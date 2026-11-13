@@ -12,19 +12,38 @@ A ferramenta **prepara minutas e aponta problemas; quem decide é sempre o geren
 
 > **Situação:** em construção. Veja em que fase o projeto está em [`docs/andamento.md`](docs/andamento.md).
 
-## Como usar (quando publicado)
+## Como usar
 
-O app roda no navegador, publicado no GitHub Pages. Os PDFs são lidos na sua própria máquina.
+O app roda no navegador: **https://izacxll.github.io/raio-x-do-projeto/**. Os PDFs são lidos na sua própria máquina.
+
+Hoje (fase F0) funcionam: a escolha da etapa, o envio dos PDFs, a leitura página a página (com OCR nas páginas em imagem), o relatório de leitura em DOCX, PDF e XLSX e o dossiê (salvar e abrir). As análises de cada etapa chegam nas fases seguintes.
 
 - **Sem chave da API:** leitura dos PDFs, etapa 1 (leitura da RFP) e etapa 5 (conferência do PGP). Nada é enviado para fora do navegador.
 - **Com a chave da API:** etapas 2, 3 e 4, que usam a inteligência do PMO (Claude). A chave é pedida ao administrador do Claude da FGV, que a cria no Claude Console; o login do claude.ai não serve. A chave fica só no seu navegador, durante a sessão, e o conteúdo dos PDFs dessas etapas é enviado à API do Claude pela organização da FGV.
-- O trabalho é salvo num arquivo de **dossiê** (JSON), que você guarda e reabre quando quiser. O dossiê nunca guarda a chave.
+- O trabalho é salvo num arquivo de **dossiê** (`<projeto>.dossie.json`), que você guarda e reabre quando quiser. O dossiê nunca guarda a chave.
 
 O guia completo estará em [`docs/guia-do-gerente.md`](docs/guia-do-gerente.md).
 
 ## Como rodar localmente
 
-*Disponível a partir da fase F0 (esqueleto do app).*
+Precisa do Node.js 22 ou mais novo.
+
+```powershell
+npm install
+npm run dev          # abre em http://localhost:5173
+```
+
+| Comando | O que faz |
+|---|---|
+| `npm test` | Testes de unidade e a leitura das RFPs públicas de teste |
+| `npm run build` | Build de produção em `dist/` (com a checagem de tipos) |
+| `npm run test:fumaca` | Testes no navegador sobre o build (rode `npx playwright install chromium` uma vez) |
+| `npm run lint` / `npm run verificar-formato` | ESLint e Prettier |
+| `npm run verificar-repositorio` | A verificação do repositório público que o CI faz (decisão 0010) |
+
+## Como publicar
+
+A `main` é publicada no GitHub Pages a cada merge (`.github/workflows/publicar.yml`). Para testar uma fase antes do merge, o mesmo workflow pode ser disparado à mão na branch da fase (decisão 0018).
 
 ## Onde fica cada coisa
 
@@ -34,8 +53,11 @@ O guia completo estará em [`docs/guia-do-gerente.md`](docs/guia-do-gerente.md).
 | [`docs/andamento.md`](docs/andamento.md) | Fase atual, decisões pendentes e próximo passo |
 | [`docs/decisoes/`](docs/decisoes/) | Uma decisão por arquivo |
 | `.claude/skills/pmo/` | Skill PMO: a inteligência das etapas 2, 3 e 4 (fase S) |
-| `src/` | Código do app (a partir da F0) |
-| `tests/` | Testes e documentos públicos de teste (a partir da F0) |
+| [`docs/arquitetura.md`](docs/arquitetura.md) | Código × PMO, pastas, fluxo das etapas, dossiê, segurança e testes |
+| [`docs/identidade-visual.md`](docs/identidade-visual.md) | Cores, fonte, componentes e etiquetas |
+| [`src/`](src/) | Código do app |
+| [`tests/`](tests/) | Testes; RFPs públicas de teste em `tests/fixtures/rfps-publicas/` |
+| [`scripts/`](scripts/) | Cópia dos arquivos de leitura para o site e verificação do repositório |
 | `referencias/` | Material de referência e documentos confidenciais — **fora do Git** |
 
 ## Licença
