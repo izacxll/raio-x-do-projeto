@@ -28,7 +28,7 @@ function App() {
       </Routes>
       <footer className="rodape">
         Raio-X do Projeto {__VERSAO_APP__} · skill PMO {__VERSAO_SKILL__} · os PDFs são lidos no seu
-        navegador. Em construção: veja o andamento no repositório.
+        navegador. Em construção.
       </footer>
     </HashRouter>
   );

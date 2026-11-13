@@ -4,7 +4,9 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 
 ## [Não publicado]
 
-## [0.2.0] — F0: esqueleto do app
+## [0.2.0] — 13/11/2026
+
+### Fase F0 — esqueleto do app (aprovada)
 
 ### Adicionado
 - App em TypeScript + React + Vite, publicado no GitHub Pages: https://izacxll.github.io/raio-x-do-projeto/
@@ -23,6 +25,7 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 ### Alterado
 - Ordem das fases: a F0 vem antes da P, e as tags trocam (F0 = v0.2.0, P = v0.3.0; decisão 0005 atualizada).
 - `CLAUDE.md`: as RFPs públicas de teste não precisam mais da lista mostrada antes do commit.
+- Ajustes da revisão: a tela não mostra mais nomes de fases ("Em construção: a análise chega na próxima versão"); a etapa 1 lista as quatro saídas da especificação (análise, lista de requisitos e quadro de prazos, checklist de habilitação, perguntas de esclarecimento); o "entra:" dos cartões de etapa fica no rodapé. Um teste de fumaça barra termos internos na tela.
 
 ## [0.1.0] — 13/11/2026
 

@@ -4,7 +4,7 @@ Atualizado em 13/11/2026 (F0).
 
 ## Onde estamos
 
-**Fase atual: F0 (esqueleto do app), pronta para teste** na branch `fase/f0-esqueleto` (PR aberto). Prévia no GitHub Pages: https://izacxll.github.io/raio-x-do-projeto/ (decisão 0018: cada push numa branch `fase/*` publica a prévia).
+**A F0 (esqueleto do app) foi aprovada e publicada como v0.2.0 em 13/11/2026.** App no ar: https://izacxll.github.io/raio-x-do-projeto/ (a `main` publica a cada merge; cada push numa branch `fase/*` publica uma prévia, decisão 0018).
 
 A ordem mudou (decisão 0017): **a F0 veio antes da P**. Próxima: fase P (prova de conceito), numa conversa nova.
 
@@ -49,7 +49,7 @@ A ordem mudou (decisão 0017): **a F0 veio antes da P**. Próxima: fase P (prova
 |---|---|---|---|
 | Fundação | Organização do repositório e decisões do plano | concluída (PR #1) | — |
 | S | Skill PMO 0.1.0 | concluída (PR #2; checklist aprovado) | v0.1.0 |
-| F0 | Esqueleto, identidade visual com o logo, fluxo de tela, leitura de PDF, dossiê `.dossie.json`, exportação básica, CI com a verificação dos formatos | pronta para teste (PR aberto) | v0.2.0 |
+| F0 | Esqueleto, identidade visual com o logo, fluxo de tela, leitura de PDF, dossiê `.dossie.json`, exportação básica, CI com a verificação dos formatos | concluída (PR #3) | v0.2.0 |
 | P | Prova de conceito com um caso real de política pública, sem código do app; inclui a comparação regras de código × leitura do PMO | a fazer (depois da F0, decisão 0017) | v0.3.0 |
 | F5 | Etapa 5: conferência do PGP só com código, com a base do "ausente" em três níveis | a fazer | v0.4.0 |
 | F1 | Etapa 1: leitura da RFP (só código) | a fazer | v0.5.0 |
@@ -68,10 +68,10 @@ A ordem mudou (decisão 0017): **a F0 veio antes da P**. Próxima: fase P (prova
 
 ## Próximo passo
 
-1. **Responsável pelo projeto:** testar a F0 no link acima (roteiro na descrição do PR) e dar o ok.
-2. Depois do ok: merge do PR, tag v0.2.0 e release. A publicação da `main` substitui a prévia.
-3. **Vale abrir uma conversa nova** para a fase P. Ela começa lendo o `CLAUDE.md` e este arquivo.
-4. Fase P: perguntar se os três PDFs do caso são do mesmo contrato; pedir que sejam salvos em `referencias/casos/<caso>/entrada/` como `1-chamamento.pdf`, `2-tap.pdf` e `3-plano.pdf`; seguir a seção 15 da especificação, com a regra contra contaminação. O app da F0 pode ser usado para ler os PDFs (nada sai do navegador), mas o que for gerado a partir deles fica fora do Git.
+1. F0 concluída: merge, tag v0.2.0 e release feitos.
+2. **Vale abrir uma conversa nova** para a fase P. Ela começa lendo o `CLAUDE.md` e este arquivo.
+3. Fase P: perguntar se os três PDFs do caso são do mesmo contrato; pedir que sejam salvos em `referencias/casos/<caso>/entrada/` como `1-chamamento.pdf`, `2-tap.pdf` e `3-plano.pdf`; seguir a seção 15 da especificação, com a regra contra contaminação. O app da F0 pode ser usado para ler os PDFs (nada sai do navegador), mas o que for gerado a partir deles fica fora do Git.
+4. Na tela, nunca citar fases do plano: para o GP, o que falta é "em construção" (pedido na revisão da F0; há teste de fumaça).
 
 **Lembretes técnicos:**
 - O Poppler (`pdftotext`, `pdfinfo`) não está no PATH do Git Bash; use o caminho completo ou a leitura do próprio app (`npm test` lê as RFPs de teste em Node).

@@ -380,6 +380,9 @@ textarea {
 .cartao-etapa span:last-child {
   font-size: var(--fs-pequeno);
   color: var(--txt);
+  /* "entra:" sempre no rodapé do cartão, qualquer que seja o tamanho do título */
+  margin-top: auto;
+  padding-top: var(--esp-2);
 }
 
 .detalhe-etapa {

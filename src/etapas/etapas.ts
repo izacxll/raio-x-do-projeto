@@ -27,7 +27,7 @@ export interface Etapa {
   resumoEntrada: string;
   /** Etapas 2, 3 e 4 usam o PMO (API do Claude, com a chave do GP). As etapas 1 e 5 rodam só com código. */
   usaPmo: boolean;
-  /** Fase do plano em que a etapa fica pronta. */
+  /** Fase do plano em que a etapa fica pronta. Uso interno: nunca aparece na tela (o GP não conhece as fases). */
   fase: string;
   documentos: DocumentoPedido[];
   ferramentaFaz: string[];
@@ -65,7 +65,9 @@ export const ETAPAS: Etapa[] = [
     ],
     saidas: [
       { nome: "Análise da RFP", formatos: ["DOCX", "PDF"] },
-      { nome: "Checklist de habilitação e quadro de prazos", formatos: ["XLSX"] },
+      { nome: "Lista de requisitos e quadro de prazos", formatos: ["XLSX"] },
+      { nome: "Checklist de habilitação", formatos: ["XLSX"] },
+      { nome: "Perguntas de esclarecimento", formatos: ["DOCX"] },
     ],
   },
   {

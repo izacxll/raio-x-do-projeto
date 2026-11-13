@@ -61,8 +61,8 @@ export function TelaInicial() {
           </ul>
           <p className="envio__obs">
             {etapa.usaPmo
-              ? `Usa o PMO (Claude), com a chave do GP. Chega na fase ${etapa.fase}; a leitura dos PDFs já funciona.`
-              : `Só código, sem chave e sem enviar nada para fora do navegador. As regras chegam na fase ${etapa.fase}.`}
+              ? "Usa o PMO (inteligência artificial), com a chave do GP. Em construção: a análise chega na próxima versão; a leitura dos PDFs já funciona."
+              : "Roda no navegador, sem IA e sem enviar nada para fora. Em construção: a análise chega na próxima versão; a leitura dos PDFs já funciona."}
           </p>
         </section>
         <section className="cartao coluna">

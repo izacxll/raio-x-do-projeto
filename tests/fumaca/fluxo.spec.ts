@@ -25,6 +25,14 @@ test("tela inicial mostra as cinco etapas, o logo e a legenda dos rótulos", asy
   await expect(page.getByText("Do documento, com a página")).toBeVisible();
   await page.getByRole("tab", { name: /Conferência do plano/ }).click();
   await expect(page.getByText("Relatório de conformidade")).toBeVisible();
+  await page.getByRole("tab", { name: /Leitura da RFP/ }).click();
+  for (const saida of [
+    "Lista de requisitos e quadro de prazos",
+    "Checklist de habilitação",
+    "Perguntas de esclarecimento",
+  ]) {
+    await expect(page.getByText(saida, { exact: true })).toBeVisible();
+  }
   const csp = await page.locator('meta[http-equiv="Content-Security-Policy"]').getAttribute("content");
   expect(csp).toContain("connect-src 'self' https://api.anthropic.com");
   expect(erros).toEqual([]);
@@ -86,4 +94,18 @@ test("PDF escaneado passa pelo OCR, servido pelo próprio site", async ({ page }
   await expect(page.locator(".envio__arquivo")).toHaveCount(1, { timeout: 200_000 });
   expect(deFora).toEqual([]);
   expect(erros).toEqual([]);
+});
+
+test("nenhum termo interno de construção (fases do plano) aparece para o GP", async ({ page }) => {
+  const INTERNO = /\bfases?\b|\bF[0-9]b?\b|repositório/i;
+  await page.goto("./");
+  for (let i = 0; i < 5; i++) {
+    await page.getByRole("tab").nth(i).click();
+    expect(await page.locator("body").innerText(), `tela inicial, etapa ${i + 1}`).not.toMatch(INTERNO);
+  }
+  for (let n = 1; n <= 5; n++) {
+    await page.goto(`./#/etapa/${n}`);
+    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+    expect(await page.locator("body").innerText(), `etapa ${n}`).not.toMatch(INTERNO);
+  }
 });

@@ -54,8 +54,8 @@ function AvisoEnvio({ etapa }: { etapa: Etapa }) {
     return (
       <div className="aviso">
         <p>
-          <b>Só código.</b> Os PDFs são lidos aqui no navegador; nada é enviado para fora. As regras desta
-          etapa chegam na fase {etapa.fase}.
+          <b>Sem IA.</b> Os PDFs são lidos aqui no navegador; nada é enviado para fora. Em construção: a
+          análise desta etapa chega na próxima versão; a leitura dos PDFs já funciona.
         </p>
       </div>
     );
@@ -63,9 +63,10 @@ function AvisoEnvio({ etapa }: { etapa: Etapa }) {
   return (
     <div className="aviso aviso--pmo">
       <p>
-        <b>Etapa com o PMO.</b> Quando estiver pronta (fase {etapa.fase}), o conteúdo dos PDFs desta etapa
-        será enviado à API do Claude, pela chave do GP na organização da FGV. Por enquanto, só a leitura
-        funciona, e ela acontece no navegador, sem enviar nada.
+        <b>Etapa com o PMO (inteligência artificial).</b> Quando a análise estiver pronta, o conteúdo dos PDFs
+        desta etapa será enviado à API do Claude, pela chave do GP na organização da FGV. Em construção: a
+        análise chega na próxima versão. Por enquanto, só a leitura funciona, e ela acontece no navegador, sem
+        enviar nada.
       </p>
     </div>
   );
@@ -343,7 +344,7 @@ export function TelaEtapa() {
       <Trilho etapa={etapa} />
       <main className="pagina" style={{ width: "100%" }}>
         <RotuloSecao>
-          Etapa {etapa.numero} · {etapa.usaPmo ? "com o PMO" : "só código"}
+          Etapa {etapa.numero} · {etapa.usaPmo ? "com o PMO" : "sem IA"}
         </RotuloSecao>
         <Titulo>{etapa.nome}</Titulo>
         <PassosFluxo lidos={obrigatoriosLidos} />
