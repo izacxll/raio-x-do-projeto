@@ -13,6 +13,7 @@ Uma decisão por arquivo, numerada em ordem. Cada uma registra o contexto, o que
 | [0007](0007-ordem-da-etapa-4.md) | Ordem de geração das partes do PGP (etapa 4) | aceita |
 | [0008](0008-tabela-de-categoria.md) | Tabela fixa de categoria dos achados (etapa 5) | aceita |
 | [0009](0009-regras-do-raio-x-nos-tres-tipos.md) | Regras do Raio-X traduzidas em vago, conflituoso e ausente | aceita |
+| [0010](0010-saidas-e-dossie-fora-do-git.md) | Saídas do app e dossiê fora do Git; extensão `.dossie.json` | aceita |
 
 Modelo para uma nova decisão:
 

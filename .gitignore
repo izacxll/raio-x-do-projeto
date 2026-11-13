@@ -7,6 +7,29 @@ referencias/
 !tests/fixtures/rfps-publicas/**/*.pdf
 !tests/fixtures/rfps-publicas/**/*.PDF
 
+# Saidas do app e dossie: podem ter preco, valor-hora e conteudo de RFP privada.
+# Nenhum, exceto os exemplos gerados de RFPs publicas (decisao 0010).
+*.docx
+*.DOCX
+*.xlsx
+*.XLSX
+*.zip
+*.ZIP
+*.dossie.json
+!tests/fixtures/gerados/**/*.docx
+!tests/fixtures/gerados/**/*.DOCX
+!tests/fixtures/gerados/**/*.xlsx
+!tests/fixtures/gerados/**/*.XLSX
+!tests/fixtures/gerados/**/*.zip
+!tests/fixtures/gerados/**/*.ZIP
+!tests/fixtures/gerados/**/*.dossie.json
+
+# Formatos antigos de escritorio (documentos recebidos de clientes): nunca
+*.doc
+*.DOC
+*.xls
+*.XLS
+
 # Segredos
 .env
 .env.*
