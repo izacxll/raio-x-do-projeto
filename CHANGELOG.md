@@ -4,6 +4,15 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 
 ## [Não publicado]
 
+### Fase S — skill PMO (em andamento)
+- Skill PMO, primeiros arquivos: `checklist.md` (12 perguntas cobrindo os 24 riscos da V29), `experiencia.md` e o modelo de ficha `artefatos/_modelo.md`.
+- Decisões 0014 (leitura das fontes da skill) e 0015 (formato das fichas).
+
+### Corrigido
+- `.gitignore`: o padrão `referencias/` passa a valer só para a pasta da raiz (`/referencias/`). Antes, ele também excluía a pasta `.claude/skills/pmo/referencias/` da skill, que precisa ir para o Git.
+
+### Fundação
+
 ### Adicionado
 - `CLAUDE.md` com os princípios inegociáveis, a divisão código × PMO, a distinção entre brechas do Raio-X e riscos do projeto, as regras do repositório e as de segurança.
 - `docs/andamento.md` com as fases, as decisões pendentes e o próximo passo.

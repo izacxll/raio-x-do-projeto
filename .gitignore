@@ -1,5 +1,5 @@
 # Materiais de referencia (nao versionar: PMBOK, casos reais, documentos internos)
-referencias/
+/referencias/
 
 # PDFs: nenhum, exceto as RFPs publicas de teste (com fonte no README da pasta)
 *.pdf
