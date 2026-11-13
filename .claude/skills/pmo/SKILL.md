@@ -125,7 +125,7 @@ Toda resposta é **um objeto JSON** que segue o schema do passo, enviado pelo ap
 - `fontes`: obrigatório em `documento`. Em `sugestao`, inclua quando a sugestão nasce de um trecho. `doc` é `rfp`, `proposta`, `tap` ou `pgp`; `pagina` é a página do arquivo PDF; `trecho` é literal.
 - `alternativas`: opcional, de 2 a 3 itens.
 - `requisitos`: números R que o item atende ou afeta.
-- `ficha`: item do conteúdo mínimo que o item cobre (por exemplo, `A7.2`, `TAP.6`), quando houver.
+- `ficha`: item do conteúdo mínimo que o item cobre (por exemplo, `A7.2`, `TAP6.1`, `PROP-SOW.4`), quando houver.
 - Em `decisao_gp`, `texto` traz a redação sugerida e o campo fica marcado como pendente do GP.
 - Estimativas de duração: `{ "otimista": n, "mais_provavel": n, "pessimista": n, "unidade": "dias úteis", "base": "..." }`. Nunca a média: quem calcula é o código.
 - Quando o documento não informa: `{ "texto": "não informado no documento — a definir pelo GP", "rotulo": "decisao_gp" }`.
