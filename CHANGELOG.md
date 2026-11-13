@@ -4,6 +4,15 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 
 ## [Não publicado]
 
+### F5 — conferência do PGP só com código (em teste)
+- **Etapa 5 na tela:** mapa do PGP (as 51 partes localizadas por título ou por conteúdo, confirmadas pelo GP: presente, dispensada ou fora do plano), características do projeto, premissas críticas (pré-marcadas, com o sinal achado nos documentos), requisitos da RFP (extraídos pelo código ou incluídos pelo GP, com número fixo).
+- **Conferência:** vago (10 padrões de texto), conflituoso (texto de outro documento; prazo total × RFP × TAP), ausente (partes, conteúdo mínimo das fichas, premissas críticas no A8/B3/B27/A11, requisitos na especificação do escopo). Gravidade pela parte do PGP; categoria pela regra fixa da decisão 0008. Página ilegível deixa a verificação "não verificável", nunca "ausente".
+- **Decisão do GP** em cada achado (procede ou não, troca de gravidade, justificativa), guardada no dossiê.
+- **Exportação:** relatório de conformidade (DOCX e PDF, com minuta enquanto houver achado pendente) e lista de achados (XLSX).
+- A skill é lida pelo app no build (fichas e premissas críticas): fonte única com o Claude Code.
+- Fixture gerada pelo PMO a partir de uma RFP pública, com 9 erros plantados (vago, conflituoso e ausente em cada gravidade): todos achados, e o plano limpo não é acusado nessas regras.
+- Decisão 0022.
+
 ### Skill PMO 0.2.0 — premissas críticas (decisão 0021)
 - `checklist.md` reescrito como **premissas críticas comuns** PC1 a PC8: o que o plano assume, quando se aplica, sinais de aplicação, sinais no plano, o que acontece se não se confirmar e onde tem de estar. A PC2 (sistemas e ferramentas que não são da FGV) é nova.
 - Itens novos de conteúdo mínimo: A8.12 (tratamento das premissas críticas; grave), B3.9, B27.13, A11.12, PROP-SOW.11 e TAP-PR.2.
