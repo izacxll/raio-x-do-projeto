@@ -14,7 +14,7 @@ A etapa 4 gera as partes do Plano de Gerenciamento do Projeto. A especificação
 2. **Ciclo de vida e abordagem:** A17 e A18.
 3. **Escopo:** documentação dos requisitos (B22), especificação do escopo (B17), EAP e dicionário, linha de base do escopo (A13), matriz de rastreabilidade (B23), planos A1 e A2.
 4. **Atividades:** lista (B2), atributos (B1), sequência.
-5. **Recursos (antes das durações):** plano de gerenciamento dos recursos (A6), requisitos de recursos (B26), estrutura analítica dos recursos (B24), RACI e designações da equipe (B18) e de recursos físicos (B12), calendários dos recursos (B25), termo de nomeação da equipe (B32; nomes são do GP).
+5. **Recursos (antes das durações):** plano de gerenciamento dos recursos (A6), requisitos de recursos (B26), estrutura analítica dos recursos (B24), RACI e designações da equipe (B18) e de recursos físicos (B12), calendários dos recursos (B25), termo de nomeação da equipe (B32). O B32 é o *team charter*: os combinados da equipe (valores, regras de reunião e de comunicação, como se decide e como se resolvem conflitos). Não tem nomes; os nomes ficam nas designações da equipe (B18).
 6. **Durações e cronograma:** durações em três pontos (B8) com as bases das estimativas (B4) → diagrama de rede (B16), caminho crítico, cronograma (B15), lista de marcos (B11), calendários do projeto (B13), dados do cronograma (B29), linha de base do cronograma (A14), plano A3.
 7. **Riscos (antes dos custos):** plano A8 e registro dos riscos inicial (B27), a partir das brechas da etapa 1 e do checklist do PMO.
 8. **Custos:** estimativas (B6), orçamento, reservas de contingência e gerencial (valores do GP), linha de base dos custos (A15), plano A4.
