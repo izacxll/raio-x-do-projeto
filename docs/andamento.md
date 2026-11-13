@@ -1,14 +1,18 @@
 # Andamento
 
-Atualizado em 13/11/2026 (skill 0.2.0 e início da F5).
+Atualizado em 13/11/2026 (F5 publicada como v0.3.0).
 
 ## Onde estamos
 
 **A F0 (esqueleto do app) foi aprovada e publicada como v0.2.0 em 13/11/2026.** App no ar: https://izacxll.github.io/raio-x-do-projeto/ (a `main` publica a cada merge; cada push numa branch `fase/*` publica uma prévia, decisão 0018).
 
-**Skill PMO 0.2.0 em revisão** (PR na branch `fase/s2-premissas-criticas`, decisão 0021): os riscos da V29 deixam de ser lista à parte e viram 8 premissas críticas (PC1 a PC8) escritas dentro da proposta, do TAP e do plano (B3, B27, A11; tratamento no A8, grave). Na etapa 5, a premissa crítica que se aplica e não está no plano é "ausente".
+**F5 (conferência, só código) publicada como v0.3.0 em 13/11/2026**, junto com a skill PMO 0.2.0, **antes do teste da responsável** (decisão 0023). App no ar: https://izacxll.github.io/raio-x-do-projeto/ — etapa 5. **O teste da etapa 5 continua pendente**; o que ele encontrar sai como v0.3.1, v0.3.2 etc. A fase P (caso real) fica para depois, por decisão da responsável pelo projeto.
 
-**Próxima: F5** (conferência, só código), com as RFPs públicas e planos com erros plantados. A fase P (caso real) fica para depois, por decisão da responsável pelo projeto.
+**Skill PMO 0.2.0 publicada** (PR #4, decisão 0021): os riscos da V29 deixam de ser lista à parte e viram 8 premissas críticas (PC1 a PC8) escritas dentro da proposta, do TAP e do plano (B3, B27, A11; tratamento no A8, grave). Na etapa 5, a premissa crítica que se aplica e não está no plano é "ausente".
+
+**O que a F5 entregou:** mapa do PGP confirmado pelo GP; características do projeto; premissas críticas; requisitos da RFP; conferência (vago, conflituoso, ausente) com gravidade e categoria por regra fixa; decisão do GP em cada achado; relatório DOCX/PDF e lista XLSX. Teste com um plano gerado pelo PMO e 9 erros plantados: todos achados. Regras e limites na decisão 0022.
+
+**O que falta na conferência (próximas versões):** as regras da decisão 0009 que ainda não entraram (escopo × exclusões, teto × volume, datas de marcos, eleição, valores por extenso etc.); extração de requisitos em tabela; cruzamento de datas, valores e responsáveis entre PGP, TAP e RFP.
 
 **O que a F0 entregou:**
 - tela inicial com as cinco etapas e a tela de cada etapa no fluxo da seção 5.0, com a identidade da apresentação e o logo;
@@ -53,7 +57,7 @@ Atualizado em 13/11/2026 (skill 0.2.0 e início da F5).
 | S | Skill PMO 0.1.0 | concluída (PR #2; checklist aprovado) | v0.1.0 |
 | F0 | Esqueleto, identidade visual com o logo, fluxo de tela, leitura de PDF, dossiê `.dossie.json`, exportação básica, CI com a verificação dos formatos | concluída (PR #3) | v0.2.0 |
 | P | Prova de conceito com um caso real de política pública, sem código do app; inclui a comparação regras de código × leitura do PMO | adiada pela responsável pelo projeto (depois da F5) | a definir |
-| F5 | Etapa 5: conferência do PGP só com código, com a base do "ausente" em três níveis | a fazer | v0.4.0 |
+| F5 | Etapa 5: conferência do PGP só com código, com a base do "ausente" em três níveis | concluída (PR #5), teste da responsável pendente (decisão 0023) | v0.3.0 |
 | F1 | Etapa 1: leitura da RFP (só código) | a fazer | v0.5.0 |
 | F2 | Etapa 2: proposta, com o PMO; tela da chave; comparação de modelos | a fazer | v0.6.0 |
 | F5b | Leitura opcional do PMO na etapa 5 | a fazer | v0.7.0 |
@@ -70,10 +74,9 @@ Atualizado em 13/11/2026 (skill 0.2.0 e início da F5).
 
 ## Próximo passo
 
-1. **Responsável pelo projeto:** revisar o PR da skill 0.2.0 (premissas críticas, decisão 0021).
-2. **F5** (conferência, só código), na branch `fase/f5-conferencia`, a partir da skill 0.2.0: mapa do PGP, conteúdo mínimo das fichas, premissas críticas, vago/conflituoso/ausente, categoria e gravidade; testes com as RFPs públicas e com planos gerados pelo PMO (Claude Code) com erros plantados.
-3. Depois: fase P (caso real), F1, F2…
-4. Na tela, nunca citar fases do plano: para o GP, o que falta é "em construção" (pedido na revisão da F0; há teste de fumaça).
+1. **Responsável pelo projeto:** testar a etapa 5 no app publicado, quando puder; o que aparecer vira correção (v0.3.x).
+2. **Vale abrir uma conversa nova** para a próxima fase (F1, leitura da RFP, ou a P, se a responsável quiser retomá-la).
+3. Na tela, nunca citar fases do plano: para o GP, o que falta é "em construção".
 
 **Lembretes técnicos:**
 - O Poppler (`pdftotext`, `pdfinfo`) não está no PATH do Git Bash; use o caminho completo ou a leitura do próprio app (`npm test` lê as RFPs de teste em Node).

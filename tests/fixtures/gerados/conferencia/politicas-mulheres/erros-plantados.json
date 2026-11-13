@@ -1,0 +1,83 @@
+[
+  {
+    "id": "vago-grave",
+    "tipo": "vago",
+    "gravidade": "grave",
+    "parte": "A11",
+    "descricao": "No plano de mudanças, o prazo concreto de aviso de atraso (24 horas antes da data de entrega, TR item 5.14.3) vira 'oportunamente'.",
+    "de": "com antecedência mínima de 24 (vinte e quatro) horas da data prevista de entrega",
+    "para": "oportunamente"
+  },
+  {
+    "id": "vago-media",
+    "tipo": "vago",
+    "gravidade": "média",
+    "parte": "B11",
+    "descricao": "Na lista de marcos, o prazo do marco M5 (entrega da minuta do Protocolo e Fluxo, D+65) vira 'a definir'.",
+    "de": "M5 | Entrega do produto: minuta do Protocolo e Fluxo Intersetorial | 0 dias | Contratual | D+65",
+    "para": "M5 | Entrega do produto: minuta do Protocolo e Fluxo Intersetorial | 0 dias | Contratual | a definir"
+  },
+  {
+    "id": "vago-baixa",
+    "tipo": "vago",
+    "gravidade": "baixa",
+    "parte": "B3",
+    "descricao": "No registro de premissas, a frequência de revisão (a cada reunião quinzenal) vira 'quando necessário'.",
+    "de": "revista a cada reunião quinzenal de acompanhamento",
+    "para": "revista quando necessário"
+  },
+  {
+    "id": "conflituoso-grave",
+    "tipo": "conflituoso",
+    "gravidade": "grave",
+    "parte": "A3",
+    "descricao": "No plano do cronograma, o prazo total passa de 04 para 06 meses, em conflito com a RFP (TR, itens 1.4 e 5.2), com o TAP e com o cronograma (B15).",
+    "de": "prazo de execução de 04 (quatro) meses",
+    "para": "prazo de execução de 06 (seis) meses"
+  },
+  {
+    "id": "conflituoso-media",
+    "tipo": "conflituoso",
+    "gravidade": "média",
+    "parte": "B17",
+    "descricao": "Na especificação do escopo, entra uma frase com 'neste Termo de Referência' (texto de outro documento colado no plano).",
+    "de": "Os materiais de cada produto são entregues à Secretaria Municipal de Desenvolvimento Social em formato digital editável e PDF (TR, item 5.9, p. 26).",
+    "para": "Os materiais de cada produto são entregues à Secretaria Municipal de Desenvolvimento Social em formato digital editável e PDF (TR, item 5.9, p. 26). Os produtos deverão observar as especificações estabelecidas neste Termo de Referência."
+  },
+  {
+    "id": "conflituoso-baixa",
+    "tipo": "conflituoso",
+    "gravidade": "baixa",
+    "parte": "B31",
+    "descricao": "No registro das partes interessadas, entra uma frase com 'a licitante deverá' (texto de edital colado no plano).",
+    "de": "A indicação dos representantes de cada órgão é feita pela Secretaria, por ofício, até o marco M2.",
+    "para": "A indicação dos representantes de cada órgão é feita pela Secretaria, por ofício, até o marco M2. A licitante deverá apresentar a relação nominal dos representantes de cada órgão da rede."
+  },
+  {
+    "id": "ausente-grave",
+    "tipo": "ausente",
+    "gravidade": "grave",
+    "parte": "A8",
+    "descricao": "No plano de riscos, é removido o parágrafo que trata das premissas críticas (item A8.12); elas continuam no registro de premissas (B3), no registro dos riscos (B27) e no plano de mudanças (A11).",
+    "de": "Premissas críticas. As premissas críticas que se aplicam a este projeto (PC1, PC3, PC4, PC6, PC7 e PC8) são acompanhadas como riscos: cada uma está no registro de premissas, com um risco ligado no registro dos riscos e o reajuste previsto no plano de mudanças. O Gerente do Projeto valida cada premissa crítica com o gestor do contrato na reunião de abertura e as revê em toda reunião quinzenal: PC1 (recebimento dos dados da rede até o marco M2), PC3 (prazo de análise registrado em ata), PC4 (data de início igual à assinatura e reunião de abertura até D+5), PC6 (estratégia de mobilização a cargo da Secretaria), PC7 (dimensionamento da equipe para o pico do mês 3) e PC8 (limite de revisões de uma rodada por produto). PC2 e PC5 não se aplicam: o TR não obriga o uso de sistema do contratante, e a vigência de 4 meses não cruza eleição municipal nem troca de gestão prevista.\n",
+    "para": ""
+  },
+  {
+    "id": "ausente-media",
+    "tipo": "ausente",
+    "gravidade": "média",
+    "parte": "B17",
+    "descricao": "Na especificação do escopo, é removida a linha do produto P2 'Capacitação do Conselho Municipal dos Direitos da Mulher' (requisito R02, TR item 5.4); o produto continua no TAP, na lista de marcos e na EAP.",
+    "de": "P2 — Capacitação do Conselho Municipal dos Direitos da Mulher (R02) | Até 14 conselheiros titulares e suplentes; 4 (quatro) horas presenciais em um encontro; conteúdo mínimo do TR, item 5.4 (p. 24); material de apoio e relatório | Aceito quando: o encontro de 4 horas estiver comprovado pela lista de presença; os oito temas do item 5.4 estiverem cobertos; o relatório for atestado pelo fiscal do contrato\n",
+    "para": ""
+  },
+  {
+    "id": "ausente-baixa",
+    "tipo": "ausente",
+    "gravidade": "baixa",
+    "parte": "B27",
+    "descricao": "No registro dos riscos, é removida a linha RK02, o risco ligado à premissa crítica PC3 (análise e aprovação no prazo); a premissa continua no registro de premissas (B3, P03) e no plano de mudanças (A11).",
+    "de": "RK02 | Ligado à premissa PC3: a Secretaria não conclui a análise de um produto no prazo de análise registrado em ata, e os produtos seguintes atrasam. | Média (2) | Alta (3) | 6, alta | Mitigar: registrar em ata o prazo de análise e quem analisa (fiscal do contrato como ponto focal); apresentar a versão preliminar em reunião antes do envio formal. | Produto sem manifestação do fiscal ao fim da janela de análise do cronograma | Gerente do Projeto | Aberto\n",
+    "para": ""
+  }
+]

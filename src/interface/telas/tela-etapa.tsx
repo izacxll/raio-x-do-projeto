@@ -10,6 +10,7 @@ import { exportar, type FormatoExportacao } from "../../exportacao/exportar";
 import { montarRelatorioLeitura, NOME_ORIGEM } from "../../exportacao/relatorio-leitura";
 import { resumirLeitura, type Progresso } from "../../leitura/ler-documento";
 import { EtiquetaRotulo, LegendaRotulos, RotuloSecao, Titulo } from "../componentes/basicos";
+import { ConferenciaPgp } from "./conferencia";
 
 const PASSOS = [
   "Escolher a etapa",
@@ -332,6 +333,10 @@ export function TelaEtapa() {
 
   const papeis = new Set(etapa.documentos.map((d) => d.papel));
   const documentos = dossie.documentos.filter((d) => papeis.has(d.papel));
+  const primeiro = (papel: string) => dossie.documentos.find((d) => d.papel === papel);
+  const pgp = primeiro("pgp");
+  const tap = primeiro("tap");
+  const rfp = primeiro("rfp");
   const obrigatoriosLidos = etapa.documentos
     .filter((d) => d.obrigatorio)
     .every((d) => documentosDoPapel(dossie, d.papel).length > 0);
@@ -372,8 +377,18 @@ export function TelaEtapa() {
           )}
         </section>
 
+        {etapa.numero === 5 &&
+          (pgp ? (
+            <ConferenciaPgp pgp={pgp} tap={tap} rfp={rfp} />
+          ) : (
+            <section className="bloco">
+              <RotuloSecao>Conferência</RotuloSecao>
+              <p className="texto-apoio">Envie o PGP para conferir.</p>
+            </section>
+          ))}
+
         <section className="bloco">
-          <RotuloSecao>Exportar</RotuloSecao>
+          <RotuloSecao>Relatório de leitura</RotuloSecao>
           <Exportar documentos={documentos} />
         </section>
 
