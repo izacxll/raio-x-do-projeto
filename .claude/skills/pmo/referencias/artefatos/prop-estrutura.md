@@ -6,7 +6,7 @@ etapas: [2]
 gravidade: não se aplica
 categoria: não se aplica
 sinonimos: ["estrutura da proposta", "sumário da proposta", "modelo de proposta", "índice", "roteiro da proposta técnica"]
-versao: 0.1.0
+versao: 0.2.0
 ---
 
 # PROP-ESTRUTURA — Estrutura da proposta técnica
@@ -66,7 +66,7 @@ Define o esqueleto da minuta: as seções, a ordem e os limites de forma. O aval
 - Alguma seção da estrutura da skill entra em conflito com o modelo do edital? Se sim, o modelo vence. (`licitacoes.md`)
 - A proposta técnica traz algum valor de preço que o edital manda pôr só na de preço? (PMBOK 6, p. 486)
 - Diagramas e tabelas ajudam o avaliador (fluxo da metodologia, cronograma), sem passar do limite de páginas? (Rework RW-072)
-- Há texto de outra proposta, com nome de outro órgão ou outro edital? (checklist 2, CP8)
+- Há texto de outra proposta, com nome de outro órgão ou outro edital? (conflituoso, CP8)
 
 ## Erros comuns
 - Estrutura própria "mais bonita" no lugar do modelo obrigatório (Rework RW-072, adaptação; `licitacoes.md`).
@@ -104,4 +104,4 @@ Preço: documento à parte (PROP-PRECO).
 ## Fontes
 - PMBOK 6: 12.1, p. 477 (PDF 513); 12.2, p. 486–487 (PDF 522–523); "lado do vendedor" (notas), p. 479 (PDF 515).
 - Rework: RW-071 (https://resources.rework.com/libraries/deal-closing/proposal-development); RW-072 (https://resources.rework.com/libraries/deal-closing/proposal-design).
-- `licitacoes.md`, "Como usar" e 2.2; `checklist.md` 2; especificação da etapa 2, passos 1, 3 e 9.
+- `licitacoes.md`, "Como usar" e 2.2; `checklist.md` (conflituoso, CP8); especificação da etapa 2, passos 1, 3 e 9.

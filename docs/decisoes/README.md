@@ -24,6 +24,7 @@ Uma decisão por arquivo, numerada em ordem. Cada uma registra o contexto, o que
 | [0018](0018-publicacao-e-previa-da-fase.md) | Publicação no GitHub Pages e prévia da fase antes do merge | aceita |
 | [0019](0019-leitura-de-pdf.md) | Leitura de PDF: bibliotecas, OCR local e estado de cada página | aceita |
 | [0020](0020-rfps-publicas-sem-mostrar-a-lista.md) | RFPs públicas de teste entram no Git sem a lista ser mostrada antes | aceita |
+| [0021](0021-riscos-da-v29-viram-premissas-criticas.md) | Riscos da V29 viram premissas críticas do plano (PC1 a PC8); skill PMO 0.2.0 | aceita |
 
 Modelo para uma nova decisão:
 

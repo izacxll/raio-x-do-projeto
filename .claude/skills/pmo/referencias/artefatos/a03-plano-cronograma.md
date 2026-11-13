@@ -6,7 +6,7 @@ etapas: [4, 5]
 gravidade: grave
 categoria: tempo
 sinonimos: ["plano de cronograma", "plano de gerenciamento de cronograma", "gestão do cronograma", "gerenciamento do cronograma", "gerenciamento do tempo", "plano de gerenciamento do tempo", "metodologia de cronograma"]
-versao: 0.1.0
+versao: 0.2.0
 ---
 
 # A3 — Plano de gerenciamento do cronograma
@@ -36,12 +36,12 @@ Componente que "estabelece os critérios e as atividades para o desenvolvimento,
   - confere: código
   - dispensa: nunca
 - **A3.5** Como o cronograma é calculado e a partir de que evento as datas são contadas (assinatura, ordem de serviço)
-  - fonte: PMBOK 6, 6.5, p. 207 (PDF 243); checklist 9; experiencia.md §2
+  - fonte: PMBOK 6, 6.5, p. 207 (PDF 243); `checklist.md` PC4; experiencia.md §2
   - sinais: "a partir da ordem de serviço" | "a partir da assinatura" | "data de início" | "D+" | "contados de"
   - confere: código
   - dispensa: nunca
 - **A3.6** Análise e aprovação do contratante e dependências externas entram na rede como atividades com duração
-  - fonte: PMBOK 6, 6.3, p. 191–192 (PDF 227–228); checklist 4 e 8; Rework RW-052 (https://resources.rework.com/libraries/project-management/critical-path-method)
+  - fonte: PMBOK 6, 6.3, p. 191–192 (PDF 227–228); `checklist.md` PC1, PC3 e PC6; Rework RW-052 (https://resources.rework.com/libraries/project-management/critical-path-method)
   - sinais: "prazo de análise" | "aprovação do contratante" | "validação" | "dependência externa" | "recebimento dos dados"
   - confere: código
   - dispensa: nunca
@@ -77,14 +77,14 @@ Componente que "estabelece os critérios e as atividades para o desenvolvimento,
   - dispensa: nunca
 
 ## Perguntas de qualidade
-- O plano diz de que evento as datas são contadas, e esse evento tem data? (checklist 9)
-- O tempo do contratante para analisar e aprovar entra como atividade, ou o plano supõe aprovação instantânea? (checklist 4; experiencia.md §1)
-- As dependências de terceiros (dados, agendas, pareceres) têm prazo e aparecem na rede? (checklist 8)
+- O plano diz de que evento as datas são contadas, e esse evento tem data? (PC4)
+- O tempo do contratante para analisar e aprovar entra como atividade, ou o plano supõe aprovação instantânea? (PC3; experiencia.md §1)
+- As dependências de terceiros (dados, agendas, pareceres) têm prazo e aparecem na rede? (PC1 e PC6)
 - A contingência está visível e tem regra de uso, ou ficou escondida nas durações? (PMBOK 6, p. 202, PDF 238; Rework RW-024)
 - O plano diz o que fazer se o cálculo der folga negativa frente a um prazo do contrato? Quem calcula é o código (SKILL.md, princípio 6).
 
 ## Erros comuns
-- Plano copiado de outro projeto, sem a contagem do contrato (checklist 2).
+- Plano copiado de outro projeto, sem a contagem do contrato (conflituoso, CP8).
 - Aprovação do cliente fora da rede; o cronograma estoura nas aprovações (experiencia.md §1).
 - Comprimir fora do caminho crítico ou paralelizar dependência rígida (PMBOK 6, p. 215, PDF 251; Rework RW-016).
 - Nivelar recurso movendo prazo contratual sem aprovação formal (Rework RW-009, https://resources.rework.com/libraries/project-management/resource-leveling-vs-smoothing).
@@ -95,7 +95,7 @@ Não se dispensa: todo projeto da FGV tem prazos contratuais. Em porte pequeno, 
 Linha para a tela: "Cronograma simplificado, junto com o cronograma: porte pequeno (PMBOK 6, p. 175 e 181)."
 
 ## Ligações
-- **Vem de:** 6.1, com TAP (TAP.6, marcos), A1 e A18 (p. 180, PDF 216); prazos da RFP e da proposta; checklist 4, 8 e 9.
+- **Vem de:** 6.1, com TAP (TAP.6, marcos), A1 e A18 (p. 180, PDF 216); prazos da RFP e da proposta; `checklist.md` PC1, PC3, PC4 e PC6.
 - **Vai para:** 6.2 a 6.6, 7.1 e 11.2; B16, B15, B11, B13, A14; A8 (reserva; p. 202, PDF 238); A7 (relatórios); A11 (mudança de linha de base).
 
 ## Modelo de redação
@@ -113,4 +113,4 @@ Linha para a tela: "Cronograma simplificado, junto com o cronograma: porte peque
 - PMBOK 6: 6.1, p. 179–182 (PDF 215–218); 6.2, p. 184–186 (PDF 220–222); 6.3, p. 188–193 (PDF 224–229); 6.4, p. 201–202 (PDF 237–238); 6.5, p. 207–215 (PDF 243–251); 6.6, p. 224 (PDF 260); p. 175 (PDF 211).
 - PMBOK 7: 2.4.2.2, p. 55–57 (PDF 150–152); 2.7.5, p. 113–114 (PDF 208–209); artefatos, p. 187 (PDF 282).
 - Rework: RW-016 (https://resources.rework.com/libraries/project-management/fast-tracking-vs-crashing); RW-009, RW-024, RW-027, RW-037, RW-052, RW-056 (links nos itens e nos erros).
-- `checklist.md` (2, 4, 8, 9); `experiencia.md` §1 e §2.
+- `checklist.md` (CP8, PC1, PC3, PC4, PC6); `experiencia.md` §1 e §2.

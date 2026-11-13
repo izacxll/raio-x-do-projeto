@@ -6,13 +6,13 @@ etapas: [2]
 gravidade: não se aplica
 categoria: não se aplica
 sinonimos: ["estratégia da proposta", "abordagem técnica", "alternativas de abordagem", "critérios de julgamento", "como seremos avaliados"]
-versao: 0.1.0
+versao: 0.2.0
 ---
 
 # PROP-ESTRATEGIA — Estratégia da proposta e abordagens técnicas
 
 ## Para que serve
-Documento interno de decisão, que não vai ao contratante. Lê o edital do lado de quem avalia: método de seleção, critérios, pesos e onde estão os pontos (PMBOK 6, 12.1, p. 473–474 e 478–479, PDF 509–510 e 514–515). Depois oferece ao GP 2 ou 3 abordagens técnicas comparáveis. **O GP escolhe uma** (`decisao_gp`), e o resto da proposta parte dela. Também dá destino a cada brecha da etapa 1 e a cada pergunta do checklist que se aplica.
+Documento interno de decisão, que não vai ao contratante. Lê o edital do lado de quem avalia: método de seleção, critérios, pesos e onde estão os pontos (PMBOK 6, 12.1, p. 473–474 e 478–479, PDF 509–510 e 514–515). Depois oferece ao GP 2 ou 3 abordagens técnicas comparáveis. **O GP escolhe uma** (`decisao_gp`), e o resto da proposta parte dela. Também dá destino a cada brecha da etapa 1; as premissas críticas que se aplicam (PC1 a PC8) saem escritas com a consequência no SOW (PROP-SOW.11).
 
 ## Conteúdo mínimo
 - **PROP-ESTRATEGIA.1** Critério de julgamento do edital (menor preço, técnica e preço, melhor técnica etc.), com página e trecho
@@ -50,13 +50,13 @@ Documento interno de decisão, que não vai ao contratante. Lê o edital do lado
   - sinais: "decisão do GP" | "abordagem escolhida" | "a definir pelo GP"
   - confere: código
   - dispensa: nunca
-- **PROP-ESTRATEGIA.8** Cada brecha da etapa 1 e cada pergunta do checklist aplicável com um destino: premissa ou exclusão, folga, reserva ou pergunta de esclarecimento
-  - fonte: SKILL.md, etapa 2, passo 8; `checklist.md` (introdução); PMBOK 6, 11.5, p. 442–443 (PDF 478–479)
-  - sinais: "brecha" | "checklist" | "premissa" | "exclusão" | "folga" | "reserva" | "pergunta de esclarecimento" | tabela origem × destino
+- **PROP-ESTRATEGIA.8** Cada brecha da etapa 1 com um destino: premissa ou exclusão, folga, reserva ou pergunta de esclarecimento; as premissas críticas que se aplicam (PC1 a PC8) saem escritas com a consequência no SOW (PROP-SOW.11)
+  - fonte: SKILL.md, etapa 2, passo 8; `checklist.md` (onde cada premissa crítica aparece; o que não é premissa crítica); PMBOK 6, 11.5, p. 442–443 (PDF 478–479)
+  - sinais: "brecha" | "premissa crítica" | "premissa" | "exclusão" | "folga" | "reserva" | "pergunta de esclarecimento" | tabela origem × destino
   - confere: código
   - dispensa: nunca
 - **PROP-ESTRATEGIA.9** O destino é coerente com a natureza do problema: ambiguidade vira pergunta; obrigação do contratante vira premissa com prazo; incerteza aceita vira folga ou reserva
-  - fonte: PMBOK 6, 11.5, p. 439 e 442–443 (PDF 475 e 478–479); `checklist.md` 1, 3, 4 e 8; SKILL.md, princípio 8
+  - fonte: PMBOK 6, 11.5, p. 439 e 442–443 (PDF 475 e 478–479); `checklist.md` (vago, CTR7; CTR2, CTR3; PC1, PC3 e PC6); SKILL.md, princípio 8
   - sinais: destino ao lado de cada origem, com página da RFP
   - confere: só PMO
   - dispensa: nunca
@@ -71,14 +71,14 @@ Documento interno de decisão, que não vai ao contratante. Lê o edital do lado
 - As abordagens são de fato diferentes (método, alcance, intensidade de campo), e não variações da mesma? (PMBOK 6, p. 150–155)
 - Alguma abordagem promete o que não cabe no preço ou no prazo do edital? (Rework RW-071, erros comuns)
 - O edital é de orçamento fixo ou divulga o valor estimado? A abordagem cabe nele? (PMBOK 6, p. 474, PDF 510)
-- A minuta do contrato tem cláusula que muda a decisão de participar (multa, titularidade dos produtos, prazo de pagamento)? (Rework RW-077, adaptação; checklist 3)
-- Brecha que não tem destino ficou sem tratamento? (checklist, introdução)
+- A minuta do contrato tem cláusula que muda a decisão de participar (multa, titularidade dos produtos, prazo de pagamento)? (Rework RW-077, adaptação; CTR2)
+- Brecha que não tem destino ficou sem tratamento? (`checklist.md`, brecha não é premissa nem risco do projeto)
 
 ## Erros comuns
 - Uma só abordagem apresentada como a única possível (SKILL.md, princípio 1).
 - Estratégia de venda entre empresas aplicada à licitação: âncora, desconto, opções de preço (Rework RW-073 e RW-074, adaptação).
 - Tratar brecha como risco do projeto e mandá-la só para o registro, sem premissa nem pergunta (SKILL.md, princípio 8).
-- Perder o prazo de esclarecimento e ter de assumir uma leitura como premissa (checklist 1; `licitacoes.md` 2.3).
+- Perder o prazo de esclarecimento e ter de assumir uma leitura como premissa (vago, CTR7; PROP-SOW.6; `licitacoes.md` 2.3).
 - Dizer "o prazo é curto" em vez de mostrar a conta ao código (SKILL.md, princípio 6).
 
 ## Quando dispensar a parte inteira
@@ -97,7 +97,7 @@ Linha para a tela: "Estratégia curta, com uma alternativa e a tabela de destino
    | Abordagem | Descrição | Prós | Contras | R atendidos | Riscos | Prazo | Custo |
    Abordagem escolhida: a definir pelo GP.
 3. Riscos que viram proposta:
-   | Origem (brecha ou checklist n) | Doc, p., trecho | Destino | Texto sugerido |
+   | Origem (brecha da etapa 1) | Doc, p., trecho | Destino | Texto sugerido |
    Destinos: premissa/exclusão (PROP-SOW), folga (PROP-EAP), reserva (PROP-PRECO),
    pergunta de esclarecimento até [data do edital]. Quais mandar: decisão do GP.
 ```
@@ -105,4 +105,4 @@ Linha para a tela: "Estratégia curta, com uma alternativa e a tabela de destino
 ## Fontes
 - PMBOK 6: 5.3, p. 150–155 (PDF 186–191); 11.5, p. 439 e 442–443 (PDF 475 e 478–479); 12.1, p. 468, 473–474 e 478–479 (PDF 504, 509–510 e 514–515); 12.2, p. 487 (PDF 523).
 - Rework: RW-071 (https://resources.rework.com/libraries/deal-closing/proposal-development); RW-073 (https://resources.rework.com/libraries/deal-closing/pricing-strategies); RW-074 (https://resources.rework.com/libraries/deal-closing/pricing-negotiation); RW-077 (https://resources.rework.com/libraries/deal-closing/terms-negotiation).
-- `licitacoes.md` 2.2 e 2.3; `checklist.md` (introdução, 1, 3, 4, 8); SKILL.md, etapa 2 e princípios 1, 2, 6 e 8.
+- `licitacoes.md` 2.2 e 2.3; `checklist.md` (onde cada premissa crítica aparece; o que não é premissa crítica; PC1, PC3, PC6); SKILL.md, etapa 2 e princípios 1, 2, 6 e 8.

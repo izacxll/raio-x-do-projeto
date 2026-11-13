@@ -1,192 +1,226 @@
-# Checklist de riscos do PMO
+# Premissas críticas comuns
 
-Versão 0.1.0 (rascunho da fase S).
+Versão 0.2.0 (decisão 0021).
 
-**Origem:** a taxonomia V29 do Raio-X do Plano de Trabalho tem 24 riscos, levantados na pesquisa com a gestão de projetos da FGV Projetos. Aqui ela está reduzida a **12 perguntas, sem perder nenhum risco**; o código V29 de cada um fica entre parênteses. A taxonomia original não muda: este arquivo só a reorganiza para o uso do PMO.
+**O que é uma premissa crítica:** algo que o plano assume que vai acontecer e que, se não acontecer, obriga a refazer escopo, prazo e metas. Não é uma lista de riscos à parte: **cada premissa crítica que se aplica ao projeto tem de estar escrita no próprio plano.**
 
-**Para que serve:** escrever melhor nas etapas 2, 3 e 4 (proposta, TAP e plano). **Não serve para dar nota.** Cada pergunta respondida "não" ou "não dá para saber" vira um destino na peça: uma premissa ou exclusão escrita, uma folga no cronograma, uma reserva no preço, um risco no registro ou uma pergunta de esclarecimento ao contratante.
+**Origem:** a taxonomia V29 do Raio-X do Plano de Trabalho (24 riscos), levantada na pesquisa com a gestão de projetos da FGV Projetos. A maioria daqueles riscos é premissa. Este arquivo é a versão revisada, só para o Raio-X do Projeto; a V29 original não muda. Os códigos V29 ficam entre parênteses para a ligação com a pesquisa. A PC2 é nova e não tem código V29.
 
-**Quando aplicar:** as perguntas 1 a 10 valem para todo projeto. A 11 só vale se o projeto tem trabalho de campo ou território; a 12, só se tem beneficiários. Característica que o projeto não tem não é risco: nesse caso, a pergunta é marcada "não se aplica".
+## Onde cada premissa crítica aparece
 
-**Lembretes que valem para todas as perguntas:**
-- **Fato não é risco:** é preciso o fato **mais** o contexto que o torna consequente.
-- **Regra de ausência:** o documento não registrar algo não prova que não exista. Escreve-se "o documento não declara X", nunca "não há X". Antes de dizer que falta, procura-se no documento inteiro.
-- **Brecha não é risco do projeto:** brecha é o problema que o próprio texto cria (o que está escrito errado, o que ficou em aberto, o que transfere responsabilidade para a FGV). O registro de riscos do PGP trata de condições futuras da execução. A brecha pode **gerar** um risco no registro, mas são coisas diferentes.
-- **Redação condicional** ("sugere-se", "recomenda-se avaliar"), sempre com o trecho e a página que motivam a sugestão.
-
-## As 12 perguntas
-
-| # | Pergunta do PMO | V29 |
+| Etapa | Onde | Item de conteúdo mínimo |
 |---|---|---|
-| 1 | Algum trecho admite mais de uma leitura? | CTR7 |
-| 2 | As premissas têm base, e o texto foi ajustado a este projeto? | CTR1, CP8, CP9 |
-| 3 | O texto transfere responsabilidade para a FGV? | CTR2, CTR3, CTR4 |
-| 4 | Aprovação e pagamento têm critério e prazo? | CTR5 |
-| 5 | O escopo tem limite (exclusões, número de revisões)? | CTR6 |
-| 6 | Cada frente tem responsável e equipe suficiente para o volume? | CP10, CP11 |
-| 7 | A gestão está definida desde o início, inclusive quem decide do lado do cliente? | CP12, CE16 |
-| 8 | O que depende de terceiros tem prazo, compromisso e alternativa? | CP13 |
-| 9 | O prazo absorve contratação atrasada e mudança de contexto político? | CE15, CE17 |
-| 10 | Sigilo, dados pessoais e independência técnica estão tratados? | CP14 |
-| 11 | Só se houver campo: deslocamento, comunicação a distância, atuação local, clima e segurança estão previstos? | TC18, TC19, TC20, TC21, TC22 |
-| 12 | Só se houver beneficiários: adesão e cadastro estão previstos? | TB23, TB24 |
+| 2 — proposta | Premissas do SOW, escritas com a consequência e, quando couber, como obrigação do contratante com prazo | PROP-SOW.11 |
+| 3 — TAP | Premissas de alto nível, com a consequência | TAP-PR.2 |
+| 4 — plano | Registro de premissas, com responsável por validar | B3.9 |
+| 4 — plano | Registro de riscos, com resposta e gatilho | B27.13 |
+| 4 — plano | Plano de mudanças: como reajustar escopo, prazo e metas se ela falhar | A11.12 |
+| 4 — plano | Plano de riscos: como as premissas críticas são tratadas | A8.12 (grave) |
+| 5 — conferência | A premissa crítica que se aplica ao projeto e não está no plano é **ausente** | — |
+
+**Se aplica ao projeto:** o código pré-marca as premissas pelos **sinais de aplicação** na RFP, no TAP e no plano; o GP confirma na tela das características do projeto. Premissa marcada "não se aplica" pelo GP não vira ausente. Na dúvida, a pré-marcação é "se aplica", para o GP decidir. O PMO, nas etapas 2 a 4, faz a mesma pergunta: esta premissa vale para este projeto?
+
+**Lembretes que valem para todas:**
+- **Premissa escrita é verificável:** diz o que se assume, de quem depende, até quando e o que acontece se falhar. "Conta-se com a colaboração do contratante" não é premissa crítica escrita; é vago.
+- **Regra de ausência:** o documento não registrar algo não prova que não exista. Antes de dizer que falta, procura-se no plano inteiro. O que o código não acha fica "não localizado pelo código — conferir no documento".
+- **Redação condicional** ("sugere-se", "recomenda-se avaliar"), sempre com o trecho e a página que motivam a sugestão.
+- **Sem números inventados:** prazos de aprovação, datas de início e volumes que o documento não traz ficam "a definir pelo GP".
+
+## Formato de cada premissa
+
+Cada premissa tem um bloco com campos fixos, lidos pelo código da etapa 5:
+- **assume:** o que o plano assume;
+- **aplica-se:** quando a premissa vale para o projeto;
+- **sinais de aplicação:** termos na RFP, no TAP ou no plano que indicam que ela vale (`|` separa os termos);
+- **sinais no plano:** termos que indicam que o plano a tratou (achar o sinal não prova que está bem tratada, só que existe);
+- **se não se confirmar:** o efeito em escopo, prazo, metas e custo;
+- **onde no plano:** os itens de conteúdo mínimo em que ela tem de aparecer;
+- **confere:** `código` para a presença; `só PMO` para a qualidade.
 
 ---
 
-### 1. Algum trecho admite mais de uma leitura? (CTR7)
+## As 8 premissas críticas
 
-- **O que procurar:** trecho sobre entrega, prazo, formato ou obrigação que pode ser lido de dois jeitos, por exemplo "relatório" sem dizer se é um por etapa ou um consolidado, ou "acompanhamento" sem dizer de quê nem com que frequência. Também a leitura que o plano adotou sem confirmação do contratante.
-- **Sinais no texto:** "entre outros", "quando necessário", "conforme demanda", "a critério", "oportunamente", termos próximos tratados como sinônimos ("nota técnica" × "relatório técnico"), plural sem quantidade.
-- **Etapa 2:** pergunta de esclarecimento antes do prazo; se não houver resposta, a proposta declara a leitura adotada como premissa.
-- **Etapa 3:** a leitura adotada vai para o registro de premissas.
-- **Etapa 4:** critério de aceite que fixe a leitura e um item no registro das questões até a confirmação.
+| Código | Premissa crítica | V29 |
+|---|---|---|
+| PC1 | Dados e informações do cliente ou de outros órgãos chegam no prazo e na qualidade combinados | CTR4, CP13, TB24 |
+| PC2 | Sistemas e ferramentas que não são da FGV funcionam | nova |
+| PC3 | O cliente aprova e decide no prazo, com critério claro e com quem tenha capacidade técnica de avaliar as entregas | CTR1, CTR5, CE16 |
+| PC4 | O projeto começa na data prevista | CE15 |
+| PC5 | As prioridades e os interlocutores do cliente se mantêm | CE17 |
+| PC6 | Parceiros, órgãos e participantes fazem a sua parte | CP13, TB23, TC20 |
+| PC7 | A equipe prevista dá conta do volume | CP10, CP11 |
+| PC8 | O escopo não cresce sem aditivo | CTR6 |
 
-### 2. As premissas têm base, e o texto foi ajustado a este projeto? (CTR1, CP8, CP9)
+### PC1 — Dados e informações do cliente ou de outros órgãos chegam no prazo e na qualidade combinados (CTR4, CP13, TB24)
 
-- **O que procurar:**
-  - **CTR1:** premissa do contratante que pode não se confirmar. O inverso também conta: uma limitação declarada do contratante, como não ter corpo técnico na área, que pesa justamente por ser verdadeira. Por exemplo, quem aprova as entregas sem capacidade para avaliá-las.
-  - **CP8:** trecho, tabela ou número que veio de outro projeto ou fase sem ajuste (nome de outro órgão, outro tipo de contrato, "neste Termo de Referência" dentro de um plano).
-  - **CP9:** premissa do próprio plano sem base, ou método pouco adequado ao objeto.
-- **Sinais no texto:** "pressupõe-se", "considera-se que", "estima-se" sem fonte; termos de outro tipo de contrato (concessão, termo aditivo, PPP, convênio) que só aparecem num lugar; números redondos sem memória de cálculo.
-- **Etapa 2:** premissas escritas e numeradas, cada uma com a base; método justificado pelo objeto.
-- **Etapa 3:** registro de premissas inicial (B3), com a origem de cada premissa.
-- **Etapa 4:** premissas novas das estimativas e dos riscos entram no B3; premissa crítica sem base vira risco no registro (B27).
+- **assume:** bases de dados, documentos, listas de beneficiários, cadastros e informações que o trabalho usa chegam do contratante ou de outro órgão na data e no formato combinados, atualizados e completos.
+- **aplica-se:** quando algum produto ou atividade depende de dado, documento ou cadastro que a FGV não produz.
+- **sinais de aplicação:** "base de dados" | "dados fornecidos" | "a contratante fornecerá" | "disponibilização" | "cadastro" | "lista de beneficiários" | "microdados" | "informações do órgão" | "dados secundários" | "após o recebimento"
+- **sinais no plano:** "prazo para envio dos dados" | "dados até" | "recebimento dos dados" | "qualidade dos dados" | "saneamento" | "data de atualização" | "premissa" junto de "dados"
+- **se não se confirmar:**
+  - **prazo:** o produto que depende do dado atrasa; se o prazo da FGV não for contado do recebimento, o atraso do cliente vira atraso da FGV (CTR4);
+  - **escopo:** cadastro desatualizado exige saneamento que não estava previsto (TB24);
+  - **metas:** amostra, cobertura ou indicador calculado sobre dado incompleto perde validade;
+  - **custo:** horas de coleta ou tratamento extras.
+- **onde no plano:** B3.9, B27.13, A11.12, A8.12; na proposta, PROP-SOW.8 (obrigação do contratante com prazo) e PROP-SOW.11; no TAP, TAP-PR.2.
+- **confere:** código (presença); só PMO (se o prazo e a qualidade estão definidos)
+- **Exemplo de redação:** "Premissa: a base de [dados do contratante] é entregue até [data a definir pelo GP], atualizada há no máximo [prazo a definir pelo GP]. Se não for, os prazos dos produtos [n] passam a contar do recebimento, e o saneamento é tratado como mudança (A11)."
 
-### 3. O texto transfere responsabilidade para a FGV? (CTR2, CTR3, CTR4)
+### PC2 — Sistemas e ferramentas que não são da FGV funcionam (nova)
 
-- **O que procurar:**
-  - **CTR2:** exigência do contrato que cria o risco por si mesma, como vedação de subcontratação com atividade de campo, ou multa sobre um prazo que o plano trata como estimativa.
-  - **CTR3:** atividade de que o método depende (divulgação, mobilização, cessão de espaço, qualidade da lista de beneficiários, articulação) sem responsável em nenhum documento. O agravante é algum documento vedar que a FGV a faça.
-  - **CTR4:** obrigação do cliente ou de terceiro cujo resultado é cobrado da FGV, como um prazo da contratada contado do recebimento de dados que o cliente deve fornecer.
-- **Sinais no texto:** "a contratada deverá garantir", "sob responsabilidade da contratada" em atividade que depende do cliente; "após o recebimento", "a partir da disponibilização" sem prazo para o cliente; "vedada a subcontratação".
-- **Etapa 2:** obrigações do contratante escritas na proposta, com prazo; exclusão explícita do que não é da FGV; pergunta de esclarecimento sobre a cláusula.
-- **Etapa 3:** limites e exclusões no TAP (elemento 4); risco geral (elemento 5).
-- **Etapa 4:** RACI com o contratante; risco no registro com resposta e gatilho; plano de aquisições coerente com a vedação.
+- **assume:** sistema do contratante que a equipe é obrigada a usar, plataforma de terceiro, ambiente de acesso ou ferramenta indicada no edital está disponível, estável e com os acessos liberados a tempo.
+- **aplica-se:** quando o edital, o TR ou o plano obriga o uso de sistema, plataforma ou ferramenta que não é da FGV, ou quando a entrega é registrada num sistema do contratante.
+- **sinais de aplicação:** "sistema do contratante" | "sistema da contratante" | "plataforma" | "por meio do sistema" | "inserção no sistema" | "acesso ao sistema" | "login" | "ambiente" | "ferramenta indicada" | "sistema oficial"
+- **sinais no plano:** "acesso ao sistema" | "indisponibilidade" | "instabilidade" | "credenciais" | "liberação de acesso" | "contingência" junto de "sistema" | "premissa" junto de "sistema"
+- **se não se confirmar:**
+  - **prazo:** atividade parada enquanto o sistema não funciona ou o acesso não sai;
+  - **escopo:** trabalho manual ou registro duplicado para contornar o sistema;
+  - **metas:** registros que não entram no sistema não contam para a meta medida por ele;
+  - **custo:** horas extras de retrabalho e suporte.
+- **onde no plano:** B3.9, B27.13, A11.12, A8.12; na proposta, PROP-SOW.8 (acessos como obrigação do contratante) e PROP-SOW.11; no TAP, TAP-PR.2.
+- **confere:** código (presença); só PMO (se há contingência viável)
+- **Exemplo de redação:** "Premissa: o sistema de gestão do contratante fica disponível e a equipe recebe os acessos até [data a definir pelo GP]. Indisponibilidade de mais de [prazo a definir pelo GP] suspende a contagem dos prazos afetados."
 
-### 4. Aprovação e pagamento têm critério e prazo? (CTR5)
+### PC3 — O cliente aprova e decide no prazo, com critério claro e com quem tenha capacidade técnica de avaliar as entregas (CTR1, CTR5, CE16)
 
-- **O que procurar:**
-  - aceite sem critério, sem prazo ou sem responsável com capacidade de avaliar;
-  - parcela ligada a produto que depende de ato de terceiro;
-  - caixa antes da primeira parcela: quanto do cronograma e do preço fica executado sem pagamento se um evento externo atrasar. Só pesa se esse período for longo (mais de um quarto do cronograma) ou não tiver fim previsível.
-  - **Leia como o plano liga o pagamento:** se a nota é emitida contra a entrega, atraso no aceite não bloqueia o pagamento, a menos que o documento diga o contrário.
-- **Sinais no texto:** "após aprovação" sem prazo; "a critério da contratante"; cronograma de desembolso preso a produtos; ausência de prazo de análise.
-- **Etapa 2:** prazo de análise do cliente na proposta, com aprovação tácita se o edital permitir; critério de aceite por produto; folga no cronograma para as aprovações.
-- **Etapa 3:** requisitos de aprovação e critérios de término (elementos 9 e 10), ligados às cláusulas de aceite.
-- **Etapa 4:** critérios de aceite no plano da qualidade; tempos de aprovação na rede do cronograma.
+- **assume:** o contratante tem instância de decisão definida, analisa cada produto em prazo conhecido, aceita por critério verificável e tem quem avalie tecnicamente as entregas. Inclui a limitação declarada do contratante (como não ter corpo técnico na área), que pesa justamente por ser verdadeira (CTR1).
+- **aplica-se:** sempre que há produto sujeito a aprovação ou decisão do contratante (quase todo projeto). O GP pode marcar "não se aplica" com o motivo.
+- **sinais de aplicação:** "aprovação" | "aceite" | "análise da contratante" | "parecer" | "validação" | "a critério da contratante" | "após aprovação" | "fiscal do contrato" | "gestor do contrato" | "comitê"
+- **sinais no plano:** "prazo de análise" | "prazo para aprovação" | "aprovação tácita" | "critério de aceite" | "instância de decisão" | "quem aprova" | "ponto focal" | "dias úteis para análise"
+- **se não se confirmar:**
+  - **prazo:** a aprovação lenta empurra os produtos seguintes, que dependem do anterior; o caminho crítico estoura (CE16);
+  - **escopo:** critério aberto gera rodadas de revisão sem fim (liga com PC8);
+  - **custo:** parcela presa ao aceite atrasa o caixa; se o período sem pagamento for longo, pesa no custo financeiro (CTR5);
+  - **metas:** produto aprovado por quem não avalia tecnicamente pode ser contestado depois.
+- **onde no plano:** B3.9, B27.13, A11.12, A8.12; na proposta, PROP-SOW.9 e PROP-SOW.11; no TAP, TAP9 (requisitos de aprovação), TAP8 (quem decide) e TAP-PR.2.
+- **confere:** código (presença); só PMO (se o critério é mensurável e o prazo é coerente com o cronograma)
+- **Leia como o plano liga o pagamento:** se a nota é emitida contra a entrega, atraso no aceite não bloqueia o pagamento, a menos que o documento diga o contrário.
+- **Exemplo de redação:** "Premissa: o contratante analisa cada produto em até [prazo a definir pelo GP], pela instância [a definir pelo GP], com o critério de aceite do produto. Atraso na análise desloca os produtos dependentes pelo mesmo número de dias (A11)."
 
-### 5. O escopo tem limite (exclusões, número de revisões)? (CTR6)
+### PC4 — O projeto começa na data prevista (CE15)
 
-- **O que procurar:** escopo aberto com valor fixo ("entre outras", cenários alternativos obrigatórios, apoio sem volume nem prazo), muitos interlocutores, revisões sem limite.
-- **Sinais no texto:** "entre outros", "e demais atividades necessárias", "quantas revisões forem necessárias", falta de lista de exclusões.
-- **Etapa 2:** exclusões explícitas; número de rodadas de revisão por produto; volumes e quantidades declarados.
-- **Etapa 3:** limites no elemento 4 do TAP.
-- **Etapa 4:** especificação do escopo (B17) com exclusões; processo de mudanças (A11) que cubra pedido fora do escopo.
-
-### 6. Cada frente tem responsável e equipe suficiente para o volume? (CP10, CP11)
-
-- **O que procurar:**
-  - **CP10:** frente sem responsável, atribuição, momento de entrada ou rotina de reunião interna.
-  - **CP11:** capacidade declarada × volume, complexidade e território, frente a frente. Casos típicos:
-    - horas iguais todo mês enquanto o trabalho pesado se concentra em poucos meses;
-    - coordenação com poucas horas diante de muitas frentes e interlocutores;
-    - função com duas cargas que crescem por variáveis diferentes, dimensionada por uma só;
-    - expansão por fases sem crescimento da gestão.
-- **Sinais no texto:** quadro de equipe sem horas por atividade; teto por pessoa por dia × quantidade a produzir; regra única citada como justificativa do dimensionamento.
-- **Etapa 2:** horas por perfil e por atividade da EAP; conta equipe × volume mostrada (feita por código).
-- **Etapa 3:** recursos pré-aprovados como Decisão do GP.
-- **Etapa 4:** requisitos de recursos (B26), RACI, calendários dos recursos; o pico de carga conferido contra as horas disponíveis.
-
-### 7. A gestão está definida desde o início, inclusive quem decide do lado do cliente? (CP12, CE16)
-
-- **O que procurar:**
-  - **CP12:** sem metas, fluxos ou instrumentos de gestão no início; frentes paralelas sem momento de integração.
-  - **CE16:** cliente sem instância de decisão definida; tempos internos do cliente (burocracia, colegiados) que o cronograma não considera.
-- **Sinais no texto:** ausência de reunião de abertura e de comitê; "interlocutor a ser indicado"; decisões que dependem de "aprovação superior" sem prazo.
-- **Etapa 2:** governança proposta (comitê, pontos focais, rito de decisão) e os tempos do cliente na rede.
-- **Etapa 3:** patrocinador e partes interessadas-chave (elementos 8 e 12); reunião de abertura.
-- **Etapa 4:** plano de comunicações com reuniões com o cliente **e** reuniões internas, com cadência e responsável; plano de engajamento.
-
-### 8. O que depende de terceiros tem prazo, compromisso e alternativa? (CP13)
-
-- **O que procurar:** entrega, dado, insumo ou apoio sob responsabilidade de quem a FGV não controla, sem prazo nem consequência:
-  - bases de dados de outros órgãos;
-  - fornecedor ou ferramenta única;
-  - "apoio das prefeituras", "parceria em construção", "cessão sem ônus";
-  - condição que o método supõe existir no território (rede de serviços, conectividade).
-- **Sinais no texto:** "com o apoio de", "em articulação com", "mediante disponibilização", "parceiros locais".
-- **Etapa 2:** dependência escrita como premissa, com prazo; alternativa prevista; pergunta de esclarecimento sobre quem garante.
-- **Etapa 3:** premissas e risco geral.
-- **Etapa 4:** risco no registro com gatilho e alternativa; marcos de dependência externa no cronograma.
-
-### 9. O prazo absorve contratação atrasada e mudança de contexto político? (CE15, CE17)
-
-- **O que procurar:**
-  - **CE15:** atraso na contratação absorvido pelas etapas seguintes com o prazo final mantido; prazos contados de marcos diferentes (produtos que contam da etapa anterior e produto final preso a data fixa).
-  - **CE17:** eleição, troca de gestão ou mudança de prioridade no período de execução.
-- **Sinais no texto:** data fixa de entrega com início "a partir da assinatura"; período que cruza o primeiro turno de uma eleição do nível do contratante.
-- **Etapa 2:** cronograma em dias contados da ordem de serviço; premissa sobre a data de início; contingência com gatilho quando a entrega está presa a data que não se move.
-- **Etapa 3:** marcos (elemento 6) coerentes com os prazos da RFP.
-- **Etapa 4:** folgas e caminho crítico mostrados; risco de calendário político no registro, se houver.
+- **assume:** a assinatura, a ordem de serviço ou a reunião de abertura acontece na data que o cronograma usa.
+- **aplica-se:** quando há prazo final fixo, data de entrega presa a evento externo ou marcos contados de datas diferentes. Na dúvida, sempre.
+- **sinais de aplicação:** "a partir da assinatura" | "ordem de serviço" | "data de início" | "vigência" | "prazo de execução" | "até [data]" | data fixa de entrega
+- **sinais no plano:** "data de início" | "contados da ordem de serviço" | "D+" | "dias contados" | "se o início atrasar" | "premissa" junto de "início"
+- **se não se confirmar:**
+  - **prazo:** o atraso é absorvido pelas etapas seguintes quando o prazo final é mantido; produtos contados de marcos diferentes ficam incoerentes;
+  - **escopo:** com prazo final fixo, cabe menos trabalho no tempo que sobra;
+  - **metas:** atividade sazonal (calendário escolar, safra, ano fiscal) pode perder a janela;
+  - **custo:** equipe mobilizada sem poder trabalhar.
+- **onde no plano:** B3.9, B27.13, A11.12, A8.12; cronograma em dias contados do início (B15); na proposta, PROP-SOW.11; no TAP, TAP6 (marcos) e TAP-PR.2.
+- **confere:** código (presença); só PMO (se o reajuste proposto é viável)
 - **Limite do PMO:** o PMO não avalia se o prazo total "é suficiente". O código calcula datas e folgas; o PMO aponta o que depende de datas (marco sem data, prazo contado de evento sem data).
+- **Exemplo de redação:** "Premissa: o projeto começa em [data a definir pelo GP]. Os prazos são contados em dias a partir da ordem de serviço; se o início atrasar, sugere-se reajustar as datas dos produtos ou, com prazo final fixo, renegociar o escopo (A11)."
 
-### 10. Sigilo, dados pessoais e independência técnica estão tratados? (CP14)
+### PC5 — As prioridades e os interlocutores do cliente se mantêm (CE17)
 
-- **O que procurar:** protocolo de confidencialidade e de tratamento de dados pessoais (LGPD) proporcional ao que o projeto trata; independência técnica, como a mesma equipe orientar e depois avaliar os mesmos participantes.
-- **Sinais no texto:** dados de beneficiários, microdados, entrevistas; cláusulas de confidencialidade e LGPD na RFP.
-- **Etapa 2:** como os dados serão tratados, quem acessa, anonimização; separação de equipes quando houver avaliação.
-- **Etapa 4:** plano da qualidade e plano de configuração (controle de versões e acesso); risco no registro.
+- **assume:** a gestão do contratante, as prioridades do programa e os interlocutores que validam o trabalho continuam os mesmos durante a execução.
+- **aplica-se:** quando o período de execução cruza eleição do nível do contratante, fim de mandato, troca de gestão prevista ou reestruturação anunciada; ou quando o contratante é público e o projeto dura mais de um ano. O GP confirma.
+- **sinais de aplicação:** "eleição" | "transição de governo" | "nova gestão" | "mandato" | "período eleitoral" | "reestruturação" | vigência que cruza outubro de ano eleitoral
+- **sinais no plano:** "período eleitoral" | "transição" | "troca de interlocutores" | "nova gestão" | "revalidação" | "premissa" junto de "gestão"
+- **se não se confirmar:**
+  - **escopo:** a nova gestão muda prioridades e pede outro produto;
+  - **prazo:** decisões param no período eleitoral ou de transição;
+  - **metas:** indicadores pensados para o programa anterior perdem sentido;
+  - **custo:** retrabalho de produtos já aprovados.
+- **onde no plano:** B3.9, B27.13, A11.12, A8.12; plano de engajamento (A10) com a revalidação dos interlocutores; na proposta, PROP-SOW.11; no TAP, TAP-PR.2.
+- **confere:** código (presença); só PMO (se há marco de revalidação)
+- **Exemplo de redação:** "Premissa: os interlocutores e as prioridades do contratante se mantêm até [marco a definir pelo GP]. Se houver troca de gestão, sugere-se uma reunião de revalidação do escopo e das metas antes do produto seguinte (A11)."
 
-### 11. Só se houver campo: deslocamento, comunicação a distância, atuação local, clima e segurança estão previstos? (TC18–TC22)
+### PC6 — Parceiros, órgãos e participantes fazem a sua parte (CP13, TB23, TC20)
 
-**Aplica-se só se** o projeto executa em locais físicos distribuídos ou tem atividade de campo. Senão, "não se aplica".
+- **assume:** outros órgãos, prefeituras, parceiros locais, organizações do território e participantes cumprem o que o método supõe: adesão, mobilização, cessão de espaço, apoio local, resposta a convites, presença nas atividades. Inclui quem já atua no território e pode ler o projeto como concorrência (TC20).
+- **aplica-se:** quando o resultado depende de quem não é a FGV nem o contratante: adesão de participantes, apoio de outros órgãos ou de parceiros locais.
+- **sinais de aplicação:** "com o apoio de" | "em articulação com" | "parceiros locais" | "prefeituras" | "adesão" | "mobilização" | "participantes" | "beneficiários" | "cessão" | "sem ônus" | "rede de serviços" | "território"
+- **sinais no plano:** "quem mobiliza" | "estratégia de mobilização" | "taxa de adesão" | "termo de compromisso" | "carta de apoio" | "alternativa" | "meta condicionada" | "premissa" junto de "adesão" ou "parceiro"
+- **se não se confirmar:**
+  - **metas:** a meta de participação ou de cobertura não é atingida;
+  - **prazo:** atividades esperam a adesão ou o apoio;
+  - **escopo:** a FGV assume mobilização que não estava no escopo;
+  - **custo:** mais deslocamento, mais rodadas de convite.
+- **Atenção à causa mal atribuída:** atribuir baixa adesão à "desconfiança das famílias" quando ninguém tem a obrigação de divulgar o programa. A causa estrutural (quem mobiliza) é o que vai para o plano.
+- **onde no plano:** B3.9, B27.13, A11.12, A8.12; partes interessadas (B31) e engajamento (A10); atividades de mobilização na EAP; na proposta, PROP-SOW.8 (o que cabe ao contratante) e PROP-SOW.11; no TAP, TAP8 e TAP-PR.2.
+- **confere:** código (presença); só PMO (se a meta está condicionada e a mobilização tem responsável)
+- **Exemplo de redação:** "Premissa: [órgão parceiro] apoia [atividade] e os participantes aderem na proporção de [a definir pelo GP]. A meta de [indicador] fica condicionada a essa adesão; abaixo de [limite a definir pelo GP], sugere-se rever a meta ou a estratégia de mobilização (A11)."
 
-- **TC18 território e deslocamento:** distância, dispersão e tempo de viagem contra a rotina, as metas e a equipe.
-- **TC19 comunicação longa ou a distância:** intermediários demais entre quem coordena e quem executa; equipe longe da coordenação sem encontro presencial.
-- **TC20 resistência de quem já atua no território:** estruturas locais que podem ler o projeto como concorrência; como o projeto se apresenta e se articula.
-- **TC21 adversidade climática:** atividade que depende do clima; folga e critério para adiar ou cancelar.
-- **TC22 acidente ou violência:** exposição da equipe ou do público a dano físico; protocolo de segurança e de resposta a incidentes.
-- **Etapa 2:** despesas de campo e logística no preço (por território); tempos de deslocamento nas durações; exclusões e premissas de segurança.
-- **Etapa 4:** plano de comunicações com a ponta; riscos de campo no registro; calendário com sazonalidade.
+### PC7 — A equipe prevista dá conta do volume (CP10, CP11)
 
-### 12. Só se houver beneficiários: adesão e cadastro estão previstos? (TB23, TB24)
+- **assume:** a equipe dimensionada, com as horas e os perfis previstos, dá conta do volume, da complexidade e do território de cada frente, e cada frente tem responsável.
+- **aplica-se:** sempre (todo projeto tem equipe dimensionada para um volume).
+- **sinais de aplicação:** "equipe" | "horas" | "dedicação" | "perfil" | "coordenador" | "quantidade" | "volume" | "metas" | "frentes"
+- **sinais no plano:** "horas por atividade" | "dimensionamento" | "pico" | "capacidade" | "responsável pela frente" | "se o volume exceder" | "premissa" junto de "equipe" ou "volume"
+- **se não se confirmar:**
+  - **prazo:** atraso concentrado nos meses de pico (horas iguais todo mês e trabalho pesado em poucos meses);
+  - **metas:** volume prometido não é entregue com a qualidade combinada;
+  - **custo:** horas extras ou reforço de equipe sem previsão;
+  - **escopo:** frente sem responsável fica para trás (CP10).
+- **onde no plano:** B3.9, B27.13, A11.12, A8.12; requisitos de recursos (B26), designações (B18), RACI; na proposta, PROP-SOW.11 e o quadro de equipe; no TAP, TAP-PR.2.
+- **confere:** código (presença); a conta equipe × volume é do código; só PMO (se o dimensionamento cobre cada frente)
+- **Exemplo de redação:** "Premissa: a equipe de [perfis] com [horas a definir pelo GP] atende ao volume de [quantidade do TR]. Se o volume exceder [limite a definir pelo GP], sugere-se tratar como mudança de escopo ou reforço de equipe (A11)."
 
-**Aplica-se só se** o resultado depende de beneficiários, usuários ou participantes. Senão, "não se aplica".
+### PC8 — O escopo não cresce sem aditivo (CTR6)
 
-- **TB23 resultado depende da participação de terceiros:** adesão voluntária pressuposta, sem mecanismo de mobilização nem responsável. Atenção à **causa mal atribuída**: atribuir baixa adesão a "desconfiança das famílias" quando ninguém tem a obrigação de divulgar o programa.
-- **TB24 cadastro desatualizado:** lista de beneficiários vinda de fora, sem data de atualização nem tempo previsto para corrigi-la.
-- **Etapa 2:** quem mobiliza e com que meios; meta condicionada à adesão escrita como premissa; tempo de saneamento do cadastro.
-- **Etapa 4:** risco no registro com a causa estrutural; atividades de mobilização na EAP.
+- **assume:** o escopo fica no que o contrato diz: revisões limitadas por produto, demandas extras tratadas como mudança e, no contrato público, como aditivo.
+- **aplica-se:** sempre que há preço fixo ou produtos sujeitos a revisão (quase todo projeto). O GP pode marcar "não se aplica" com o motivo.
+- **sinais de aplicação:** "entre outros" | "e demais atividades necessárias" | "quantas revisões forem necessárias" | "apoio" | "sempre que solicitado" | "a critério da contratante" | "preço global" | "valor fixo"
+- **sinais no plano:** "rodadas de revisão" | "limite de revisões" | "fora do escopo" | "exclusões" | "termo aditivo" | "solicitação de mudança" | "premissa" junto de "escopo"
+- **se não se confirmar:**
+  - **escopo e custo:** trabalho a mais pelo mesmo preço;
+  - **prazo:** revisões sem limite seguram a aprovação e o produto seguinte;
+  - **metas:** esforço desviado para demandas fora do objeto.
+- **onde no plano:** B3.9, B27.13, A11.12, A8.12; especificação do escopo com exclusões (B17); na proposta, PROP-SOW.4, PROP-SOW.5 e PROP-SOW.11; no TAP, TAP4 (limites) e TAP-PR.2.
+- **confere:** código (presença); só PMO (se o limite é claro)
+- **Exemplo de redação:** "Premissa: cada produto tem até [número a definir pelo GP] rodadas de revisão. Pedido além disso, ou produto novo, é tratado como solicitação de mudança e, se alterar o contrato, como termo aditivo (A11)."
 
 ---
+
+## O que não é premissa crítica
+
+| V29 | Tratamento |
+|---|---|
+| CTR7 — trecho com mais de uma leitura | Problema do próprio texto: **vago** (etapa 5). Na etapa 1, pergunta de esclarecimento; na proposta, a leitura adotada vira premissa comum (PROP-SOW.6) |
+| CP9 — premissa do plano sem base | Problema do texto: **vago** |
+| CP8 — texto reaproveitado de outro projeto | Problema do texto: **conflituoso** |
+| CTR2 — exigência do contrato que cria o risco | Etapa 1, como pergunta de esclarecimento; proposta, como exclusão ou obrigação do contratante |
+| CTR3 — atividade sem responsável | Etapa 1, como pergunta de esclarecimento; proposta, como exclusão ou obrigação do contratante (PROP-SOW.5 e PROP-SOW.8) |
+| CP12 — gestão não definida desde o início | Conteúdo mínimo do plano de comunicações: A7.8 (reuniões com o cliente) e A7.9 (reuniões internas) |
+| CP14 — sigilo, dados pessoais e independência técnica | Conteúdo mínimo: A12.8, A7.5, A9.10 e PROP-METODOLOGIA.9 |
+| TC18, TC19, TC21, TC22 | Saem desta versão |
+| TC20, TB23, TB24 | Absorvidos em PC6 (TC20, TB23) e PC1 (TB24) |
+
+**Brecha não é premissa nem risco do projeto:** brecha é o problema que o próprio texto cria. Uma brecha pode **gerar** uma premissa crítica (o TR não dá prazo de aprovação → PC3 escrita na proposta), mas a brecha em si se resolve com esclarecimento, exclusão ou correção do texto.
 
 ## Cobertura dos 24 riscos da V29
 
-| Código | Risco | Pergunta |
+| Código | Risco | Destino nesta versão |
 |---|---|---|
-| CTR1 | Premissa do contratante que não se confirma | 2 |
-| CTR2 | Exigência do contrato que cria o risco | 3 |
-| CTR3 | Atividade sem responsável | 3 |
-| CTR4 | Obrigação do cliente cobrada da contratada | 3 |
-| CTR5 | Aprovação e pagamento sem regras claras | 4 |
-| CTR6 | Escopo que cresce sem limite | 5 |
-| CTR7 | Trecho com mais de uma leitura | 1 |
-| CP8 | Texto reaproveitado sem ajuste | 2 |
-| CP9 | Premissa do plano sem base | 2 |
-| CP10 | Equipe sem responsáveis e atribuições claras | 6 |
-| CP11 | Equipe insuficiente para o volume | 6 |
-| CP12 | Gestão não definida desde o início | 7 |
-| CP13 | Dependência de terceiros | 8 |
-| CP14 | Sigilo e independência técnica | 10 |
-| CE15 | Contratação atrasada e cronograma comprimido | 9 |
-| CE16 | Decisão do cliente lenta ou sem responsável | 7 |
-| CE17 | Mudança de prioridades pelo contexto político | 9 |
-| TC18 | Território e deslocamento | 11 |
-| TC19 | Comunicação longa ou a distância | 11 |
-| TC20 | Resistência de quem já atua no território | 11 |
-| TC21 | Adversidade climática | 11 |
-| TC22 | Acidente ou violência com a equipe ou o público | 11 |
-| TB23 | Resultado depende da participação de terceiros | 12 |
-| TB24 | Cadastro de beneficiários desatualizado | 12 |
+| CTR1 | Premissa do contratante que não se confirma | PC3 |
+| CTR2 | Exigência do contrato que cria o risco | Etapa 1 e proposta |
+| CTR3 | Atividade sem responsável | Etapa 1 e proposta |
+| CTR4 | Obrigação do cliente cobrada da contratada | PC1 |
+| CTR5 | Aprovação e pagamento sem regras claras | PC3 |
+| CTR6 | Escopo que cresce sem limite | PC8 |
+| CTR7 | Trecho com mais de uma leitura | Vago |
+| CP8 | Texto reaproveitado sem ajuste | Conflituoso |
+| CP9 | Premissa do plano sem base | Vago |
+| CP10 | Equipe sem responsáveis e atribuições claras | PC7 |
+| CP11 | Equipe insuficiente para o volume | PC7 |
+| CP12 | Gestão não definida desde o início | A7.8, A7.9 |
+| CP13 | Dependência de terceiros | PC1 (dados), PC6 (apoio e adesão) |
+| CP14 | Sigilo e independência técnica | A12.8, A7.5, A9.10, PROP-METODOLOGIA.9 |
+| CE15 | Contratação atrasada e cronograma comprimido | PC4 |
+| CE16 | Decisão do cliente lenta ou sem responsável | PC3 |
+| CE17 | Mudança de prioridades pelo contexto político | PC5 |
+| TC18 | Território e deslocamento | Sai |
+| TC19 | Comunicação longa ou a distância | Sai |
+| TC20 | Resistência de quem já atua no território | PC6 |
+| TC21 | Adversidade climática | Sai |
+| TC22 | Acidente ou violência com a equipe ou o público | Sai |
+| TB23 | Resultado depende da participação de terceiros | PC6 |
+| TB24 | Cadastro de beneficiários desatualizado | PC1 |
 
-Os 24 riscos estão cobertos, cada um numa pergunta só.
+## Correspondência com as 12 perguntas da versão 0.1.0
+
+Para quem conhece a versão anterior: pergunta 1 → vago (CTR7); 2 → PC3 (CTR1), conflituoso (CP8), vago (CP9); 3 → etapa 1 e proposta (CTR2, CTR3), PC1 (CTR4); 4 → PC3; 5 → PC8; 6 → PC7; 7 → A7.8 e A7.9 (CP12), PC3 (CE16); 8 → PC1 e PC6; 9 → PC4 e PC5; 10 → A12.8 e afins (CP14); 11 → sai, salvo TC20 → PC6; 12 → PC6 e PC1.

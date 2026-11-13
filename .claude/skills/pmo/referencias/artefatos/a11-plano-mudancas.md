@@ -6,7 +6,7 @@ etapas: [4, 5]
 gravidade: grave
 categoria: trabalho do projeto
 sinonimos: ["plano de mudanças", "plano de gerenciamento das mudanças", "controle de mudanças", "plano de controle de mudanças", "gestão de mudanças", "controle de alterações", "gestão de alterações"]
-versao: 0.1.0
+versao: 0.2.0
 ---
 
 # A11 — Plano de gerenciamento de mudanças
@@ -70,11 +70,16 @@ Diz como as solicitações de mudança serão autorizadas e incorporadas ao proj
   - sinais: "backlog" | "repriorização" | "dono do produto" | "representante do contratante"
   - confere: só PMO
   - dispensa: abordagem preditiva
+- **A11.12** Como reajustar escopo, prazo e metas se uma premissa crítica falhar: quem identifica, quem decide e qual o caminho (mudança interna, ajuste com o contratante, termo aditivo)
+  - fonte: decisão 0021; `checklist.md` (PC1 a PC8, campo "se não se confirmar"); PMBOK 6, 4.6, p. 113–120 (PDF 149–156) (controle integrado de mudanças)
+  - sinais: "se a premissa" | "premissa não se confirmar" | "falha de premissa" | "reajuste do cronograma" | "revisão das metas" | "reequilíbrio"
+  - confere: código
+  - dispensa: nunca
 
 ## Perguntas de qualidade
-- O plano dá ao pedido fora do escopo (rodada extra de revisão, produto novo pedido em oficina) um caminho escrito com resposta de impacto? (checklist 5)
-- Quem decide do lado do contratante está nomeado por papel, com prazo? Sem instância de decisão, a mudança simples para (checklist 7; experiencia.md §1).
-- O que depende de terceiro (dado de outro órgão que mudou) também entra como pedido de mudança? (checklist 8)
+- O plano dá ao pedido fora do escopo (rodada extra de revisão, produto novo pedido em oficina) um caminho escrito com resposta de impacto? (PC8)
+- Quem decide do lado do contratante está nomeado por papel, com prazo? Sem instância de decisão, a mudança simples para (PC3; experiencia.md §1).
+- O que depende de terceiro (dado de outro órgão que mudou) também entra como pedido de mudança? (PC1)
 - Existe rito de urgência, com aprovação provisória e formulário preenchido depois? (Rework RW-028)
 - O nível de controle é proporcional ao porte, ao contrato e ao contexto? (PMBOK 6, p. 115, PDF 151)
 
@@ -109,4 +114,4 @@ Linha para a tela: "Mudanças numa seção curta, com aprovador único e caminho
 - PMBOK 6: 4.2, p. 83 e 88 (PDF 119 e 124); 4.6, p. 113–120 (PDF 149–156); X1.5, p. 642 (PDF 678); X3.3.4, p. 671 (PDF 707); glossário, p. 719 (PDF 755).
 - PMBOK 7: Padrão 3.12, p. 58–59 (PDF 85–86); Guia 2.5.7, p. 76–77 (PDF 171–172); glossário, p. 239 e 244 (PDF 334 e 339).
 - Rework: RW-028 (https://resources.rework.com/libraries/project-management/change-control-process); RW-032 (https://resources.rework.com/libraries/project-management/integrated-change-control).
-- `licitacoes.md` 2.7; `checklist.md` (5, 7, 8); `experiencia.md` §1; `pmbok7.md` seção 3.
+- `licitacoes.md` 2.7; `checklist.md` (PC1 a PC8); `experiencia.md` §1; `pmbok7.md` seção 3.

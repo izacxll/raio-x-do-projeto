@@ -6,7 +6,7 @@ etapas: [2, 4, 5]
 gravidade: média
 categoria: escopo
 sinonimos: ["baseline do escopo", "escopo aprovado", "EAP", "estrutura analítica do projeto", "WBS", "dicionário da EAP"]
-versao: 0.1.0
+versao: 0.2.0
 ---
 
 # A13 — Linha de base do escopo
@@ -69,7 +69,7 @@ versao: 0.1.0
 ## Perguntas de qualidade
 - Cada produto do TR está na EAP com o mesmo nome e número, para medição e pagamento por produto baterem com o cronograma físico-financeiro? (Rework RW-053, observação do leitor)
 - Somando os filhos chega-se ao pai, sem lacuna nem sobreposição? O que ficou fora da EAP está como exclusão no B17? (PMBOK 6, p. 161; Rework RW-053)
-- O que depende do contratante (dados, aprovações, mobilização) aparece como pacote ou marco, ou some da EAP? (checklist 3 e 8)
+- O que depende do contratante (dados, aprovações, mobilização) aparece como pacote ou marco, ou some da EAP? (PC1, PC3 e PC6)
 - Versão preliminar, versão revisada e versão final aceita aparecem no dicionário ou como marcos? (Rework RW-038, observação do leitor)
 - A decomposição é proporcional: nem tarefas no último nível, nem produto de meses sem pacote? (PMBOK 6, p. 160; Rework RW-038)
 - Se há subcontratação, a parte do terceiro tem pacote próprio? (PMBOK 6, p. 159, PDF 195)
@@ -107,4 +107,4 @@ Pacote distante: pacote de planejamento, a detalhar até [data ou marco a defini
 - PMBOK 6: 5.4, p. 157–162 (PDF 193–198); 4.2, p. 83 (PDF 119); p. 131 (PDF 167); Parte 2, p. 570 (PDF 606); glossário, p. 702, 703 e 715 (PDF 738, 739 e 751).
 - PMBOK 7: 2.6, p. 85 (PDF 180); EAP, p. 187 (PDF 282); linha de base do escopo, p. 188 (PDF 283).
 - Rework: RW-029, RW-036, RW-038, RW-053 (links nos itens).
-- `checklist.md` (3, 8); `pmbok6.md`, seção 8.
+- `checklist.md` (PC1, PC3, PC6); `pmbok6.md`, seção 8.

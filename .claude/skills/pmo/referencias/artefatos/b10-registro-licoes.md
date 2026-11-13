@@ -6,7 +6,7 @@ etapas: [4, 5]
 gravidade: baixa
 categoria: trabalho do projeto
 sinonimos: ["registro de lições aprendidas", "lições aprendidas", "registro das lições", "banco de lições aprendidas", "base de lições aprendidas"]
-versao: 0.1.0
+versao: 0.2.0
 ---
 
 # B10 — Registro das lições aprendidas
@@ -68,8 +68,8 @@ Registra o conhecimento adquirido no projeto, usado nele mesmo e, no fim, lança
 
 ## Perguntas de qualidade
 - As recomendações são acionáveis ("incluir os decisores na lista do relatório") e não genéricas ("melhorar a comunicação")? (Rework RW-023)
-- O registro guarda o que serve à próxima proposta: prazo real de análise do órgão, tempo de campo, adesão? (Rework RW-023, observação do leitor; checklist 4, 9, 11 e 12)
-- As lições de projetos anteriores viraram riscos no B27 ou premissas no B3? (Rework RW-023; checklist 2)
+- O registro guarda o que serve à próxima proposta: prazo real de análise do órgão, tempo de campo, adesão? (Rework RW-023, observação do leitor; PC3, PC4, PC5 e PC6)
+- As lições de projetos anteriores viraram riscos no B27 ou premissas no B3? (Rework RW-023; PC1 a PC8)
 - A versão final cobre benefícios, exatidão do business case, ciclo de vida, riscos e partes interessadas? (PMBOK 6, p. 127, PDF 163)
 - A retrospectiva da equipe é interna e separada das reuniões de validação com o contratante? (Rework RW-069, observação do leitor)
 
@@ -86,7 +86,7 @@ Não se dispensa: o PMBOK o cria no início e o usa em quase todos os processos 
 Linha para a tela: "Lições numa tabela curta, revista a cada produto: porte pequeno (PMBOK 6, p. 104)."
 
 ## Ligações
-- **Vem de:** 4.4 (nasce aqui); repositório da organização (APO, PMBOK 6, p. 84, PDF 120); retrospectivas; padrões do B5 e do B9; checklist.
+- **Vem de:** 4.4 (nasce aqui); repositório da organização (APO, PMBOK 6, p. 84, PDF 120); retrospectivas; padrões do B5 e do B9; premissas críticas (PC1 a PC8).
 - **Vai para:** quase todos os processos depois da iniciação (P 5.2, 6.4, 6.5, 7.2, 11.2, 11.5; E 4.3; M 4.5; F 4.7; pmbok6.md, tabela); B27 e B3 do próximo projeto; repositório da organização no encerramento (p. 128, PDF 164); próxima proposta (etapa 2).
 
 ## Modelo de redação
@@ -101,4 +101,4 @@ Destino: repositório da organização no encerramento.
 - PMBOK 6: 4.2, p. 84 (PDF 120); 4.3, p. 97 (PDF 133); 4.4, p. 100–104 (PDF 136–140); 4.7, p. 127–128 (PDF 163–164); glossário, p. 721 (PDF 757).
 - PMBOK 7: 2.5.8, p. 77–78 (PDF 172–173); Guia 3.4, p. 144 (PDF 239); Guia 4.6, p. 185 (PDF 280).
 - Rework: RW-023, RW-069 e RW-106 (links nos itens); RW-026 (link nos erros).
-- `checklist.md` (2, 4, 9, 11, 12); decisão 0007.
+- `checklist.md` (PC1 a PC8); decisão 0007.

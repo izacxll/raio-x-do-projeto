@@ -6,7 +6,7 @@ etapas: [4, 5]
 gravidade: baixa
 categoria: tempo
 sinonimos: ["atributos das atividades", "atributos da atividade", "dicionário das atividades", "ficha das atividades", "detalhamento das atividades", "planilha de atividades"]
-versao: 0.1.0
+versao: 0.2.0
 ---
 
 # B1 — Atributos das atividades
@@ -56,7 +56,7 @@ Amplia a descrição de cada atividade da lista (B2) com os dados que o cronogra
   - confere: código
   - dispensa: porte pequeno
 - **B1.9** Local de execução e calendário designado, quando há trabalho em campo ou regimes de trabalho diferentes
-  - fonte: PMBOK 6, 6.2.3.2, p. 186 (PDF 222); 6.5, p. 220 (PDF 256); checklist 11
+  - fonte: PMBOK 6, 6.2.3.2, p. 186 (PDF 222); 6.5, p. 220 (PDF 256)
   - sinais: "local" | "município" | "território" | "campo" | "calendário" | "turno"
   - confere: código
   - dispensa: sem campo
@@ -73,15 +73,15 @@ Amplia a descrição de cada atividade da lista (B2) com os dados que o cronogra
 
 ## Perguntas de qualidade
 - Toda dependência arbitrada tem motivo escrito? Ela cria folga arbitrária e precisa ser revista se houver paralelismo (PMBOK 6, p. 191, PDF 227).
-- As atividades que dependem do contratante estão marcadas como externas e ligadas a uma premissa com prazo? (checklist 8; Rework RW-027, observação do leitor)
-- As datas impostas batem com os prazos da RFP e os marcos do TAP? O conflito aparece como folga negativa no cálculo do código (checklist 9).
-- Se há campo: o local e o calendário de cada atividade refletem deslocamento e sazonalidade? (checklist 11)
+- As atividades que dependem do contratante estão marcadas como externas e ligadas a uma premissa com prazo? (PC1; Rework RW-027, observação do leitor)
+- As datas impostas batem com os prazos da RFP e os marcos do TAP? O conflito aparece como folga negativa no cálculo do código (PC4).
+- Se há campo: o local e o calendário de cada atividade refletem deslocamento e sazonalidade?
 - O responsável é um papel único por atividade, e não "equipe"? (Rework RW-038)
 
 ## Erros comuns
 - Usar dependência para representar falta de recurso; isso se resolve no nivelamento (Rework RW-027).
 - Pôr TI em tudo quando II ou TT descreve melhor o trabalho, alongando o cronograma (Rework RW-027).
-- Embutir espera na duração (por exemplo, prazo de análise somado à redação); a análise do contratante é atividade própria (PMBOK 6, p. 203, PDF 239; checklist 4).
+- Embutir espera na duração (por exemplo, prazo de análise somado à redação); a análise do contratante é atividade própria (PMBOK 6, p. 203, PDF 239; PC3).
 - Premissa só na cabeça de quem montou o cronograma (PMBOK 6, p. 197, PDF 233).
 
 ## Quando dispensar a parte inteira
@@ -107,4 +107,4 @@ Datas impostas: [cláusula da RFP, página].
 - PMBOK 6: 6.2.3.2, p. 186 (PDF 222); 6.3, p. 189–193 (PDF 225–229); 6.4, p. 196–197, 203–204 (PDF 232–233, 239–240); 6.5, p. 207, 210, 220–221 (PDF 243, 246, 256–257); p. 175 (PDF 211); glossário, p. 700 (PDF 736).
 - PMBOK 7: 2.4.2.3, p. 62 (PDF 157).
 - Rework: RW-027, RW-038 (links nos itens).
-- `checklist.md` (4, 8, 9, 11); `experiencia.md` §2.
+- `checklist.md` (PC1, PC3, PC4); `experiencia.md` §2.

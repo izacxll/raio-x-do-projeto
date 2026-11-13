@@ -6,7 +6,7 @@ etapas: [2, 4, 5]
 gravidade: baixa
 categoria: tempo
 sinonimos: ["lista de atividades", "relação de atividades", "atividades do projeto", "plano de atividades", "descrição das atividades", "atividades por produto", "detalhamento das atividades"]
-versao: 0.1.0
+versao: 0.2.0
 ---
 
 # B2 — Lista de atividades
@@ -36,12 +36,12 @@ Relaciona as atividades do cronograma que produzem as entregas, cada uma com ide
   - confere: código
   - dispensa: nunca
 - **B2.5** Análise e aprovação do contratante e dependências externas listadas como atividades
-  - fonte: PMBOK 6, 6.3, p. 191–192 (PDF 227–228); checklist 4 e 8; Rework RW-051 (https://resources.rework.com/libraries/project-management/what-is-a-pert-chart) (passo 1, revisões e aprovações) e RW-027 (https://resources.rework.com/libraries/project-management/task-dependencies)
+  - fonte: PMBOK 6, 6.3, p. 191–192 (PDF 227–228); `checklist.md` (PC1, PC3, PC6); Rework RW-051 (https://resources.rework.com/libraries/project-management/what-is-a-pert-chart) (passo 1, revisões e aprovações) e RW-027 (https://resources.rework.com/libraries/project-management/task-dependencies)
   - sinais: "análise do contratante" | "aprovação" | "validação" | "recebimento dos dados" | "autorização"
   - confere: código
   - dispensa: nunca
 - **B2.6** Deslocamento, mobilização e logística de campo como atividades (ou parte explícita delas)
-  - fonte: checklist 11; experiencia.md §5; PMBOK 6, 6.2.3.2, p. 186 (PDF 222) (local do trabalho)
+  - fonte: experiencia.md §5; PMBOK 6, 6.2.3.2, p. 186 (PDF 222) (local do trabalho)
   - sinais: "deslocamento" | "viagem" | "mobilização" | "logística" | "visita de campo" | "trabalho de campo"
   - confere: código
   - dispensa: sem campo
@@ -68,14 +68,14 @@ Relaciona as atividades do cronograma que produzem as entregas, cada uma com ide
 
 ## Perguntas de qualidade
 - Algum produto do contrato ficou sem atividade que o produza, revise e entregue? (regra dos 100%, PMBOK 6, p. 161, PDF 197)
-- Cada produto tem a sequência completa: elaborar, revisar internamente, entregar, análise do contratante, ajustes, aceite? (checklist 4 e 5)
-- O que depende de terceiros (dados, agendas, pareceres) aparece como atividade com dono do outro lado? (checklist 8)
-- Se há campo: o deslocamento está listado, ou o tempo de viagem sumiu? (checklist 11; experiencia.md §5)
+- Cada produto tem a sequência completa: elaborar, revisar internamente, entregar, análise do contratante, ajustes, aceite? (PC3 e PC8)
+- O que depende de terceiros (dados, agendas, pareceres) aparece como atividade com dono do outro lado? (PC1 e PC6)
+- Se há campo: o deslocamento está listado, ou o tempo de viagem sumiu? (experiencia.md §5)
 - A lista inclui as reuniões internas e de integração entre frentes? (experiencia.md §8)
 
 ## Erros comuns
 - Listar entregas em vez de atividades; ou descer até tarefas individuais, inflando o cronograma (Rework RW-038 e RW-053).
-- Lista copiada de outro projeto sem ajuste ao objeto (checklist 2; o PMBOK 6 cita listas de projetos anteriores como insumo da decomposição, p. 184, PDF 220, não como substituto dela).
+- Lista copiada de outro projeto sem ajuste ao objeto (conflituoso, CP8; o PMBOK 6 cita listas de projetos anteriores como insumo da decomposição, p. 184, PDF 220, não como substituto dela).
 - Aprovação do cliente fora da lista; o cronograma estoura nas aprovações (experiencia.md §1).
 - Trabalho novo descoberto depois da linha de base incluído sem solicitação de mudança (PMBOK 6, p. 186, PDF 222).
 
@@ -106,4 +106,4 @@ Gerenciamento: abertura, reuniões, relatórios [cadência a definir pelo GP].
 - PMBOK 6: 5.4, p. 161 (PDF 197); 6.2, p. 184–186 (PDF 220–222); 6.3, p. 191–192 (PDF 227–228); 6.4, p. 202 (PDF 238); Fig. 6-2, p. 176 (PDF 212); Fig. 6-21, p. 219 (PDF 255); 11.5, p. 447–448 (PDF 483–484); p. 175 (PDF 211); glossário, p. 715 (PDF 751).
 - PMBOK 7: artefatos, p. 192 (PDF 287).
 - Rework: RW-027, RW-037, RW-038, RW-051, RW-053 (links nos itens).
-- `checklist.md` (2, 4, 5, 8, 11); `experiencia.md` §1, §5 e §8.
+- `checklist.md` (PC1, PC3, PC6, PC8; conflituoso, CP8); `experiencia.md` §1, §5 e §8.

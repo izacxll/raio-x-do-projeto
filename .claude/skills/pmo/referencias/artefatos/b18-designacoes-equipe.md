@@ -6,7 +6,7 @@ etapas: [2, 4, 5]
 gravidade: baixa
 categoria: equipe
 sinonimos: ["designações da equipe", "designação da equipe", "equipe do projeto", "composição da equipe", "matriz RACI", "matriz de responsabilidades", "diretório da equipe", "quadro de equipe", "equipe técnica"]
-versao: 0.1.0
+versao: 0.2.0
 ---
 
 # B18 — Designações da equipe do projeto
@@ -31,7 +31,7 @@ Registra quem está na equipe, com que papel e com que responsabilidades, e pode
   - confere: código
   - dispensa: nunca
 - **B18.4** Um responsável principal por produto ou pacote de trabalho
-  - fonte: PMBOK 6, 9.1.2.2, p. 316 (PDF 352); `checklist.md` 6 (CP10)
+  - fonte: PMBOK 6, 9.1.2.2, p. 316 (PDF 352); `checklist.md` PC7 (CP10)
   - sinais: coluna "responsável" | "R" único por linha | "coordenador da frente"
   - confere: código
   - dispensa: nunca
@@ -41,12 +41,12 @@ Registra quem está na equipe, com que papel e com que responsabilidades, e pode
   - confere: código
   - dispensa: porte pequeno
 - **B18.6** Contratante na matriz: gestor ou fiscal do contrato como "A" ou "C" no aceite de cada produto
-  - fonte: PMBOK 6, 9.1.2.2, p. 317 (PDF 353) (equipes com recursos internos e externos); Rework RW-049 e RW-059 (adaptação do leitor); `checklist.md` 7 (CE16)
+  - fonte: PMBOK 6, 9.1.2.2, p. 317 (PDF 353) (equipes com recursos internos e externos); Rework RW-049 e RW-059 (adaptação do leitor); `checklist.md` PC3 (CE16)
   - sinais: coluna "contratante" | "gestor do contrato" | "fiscal" | "ponto focal"
   - confere: código
   - dispensa: nunca
 - **B18.7** Período de atuação e dedicação de cada membro (entrada, saída, horas ou percentual), coerente com o B25
-  - fonte: PMBOK 6, 9.3.3.2, p. 334 (PDF 370); `checklist.md` 6 (CP10, momento de entrada)
+  - fonte: PMBOK 6, 9.3.3.2, p. 334 (PDF 370); `checklist.md` PC7 (CP10, momento de entrada)
   - sinais: "dedicação" | "período" | "entrada" | "horas/mês" | "%"
   - confere: código
   - dispensa: nunca
@@ -69,7 +69,7 @@ Registra quem está na equipe, com que papel e com que responsabilidades, e pode
 ## Perguntas de qualidade
 - A RACI bate com as obrigações da contratada e da contratante escritas no contrato e no edital? (Rework RW-059, adaptação do leitor)
 - Há pessoa com responsabilidade e sem a autoridade correspondente? (PMBOK 6, p. 318–319, PDF 354–355; A6.4)
-- Quem orienta e quem avalia são equipes separadas, quando a mesma frente faria as duas coisas? (checklist 10)
+- Quem orienta e quem avalia são equipes separadas, quando a mesma frente faria as duas coisas? (A12.8, CP14)
 - Toda parte interessada da linha tem algum papel, nem que seja "I"? Alguém do B31 ficou de fora? (Rework RW-059)
 - O substituto previsto para um profissional pontuado tem qualificação equivalente? (PMBOK 6, p. 330, PDF 366; `licitacoes.md` 2.2)
 
@@ -103,4 +103,4 @@ Linha para a tela: "Equipe com responsável por produto, sem RACI completa: port
 - PMBOK 6: 9.1.2.2, p. 316–317 (PDF 352–353); 9.3, p. 330–334 (PDF 366–370).
 - PMBOK 7: 2.2, p. 27–28 (PDF 122–123).
 - Rework: RW-049, RW-058 e RW-059 (links nos itens).
-- `checklist.md` 6, 7 e 10; `experiencia.md` §4; `licitacoes.md` 2.2; SKILL.md; decisão 0011; ficha `prop-equipe`.
+- `checklist.md` (PC3, PC7; A12.8, CP14); `experiencia.md` §4; `licitacoes.md` 2.2; SKILL.md; decisão 0011; ficha `prop-equipe`.

@@ -6,7 +6,7 @@ etapas: [2]
 gravidade: não se aplica
 categoria: não se aplica
 sinonimos: ["proposta de preço", "proposta comercial", "planilha de preços", "composição de custos", "memória de cálculo", "orçamento", "cronograma físico-financeiro"]
-versao: 0.1.0
+versao: 0.2.0
 ---
 
 # PROP-PRECO — Proposta de preço e memória de cálculo
@@ -31,7 +31,7 @@ Organiza o preço de baixo para cima, a partir das horas da EAP e das despesas, 
   - confere: código
   - dispensa: nunca
 - **PROP-PRECO.4** Despesas de campo por território, com a base de quantidade (deslocamentos, dias, equipe)
-  - fonte: `checklist.md` 11 (TC18); `experiencia.md` §5; SKILL.md, etapa 2, passo 7
+  - fonte: `experiencia.md` §5; SKILL.md, etapa 2, passo 7
   - sinais: nome do território ou município | "por território" | "deslocamentos" | "dias de campo"
   - confere: código
   - dispensa: sem campo
@@ -51,7 +51,7 @@ Organiza o preço de baixo para cima, a partir das horas da EAP e das despesas, 
   - confere: código
   - dispensa: nunca
 - **PROP-PRECO.8** Desembolso como o edital define (por produto aceito, por medição), e o período sem pagamento até a primeira parcela informado ao GP
-  - fonte: PMBOK 6, 12.3, p. 494 (PDF 530); Rework RW-078, adaptação; `checklist.md` 4; `licitacoes.md` 2.6 (art. 145)
+  - fonte: PMBOK 6, 12.3, p. 494 (PDF 530); Rework RW-078, adaptação; `checklist.md` PC3 (CTR5); `licitacoes.md` 2.6 (art. 145)
   - sinais: "cronograma de desembolso" | "parcela" | "primeira parcela" | "físico-financeiro"
   - confere: código
   - dispensa: nunca
@@ -76,7 +76,7 @@ Organiza o preço de baixo para cima, a partir das horas da EAP e das despesas, 
 - Os riscos com destino "reserva" entraram, e nenhuma reserva aparece sem origem? (PMBOK 6, p. 245)
 - O preço sustenta o que a proposta técnica promete (campo, oficinas, revisões)? (Rework RW-071)
 - A planilha permite reserva em linha própria, ou ela precisa estar nas premissas ou nos indiretos? (Rework RW-014, adaptação)
-- O GP sabe quanto do trabalho fica sem pagamento até a primeira parcela, inclusive o prazo de aceite? (Rework RW-078, adaptação; checklist 4)
+- O GP sabe quanto do trabalho fica sem pagamento até a primeira parcela, inclusive o prazo de aceite? (Rework RW-078, adaptação; PC3, CTR5)
 
 ## Erros comuns
 - O PMO calculando totais ou dizendo que o preço "está alto" (SKILL.md, princípio 6).
@@ -107,4 +107,4 @@ Preço final: decisão do GP.
 ## Fontes
 - PMBOK 6: 7.2, p. 241, 244 e 245 (PDF 277, 280 e 281); 11.5, p. 439 e 443 (PDF 475 e 479); 12.1, p. 479 (PDF 515); 12.2, p. 485 (PDF 521); 12.3, p. 494 (PDF 530).
 - Rework: RW-014 (https://resources.rework.com/libraries/project-management/project-cost-estimation); RW-071 (https://resources.rework.com/libraries/deal-closing/proposal-development); RW-073 (https://resources.rework.com/libraries/deal-closing/pricing-strategies); RW-074 (https://resources.rework.com/libraries/deal-closing/pricing-negotiation); RW-076 (https://resources.rework.com/libraries/deal-closing/quote-generation); RW-078 (https://resources.rework.com/libraries/deal-closing/payment-terms).
-- `licitacoes.md` 2.5, 2.6 e 2.9; `checklist.md` 4 e 11; `experiencia.md` §5; SKILL.md, princípios 1, 2 e 6, etapa 2.
+- `licitacoes.md` 2.5, 2.6 e 2.9; `checklist.md` PC3; `experiencia.md` §5; SKILL.md, princípios 1, 2 e 6, etapa 2.

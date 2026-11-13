@@ -6,7 +6,7 @@ etapas: [4, 5]
 gravidade: baixa
 categoria: tempo
 sinonimos: ["previsões do cronograma", "previsão do cronograma", "previsão de término", "data prevista de término", "projeção do cronograma", "tendência do cronograma", "término previsto"]
-versao: 0.1.0
+versao: 0.2.0
 ---
 
 # B30 — Previsões do cronograma
@@ -63,8 +63,8 @@ Estimativas de datas e condições futuras feitas com o que se sabe na data do s
 
 ## Perguntas de qualidade
 - O modelo diz de onde vêm os dados de andamento e com que frequência a previsão é refeita (A3.9)?
-- A previsão compara com os prazos do contrato, e não só com a linha de base interna? (checklist 9)
-- O atraso de aprovação do contratante aparece separado do atraso de produção? (checklist 4; experiencia.md §1)
+- A previsão compara com os prazos do contrato, e não só com a linha de base interna? (PC4)
+- O atraso de aprovação do contratante aparece separado do atraso de produção? (PC3; experiencia.md §1)
 - Na etapa 4: algum campo traz número ou acontecimento que só a execução poderia dar? (SKILL.md, princípio 2)
 
 ## Erros comuns
@@ -97,4 +97,4 @@ Gatilho: previsão além de [limite do A3] → [ação ou solicitação de mudan
 - PMBOK 6: 6.1.3.1, p. 182 (PDF 218); 6.5, p. 213–214 (PDF 249–250); Fig. 6-21, p. 219 (PDF 255); 6.6, p. 224–229 (PDF 260–265); Padrão, cap. 5, p. 613–632 (PDF 649–668); glossário, p. 720 (PDF 756).
 - PMBOK 7: 2.7, p. 104–105 e 114 (PDF 199–200 e 209); artefatos, p. 190 (PDF 285); glossário, p. 250 (PDF 345).
 - Rework: RW-013, RW-015 (links nos itens).
-- `checklist.md` (4, 9); `experiencia.md` §1; SKILL.md, princípio 2 e etapa 4.
+- `checklist.md` (PC3, PC4); `experiencia.md` §1; SKILL.md, princípio 2 e etapa 4.

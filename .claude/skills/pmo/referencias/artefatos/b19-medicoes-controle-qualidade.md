@@ -6,7 +6,7 @@ etapas: [4, 5]
 gravidade: baixa
 categoria: medição
 sinonimos: ["medições da qualidade", "registro de controle da qualidade", "resultados das revisões", "registro de revisões", "folha de verificação", "controle de qualidade dos produtos"]
-versao: 0.1.0
+versao: 0.2.0
 ---
 
 # B19 — Medições de controle da qualidade
@@ -36,7 +36,7 @@ São "Os resultados documentados das atividades de controle de qualidade" (PMBOK
   - confere: código
   - dispensa: nunca
 - **B19.5** Resultado da análise do contratante: rodada, data, parecer, motivo da devolução
-  - fonte: PMBOK 6, 5.5, p. 164 (PDF 200); `licitacoes.md` 2.6; checklist 4
+  - fonte: PMBOK 6, 5.5, p. 164 (PDF 200); `licitacoes.md` 2.6; `checklist.md` PC3
   - sinais: "parecer" | "aceite" | "devolução" | "rodada" | "recebimento provisório" | "recebimento definitivo"
   - confere: código
   - dispensa: nunca
@@ -52,7 +52,7 @@ São "Os resultados documentados das atividades de controle de qualidade" (PMBOK
   - dispensa: nunca
 
 ## Perguntas de qualidade
-- O registro mostra quantas rodadas cada produto levou até o aceite? (checklist 5)
+- O registro mostra quantas rodadas cada produto levou até o aceite? (PC8)
 - Os campos permitem ver o padrão das devoluções, e não só cada caso? (Rework RW-107)
 - O modelo separa a verificação interna (FGV) da análise do contratante? (Rework RW-045, verificação × validação)
 - O modelo está vazio de resultados, como deve? (SKILL.md, princípio 2)
@@ -85,4 +85,4 @@ Análise do contratante:
 - PMBOK 6: 5.5, p. 164 (PDF 200); 8.2.1, p. 291 (PDF 327); 8.3, p. 300–306 (PDF 336–342); glossário, p. 715 (PDF 751).
 - PMBOK 7: seção 4, p. 155 (PDF 250).
 - Rework: RW-107 (link no item); RW-045 (https://resources.rework.com/libraries/project-management/v-model).
-- Decisão 0007; `licitacoes.md` 2.6; `checklist.md` (4, 5).
+- Decisão 0007; `licitacoes.md` 2.6; `checklist.md` (PC3, PC8).

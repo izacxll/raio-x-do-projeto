@@ -6,7 +6,7 @@ etapas: [4, 5]
 gravidade: baixa
 categoria: equipe
 sinonimos: ["requisitos de recursos", "necessidades de recursos", "dimensionamento da equipe", "alocação de horas", "matriz de horas", "quadro de horas", "estimativa de recursos", "histograma de recursos"]
-versao: 0.1.0
+versao: 0.2.0
 ---
 
 # B26 — Requisitos de recursos
@@ -36,22 +36,22 @@ Mostra "Os tipos e quantidades de recursos exigidos para cada atividade de um pa
   - confere: código
   - dispensa: nunca
 - **B26.5** Premissa de produtividade explícita onde a carga depende de volume (entrevistas por dia, municípios por equipe)
-  - fonte: PMBOK 6, 9.2.2.4 (paramétrica), p. 324 (PDF 360); `checklist.md` 6 (CP11); `experiencia.md` §4
+  - fonte: PMBOK 6, 9.2.2.4 (paramétrica), p. 324 (PDF 360); `checklist.md` PC7 (CP11); `experiencia.md` §4
   - sinais: "por dia" | "por técnico" | "produtividade" | "por equipe"
   - confere: código
   - dispensa: nunca
 - **B26.6** Distribuição das horas no tempo (mês ou fase), para mostrar o pico de carga
-  - fonte: `checklist.md` 6 (CP11); `experiencia.md` §4; Rework RW-010 (https://resources.rework.com/libraries/project-management/capacity-planning)
+  - fonte: `checklist.md` PC7 (CP11); `experiencia.md` §4; Rework RW-010 (https://resources.rework.com/libraries/project-management/capacity-planning)
   - sinais: colunas por mês ou fase | "histograma" | "pico"
   - confere: código
   - dispensa: nunca
 - **B26.7** Recursos físicos e despesas de campo requeridos: veículos, diárias, material de coleta
-  - fonte: PMBOK 6, 9.2.3.1, p. 325 (PDF 361) e 9.6.1.2, p. 355 (PDF 391); `checklist.md` 11
+  - fonte: PMBOK 6, 9.2.3.1, p. 325 (PDF 361) e 9.6.1.2, p. 355 (PDF 391)
   - sinais: "veículo" | "diárias" | "deslocamento" | "tablet" | "material de campo"
   - confere: código
   - dispensa: sem campo
 - **B26.8** Horas da coordenação e das interações com o contratante (reuniões, revisões, ajustes de produto) incluídas
-  - fonte: `checklist.md` 6 (CP10); Rework RW-010 (adaptação do leitor); `experiencia.md` §4
+  - fonte: `checklist.md` PC7 (CP10); Rework RW-010 (adaptação do leitor); `experiencia.md` §4
   - sinais: linha de "gestão" | "coordenação" | "reuniões" | "revisões" na matriz
   - confere: só PMO
   - dispensa: nunca
@@ -62,14 +62,14 @@ Mostra "Os tipos e quantidades de recursos exigidos para cada atividade de um pa
   - dispensa: nunca
 
 ## Perguntas de qualidade
-- A equipe dá conta do volume em cada frente e em cada mês, e não só na média? (checklist 6)
+- A equipe dá conta do volume em cada frente e em cada mês, e não só na média? (PC7)
 - Algum perfil tem duas cargas que crescem por variáveis diferentes, dimensionado por uma só? (`experiencia.md` §4)
-- O tempo de deslocamento entrou nas horas da equipe de campo? (checklist 11; `experiencia.md` §5)
+- O tempo de deslocamento entrou nas horas da equipe de campo? (`experiencia.md` §5)
 - A estimativa é bottom-up onde a EAP permite, ou análoga só onde o detalhe falta? (PMBOK 6, p. 324, PDF 360)
 - Cada premissa de produtividade tem base no B4? (B4.3 e B4.4)
 
 ## Erros comuns
-- Horas sem premissa de produtividade, o que impede a conta equipe × volume (checklist 6).
+- Horas sem premissa de produtividade, o que impede a conta equipe × volume (PC7).
 - Dimensionamento pela média, escondendo o pico (`experiencia.md` §4).
 - Esquecer as horas de reuniões com o contratante e de revisão de produtos (Rework RW-010, adaptação do leitor).
 - Planejar a 100% de utilização (Rework RW-010).
@@ -95,4 +95,4 @@ Diferenças em relação à proposta: [perfil, motivo].
 ## Fontes
 - PMBOK 6: 9.2, p. 320–327 (PDF 356–363); 9.3, p. 330 (PDF 366); 9.6, p. 355 (PDF 391); glossário, p. 722 (PDF 758).
 - Rework: RW-010 (link no item B26.6).
-- `checklist.md` 6 e 11; `experiencia.md` §4 e §5; `licitacoes.md` 2.2; ficha `prop-equipe`.
+- `checklist.md` PC7; `experiencia.md` §4 e §5; `licitacoes.md` 2.2; ficha `prop-equipe`.

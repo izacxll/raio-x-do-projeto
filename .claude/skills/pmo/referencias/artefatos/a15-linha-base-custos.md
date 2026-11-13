@@ -6,7 +6,7 @@ etapas: [4, 5]
 gravidade: média
 categoria: custo
 sinonimos: ["baseline de custos", "orçamento aprovado", "orçamento de referência", "orçamento do projeto", "cronograma de desembolso", "curva S", "linha de base de custo"]
-versao: 0.1.0
+versao: 0.2.0
 ---
 
 # A15 — Linha de base dos custos
@@ -51,7 +51,7 @@ versao: 0.1.0
   - confere: só PMO
   - dispensa: nunca
 - **A15.8** Requisitos de financiamento por período e cronograma de desembolso do contratante, com o intervalo até a primeira parcela
-  - fonte: PMBOK 6, 7.3, p. 253 e 256 (PDF 289 e 292); `licitacoes.md` 2.6; checklist 4
+  - fonte: PMBOK 6, 7.3, p. 253 e 256 (PDF 289 e 292); `licitacoes.md` 2.6; `checklist.md` PC3
   - sinais: "cronograma de desembolso" | "físico-financeiro" | "parcela" | "requisitos de recursos financeiros" | "fluxo de caixa"
   - confere: código
   - dispensa: nunca
@@ -69,8 +69,8 @@ versao: 0.1.0
 ## Perguntas de qualidade
 - A contingência aparece separada e ligada a riscos, ou está diluída nas horas? (PMBOK 6, p. 245, PDF 281)
 - Há duas referências distintas: o cronograma físico-financeiro do contrato (externo) e o custo interno da FGV? Qual delas é a linha de base deste plano? (Rework RW-029, observação do leitor)
-- O desembolso do contratante e a curva de gastos mostram quanto a FGV financia antes de receber? Quem calcula é o código (checklist 4; SKILL.md, princípio 6).
-- A data da linha de base está amarrada à assinatura ou à ordem de serviço? (checklist 9)
+- O desembolso do contratante e a curva de gastos mostram quanto a FGV financia antes de receber? Quem calcula é o código (PC3; SKILL.md, princípio 6).
+- A data da linha de base está amarrada à assinatura ou à ordem de serviço? (PC4)
 
 ## Erros comuns
 - Reserva gerencial dentro da linha de base, o que mascara o desempenho (PMBOK 6, p. 252, PDF 288; glossário, p. 722, PDF 758).
@@ -106,4 +106,4 @@ Mudança: só por solicitação aprovada (A11); aditivo ou apostila quando afeta
 - PMBOK 6: 4.2, p. 83 (PDF 119); 7.2, p. 245 (PDF 281); 7.3, p. 248–256 (PDF 284–292); 7.4, p. 259–267 (PDF 295–303); glossário, p. 715 e 722 (PDF 751 e 758).
 - PMBOK 7: 2.4.2.4, p. 62–63 (PDF 157–158); glossário, p. 246 (PDF 341).
 - Rework: RW-029 (link no item); RW-015 (https://resources.rework.com/libraries/project-management/earned-value-management).
-- `licitacoes.md` 2.6; `checklist.md` (4, 9); decisão 0009.
+- `licitacoes.md` 2.6; `checklist.md` (PC3, PC4); decisão 0009.

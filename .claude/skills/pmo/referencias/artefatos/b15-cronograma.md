@@ -6,7 +6,7 @@ etapas: [2, 4, 5]
 gravidade: média
 categoria: tempo
 sinonimos: ["cronograma", "cronograma de execução", "cronograma de atividades", "cronograma físico", "cronograma físico-financeiro", "Gantt", "gráfico de Gantt", "plano de trabalho detalhado"]
-versao: 0.1.0
+versao: 0.2.0
 ---
 
 # B15 — Cronograma do projeto
@@ -36,12 +36,12 @@ versao: 0.1.0
   - confere: código
   - dispensa: nunca
 - **B15.5** Tempos de análise e aprovação do contratante como atividades com duração
-  - fonte: checklist 4; `licitacoes.md` 2.6; Rework RW-052 (https://resources.rework.com/libraries/project-management/critical-path-method) e RW-050 (observações do leitor)
+  - fonte: `checklist.md` PC3; `licitacoes.md` 2.6; Rework RW-052 (https://resources.rework.com/libraries/project-management/critical-path-method) e RW-050 (observações do leitor)
   - sinais: "análise do contratante" | "aprovação" | "validação" | "parecer" | "prazo de análise"
   - confere: código
   - dispensa: nunca
 - **B15.6** Dependências externas (dados de outros órgãos, agendas, autorizações) como atividades ou marcos
-  - fonte: PMBOK 6, 6.3, p. 191–192 (PDF 227–228); checklist 8; experiencia.md §3
+  - fonte: PMBOK 6, 6.3, p. 191–192 (PDF 227–228); `checklist.md` (PC1 e PC6); experiencia.md §3
   - sinais: "recebimento dos dados" | "disponibilização" | "autorização" | "dependência externa" | "a cargo do contratante"
   - confere: código
   - dispensa: nunca
@@ -51,7 +51,7 @@ versao: 0.1.0
   - confere: código
   - dispensa: nunca
 - **B15.8** Datas contadas de um evento definido e compatíveis com os prazos da RFP e os marcos do TAP (a conta é do código)
-  - fonte: PMBOK 6, 6.1, p. 180 (PDF 216); checklist 9; experiencia.md §2
+  - fonte: PMBOK 6, 6.1, p. 180 (PDF 216); `checklist.md` PC4; experiencia.md §2
   - sinais: "ordem de serviço" | "assinatura" | "D+" | "mês 1" | "semana 1" | datas de calendário
   - confere: código
   - dispensa: nunca
@@ -77,11 +77,11 @@ versao: 0.1.0
   - dispensa: porte pequeno
 
 ## Perguntas de qualidade
-- Alguma atividade ou marco está sem data, ou contada de evento sem data? O PMO aponta; quem calcula é o código (checklist 9).
-- O contratante tem prazo para analisar cada produto, e esse prazo aparece como atividade? (checklist 4)
-- O que depende de terceiros tem prazo e aparece no cronograma? (checklist 8)
+- Alguma atividade ou marco está sem data, ou contada de evento sem data? O PMO aponta; quem calcula é o código (PC4).
+- O contratante tem prazo para analisar cada produto, e esse prazo aparece como atividade? (PC3)
+- O que depende de terceiros tem prazo e aparece no cronograma? (PC1 e PC6)
 - Há contingência visível antes das entregas presas a datas fixas? (experiencia.md §2)
-- Se há campo: deslocamento e sazonalidade entram nas durações e no calendário (B13)? (checklist 11)
+- Se há campo: deslocamento e sazonalidade entram nas durações e no calendário (B13)?
 - Se um produto começa antes do aceite do anterior (paralelismo), o risco de retrabalho está no B27? (Rework RW-016, https://resources.rework.com/libraries/project-management/fast-tracking-vs-crashing)
 
 ## Erros comuns
@@ -114,4 +114,4 @@ Gantt resumido por produto para o contratante; detalhado para a equipe.
 - PMBOK 6: 5.4, p. 161 (PDF 197); 6.1, p. 180 (PDF 216); 6.2, p. 186 (PDF 222); 6.3, p. 188–192 (PDF 224–228); 6.4, p. 197 e 202 (PDF 233 e 238); 6.5, p. 207–219 (PDF 243–255); 11.5, p. 447–448 (PDF 483–484); p. 175 (PDF 211).
 - PMBOK 7: 2.4.2.3, p. 58–62 (PDF 153–157); artefatos, p. 188–189 (PDF 283–284).
 - Rework: RW-016, RW-024, RW-025, RW-027, RW-050, RW-052, RW-056 (links nos itens).
-- `checklist.md` (4, 8, 9, 11); `experiencia.md` §1, §2, §3 e §8; `licitacoes.md` 2.6.
+- `checklist.md` (PC1, PC3, PC4, PC6); `experiencia.md` §1, §2, §3 e §8; `licitacoes.md` 2.6.

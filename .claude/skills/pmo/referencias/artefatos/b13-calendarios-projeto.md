@@ -6,7 +6,7 @@ etapas: [4, 5]
 gravidade: baixa
 categoria: tempo
 sinonimos: ["calendário do projeto", "calendário de trabalho", "calendário", "dias úteis", "jornada de trabalho", "calendário de campo"]
-versao: 0.1.0
+versao: 0.2.0
 ---
 
 # B13 — Calendários do projeto
@@ -46,12 +46,12 @@ O calendário do projeto "identifica os dias úteis e os turnos disponíveis par
   - confere: código
   - dispensa: porte pequeno ou sem campo
 - **B13.7** Sazonalidade que afeta o campo (chuva, calendário escolar, safra) refletida em períodos indisponíveis ou restritos
-  - fonte: checklist 11 (TC21; "calendário com sazonalidade"); experiencia.md §5
+  - fonte: experiencia.md §5
   - sinais: "período chuvoso" | "sazonalidade" | "calendário escolar" | "safra" | "férias escolares"
   - confere: código
   - dispensa: sem campo
 - **B13.8** Calendário administrativo e político do contratante (eleição, troca de gestão, encerramento do exercício) considerado
-  - fonte: checklist 7 e 9 (CE16, CE17); experiencia.md §1
+  - fonte: `checklist.md` (PC3, PC5); experiencia.md §1
   - sinais: "eleição" | "período eleitoral" | "troca de gestão" | "fim do exercício" | "recesso do órgão"
   - confere: só PMO
   - dispensa: contratante privado
@@ -62,16 +62,16 @@ O calendário do projeto "identifica os dias úteis e os turnos disponíveis par
   - dispensa: porte pequeno
 
 ## Perguntas de qualidade
-- A contagem de dias do calendário é a mesma do contrato? Se o contrato fala em dias corridos e o plano em úteis, há conflito (checklist 1).
-- O período de execução cruza eleição ou troca de gestão do nível do contratante? O calendário e o B27 registram isso? (checklist 9)
-- Há períodos em que o contratante não analisa nem decide (recesso, fim de exercício)? (checklist 7)
-- Se há campo: chuva, calendário escolar ou outras sazonalidades estão no calendário? (checklist 11)
+- A contagem de dias do calendário é a mesma do contrato? Se o contrato fala em dias corridos e o plano em úteis, há conflito entre os documentos (conflituoso).
+- O período de execução cruza eleição ou troca de gestão do nível do contratante? O calendário e o B27 registram isso? (PC5)
+- Há períodos em que o contratante não analisa nem decide (recesso, fim de exercício)? (PC3)
+- Se há campo: chuva, calendário escolar ou outras sazonalidades estão no calendário?
 - As durações em dias úteis foram convertidas em datas por este calendário, e não por outro? (a conversão é do código)
 
 ## Erros comuns
 - Calendário único para equipes com regimes diferentes (PMBOK 6, p. 220, PDF 256).
-- Contagem do plano diferente da do contrato (checklist 1; `licitacoes.md` 2.3).
-- Sazonalidade de campo fora do calendário (checklist 11; experiencia.md §5).
+- Contagem do plano diferente da do contrato (conflituoso; `licitacoes.md` 2.3).
+- Sazonalidade de campo fora do calendário (experiencia.md §5).
 - Confundir calendário do projeto com o dos recursos (PMBOK 6, p. 199 e 220, PDF 235 e 256).
 - Calendário político ignorado quando a decisão depende da gestão em exercício (experiencia.md §1).
 
@@ -95,4 +95,4 @@ eleição ou troca de gestão no período: [sim/não; datas a conferir pelo GP].
 ## Fontes
 - PMBOK 6: 6.1.3.1, p. 182 (PDF 218); 6.2.3.2, p. 186 (PDF 222); 6.4, p. 199 (PDF 235); 6.5, p. 209 e 220 (PDF 245 e 256); 6.6, p. 225 (PDF 261); glossário, p. 701 (PDF 737).
 - PMBOK 7: artefatos, calendário do projeto, p. 192 (PDF 287).
-- `checklist.md` (1, 7, 9, 11); `experiencia.md` §1 e §5; `licitacoes.md` 2.3.
+- `checklist.md` (PC3, PC5; vago, CTR7); `experiencia.md` §1 e §5; `licitacoes.md` 2.3.

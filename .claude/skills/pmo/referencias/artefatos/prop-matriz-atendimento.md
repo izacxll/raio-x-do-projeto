@@ -6,7 +6,7 @@ etapas: [2]
 gravidade: não se aplica
 categoria: não se aplica
 sinonimos: ["matriz de atendimento", "quadro de atendimento ao edital", "matriz de conformidade", "checklist de envio", "lista de documentos", "declarações e anexos"]
-versao: 0.1.0
+versao: 0.2.0
 ---
 
 # PROP-MATRIZ — Matriz de atendimento e checklist de envio
@@ -31,7 +31,7 @@ Liga cada requisito (R01…) e cada critério de pontuação à página da propo
   - confere: só PMO
   - dispensa: nunca
 - **PROP-MATRIZ.4** Requisito não atendido ou atendido em parte aparece com o motivo e o destino (exclusão, premissa, pergunta de esclarecimento)
-  - fonte: ficha B23 (B23.9); `checklist.md` (destinos); PROP-ESTRATEGIA.8
+  - fonte: ficha B23 (B23.9); `checklist.md` (onde cada premissa crítica aparece); PROP-ESTRATEGIA.8
   - sinais: "não atendido" | "atendido parcialmente" | "pendente de esclarecimento" | célula de página vazia
   - confere: código
   - dispensa: nunca
@@ -101,4 +101,4 @@ Linha para a tela: "Matriz curta, requisitos com página e checklist: porte pequ
 ## Fontes
 - PMBOK 6: 5.2.3.2, p. 148–149 (PDF 184–185); 12.1, p. 470 (PDF 506); 12.2, p. 486–487 (PDF 522–523).
 - Rework: RW-072 (https://resources.rework.com/libraries/deal-closing/proposal-design); RW-076 (https://resources.rework.com/libraries/deal-closing/quote-generation).
-- `licitacoes.md` 2.2, 2.3 e 2.6; `checklist.md` (destinos); ficha B23; SKILL.md, etapa 2 e princípio 9; especificação da etapa 2, passo 9 e saída.
+- `licitacoes.md` 2.2, 2.3 e 2.6; `checklist.md` (onde cada premissa crítica aparece); ficha B23; SKILL.md, etapa 2 e princípio 9; especificação da etapa 2, passo 9 e saída.

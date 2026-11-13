@@ -1,6 +1,6 @@
 # Contratação pública: regras que afetam a proposta e o plano
 
-Versão 0.1.0 (rascunho da fase S). Textos consultados no Planalto (planalto.gov.br/ccivil_03, texto compilado) em **13/11/2026**.
+Versão 0.2.0. Textos consultados no Planalto (planalto.gov.br/ccivil_03, texto compilado) em **13/11/2026**.
 
 ## Como usar este arquivo
 
@@ -109,7 +109,7 @@ Versão 0.1.0 (rascunho da fase S). Textos consultados no Planalto (planalto.gov
   - provisório pelo fiscal e definitivo por servidor ou comissão, por termo detalhado (art. 140);
   - **prazos de recebimento ficam para regulamento ou contrato** (art. 140, § 3º).
 - **Reajuste:** índice obrigatório no edital, com data-base na data do orçamento estimado (art. 25, § 7º). Em serviços contínuos, interregno mínimo de 1 ano (art. 25, § 8º).
-- **Na proposta e no plano:** se o edital não fixa prazo de aceite e de pagamento, isso é pergunta de esclarecimento (checklist 4). A folga para aprovações entra no cronograma.
+- **Na proposta e no plano:** se o edital não fixa prazo de aceite e de pagamento, isso é pergunta de esclarecimento (PC3). A folga para aprovações entra no cronograma.
 
 ### 2.7 Alterações e reequilíbrio
 - **Alteração unilateral** (projeto ou quantidades) e **alteração por acordo** (garantia, regime, forma de pagamento, reequilíbrio) — art. 124.
@@ -125,7 +125,7 @@ Versão 0.1.0 (rascunho da fase S). Textos consultados no Planalto (planalto.gov
   - permitida em partes, até o limite autorizado em cada caso (art. 122);
   - **edital ou regulamento podem vedá-la ou restringi-la** (art. 122, § 2º);
   - vedada para parentes de dirigentes e agentes da contratação (art. 122, § 3º).
-- **No plano de aquisições (A9):** o que pode ou não ser subcontratado segundo o edital. Vedação de subcontratação junto com atividade de campo é brecha conhecida (checklist 3, CTR2).
+- **No plano de aquisições (A9):** o que pode ou não ser subcontratado segundo o edital. Vedação de subcontratação junto com atividade de campo é brecha conhecida (pergunta de esclarecimento e exclusão ou obrigação do contratante, CTR2).
 
 ### 2.9 Preço inexequível
 - **Obras e serviços de engenharia:**
@@ -138,7 +138,7 @@ Versão 0.1.0 (rascunho da fase S). Textos consultados no Planalto (planalto.gov
 - **Tipos:** advertência; multa de **0,5% a 30%** do valor do contrato; impedimento de licitar por até 3 anos; inidoneidade de 3 a 6 anos (art. 156).
 - **Dosimetria:** gravidade, peculiaridades, agravantes e atenuantes, danos e programa de integridade (art. 156, § 1º).
 - **Defesa:** 15 dias úteis (arts. 157 e 158).
-- **Multa de mora** sobre prazo que o plano trata como estimativa é brecha conhecida (checklist 3, CTR2).
+- **Multa de mora** sobre prazo que o plano trata como estimativa é brecha conhecida (pergunta de esclarecimento e exclusão ou obrigação do contratante, CTR2).
 
 ## 3. Lei 8.666/1993 — só para contratos antigos
 

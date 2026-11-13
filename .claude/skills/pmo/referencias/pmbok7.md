@@ -1,5 +1,5 @@
 # PMBOK 7 — princípios, domínios de desempenho e adaptação
-Versão 0.1.0 (rascunho da fase S). Fonte: PMI, Padrão de Gerenciamento de Projetos e Guia PMBOK, 7ª ed., em português. Páginas: impressa (PDF).
+Versão 0.2.0. Fonte: PMI, Padrão de Gerenciamento de Projetos e Guia PMBOK, 7ª ed., em português. Páginas: impressa (PDF).
 
 **Leitura.** Duas numerações: **Padrão** (PDF = p. + 27) e **Guia**, com apêndices e glossário (PDF = p. + 95). Tudo resumido com outras palavras; entre aspas, só definições curtas literais. **[aplicação]** = leitura aplicada a planos ou ao app (dos leitores ou da skill), não está no livro. **[sugestão]** = ligação com os códigos A (componentes do plano) e B (documentos do projeto) do PMBOK 6 proposta pelos leitores; o PMBOK 7 não usa códigos. **[citado]** = o PMBOK 7 nomeia o artefato.
 

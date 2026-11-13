@@ -6,7 +6,7 @@ etapas: [4, 5]
 gravidade: grave
 categoria: equipe
 sinonimos: ["plano de recursos", "plano de gerenciamento de recursos", "plano de gestão de recursos", "plano de gerenciamento da equipe", "plano de recursos humanos", "gestão da equipe", "plano de pessoal"]
-versao: 0.1.0
+versao: 0.2.0
 ---
 
 # A6 — Plano de gerenciamento dos recursos
@@ -41,7 +41,7 @@ Diz como os recursos de equipe e os físicos serão identificados, obtidos, orga
   - confere: código
   - dispensa: nunca
 - **A6.6** Cada pacote de trabalho ou produto com um responsável definido, por RACI ou coluna de responsável (o detalhe fica no B18)
-  - fonte: PMBOK 6, 9.1.2.2, p. 316–317 (PDF 352–353); `checklist.md` 6 (CP10)
+  - fonte: PMBOK 6, 9.1.2.2, p. 316–317 (PDF 352–353); `checklist.md` PC7 (CP10)
   - sinais: "RACI" | "matriz de responsabilidades" | "responsável" por produto | remissão ao B18
   - confere: código
   - dispensa: nunca
@@ -72,10 +72,10 @@ Diz como os recursos de equipe e os físicos serão identificados, obtidos, orga
   - dispensa: nunca
 
 ## Perguntas de qualidade
-- A coordenação tem horas e autoridade para o número de frentes e de interlocutores do contratante? (checklist 6; `experiencia.md` §4)
-- O plano diz quem, do lado do cliente, decide e aceita? A interface aparece no organograma? (checklist 7)
+- A coordenação tem horas e autoridade para o número de frentes e de interlocutores do contratante? (PC7; `experiencia.md` §4)
+- O plano diz quem, do lado do cliente, decide e aceita? A interface aparece no organograma? (PC3)
 - Equipe pontuada na proposta continua no plano, e a substituição exige qualificação equivalente e anuência? (`licitacoes.md` 2.2; PMBOK 6, p. 330, PDF 366)
-- Se houver campo, a equipe local é compatível com a regra de subcontratação? (checklist 3 e 11; `experiencia.md` §5)
+- Se houver campo, a equipe local é compatível com a regra de subcontratação? (pergunta de esclarecimento e exclusão ou obrigação do contratante, CTR2; `experiencia.md` §5)
 - Equipe distribuída ou mista tem mecanismo de integração? (PMBOK 7, p. 19, PDF 114; B32.9)
 
 ## Erros comuns
@@ -83,7 +83,7 @@ Diz como os recursos de equipe e os físicos serão identificados, obtidos, orga
 - Responsabilidade sem autoridade correspondente (PMBOK 6, p. 318–319).
 - Alocar pessoas a 100% e tratar o plano inicial como fixo (Rework RW-008).
 - Horas iguais todo mês enquanto o trabalho se concentra em poucas fases (`experiencia.md` §4).
-- Expansão por ondas ou lotes sem crescimento da gestão (checklist 6).
+- Expansão por ondas ou lotes sem crescimento da gestão (PC7).
 
 ## Quando dispensar a parte inteira
 Não se dispensa. O PMBOK permite dividir o plano em equipe e recursos físicos (p. 318, PDF 354) e pôr designações em outros planos (p. 316, PDF 352). Em porte pequeno, pode virar uma seção "Equipe e recursos" junto com B18 e B32 (PMBOK 7, 3.2, p. 133, PDF 228).
@@ -112,4 +112,4 @@ Linha para a tela: "Recursos numa seção única, com designações e combinados
 - PMBOK 6: 9.1, p. 312–320 (PDF 348–356); 9.2, p. 322 (PDF 358); 9.3, p. 329–333 (PDF 365–369); 9.4, p. 339 e 342 (PDF 375 e 378); 9.5, p. 345–347 (PDF 381–383); 9.6, p. 353–354 (PDF 389–390); glossário, p. 719 (PDF 755).
 - PMBOK 7: 2.2 Equipe, p. 16–31 (PDF 111–126); 3.2, p. 133 (PDF 228).
 - Rework: RW-008 e RW-010 (links no item A6.11).
-- `checklist.md` 3, 6, 7 e 11; `experiencia.md` §4 e §5; `licitacoes.md` 2.2.
+- `checklist.md` (CTR2, PC3, PC7); `experiencia.md` §4 e §5; `licitacoes.md` 2.2.

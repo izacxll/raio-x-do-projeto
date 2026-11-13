@@ -6,7 +6,7 @@ etapas: [4, 5]
 gravidade: média
 categoria: tempo
 sinonimos: ["baseline do cronograma", "cronograma aprovado", "cronograma de referência", "cronograma físico", "cronograma físico-financeiro", "linha de base de prazo"]
-versao: 0.1.0
+versao: 0.2.0
 ---
 
 # A14 — Linha de base do cronograma
@@ -36,7 +36,7 @@ versao: 0.1.0
   - confere: código
   - dispensa: nunca
 - **A14.5** Data de referência da linha de base (assinatura, ordem de serviço ou aprovação do plano)
-  - fonte: Rework RW-029 (passo 4 e observação do leitor); checklist 9; experiencia.md §2
+  - fonte: Rework RW-029 (passo 4 e observação do leitor); `checklist.md` PC4; experiencia.md §2
   - sinais: "ordem de serviço" | "data de assinatura" | "data da linha de base" | "a partir de"
   - confere: código
   - dispensa: nunca
@@ -69,7 +69,7 @@ versao: 0.1.0
 ## Perguntas de qualidade
 - A linha de base tem data e aprovação, ou é um rascunho com o nome de linha de base? (Rework RW-029)
 - A contingência aparece como linha própria, e a reserva gerencial ficou de fora? (PMBOK 6, p. 202, PDF 238)
-- As datas estão contadas de um evento que tem data? O que acontece se a assinatura atrasar? (checklist 9; experiencia.md §2)
+- As datas estão contadas de um evento que tem data? O que acontece se a assinatura atrasar? (PC4; experiencia.md §2)
 - O plano diz que mudar data de produto exige pedido formal ao contratante? (`licitacoes.md` 2.7)
 - O cronograma anexo ao contrato é a linha de base externa; há também uma interna, com o esforço da FGV? (Rework RW-029, observação do leitor)
 
@@ -102,4 +102,4 @@ Mudanças: por solicitação no controle integrado; prazo contratual só com [ad
 - PMBOK 6: 6.1, p. 180 (PDF 216); 6.2, p. 185–186 (PDF 221–222); 6.4, p. 202 (PDF 238); 6.5, p. 207–208 e 217 (PDF 243–244 e 253); 6.6, p. 223–229 (PDF 259–265); glossário, p. 715, 717 e 722 (PDF 751, 753 e 758).
 - PMBOK 7: 2.7.2, p. 100 (PDF 195); 2.8, p. 127 (PDF 222); glossário, p. 246 (PDF 341).
 - Rework: RW-009, RW-029, RW-037 (links nos itens).
-- `licitacoes.md` 2.7; `checklist.md` 9; `experiencia.md` §2.
+- `licitacoes.md` 2.7; `checklist.md` PC4; `experiencia.md` §2.

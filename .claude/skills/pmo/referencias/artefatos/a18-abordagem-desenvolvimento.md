@@ -6,7 +6,7 @@ etapas: [4, 5]
 gravidade: baixa
 categoria: abordagem de desenvolvimento e ciclo de vida
 sinonimos: ["abordagem de desenvolvimento", "abordagem de gerenciamento", "abordagem de gestão", "modelo de gestão do projeto", "abordagem preditiva", "abordagem híbrida", "abordagem ágil"]
-versao: 0.1.0
+versao: 0.2.0
 ---
 
 # A18 — Abordagem de desenvolvimento
@@ -65,7 +65,7 @@ Diz como o produto, serviço ou resultado será desenvolvido: preditiva, iterati
 - Os produtos têm requisitos fixados no TR e aceite documentado? Pela Fig. X3-1, isso é perfil preditivo, mesmo que o plano diga "ágil" (PMBOK 6, p. 666, PDF 702).
 - A elaboração de cada produto passa por versões e oficinas com o órgão? Isso sugere híbrido: contrato preditivo, elaboração iterativa (Rework RW-041 e RW-061, observação do leitor).
 - A regra de decisão foi aplicada: se dá para escrever hoje um critério de aceite que vai se manter, a parte é preditiva (Rework RW-041)?
-- Abordagem adaptativa exige envolvimento intenso do cliente: o contratante tem quem participe? (PMBOK 7, p. 39–41, PDF 134–136; checklist 7)
+- Abordagem adaptativa exige envolvimento intenso do cliente: o contratante tem quem participe? (PMBOK 7, p. 39–41, PDF 134–136; PC3)
 - Regulação forte ou burocracia do contratante puxam para a preditiva; o plano considera isso? (PMBOK 7, p. 39–41, PDF 134–136)
 - O TAP será revisto em cada ciclo na parte adaptativa? (PMBOK 6, X3.3.1, p. 669, PDF 705)
 - Quadro kanban ou caixas de tempo dentro de cada produto são bem-vindos, mas não substituem o cronograma de marcos do contrato (Rework RW-048 e RW-044, observação do leitor); na preditiva, o seguir/parar entre etapas é o aceite de cada produto (Rework RW-047, observação do leitor).
@@ -99,4 +99,4 @@ Linha para a tela: "Abordagem num parágrafo, junto com o ciclo de vida: porte p
 - PMBOK 6: 1.2.4.1, p. 19 (PDF 55); 4.2, p. 88 (PDF 124); X1.5, p. 642 (PDF 678); X3.1, p. 666 (PDF 702); X3.3.1 e X3.3.4, p. 669–671 (PDF 705–707); X5.1, p. 679 (PDF 715); X5.8, p. 683 (PDF 719); glossário, p. 698 (PDF 734).
 - PMBOK 7: Guia 2.3, p. 32–50 (PDF 127–145); 2.5.7, p. 76–77 (PDF 171–172); Guia 3, p. 133–139 (PDF 228–234).
 - Rework: RW-041, RW-061, RW-060 e RW-062 (links nos itens e erros); RW-047 (https://resources.rework.com/libraries/project-management/waterfall-methodology-project-management); RW-044 (https://resources.rework.com/libraries/project-management/timeboxing); RW-048 (https://resources.rework.com/libraries/project-management/what-is-kanban).
-- `checklist.md` (7); `experiencia.md` §1; `pmbok7.md` seções 3 e 6.
+- `checklist.md` (PC3); `experiencia.md` §1; `pmbok7.md` seções 3 e 6.

@@ -6,7 +6,7 @@ etapas: [4, 5]
 gravidade: baixa
 categoria: escopo
 sinonimos: ["requisitos do projeto", "lista de requisitos", "registro de requisitos", "especificação de requisitos", "requisitos", "quadro de requisitos"]
-versao: 0.1.0
+versao: 0.2.0
 ---
 
 # B22 — Documentação dos requisitos
@@ -26,12 +26,12 @@ versao: 0.1.0
   - confere: código
   - dispensa: nunca
 - **B22.3** Requisitos não ambíguos: mensuráveis e testáveis, com uma só leitura
-  - fonte: PMBOK 6, 5.2.3.1, p. 147 (PDF 183); PMBOK 7, 2.6, p. 82–83 (PDF 177–178); `checklist.md` 1; Rework RW-031
+  - fonte: PMBOK 6, 5.2.3.1, p. 147 (PDF 183); PMBOK 7, 2.6, p. 82–83 (PDF 177–178); `checklist.md` (vago, CTR7); Rework RW-031
   - sinais: quantidades, prazos e formatos no texto do requisito; "entre outros", "quando necessário", "adequado" indicam ambiguidade
   - confere: só PMO
   - dispensa: nunca
 - **B22.4** Completos, consistentes e aceitáveis para as partes principais: sem contradição entre si nem com o TR; divergência resolvida com leitura adotada no B3
-  - fonte: PMBOK 6, 5.2.3.1, p. 147 (PDF 183); PMBOK 7, 2.6, p. 82–83 (PDF 177–178); `checklist.md` 1
+  - fonte: PMBOK 6, 5.2.3.1, p. 147 (PDF 183); PMBOK 7, 2.6, p. 82–83 (PDF 177–178); `checklist.md` (vago, CTR7)
   - sinais: "leitura adotada" | "premissa" | "conforme esclarecimento"
   - confere: só PMO
   - dispensa: nunca
@@ -63,10 +63,10 @@ versao: 0.1.0
 
 ## Perguntas de qualidade
 - Todos os R da etapa 1 estão aqui, com o mesmo número e o mesmo sentido do TR? (SKILL.md, princípio 9)
-- Algum requisito admite duas leituras (plural sem quantidade, "acompanhamento" sem frequência)? A leitura adotada está no B3 e há pergunta ao contratante? (checklist 1)
+- Algum requisito admite duas leituras (plural sem quantidade, "acompanhamento" sem frequência)? A leitura adotada está no B3 e há pergunta ao contratante? (vago, CTR7)
 - Obrigações contratuais e marcos do TR aparecem como requisitos de projeto? (PMBOK 6, p. 148, PDF 184)
-- Cada requisito tem como ser verificado pelo fiscal? (checklist 4)
-- Há requisito que transfere à FGV algo que depende do contratante? (checklist 3)
+- Cada requisito tem como ser verificado pelo fiscal? (PC3)
+- Há requisito que transfere à FGV algo que depende do contratante? (PC1)
 
 ## Erros comuns
 - Requisito vago, impossível de testar (Rework RW-031).
@@ -95,4 +95,4 @@ Leituras adotadas: ver B3; perguntas ao contratante: ver B9.
 - PMBOK 6: 5.2, p. 140–148 (PDF 176–184); 5.3, p. 151 (PDF 187); p. 133 (PDF 169); glossário, p. 707 (PDF 743).
 - PMBOK 7: 2.6, p. 82–83 (PDF 177–178); documentação dos requisitos, p. 192 (PDF 287).
 - Rework: RW-030, RW-031, RW-063, RW-067 (links nos itens).
-- SKILL.md, princípios 3 e 9; `checklist.md` (1, 3, 4).
+- SKILL.md, princípios 3 e 9; `checklist.md` (PC1, PC3; vago, CTR7).

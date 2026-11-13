@@ -6,7 +6,7 @@ etapas: [4, 5]
 gravidade: baixa
 categoria: incerteza
 sinonimos: ["relatório de riscos", "relatório de situação dos riscos", "panorama dos riscos", "risco geral do projeto", "exposição ao risco"]
-versao: 0.1.0
+versao: 0.2.0
 ---
 
 # B28 — Relatório de riscos

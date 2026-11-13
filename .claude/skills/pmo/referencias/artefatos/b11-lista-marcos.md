@@ -6,7 +6,7 @@ etapas: [3, 4, 5]
 gravidade: média
 categoria: tempo
 sinonimos: ["marcos", "marcos do projeto", "cronograma de marcos", "gráfico de marcos", "marcos contratuais", "cronograma de entregas", "datas-chave"]
-versao: 0.1.0
+versao: 0.2.0
 ---
 
 # B11 — Lista de marcos
@@ -31,7 +31,7 @@ Identifica todos os marcos do projeto; marco é "um ponto ou evento significativ
   - confere: código
   - dispensa: nunca
 - **B11.4** Cada marco tem data ou prazo contado de um evento definido
-  - fonte: PMBOK 6, 6.2.3.3, p. 186 (PDF 222); 6.3, p. 188 (PDF 224); checklist 9
+  - fonte: PMBOK 6, 6.2.3.3, p. 186 (PDF 222); 6.3, p. 188 (PDF 224); `checklist.md` PC4
   - sinais: datas | "D+" | "dias após" | "a partir da ordem de serviço" | "mês"
   - confere: código
   - dispensa: nunca
@@ -41,12 +41,12 @@ Identifica todos os marcos do projeto; marco é "um ponto ou evento significativ
   - confere: código
   - dispensa: nunca
 - **B11.6** Entrega do produto e aprovação pelo contratante como marcos distintos
-  - fonte: Rework RW-025 (observação do leitor); checklist 4; experiencia.md §1
+  - fonte: Rework RW-025 (observação do leitor); `checklist.md` PC3; experiencia.md §1
   - sinais: "entrega do produto" e "aprovação do produto" | "aceite" | "recebimento definitivo"
   - confere: código
   - dispensa: nunca
 - **B11.7** Marcos de dependência externa (ordem de serviço, recebimento de dados, autorizações)
-  - fonte: PMBOK 6, 6.3, p. 191–192 (PDF 227–228); checklist 8; experiencia.md §3
+  - fonte: PMBOK 6, 6.3, p. 191–192 (PDF 227–228); `checklist.md` (PC1 e PC6); experiencia.md §3
   - sinais: "ordem de serviço" | "recebimento dos dados" | "disponibilização" | "autorização"
   - confere: código
   - dispensa: nunca
@@ -61,7 +61,7 @@ Identifica todos os marcos do projeto; marco é "um ponto ou evento significativ
   - confere: código
   - dispensa: porte pequeno
 - **B11.10** Marcos que disparam pagamento identificados
-  - fonte: experiencia.md §1 (pagamento por produto); checklist 4; Rework RW-025 (observação do leitor)
+  - fonte: experiencia.md §1 (pagamento por produto); `checklist.md` PC3; Rework RW-025 (observação do leitor)
   - sinais: "pagamento" | "parcela" | "desembolso" | "% do valor" | cronograma físico-financeiro
   - confere: código
   - dispensa: pagamento de outra forma
@@ -72,10 +72,10 @@ Identifica todos os marcos do projeto; marco é "um ponto ou evento significativ
   - dispensa: porte pequeno
 
 ## Perguntas de qualidade
-- Algum marco está sem data, ou contado de evento sem data? O PMO aponta; a conta é do código (checklist 9).
-- O aceite tem prazo do lado do contratante, e esse prazo separa "entregue" de "aprovado"? (checklist 4)
+- Algum marco está sem data, ou contado de evento sem data? O PMO aponta; a conta é do código (PC4).
+- O aceite tem prazo do lado do contratante, e esse prazo separa "entregue" de "aprovado"? (PC3)
 - Os prazos estão todos contados do mesmo ponto, ou há marco preso a data fixa e outros contados da etapa anterior? (experiencia.md §2)
-- Algum marco cai em período eleitoral ou de troca de gestão do contratante? (checklist 9)
+- Algum marco cai em período eleitoral ou de troca de gestão do contratante? (PC5)
 - A quantidade de marcos é legível para o patrocinador? (Rework RW-025)
 
 ## Erros comuns
@@ -106,4 +106,4 @@ Prazos que o documento não traz: "não informado no documento — a definir pel
 - PMBOK 6: 6.1, p. 180 (PDF 216); 6.2.3.3, p. 186 (PDF 222); 6.3, p. 188–192 (PDF 224–228); 6.5.3.2, p. 217–219 (PDF 253–255); glossário, marco, p. 715 (PDF 751).
 - PMBOK 7: artefatos, cronograma de marcos e roadmap, p. 184 e 188 (PDF 279 e 283).
 - Rework: RW-025 (link nos itens).
-- Ficha `tap` (TAP.6); `checklist.md` (4, 8, 9); `experiencia.md` §1, §2 e §3.
+- Ficha `tap` (TAP.6); `checklist.md` (PC1, PC3, PC4, PC5, PC6); `experiencia.md` §1, §2 e §3.

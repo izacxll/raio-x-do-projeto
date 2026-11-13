@@ -6,7 +6,7 @@ etapas: [2, 4, 5]
 gravidade: baixa
 categoria: tempo
 sinonimos: ["diagrama de rede", "rede do cronograma", "diagrama de precedência", "rede PERT", "diagrama PERT", "rede de atividades", "tabela de predecessoras", "matriz de dependências"]
-versao: 0.1.0
+versao: 0.2.0
 ---
 
 # B16 — Diagrama de rede do cronograma do projeto
@@ -36,12 +36,12 @@ versao: 0.1.0
   - confere: código
   - dispensa: nunca
 - **B16.5** Tempos de análise e aprovação do contratante na rede, como atividades com duração e não como espera
-  - fonte: PMBOK 6, 6.3, p. 193 (PDF 229) (antecipações e esperas não substituem a lógica); checklist 4; Rework RW-052 (https://resources.rework.com/libraries/project-management/critical-path-method)
+  - fonte: PMBOK 6, 6.3, p. 193 (PDF 229) (antecipações e esperas não substituem a lógica); `checklist.md` PC3; Rework RW-052 (https://resources.rework.com/libraries/project-management/critical-path-method)
   - sinais: "análise do contratante" | "aprovação" | "validação" | "parecer" como atividade com ID
   - confere: código
   - dispensa: nunca
 - **B16.6** Dependências externas identificadas como tal (dados, agendas, autorizações de terceiros)
-  - fonte: PMBOK 6, 6.3, p. 191–192 (PDF 227–228); checklist 8; Rework RW-027 (https://resources.rework.com/libraries/project-management/task-dependencies)
+  - fonte: PMBOK 6, 6.3, p. 191–192 (PDF 227–228); `checklist.md` (PC1 e PC6); Rework RW-027 (https://resources.rework.com/libraries/project-management/task-dependencies)
   - sinais: "externa" | "dependência externa" | "a cargo do contratante" | "recebimento" | "disponibilização"
   - confere: código
   - dispensa: nunca
@@ -73,8 +73,8 @@ versao: 0.1.0
 
 ## Perguntas de qualidade
 - Alguma atividade ficou solta (sem entrada ou sem saída)? O código acusa; o PMO procura a causa (PMBOK 6, p. 188, PDF 224).
-- A análise do contratante está modelada como atividade, ou escondida como espera? (checklist 4)
-- Cada dependência de terceiro tem um responsável do outro lado e um prazo? (checklist 8)
+- A análise do contratante está modelada como atividade, ou escondida como espera? (PC3)
+- Cada dependência de terceiro tem um responsável do outro lado e um prazo? (PC1 e PC6)
 - As frentes paralelas convergem num produto consolidado? Essa convergência está apontada? (Rework RW-055, observação do leitor)
 - Há relações II ou TT que permitiriam sobrepor produtos sem violar a sequência de aceite do edital? (Rework RW-055)
 
@@ -82,7 +82,7 @@ versao: 0.1.0
 - Desenhar a rede depois do cronograma, como enfeite (Rework RW-055).
 - Usar espera no lugar de atividade, ou embutir esperas nas durações (PMBOK 6, p. 193 e 203, PDF 229 e 239).
 - Usar dependência para representar falta de recurso; isso é nivelamento (Rework RW-027).
-- Ignorar dependências externas (Rework RW-027; checklist 8).
+- Ignorar dependências externas (Rework RW-027; PC1 e PC6).
 - Dependência circular, sinal de erro de planejamento (Rework RW-051).
 
 ## Quando dispensar a parte inteira
@@ -107,4 +107,4 @@ Caminho crítico e folgas: calculados pelo código.
 - PMBOK 6: 6.2, p. 186 (PDF 222); 6.3, p. 188–194 (PDF 224–230); 6.4, p. 203 (PDF 239); 6.5, p. 209 e 218 (PDF 245 e 254); 6.6, p. 230 (PDF 266); glossário, p. 706 (PDF 742).
 - PMBOK 7: 2.4.2.3, p. 59–60 (PDF 154–155); artefatos, p. 189 (PDF 284).
 - Rework: RW-027, RW-051, RW-052, RW-055, RW-056 (links nos itens).
-- `checklist.md` (4, 8).
+- `checklist.md` (PC1, PC3, PC6).

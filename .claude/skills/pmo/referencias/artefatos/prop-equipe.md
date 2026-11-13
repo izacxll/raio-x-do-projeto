@@ -6,7 +6,7 @@ etapas: [2]
 gravidade: não se aplica
 categoria: não se aplica
 sinonimos: ["equipe técnica", "equipe-chave", "composição da equipe", "perfis profissionais", "alocação de horas", "matriz RACI", "quadro de pessoal"]
-versao: 0.1.0
+versao: 0.2.0
 ---
 
 # PROP-EQUIPE — Equipe técnica, horas e responsabilidades
@@ -26,22 +26,22 @@ Mostra quem faz o trabalho, com que perfil, quantas horas em cada atividade da E
   - confere: código
   - dispensa: nunca
 - **PROP-EQUIPE.3** Horas de cada perfil por atividade ou pacote da EAP, numa matriz; os totais são do código
-  - fonte: PMBOK 6, 9.2, bottom-up, p. 324 (PDF 360); requisitos de recursos, p. 325 (PDF 361); `checklist.md` 6
+  - fonte: PMBOK 6, 9.2, bottom-up, p. 324 (PDF 360); requisitos de recursos, p. 325 (PDF 361); `checklist.md` PC7
   - sinais: tabela perfil × código da EAP com horas | "horas" | "h"
   - confere: código
   - dispensa: nunca
 - **PROP-EQUIPE.4** Premissa de produtividade explícita onde a carga depende de volume (entrevistas por dia, municípios por equipe), para o código fazer a conta equipe × volume
-  - fonte: `checklist.md` 6 (CP11); `experiencia.md` §4; PMBOK 6, 6.4, p. 200–201 (PDF 236–237) (paramétrica)
+  - fonte: `checklist.md` PC7 (CP11); `experiencia.md` §4; PMBOK 6, 6.4, p. 200–201 (PDF 236–237) (paramétrica)
   - sinais: "por dia" | "por técnico" | "produtividade" | "premissa"
   - confere: código
   - dispensa: nunca
 - **PROP-EQUIPE.5** Distribuição das horas acompanha o pico do trabalho, e a coordenação tem horas para as frentes e os interlocutores
-  - fonte: `checklist.md` 6 (CP10, CP11); `experiencia.md` §4
+  - fonte: `checklist.md` PC7 (CP10, CP11); `experiencia.md` §4
   - sinais: horas que variam por fase ou mês; horas de coordenação por frente
   - confere: só PMO
   - dispensa: nunca
 - **PROP-EQUIPE.6** Um responsável por frente e por produto
-  - fonte: `checklist.md` 6 (CP10); Rework RW-036 (dono único por entrega)
+  - fonte: `checklist.md` PC7 (CP10); Rework RW-036 (dono único por entrega)
   - sinais: "responsável" | "coordenador da frente" | coluna de responsável por produto
   - confere: código
   - dispensa: nunca
@@ -61,24 +61,24 @@ Mostra quem faz o trabalho, com que perfil, quantas horas em cada atividade da E
   - confere: código
   - dispensa: nunca
 - **PROP-EQUIPE.10** Equipe de campo ou local compatível com a regra de subcontratação do edital
-  - fonte: `licitacoes.md` 2.8 (art. 122); `checklist.md` 3 (CTR2) e 11; `experiencia.md` §5
+  - fonte: `licitacoes.md` 2.8 (art. 122); `checklist.md` (CTR2: exclusão ou obrigação do contratante); `experiencia.md` §5
   - sinais: "subcontratação" | "equipe local" | "vedada" | "permitida"
   - confere: só PMO
   - dispensa: sem campo
 
 ## Perguntas de qualidade
-- A equipe dá conta do volume em cada frente e em cada mês, e não só na média? (checklist 6; `experiencia.md` §4)
-- A coordenação cresce se o projeto cresce por ondas ou lotes? (checklist 6)
+- A equipe dá conta do volume em cada frente e em cada mês, e não só na média? (PC7; `experiencia.md` §4)
+- A coordenação cresce se o projeto cresce por ondas ou lotes? (PC7)
 - Algum perfil tem duas cargas que crescem por motivos diferentes (supervisor que também articula municípios)? (`experiencia.md` §4)
-- Há separação de equipes quando a mesma frente orienta e avalia? (checklist 10)
+- Há separação de equipes quando a mesma frente orienta e avalia? (PROP-METODOLOGIA.9, CP14)
 - O profissional apresentado para pontuar terá disponibilidade real no período? (`licitacoes.md` 2.2; PMBOK 6, p. 478–479)
 
 ## Erros comuns
 - Horas iguais todo mês enquanto o trabalho se concentra em poucas fases (`experiencia.md` §4).
-- Coordenação com poucas horas diante de muitas frentes (checklist 6).
+- Coordenação com poucas horas diante de muitas frentes (PC7).
 - Profissional pontuado que não aparece na execução (`licitacoes.md` 2.2).
 - RACI sem o contratante, ou com mais de um "A" por linha (PMBOK 6, p. 317; Rework RW-049).
-- Campo com equipe local quando o edital veda subcontratação (checklist 3, CTR2).
+- Campo com equipe local quando o edital veda subcontratação (pergunta de esclarecimento, CTR2).
 
 ## Quando dispensar a parte inteira
 Não se dispensa: horas por perfil são a base do preço. Em porte pequeno, a RACI pode virar uma coluna de responsável no quadro de produtos.
@@ -101,4 +101,4 @@ Linha para a tela: "Equipe em quadro de horas, com responsável por produto: por
 ## Fontes
 - PMBOK 6: 6.4, p. 200–201 (PDF 236–237); 9.1, p. 317 (PDF 353); 9.2, p. 320, 324 e 325 (PDF 356, 360 e 361); 12.1, p. 478–479 (PDF 514–515).
 - Rework: RW-036 (https://resources.rework.com/libraries/project-management/project-deliverables); RW-049 (https://resources.rework.com/libraries/project-management/what-is-raci-matrix).
-- `licitacoes.md` 2.2, 2.4 e 2.8; `checklist.md` 3, 6, 10, 11; `experiencia.md` §4 e §5; SKILL.md, princípio 1 e etapa 2.
+- `licitacoes.md` 2.2, 2.4 e 2.8; `checklist.md` (PC7; CTR2; CP14); `experiencia.md` §4 e §5; SKILL.md, princípio 1 e etapa 2.

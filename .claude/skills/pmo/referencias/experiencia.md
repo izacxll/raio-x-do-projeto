@@ -1,6 +1,6 @@
 # Experiência: onde os planos costumam falhar
 
-Versão 0.1.0 (rascunho da fase S).
+Versão 0.2.0.
 
 Padrões gerais tirados da pesquisa com a gestão de projetos da FGV Projetos (a mesma da taxonomia V29) e das rodadas do Raio-X do Plano de Trabalho. **Sem nomes de pessoas, sem projeto identificável, sem trechos de entrevista.**
 

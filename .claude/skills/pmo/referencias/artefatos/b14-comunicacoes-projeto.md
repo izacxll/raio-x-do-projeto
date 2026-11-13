@@ -6,7 +6,7 @@ etapas: [4, 5]
 gravidade: baixa
 categoria: partes interessadas
 sinonimos: ["comunicações do projeto", "relatório de status", "relatório de andamento", "relatório de acompanhamento", "relatório mensal", "ata de reunião", "modelo de ata", "boletim", "registros do projeto"]
-versao: 0.1.0
+versao: 0.2.0
 ---
 
 # B14 — Comunicações do projeto
@@ -36,7 +36,7 @@ São os artefatos de comunicação produzidos conforme o A7: relatórios de dese
   - confere: código
   - dispensa: porte pequeno
 - **B14.5** Pendências e pedidos ao contratante (dados, aprovações, decisões), com responsável e prazo
-  - fonte: Rework RW-022 (seção de pedidos e decisões); `checklist.md` 7 (CE16) e 8 (CP13)
+  - fonte: Rework RW-022 (seção de pedidos e decisões); `checklist.md` (PC1, PC3)
   - sinais: "pendências do contratante" | "pedidos" | "aguardando" | "decisões necessárias"
   - confere: código
   - dispensa: nunca
@@ -56,7 +56,7 @@ São os artefatos de comunicação produzidos conforme o A7: relatórios de dese
   - confere: código
   - dispensa: porte pequeno
 - **B14.9** Comunicações ao público ou aos beneficiários (comunicados, materiais de divulgação), quando o método depende de adesão
-  - fonte: PMBOK 6, 10.1.2.5, p. 374–375 (PDF 410–411); `checklist.md` 12 (TB23)
+  - fonte: PMBOK 6, 10.1.2.5, p. 374–375 (PDF 410–411); `checklist.md` PC6
   - sinais: "comunicado" | "divulgação" | "material informativo" | "mobilização"
   - confere: código
   - dispensa: sem beneficiários
@@ -67,7 +67,7 @@ São os artefatos de comunicação produzidos conforme o A7: relatórios de dese
   - dispensa: nunca
 
 ## Perguntas de qualidade
-- O relatório diz o que depende do contratante, com data, para proteger a FGV em caso de atraso? (Rework RW-022, adaptação do leitor; checklist 8)
+- O relatório diz o que depende do contratante, com data, para proteger a FGV em caso de atraso? (Rework RW-022, adaptação do leitor; PC1)
 - Os modelos seguem o formato e a cadência do A7 e do contrato? (A7.10; Rework RW-022)
 - O relatório ao contratante e o interno estão separados (margem e esforço só no interno)? (Rework RW-022)
 - Há relatório exigido pelo contrato com conteúdo mínimo que o modelo não cobre? (`licitacoes.md` 2.6)
@@ -108,4 +108,4 @@ Decisão: ... | Ação: ... | Responsável: ... | Prazo: ...
 ## Fontes
 - PMBOK 6: 10.1, p. 367 (PDF 403); 10.1.2.5, p. 374–375 (PDF 410–411); 10.2, p. 381–388 (PDF 417–424).
 - Rework: RW-020 e RW-022 (links nos itens).
-- `checklist.md` 7, 8 e 12; `licitacoes.md` 2.6; SKILL.md, princípio 2 e etapa 4; decisão 0007.
+- `checklist.md` (PC1, PC3, PC6); `licitacoes.md` 2.6; SKILL.md, princípio 2 e etapa 4; decisão 0007.

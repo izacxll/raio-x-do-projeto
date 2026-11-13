@@ -6,13 +6,13 @@ etapas: [4, 5]
 gravidade: baixa
 categoria: trabalho do projeto
 sinonimos: ["registro de questões", "registro de problemas", "log de questões", "controle de pendências", "pontos em aberto", "issue log", "RAID"]
-versao: 0.1.0
+versao: 0.2.0
 ---
 
 # B9 — Registro das questões
 
 ## Para que serve
-"Um documento do projeto, onde informações sobre questões são registradas e monitoradas" (PMBOK 6, glossário, p. 721, PDF 757). Questão é problema, lacuna, inconsistência ou conflito inesperado que já exige ação (4.3, p. 96, PDF 132). Risco ainda não aconteceu (B27); mudança propõe alterar a linha de base (B5). Nasce na execução (4.3); na etapa 4 entra como **modelo inicial**, sem inventar questões (decisão 0007, passo 12). Exceção: leitura do TR ainda não confirmada pelo contratante pode entrar já como questão aberta (checklist 1).
+"Um documento do projeto, onde informações sobre questões são registradas e monitoradas" (PMBOK 6, glossário, p. 721, PDF 757). Questão é problema, lacuna, inconsistência ou conflito inesperado que já exige ação (4.3, p. 96, PDF 132). Risco ainda não aconteceu (B27); mudança propõe alterar a linha de base (B5). Nasce na execução (4.3); na etapa 4 entra como **modelo inicial**, sem inventar questões (decisão 0007, passo 12). Exceção: leitura do TR ainda não confirmada pelo contratante pode entrar já como questão aberta (vago, CTR7).
 
 ## Conteúdo mínimo
 - **B9.1** Identificador e descrição de cada questão
@@ -62,8 +62,8 @@ versao: 0.1.0
   - dispensa: porte pequeno
 
 ## Perguntas de qualidade
-- Dado, aprovação ou insumo que o contratante ou um terceiro deve e não entregou vira questão com responsável do outro lado e prazo? (checklist 3 e 8)
-- A leitura do TR adotada sem confirmação está registrada até o contratante responder? (checklist 1)
+- Dado, aprovação ou insumo que o contratante ou um terceiro deve e não entregou vira questão com responsável do outro lado e prazo? (PC1 e PC6)
+- A leitura do TR adotada sem confirmação está registrada até o contratante responder? (vago, CTR7)
 - O registro é revisto numa reunião com cadência fixa (A7), e as questões abertas há dois ciclos sobem de nível? (Rework RW-004)
 - A causa de cada questão é investigada, e não só o sintoma ("falha de comunicação", "erro humano")? (Rework RW-106, https://resources.rework.com/libraries/process-management/root-cause-analysis)
 - No encerramento, o registro mostra que não há questão pendente? (PMBOK 6, 4.7, p. 124, PDF 160)
@@ -80,13 +80,13 @@ Não se dispensa: é entrada do monitoramento (4.5) e do encerramento (4.7) (PMB
 Linha para a tela: "Questões no RAID, junto com riscos e premissas: porte pequeno (Rework RW-004)."
 
 ## Ligações
-- **Vem de:** 4.3 (nasce aqui); atualizado em 4.5, 8.3, 9.5, 9.6, 10.2, 10.3, 11.6, 11.7, 13.3 e 13.4 (pmbok6.md, tabela); risco que ocorreu (B27); dependência não cumprida; checklist 1 (leitura não confirmada).
+- **Vem de:** 4.3 (nasce aqui); atualizado em 4.5, 8.3, 9.5, 9.6, 10.2, 10.3, 11.6, 11.7, 13.3 e 13.4 (pmbok6.md, tabela); risco que ocorreu (B27); dependência não cumprida; leitura não confirmada de trecho vago (CTR7).
 - **Vai para:** 4.5 (quem resolve o quê e quando); 4.7 (nada pendente); 11.2 (questões revelam riscos); 13.1, 13.2 e 13.4 (questões ligadas a partes interessadas; PMBOK 7, Tab. 2-2, p. 15, PDF 110); B5 (questão que gera pedido de mudança); B10 (lição).
 
 ## Modelo de redação
 ```
 Nº | Tipo | Levantada por / data | Descrição | Prioridade | Responsável | Prazo | Status | Solução final | Escalonada para
-Modelo inicial: sem linhas inventadas; exceção para leituras do TR ainda não confirmadas (checklist 1).
+Modelo inicial: sem linhas inventadas; exceção para leituras do TR ainda não confirmadas (vago, CTR7).
 Revisão: na reunião de [cadência definida no A7]; sem avanço em [nº de ciclos a definir pelo GP], escalar para [papel].
 ```
 
@@ -94,4 +94,4 @@ Revisão: na reunião de [cadência definida no A7]; sem avanço em [nº de cicl
 - PMBOK 6: 4.3, p. 96 (PDF 132); 4.5, p. 108 (PDF 144); 4.7, p. 124 (PDF 160); glossário, p. 721 (PDF 757).
 - PMBOK 7: Tab. 2-2, p. 15 (PDF 110); Guia 4.6, p. 185 (PDF 280).
 - Rework: RW-004 (link no item B9.4); RW-032, RW-054 e RW-106 (links nas seções acima).
-- `checklist.md` (1, 3, 8); decisão 0007.
+- `checklist.md` (PC1, PC6; vago, CTR7); decisão 0007.

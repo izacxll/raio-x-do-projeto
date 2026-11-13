@@ -6,7 +6,7 @@ etapas: [4, 5]
 gravidade: baixa
 categoria: entrega
 sinonimos: ["relatório da qualidade", "relatórios de qualidade", "relatório de controle da qualidade", "relatório de não conformidades", "balanço da qualidade"]
-versao: 0.1.0
+versao: 0.2.0
 ---
 
 # B21 — Relatório de qualidade

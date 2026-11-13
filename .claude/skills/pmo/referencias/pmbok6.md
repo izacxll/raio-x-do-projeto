@@ -1,5 +1,5 @@
 # PMBOK 6 — áreas de conhecimento, processos, entradas e saídas
-Versão 0.1.0 (rascunho da fase S). Fonte: PMI, Guia PMBOK, 6ª ed., em português. Páginas: impressa (PDF).
+Versão 0.2.0. Fonte: PMI, Guia PMBOK, 6ª ed., em português. Páginas: impressa (PDF).
 
 Convenções:
 - `p. 75 (111)` = página impressa 75, página 111 do PDF. Em todo o livro, PDF = impressa + 36.
