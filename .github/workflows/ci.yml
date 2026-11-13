@@ -1,0 +1,54 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  verificar:
+    name: Verificação, lint, tipos, testes e build
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Instalar dependências
+        run: npm ci
+
+      - name: Verificar o repositório público (decisão 0010)
+        run: npm run verificar-repositorio
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Formatação
+        run: npm run verificar-formato
+
+      - name: Testes
+        run: npm test
+
+      - name: Build (inclui a checagem de tipos)
+        run: npm run build
+
+      - name: Instalar o Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Testes de fumaça no navegador
+        run: npm run test:fumaca
+
+      - name: Relatório dos testes de fumaça
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: relatorio-fumaca
+          path: test-results/
+          retention-days: 7
