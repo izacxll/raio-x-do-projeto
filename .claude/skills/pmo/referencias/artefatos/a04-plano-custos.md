@@ -6,7 +6,7 @@ etapas: [4, 5]
 gravidade: grave
 categoria: custo
 sinonimos: ["plano de custos", "plano de gerenciamento de custos", "gestão de custos", "gerenciamento dos custos", "gestão financeira do projeto", "plano financeiro", "metodologia de custos"]
-versao: 0.1.0
+versao: 0.2.0
 ---
 
 # A4 — Plano de gerenciamento dos custos
@@ -56,7 +56,7 @@ Componente que diz "como os custos serão planejados, estruturados e controlados
   - confere: código
   - dispensa: nunca
 - **A4.9** Ligação com as regras do contrato: evento de faturamento (entrega ou aceite), cronograma de desembolso e índice de reajuste, quando houver
-  - fonte: PMBOK 6, 7.3, p. 253 e 256 (PDF 289 e 292); `licitacoes.md` 2.6; checklist 4
+  - fonte: PMBOK 6, 7.3, p. 253 e 256 (PDF 289 e 292); `licitacoes.md` 2.6; `checklist.md` PC3
   - sinais: "cronograma de desembolso" | "físico-financeiro" | "parcela" | "nota fiscal" | "pagamento" | "reajuste" | "medição"
   - confere: código
   - dispensa: nunca
@@ -72,7 +72,7 @@ Componente que diz "como os custos serão planejados, estruturados e controlados
   - dispensa: nunca
 
 ## Perguntas de qualidade
-- O plano diz em que evento a FGV fatura (entrega ou aceite) e quanto do trabalho fica sem pagamento até a primeira parcela? (checklist 4; `experiencia.md` §1; Rework RW-078, observação do leitor)
+- O plano diz em que evento a FGV fatura (entrega ou aceite) e quanto do trabalho fica sem pagamento até a primeira parcela? (PC3; `experiencia.md` §1; Rework RW-078, observação do leitor)
 - A contingência está ligada a riscos do B27, e a reserva gerencial tem dono e condição de uso? Valores ficam com o GP (SKILL.md, princípio 1).
 - A definição de custo (só diretos ou com indiretos) é a mesma no orçamento e no acompanhamento? (PMBOK 6, p. 261, PDF 297)
 - A exatidão declarada é coerente com a fase? Proposta e plano não estão no mesmo ponto do cone (Rework RW-040).
@@ -107,4 +107,4 @@ Linha para a tela: "Custos simplificados, junto com a linha de base: porte peque
 - PMBOK 6: 7.1, p. 235–239 (PDF 271–275); 7.2, p. 241–245 (PDF 277–281); 7.3, p. 252–256 (PDF 288–292); 7.4, p. 259–261 (PDF 295–297); p. 231 e 234 (PDF 267 e 270); X5.4, p. 681 (PDF 717); glossário, p. 719 (PDF 755).
 - PMBOK 7: 2.4.2.4, p. 62–63 (PDF 157–158); 2.7.5, p. 113–114 (PDF 208–209).
 - Rework: RW-014, RW-015, RW-022 (links nos itens); RW-040 (https://resources.rework.com/libraries/project-management/cone-of-uncertainty); RW-078 (https://resources.rework.com/libraries/deal-closing/payment-terms).
-- `licitacoes.md` 2.6; `checklist.md` (4); `experiencia.md` §1.
+- `licitacoes.md` 2.6; `checklist.md` (PC3); `experiencia.md` §1.

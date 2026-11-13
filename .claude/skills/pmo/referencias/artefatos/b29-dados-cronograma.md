@@ -6,7 +6,7 @@ etapas: [4, 5]
 gravidade: baixa
 categoria: tempo
 sinonimos: ["dados do cronograma", "premissas do cronograma", "memória do cronograma", "base de dados do cronograma", "modelo do cronograma", "histograma de recursos", "cenários do cronograma"]
-versao: 0.1.0
+versao: 0.2.0
 ---
 
 # B29 — Dados do cronograma
@@ -21,12 +21,12 @@ versao: 0.1.0
   - confere: código
   - dispensa: nunca
 - **B29.2** Premissas e restrições do cronograma documentadas (data de início suposta, prazos de análise, disponibilidade de dados e de pessoas)
-  - fonte: PMBOK 6, 6.5.3.3, p. 220 (PDF 256); experiencia.md §2; checklist 9
+  - fonte: PMBOK 6, 6.5.3.3, p. 220 (PDF 256); experiencia.md §2; `checklist.md` PC4
   - sinais: "premissas do cronograma" | "restrições" | "data de início prevista" | "a partir da ordem de serviço" | "prazo de análise"
   - confere: código
   - dispensa: nunca
 - **B29.3** Requisitos de recursos por período (histograma ou tabela pessoas × mês)
-  - fonte: PMBOK 6, 6.5.3.3, p. 220 (PDF 256); experiencia.md §4; checklist 6
+  - fonte: PMBOK 6, 6.5.3.3, p. 220 (PDF 256); experiencia.md §4; `checklist.md` PC7
   - sinais: "histograma" | "recursos por mês" | "alocação mensal" | tabela de perfis × períodos
   - confere: código
   - dispensa: porte pequeno
@@ -62,7 +62,7 @@ versao: 0.1.0
   - dispensa: nunca
 
 ## Perguntas de qualidade
-- A data de início suposta está escrita como premissa, com o efeito de um atraso na assinatura? (experiencia.md §2; checklist 9)
+- A data de início suposta está escrita como premissa, com o efeito de um atraso na assinatura? (experiencia.md §2; PC4)
 - O histograma mostra o pico de trabalho, ou distribui horas iguais todos os meses? (experiencia.md §4)
 - O fluxo de faturamento depende do aceite? Um atraso de aprovação vira atraso de caixa (experiencia.md §1).
 - O cenário pessimista usa os pessimistas do B8, e não um percentual arbitrário? A conta é do código.
@@ -98,4 +98,4 @@ Dados do cronograma — versão [n]; data dos dados [a definir pelo GP]
 ## Fontes
 - PMBOK 6: p. 175–176 (PDF 211–212); 6.4, p. 202 (PDF 238); 6.5, p. 207–208, 213 e 220 (PDF 243–244, 249 e 256); Fig. 6-21, p. 219 (PDF 255); 6.6, p. 230 (PDF 266); glossário, p. 705 (PDF 741).
 - PMBOK 7: não traz os dados do cronograma entre os artefatos (lista, p. 184–192, PDF 279–287); usa o cronograma do projeto (p. 188, PDF 283).
-- `checklist.md` (6, 9); `experiencia.md` §1, §2 e §4; SKILL.md, princípio 6.
+- `checklist.md` (PC4, PC7); `experiencia.md` §1, §2 e §4; SKILL.md, princípio 6.

@@ -6,13 +6,13 @@ etapas: [4, 5]
 gravidade: grave
 categoria: partes interessadas
 sinonimos: ["plano de engajamento", "plano de gerenciamento das partes interessadas", "engajamento das partes interessadas", "estratégia de engajamento", "gestão de stakeholders", "plano de engajamento de stakeholders"]
-versao: 0.1.0
+versao: 0.2.0
 ---
 
 # A10 — Plano de engajamento das partes interessadas
 
 ## Para que serve
-"Identifica as estratégias e ações necessárias para promover o envolvimento produtivo das partes interessadas na decisão ou execução" (PMBOK 6, 13.2.3.1, p. 522, PDF 558). Parte do registro (B31) e diz o que fazer com cada parte ou grupo. O PMBOK 6 lista um único conteúdo (as estratégias); os demais itens vêm de outros trechos do cap. 13 que atribuem algo ao plano, fora da lista do livro, do PMBOK 7, do Rework e do checklist.
+"Identifica as estratégias e ações necessárias para promover o envolvimento produtivo das partes interessadas na decisão ou execução" (PMBOK 6, 13.2.3.1, p. 522, PDF 558). Parte do registro (B31) e diz o que fazer com cada parte ou grupo. O PMBOK 6 lista um único conteúdo (as estratégias); os demais itens vêm de outros trechos do cap. 13 que atribuem algo ao plano, fora da lista do livro, do PMBOK 7, do Rework e das premissas críticas (`checklist.md`).
 
 ## Conteúdo mínimo
 - **A10.1** Estratégia ou ação de engajamento para cada parte interessada ou grupo
@@ -36,7 +36,7 @@ versao: 0.1.0
   - confere: código
   - dispensa: nunca
 - **A10.5** Responsável pelas ações de que o método depende (articulação, mobilização, divulgação), dizendo se é da FGV ou do contratante
-  - fonte: `checklist.md` 3 (CTR3) e 12 (TB23); `experiencia.md` §3 e §6
+  - fonte: `checklist.md` CTR3 e PC6 (TB23); `experiencia.md` §3 e §6
   - sinais: "mobilização" | "divulgação" | "articulação" | "cabe ao contratante" | "cabe à contratada"
   - confere: só PMO
   - dispensa: sem campo e sem beneficiários
@@ -59,15 +59,15 @@ versao: 0.1.0
 ## Perguntas de qualidade
 - As estratégias saem da análise do B31 (poder, interesse, atitude), ou são iguais para todos? (PMBOK 6, p. 521, PDF 557; Rework RW-006)
 - Há partes que podem se opor e um modo de tratar com elas? (PMBOK 7, p. 8, PDF 103)
-- Quem decide do lado do cliente está no plano, com rito e tempo de decisão? (checklist 7, CE16)
-- Se houver campo: estruturas locais que podem ver o projeto como concorrência estão contempladas? (checklist 11, TC20)
-- Se houver beneficiários: quem mobiliza, com que meios? A meta condicionada à adesão está como premissa? (checklist 12, TB23)
+- Quem decide do lado do cliente está no plano, com rito e tempo de decisão? (PC3, CE16)
+- Se houver campo: estruturas locais que podem ver o projeto como concorrência estão contempladas? (PC6, TC20)
+- Se houver beneficiários: quem mobiliza, com que meios? A meta condicionada à adesão está como premissa? (PC6, TB23)
 - A comunicação combina formas ativa, passiva e interativa, ou se resume a relatórios enviados? (PMBOK 7, p. 13, PDF 108)
 
 ## Erros comuns
 - Plano feito uma vez e esquecido (PMBOK 6, p. 518, PDF 554; Rework RW-006).
 - Olhar só os apoiadores; classificar pelo cargo e não pelo comportamento; listar partes sem ação (Rework RW-006).
-- Mobilização sem responsável e baixa adesão atribuída aos beneficiários: causa mal atribuída (checklist 12; experiencia.md §6).
+- Mobilização sem responsável e baixa adesão atribuída aos beneficiários: causa mal atribuída (PC6; experiencia.md §6).
 - Análise sensível (resistência, atitude) em documento entregue ao contratante; ela deve ficar na equipe (PMBOK 7, p. 12, PDF 107).
 
 ## Quando dispensar a parte inteira
@@ -75,7 +75,7 @@ Não se dispensa, mas o PMBOK 6 admite plano "formal ou informal", detalhado ou 
 Linha para a tela: "Engajamento como coluna de ação no registro das partes interessadas: porte pequeno (PMBOK 6, p. 522)."
 
 ## Ligações
-- **Vem de:** 13.2, com TAP (TAP1 e TAP2; p. 518, PDF 554), A6, A7, A8 (limites e atitudes diante do risco), B3, B5, B9, B15 (atividades ligadas a partes específicas), B27 (responsáveis e afetados) e B31; acordos (contratados, em coordenação com as aquisições; p. 519, PDF 555); checklist 7, 11 e 12.
+- **Vem de:** 13.2, com TAP (TAP1 e TAP2; p. 518, PDF 554), A6, A7, A8 (limites e atitudes diante do risco), B3, B5, B9, B15 (atividades ligadas a partes específicas), B27 (responsáveis e afetados) e B31; acordos (contratados, em coordenação com as aquisições; p. 519, PDF 555); `checklist.md` PC3 e PC6.
 - **Vai para:** 13.1, 13.3 e 13.4; A7 (10.1); 5.2 (coleta de requisitos); 8.1.
 - Requisitos da RFP sobre participação, consulta ou articulação com atores caem aqui (número R).
 
@@ -92,4 +92,4 @@ Linha para a tela: "Engajamento como coluna de ação no registro das partes int
 - PMBOK 6: cap. 13, p. 505 (PDF 541); 13.1, p. 512–515 (PDF 548–551); 13.2, p. 518–522 (PDF 554–558); 13.3, p. 524–525 (PDF 560–561); 13.4, p. 535 (PDF 571).
 - PMBOK 7: 2.1 Partes interessadas, p. 8–14 (PDF 103–109); plano de engajamento, p. 187 (PDF 282).
 - Rework: RW-006 (link no item).
-- `checklist.md` (3, 7, 11, 12); `experiencia.md` §3 e §6.
+- `checklist.md` (CTR3, PC3, PC6); `experiencia.md` §3 e §6.

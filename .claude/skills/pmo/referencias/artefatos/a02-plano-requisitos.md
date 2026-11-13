@@ -6,7 +6,7 @@ etapas: [4, 5]
 gravidade: grave
 categoria: escopo
 sinonimos: ["plano de requisitos", "plano de gerenciamento de requisitos", "gerenciamento dos requisitos", "gestão de requisitos", "gestão dos requisitos", "plano de análise de negócio"]
-versao: 0.1.0
+versao: 0.2.0
 ---
 
 # A2 — Plano de gerenciamento dos requisitos
@@ -56,16 +56,16 @@ Descreve "como os requisitos serão analisados, documentados e gerenciados" (PMB
   - confere: código
   - dispensa: nunca
 - **A2.9** Requisito com mais de uma leitura ou em conflito: pergunta ao contratante, leitura adotada como premissa (B3) e questão aberta (B9) até a confirmação
-  - fonte: PMBOK 6, 5.2, p. 147 (PDF 183) (não ambíguos antes da linha de base); PMBOK 7, 2.6, p. 82–83 (PDF 177–178); `checklist.md` 1
+  - fonte: PMBOK 6, 5.2, p. 147 (PDF 183) (não ambíguos antes da linha de base); PMBOK 7, 2.6, p. 82–83 (PDF 177–178); `checklist.md`, vago (CTR7)
   - sinais: "esclarecimento" | "leitura adotada" | "interpretação" | "registro de premissas" | "questão"
   - confere: só PMO
   - dispensa: nunca
 
 ## Perguntas de qualidade
 - O plano usa os números R da etapa 1, ou criou outra numeração que quebra o encadeamento RFP → TAP → PGP? (SKILL.md, princípio 9)
-- Quem pode aceitar um requisito novo vindo de oficina ou de pedido do contratante, e o que acontece se ele exceder o contrato? (checklist 5; Rework RW-030)
+- Quem pode aceitar um requisito novo vindo de oficina ou de pedido do contratante, e o que acontece se ele exceder o contrato? (PC8; Rework RW-030)
 - Os obrigatórios do TR estão separados das demandas acrescidas? O obrigatório do TR não se troca sem aditivo (Rework RW-063, observação do leitor).
-- Há modo de resolver requisito ambíguo antes de fixar a linha de base? (PMBOK 6, p. 147; checklist 1)
+- Há modo de resolver requisito ambíguo antes de fixar a linha de base? (PMBOK 6, p. 147; vago, CTR7)
 - A validação aponta a evidência de cada requisito (seção do produto, ata, lista de presença), e não só "aprovação do produto"?
 - Os requisitos são instáveis? Então o plano prevê técnica mais enxuta ou iterativa até estabilizarem (PMBOK 6, p. 133, PDF 169).
 
@@ -74,7 +74,7 @@ Descreve "como os requisitos serão analisados, documentados e gerenciados" (PMB
 - Tratar toda demanda nova como requisito do contrato, sem passar pela mudança (Rework RW-030; RW-067, observação do leitor).
 - Tudo "obrigatório", sem margem (Rework RW-063).
 - Requisito vago, impossível de testar (Rework RW-031).
-- Plano de requisitos de software (módulos, casos de teste) copiado para consultoria sem ajuste (checklist 2, CP8).
+- Plano de requisitos de software (módulos, casos de teste) copiado para consultoria sem ajuste (conflituoso, CP8).
 
 ## Quando dispensar a parte inteira
 O PMBOK 6 não fala em simplificar este plano, mas lembra que as listas de componentes são exemplos (Parte 2, p. 558, PDF 594). Como o app já numera os requisitos e o B23 os rastreia, em porte pequeno o A2 pode ser fundido com o A1 numa seção "Escopo e requisitos" (A2.1, A2.2, A2.4, A2.5, A2.8, A2.9). Em abordagem adaptativa, o backlog faz o papel da lista e o plano diz como ele é priorizado e refinado (PMBOK 6, p. 133, PDF 169; Rework RW-067).
@@ -101,4 +101,4 @@ Linha para a tela: "Requisitos junto com o escopo, usando os números R da RFP: 
 - PMBOK 6: 5.1.3.2, p. 137 (PDF 173); 5.2, p. 140–148 (PDF 176–184); 5.5, p. 165 (PDF 201); 5.6, p. 169 (PDF 205); p. 133 (PDF 169); Parte 2, p. 558 (PDF 594); glossário, p. 719 (PDF 755).
 - PMBOK 7: 2.6, p. 82–83 (PDF 177–178); plano dos requisitos, p. 186 (PDF 281).
 - Rework: RW-030 (https://resources.rework.com/libraries/project-management/scope-creep); RW-031 e RW-063 (links nos itens); RW-067 (https://resources.rework.com/libraries/project-management/product-backlog).
-- SKILL.md, princípio 9; `checklist.md` (1, 2, 5); `licitacoes.md` 2.7.
+- SKILL.md, princípio 9; `checklist.md` (CTR7, CP8, PC8); `licitacoes.md` 2.7.

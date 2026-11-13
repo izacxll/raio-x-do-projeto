@@ -6,7 +6,7 @@ etapas: [2]
 gravidade: não se aplica
 categoria: não se aplica
 sinonimos: ["EAP", "estrutura analítica do projeto", "plano de trabalho", "cronograma", "cronograma físico", "cronograma de execução", "WBS"]
-versao: 0.1.0
+versao: 0.2.0
 ---
 
 # PROP-EAP — EAP e estimativas de duração da proposta
@@ -37,21 +37,21 @@ O PMO monta a EAP por produto e estima as durações em três pontos, com a base
   - dispensa: nunca
 - **PROP-EAP.5** Pessimista que reflete os riscos reais (retrabalho, demora de dados, campo), não um acréscimo fixo
   - fonte: Rework RW-057 (subestimar o pessimista é o erro mais comum); PMBOK 6, 6.4, p. 201 (PDF 237)
-  - sinais: base do pessimista cita risco, brecha ou pergunta do checklist
+  - sinais: base do pessimista cita risco, brecha ou premissa crítica
   - confere: só PMO
   - dispensa: nunca
 - **PROP-EAP.6** Tempo de análise e aprovação do contratante como atividade própria depois de cada produto, com a duração do edital ou sugerida
-  - fonte: PMBOK 6, 12.1, TR, p. 478 (PDF 514); `checklist.md` 4; `experiencia.md` §1; PROP-SOW.9
+  - fonte: PMBOK 6, 12.1, TR, p. 478 (PDF 514); `checklist.md` PC3; `experiencia.md` §1; PROP-SOW.9
   - sinais: "análise do contratante" | "aprovação" | atividade do contratante ligada a cada produto
   - confere: código
   - dispensa: nunca
 - **PROP-EAP.7** Dependências entre atividades, inclusive as externas (dados do contratante, terceiros), como marcos de entrada
-  - fonte: PMBOK 6, 6.3, p. 187 (PDF 223); `checklist.md` 8; Rework RW-033 (dependências do cliente com data)
+  - fonte: PMBOK 6, 6.3, p. 187 (PDF 223); `checklist.md` PC1 e PC6; Rework RW-033 (dependências do cliente com data)
   - sinais: "predecessora" | "depende de" | "marco" | "recebimento dos dados"
   - confere: código
   - dispensa: nunca
 - **PROP-EAP.8** Prazos contados da ordem de serviço ou da assinatura, e os prazos e marcos da RFP passados ao código, com página
-  - fonte: `checklist.md` 9 (CE15); `experiencia.md` §2; especificação da etapa 2, passo 5
+  - fonte: `checklist.md` PC4 (CE15); `experiencia.md` §2; especificação da etapa 2, passo 5
   - sinais: "a partir da ordem de serviço" | "dias após a assinatura" | prazo da RFP com página
   - confere: código
   - dispensa: nunca
@@ -61,7 +61,7 @@ O PMO monta a EAP por produto e estima as durações em três pontos, com a base
   - confere: código
   - dispensa: nunca
 - **PROP-EAP.10** Deslocamento e logística de campo nas durações, por território
-  - fonte: `checklist.md` 11 (TC18); `experiencia.md` §5
+  - fonte: `experiencia.md` §5
   - sinais: "deslocamento" | "viagem" | "território" | base que cita distância ou logística
   - confere: código
   - dispensa: sem campo
@@ -69,9 +69,9 @@ O PMO monta a EAP por produto e estima as durações em três pontos, com a base
 ## Perguntas de qualidade
 - Somando os filhos chega-se ao produto, sem trabalho órfão? (PMBOK 6, p. 161; ficha A13)
 - Quem estimou conhece o trabalho? A base diz de onde veio o número? (PMBOK 6, p. 196 e 204)
-- Algum prazo de produto conta de um evento sem data ("após a aprovação" sem prazo)? (checklist 4 e 9)
-- O período de execução cruza eleição ou troca de gestão do nível do contratante? Se sim, isso entra como premissa ou folga. (checklist 9, CE17)
-- O PMO deixou de afirmar que o prazo "é curto" e passou a conta ao código? (SKILL.md, princípio 6; checklist 9, limite do PMO)
+- Algum prazo de produto conta de um evento sem data ("após a aprovação" sem prazo)? (PC3 e PC4)
+- O período de execução cruza eleição ou troca de gestão do nível do contratante? Se sim, isso entra como premissa ou folga. (PC5, CE17)
+- O PMO deixou de afirmar que o prazo "é curto" e passou a conta ao código? (SKILL.md, princípio 6; `checklist.md` PC4, limite do PMO)
 
 ## Erros comuns
 - EAP de atividades, ou sem ramo de gerenciamento (PMBOK 6, p. 157 e 161).
@@ -95,10 +95,10 @@ EAP: 1 Gerenciamento do projeto — 1.1 Plano de trabalho; 1.2 Relatórios
 | Código | Atividade/pacote | Predecessoras | Otimista | Mais provável | Pessimista | Unidade | Base | Responsável |
 | 2.2 | Análise do contratante | 2.1 | [edital ou sugestão] | ... | ... | dias úteis | [doc, p.] | Contratante |
 Início: a partir de [ordem de serviço/assinatura]; prazos da RFP: [doc, p.].
-Folgas: | Atividade | Motivo (brecha ou checklist n) |   Datas e caminho crítico: código.
+Folgas: | Atividade | Motivo (brecha ou premissa crítica PCn) |   Datas e caminho crítico: código.
 ```
 
 ## Fontes
 - PMBOK 6: 5.4, p. 157–161 (PDF 193–197); 6.3, p. 187 (PDF 223); 6.4, p. 196–202 (PDF 232–238); bases das estimativas, p. 204 (PDF 240); 11.5, p. 443 (PDF 479); 12.1, p. 478 (PDF 514).
 - Rework: RW-014 (https://resources.rework.com/libraries/project-management/project-cost-estimation); RW-033 (https://resources.rework.com/libraries/project-management/statement-of-work); RW-036 (https://resources.rework.com/libraries/project-management/project-deliverables); RW-057 (https://resources.rework.com/libraries/project-management/three-point-estimation).
-- `checklist.md` 4, 8, 9, 11; `experiencia.md` §1, §2, §5; ficha A13; SKILL.md, etapa 2 e princípio 6.
+- `checklist.md` PC1, PC3, PC4, PC5 e PC6; `experiencia.md` §1, §2, §5; ficha A13; SKILL.md, etapa 2 e princípio 6.

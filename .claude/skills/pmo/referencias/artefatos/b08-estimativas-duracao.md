@@ -6,7 +6,7 @@ etapas: [2, 4, 5]
 gravidade: baixa
 categoria: tempo
 sinonimos: ["estimativas de duração", "estimativas de duração das atividades", "estimativa de duração", "durações", "estimativa de prazos", "estimativa de três pontos", "PERT"]
-versao: 0.1.0
+versao: 0.2.0
 ---
 
 # B8 — Estimativas de duração
@@ -36,7 +36,7 @@ São "avaliações quantitativas do número provável de períodos de tempo que 
   - confere: só PMO
   - dispensa: porte pequeno
 - **B8.5** Estimativas sem esperas nem antecipações; a análise do contratante é atividade própria, não somada à duração da redação
-  - fonte: PMBOK 6, 6.4.3.1, p. 203 (PDF 239); 6.3, p. 193 (PDF 229); checklist 4
+  - fonte: PMBOK 6, 6.4.3.1, p. 203 (PDF 239); 6.3, p. 193 (PDF 229); `checklist.md` PC3
   - sinais: "incluindo aprovação" | "com análise" dentro da mesma linha | duração que soma produção e espera
   - confere: só PMO
   - dispensa: nunca
@@ -51,7 +51,7 @@ São "avaliações quantitativas do número provável de períodos de tempo que 
   - confere: código
   - dispensa: porte pequeno
 - **B8.8** Duração coerente com os recursos designados e a produtividade suposta; mais gente não reduz o prazo na mesma proporção
-  - fonte: PMBOK 6, 6.4, p. 196–197 (PDF 232–233); experiencia.md §4; checklist 6
+  - fonte: PMBOK 6, 6.4, p. 196–197 (PDF 232–233); experiencia.md §4; `checklist.md` PC7
   - sinais: duração sem perfil nem quantidade de pessoas | "com equipe reforçada"
   - confere: só PMO
   - dispensa: nunca
@@ -73,9 +73,9 @@ São "avaliações quantitativas do número provável de períodos de tempo que 
 
 ## Perguntas de qualidade
 - O mais provável considera disponibilidade realista, interrupções e dependências, como pede o PMBOK (p. 201, PDF 237)?
-- Volume × equipe × produtividade sustenta a duração, inclusive no pico? A conta é do código (checklist 6; experiencia.md §4).
-- Deslocamento e sazonalidade entraram nas durações de campo? (checklist 11)
-- A análise do contratante tem duração própria, do contrato ou a definir pelo GP? (checklist 4)
+- Volume × equipe × produtividade sustenta a duração, inclusive no pico? A conta é do código (PC7; experiencia.md §4).
+- Deslocamento e sazonalidade entraram nas durações de campo?
+- A análise do contratante tem duração própria, do contrato ou a definir pelo GP? (PC3)
 - **Ordem de colher os três pontos.** O Rework diverge: o RW-057 pede o mais provável primeiro; o RW-051, otimista e pessimista primeiro. Ambos querem evitar ancoragem; registre no B4 a ordem usada.
 
 ## Erros comuns
@@ -112,4 +112,4 @@ Análise do contratante: atividade à parte. Contingência: linha à parte (valo
 - PMBOK 6: 6.1.3.1, p. 182 (PDF 218); 6.3, p. 193 (PDF 229); 6.4, p. 196–204 (PDF 232–240); 6.5, p. 207 (PDF 243); 7.2, p. 244–245 (PDF 280–281); p. 175 (PDF 211).
 - PMBOK 7: 2.4.2.2, p. 55–57 (PDF 150–152).
 - Rework: RW-013, RW-024, RW-040, RW-051, RW-057, RW-113 (links nos itens e nos erros).
-- `checklist.md` (4, 6, 11); `experiencia.md` §4; SKILL.md, princípio 6 e seção 4.
+- `checklist.md` (PC3, PC7); `experiencia.md` §4; SKILL.md, princípio 6 e seção 4.

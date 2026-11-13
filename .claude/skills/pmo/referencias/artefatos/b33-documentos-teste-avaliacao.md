@@ -6,7 +6,7 @@ etapas: [4, 5]
 gravidade: baixa
 categoria: entrega
 sinonimos: ["plano de testes", "documentos de teste", "roteiro de revisão", "lista de verificação dos produtos", "checklist de revisão", "plano de validação", "protocolo de avaliação"]
-versao: 0.1.0
+versao: 0.2.0
 ---
 
 # B33 — Documentos de teste e avaliação
@@ -41,7 +41,7 @@ Descrevem as atividades usadas para conferir se o produto atende aos objetivos d
   - confere: código
   - dispensa: porte pequeno
 - **B33.6** Instrumentos de coleta testados antes do uso (pré-teste de questionário ou roteiro, piloto)
-  - fonte: PMBOK 6, 8.1.2, p. 285 (PDF 321) (testes de campo como exemplo de planejamento de testes); checklist 11
+  - fonte: PMBOK 6, 8.1.2, p. 285 (PDF 321) (testes de campo como exemplo de planejamento de testes)
   - sinais: "pré-teste" | "piloto" | "teste do instrumento" | "validação do questionário"
   - confere: código
   - dispensa: sem campo
@@ -58,7 +58,7 @@ Descrevem as atividades usadas para conferir se o produto atende aos objetivos d
 - Há requisito sem forma de verificação? (Rework RW-045, requisitos órfãos)
 
 ## Erros comuns
-- Lista de verificação genérica, sem os critérios deste contrato (PMBOK 6, p. 292, PDF 328; checklist 2).
+- Lista de verificação genérica, sem os critérios deste contrato (PMBOK 6, p. 292, PDF 328; conflituoso, CP8).
 - Aceite tratado como formalidade, com o cliente vendo o produto só no fim (Rework RW-045).
 - Verificação escrita depois do produto, descrevendo o que foi feito (Rework RW-045; RW-064).
 
@@ -85,4 +85,4 @@ Instrumentos de campo (se houver): pré-teste em [a definir pelo GP] antes da co
 - PMBOK 6: p. 272 (PDF 308); 8.1, p. 280 e 285 (PDF 316 e 321); 8.2, p. 290–296 (PDF 326–332); 8.3, p. 303 e 306 (PDF 339 e 342); glossário, p. 707 (PDF 743).
 - PMBOK 7: 2.6.3, p. 89 (PDF 184); artefatos, p. 187 (PDF 282) (plano de testes).
 - Rework: RW-045, RW-107 (links nos itens); RW-064 (https://resources.rework.com/libraries/project-management/acceptance-criteria).
-- `checklist.md` (2, 11).
+- `checklist.md` (conflituoso, CP8).

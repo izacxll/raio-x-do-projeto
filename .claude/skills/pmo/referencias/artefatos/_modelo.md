@@ -21,7 +21,7 @@ etapas: [4, 5]                  # etapas que usam a ficha
 gravidade: grave                # na conferência (etapa 5): grave | média | baixa | não se aplica
 categoria: partes interessadas  # decisão 0008
 sinonimos: ["plano de comunicação", "matriz de comunicação"]   # títulos que o mapa do PGP reconhece
-versao: 0.1.0
+versao: 0.2.0
 ---
 ```
 
@@ -42,7 +42,7 @@ versao: 0.1.0
 - **A7.2** ...
 
 ## Perguntas de qualidade
-Perguntas que o PMO faz ao escrever e que a leitura do PMO (F5b) faz ao conferir. Ligadas ao checklist quando couber: "(checklist 7)".
+Perguntas que o PMO faz ao escrever e que a leitura do PMO (F5b) faz ao conferir. Ligadas às premissas críticas quando couber: "(PC3)".
 
 ## Erros comuns
 Do PMBOK, do Rework e da experiência, cada um com a fonte.

@@ -6,7 +6,7 @@ etapas: [4, 5]
 gravidade: baixa
 categoria: escopo
 sinonimos: ["matriz de rastreabilidade", "rastreabilidade dos requisitos", "matriz de atendimento", "matriz de requisitos", "quadro de atendimento aos requisitos"]
-versao: 0.1.0
+versao: 0.2.0
 ---
 
 # B23 — Matriz de rastreabilidade dos requisitos
@@ -56,7 +56,7 @@ versao: 0.1.0
   - confere: só PMO
   - dispensa: porte pequeno
 - **B23.9** Requisito sem entrega, ou atendido em parte, aparece com o motivo e o destino (exclusão, premissa, pergunta ao contratante, mudança)
-  - fonte: PMBOK 6, p. 148 (PDF 184); Rework RW-031; `checklist.md` (destinos das perguntas)
+  - fonte: PMBOK 6, p. 148 (PDF 184); Rework RW-031; `checklist.md` (campo "onde no plano" e tabela "O que não é premissa crítica")
   - sinais: "não atendido" | "atendido parcialmente" | "fora do escopo" | "pendente de esclarecimento" | célula de entrega vazia
   - confere: só PMO
   - dispensa: nunca
@@ -65,7 +65,7 @@ versao: 0.1.0
 - Todo R da etapa 1 está na matriz, com o mesmo número? (SKILL.md, princípio 9)
 - Algum R ficou sem entrega? O motivo está escrito, ou o requisito sumiu? (Rework RW-031)
 - Algum pacote da EAP não serve a requisito nem ao gerenciamento? Pode ser banho de ouro (Rework RW-030).
-- A validação diz onde o requisito é atendido (seção do produto, ata, lista de presença), de um jeito que o fiscal confira? (Rework RW-031, observação do leitor; checklist 4)
+- A validação diz onde o requisito é atendido (seção do produto, ata, lista de presença), de um jeito que o fiscal confira? (Rework RW-031, observação do leitor; PC3)
 - A matriz será mantida na execução, com situação atualizada a cada entrega? (Rework RW-031)
 
 ## Erros comuns
@@ -93,4 +93,4 @@ Requisitos sem entrega: | R | Motivo | Destino (exclusão, premissa, pergunta, m
 - PMBOK 6: 5.2.3.2, p. 148–149 (PDF 184–185); 5.5, p. 165 e 167 (PDF 201 e 203); 5.6, p. 169 (PDF 205).
 - PMBOK 7: 2.6, p. 83 (PDF 178); matriz de rastreabilidade, p. 189 (PDF 284).
 - Rework: RW-030, RW-031 (links nos itens).
-- SKILL.md, princípio 9; decisão 0013; `checklist.md` (4).
+- SKILL.md, princípio 9; decisão 0013; `checklist.md` (PC3).

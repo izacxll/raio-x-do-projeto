@@ -6,7 +6,7 @@ etapas: [4, 5]
 gravidade: baixa
 categoria: abordagem de desenvolvimento e ciclo de vida
 sinonimos: ["ciclo de vida", "ciclo de vida do projeto", "fases do projeto", "etapas do projeto", "fases e marcos", "estrutura de fases"]
-versao: 0.1.0
+versao: 0.2.0
 ---
 
 # A17 — Descrição do ciclo de vida do projeto
@@ -67,11 +67,11 @@ Descreve "a série de fases pelas quais um projeto passa, do início ao término
   - dispensa: contratante privado
 
 ## Perguntas de qualidade
-- Os prazos das fases contam do mesmo marco (ordem de serviço) ou misturam datas fixas e prazos relativos? (checklist 9; experiencia.md §2)
-- O critério de saída diz quem aceita e em que prazo? Fase que "termina com a entrega", sem aceite, não fecha (checklist 4).
+- Os prazos das fases contam do mesmo marco (ordem de serviço) ou misturam datas fixas e prazos relativos? (PC4; experiencia.md §2)
+- O critério de saída diz quem aceita e em que prazo? Fase que "termina com a entrega", sem aceite, não fecha (PC3).
 - Há reunião de início em cada fase, no projeto com várias fases? (PMBOK 6, p. 86, PDF 122)
 - Na revisão de cada fase, revêm-se o TAP, os critérios de sucesso e as partes interessadas? (PMBOK 6, Parte 2, p. 562, PDF 598)
-- Expansão por ondas ou territórios aparece como fases repetidas, com a gestão crescendo junto? (checklist 6; experiencia.md §4)
+- Expansão por ondas ou territórios aparece como fases repetidas, com a gestão crescendo junto? (PC7; experiencia.md §4)
 - Piloto seguido de expansão: o portão entre os dois é um produto com aceite do órgão? (Rework RW-039, observação do leitor)
 
 ## Erros comuns
@@ -104,4 +104,4 @@ Linha para a tela: "Ciclo de vida num parágrafo, junto com a abordagem: uma fas
 - PMBOK 6: 1.2.4, p. 18–21 (PDF 54–57); 4.2, p. 86 (PDF 122); 4.7, p. 123 (PDF 159); Parte 2, p. 562 (PDF 598); X1.5, p. 642 (PDF 678); X3.1, p. 666 (PDF 702); glossário, p. 702, 710 e 723 (PDF 738, 746 e 759).
 - PMBOK 7: Guia 2.3, p. 32–50 (PDF 127–145), em especial p. 33, 42, 46, 47, 49 e Tab. 2-5.
 - Rework: RW-054 (https://resources.rework.com/libraries/project-management/project-life-cycle); RW-039 (https://resources.rework.com/libraries/project-management/stage-gate-process); RW-037 (link no item de erros); RW-026 (https://resources.rework.com/libraries/project-management/prince2-methodology).
-- `licitacoes.md` 2.6; `checklist.md` (4, 6, 9); `experiencia.md` §2 e §4; `pmbok7.md` seções 3 e 6.
+- `licitacoes.md` 2.6; `checklist.md` (PC3, PC4, PC7); `experiencia.md` §2 e §4; `pmbok7.md` seções 3 e 6.

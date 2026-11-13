@@ -6,7 +6,7 @@ etapas: [4, 5]
 gravidade: média
 categoria: escopo
 sinonimos: ["declaração do escopo do projeto", "declaração do escopo", "especificação do escopo", "escopo do projeto", "descrição do escopo", "escopo detalhado", "definição do escopo"]
-versao: 0.1.0
+versao: 0.2.0
 ---
 
 # B17 — Especificação do escopo do projeto
@@ -31,22 +31,22 @@ versao: 0.1.0
   - confere: código
   - dispensa: nunca
 - **B17.4** Critérios verificáveis (passa ou não passa): conteúdo mínimo, formato, base usada, validação; sem "a contento" ou "satisfatório" e sem contrariar o TR
-  - fonte: PMBOK 6, glossário, p. 704 (PDF 740); PMBOK 7, 2.6, p. 82–83 (PDF 177–178); Rework RW-064; `checklist.md` 4
+  - fonte: PMBOK 6, glossário, p. 704 (PDF 740); PMBOK 7, 2.6, p. 82–83 (PDF 177–178); Rework RW-064; `checklist.md` PC3
   - sinais: quantidades, formatos e condições explícitas no critério; "a contento", "satisfatório", "adequado" indicam critério vago
   - confere: só PMO
   - dispensa: nunca
 - **B17.5** Exclusões explícitas, em lista própria
-  - fonte: PMBOK 6, 5.3.3.1, p. 154 (PDF 190); PMBOK 7, glossário, p. 242 (PDF 337); Rework RW-003 e RW-030 (https://resources.rework.com/libraries/project-management/scope-creep); `checklist.md` 5
+  - fonte: PMBOK 6, 5.3.3.1, p. 154 (PDF 190); PMBOK 7, glossário, p. 242 (PDF 337); Rework RW-003 e RW-030 (https://resources.rework.com/libraries/project-management/scope-creep); `checklist.md` PC8
   - sinais: "exclusões" | "fora do escopo" | "não faz parte do escopo" | "não está incluído" | "não contempla" | "não inclui"
   - confere: código
   - dispensa: nunca
 - **B17.6** As exclusões cobrem o trabalho que o contratante pode supor incluído (implantação, capacitação extra, nova rodada de campo) e o que cabe ao contratante
-  - fonte: Rework RW-003 (observação do leitor); `checklist.md` 3 e 5; `experiencia.md` §7
+  - fonte: Rework RW-003 (observação do leitor); `checklist.md` (CTR2, CTR3, PC8); `experiencia.md` §7
   - sinais: "implantação" | "capacitação adicional" | "cabe ao contratante" | "obrigações do contratante"
   - confere: só PMO
   - dispensa: nunca
 - **B17.7** Limites de volume: quantidades por entrega (oficinas, municípios, entrevistas, rodadas de revisão), sem "entre outros" ou "quantas forem necessárias"
-  - fonte: PMBOK 6, 5.3.3.1, p. 154 (PDF 190) (grau de detalhe); `checklist.md` 1 e 5; `experiencia.md` §7
+  - fonte: PMBOK 6, 5.3.3.1, p. 154 (PDF 190) (grau de detalhe); `checklist.md` (PC8; vago, CTR7); `experiencia.md` §7
   - sinais: números por entrega | "até" | "no máximo" | "rodadas de revisão"; "entre outros", "conforme demanda", "quando necessário" indicam falta de limite
   - confere: só PMO
   - dispensa: nunca
@@ -67,16 +67,16 @@ versao: 0.1.0
   - dispensa: nunca
 
 ## Perguntas de qualidade
-- Cada produto tem critério que o fiscal consegue conferir sem interpretar? (checklist 4)
-- Algum trecho admite duas leituras ("relatório" sem dizer se é por etapa; plural sem quantidade)? A leitura adotada virou premissa? (checklist 1)
-- As exclusões estão escritas antes de alguém perguntar, inclusive o trabalho vizinho que o contratante pode supor incluído? (Rework RW-003; checklist 5)
-- O que depende do contratante (dados, espaço, mobilização) está como premissa com prazo ou como exclusão? (checklist 3 e 8)
-- Há texto de outro projeto (outro órgão, outro tipo de contrato)? (checklist 2, CP8)
+- Cada produto tem critério que o fiscal consegue conferir sem interpretar? (PC3)
+- Algum trecho admite duas leituras ("relatório" sem dizer se é por etapa; plural sem quantidade)? A leitura adotada virou premissa? (vago, CTR7)
+- As exclusões estão escritas antes de alguém perguntar, inclusive o trabalho vizinho que o contratante pode supor incluído? (Rework RW-003; PC8)
+- O que depende do contratante (dados, espaço, mobilização) está como premissa com prazo ou como exclusão? (PC1 e PC6)
+- Há texto de outro projeto (outro órgão, outro tipo de contrato)? (conflituoso, CP8)
 - O TAP adianta detalhes que cabem aqui, ou a especificação só repete o TAP? (PMBOK 6, p. 154–155)
 
 ## Erros comuns
 - Entregas escritas como atividades ("realizar oficinas") (Rework RW-003 e RW-036).
-- Sem lista de exclusões (Rework RW-003 e RW-033; checklist 5).
+- Sem lista de exclusões (Rework RW-003 e RW-033; PC8).
 - Critérios vagos, ou escritos depois do trabalho (Rework RW-064 e RW-036).
 - "Entre outros", "quando necessário" e revisões sem limite com preço fixo (experiencia.md §7).
 - Contradizer o TR, ou tratar a especificação como se fosse o contrato (Rework RW-003, observação do leitor).
@@ -106,4 +106,4 @@ Linha para a tela: "Especificação curta, com produtos, critérios e exclusões
 - PMBOK 6: 5.3, p. 151–155 (PDF 187–191); 5.4.3.1, p. 161 (PDF 197); 8.1, p. 292 (PDF 328); glossário, p. 704 e 709 (PDF 740 e 745).
 - PMBOK 7: 2.6, p. 82–85 (PDF 177–180); glossário, p. 242 (PDF 337).
 - Rework: RW-003, RW-030, RW-033 (https://resources.rework.com/libraries/project-management/statement-of-work), RW-036, RW-064 (links nos itens).
-- `checklist.md` (1, 2, 3, 4, 5, 8); `experiencia.md` §7; `licitacoes.md`, seção 1; `pmbok6.md`, seção 6.
+- `checklist.md` (PC1, PC3, PC6, PC8; CTR2, CTR3; vago, CTR7; conflituoso, CP8); `experiencia.md` §7; `licitacoes.md`, seção 1; `pmbok6.md`, seção 6.

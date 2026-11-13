@@ -1,5 +1,5 @@
 # Rework — práticas, modelos e erros comuns
-Versão 0.1.0 (rascunho da fase S). Fonte: biblioteca do Rework (resources.rework.com/libraries), lida em 13/11/2026; 93 artigos. Se o Rework e o PMBOK divergirem, prevalece o PMBOK.
+Versão 0.2.0. Fonte: biblioteca do Rework (resources.rework.com/libraries), lida em 13/11/2026; 93 artigos. Se o Rework e o PMBOK divergirem, prevalece o PMBOK.
 
 ## Como a skill usa o Rework
 
@@ -142,7 +142,7 @@ Folgas para demora de decisão, rodadas de revisão e feriados.
 
 **Artigos.** RW-076 (https://resources.rework.com/libraries/deal-closing/quote-generation); RW-073 (https://resources.rework.com/libraries/deal-closing/pricing-strategies); RW-074 (https://resources.rework.com/libraries/deal-closing/pricing-negotiation); RW-014.
 
-### 4.4 Condições contratuais e pagamento (`prop-estrategia`, `prop-preco`, checklist 3 e 4)
+### 4.4 Condições contratuais e pagamento (`prop-estrategia`, `prop-preco`, `checklist.md` CTR2 e PC3)
 **Acrescenta.** Condição contratual é alocação de risco e pesa tanto quanto o preço. Ler a minuta do edital por cinco grupos: comerciais (prazo de pagamento, reajuste); desempenho (níveis de serviço, garantia de resultado fora do próprio controle); risco (responsabilidade sem teto, multas, indenizações, seguros); relacionamento (governança, equipe dedicada); saída (extinção, titularidade dos produtos e direitos autorais, sigilo, guarda de dados). Para cada risco: pedir esclarecimento, impugnar, aceitar com reserva no preço ou não participar. O que seria "inegociável" numa venda privada vira critério interno de participar. Do pagamento, só a estrutura por marcos se aplica (após entrega e aceite, conforme o cronograma físico-financeiro); daí estimar o capital de giro que a FGV banca até o primeiro pagamento, com o prazo de aceite.
 
 **Erros.** Aceitar a minuta sem ler o que foge do usual; avaliar só o preço e não o pacote; acordo verbal sem registro; cláusula jurídica sem o jurídico.

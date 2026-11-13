@@ -6,7 +6,7 @@ etapas: [4, 5]
 gravidade: baixa
 categoria: trabalho do projeto
 sinonimos: ["registro de mudanças", "log de mudanças", "controle de solicitações de mudança", "histórico de mudanças", "registro de alterações", "change log"]
-versao: 0.1.0
+versao: 0.2.0
 ---
 
 # B5 — Registro das mudanças
@@ -59,7 +59,7 @@ versao: 0.1.0
 ## Perguntas de qualidade
 - Os pedidos feitos em reunião ou por e-mail pelo contratante também entram, mesmo os "pequenos"? (PMBOK 6, p. 115, PDF 151; Rework RW-028, observação do leitor)
 - Muitas mudanças de escopo cedo indicam escopo mal definido ou partes desalinhadas; o registro é revisto para achar esse padrão? (Rework RW-028; PMBOK 7, Tab. 2-2, p. 15, PDF 110)
-- Rodada de revisão além do limite contratado aparece como mudança? (checklist 5)
+- Rodada de revisão além do limite contratado aparece como mudança? (PC8)
 - O registro conversa com o A11 (mesmos estados e alçadas) e com o B27 (risco criado pela mudança)? (Rework RW-032)
 
 ## Erros comuns
@@ -86,4 +86,4 @@ Modelo inicial: sem linhas; preencher na execução. Estados e alçadas conforme
 - PMBOK 6: 4.3, p. 92 e 96 (PDF 128 e 132); 4.6, p. 115–120 (PDF 151–156); X3.3.4, p. 671 (PDF 707); glossário, p. 721 (PDF 757).
 - PMBOK 7: Tab. 2-2, p. 15 (PDF 110); Tab. 2-6, p. 68 (PDF 163); Tab. 2-7, p. 79 (PDF 174); Guia 4.6, p. 185 (PDF 280).
 - Rework: RW-028 e RW-032 (links nos itens).
-- `licitacoes.md` 2.7; `checklist.md` (5); decisão 0007.
+- `licitacoes.md` 2.7; `checklist.md` (PC8); decisão 0007.

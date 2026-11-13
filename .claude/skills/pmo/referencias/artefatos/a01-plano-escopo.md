@@ -6,7 +6,7 @@ etapas: [4, 5]
 gravidade: grave
 categoria: escopo
 sinonimos: ["plano do escopo", "plano de gestão do escopo", "gerenciamento do escopo", "gestão do escopo", "controle do escopo", "gerenciamento do escopo e dos requisitos"]
-versao: 0.1.0
+versao: 0.2.0
 ---
 
 # A1 — Plano de gerenciamento do escopo
@@ -36,7 +36,7 @@ versao: 0.1.0
   - confere: código
   - dispensa: nunca
 - **A1.5** Prazo de análise do contratante e limite de rodadas de revisão por produto; o que acontece com a entrega recusada
-  - fonte: PMBOK 6, 5.5, p. 166 (PDF 202); `checklist.md` 4 e 5; `experiencia.md` §1 e §7; Rework RW-036 (https://resources.rework.com/libraries/project-management/project-deliverables)
+  - fonte: PMBOK 6, 5.5, p. 166 (PDF 202); `checklist.md` PC3 e PC8; `experiencia.md` §1 e §7; Rework RW-036 (https://resources.rework.com/libraries/project-management/project-deliverables)
   - sinais: "prazo de análise" | "dias úteis para análise" | "rodadas de revisão" | "rodada de ajustes" | "aprovação tácita" | "versão final"
   - confere: código
   - dispensa: nunca
@@ -57,16 +57,16 @@ versao: 0.1.0
   - dispensa: porte pequeno
 
 ## Perguntas de qualidade
-- O plano diz quem aceita cada produto, com que documento e em quanto tempo? Se o TR não fixa prazo de análise, isso virou pergunta de esclarecimento ou premissa? (checklist 4; `licitacoes.md` 2.6)
-- Há limite de rodadas de revisão, e o que passa dele vira pedido de mudança? (checklist 5)
+- O plano diz quem aceita cada produto, com que documento e em quanto tempo? Se o TR não fixa prazo de análise, isso virou pergunta de esclarecimento ou premissa? (PC3; `licitacoes.md` 2.6)
+- Há limite de rodadas de revisão, e o que passa dele vira pedido de mudança? (PC8)
 - Pedido feito em reunião ou oficina tem caminho escrito até o A11, com resposta de impacto em prazo e custo? (Rework RW-030)
 - O ritmo de detalhamento bate com a abordagem do A18? Plano "ágil" com escopo fechado e entrega única no fim tem perfil preditivo (inferência das notas a partir da Fig. X3-1, PMBOK 6, p. 666, PDF 702).
 - O plano descreve processo, ou só copia a lista de produtos? (p. 137 × p. 154)
 
 ## Erros comuns
 - Plano que repete o escopo e não diz como aceitar nem como controlar (PMBOK 6, p. 137, PDF 173: o plano é o "como").
-- Aceite sem prazo nem critério, com pagamento preso ao aceite (checklist 4; experiencia.md §1).
-- Revisões sem limite com preço fixo (checklist 5; experiencia.md §7).
+- Aceite sem prazo nem critério, com pagamento preso ao aceite (PC3; experiencia.md §1).
+- Revisões sem limite com preço fixo (PC8; experiencia.md §7).
 - Acréscimo "pequeno" absorvido sem decisão formal; banho de ouro tratado como qualidade (Rework RW-030).
 - Linha de base fixada antes de o escopo estabilizar, ou ajustada ao realizado sem pedido de mudança (Rework RW-029).
 
@@ -95,4 +95,4 @@ Linha para a tela: "Escopo e requisitos numa seção só, com aceite e controle 
 - PMBOK 6: cap. 5, p. 131–137 (PDF 167–173); 5.2, p. 140 (PDF 176); 5.4, p. 157–161 (PDF 193–197); 5.5, p. 164–166 (PDF 200–202); 5.6, p. 168–169 (PDF 204–205); 4.2, p. 83 (PDF 119); X3, p. 666 (PDF 702); glossário, p. 719 (PDF 755).
 - PMBOK 7: 2.4, p. 54 (PDF 149); 2.6, p. 85–87 (PDF 180–182); plano do escopo, p. 187 (PDF 282).
 - Rework: RW-029, RW-030, RW-036, RW-037 (links nos itens).
-- `checklist.md` (4, 5); `experiencia.md` §1, §7 e §9; `licitacoes.md` 2.6 e 2.7.
+- `checklist.md` (PC3, PC8); `experiencia.md` §1, §7 e §9; `licitacoes.md` 2.6 e 2.7.

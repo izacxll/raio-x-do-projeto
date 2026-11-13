@@ -6,7 +6,7 @@ etapas: [4, 5]
 gravidade: grave
 categoria: trabalho do projeto
 sinonimos: ["plano de aquisições", "plano de contratações", "plano de compras", "gestão de aquisições", "subcontratações", "contratação de terceiros", "gestão de fornecedores"]
-versao: 0.1.0
+versao: 0.2.0
 ---
 
 # A9 — Plano de gerenciamento das aquisições
@@ -61,7 +61,7 @@ Descreve "como a equipe do projeto adquirirá produtos e serviços fora da organ
   - confere: só PMO
   - dispensa: porte pequeno
 - **A9.10** Requisitos repassados ao fornecedor: sigilo, dados pessoais, propriedade intelectual
-  - fonte: PMBOK 6, 12.1, p. 470 (PDF 506); `checklist.md` 10
+  - fonte: PMBOK 6, 12.1, p. 470 (PDF 506); `checklist.md` CP14
   - sinais: "confidencialidade" | "sigilo" | "LGPD" | "dados pessoais" | "propriedade intelectual"
   - confere: código
   - dispensa: porte pequeno e sem dados pessoais
@@ -77,14 +77,14 @@ Descreve "como a equipe do projeto adquirirá produtos e serviços fora da organ
   - dispensa: porte pequeno
 
 ## Perguntas de qualidade
-- Se o edital veda ou limita a subcontratação (ou a contratação é por inexigibilidade, art. 74, § 4º), a execução depende dela? Vedação com atividade de campo é brecha conhecida (checklist 3, CTR2; `licitacoes.md` 2.4 e 2.8).
+- Se o edital veda ou limita a subcontratação (ou a contratação é por inexigibilidade, art. 74, § 4º), a execução depende dela? Vedação com atividade de campo é brecha conhecida (pergunta de esclarecimento e exclusão ou obrigação do contratante, CTR2; `licitacoes.md` 2.4 e 2.8).
 - Profissional pontuado na proposta técnica continua na execução, sem troca por subcontratado? (`licitacoes.md` 2.2, art. 38)
 - O contrato com o fornecedor traz tudo o que se vai cobrar dele? O que não está no contrato não pode ser exigido (PMBOK 6, p. 461, PDF 497).
-- Fornecedor único ou plataforma imposta tem alternativa e prazo? (checklist 8)
+- Fornecedor único ou plataforma imposta tem alternativa e prazo? (PC2)
 - O custo das aquisições e da gestão dos fornecedores está na linha de base dos custos? (PMBOK 6, p. 484, PDF 520)
 
 ## Erros comuns
-- Plano que conta com subcontratação vedada ou acima do limite do edital (`licitacoes.md` 2.8; checklist 3).
+- Plano que conta com subcontratação vedada ou acima do limite do edital (`licitacoes.md` 2.8; CTR2).
 - Contratação de terceiros fora do cronograma; o atraso de um fornecedor se propaga para os outros (PMBOK 6, p. 500, PDF 536).
 - Mudança combinada verbalmente com o fornecedor: deve ser escrita e aprovada antes (PMBOK 6, p. 494 e 496, PDF 530 e 532).
 - Não dizer quem tem autoridade para contratar; em geral não é o GP (PMBOK 6, p. 460, PDF 496).
@@ -110,4 +110,4 @@ Linha para a tela: "Sem subcontratação nem compras relevantes: registrar a dec
 
 ## Fontes
 - PMBOK 6: 12.1, p. 460–481 (PDF 496–517); 12.2, p. 484–489 (PDF 520–525); 12.3, p. 494–500 (PDF 530–536); 11.5, p. 447 (PDF 483); 13.2, p. 519 (PDF 555); X5.9, p. 683 (PDF 719); glossário, p. 719 (PDF 755).
-- `licitacoes.md` 2.2, 2.4 e 2.8; `checklist.md` (3, 8, 10).
+- `licitacoes.md` 2.2, 2.4 e 2.8; `checklist.md` (CTR2, PC2, CP14).

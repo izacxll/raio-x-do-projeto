@@ -6,7 +6,7 @@ etapas: [4, 5]
 gravidade: grave
 categoria: entrega
 sinonimos: ["plano de qualidade", "plano da qualidade", "plano de gerenciamento de qualidade", "gestão da qualidade", "gerenciamento da qualidade", "garantia da qualidade", "controle de qualidade", "critérios de aceite"]
-versao: 0.1.0
+versao: 0.2.0
 ---
 
 # A5 — Plano de gerenciamento da qualidade
@@ -26,7 +26,7 @@ Descreve como políticas, procedimentos e diretrizes serão aplicados para ating
   - confere: código
   - dispensa: nunca
 - **A5.3** Critérios de aceite por produto, ligados aos da RFP (número R e página) e, se a RFP for omissa, marcados como sugestão
-  - fonte: PMBOK 6, 8.1.1, p. 279 (PDF 315); glossário, p. 704 (PDF 740); PMBOK 7, 2.6.2, p. 85 (PDF 180); checklist 4
+  - fonte: PMBOK 6, 8.1.1, p. 279 (PDF 315); glossário, p. 704 (PDF 740); PMBOK 7, 2.6.2, p. 85 (PDF 180); `checklist.md` PC3
   - sinais: "critério de aceite" | "critérios de aceitação" | "R01" | tabela produto × critério
   - confere: código
   - dispensa: nunca
@@ -46,7 +46,7 @@ Descreve como políticas, procedimentos e diretrizes serão aplicados para ating
   - confere: código
   - dispensa: nunca
 - **A5.7** Fluxo de aceite com o contratante: prazo de análise, rodadas de revisão, recebimento provisório e definitivo, aprovação tácita se o contrato prever
-  - fonte: PMBOK 6, 5.5, p. 164 (PDF 200); `licitacoes.md` 2.6; checklist 4 e 5; `experiencia.md` §1
+  - fonte: PMBOK 6, 5.5, p. 164 (PDF 200); `licitacoes.md` 2.6; `checklist.md` PC3 e PC8; `experiencia.md` §1
   - sinais: "recebimento provisório" | "recebimento definitivo" | "prazo de análise" | "rodadas de revisão" | "aprovação tácita" | "termo de aceite"
   - confere: código
   - dispensa: nunca
@@ -71,19 +71,19 @@ Descreve como políticas, procedimentos e diretrizes serão aplicados para ating
   - confere: código
   - dispensa: porte pequeno
 - **A5.12** Qualidade dos dados quando há coleta em campo ou dados pessoais: protocolo de coleta, checagem de consistência, anonimização
-  - fonte: checklist 10 (etapa 4); PMBOK 6, 8.1.2, p. 285 (PDF 321); 8.3, p. 303 (PDF 339)
+  - fonte: `checklist.md`, A12.8 (CP14); PMBOK 6, 8.1.2, p. 285 (PDF 321); 8.3, p. 303 (PDF 339)
   - sinais: "protocolo de coleta" | "consistência" | "checagem" | "anonimização" | "LGPD"
   - confere: código
   - dispensa: sem campo e sem dados pessoais
 
 ## Perguntas de qualidade
-- Cada produto do contrato tem critério de aceite, prazo de análise e responsável do lado do contratante com capacidade de avaliar? (checklist 4; `experiencia.md` §1)
-- O número de rodadas de revisão está limitado? (checklist 5)
+- Cada produto do contrato tem critério de aceite, prazo de análise e responsável do lado do contratante com capacidade de avaliar? (PC3; `experiencia.md` §1)
+- O número de rodadas de revisão está limitado? (PC8)
 - A revisão é feita por alguém além do autor, e o controle não se reporta a quem é julgado? (Rework RW-107)
 - As revisões estão ao longo do projeto, ou só no fim? O tempo delas está no cronograma e nas horas (B6.9)? (PMBOK 7, p. 89, PDF 184)
 
 ## Erros comuns
-- Critério de aceite vago ("a contento do contratante"), que vira disputa no recebimento (Rework RW-064; checklist 4).
+- Critério de aceite vago ("a contento do contratante"), que vira disputa no recebimento (Rework RW-064; PC3).
 - Qualidade reduzida a uma "validação final" (PMBOK 7, p. 89, PDF 184).
 - Confundir qualidade com grau: produto simples bem feito pode bastar (PMBOK 6, p. 274, PDF 310).
 - Corrigir devoluções uma a uma, sem ver o padrão (Rework RW-107).
@@ -114,4 +114,4 @@ Linha para a tela: "Qualidade em formato curto, centrado nos critérios de aceit
 - PMBOK 6: 5.5, p. 164 (PDF 200); 8.1, p. 277–287 (PDF 313–323); 8.2, p. 290–292 (PDF 326–328); 8.3, p. 303–306 (PDF 339–342); p. 274 e 276 (PDF 310 e 312); X5.5, p. 681 (PDF 717); glossário, p. 704 e 719 (PDF 740 e 755).
 - PMBOK 7: 2.6.2, p. 85 (PDF 180); 2.6.3, p. 87–91 (PDF 182–186); 2.7.1, p. 97 (PDF 192).
 - Rework: RW-064, RW-107 (links nos itens); RW-065 (https://resources.rework.com/libraries/project-management/definition-of-done); RW-045 (https://resources.rework.com/libraries/project-management/v-model).
-- `licitacoes.md` 2.6; `checklist.md` (4, 5, 10); `experiencia.md` §1.
+- `licitacoes.md` 2.6; `checklist.md` (PC3, PC8, CP14); `experiencia.md` §1.

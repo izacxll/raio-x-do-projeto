@@ -6,7 +6,7 @@ etapas: [4, 5]
 gravidade: grave
 categoria: trabalho do projeto
 sinonimos: ["plano de configuração", "gerenciamento de configuração", "gestão de configuração", "controle de versões", "controle de versão", "gestão documental", "gestão de documentos"]
-versao: 0.1.0
+versao: 0.2.0
 ---
 
 # A12 — Plano de gerenciamento de configuração
@@ -46,12 +46,12 @@ Diz quais itens do projeto ficam sob controle de configuração e como as inform
   - confere: código
   - dispensa: porte pequeno
 - **A12.7** Repositório e acesso: onde ficam as versões, quem edita, quem só lê e por quanto tempo se guardam
-  - fonte: PMBOK 6, 4.3, p. 95 (PDF 131), sistema de configuração no SIGP; 4.4, p. 102 (PDF 138), retenção e segurança de dados; checklist 10
+  - fonte: PMBOK 6, 4.3, p. 95 (PDF 131), sistema de configuração no SIGP; 4.4, p. 102 (PDF 138), retenção e segurança de dados; `checklist.md` CP14
   - sinais: "repositório" | "pasta compartilhada" | "SharePoint" | "Teams" | "permissão de acesso" | "retenção"
   - confere: código
   - dispensa: nunca
 - **A12.8** Proteção dos dados pessoais e sigilosos nos itens controlados: quem acessa bases e entrevistas, anonimização
-  - fonte: PMBOK 6, 4.4, p. 101–102 (PDF 137–138), confidencialidade; checklist 10
+  - fonte: PMBOK 6, 4.4, p. 101–102 (PDF 137–138), confidencialidade; `checklist.md` CP14
   - sinais: "LGPD" | "dados pessoais" | "anonimização" | "acesso restrito" | "confidencialidade" | "termo de sigilo"
   - confere: código
   - dispensa: sem dados pessoais
@@ -62,16 +62,16 @@ Diz quais itens do projeto ficam sob controle de configuração e como as inform
   - dispensa: nunca
 
 ## Perguntas de qualidade
-- Os produtos com várias rodadas de revisão têm versão numerada e registro do que mudou entre uma e outra? (checklist 5)
-- A versão citada no termo de aceite é identificável sem ambiguidade? (checklist 1 e 4)
-- Base de beneficiários, microdados e gravações de entrevista têm acesso restrito e responsável? (checklist 10)
+- Os produtos com várias rodadas de revisão têm versão numerada e registro do que mudou entre uma e outra? (PC8)
+- A versão citada no termo de aceite é identificável sem ambiguidade? (vago, CTR7; PC3)
+- Base de beneficiários, microdados e gravações de entrevista têm acesso restrito e responsável? (A12.8, CP14)
 - Documentos do PGP (cronograma, registro de riscos) também têm versão e data? (PMBOK 6, p. 85, PDF 121)
 - O plano define quais documentos ficam sob controle formal de mudanças e quais não? (PMBOK 6, p. 85, PDF 121)
 
 ## Erros comuns
 - Confundir configuração com controle de mudanças: o primeiro cuida das especificações e versões; o segundo, de aprovar ou rejeitar (PMBOK 6, p. 118, PDF 154).
 - Entregar ao contratante versão diferente da aprovada, ou perder qual versão foi aceita (inferência a partir de p. 118–119, PDF 154–155).
-- Dados pessoais em pasta aberta à equipe toda (checklist 10).
+- Dados pessoais em pasta aberta à equipe toda (A12.8, CP14).
 
 ## Quando dispensar a parte inteira
 Pode ser fundida, não omitida, quando o projeto tem poucas entregas e sem versões sucessivas: vira um parágrafo no A11 ou no A5 com a regra de nomes, o repositório e o acesso. O PMBOK manda decidir o nível de configuração com opinião especializada (PMBOK 6, p. 85, PDF 121); a skill sugere dispensar em porte pequeno salvo entregas com versões (pmbok7.md, seção 3, item 3, [aplicação]). Com dados pessoais, o A12.8 fica mesmo assim.
@@ -96,4 +96,4 @@ Linha para a tela: "Configuração num parágrafo do plano de mudanças (nomes, 
 ## Fontes
 - PMBOK 6: 4.2, p. 85 e 88 (PDF 121 e 124); 4.3, p. 95 (PDF 131); 4.4, p. 101–102 (PDF 137–138); 4.6, p. 115–119 (PDF 151–155); 4.7, p. 125 (PDF 161); X1.5, p. 642 (PDF 678); glossário, p. 719 (PDF 755).
 - PMBOK 7: não lista o plano de configuração entre os artefatos (Guia 4.6, p. 184–192, PDF 279–287; ver pmbok7.md, seção 4).
-- `checklist.md` (1, 4, 5, 10); `pmbok7.md` seção 3.
+- `checklist.md` (CTR7, PC3, PC8, CP14); `pmbok7.md` seção 3.

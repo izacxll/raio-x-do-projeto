@@ -6,7 +6,7 @@ etapas: [2]
 gravidade: não se aplica
 categoria: não se aplica
 sinonimos: ["metodologia", "abordagem metodológica", "plano de trabalho", "estratégia de execução", "método", "procedimentos técnicos"]
-versao: 0.1.0
+versao: 0.2.0
 ---
 
 # PROP-METODOLOGIA — Abordagem e metodologia
@@ -26,7 +26,7 @@ Descreve **como** a FGV vai executar a abordagem que o GP escolheu (PROP-ESTRATE
   - confere: código
   - dispensa: nunca
 - **PROP-METODOLOGIA.3** Métodos e técnicas nomeados para cada fase (levantamento, análise, campo, oficinas, validação), com a justificativa pelo objeto
-  - fonte: `checklist.md` 2 (CP9: método adequado ao objeto); Rework RW-075 (consultoria: metodologia e entregas)
+  - fonte: `checklist.md`, vago (CP9: método adequado ao objeto); Rework RW-075 (consultoria: metodologia e entregas)
   - sinais: "entrevistas" | "oficinas" | "análise documental" | "pesquisa" | "grupo focal" | "porque" | "justifica-se"
   - confere: código
   - dispensa: nunca
@@ -41,22 +41,22 @@ Descreve **como** a FGV vai executar a abordagem que o GP escolheu (PROP-ESTRATE
   - confere: só PMO
   - dispensa: nunca
 - **PROP-METODOLOGIA.6** Participação do contratante e de terceiros no método (validações, dados, mobilização), remetendo às obrigações do PROP-SOW
-  - fonte: Rework RW-075 (exigências de colaboração do cliente); PMBOK 6, 12.1, TR, p. 478 (PDF 514); `checklist.md` 3 e 8
+  - fonte: Rework RW-075 (exigências de colaboração do cliente); PMBOK 6, 12.1, TR, p. 478 (PDF 514); `checklist.md` CTR3, PC1, PC3 e PC6
   - sinais: "validação com o contratante" | "dados fornecidos" | "mobilização" | "ver obrigações do contratante"
   - confere: código
   - dispensa: nunca
 - **PROP-METODOLOGIA.7** Trabalho de campo: territórios, logística, deslocamento, segurança e plano para clima e acesso
-  - fonte: `checklist.md` 11 (TC18 a TC22); `experiencia.md` §5
+  - fonte: `experiencia.md` §5
   - sinais: "campo" | "território" | "deslocamento" | "logística" | "segurança" | "municípios"
   - confere: código
   - dispensa: sem campo
 - **PROP-METODOLOGIA.8** Mobilização e adesão de beneficiários: quem mobiliza, com que meios, e o tratamento do cadastro
-  - fonte: `checklist.md` 12 (TB23, TB24); `experiencia.md` §6
+  - fonte: `checklist.md` PC6 (TB23) e PC1 (TB24); `experiencia.md` §6
   - sinais: "mobilização" | "adesão" | "divulgação" | "cadastro" | "beneficiários"
   - confere: código
   - dispensa: sem beneficiários
 - **PROP-METODOLOGIA.9** Tratamento de dados pessoais e sigilo (quem acessa, anonimização), e separação de equipes quando houver avaliação
-  - fonte: `checklist.md` 10 (CP14); PMBOK 6, 12.1, p. 470 (PDF 506) (requisitos contratuais)
+  - fonte: `checklist.md`, o que não é premissa crítica (CP14); PMBOK 6, 12.1, p. 470 (PDF 506) (requisitos contratuais)
   - sinais: "LGPD" | "dados pessoais" | "anonimização" | "confidencialidade" | "independência"
   - confere: código
   - dispensa: sem dados pessoais
@@ -68,17 +68,17 @@ Descreve **como** a FGV vai executar a abordagem que o GP escolheu (PROP-ESTRATE
 
 ## Perguntas de qualidade
 - A metodologia responde ao critério de pontuação que a avalia, item a item? (`licitacoes.md` 2.2)
-- O método foi escolhido pelo objeto ou por hábito? A justificativa diz por quê? (checklist 2, CP9)
-- Toda atividade de que o método depende (divulgação, cessão de espaço, lista de beneficiários) tem responsável? Se não é da FGV, está no PROP-SOW? (checklist 3, CTR3)
-- O fluxo entre fases mostra os pontos de validação do contratante? (checklist 4 e 7)
-- Há texto de método reaproveitado de outra proposta, com outro público ou outro órgão? (checklist 2, CP8)
+- O método foi escolhido pelo objeto ou por hábito? A justificativa diz por quê? (vago, CP9)
+- Toda atividade de que o método depende (divulgação, cessão de espaço, lista de beneficiários) tem responsável? Se não é da FGV, está no PROP-SOW? (CTR3: exclusão ou obrigação do contratante)
+- O fluxo entre fases mostra os pontos de validação do contratante? (PC3)
+- Há texto de método reaproveitado de outra proposta, com outro público ou outro órgão? (conflituoso, CP8)
 
 ## Erros comuns
 - Catálogo de técnicas sem ligação com os requisitos (Rework RW-071).
-- Método que pressupõe adesão voluntária sem mobilização e sem responsável (checklist 12; `experiencia.md` §6).
+- Método que pressupõe adesão voluntária sem mobilização e sem responsável (PC6; `experiencia.md` §6).
 - Campo sem tempo de deslocamento nem logística (`experiencia.md` §5).
 - Prometer intensidade de campo ou número de oficinas que o preço não paga (Rework RW-071, erros comuns).
-- Mesma equipe que orienta e depois avalia os mesmos participantes (checklist 10).
+- Mesma equipe que orienta e depois avalia os mesmos participantes (PROP-METODOLOGIA.9, CP14).
 
 ## Quando dispensar a parte inteira
 Não se dispensa: a metodologia é o que a técnica pontua. Em porte pequeno, pode fundir-se com o PROP-SOW numa tabela por produto (como se faz, com que método, com que participação do contratante).
@@ -101,4 +101,4 @@ Linha para a tela: "Metodologia junto com os produtos: porte pequeno."
 ## Fontes
 - PMBOK 6: 1.2.4.1, p. 18–19 (PDF 54–55); 4.1.3.1, p. 81 (PDF 117); 12.1, p. 470, 478–479 (PDF 506, 514–515); 12.2, p. 487 (PDF 523).
 - Rework: RW-036 (https://resources.rework.com/libraries/project-management/project-deliverables); RW-071 (https://resources.rework.com/libraries/deal-closing/proposal-development); RW-075 (https://resources.rework.com/libraries/deal-closing/sow-creation).
-- `licitacoes.md` 2.2; `checklist.md` 2, 3, 4, 7, 8, 10, 11, 12; `experiencia.md` §5 e §6; SKILL.md, etapa 2 e princípio 9.
+- `licitacoes.md` 2.2; `checklist.md` (PC1, PC3, PC6; vago, CP9; conflituoso, CP8; CTR3; CP14); `experiencia.md` §5 e §6; SKILL.md, etapa 2 e princípio 9.

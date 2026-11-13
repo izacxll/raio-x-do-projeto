@@ -6,7 +6,7 @@ etapas: [4, 5]
 gravidade: baixa
 categoria: equipe
 sinonimos: ["estrutura analítica dos recursos", "EAR", "RBS", "árvore de recursos", "hierarquia de recursos", "categorias de recursos", "catálogo de perfis"]
-versao: 0.1.0
+versao: 0.2.0
 ---
 
 # B24 — Estrutura analítica dos recursos
@@ -49,8 +49,8 @@ versao: 0.1.0
 ## Perguntas de qualidade
 - Cada perfil exigido pelo edital aparece como tipo, com a formação e o registro pedidos? (PROP-EQUIPE.1)
 - Os níveis de senioridade batem com os valores-hora da planilha (decisão do GP)? (PROP-PRECO)
-- A árvore separa quem é da FGV, quem é subcontratado e quem é do cliente, para a RACI e as aquisições? (A9; checklist 3)
-- Se houver campo, os recursos físicos estão listados, ou ficou só o pessoal? (checklist 11)
+- A árvore separa quem é da FGV, quem é subcontratado e quem é do cliente, para a RACI e as aquisições? (A9; CTR3)
+- Se houver campo, os recursos físicos estão listados, ou ficou só o pessoal?
 
 ## Erros comuns
 - EAR só com pessoal, sem os recursos físicos de campo; o próprio livro oscila: a p. 316 (PDF 352) fala só em recursos físicos e a p. 326 (PDF 362) inclui pessoal e equipamentos.
@@ -80,4 +80,4 @@ Origem de cada tipo: própria | subcontratada | cedida pelo contratante.
 ## Fontes
 - PMBOK 6: 9.1.2.2, p. 316–317 (PDF 352–353); 9.2, p. 322 (PDF 358); 9.2.3.3, p. 326–327 (PDF 362–363); 9.3, p. 329 (PDF 365); glossário, p. 710 (PDF 746).
 - PMBOK 7: 2.4.5, p. 65 (PDF 160); 3.2, p. 133 (PDF 228).
-- `checklist.md` 3 e 11; `experiencia.md` §9; `licitacoes.md` 2.8; fichas `prop-equipe` e `prop-preco`.
+- `checklist.md` (CTR3); `experiencia.md` §9; `licitacoes.md` 2.8; fichas `prop-equipe` e `prop-preco`.

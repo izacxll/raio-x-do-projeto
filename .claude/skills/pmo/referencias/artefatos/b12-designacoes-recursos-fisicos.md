@@ -6,7 +6,7 @@ etapas: [4, 5]
 gravidade: baixa
 categoria: trabalho do projeto
 sinonimos: ["designações de recursos físicos", "recursos físicos", "recursos materiais", "equipamentos e materiais", "infraestrutura do projeto", "lista de equipamentos", "logística de campo"]
-versao: 0.1.0
+versao: 0.2.0
 ---
 
 # B12 — Designações de recursos físicos
@@ -36,7 +36,7 @@ Registra os materiais, equipamentos, suprimentos, locais e outros recursos físi
   - confere: código
   - dispensa: nunca
 - **B12.5** Origem: próprio da FGV, alugado ou contratado, ou fornecido pelo contratante; o que vem do contratante vira premissa com prazo no B3
-  - fonte: PMBOK 6, 9.6.1.2, p. 354 (PDF 390) (interno ou terceirizado); `checklist.md` 8 (CP13)
+  - fonte: PMBOK 6, 9.6.1.2, p. 354 (PDF 390) (interno ou terceirizado); `checklist.md` PC6
   - sinais: "próprio" | "alugado" | "terceirizado" | "fornecido pelo contratante" | "cessão"
   - confere: código
   - dispensa: nunca
@@ -52,13 +52,13 @@ Registra os materiais, equipamentos, suprimentos, locais e outros recursos físi
   - dispensa: porte pequeno
 
 ## Perguntas de qualidade
-- O que o método supõe existir no território (sala, conectividade, rede de serviços) está garantido por alguém, com prazo? (checklist 8)
-- Equipamento ou fornecedor único sem alternativa vira risco no B27? (checklist 8; PMBOK 6, p. 310, PDF 346)
-- Os recursos físicos de campo entraram no preço e nas despesas por território? (checklist 11; PROP-PRECO)
+- O que o método supõe existir no território (sala, conectividade, rede de serviços) está garantido por alguém, com prazo? (PC6)
+- Equipamento ou fornecedor único sem alternativa vira risco no B27? (PC6; PMBOK 6, p. 310, PDF 346)
+- Os recursos físicos de campo entraram no preço e nas despesas por território? (PROP-PRECO)
 - Equipamento de coleta com dados pessoais tem regra de guarda e devolução? (A6.9; B32)
 
 ## Erros comuns
-- Contar com "cessão sem ônus" ou "apoio das prefeituras" sem prazo nem compromisso (checklist 8).
+- Contar com "cessão sem ônus" ou "apoio das prefeituras" sem prazo nem compromisso (PC6).
 - Equipamento crítico indisponível ou material de baixa qualidade, citados pelo PMBOK como fonte de risco (p. 310, PDF 346).
 - Lista feita uma vez e não atualizada (PMBOK 6, p. 358, PDF 394).
 
@@ -80,4 +80,4 @@ Atualização: [quando muda a disponibilidade; frequência a definir pelo GP].
 ## Fontes
 - PMBOK 6: 9.1.3.1, p. 318 (PDF 354); 9.3.3.1, p. 333 (PDF 369); 9.6, p. 353–358 (PDF 389–394); cap. 9, p. 310 (PDF 346).
 - PMBOK 7: 2.4.5, p. 65 (PDF 160); 3.2, p. 133 (PDF 228).
-- `checklist.md` 8 e 11; ficha `prop-preco`.
+- `checklist.md` PC6; ficha `prop-preco`.

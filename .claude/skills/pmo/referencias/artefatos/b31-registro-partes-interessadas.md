@@ -6,7 +6,7 @@ etapas: [3, 4, 5]
 gravidade: baixa
 categoria: partes interessadas
 sinonimos: ["registro de partes interessadas", "registro de stakeholders", "mapa de stakeholders", "mapeamento das partes interessadas", "matriz de partes interessadas", "matriz poder x interesse", "lista de partes interessadas"]
-versao: 0.1.0
+versao: 0.2.0
 ---
 
 # B31 — Registro das partes interessadas
@@ -21,7 +21,7 @@ versao: 0.1.0
   - confere: código
   - dispensa: nunca
 - **B31.2** Quem decide do lado do contratante: patrocinador e instância de decisão (no setor público, também gestor e fiscal do contrato)
-  - fonte: PMBOK 6, 13.1, p. 509 (PDF 545); `checklist.md` 7 (CE16); `experiencia.md` §1
+  - fonte: PMBOK 6, 13.1, p. 509 (PDF 545); `checklist.md` PC3 (CE16); `experiencia.md` §1
   - sinais: "patrocinador" | "gestor do contrato" | "fiscal do contrato" | "ponto focal" | "comitê" | "instância de decisão"
   - confere: código
   - dispensa: nunca
@@ -65,9 +65,9 @@ versao: 0.1.0
 - A lista vai além de cliente e patrocinador e inclui quem pode se opor? (PMBOK 6, p. 505, PDF 541; Rework RW-006)
 - Estão nomeadas pessoas, e não só departamentos? O que o documento não traz fica "a definir pelo GP" (Rework RW-006; SKILL.md, princípio 2).
 - A classificação segue o comportamento real, não só o cargo? (Rework RW-006)
-- Poder, interesse e atitude atribuídos sem base são premissas e vão para o B3 (PMBOK 6, p. 515, PDF 551; checklist 2).
-- Se houver campo: estruturas locais que já atuam no objeto estão listadas? (checklist 11, TC20)
-- Se houver beneficiários: estão no registro, com quem os representa? (checklist 12)
+- Poder, interesse e atitude atribuídos sem base são premissas e vão para o B3 (PMBOK 6, p. 515, PDF 551; vago, CP9).
+- Se houver campo: estruturas locais que já atuam no objeto estão listadas? (PC6)
+- Se houver beneficiários: estão no registro, com quem os representa? (PC6)
 - Órgãos de controle e procuradoria aparecem? (Rework RW-006, observação do leitor)
 
 ## Erros comuns
@@ -95,4 +95,4 @@ Linha para a tela: "Registro simples com matriz poder x interesse: porte pequeno
 - PMBOK 6: cap. 13, p. 505 (PDF 541); 13.1, p. 507–515 (PDF 543–551); 13.2, p. 519–521 (PDF 555–557); 12.3, p. 496 (PDF 532); Padrão, p. 550 (PDF 586); glossário, p. 721 (PDF 757).
 - PMBOK 7: 2.1 Partes interessadas, p. 8–15 (PDF 103–110); registro das partes interessadas, p. 185 (PDF 280).
 - Rework: RW-006 (link nos itens).
-- `checklist.md` (2, 7, 11, 12); `experiencia.md` §1; SKILL.md, princípio 2.
+- `checklist.md` (PC3, PC6; vago, CP9); `experiencia.md` §1; SKILL.md, princípio 2.
