@@ -15,16 +15,25 @@ Leitura das fontes, com as notas em `referencias/` (fora do Git), o que permite 
 
 | Fonte | Partes | Situação |
 |---|---|---|
-| PMBOK 6, onda 1: caps. 1–3, 4, 5, 6 | 4 | notas prontas em `referencias/pmbok/notas/` |
-| PMBOK 6, onda 2: caps. 7–8, 9–10, 11, 12–13 | 4 | em leitura |
-| Onda 3: PMBOK 6 (Parte 2, anexos, glossário) e PMBOK 7 (padrão, domínios, adaptação e modelos) | 5 | a fazer |
-| Rework | 78 artigos escolhidos, mais Process Management e Productivity | lote 1 (RW-001 a RW-024) em leitura; os demais lotes vêm em seguida, um de cada vez |
-| Legislação (14.133, 8.666, 13.019, 13.303) | — | em leitura |
+| PMBOK 6 e 7, ondas 1 a 3 | 13 | **concluídas**: notas em `referencias/pmbok/notas/` |
+| Rework | 78 artigos escolhidos, mais 15 de Process Management e Productivity (RW-101 a RW-115) | lote 1 (RW-001 a RW-024) lido; lote 2 (RW-025 a RW-046) em leitura; em seguida, lote 3 (RW-047 a RW-070) e lote 4 (RW-071 a RW-078 e RW-101 a RW-115), um de cada vez |
+| Legislação (14.133, 8.666, 13.019, 13.303 e Decreto 12.807/2025) | — | **concluída**: notas em `referencias/legislacao/` |
 
 **Já escritos na skill:**
+- `SKILL.md`;
+- `referencias/licitacoes.md`, com os valores de 2026;
 - `referencias/checklist.md`: as 12 perguntas, com os 24 riscos da V29 cobertos;
 - `referencias/experiencia.md`;
 - `referencias/artefatos/_modelo.md`: formato das fichas (decisão 0015).
+
+**Em escrita:** `pmbok6.md` e `pmbok7.md`, feitos por subagentes a partir das notas.
+
+**Depois:**
+- as fichas, em 7 grupos: integração e TAP; escopo; cronograma; custos e qualidade; recursos e comunicações; riscos, aquisições e partes interessadas; proposta;
+- o `rework.md`;
+- o quadro de artigos × artefatos.
+
+As fichas começam quando o Rework terminar os lotes 2 e 3.
 
 **Para retomar:**
 - Os índices mostram o que falta: as notas em `referencias/pmbok/notas/` e o status de cada artigo em `referencias/rework/_indice.md`.
