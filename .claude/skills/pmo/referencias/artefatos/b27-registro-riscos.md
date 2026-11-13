@@ -17,7 +17,7 @@ versao: 0.1.0
 ## Conteúdo mínimo
 - **B27.1** Cada risco com identificador único e descrição clara
   - fonte: PMBOK 6, 11.2.3.1, p. 417 (PDF 453)
-  - sinais: "ID" | "R01" | "R-01" | "descrição do risco" | tabela com uma linha por risco
+  - sinais: "ID do risco" | "RK01" | "risco 1" | "descrição do risco" | tabela com uma linha por risco
   - confere: código
   - dispensa: nunca
 - **B27.2** Causa e efeito escritos separados do evento de risco
