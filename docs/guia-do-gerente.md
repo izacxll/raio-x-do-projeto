@@ -1,0 +1,48 @@
+# Guia do gerente
+
+Como usar o Raio-X do Projeto: **https://izacxll.github.io/raio-x-do-projeto/**. A ferramenta prepara minutas e aponta problemas; quem decide é sempre o gerente do projeto (GP).
+
+## O que cada etiqueta quer dizer
+
+- **Do documento, p. N:** tirado da RFP, da proposta, do TAP ou do PGP, com a página e o trecho. Abra o trecho para conferir.
+- **Sugestão:** o que a ferramenta propõe, em redação condicional. Pode ser aceita, editada ou descartada.
+- **Decisão do GP:** só você preenche (participar ou não, abordagem, valor-hora, nomes da equipe, reserva, preço final…).
+- **"não localizado pelo código — conferir no documento":** o código não achou; não quer dizer que o documento não traga.
+- **"citação não conferida":** o PMO citou um trecho que o código não achou na página indicada. Não vale como fato até você conferir.
+
+Enquanto houver item pendente, os documentos exportados saem com o cabeçalho **"Minuta — sugestões geradas por ferramenta, sujeitas à validação do Gerente do Projeto"**.
+
+## Sem chave da API
+
+Nada sai do navegador.
+
+- **Etapa 1 — Leitura da RFP:** envie a RFP (e os anexos, se vierem em PDFs separados) e clique em "Analisar a RFP". Revise os requisitos (R01, R02…): os números seguem até a conferência do plano. Decida se participa. Baixe a análise, a lista de requisitos e prazos, o checklist de habilitação e as perguntas de esclarecimento.
+- **Etapa 5 — Conferência do PGP:** envie o PGP (e, se tiver, o TAP e a RFP), confirme o mapa do plano e as características do projeto e clique em "Conferir o plano".
+
+## Com a chave da API
+
+### A chave
+1. O login do claude.ai **não** é a chave. Peça uma chave da API ao administrador do Claude da FGV (organização da FGV no Claude Console).
+2. Na etapa 2, em "Conectar ao Claude", cole a chave e clique em "Usar esta chave" e em "Testar".
+3. A chave fica só nesta aba do navegador e some quando ela é fechada. Use o app numa aba só dele e clique em **"Esquecer a chave"** ao terminar. A chave nunca vai para o dossiê nem para os arquivos.
+
+Nas etapas com o PMO, o texto dos PDFs vai para a API do Claude, pela sua chave, na organização da FGV. O app só envia quando você clica em "Pedir ao PMO", e mostra antes quanto deve custar.
+
+### Etapa 2 — Proposta
+1. **Documentos:** a RFP e os anexos, ou o dossiê da etapa 1 (melhor: os requisitos e as brechas já revisados por você seguem para a proposta).
+2. **Ponto de partida:** o que o código tirou da RFP (requisitos, critério de julgamento, modelo obrigatório, limite de páginas, valor estimado, prazos, brechas).
+3. **Estratégia (PMO):** como o contratante vai avaliar, onde estão os pontos e 2 ou 3 abordagens técnicas com prós e contras. **Escolha uma abordagem** e marque as premissas críticas que se aplicam ao projeto.
+4. **Conteúdo técnico (PMO):** as seções da proposta, o escopo (produtos, critérios de aceite, prazos), exclusões, premissas com a consequência, restrições e obrigações do contratante. Revise item a item.
+5. **EAP, estimativas e equipe (PMO):** atividades com estimativa em três pontos, perfis e horas. O código monta o cronograma e o caminho crítico. Informe o **início previsto** e os **dias de aprovação** de cada produto pelo contratante: o código confere o prazo total e o de cada produto contra a RFP.
+6. **Preço:** preencha o valor-hora de cada perfil, as despesas, os percentuais de custos indiretos e de tributos e a reserva. O código faz as contas e compara com o valor estimado do edital. O preço final é seu.
+7. **Conferência final:** a matriz de atendimento liga cada requisito e cada quesito de pontuação ao ponto da minuta que o atende; o checklist de envio traz os prazos e os documentos exigidos.
+8. **Exportar:** proposta técnica (DOCX e PDF), planilha de preço (XLSX), matriz de atendimento e checklist de envio (XLSX) e perguntas de esclarecimento (DOCX).
+
+O custo de cada chamada (tokens e valor estimado em dólar) fica na tabela "Uso da API nesta proposta" e no dossiê.
+
+### Etapas 3 e 4
+Em construção.
+
+## Dossiê
+
+"Salvar projeto" baixa o `<projeto>.dossie.json` com tudo o que foi lido, sugerido e decidido. "Abrir projeto" retoma de onde parou. O dossiê não guarda a chave nem os PDFs (só o texto lido deles). Guarde-o com o mesmo cuidado da RFP.

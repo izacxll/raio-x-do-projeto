@@ -4,7 +4,22 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 
 ## [Não publicado]
 
-### F1 — leitura da RFP só com código (versão 0.4.0, aguardando o teste da responsável)
+## [0.5.0] — 13/11/2026
+
+### F2 — proposta com o PMO (publicada antes do teste da responsável e sem o teste com a chave, decisão 0026)
+- **Conectar ao Claude:** campo da chave, "Testar" (chamada mínima), "só nesta sessão", "lembrar neste navegador" desativado com o motivo e "Esquecer a chave" sempre visível. A chave fica só no `sessionStorage` da aba; nunca vai para o dossiê, para os exportados nem para registros.
+- **Etapa 2 na tela:** ponto de partida (código, da etapa 1), três passos do PMO (estratégia e abordagens; conteúdo técnico e SOW; EAP, estimativas e equipe) com o custo estimado antes e o uso real depois, escolha da abordagem e das premissas críticas pelo GP, revisão item a item.
+- **Conferência do que o PMO devolve:** citação procurada na página indicada (literal, aproximada e por partes, copiada do Raio-X), "citação não conferida" quando não acha, aviso de redação afirmativa e de número sem fonte.
+- **Contas do código:** cronograma PERT com rede, folga e caminho crítico, tempo de aprovação do cliente (decisão do GP), prazo total e prazo de entrega de cada produto contra a RFP; preço de baixo para cima com os valores do GP (tributos por dentro) e conferência com o valor estimado; matriz de atendimento; limite de páginas; checklist de envio.
+- **Saídas:** proposta técnica (DOCX e PDF), planilha de preço (XLSX), matriz de atendimento e checklist de envio (XLSX), perguntas de esclarecimento (DOCX).
+- **Cliente da API:** SDK oficial 1.6.0, streaming, saída estruturada validada por Zod, cache da skill e dos documentos, esforço por passo, modelo de reserva da própria API em caso de recusa, erros em português.
+- **Comparação de modelos** (decisão 0002): `npm run comparar-modelos`, pronta para rodar com a chave.
+- Testes sem chave: API simulada (unidade e fumaça no navegador) e respostas do PMO geradas no Claude Code para a RFP pública da OEI, com todas as citações achadas pelo código.
+- Guia do gerente (`docs/guia-do-gerente.md`). Decisão 0025. Versão do app: 0.5.0.
+
+## [0.4.0] — 13/11/2026
+
+### F1 — leitura da RFP só com código (publicada antes do teste da responsável, decisão 0026)
 - **Etapa 1 na tela:** "Analisar a RFP" lê a RFP e os anexos e organiza o resultado como a análise final: pontos de atenção, identificação, mapa do documento, requisitos, prazos, julgamento, habilitação, forma de apresentação, condições contratuais, partes interessadas e vagos e brechas. Cada item com o rótulo, o documento, a página e o trecho.
 - **Mapa:** seções numeradas, cláusulas e anexos (inclusive "ANEXO “A”" e o termo de referência sem a palavra "anexo"), com páginas, a separação corpo × anexos e o tema de cada seção. Cabeçalho e rodapé repetidos ficam fora das buscas.
 - **Requisitos numerados** (R01, R02…): produtos, equipe mínima, quantidades e local. O número fica fixo no dossiê, segue para a conferência (etapa 5) e nunca é reaproveitado; o GP edita, descarta e inclui.

@@ -16,13 +16,13 @@ A ferramenta **prepara minutas e aponta problemas; quem decide é sempre o geren
 
 O app roda no navegador: **https://izacxll.github.io/raio-x-do-projeto/**. Os PDFs são lidos na sua própria máquina.
 
-Hoje funcionam, sem chave: a leitura dos PDFs (com OCR nas páginas em imagem), o dossiê (salvar e abrir), a **etapa 1** (análise da RFP: requisitos numerados, prazos com o limite de esclarecimento calculado, julgamento, habilitação, condições contratuais, brechas com perguntas de esclarecimento e as quatro saídas) e a **etapa 5** (conferência do PGP). As etapas 2, 3 e 4, com o PMO, chegam nas próximas versões.
+Hoje funcionam, sem chave: a leitura dos PDFs (com OCR nas páginas em imagem), o dossiê (salvar e abrir), a **etapa 1** (análise da RFP: requisitos numerados, prazos com o limite de esclarecimento calculado, julgamento, habilitação, condições contratuais, brechas com perguntas de esclarecimento e as quatro saídas) e a **etapa 5** (conferência do PGP). Com a chave, a **etapa 2** (proposta: estratégia e abordagens, conteúdo técnico e SOW, EAP e equipe pelo PMO; cronograma, preço e matriz de atendimento pelo código). As etapas 3 e 4 chegam nas próximas versões.
 
 - **Sem chave da API:** leitura dos PDFs, etapa 1 (leitura da RFP) e etapa 5 (conferência do PGP). Nada é enviado para fora do navegador.
 - **Com a chave da API:** etapas 2, 3 e 4, que usam a inteligência do PMO (Claude). A chave é pedida ao administrador do Claude da FGV, que a cria no Claude Console; o login do claude.ai não serve. A chave fica só no seu navegador, durante a sessão, e o conteúdo dos PDFs dessas etapas é enviado à API do Claude pela organização da FGV.
 - O trabalho é salvo num arquivo de **dossiê** (`<projeto>.dossie.json`), que você guarda e reabre quando quiser. O dossiê nunca guarda a chave.
 
-O guia completo estará em [`docs/guia-do-gerente.md`](docs/guia-do-gerente.md).
+O guia completo está em [`docs/guia-do-gerente.md`](docs/guia-do-gerente.md).
 
 ## Como rodar localmente
 
@@ -40,6 +40,7 @@ npm run dev          # abre em http://localhost:5173
 | `npm run test:fumaca` | Testes no navegador sobre o build (rode `npx playwright install chromium` uma vez) |
 | `npm run lint` / `npm run verificar-formato` | ESLint e Prettier |
 | `npm run verificar-repositorio` | A verificação do repositório público que o CI faz (decisão 0010) |
+| `npm run comparar-modelos` | Compara o Opus 5.5 e o Sonnet 5.5 na etapa 2 (gasta crédito; precisa de `$env:ANTHROPIC_API_KEY`, decisão 0025) |
 
 ## Como publicar
 
@@ -53,6 +54,7 @@ A `main` é publicada no GitHub Pages a cada merge (`.github/workflows/publicar.
 | [`docs/andamento.md`](docs/andamento.md) | Fase atual, decisões pendentes e próximo passo |
 | [`docs/decisoes/`](docs/decisoes/) | Uma decisão por arquivo |
 | `.claude/skills/pmo/` | Skill PMO: a inteligência das etapas 2, 3 e 4 (fase S) |
+| [`docs/guia-do-gerente.md`](docs/guia-do-gerente.md) | Como usar, com e sem chave |
 | [`docs/arquitetura.md`](docs/arquitetura.md) | Código × PMO, pastas, fluxo das etapas, dossiê, segurança e testes |
 | [`docs/identidade-visual.md`](docs/identidade-visual.md) | Cores, fonte, componentes e etiquetas |
 | [`src/`](src/) | Código do app |

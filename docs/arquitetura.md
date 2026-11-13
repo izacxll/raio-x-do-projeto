@@ -16,7 +16,7 @@ As etapas 1 e 5 rodam só com código e sem chave.
 | Pasta | O que tem | Desde |
 |---|---|---|
 | `dominio/` | A skill lida no build: fichas (partes do PGP, conteúdo mínimo, gravidade, categoria), premissas críticas e características do projeto | F5 |
-| `etapas/` | As cinco etapas: documentos pedidos, o que a ferramenta faz, saídas. `1-rfp/`: a análise da RFP (junta os passos 1 a 11) e a revisão do GP | F0, F1 |
+| `etapas/` | As cinco etapas: documentos pedidos, o que a ferramenta faz, saídas. `1-rfp/`: a análise da RFP (junta os passos 1 a 11) e a revisão do GP. `2-proposta/`: ponto de partida, pedidos ao PMO, cronograma (PERT, caminho crítico, prazos), preço, conferência final e os itens do PMO com a revisão do GP | F0, F1, F2 |
 | `leitura/` | PDF página a página (pdf.js), OCR (Tesseract.js), imagens na página, estado de cada página | F0 |
 | `texto/` | Normalização para comparar trechos, limpeza de carimbos, nome de arquivo; datas no texto e contas de prazo (dias úteis), frase em volta de uma posição, cabeçalho repetido | F0, F1 |
 | `dossie/` | Esquema do dossiê (zod), salvar e abrir, estado do app (zustand) | F0 |
@@ -24,7 +24,8 @@ As etapas 1 e 5 rodam só com código e sem chave.
 | `interface/` | Telas, componentes, estilos, tokens e o logo | F0 |
 | `extracao/` | Requisitos (produtos rotulados) e prazo total da RFP. `rfp/`: mapa da RFP, quadro da capa, identificação, requisitos (equipe, quantidades, local), prazos do certame e da execução, julgamento, habilitação, temas (apresentação e condições contratuais) e partes interessadas | F5, F1 |
 | `regras/` | Busca com página e trecho, mapa do PGP, vago, conflituoso, ausente, conferência; brechas da RFP com a pergunta de esclarecimento (`brechas-rfp.ts`) | F5, F1 |
-| `pmo/` | Chamada à API (`cliente.ts`), chave, montagem com a skill, schemas | F2 |
+| `config/` | Modelo, esforço e limites de cada passo do PMO (`modelo.ts`) e tabela de preços (`precos.ts`) | F2 |
+| `pmo/` | Único módulo que chama a API (`cliente.ts`); chave só no `sessionStorage` (`chave.ts`); montagem do pedido com a skill e o texto dos documentos (`montagem.ts`); schemas Zod de cada passo (`schemas/`); custo à vista (`custo.ts`); conferência de citações (`citacoes.ts`) e de redação e números sem fonte (`redacao.ts`) | F2 |
 
 ## Fluxo de uma etapa (seção 5.0 da especificação)
 
@@ -36,6 +37,14 @@ As etapas 1 e 5 rodam só com código e sem chave.
 6. **Exportar:** o conteúdo vira um `DocumentoExportavel` (`src/exportacao/modelo.ts`), e cada montador gera o seu formato. As bibliotecas são carregadas só na hora do download.
 7. **Salvar o dossiê.**
 
+## Etapa com o PMO (etapa 2, decisão 0025)
+
+1. O código monta o **ponto de partida** a partir da etapa 1 (ou roda a leitura da RFP, se ela não foi feita).
+2. Cada passo do PMO (estratégia → conteúdo → EAP) é um pedido à API: a skill e o texto dos documentos vão com cache; depois vai o pedido do passo. A resposta é JSON estruturado, validado pelo schema.
+3. O código confere cada item: citação na página indicada, redação condicional, números sem fonte.
+4. O GP decide no meio (abordagem, premissas críticas) e revisa cada item; o código faz as contas (cronograma, prazos, preço) e a conferência final.
+5. O uso de cada chamada (tokens e valor) fica no dossiê.
+
 ## Dossiê
 
 Um JSON (`<projeto>.dossie.json`, decisão 0010) com tudo o que foi lido, sugerido e decidido:
@@ -44,7 +53,8 @@ Um JSON (`<projeto>.dossie.json`, decisão 0010) com tudo o que foi lido, sugeri
 - `versaoApp`, `versaoSkill`: as versões que geraram o conteúdo;
 - `projeto`: nome;
 - `documentos`: cada PDF lido, com o papel (RFP, anexo, proposta, TAP, PGP) e o texto de cada página, com o estado e o motivo;
-- `itens`: os itens rotulados (do documento, sugestão, decisão do GP), com estado de revisão e origem (documento, página, trecho).
+- `itens`: os itens rotulados (do documento, sugestão, decisão do GP), com estado de revisão e origem (documento, página, trecho);
+- `analiseRfp`, `conferencia`, `proposta`: o que cada etapa produziu e o que o GP decidiu (a proposta guarda também o uso da API).
 
 O dossiê guarda o texto, não o PDF. **Nunca guarda a chave da API:** o esquema não tem campo para ela, e o que não está no esquema é descartado ao salvar e ao abrir.
 
@@ -60,4 +70,6 @@ O dossiê guarda o texto, não o PDF. **Nunca guarda a chave da API:** o esquema
 |---|---|---|
 | Unidade e integração (Node) | `tests/**/*.test.ts` | `npm test` |
 | Leitura das RFPs públicas de teste | `tests/leitura/rfps-publicas.test.ts` | `npm test` |
-| Fumaça no navegador, sobre o build, com a CSP ativa (inclui o OCR) | `tests/fumaca/` | `npm run build && npm run test:fumaca` |
+| Fumaça no navegador, sobre o build, com a CSP ativa (inclui o OCR e a etapa 2 com a API simulada) | `tests/fumaca/` | `npm run build && npm run test:fumaca` |
+| Etapa 2 sem chave: API simulada no formato de streaming e respostas do PMO geradas no Claude Code | `tests/pmo/`, `tests/etapas/proposta.test.ts`, `tests/ajudantes/api-simulada.ts` | `npm test` |
+| Comparação de modelos com a chave (gasta crédito) | `tests/pmo/comparacao-modelos.test.ts` | `npm run comparar-modelos` |
