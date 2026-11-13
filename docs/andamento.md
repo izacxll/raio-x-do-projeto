@@ -1,12 +1,14 @@
 # Andamento
 
-Atualizado em 13/11/2026 (F0).
+Atualizado em 13/11/2026 (skill 0.2.0 e início da F5).
 
 ## Onde estamos
 
 **A F0 (esqueleto do app) foi aprovada e publicada como v0.2.0 em 13/11/2026.** App no ar: https://izacxll.github.io/raio-x-do-projeto/ (a `main` publica a cada merge; cada push numa branch `fase/*` publica uma prévia, decisão 0018).
 
-A ordem mudou (decisão 0017): **a F0 veio antes da P**. Próxima: fase P (prova de conceito), numa conversa nova.
+**Skill PMO 0.2.0 em revisão** (PR na branch `fase/s2-premissas-criticas`, decisão 0021): os riscos da V29 deixam de ser lista à parte e viram 8 premissas críticas (PC1 a PC8) escritas dentro da proposta, do TAP e do plano (B3, B27, A11; tratamento no A8, grave). Na etapa 5, a premissa crítica que se aplica e não está no plano é "ausente".
+
+**Próxima: F5** (conferência, só código), com as RFPs públicas e planos com erros plantados. A fase P (caso real) fica para depois, por decisão da responsável pelo projeto.
 
 **O que a F0 entregou:**
 - tela inicial com as cinco etapas e a tela de cada etapa no fluxo da seção 5.0, com a identidade da apresentação e o logo;
@@ -20,7 +22,7 @@ A ordem mudou (decisão 0017): **a F0 veio antes da P**. Próxima: fase P (prova
 
 ### Fase S (concluída, v0.1.0)
 
-**O que a skill tem** (em `.claude/skills/pmo/`, versão 0.1.0):
+**O que a skill tem** (em `.claude/skills/pmo/`, versão 0.2.0 desde a decisão 0021):
 
 | Arquivo | Conteúdo |
 |---|---|
@@ -29,7 +31,7 @@ A ordem mudou (decisão 0017): **a F0 veio antes da P**. Próxima: fase P (prova
 | `referencias/pmbok7.md` | 12 princípios, 8 domínios (com a verificação de resultados), adaptação e artefatos × partes do plano |
 | `referencias/rework.md` | Práticas por tema, a seção da proposta e o quadro de cobertura (56 dos 61 artefatos com artigo) |
 | `referencias/licitacoes.md` | Leis 14.133, 8.666, 13.019 e 13.303, com artigos e os valores de 2026 (Decreto 12.807/2025) |
-| `referencias/checklist.md` | As 12 perguntas, cobrindo os 24 riscos da V29 |
+| `referencias/checklist.md` | Premissas críticas comuns PC1 a PC8 (V29 revisada, decisão 0021; na 0.1.0 eram 12 perguntas de risco) |
 | `referencias/experiencia.md` | Onde os planos costumam falhar (só padrões gerais) |
 | `referencias/artefatos/` | 61 fichas: TAP, 18 componentes, 33 documentos e 9 partes da proposta, com 608 itens de conteúdo mínimo (508 conferidos por código, 100 só pelo PMO) |
 
@@ -50,7 +52,7 @@ A ordem mudou (decisão 0017): **a F0 veio antes da P**. Próxima: fase P (prova
 | Fundação | Organização do repositório e decisões do plano | concluída (PR #1) | — |
 | S | Skill PMO 0.1.0 | concluída (PR #2; checklist aprovado) | v0.1.0 |
 | F0 | Esqueleto, identidade visual com o logo, fluxo de tela, leitura de PDF, dossiê `.dossie.json`, exportação básica, CI com a verificação dos formatos | concluída (PR #3) | v0.2.0 |
-| P | Prova de conceito com um caso real de política pública, sem código do app; inclui a comparação regras de código × leitura do PMO | a fazer (depois da F0, decisão 0017) | v0.3.0 |
+| P | Prova de conceito com um caso real de política pública, sem código do app; inclui a comparação regras de código × leitura do PMO | adiada pela responsável pelo projeto (depois da F5) | a definir |
 | F5 | Etapa 5: conferência do PGP só com código, com a base do "ausente" em três níveis | a fazer | v0.4.0 |
 | F1 | Etapa 1: leitura da RFP (só código) | a fazer | v0.5.0 |
 | F2 | Etapa 2: proposta, com o PMO; tela da chave; comparação de modelos | a fazer | v0.6.0 |
@@ -68,9 +70,9 @@ A ordem mudou (decisão 0017): **a F0 veio antes da P**. Próxima: fase P (prova
 
 ## Próximo passo
 
-1. F0 concluída: merge, tag v0.2.0 e release feitos.
-2. **Vale abrir uma conversa nova** para a fase P. Ela começa lendo o `CLAUDE.md` e este arquivo.
-3. Fase P: perguntar se os três PDFs do caso são do mesmo contrato; pedir que sejam salvos em `referencias/casos/<caso>/entrada/` como `1-chamamento.pdf`, `2-tap.pdf` e `3-plano.pdf`; seguir a seção 15 da especificação, com a regra contra contaminação. O app da F0 pode ser usado para ler os PDFs (nada sai do navegador), mas o que for gerado a partir deles fica fora do Git.
+1. **Responsável pelo projeto:** revisar o PR da skill 0.2.0 (premissas críticas, decisão 0021).
+2. **F5** (conferência, só código), na branch `fase/f5-conferencia`, a partir da skill 0.2.0: mapa do PGP, conteúdo mínimo das fichas, premissas críticas, vago/conflituoso/ausente, categoria e gravidade; testes com as RFPs públicas e com planos gerados pelo PMO (Claude Code) com erros plantados.
+3. Depois: fase P (caso real), F1, F2…
 4. Na tela, nunca citar fases do plano: para o GP, o que falta é "em construção" (pedido na revisão da F0; há teste de fumaça).
 
 **Lembretes técnicos:**

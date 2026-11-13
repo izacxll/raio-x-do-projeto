@@ -38,12 +38,17 @@ Vale no código e na interface, não só nos prompts.
 - Quando o PMO achar algo que o código não achou, avalie se uma regra pegaria e proponha a regra.
 - A skill PMO (`.claude/skills/pmo/`) é **fonte única**: usada pelo Claude Code e importada no build do app (`?raw`).
 
-## 3. Brechas do Raio-X ≠ riscos do projeto
+## 3. Brechas do Raio-X ≠ riscos do projeto; riscos da V29 = premissas críticas
 
 O Raio-X do Plano de Trabalho (código em `referencias/raio-x/`, fora do Git) aponta os problemas que **o próprio texto** cria: o que está escrito errado, o que ficou em aberto, o que transfere responsabilidade para a FGV. Isso são **brechas**. O **registro de riscos do PGP** (etapa 4) é outra coisa. Não misture os dois.
 
 - Não altere o Raio-X original. Reaproveite copiando, com `// origem: App-final-4.jsx, <função>, linha N`.
-- Não mude metodologia, taxonomia V29, códigos ou prompts do Raio-X sem aprovação explícita.
+- Não mude metodologia, taxonomia V29, códigos ou prompts do Raio-X sem aprovação explícita. A V29 continua como está no Raio-X do Plano de Trabalho.
+- **Riscos da V29 viram premissas críticas, dentro do plano** (decisão 0021). No Raio-X do Projeto, a V29 revisada é o `checklist.md` da skill: 8 premissas críticas comuns (PC1 a PC8), e não uma lista de riscos à parte.
+  - Cada premissa crítica que se aplica ao projeto aparece no plano em três lugares: registro de premissas (B3), registro de riscos com resposta e gatilho (B27) e plano de mudanças, com o modo de reajustar escopo, prazo e metas (A11). O plano de riscos (A8) diz como elas são tratadas; a falta conta como grave. Na proposta e no TAP, ela já sai escrita, com a consequência.
+  - Na etapa 5, a premissa crítica que se aplica e não está no plano é **ausente**. O GP confirma quais se aplicam.
+  - Não viram premissa: duas leituras (CTR7) e premissa sem base (CP9) são **vago**; texto de outro projeto (CP8) é **conflituoso**; o que o edital empurra para a FGV (CTR2, CTR3) vai para a etapa 1 (pergunta de esclarecimento) e para a proposta (exclusão ou obrigação do contratante); gestão (CP12) e sigilo/LGPD (CP14) são conteúdo mínimo das fichas dos planos. TC18, TC19, TC21 e TC22 saem.
+  - Exemplos no repositório não citam projeto nem sistema real.
 - Na etapa 5, a saída usa só **vago, conflituoso e ausente** e a gravidade pela parte do PGP (decisões 0008 e 0009).
 
 ## 4. Regras do repositório

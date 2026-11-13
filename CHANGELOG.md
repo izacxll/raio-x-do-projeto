@@ -4,6 +4,13 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 
 ## [Não publicado]
 
+### Skill PMO 0.2.0 — premissas críticas (decisão 0021)
+- `checklist.md` reescrito como **premissas críticas comuns** PC1 a PC8: o que o plano assume, quando se aplica, sinais de aplicação, sinais no plano, o que acontece se não se confirmar e onde tem de estar. A PC2 (sistemas e ferramentas que não são da FGV) é nova.
+- Itens novos de conteúdo mínimo: A8.12 (tratamento das premissas críticas; grave), B3.9, B27.13, A11.12, PROP-SOW.11 e TAP-PR.2.
+- O que não vira premissa: CTR7 e CP9 (vago), CP8 (conflituoso), CTR2 e CTR3 (etapa 1 e proposta), CP12 e CP14 (conteúdo mínimo dos planos). Saem TC18, TC19, TC21 e TC22 e as perguntas "só se houver campo" e "só se houver beneficiários".
+- `SKILL.md` 0.2.0 (princípio 11) e todas as fichas com as citações do checklist antigo trocadas pelos códigos PC, pelo tipo do problema de texto ou pelo item de conteúdo mínimo.
+- `CLAUDE.md`, seção 3: os riscos da V29 entram como premissas críticas dentro do plano.
+
 ## [0.2.0] — 13/11/2026
 
 ### Fase F0 — esqueleto do app (aprovada)
