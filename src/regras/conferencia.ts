@@ -15,7 +15,14 @@ import {
   type TipoAchado,
   type Verificacao,
 } from "./achado";
-import { paginasNaoVerificaveis, procurar, procurarPadrao, procurarSinais, type Ocorrencia } from "./busca";
+import {
+  normalizarTermo,
+  paginasNaoVerificaveis,
+  procurar,
+  procurarPadrao,
+  procurarSinais,
+  type Ocorrencia,
+} from "./busca";
 import { paginasDaParte, parteDaPosicao, type ParteConfirmada } from "./mapa-pgp";
 import { PADROES_VAGO } from "./vago";
 
@@ -290,10 +297,54 @@ export function conferirPlano(e: EntradaConferencia): ResultadoConferencia {
   // ---------- (a) requisitos da RFP ----------
   const lugarDoEscopo = ["B17", "A13", "A1"].find((c) => presente(c)) ?? "B17";
   const faixaEscopo = paginasDaParte(confirmadas.get(lugarDoEscopo));
+  const lugarDaEquipe = ["B18", "A6", "B26"].find((c) => presente(c)) ?? "A6";
   for (const r of e.requisitos) {
     const id = `requisito:${r.numero}`;
     const termos = termosDoRequisito(r);
     const base = { id, alvo: r.numero, descricao: `${r.rotulo}: ${r.descricao}` };
+    // quantidade e local dependem de leitura (o plano pode escrever "doze oficinas" ou o nome do município)
+    if (r.tipo === "quantidade" || r.tipo === "local") {
+      verificacoes.push({
+        ...base,
+        estado: "nao-conferido",
+        detalhe: "Quantidade e local não são conferidos pelo código nesta versão: conferir no plano.",
+      });
+      continue;
+    }
+    if (r.tipo === "equipe") {
+      const papel = r.rotulo.replace(/^Equipe:\s*/, "");
+      // as 5 primeiras palavras bastam: o plano costuma citar o perfil de forma resumida
+      const termo = papel.split(/\s+/).slice(0, 5).join(" ");
+      const noPlano = normalizarTermo(termo).length >= 6 ? procurar(e.pgp, [termo], { primeira: true }) : [];
+      if (noPlano.length) {
+        verificacoes.push({
+          ...base,
+          estado: "ok",
+          detalhe: `Perfil localizado na p. ${noPlano[0]?.pagina}.`,
+        });
+        continue;
+      }
+      ausenteOuNaoVerificavel(id, r.numero, base.descricao, () =>
+        registrar({
+          tipo: "ausente",
+          regra: "requisito",
+          partes: [lugarDaEquipe],
+          chave: r.numero,
+          titulo: `${r.numero} (${papel}) ${NAO_LOCALIZADO} no plano`,
+          descricao: `O perfil de equipe ${r.numero} exigido pela RFP ("${r.descricao}") não foi localizado no plano.`,
+          evidencias: [
+            {
+              documento: "rfp",
+              pagina: r.origem === "codigo" ? r.pagina : undefined,
+              trecho: r.origem === "codigo" ? r.trecho : r.descricao,
+              rotulo: r.origem === "codigo" ? `RFP, p. ${r.pagina}` : "Requisito incluído pelo GP",
+            },
+          ],
+          sugestao: `Sugere-se indicar no plano quem ocupa o perfil "${papel}" (${r.numero}) e a dedicação prevista, como pede a RFP.`,
+        }),
+      );
+      continue;
+    }
     if (!termos.length) {
       verificacoes.push({
         ...base,
