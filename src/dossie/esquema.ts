@@ -94,7 +94,37 @@ export const RequisitoDossie = z.object({
   pagina: z.number().int().nonnegative(),
   trecho: z.string(),
   origem: z.enum(["codigo", "gp"]),
+  /** Sem tipo, é produto (dossiês da F5). */
+  tipo: z.enum(["produto", "equipe", "quantidade", "local", "outro"]).optional(),
+  documento: z.string().optional(),
 });
+
+// ---------- etapa 1: análise da RFP ----------
+
+/** Revisão do GP sobre um item da análise, guardada pelo id estável do item. */
+export const RevisaoItem = z.object({
+  estado: EstadoItem,
+  textoEditado: z.string().optional(),
+});
+export type RevisaoItem = z.infer<typeof RevisaoItem>;
+
+export const DecisaoParticipacao = z.enum(["a-decidir", "participar", "nao-participar"]);
+
+export const AnaliseRfpDossie = z.object({
+  /** Requisitos com o número fixo: é a lista que segue para as etapas seguintes. */
+  requisitos: z.array(RequisitoDossie),
+  /** Próximo número de requisito: número de requisito removido não é reaproveitado. */
+  proximoRequisito: z.number().int().positive(),
+  /** Revisão de cada item, pelo id (requisitos: "requisito:R01"). */
+  revisoes: z.record(z.string(), RevisaoItem),
+  /** Decisão do GP: participar ou não. Nunca é preenchida pela ferramenta. */
+  participacao: z.object({
+    decisao: DecisaoParticipacao,
+    justificativa: z.string().optional(),
+  }),
+  executadaEm: z.string().optional(),
+});
+export type AnaliseRfpDossie = z.infer<typeof AnaliseRfpDossie>;
 
 /** Decisão do GP sobre um achado: procede ou não, e troca de gravidade ou categoria, sempre com justificativa. */
 export const DecisaoAchado = z.object({
@@ -127,6 +157,7 @@ export const Dossie = z.object({
   projeto: z.object({ nome: z.string() }),
   documentos: z.array(DocumentoLido),
   itens: z.array(ItemRotulado),
+  analiseRfp: AnaliseRfpDossie.optional(),
   conferencia: Conferencia.optional(),
 });
 export type Dossie = z.infer<typeof Dossie>;
