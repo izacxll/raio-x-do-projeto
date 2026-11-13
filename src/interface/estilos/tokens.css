@@ -1,0 +1,76 @@
+/*
+ * Tokens da identidade visual do Raio-X do Projeto — fonte única de cores, fontes e medidas.
+ * Copiados do :root da apresentação (referencias/identidade/, fora do Git). Documentados em docs/identidade-visual.md.
+ * Nenhuma cor solta no código: a interface usa var(--...) e a exportação lê este arquivo por src/interface/tokens.ts.
+ * Formato que a exportação entende: uma variável de cor por linha, "--nome: #RRGGBB;".
+ */
+:root {
+  /* Azuis */
+  --navy950: #002d4d;
+  --navy: #003a79;
+  --navy700: #0c63aa;
+  --blue: #008bc9;
+  --celeste: #73bfe8;
+
+  /* Neutros */
+  --ink: #5c5b5f;
+  --txt: #3f4a57;
+  --line4: #afaeb4;
+  --line: #d7d9dd;
+  --white: #ffffff;
+  --soft: #e8f5fb;
+  --soft-borda: #bfe2f3;
+  --paper: #e6edf5;
+  --mist: #f4f6f9;
+  --bd: #b9c7d8;
+  --cinza-prog: #c5d3e3;
+  --hint: #5c6b7a;
+
+  /* Destaques */
+  --vinho: #9b0a51;
+  --laranja: #e29200;
+  --laranja-claro: #fdf1d8;
+  --laranja-txt: #633806;
+
+  /* Gravidade (etapa 5) */
+  --grave: var(--vinho);
+  --media: var(--laranja);
+  --baixa: var(--ink);
+
+  /* Tipos de não conformidade (etapa 5) */
+  --tipo-vago: var(--navy700);
+  --tipo-conflituoso: var(--blue);
+  --tipo-ausente: var(--navy);
+
+  /* Faixa e sombra */
+  --grad: linear-gradient(90deg, var(--blue), var(--navy));
+  --sh: 0 2px 6px rgba(0, 45, 77, 0.12), 0 8px 24px rgba(0, 45, 77, 0.08);
+  --grade-fundo: rgba(12, 99, 170, 0.06);
+
+  /* Fonte: a Gotham é paga e nunca entra no repositório; aparece só para quem a tem instalada */
+  --font: "Gotham", Arial, sans-serif;
+
+  /* Tamanhos de texto (app de uso prolongado em notebook: nada menor que 13px) */
+  --fs-rotulo: 12px;
+  --fs-pequeno: 13px;
+  --fs-base: 15px;
+  --fs-medio: 17px;
+  --fs-titulo-cartao: 19px;
+  --fs-titulo: 30px;
+  --fs-numero-trilho: 34px;
+
+  /* Espaços e formas */
+  --esp-1: 4px;
+  --esp-2: 8px;
+  --esp-3: 12px;
+  --esp-4: 16px;
+  --esp-5: 24px;
+  --esp-6: 32px;
+  --raio: 10px;
+  --raio-pilula: 99px;
+  --borda-destaque: 5px;
+  --faixa-topo: 4px;
+  --trilho: 88px;
+  --largura-max: 1280px;
+  --foco: 3px solid var(--blue);
+}
