@@ -1,0 +1,13 @@
+# Fim de linha LF no repositório e na pasta de trabalho (evita diferenças entre Windows e o CI)
+* text=auto eol=lf
+
+# Binários
+*.pdf binary
+*.png binary
+*.jpg binary
+*.ico binary
+*.woff2 binary
+*.ttf binary
+*.traineddata binary
+*.gz binary
+*.wasm binary
