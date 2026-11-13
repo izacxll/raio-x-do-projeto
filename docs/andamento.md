@@ -11,6 +11,26 @@ Leitura das fontes, com as notas em `referencias/` (fora do Git), o que permite 
 - **Rework:** um artigo por vez; o índice do que foi lido e do que falta fica em `referencias/rework/_indice.md`.
 - **Legislação:** textos do Planalto, com a data da consulta.
 
+**Situação da leitura (13/11/2026):**
+
+| Fonte | Partes | Situação |
+|---|---|---|
+| PMBOK 6, onda 1: caps. 1–3, 4, 5, 6 | 4 | notas prontas em `referencias/pmbok/notas/` |
+| PMBOK 6, onda 2: caps. 7–8, 9–10, 11, 12–13 | 4 | em leitura |
+| Onda 3: PMBOK 6 (Parte 2, anexos, glossário) e PMBOK 7 (padrão, domínios, adaptação e modelos) | 5 | a fazer |
+| Rework | 78 artigos escolhidos, mais Process Management e Productivity | lote 1 (RW-001 a RW-024) em leitura; os demais lotes vêm em seguida, um de cada vez |
+| Legislação (14.133, 8.666, 13.019, 13.303) | — | em leitura |
+
+**Já escritos na skill:**
+- `referencias/checklist.md`: as 12 perguntas, com os 24 riscos da V29 cobertos;
+- `referencias/experiencia.md`;
+- `referencias/artefatos/_modelo.md`: formato das fichas (decisão 0015).
+
+**Para retomar:**
+- Os índices mostram o que falta: as notas em `referencias/pmbok/notas/` e o status de cada artigo em `referencias/rework/_indice.md`.
+- O texto dos PMBOKs está em `referencias/pmbok/texto/`.
+- Para ver uma página do PDF como imagem, use o Poppler, já instalado: `pdftoppm -f N -l N -png -r 110 <pdf> <saída>`. Depois de reiniciar o Claude Code, ele também passa a abrir PDFs direto.
+
 A Fundação foi concluída em 13/11/2026 (PR #1): `CLAUDE.md`, decisões 0001 a 0013, README, CHANGELOG, `.gitignore`, `.gitattributes`, modelos e rótulos.
 
 ## Fases
