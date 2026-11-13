@@ -70,17 +70,19 @@ Lista completa: livro, seção e página; links do Rework (com o código RW-NNN)
 
 ## Características do projeto (vocabulário das condições de dispensa)
 
-Confirmadas pelo GP na tela do mapa do PGP (etapa 5) ou na adaptação (etapa 4). Lista inicial, a fechar na F5:
+Confirmadas pelo GP na tela do mapa do PGP (etapa 5) ou na adaptação (etapa 4). Lista inicial, a fechar na F5.
 
-| Característica | Valores |
+**Em `dispensa`, use só as expressões da coluna da direita, escritas exatamente assim**, combinadas com "e" e "ou" (por exemplo, `porte pequeno e sem campo`, `porte pequeno ou porte médio`). O código da F5 lê essas expressões literalmente.
+
+| Característica | Expressões permitidas em `dispensa` |
 |---|---|
-| porte | pequeno · médio · grande |
-| abordagem | preditiva · adaptativa · híbrida |
-| fases | uma · várias |
-| campo | com campo · sem campo |
-| beneficiarios | com beneficiários · sem beneficiários |
-| subcontratacao | permitida · vedada · não informada |
-| dados_pessoais | sim · não |
-| frentes | uma · várias paralelas |
-| contratante | público · privado |
-| pagamento | por produto · por medição · outro |
+| porte | `porte pequeno` · `porte médio` · `porte grande` |
+| abordagem | `abordagem preditiva` · `abordagem adaptativa` · `abordagem híbrida` |
+| fases | `uma fase` · `várias fases` |
+| campo | `com campo` · `sem campo` |
+| beneficiários | `com beneficiários` · `sem beneficiários` |
+| subcontratação | `subcontratação permitida` · `subcontratação vedada` · `subcontratação não informada` |
+| dados pessoais | `com dados pessoais` · `sem dados pessoais` |
+| frentes | `uma frente` · `várias frentes` |
+| contratante | `contratante público` · `contratante privado` |
+| pagamento | `pagamento por produto` · `pagamento por medição` · `pagamento de outra forma` |
