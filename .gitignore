@@ -1,0 +1,19 @@
+# Materiais de referencia (nao versionar)
+referencias/
+
+# PDFs
+*.pdf
+*.PDF
+
+# Segredos
+.env
+.env.*
+*.key
+*.pem
+*.p12
+*.pfx
+id_rsa*
+secrets/
+
+# Dependencias
+node_modules/
