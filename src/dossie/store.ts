@@ -3,7 +3,7 @@
 import { create } from "zustand";
 import type { PapelDocumento } from "../etapas/etapas";
 import { criarDossieVazio } from "./arquivo";
-import type { Dossie, DocumentoLido } from "./esquema";
+import type { Conferencia, Dossie, DocumentoLido } from "./esquema";
 
 interface EstadoDossie {
   dossie: Dossie;
@@ -13,6 +13,7 @@ interface EstadoDossie {
   guardarDocumento: (documento: DocumentoLido, varios: boolean) => void;
   removerDocumento: (id: string) => void;
   abrirDossie: (dossie: Dossie) => void;
+  guardarConferencia: (conferencia: Conferencia) => void;
   novoProjeto: () => void;
   marcarSalvo: () => void;
 }
@@ -35,6 +36,7 @@ export const useDossie = create<EstadoDossie>((set) => ({
       alterado: true,
     })),
   abrirDossie: (dossie) => set({ dossie, alterado: false }),
+  guardarConferencia: (conferencia) => set((s) => ({ dossie: { ...s.dossie, conferencia }, alterado: true })),
   novoProjeto: () => set({ dossie: criarDossieVazio(), alterado: false }),
   marcarSalvo: () => set({ alterado: false }),
 }));

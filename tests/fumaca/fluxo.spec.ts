@@ -109,3 +109,28 @@ test("nenhum termo interno de construção (fases do plano) aparece para o GP", 
     expect(await page.locator("body").innerText(), `etapa ${n}`).not.toMatch(INTERNO);
   }
 });
+
+test("etapa 5: mapa, conferência, decisão do GP e exportação do relatório", async ({ page }) => {
+  const erros = vigiarErros(page);
+  await page.goto("./#/etapa/5");
+  // um edital público faz as vezes de plano: o teste é do fluxo da tela, não das regras
+  await page.getByTestId("enviar-pgp").setInputFiles(TEXTO);
+  await expect(page.getByText("Mapa do plano", { exact: true })).toBeVisible({ timeout: 60_000 });
+  await expect(page.getByText("Premissas críticas", { exact: true })).toBeVisible();
+  await page.getByRole("button", { name: "Conferir o plano" }).click();
+  await expect(page.getByRole("table", { name: "Resumo dos achados" })).toBeVisible();
+  const primeiro = page.locator("article.achado").first();
+  await expect(primeiro).toBeVisible();
+  await primeiro.getByLabel("O achado procede?").selectOption("nao");
+  await primeiro.getByLabel("Justificativa").fill("Teste de fumaça.");
+  for (const [botao, extensao] of [
+    ["Relatório DOCX", "docx"],
+    ["Relatório PDF", "pdf"],
+    ["Lista de achados XLSX", "xlsx"],
+  ]) {
+    const download = page.waitForEvent("download");
+    await page.getByRole("button", { name: botao }).click();
+    expect((await download).suggestedFilename().endsWith(`.${extensao}`)).toBe(true);
+  }
+  expect(erros).toEqual([]);
+});

@@ -63,6 +63,60 @@ export const ItemRotulado = z.object({
 });
 export type ItemRotulado = z.infer<typeof ItemRotulado>;
 
+// ---------- etapa 5: conferência do PGP ----------
+
+export const CaracteristicasProjeto = z.object({
+  porte: z.enum(["pequeno", "médio", "grande"]),
+  abordagem: z.enum(["preditiva", "adaptativa", "híbrida"]),
+  fases: z.enum(["uma", "várias"]),
+  campo: z.boolean(),
+  beneficiarios: z.boolean(),
+  subcontratacao: z.enum(["permitida", "vedada", "não informada"]),
+  dadosPessoais: z.boolean(),
+  frentes: z.enum(["uma", "várias"]),
+  contratante: z.enum(["público", "privado"]),
+  pagamento: z.enum(["por produto", "por medição", "de outra forma"]),
+});
+
+export const ParteDoMapa = z.object({
+  codigo: z.string(),
+  situacao: z.enum(["presente", "dispensada", "nao-existe"]),
+  paginaInicial: z.number().int().positive().optional(),
+  paginaFinal: z.number().int().positive().optional(),
+  posicaoTitulo: z.number().int().nonnegative().optional(),
+  justificativa: z.string().optional(),
+});
+
+export const RequisitoDossie = z.object({
+  numero: z.string(),
+  rotulo: z.string(),
+  descricao: z.string(),
+  pagina: z.number().int().nonnegative(),
+  trecho: z.string(),
+  origem: z.enum(["codigo", "gp"]),
+});
+
+/** Decisão do GP sobre um achado: procede ou não, e troca de gravidade ou categoria, sempre com justificativa. */
+export const DecisaoAchado = z.object({
+  procede: z.enum(["sim", "nao"]).optional(),
+  justificativa: z.string().optional(),
+  gravidade: z.enum(["grave", "média", "baixa"]).optional(),
+  categoria: z.string().optional(),
+});
+export type DecisaoAchado = z.infer<typeof DecisaoAchado>;
+
+export const Conferencia = z.object({
+  caracteristicas: CaracteristicasProjeto,
+  mapa: z.array(ParteDoMapa),
+  premissasAplicaveis: z.record(z.string(), z.boolean()),
+  requisitos: z.array(RequisitoDossie),
+  /** Próximo número de requisito: número de requisito removido não é reaproveitado. */
+  proximoRequisito: z.number().int().positive(),
+  decisoes: z.record(z.string(), DecisaoAchado),
+  executadaEm: z.string().optional(),
+});
+export type Conferencia = z.infer<typeof Conferencia>;
+
 export const Dossie = z.object({
   formato: z.literal(FORMATO_DOSSIE),
   versaoFormato: z.literal(VERSAO_FORMATO_DOSSIE),
@@ -73,5 +127,6 @@ export const Dossie = z.object({
   projeto: z.object({ nome: z.string() }),
   documentos: z.array(DocumentoLido),
   itens: z.array(ItemRotulado),
+  conferencia: Conferencia.optional(),
 });
 export type Dossie = z.infer<typeof Dossie>;

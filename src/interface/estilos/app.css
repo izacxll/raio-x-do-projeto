@@ -800,3 +800,106 @@ textarea {
     padding: var(--esp-4);
   }
 }
+
+/* ---------- etapa 5: conferência ---------- */
+.caracteristicas {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: var(--esp-3) var(--esp-4);
+}
+
+.caracteristicas label {
+  display: flex;
+  flex-direction: column;
+  gap: var(--esp-1);
+}
+
+.premissas {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--esp-3);
+}
+
+.resumo-achados {
+  max-width: 480px;
+  margin-bottom: var(--esp-3);
+}
+
+.achado--vago {
+  --cor-borda: var(--tipo-vago);
+}
+
+.achado--conflituoso {
+  --cor-borda: var(--tipo-conflituoso);
+}
+
+.achado--ausente {
+  --cor-borda: var(--tipo-ausente);
+}
+
+.achado__cabeca {
+  display: flex;
+  gap: var(--esp-2);
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.achado__titulo {
+  margin: var(--esp-2) 0 var(--esp-1);
+  color: var(--navy950);
+  font-size: var(--fs-medio);
+}
+
+.evidencias {
+  list-style: none;
+  padding: 0;
+  margin: var(--esp-2) 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--esp-2);
+  font-size: var(--fs-pequeno);
+}
+
+.etiqueta--tipo-vago {
+  background: var(--tipo-vago);
+  color: var(--white);
+  border-color: var(--tipo-vago);
+}
+
+.etiqueta--tipo-conflituoso {
+  background: var(--tipo-conflituoso);
+  color: var(--white);
+  border-color: var(--tipo-conflituoso);
+}
+
+.etiqueta--tipo-ausente {
+  background: var(--tipo-ausente);
+  color: var(--white);
+  border-color: var(--tipo-ausente);
+}
+
+.decisao {
+  display: flex;
+  gap: var(--esp-2);
+  align-items: center;
+  flex-wrap: wrap;
+  border-top: 1px solid var(--line);
+  padding-top: var(--esp-3);
+}
+
+.decisao input {
+  flex: 1;
+  min-width: 260px;
+}
+
+select,
+.cartao input:not([type="checkbox"]) {
+  border: 1px solid var(--bd);
+  border-radius: 6px;
+  padding: 4px 8px;
+  background: var(--white);
+  color: var(--navy950);
+}
