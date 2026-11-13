@@ -1,9 +1,34 @@
-# Materiais de referencia (nao versionar)
+# Materiais de referencia (nao versionar: PMBOK, casos reais, documentos internos)
 referencias/
 
-# PDFs
+# PDFs: nenhum, exceto as RFPs publicas de teste (com fonte no README da pasta)
 *.pdf
 *.PDF
+!tests/fixtures/rfps-publicas/**/*.pdf
+!tests/fixtures/rfps-publicas/**/*.PDF
+
+# Saidas do app e dossie: podem ter preco, valor-hora e conteudo de RFP privada.
+# Nenhum, exceto os exemplos gerados de RFPs publicas (decisao 0010).
+*.docx
+*.DOCX
+*.xlsx
+*.XLSX
+*.zip
+*.ZIP
+*.dossie.json
+!tests/fixtures/gerados/**/*.docx
+!tests/fixtures/gerados/**/*.DOCX
+!tests/fixtures/gerados/**/*.xlsx
+!tests/fixtures/gerados/**/*.XLSX
+!tests/fixtures/gerados/**/*.zip
+!tests/fixtures/gerados/**/*.ZIP
+!tests/fixtures/gerados/**/*.dossie.json
+
+# Formatos antigos de escritorio (documentos recebidos de clientes): nunca
+*.doc
+*.DOC
+*.xls
+*.XLS
 
 # Segredos
 .env
@@ -17,3 +42,14 @@ secrets/
 
 # Dependencias
 node_modules/
+
+# Build, testes e ferramentas
+dist/
+coverage/
+.vite/
+playwright-report/
+test-results/
+*.log
+
+# Claude Code: configuracao local (a skill em .claude/skills/ vai para o Git)
+.claude/settings.local.json
