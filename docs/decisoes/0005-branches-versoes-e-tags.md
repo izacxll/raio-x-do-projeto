@@ -18,16 +18,16 @@
 | Fundação | sem tag |
 | S — skill PMO | v0.1.0 |
 | F0 — esqueleto | v0.2.0 |
-| P — prova de conceito | v0.3.0 |
-| F5 — conferência | v0.4.0 |
-| F1 — leitura da RFP | v0.5.0 |
-| F2 — proposta | v0.6.0 |
-| F5b — leitura do PMO na conferência (decisão 0013) | v0.7.0 |
-| F3 — TAP | v0.8.0 |
-| F4 — PGP | v0.9.0 |
+| F5 — conferência | v0.3.0 |
+| F1 — leitura da RFP | v0.4.0 |
+| F2 — proposta | v0.5.0 |
+| F3 — TAP | v0.6.0 |
+| F4 — PGP | v0.7.0 |
+| F5b — leitura do PMO na conferência (decisão 0013) | v0.8.0 |
+| P — prova de conceito | a definir |
 | MVP aceito | v1.0.0 |
 
-A F5b foi incluída depois da aprovação do plano (decisão 0013), e as tags da F3 e da F4 subiram uma posição. A F0 passou para antes da P, e as tags das duas trocaram de lugar (decisão 0017).
+A F5b foi incluída depois da aprovação do plano (decisão 0013), e as tags da F3 e da F4 subiram uma posição. A F0 passou para antes da P, e as tags das duas trocaram de lugar (decisão 0017). A F5 foi feita antes da F1 e a P foi adiada; a F3 e a F4 vêm antes da F5b (decisão 0026). A tabela acima mostra a ordem em vigor.
 
 Correções entre fases aumentam o último número (v0.4.1).
 

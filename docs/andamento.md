@@ -1,10 +1,12 @@
 # Andamento
 
-Atualizado em 13/11/2026 (F2 construída sem a chave; F1 aguardando o teste da responsável).
+Atualizado em 13/11/2026 (F1 e F2 publicadas antes do teste, decisão 0026).
 
 ## Onde estamos
 
-**F2 (proposta com o PMO) construída sem a chave, na branch `fase/f2-proposta`** (nasceu da branch da F1, que ainda espera o teste). Prévia no mesmo endereço (decisão 0018): https://izacxll.github.io/raio-x-do-projeto/ — etapa 2. Tudo o que não depende da chave está pronto e testado com a API simulada. **Falta, com a chave:** o teste real da etapa 2 e a comparação Opus 5.5 × Sonnet 5.5 (`npm run comparar-modelos`), que fecha a decisão 0002. Depois, o ok da responsável: merge da F1 e da F2, tags v0.4.0 e v0.5.0.
+**F1 e F2 publicadas na `main` como v0.4.0 e v0.5.0 em 13/11/2026, antes do teste da responsável** (decisão 0026). App no ar: https://izacxll.github.io/raio-x-do-projeto/. O teste das etapas 1, 2 e 5 continua pendente; o que ele encontrar sai como v0.4.x ou v0.5.x. A etapa 2 ainda não foi testada com a chave, e a comparação Opus 5.5 × Sonnet 5.5 (`npm run comparar-modelos`, decisão 0002) espera a chave.
+
+**Próximas fases, nesta ordem (decisão 0026):** modo demonstração (respostas gravadas do PMO, sem a chave), F3 (TAP, v0.6.0), F4 (PGP, v0.7.0) e F5b (leitura do PMO na conferência, v0.8.0), cada uma com PR e prévia.
 
 **O que a F2 entregou:** tela "Conectar ao Claude" (chave só na sessão, testar, esquecer); ponto de partida vindo da etapa 1; três passos do PMO (estratégia e abordagens; conteúdo técnico e SOW; EAP, estimativas e equipe), com o custo estimado antes e o uso real depois; escolha da abordagem e das premissas críticas pelo GP; conferência de cada citação, da redação e dos números sem fonte; cronograma PERT com caminho crítico e prazos (total e de cada produto) contra a RFP; preço com os valores do GP; matriz de atendimento e checklist de envio; quatro saídas. Decisão 0025.
 
@@ -70,11 +72,11 @@ Atualizado em 13/11/2026 (F2 construída sem a chave; F1 aguardando o teste da r
 | F0 | Esqueleto, identidade visual com o logo, fluxo de tela, leitura de PDF, dossiê `.dossie.json`, exportação básica, CI com a verificação dos formatos | concluída (PR #3) | v0.2.0 |
 | P | Prova de conceito com um caso real de política pública, sem código do app; inclui a comparação regras de código × leitura do PMO | adiada pela responsável pelo projeto (depois da F5) | a definir |
 | F5 | Etapa 5: conferência do PGP só com código, com a base do "ausente" em três níveis | concluída (PR #5), teste da responsável pendente (decisão 0023) | v0.3.0 |
-| F1 | Etapa 1: leitura da RFP (só código) | pronta (PR aberto), teste da responsável pendente | v0.4.0 |
-| F2 | Etapa 2: proposta, com o PMO; tela da chave; comparação de modelos | construída sem a chave (PR aberto); teste com a chave e comparação de modelos pendentes | v0.5.0 |
-| F5b | Leitura opcional do PMO na etapa 5 | a fazer | v0.6.0 |
-| F3 | Etapa 3: TAP, com o PMO | a fazer | v0.7.0 |
-| F4 | Etapa 4: PGP, com o PMO | a fazer | v0.8.0 |
+| F1 | Etapa 1: leitura da RFP (só código) | concluída (PR #6), teste da responsável pendente (decisão 0026) | v0.4.0 |
+| F2 | Etapa 2: proposta, com o PMO; tela da chave; comparação de modelos | concluída (PR #7) sem a chave; teste da responsável, teste com a chave e comparação de modelos pendentes (decisão 0026) | v0.5.0 |
+| F3 | Etapa 3: TAP, com o PMO | a fazer | v0.6.0 |
+| F4 | Etapa 4: PGP, com o PMO | a fazer | v0.7.0 |
+| F5b | Leitura opcional do PMO na etapa 5 | a fazer | v0.8.0 |
 | MVP | Critérios de aceite da seção 14 | a fazer | v1.0.0 |
 
 ## Decisões pendentes
@@ -86,13 +88,12 @@ Atualizado em 13/11/2026 (F2 construída sem a chave; F1 aguardando o teste da r
 
 ## Próximo passo
 
-1. **Responsável pelo projeto:** testar a etapa 1 na prévia (e a etapa 5, ainda pendente) e dar o ok no PR da F1.
-2. **Quando a chave da API chegar** (pedir ao administrador do Claude da FGV, no Claude Console):
+1. **Claude Code:** modo demonstração na etapa 2; depois F3 (TAP) e F4 (PGP), com PR e prévia; se sobrar tempo, F5b.
+2. **Responsável pelo projeto:** testar as etapas 1, 2 (no modo demonstração ou com a chave) e 5 na prévia; o que aparecer vira correção (v0.4.x, v0.5.x).
+3. **Quando a chave da API chegar** (pedir ao administrador do Claude da FGV, no Claude Console):
    - no PowerShell, na pasta do projeto: `$env:ANTHROPIC_API_KEY = "<chave>"; npm run comparar-modelos` (custa cerca de US$ 2 a 3); o resultado fica em `tests/fixtures/gerados/comparacao-modelos/resumo.md`. A responsável escolhe o modelo e a decisão 0002 é atualizada;
-   - testar a etapa 2 na prévia com a chave, numa RFP pública; o que aparecer entra como ajuste antes do merge da F2.
-3. Com os dois oks: merge da F1 e da F2 (nessa ordem), tags v0.4.0 e v0.5.0 e as releases.
-4. **Vale abrir uma conversa nova** para a F5b (leitura opcional do PMO na conferência) ou a F3 (TAP), que também usam a chave.
-5. Na tela, nunca citar fases do plano: para o GP, o que falta é "em construção".
+   - testar a etapa 2 com a chave, numa RFP pública.
+4. Na tela, nunca citar fases do plano: para o GP, o que falta é "em construção".
 
 **Lembretes técnicos:**
 - O Poppler (`pdftotext`, `pdfinfo`) não está no PATH do Git Bash; use o caminho completo ou a leitura do próprio app (`npm test` lê as RFPs de teste em Node).
