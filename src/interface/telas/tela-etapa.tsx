@@ -10,6 +10,7 @@ import { exportar, type FormatoExportacao } from "../../exportacao/exportar";
 import { montarRelatorioLeitura, NOME_ORIGEM } from "../../exportacao/relatorio-leitura";
 import { resumirLeitura, type Progresso } from "../../leitura/ler-documento";
 import { EtiquetaRotulo, LegendaRotulos, RotuloSecao, Titulo } from "../componentes/basicos";
+import { AnaliseDaRfp } from "./analise-rfp";
 import { ConferenciaPgp } from "./conferencia";
 
 const PASSOS = [
@@ -55,8 +56,8 @@ function AvisoEnvio({ etapa }: { etapa: Etapa }) {
     return (
       <div className="aviso">
         <p>
-          <b>Sem IA.</b> Os PDFs são lidos aqui no navegador; nada é enviado para fora. Em construção: a
-          análise desta etapa chega na próxima versão; a leitura dos PDFs já funciona.
+          <b>Sem IA.</b> Os PDFs são lidos e analisados aqui no navegador, só com código; nada é enviado para
+          fora.
         </p>
       </div>
     );
@@ -376,6 +377,16 @@ export function TelaEtapa() {
             <p className="texto-apoio">Nenhum documento lido ainda.</p>
           )}
         </section>
+
+        {etapa.numero === 1 &&
+          (rfp ? (
+            <AnaliseDaRfp todos={dossie.documentos} />
+          ) : (
+            <section className="bloco">
+              <RotuloSecao>Análise da RFP</RotuloSecao>
+              <p className="texto-apoio">Envie a RFP para analisar.</p>
+            </section>
+          ))}
 
         {etapa.numero === 5 &&
           (pgp ? (
