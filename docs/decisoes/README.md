@@ -19,6 +19,7 @@ Uma decisão por arquivo, numerada em ordem. Cada uma registra o contexto, o que
 | [0013](0013-base-do-ausente-e-leitura-do-pmo.md) | Base do "ausente" em três níveis; leitura opcional do PMO na etapa 5 (F5b) | aceita |
 | [0014](0014-leitura-das-fontes-da-skill.md) | Leitura das fontes da skill: texto extraído, notas e índices fora do Git | aceita |
 | [0015](0015-formato-das-fichas.md) | Formato fixo das fichas de artefato (conteúdo mínimo legível pelo código) | aceita |
+| [0016](0016-codigos-dos-itens-das-fichas.md) | Códigos dos itens das fichas (TAP1.1, TAP-PR, PROP-SOW.1, RK01) e pendências do vocabulário | aceita |
 
 Modelo para uma nova decisão:
 
