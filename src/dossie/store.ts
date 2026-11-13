@@ -3,7 +3,7 @@
 import { create } from "zustand";
 import type { PapelDocumento } from "../etapas/etapas";
 import { criarDossieVazio } from "./arquivo";
-import type { AnaliseRfpDossie, Conferencia, Dossie, DocumentoLido } from "./esquema";
+import type { AnaliseRfpDossie, Conferencia, Dossie, DocumentoLido, PropostaDossie } from "./esquema";
 
 interface EstadoDossie {
   dossie: Dossie;
@@ -15,6 +15,7 @@ interface EstadoDossie {
   abrirDossie: (dossie: Dossie) => void;
   guardarAnaliseRfp: (analise: AnaliseRfpDossie) => void;
   guardarConferencia: (conferencia: Conferencia) => void;
+  guardarProposta: (proposta: PropostaDossie) => void;
   novoProjeto: () => void;
   marcarSalvo: () => void;
 }
@@ -39,6 +40,7 @@ export const useDossie = create<EstadoDossie>((set) => ({
   abrirDossie: (dossie) => set({ dossie, alterado: false }),
   guardarAnaliseRfp: (analiseRfp) => set((s) => ({ dossie: { ...s.dossie, analiseRfp }, alterado: true })),
   guardarConferencia: (conferencia) => set((s) => ({ dossie: { ...s.dossie, conferencia }, alterado: true })),
+  guardarProposta: (proposta) => set((s) => ({ dossie: { ...s.dossie, proposta }, alterado: true })),
   novoProjeto: () => set({ dossie: criarDossieVazio(), alterado: false }),
   marcarSalvo: () => set({ alterado: false }),
 }));

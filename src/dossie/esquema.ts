@@ -3,6 +3,7 @@
 // O dossiê NUNCA guarda a chave da API: o esquema não tem campo para ela, e campos desconhecidos são
 // descartados na leitura e na gravação (z.object remove chaves que não estão no esquema).
 import { z } from "zod";
+import { RespostaConteudo, RespostaEap, RespostaEstrategia } from "../pmo/schemas/proposta";
 
 export const FORMATO_DOSSIE = "raio-x-do-projeto/dossie";
 export const VERSAO_FORMATO_DOSSIE = 1;
@@ -147,6 +148,58 @@ export const Conferencia = z.object({
 });
 export type Conferencia = z.infer<typeof Conferencia>;
 
+// ---------- etapa 2: proposta ----------
+
+/** Uso de uma chamada ao PMO: tokens e valor estimado (custo à vista). Nunca a chave. */
+export const UsoPmo = z.object({
+  passo: z.string(),
+  modelo: z.string(),
+  entrada: z.number().int().nonnegative(),
+  saida: z.number().int().nonnegative(),
+  escritaCache: z.number().int().nonnegative(),
+  leituraCache: z.number().int().nonnegative(),
+  custoUsd: z.number().nonnegative().optional(),
+  em: z.string(),
+});
+export type UsoPmo = z.infer<typeof UsoPmo>;
+
+/** Resposta de um passo do PMO, como veio (validada pelo schema do passo), com o modelo e a data. */
+const RespostaGuardada = <T extends z.ZodType>(schema: T) =>
+  z.object({ resposta: schema, modelo: z.string(), em: z.string() });
+
+export const ParametrosProposta = z.object({
+  /** Início previsto da execução (aaaa-mm-dd), decisão do GP. */
+  inicio: z.string().optional(),
+  /** Dias úteis de aprovação de cada produto pelo contratante, decisão do GP. */
+  aprovacaoDias: z.number().nonnegative().optional(),
+  valoresHora: z.record(z.string(), z.number().nonnegative()),
+  despesas: z.array(z.object({ descricao: z.string(), valor: z.number().nonnegative().optional() })),
+  indiretosPct: z.number().min(0).max(100).optional(),
+  tributosPct: z.number().min(0).max(99.99).optional(),
+  reserva: z.number().nonnegative().optional(),
+  precoFinal: z.number().nonnegative().optional(),
+  /** Nomes da equipe, pelo id do perfil: só o GP preenche. */
+  nomes: z.record(z.string(), z.string()),
+});
+export type ParametrosProposta = z.infer<typeof ParametrosProposta>;
+
+export const PropostaDossie = z.object({
+  /** Modelo escolhido para as chamadas desta proposta. */
+  modelo: z.string(),
+  estrategia: RespostaGuardada(RespostaEstrategia).optional(),
+  /** Decisão do GP: a abordagem escolhida (id) e a justificativa. */
+  abordagem: z.object({ id: z.string(), justificativa: z.string().optional() }).optional(),
+  /** Decisão do GP: premissas críticas que se aplicam (PC1…PC8 → sim/não). */
+  premissasAplicaveis: z.record(z.string(), z.boolean()),
+  conteudo: RespostaGuardada(RespostaConteudo).optional(),
+  eap: RespostaGuardada(RespostaEap).optional(),
+  /** Revisão do GP de cada item, pelo id estável (estrategia:…, conteudo:…, eap:…). */
+  revisoes: z.record(z.string(), RevisaoItem),
+  parametros: ParametrosProposta,
+  uso: z.array(UsoPmo),
+});
+export type PropostaDossie = z.infer<typeof PropostaDossie>;
+
 export const Dossie = z.object({
   formato: z.literal(FORMATO_DOSSIE),
   versaoFormato: z.literal(VERSAO_FORMATO_DOSSIE),
@@ -159,5 +212,6 @@ export const Dossie = z.object({
   itens: z.array(ItemRotulado),
   analiseRfp: AnaliseRfpDossie.optional(),
   conferencia: Conferencia.optional(),
+  proposta: PropostaDossie.optional(),
 });
 export type Dossie = z.infer<typeof Dossie>;
