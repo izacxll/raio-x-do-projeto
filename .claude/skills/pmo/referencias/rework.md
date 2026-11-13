@@ -181,7 +181,7 @@ Fonte: coluna "Ficha" do `_indice.md`, somada às "Fontes" das fichas de `artefa
 | A4 Custos (plano) | RW-014, 015, 022, 040, 078 | coberto |
 | A5 Qualidade (plano) | RW-045, 064, 065, 105, 107 | coberto |
 | A6 Recursos (plano) | RW-008, 010, 111 | coberto |
-| A7 Comunicações (plano)\* | RW-020, 021, 070, 109, 110, 111 | coberto |
+| A7 Comunicações (plano) | RW-020, 021, 070, 109, 110, 111 | coberto |
 | A8 Riscos (plano) | RW-004, 005, 011, 012, 013, 042 | coberto |
 | A9 Aquisições (plano) | — | sem artigo |
 | A10 Engajamento das partes | RW-006, 108 | coberto |
@@ -206,7 +206,7 @@ Fonte: coluna "Ficha" do `_indice.md`, somada às "Fontes" das fichas de `artefa
 | B11 Lista de marcos | RW-025 | coberto |
 | B12 Recursos físicos | RW-008 | coberto |
 | B13 Calendários do projeto | — | sem artigo |
-| B14 Comunicações do projeto\* | RW-022 | coberto |
+| B14 Comunicações do projeto | RW-020, 022 | coberto |
 | B15 Cronograma | RW-009, 016, 024, 025, 027, 050, 052, 056 | coberto |
 | B16 Diagrama de rede | RW-027, 051, 052, 055, 056 | coberto |
 | B17 Especificação do escopo | RW-003, 030, 033, 036, 064, 104 | coberto |
@@ -217,14 +217,14 @@ Fonte: coluna "Ficha" do `_indice.md`, somada às "Fontes" das fichas de `artefa
 | B22 Documentação dos requisitos | RW-030, 031, 063, 067 | coberto |
 | B23 Matriz de rastreabilidade | RW-030, 031 | coberto |
 | B24 Estrutura analítica dos recursos | — | sem artigo |
-| B25 Calendários dos recursos\* | — | sem artigo |
+| B25 Calendários dos recursos | RW-008, 010 | coberto |
 | B26 Requisitos de recursos | RW-010 | coberto |
 | B27 Registro dos riscos | RW-004, 005, 011, 012 | coberto |
 | B28 Relatório de riscos | RW-013, 022 | coberto |
 | B29 Dados do cronograma | — | sem artigo |
 | B30 Previsões do cronograma | RW-013, 015 | coberto |
 | B31 Registro das partes interessadas | RW-006 | coberto |
-| B32 Termo de nomeação da equipe\* | — | sem artigo |
+| B32 Termo de nomeação da equipe | RW-109, 110 | coberto |
 | B33 Documentos de teste e avaliação | RW-045, 064, 107 | coberto |
 | TAP | RW-002, 006, 007, 020, 025, 035, 114 | coberto |
 | PROP-ESTRATEGIA | RW-071, 073, 074, 077 | coberto |
@@ -239,4 +239,4 @@ Fonte: coluna "Ficha" do `_indice.md`, somada às "Fontes" das fichas de `artefa
 
 **Observações.** Ligados só a GERAL, CHK ou EXP no índice: RW-001, 017, 018, 019, 034, 043, 046, 101, 102, 103, 112. Os resumos de RW-102, 103, 105, 106 e 108 sugerem uso na metodologia da proposta, mas não estão na ficha `prop-metodologia`.
 
-**Resumo.** 61 artefatos: 54 cobertos e 7 sem artigo (**A9, A12, B13, B24, B25, B29, B32**). Nesses sete, a ficha se apoia só no PMBOK e na experiência (`experiencia.md`).
+**Resumo.** 61 artefatos: 56 cobertos e 5 sem artigo (**A9, A12, B13, B24, B29**). Nesses cinco, a ficha se apoia só no PMBOK e na experiência (`experiencia.md`).
