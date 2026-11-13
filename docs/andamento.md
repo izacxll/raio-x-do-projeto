@@ -4,72 +4,60 @@ Atualizado em 13/11/2026.
 
 ## Onde estamos
 
-**Fase atual: S — skill PMO** (branch `fase/s-skill-pmo`). Rascunho da skill em `.claude/skills/pmo/`, para aprovação antes da prova de conceito.
+**A fase S (skill PMO) terminou e está em revisão** na branch `fase/s-skill-pmo`. Falta a responsável pelo projeto revisar e dar o ok; depois disso vêm o merge e a tag v0.1.0. A prova de conceito (fase P) só começa com esse ok.
 
-Leitura das fontes, com as notas em `referencias/` (fora do Git), o que permite retomar de onde parou:
-- **PMBOK 6 e 7:** em ondas de subagentes, com aviso antes de cada onda; as notas ficam em `referencias/pmbok/notas/`.
-- **Rework:** um artigo por vez; o índice do que foi lido e do que falta fica em `referencias/rework/_indice.md`.
-- **Legislação:** textos do Planalto, com a data da consulta.
+**O que a skill tem** (em `.claude/skills/pmo/`, versão 0.1.0):
 
-**Situação da leitura (13/11/2026):**
+| Arquivo | Conteúdo |
+|---|---|
+| `SKILL.md` | Papel, princípios, passo a passo das etapas 2, 3, 4 e 5 (F5b), formato de saída e o que carregar em cada etapa |
+| `referencias/pmbok6.md` | Os 49 processos, de onde vem e para onde vai cada parte do plano, adaptação, fórmulas e variantes da tradução |
+| `referencias/pmbok7.md` | 12 princípios, 8 domínios (com a verificação de resultados), adaptação e artefatos × partes do plano |
+| `referencias/rework.md` | Práticas por tema, a seção da proposta e o quadro de cobertura (56 dos 61 artefatos com artigo) |
+| `referencias/licitacoes.md` | Leis 14.133, 8.666, 13.019 e 13.303, com artigos e os valores de 2026 (Decreto 12.807/2025) |
+| `referencias/checklist.md` | As 12 perguntas, cobrindo os 24 riscos da V29 |
+| `referencias/experiencia.md` | Onde os planos costumam falhar (só padrões gerais) |
+| `referencias/artefatos/` | 61 fichas: TAP, 18 componentes, 33 documentos e 9 partes da proposta, com 608 itens de conteúdo mínimo (508 conferidos por código, 100 só pelo PMO) |
 
-| Fonte | Partes | Situação |
-|---|---|---|
-| PMBOK 6 e 7, ondas 1 a 3 | 13 | **concluídas**: notas em `referencias/pmbok/notas/` |
-| Rework | 78 artigos escolhidos, mais 15 de Process Management e Productivity (RW-101 a RW-115) | lote 1 (RW-001 a RW-024) lido; lote 2 (RW-025 a RW-046) em leitura; em seguida, lote 3 (RW-047 a RW-070) e lote 4 (RW-071 a RW-078 e RW-101 a RW-115), um de cada vez |
-| Legislação (14.133, 8.666, 13.019, 13.303 e Decreto 12.807/2025) | — | **concluída**: notas em `referencias/legislacao/` |
+**Tamanho do pacote enviado em cada etapa** (estimativa de 4 caracteres por token):
+- etapa 2: ~45 mil tokens;
+- etapa 3: ~16 mil tokens;
+- etapas 4 e 5: as fichas vão aos poucos (passo a passo, ou só o conteúdo mínimo), em vez dos ~100 mil tokens de todas de uma vez.
 
-**Já escritos na skill:**
-- `SKILL.md`;
-- `referencias/licitacoes.md`, com os valores de 2026;
-- `referencias/checklist.md`: as 12 perguntas, com os 24 riscos da V29 cobertos;
-- `referencias/experiencia.md`;
-- `referencias/artefatos/_modelo.md`: formato das fichas (decisão 0015).
-
-**Em escrita:** `pmbok6.md` e `pmbok7.md`, feitos por subagentes a partir das notas.
-
-**Depois:**
-- as fichas, em 7 grupos: integração e TAP; escopo; cronograma; custos e qualidade; recursos e comunicações; riscos, aquisições e partes interessadas; proposta;
-- o `rework.md`;
-- o quadro de artigos × artefatos.
-
-As fichas começam quando o Rework terminar os lotes 2 e 3.
-
-**Para retomar:**
-- Os índices mostram o que falta: as notas em `referencias/pmbok/notas/` e o status de cada artigo em `referencias/rework/_indice.md`.
-- O texto dos PMBOKs está em `referencias/pmbok/texto/`.
-- Para ver uma página do PDF como imagem, use o Poppler, já instalado: `pdftoppm -f N -l N -png -r 110 <pdf> <saída>`. Depois de reiniciar o Claude Code, ele também passa a abrir PDFs direto.
-
-A Fundação foi concluída em 13/11/2026 (PR #1): `CLAUDE.md`, decisões 0001 a 0013, README, CHANGELOG, `.gitignore`, `.gitattributes`, modelos e rótulos.
+**Fontes lidas** (todas fora do Git, em `referencias/`):
+- PMBOK 6 e 7: 13 partes, com as notas em `pmbok/notas/`.
+- Rework: 93 artigos, com o índice em `rework/_indice.md`.
+- Legislação: as quatro leis e o decreto de valores, em `legislacao/`.
 
 ## Fases
 
 | Fase | O que é | Situação | Tag |
 |---|---|---|---|
 | Fundação | Organização do repositório e decisões do plano | concluída (PR #1) | — |
-| S | Skill PMO, como rascunho para aprovação. As fichas trazem o conteúdo mínimo em itens numerados (A7.1…), com fonte, sinais no texto, quem confere (código ou só PMO) e quando dispensar (decisão 0013) | em andamento | v0.1.0 |
-| P | Prova de conceito com um caso real de política pública, sem código do app. Inclui a comparação entre as regras de código e a leitura do PMO na conferência | a fazer | v0.2.0 |
-| F0 | Esqueleto, identidade visual com o logo (decisão 0012), fluxo de tela, leitura de PDF, dossiê `.dossie.json`, exportação básica, CI com a verificação dos formatos (decisão 0010) | a fazer | v0.3.0 |
+| S | Skill PMO, rascunho para aprovação | **em revisão** | v0.1.0 |
+| P | Prova de conceito com um caso real de política pública, sem código do app; inclui a comparação regras de código × leitura do PMO | a fazer | v0.2.0 |
+| F0 | Esqueleto, identidade visual com o logo, fluxo de tela, leitura de PDF, dossiê `.dossie.json`, exportação básica, CI com a verificação dos formatos | a fazer | v0.3.0 |
 | F5 | Etapa 5: conferência do PGP só com código, com a base do "ausente" em três níveis | a fazer | v0.4.0 |
 | F1 | Etapa 1: leitura da RFP (só código) | a fazer | v0.5.0 |
 | F2 | Etapa 2: proposta, com o PMO; tela da chave; comparação de modelos | a fazer | v0.6.0 |
-| F5b | Leitura opcional do PMO na etapa 5, com custo à vista e as travas da decisão 0013 | a fazer | v0.7.0 |
+| F5b | Leitura opcional do PMO na etapa 5 | a fazer | v0.7.0 |
 | F3 | Etapa 3: TAP, com o PMO | a fazer | v0.8.0 |
 | F4 | Etapa 4: PGP, com o PMO | a fazer | v0.9.0 |
 | MVP | Critérios de aceite da seção 14 | a fazer | v1.0.0 |
 
 ## Decisões pendentes
 
-- **Modelo padrão da API:** o Opus 5.5 é provisório. A escolha final sai da comparação Opus 5.5 × Sonnet 5.5 na F2 (decisão 0002).
-- **Na fase P:** confirmar se os três PDFs do caso real são do mesmo contrato, antes de abrir qualquer um deles.
-- **Na F0:**
-  - receber a apresentação HTML (identidade visual) e o logo da FGV Projetos em `referencias/identidade/`;
-  - incluir DOCX, XLSX, ZIP, `.dossie.json`, DOC e XLS na verificação do CI (decisão 0010).
-- **Na F5:** definir com a responsável pelo projeto as características que o GP confirma na tela do mapa (porte, campo, beneficiários, subcontratação…). As condições de dispensa do conteúdo mínimo dependem delas (decisão 0013).
+- **Revisão da skill pela responsável pelo projeto.** A especificação pede que o `checklist.md` final seja mostrado antes de ser usado.
+- **Modelo padrão da API:** Opus 5.5 é provisório; a escolha final sai da comparação na F2 (decisão 0002).
+- **Na fase P:** confirmar se os três PDFs do caso real são do mesmo contrato, antes de abrir qualquer um.
+- **Na F0:** receber a apresentação HTML e o logo da FGV Projetos em `referencias/identidade/`. Incluir os formatos da decisão 0010 na verificação do CI.
+- **Na F5:** fechar a lista de características do projeto (porte, campo, beneficiários etc.) e a tela em que o GP as confirma.
+- **Na F2:** ampliar o vocabulário de dispensa com as características da proposta (decisão 0016).
 
 ## Próximo passo
 
-1. Receber o ok da responsável pelo projeto para a 1ª onda de leitura do PMBOK.
-2. Montar o índice do Rework (`referencias/rework/_indice.md`) e começar a leitura, um artigo por vez.
-3. Ler a legislação no Planalto.
-4. Escrever os arquivos da skill à medida que as notas ficarem prontas.
+1. A responsável pelo projeto revisa o PR da fase S. Depois do ok: merge, tag v0.1.0 e release.
+2. **Vale abrir uma conversa nova** para a fase P. Esta já está muito longa. A conversa nova começa lendo o `CLAUDE.md` e este arquivo.
+3. Fase P: perguntar se os três PDFs do caso são do mesmo contrato; pedir que sejam salvos em `referencias/casos/<caso>/entrada/` como `1-chamamento.pdf`, `2-tap.pdf` e `3-plano.pdf`; seguir a seção 15 da especificação, com a regra contra contaminação.
+
+**Lembrete técnico:** depois de reiniciar o Claude Code, ele abre PDFs direto, porque o Poppler já está instalado. Até lá, use `pdftoppm` pelo caminho completo.
