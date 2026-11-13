@@ -4,7 +4,7 @@ Atualizado em 13/11/2026 (F0).
 
 ## Onde estamos
 
-**Fase atual: F0 (esqueleto do app), pronta para teste** na branch `fase/f0-esqueleto` (PR aberto). Endereço do GitHub Pages: https://izacxll.github.io/raio-x-do-projeto/ — a fonte do Pages já é o GitHub Actions, mas o app só vai ao ar com o merge na `main` ou com a prévia da decisão 0018, que depende de a responsável pelo projeto liberar `fase/*` no ambiente `github-pages`.
+**Fase atual: F0 (esqueleto do app), pronta para teste** na branch `fase/f0-esqueleto` (PR aberto). Prévia no GitHub Pages: https://izacxll.github.io/raio-x-do-projeto/ (decisão 0018: cada push numa branch `fase/*` publica a prévia).
 
 A ordem mudou (decisão 0017): **a F0 veio antes da P**. Próxima: fase P (prova de conceito), numa conversa nova.
 
@@ -68,7 +68,7 @@ A ordem mudou (decisão 0017): **a F0 veio antes da P**. Próxima: fase P (prova
 
 ## Próximo passo
 
-1. **Responsável pelo projeto:** escolher entre liberar a prévia (decisão 0018) ou testar localmente (`npm run dev`) e fazer o merge para o link valer; testar a F0 (roteiro na descrição do PR) e dar o ok.
+1. **Responsável pelo projeto:** testar a F0 no link acima (roteiro na descrição do PR) e dar o ok.
 2. Depois do ok: merge do PR, tag v0.2.0 e release. A publicação da `main` substitui a prévia.
 3. **Vale abrir uma conversa nova** para a fase P. Ela começa lendo o `CLAUDE.md` e este arquivo.
 4. Fase P: perguntar se os três PDFs do caso são do mesmo contrato; pedir que sejam salvos em `referencias/casos/<caso>/entrada/` como `1-chamamento.pdf`, `2-tap.pdf` e `3-plano.pdf`; seguir a seção 15 da especificação, com a regra contra contaminação. O app da F0 pode ser usado para ler os PDFs (nada sai do navegador), mas o que for gerado a partir deles fica fora do Git.
