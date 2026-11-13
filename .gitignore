@@ -53,3 +53,6 @@ test-results/
 
 # Claude Code: configuracao local (a skill em .claude/skills/ vai para o Git)
 .claude/settings.local.json
+
+# Arquivos de leitura copiados de node_modules antes do dev e do build (scripts/copiar-ativos-leitura.mjs)
+public/vendor/
