@@ -14,6 +14,9 @@ Uma decisão por arquivo, numerada em ordem. Cada uma registra o contexto, o que
 | [0008](0008-tabela-de-categoria.md) | Tabela fixa de categoria dos achados (etapa 5) | aceita |
 | [0009](0009-regras-do-raio-x-nos-tres-tipos.md) | Regras do Raio-X traduzidas em vago, conflituoso e ausente | aceita |
 | [0010](0010-saidas-e-dossie-fora-do-git.md) | Saídas do app e dossiê fora do Git; extensão `.dossie.json` | aceita |
+| [0011](0011-nome-do-b32.md) | Nome do B32: "Termo de nomeação da equipe" (team charter), com sinônimos | aceita |
+| [0012](0012-logo-da-fgv-projetos.md) | Logo da FGV Projetos: único arquivo de `referencias/` que entra no Git | aceita |
+| [0013](0013-base-do-ausente-e-leitura-do-pmo.md) | Base do "ausente" em três níveis; leitura opcional do PMO na etapa 5 (F5b) | aceita |
 
 Modelo para uma nova decisão:
 

@@ -7,7 +7,11 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 ### Adicionado
 - `CLAUDE.md` com os princípios inegociáveis, a divisão código × PMO, a distinção entre brechas do Raio-X e riscos do projeto, as regras do repositório e as de segurança.
 - `docs/andamento.md` com as fases, as decisões pendentes e o próximo passo.
-- Decisões 0001 a 0010 em `docs/decisoes/`. A 0010 cobre as saídas do app e a extensão `.dossie.json`.
+- Decisões 0001 a 0013 em `docs/decisoes/`:
+  - 0010: saídas do app e extensão `.dossie.json`;
+  - 0011: nome do B32;
+  - 0012: logo da FGV Projetos;
+  - 0013: base do "ausente" em três níveis e leitura opcional do PMO na etapa 5, numa fase nova (F5b), com as tags da F3 e da F4 deslocadas na 0005.
 - README inicial, modelos de issue (erro e melhoria) e de pull request.
 - `.gitattributes` com fim de linha LF.
 - Rótulos no GitHub: `etapa-1` a `etapa-5`, `pmo`, `regras`, `leitura`, `exportacao`, `documentacao`.

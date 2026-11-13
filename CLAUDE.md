@@ -28,7 +28,11 @@ Vale no código e na interface, não só nos prompts.
 | Código | ler PDF (texto por página, OCR, tabelas), extrair, contar, comparar, conferir, calcular, montar documentos | `src/leitura`, `src/texto`, `src/extracao`, `src/regras`, `src/exportacao` |
 | PMO (API do Claude, chave do GP) | criar ou interpretar: estratégia, abordagens, conteúdo técnico, EAP, estimativas, redação do TAP e do PGP | `src/pmo` + `.claude/skills/pmo/` |
 
-- Etapas 1 (RFP) e 5 (conferência) são **só código** e funcionam sem chave. Etapas 2, 3 e 4 usam o PMO.
+- Etapas 1 (RFP) e 5 (conferência) funcionam **só com código e sem chave**. Etapas 2, 3 e 4 usam o PMO.
+- Etapa 5 (decisão 0013):
+  - **Base do "ausente":** (a) requisitos da RFP e elementos do TAP; (b) partes do PGP que o GP não dispensou; (c) conteúdo mínimo de cada parte, que vem das fichas da skill com itens numerados (A7.1…) e diz, item a item, se o código confere ou só o PMO.
+  - **Leitura do PMO (fase F5b, depois da F2):** opcional, com custo à vista. Todo achado dela é Sugestão. A citação é conferida por código e o "ausente" só vale depois da busca do código no plano inteiro. Categoria e gravidade continuam por regra fixa.
+  - **Proporcionalidade:** o PMBOK é guia, não checklist; projeto pequeno não pode sair todo vermelho.
 - Todas as contas são feitas por código, nunca pelo modelo.
 - Textos das etapas por código (sugestões, perguntas, pontos de atenção) saem de **modelos de texto** escritos junto de cada regra, em redação condicional.
 - Quando o PMO achar algo que o código não achou, avalie se uma regra pegaria e proponha a regra.
@@ -64,7 +68,8 @@ O Raio-X do Plano de Trabalho (código em `referencias/raio-x/`, fora do Git) ap
   
   A partir da F0, o CI falha se aparecer qualquer um desses ou texto com cara de chave.
 - **Licença:** nenhuma até a FGV decidir. Não adicione.
-- A fonte Gotham é paga: nunca inclua os arquivos dela. O logo da FGV Projetos vem da responsável pelo projeto; não invente um.
+- A fonte Gotham é paga: nunca inclua os arquivos dela.
+- O logo da FGV Projetos vem da responsável pelo projeto (`referencias/identidade/`). Nunca invente um. Ele é copiado para `src/interface/ativos/` e é o **único arquivo de `referencias/` que entra no Git** (decisão 0012).
 
 ## 5. Segurança e confidencialidade
 
