@@ -1,0 +1,26 @@
+[
+  {
+    "numero": "R01",
+    "rotulo": "Serviço 1",
+    "descricao": "Capacitação da Rede Intersetorial",
+    "pagina": 23,
+    "trecho": "CAPACITAÇÃO DA REDE INTERSETORIAL",
+    "origem": "gp"
+  },
+  {
+    "numero": "R02",
+    "rotulo": "Serviço 2",
+    "descricao": "Capacitação do Conselho Municipal dos Direitos da Mulher",
+    "pagina": 24,
+    "trecho": "CAPACITAÇÃO DO CONSELHO MUNICIPAL DOS DIREITOS DA MULHER",
+    "origem": "gp"
+  },
+  {
+    "numero": "R03",
+    "rotulo": "Serviço 3",
+    "descricao": "Elaboração do Protocolo e Fluxo Intersetorial de Atendimento à Mulher em Situação de Violência",
+    "pagina": 25,
+    "trecho": "ELABORAÇÃO DO PROTOCOLO E FLUXO INTERSETORIAL DE ATENDIMENTO À MULHER EM SITUAÇÃO DE VIOLÊNCIA",
+    "origem": "gp"
+  }
+]

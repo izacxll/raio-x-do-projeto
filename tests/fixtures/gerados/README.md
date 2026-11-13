@@ -4,4 +4,4 @@ Aqui ficam exemplos do que a ferramenta gera a partir das RFPs de `../rfps-publi
 
 É a única pasta do repositório onde DOCX, XLSX, ZIP e `.dossie.json` podem entrar. Cada arquivo novo é conferido antes do commit.
 
-Vazia por enquanto: os primeiros exemplos chegam com as etapas.
+- `conferencia/<caso>/`: planos e TAPs gerados pelo PMO para testar a etapa 5, com erros plantados (texto com marcadores de página, sem PDF).

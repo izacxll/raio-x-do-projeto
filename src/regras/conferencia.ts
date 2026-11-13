@@ -40,6 +40,8 @@ export interface ResultadoConferencia {
 
 /** Itens tratados pela regra das premissas críticas, e não pela busca genérica dos sinais. */
 const ITENS_DAS_PREMISSAS = new Set(["B3.9", "B27.13", "A11.12"]);
+/** Itens cujo sentido é estar na própria parte: achados fora dela não contam (a A8.12 é o tratamento no plano de riscos). */
+const ITENS_ESTRITOS = new Set(["A8.12"]);
 /** Onde cada premissa crítica tem de estar no plano (decisão 0021). */
 const LUGARES_DA_PREMISSA = ["B3", "B27", "A11"] as const;
 /** Texto de outro tipo de documento colado no plano (decisão 0009; CP8). */
@@ -145,7 +147,7 @@ export function conferirPlano(e: EntradaConferencia): ResultadoConferencia {
           regra: "parte-ausente",
           partes: [ficha.codigo],
           chave: "parte",
-          titulo: `${ficha.nome}: parte ${NAO_LOCALIZADO}`,
+          titulo: `${ficha.nome}: parte não localizada pelo código — conferir no documento`,
           descricao: `A parte ${ficha.codigo} (${ficha.nome}) não foi localizada no plano, nem com título próprio nem junto de outra parte, e o GP não a marcou como dispensada no mapa.`,
           evidencias: [
             evidenciaFicha(ficha.codigo, `Parte do plano prevista: ${ficha.nome} (${ficha.tipo}).`),
@@ -201,7 +203,7 @@ export function conferirPlano(e: EntradaConferencia): ResultadoConferencia {
         verificacoes.push({ ...base, estado: "ok", detalhe: `Localizado na p. ${naParte.pagina}.` });
         continue;
       }
-      const noPlano = faixa ? procurarSinais(e.pgp, item) : undefined;
+      const noPlano = faixa && !ITENS_ESTRITOS.has(item.codigo) ? procurarSinais(e.pgp, item) : undefined;
       if (noPlano) {
         verificacoes.push({
           ...base,

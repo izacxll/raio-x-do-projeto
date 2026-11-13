@@ -1,0 +1,12 @@
+{
+  "porte": "pequeno",
+  "abordagem": "preditiva",
+  "fases": "uma",
+  "campo": true,
+  "beneficiarios": false,
+  "subcontratacao": "vedada",
+  "dadosPessoais": true,
+  "frentes": "várias",
+  "contratante": "público",
+  "pagamento": "de outra forma"
+}

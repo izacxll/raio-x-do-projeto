@@ -217,7 +217,7 @@ describe("relatório", () => {
     const r = conferirPlano(entrada({ pgp: paginas(["Plano"]), mapa: mapa({ A1: null, A8: [1, 1] }) }));
     expect(JSON.stringify(r)).not.toMatch(/não informado no documento/i);
     expect(
-      r.achados.every((a) => a.titulo.includes("não localizado pelo código") || a.tipo !== "ausente"),
+      r.achados.every((a) => /não localizad[oa] pelo código/.test(a.titulo) || a.tipo !== "ausente"),
     ).toBe(true);
   });
 
