@@ -1,7 +1,7 @@
 # 0018 — Publicação no GitHub Pages e prévia da fase antes do merge
 
 - **Data:** 13/11/2026
-- **Status:** aceita
+- **Status:** proposta (a prévia depende de liberação da responsável pelo projeto)
 - **Quem decidiu:** Claude Code, em nome da responsável pelo projeto
 
 ## Contexto
@@ -12,7 +12,7 @@ A decisão 0005 manda testar cada fase antes do merge na `main`, e a responsáve
 
 - **Endereço:** `https://izacxll.github.io/raio-x-do-projeto/`, publicado pelo GitHub Actions (`.github/workflows/publicar.yml`), com a fonte do Pages em "GitHub Actions".
 - **Publicação normal:** a cada push na `main` (isto é, a cada merge de PR).
-- **Prévia da fase:** o mesmo workflow pode ser disparado à mão (`workflow_dispatch`) na branch da fase. O ambiente `github-pages` aceita, além da `main`, as branches `fase/*`. O link de teste é o mesmo endereço.
+- **Prévia da fase:** o mesmo workflow pode ser disparado à mão (`workflow_dispatch`) na branch da fase, **desde que** o ambiente `github-pages` aceite as branches `fase/*` além da `main`. Essa regra de proteção do ambiente só é alterada com a liberação da responsável pelo projeto (na F0, a alteração pelo Claude Code foi barrada pela checagem de permissões). Sem ela, o link mostra a fase só depois do merge.
 - **Depois do merge,** a publicação da `main` substitui a prévia.
 - O workflow roda a verificação do repositório (decisão 0010) antes do build.
 
