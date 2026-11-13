@@ -56,7 +56,13 @@ O Raio-X do Plano de Trabalho (código em `referencias/raio-x/`, fora do Git) ap
   - Saídas geradas a partir delas, antes de qualquer edição de GP e sem preço nem nomes → `tests/fixtures/gerados/`.
   - **Nunca no Git:** RFP privada não publicada; documentos escritos por pessoas da FGV (TAPs, planos, o caso da prova de conceito); versões finais do GP; qualquer documento interno. Ficam em `referencias/`, assim como o que for gerado a partir deles.
   - O caso real da prova de conceito nunca é identificado no Git: em `docs/` ele é só "um caso real de política pública".
-- **Nada indevido no Git:** build, `node_modules`, chaves, PDFs fora de `tests/fixtures/rfps-publicas/`. O CI falha se aparecer PDF fora dessa pasta ou texto com cara de chave.
+- **Nada indevido no Git** (decisão 0010):
+  - build, `node_modules` e chaves;
+  - PDF fora de `tests/fixtures/rfps-publicas/`;
+  - DOCX, XLSX, ZIP e dossiê (`.dossie.json`) fora de `tests/fixtures/gerados/`;
+  - DOC e XLS em lugar nenhum.
+  
+  A partir da F0, o CI falha se aparecer qualquer um desses ou texto com cara de chave.
 - **Licença:** nenhuma até a FGV decidir. Não adicione.
 - A fonte Gotham é paga: nunca inclua os arquivos dela. O logo da FGV Projetos vem da responsável pelo projeto; não invente um.
 
@@ -67,7 +73,7 @@ O Raio-X do Plano de Trabalho (código em `referencias/raio-x/`, fora do Git) ap
 - Chamada direta do navegador à API (SDK com `dangerouslyAllowBrowser: true`), isolada num módulo só (`src/pmo/cliente.ts`).
 - Bibliotecas empacotadas no build e servidas pelo próprio site (inclusive OCR e dados do português). Nenhum CDN em produção, nenhum script de terceiros.
 - Content-Security-Policy: conexão só com o próprio site e `api.anthropic.com`.
-- RFPs e propostas são confidenciais: nada é gravado em servidor; o dossiê (JSON) fica com o GP e nunca guarda a chave.
+- RFPs e propostas são confidenciais: nada é gravado em servidor; o dossiê (`<projeto>.dossie.json`) fica com o GP e nunca guarda a chave.
 - A interface avisa que, nas etapas com o PMO, o conteúdo dos PDFs vai para a API do Claude. As etapas só com código não enviam nada.
 - Conteúdo dos PMBOKs e do Rework entra na skill **resumido**, com fonte (livro, seção, página ou link); citações curtas só de definições.
 
