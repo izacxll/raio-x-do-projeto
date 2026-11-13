@@ -4,6 +4,20 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 
 ## [Não publicado]
 
+### F1 — leitura da RFP só com código (versão 0.4.0, aguardando o teste da responsável)
+- **Etapa 1 na tela:** "Analisar a RFP" lê a RFP e os anexos e organiza o resultado como a análise final: pontos de atenção, identificação, mapa do documento, requisitos, prazos, julgamento, habilitação, forma de apresentação, condições contratuais, partes interessadas e vagos e brechas. Cada item com o rótulo, o documento, a página e o trecho.
+- **Mapa:** seções numeradas, cláusulas e anexos (inclusive "ANEXO “A”" e o termo de referência sem a palavra "anexo"), com páginas, a separação corpo × anexos e o tema de cada seção. Cabeçalho e rodapé repetidos ficam fora das buscas.
+- **Requisitos numerados** (R01, R02…): produtos, equipe mínima, quantidades e local. O número fica fixo no dossiê, segue para a conferência (etapa 5) e nunca é reaproveitado; o GP edita, descarta e inclui.
+- **Prazos:** datas do certame pelo contexto (inclusive tabela de cronograma), limite de esclarecimento e impugnação **calculado pelo código** a partir da sessão (dias úteis, conferir feriados), prazos da execução com a forma de contagem e alerta do que está perto.
+- **Julgamento** (critério, modo de disputa, pesos, tabela de pontuação), **habilitação** (catálogo de 31 documentos), **apresentação** e **condições contratuais** com o valor tirado por código (garantia, multas, reajuste, pagamento, subcontratação) e **partes interessadas**.
+- **Vagos e brechas:** regras do Raio-X aplicadas à RFP (CTR4, CTR5, CP13, CE15, vedação de subcontratação × campo, CE17), mais prazo com valores diferentes, sessão com datas diferentes, custo de logística a cargo da contratada sem quantidade e os 10 padrões de vago. Cada uma com a pergunta de esclarecimento sugerida e os três estados (achado, não identificado, não verificável).
+- **Revisão do GP** item a item (pendente, aceito, editado, descartado), "aceitar os pendentes da seção" e a **decisão de participar**, que só o GP preenche.
+- **Saídas:** Análise da RFP (DOCX e PDF), Requisitos e prazos (XLSX), Checklist de habilitação (XLSX) e Perguntas de esclarecimento (DOCX). Cabeçalho de minuta enquanto houver item pendente.
+- **Etapa 5:** usa os requisitos da etapa 1 quando existem; perfil de equipe é procurado no plano inteiro; quantidade e local ficam "não conferido pelo código".
+- **Correção:** o vago "se necessário" não casa mais com "torna-se necessária" (etapas 1 e 5).
+- Testes: cada regra de brecha com um caso que acha e outro que não acha, a análise de um edital de teste, quatro RFPs públicas (inclusive a escaneada e a de 126 páginas), o número do requisito da etapa 1 até a conferência, a redação das sugestões e a fumaça da etapa 1 no navegador.
+- Decisão 0024. Versão do app: 0.4.0.
+
 ## [0.3.0] — 13/11/2026
 
 ### F5 — conferência do PGP só com código (publicada antes do teste da responsável, decisão 0023)

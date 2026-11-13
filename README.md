@@ -16,7 +16,7 @@ A ferramenta **prepara minutas e aponta problemas; quem decide é sempre o geren
 
 O app roda no navegador: **https://izacxll.github.io/raio-x-do-projeto/**. Os PDFs são lidos na sua própria máquina.
 
-Hoje (fase F0) funcionam: a escolha da etapa, o envio dos PDFs, a leitura página a página (com OCR nas páginas em imagem), o relatório de leitura em DOCX, PDF e XLSX e o dossiê (salvar e abrir). As análises de cada etapa chegam nas fases seguintes.
+Hoje funcionam, sem chave: a leitura dos PDFs (com OCR nas páginas em imagem), o dossiê (salvar e abrir), a **etapa 1** (análise da RFP: requisitos numerados, prazos com o limite de esclarecimento calculado, julgamento, habilitação, condições contratuais, brechas com perguntas de esclarecimento e as quatro saídas) e a **etapa 5** (conferência do PGP). As etapas 2, 3 e 4, com o PMO, chegam nas próximas versões.
 
 - **Sem chave da API:** leitura dos PDFs, etapa 1 (leitura da RFP) e etapa 5 (conferência do PGP). Nada é enviado para fora do navegador.
 - **Com a chave da API:** etapas 2, 3 e 4, que usam a inteligência do PMO (Claude). A chave é pedida ao administrador do Claude da FGV, que a cria no Claude Console; o login do claude.ai não serve. A chave fica só no seu navegador, durante a sessão, e o conteúdo dos PDFs dessas etapas é enviado à API do Claude pela organização da FGV.

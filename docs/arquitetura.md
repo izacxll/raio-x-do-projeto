@@ -16,14 +16,14 @@ As etapas 1 e 5 rodam só com código e sem chave.
 | Pasta | O que tem | Desde |
 |---|---|---|
 | `dominio/` | A skill lida no build: fichas (partes do PGP, conteúdo mínimo, gravidade, categoria), premissas críticas e características do projeto | F5 |
-| `etapas/` | As cinco etapas: documentos pedidos, o que a ferramenta faz, saídas. Cada etapa terá aqui a sua pasta | F0 |
+| `etapas/` | As cinco etapas: documentos pedidos, o que a ferramenta faz, saídas. `1-rfp/`: a análise da RFP (junta os passos 1 a 11) e a revisão do GP | F0, F1 |
 | `leitura/` | PDF página a página (pdf.js), OCR (Tesseract.js), imagens na página, estado de cada página | F0 |
-| `texto/` | Normalização para comparar trechos, limpeza de carimbos, nome de arquivo | F0 |
+| `texto/` | Normalização para comparar trechos, limpeza de carimbos, nome de arquivo; datas no texto e contas de prazo (dias úteis), frase em volta de uma posição, cabeçalho repetido | F0, F1 |
 | `dossie/` | Esquema do dossiê (zod), salvar e abrir, estado do app (zustand) | F0 |
 | `exportacao/` | Modelo neutro de documento e os montadores DOCX, PDF e XLSX | F0 |
 | `interface/` | Telas, componentes, estilos, tokens e o logo | F0 |
-| `extracao/` | Requisitos (produtos rotulados) e prazo total da RFP | F5 |
-| `regras/` | Busca com página e trecho, mapa do PGP, vago, conflituoso, ausente, conferência | F5 |
+| `extracao/` | Requisitos (produtos rotulados) e prazo total da RFP. `rfp/`: mapa da RFP, quadro da capa, identificação, requisitos (equipe, quantidades, local), prazos do certame e da execução, julgamento, habilitação, temas (apresentação e condições contratuais) e partes interessadas | F5, F1 |
+| `regras/` | Busca com página e trecho, mapa do PGP, vago, conflituoso, ausente, conferência; brechas da RFP com a pergunta de esclarecimento (`brechas-rfp.ts`) | F5, F1 |
 | `pmo/` | Chamada à API (`cliente.ts`), chave, montagem com a skill, schemas | F2 |
 
 ## Fluxo de uma etapa (seção 5.0 da especificação)

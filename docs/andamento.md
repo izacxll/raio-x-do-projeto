@@ -1,8 +1,14 @@
 # Andamento
 
-Atualizado em 13/11/2026 (F5 publicada como v0.3.0).
+Atualizado em 13/11/2026 (F1 pronta, aguardando o teste da responsável).
 
 ## Onde estamos
+
+**F1 (leitura da RFP, só código) pronta na branch `fase/f1-leitura-rfp`, com o PR aberto e a prévia publicada no mesmo endereço** (decisão 0018): https://izacxll.github.io/raio-x-do-projeto/ — etapa 1. Falta o teste e o ok da responsável; depois, merge, tag **v0.4.0** e release (decisão 0024).
+
+**O que a F1 entregou:** "Analisar a RFP" com pontos de atenção, identificação, mapa do documento (seções, cláusulas, anexos e o tema de cada uma), requisitos numerados (produtos, equipe, quantidades, local; número fixo no dossiê, que segue para a etapa 5), prazos do certame e da execução com o limite de esclarecimento calculado e o alerta, julgamento, habilitação (catálogo de 31 documentos), apresentação, condições contratuais com o valor tirado por código, partes interessadas e vagos e brechas com a pergunta de esclarecimento sugerida. Revisão item a item, decisão de participar (só do GP) e as quatro saídas (Análise DOCX/PDF, Requisitos e prazos XLSX, Checklist de habilitação XLSX, Perguntas DOCX). Testada em 8 RFPs públicas.
+
+**O que falta na leitura da RFP (próximas versões):** requisitos técnicos e funcionais em texto corrido (o GP inclui), feriados na conta de dias úteis, produtos com código próprio em tabela ("PML-REL-01"), descrição de produto partida em duas colunas da tabela.
 
 **A F0 (esqueleto do app) foi aprovada e publicada como v0.2.0 em 13/11/2026.** App no ar: https://izacxll.github.io/raio-x-do-projeto/ (a `main` publica a cada merge; cada push numa branch `fase/*` publica uma prévia, decisão 0018).
 
@@ -58,11 +64,11 @@ Atualizado em 13/11/2026 (F5 publicada como v0.3.0).
 | F0 | Esqueleto, identidade visual com o logo, fluxo de tela, leitura de PDF, dossiê `.dossie.json`, exportação básica, CI com a verificação dos formatos | concluída (PR #3) | v0.2.0 |
 | P | Prova de conceito com um caso real de política pública, sem código do app; inclui a comparação regras de código × leitura do PMO | adiada pela responsável pelo projeto (depois da F5) | a definir |
 | F5 | Etapa 5: conferência do PGP só com código, com a base do "ausente" em três níveis | concluída (PR #5), teste da responsável pendente (decisão 0023) | v0.3.0 |
-| F1 | Etapa 1: leitura da RFP (só código) | a fazer | v0.5.0 |
-| F2 | Etapa 2: proposta, com o PMO; tela da chave; comparação de modelos | a fazer | v0.6.0 |
-| F5b | Leitura opcional do PMO na etapa 5 | a fazer | v0.7.0 |
-| F3 | Etapa 3: TAP, com o PMO | a fazer | v0.8.0 |
-| F4 | Etapa 4: PGP, com o PMO | a fazer | v0.9.0 |
+| F1 | Etapa 1: leitura da RFP (só código) | pronta (PR aberto), teste da responsável pendente | v0.4.0 |
+| F2 | Etapa 2: proposta, com o PMO; tela da chave; comparação de modelos | a fazer | v0.5.0 |
+| F5b | Leitura opcional do PMO na etapa 5 | a fazer | v0.6.0 |
+| F3 | Etapa 3: TAP, com o PMO | a fazer | v0.7.0 |
+| F4 | Etapa 4: PGP, com o PMO | a fazer | v0.8.0 |
 | MVP | Critérios de aceite da seção 14 | a fazer | v1.0.0 |
 
 ## Decisões pendentes
@@ -74,8 +80,8 @@ Atualizado em 13/11/2026 (F5 publicada como v0.3.0).
 
 ## Próximo passo
 
-1. **Responsável pelo projeto:** testar a etapa 5 no app publicado, quando puder; o que aparecer vira correção (v0.3.x).
-2. **Vale abrir uma conversa nova** para a próxima fase (F1, leitura da RFP, ou a P, se a responsável quiser retomá-la).
+1. **Responsável pelo projeto:** testar a etapa 1 na prévia (e a etapa 5, ainda pendente); dar o ok no PR da F1. Com o ok: merge, tag v0.4.0 e release.
+2. **Vale abrir uma conversa nova** para a próxima fase (F2: proposta com o PMO e a tela da chave, que pede a chave da API da FGV; ou a P, se a responsável quiser retomá-la).
 3. Na tela, nunca citar fases do plano: para o GP, o que falta é "em construção".
 
 **Lembretes técnicos:**
