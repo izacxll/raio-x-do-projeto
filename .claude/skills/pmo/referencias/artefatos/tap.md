@@ -6,7 +6,7 @@ etapas: [3, 5]
 gravidade: não se aplica
 categoria: não se aplica
 sinonimos: ["termo de abertura", "TAP", "project charter", "charter do projeto"]
-versao: 0.1.0
+versao: 0.2.0
 ---
 
 # TAP — Termo de abertura do projeto
@@ -57,7 +57,7 @@ Documento "que autoriza formalmente a existência de um projeto" e dá ao GP aut
   - confere: código
   - dispensa: nunca
 - **TAP4.3** Limites: o que fica fora, incluindo as exclusões da proposta
-  - fonte: PMBOK 6, 4.1.3.1, p. 81 (PDF 117); Rework RW-002; `checklist.md` 3 e 5
+  - fonte: PMBOK 6, 4.1.3.1, p. 81 (PDF 117); Rework RW-002; `checklist.md` PC8; CTR2, CTR3 (exclusão)
   - sinais: "fora do escopo" | "não inclui" | "não faz parte" | "exclusões" | "limites"
   - confere: código
   - dispensa: nunca
@@ -68,9 +68,9 @@ Documento "que autoriza formalmente a existência de um projeto" e dá ao GP aut
   - sinais: "risco geral" | "principais riscos" | "riscos" | "exposição"
   - confere: código
   - dispensa: nunca
-- **TAP5.2** Resume as brechas da etapa 1 e as perguntas do checklist que se aplicam, com a origem; brecha não vira risco
-  - fonte: SKILL.md, etapa 3 e princípio 8; `checklist.md` 3, 8 e 9
-  - sinais: "brecha" | "checklist" | página da RFP
+- **TAP5.2** Resume as brechas da etapa 1 e as premissas críticas que se aplicam (PC1 a PC8), com a origem; brecha não vira risco
+  - fonte: SKILL.md, etapa 3 e princípio 8; `checklist.md` (PC1 a PC8)
+  - sinais: "brecha" | "premissa crítica" | página da RFP
   - confere: só PMO
   - dispensa: nunca
 
@@ -81,7 +81,7 @@ Documento "que autoriza formalmente a existência de um projeto" e dá ao GP aut
   - confere: código
   - dispensa: nunca
 - **TAP6.2** Marcos dentro dos prazos da RFP e iguais aos do cronograma da proposta (a conta é do código)
-  - fonte: SKILL.md, etapa 3 e princípio 6; `checklist.md` 9; Rework RW-025 (https://resources.rework.com/libraries/project-management/milestone-chart)
+  - fonte: SKILL.md, etapa 3 e princípio 6; `checklist.md` PC4; Rework RW-025 (https://resources.rework.com/libraries/project-management/milestone-chart)
   - sinais: datas ou prazos com página da RFP e da proposta
   - confere: código
   - dispensa: nunca
@@ -110,7 +110,7 @@ Documento "que autoriza formalmente a existência de um projeto" e dá ao GP aut
   - confere: código
   - dispensa: nunca
 - **TAP8.2** Quem decide do lado do contratante (no setor público, gestor e fiscal do contrato), nominal ou "a definir pelo GP"
-  - fonte: `checklist.md` 7 (CE16); `experiencia.md` §1; `licitacoes.md` 2.6
+  - fonte: `checklist.md` PC3 (CE16); `experiencia.md` §1; `licitacoes.md` 2.6
   - sinais: "gestor do contrato" | "fiscal do contrato" | "ponto focal" | "comitê"
   - confere: código
   - dispensa: nunca
@@ -132,7 +132,7 @@ Documento "que autoriza formalmente a existência de um projeto" e dá ao GP aut
   - confere: código
   - dispensa: nunca
 - **TAP9.4** Aprovação ligada à cláusula de aceite da RFP, com o prazo de análise do contratante ou "não informado no documento"
-  - fonte: SKILL.md, etapa 3; `checklist.md` 4 (CTR5); `experiencia.md` §1
+  - fonte: SKILL.md, etapa 3; `checklist.md` PC3 (CTR5); `experiencia.md` §1
   - sinais: "prazo de análise" | "dias úteis" | "aprovação tácita" | cláusula com página
   - confere: só PMO
   - dispensa: nunca
@@ -189,13 +189,18 @@ Documento "que autoriza formalmente a existência de um projeto" e dá ao GP aut
   - sinais: "premissa" | "restrição" | "pressupõe-se" | "ver registro de premissas"
   - confere: código
   - dispensa: nunca
+- **TAP-PR.2** Premissas críticas que se aplicam ao projeto (PC1 a PC8), escritas com a consequência, ou remissão ao B3 onde elas estão
+  - fonte: decisão 0021; `checklist.md` (PC1 a PC8)
+  - sinais: "premissa crítica" | "premissas críticas" | "premissa" junto de "caso não" | "se não"
+  - confere: código
+  - dispensa: nunca
 
 ## Perguntas de qualidade
 - O sucesso mede o resultado, e não só prazo, custo e "entregar o produto X"? (PMBOK 7, p. 34–36, PDF 61–63)
-- As premissas da proposta estão no TAP ou no B3, com a origem? Qual restrição é menos negociável? (checklist 2; Rework RW-007)
-- Quem decide do lado do contratante está nomeado, e o tempo de decisão dele aparece nos marcos? (checklist 7; experiencia.md §1)
-- Algum marco está sem data ou contado de evento sem data? O PMO aponta; a conta é do código (checklist 9).
-- Terceiros de quem o projeto depende e beneficiários estão entre as partes-chave? (checklist 8 e 12; Rework RW-006)
+- As premissas da proposta estão no TAP ou no B3, com a origem? Qual restrição é menos negociável? (PC1 a PC8; Rework RW-007)
+- Quem decide do lado do contratante está nomeado, e o tempo de decisão dele aparece nos marcos? (PC3, CE16; experiencia.md §1)
+- Algum marco está sem data ou contado de evento sem data? O PMO aponta; a conta é do código (PC4).
+- Terceiros de quem o projeto depende e beneficiários estão entre as partes-chave? (PC1 e PC6; Rework RW-006)
 - Quem patrocina na FGV e quem responde do lado do contratante? (Rework RW-002, observação do leitor)
 
 ## Erros comuns
@@ -210,7 +215,7 @@ Nunca: o TAP autoriza o projeto e é a base do "ausente". Adapta-se o detalhe, q
 Linha para a tela: "TAP curto, um parágrafo por elemento: porte pequeno (PMBOK 6, p. 83)."
 
 ## Ligações
-- **Vem de:** RFP e minuta do contrato (objeto, requisitos R, prazos, valor, cláusulas de aceite e de rescisão); proposta (exclusões, premissas, cronograma, equipe, valor); etapa 1 (brechas, partes); checklist.
+- **Vem de:** RFP e minuta do contrato (objeto, requisitos R, prazos, valor, cláusulas de aceite e de rescisão); proposta (exclusões, premissas, cronograma, equipe, valor); etapa 1 (brechas, partes); premissas críticas (`checklist.md`).
 - **Nasce junto:** B3 (TAP-PR) e B31 (TAP.8).
 - **Vai para:** reunião de abertura (Rework RW-020); TAP.3 e TAP.4 → B22, B17 (p. 135–152, PDF 171–188); TAP.6 → B11 (p. 180, PDF 216); TAP.7 → A4 (p. 236, PDF 272); TAP.5 → A8, B27 (p. 402, PDF 438); TAP.8 → B31 (p. 509, PDF 545); TAP.9 e TAP.10 → encerramento, 4.7 (p. 124, PDF 160).
 
@@ -220,7 +225,7 @@ Linha para a tela: "TAP curto, um parágrafo por elemento: porte pequeno (PMBOK 
 2. Objetivo | Critério de sucesso (indicador e meta) | Origem (RFP p. X ou sugestão)
 3. Requisitos de alto nível: R01 ...
 4. Descrição; entregas-chave; "não faz parte do escopo: ..." (proposta p. X)
-5. Risco geral: [fontes; origem: brecha ou checklist n]
+5. Risco geral: [fontes; origem: brecha ou premissa crítica PCn]
 6. Marco | Data ou prazo (contado de [assinatura/OS]) | Origem
 7. Decisão do GP. Sugestão: "valor global conforme proposta (p. X)"
 8. Parte | Papel | Decide o quê (detalhe no B31)
@@ -235,4 +240,4 @@ Premissas e restrições (ver B3). Assinaturas e data.
 - PMBOK 6: 4.1, p. 77–81 (PDF 113–117); 4.2.1.1, p. 83 (PDF 119); 4.7, p. 123–124 (PDF 159–160); 1.2.1, p. 5 (PDF 41); 1.2.6.4, p. 34–35 (PDF 70–71); p. 21 (PDF 57); Tab. 2-1, p. 47 (PDF 83); Tab. 5-1, p. 155 (PDF 191); 5.1–5.2, p. 135–140 (PDF 171–176); 6.1, p. 180 (PDF 216); 13.1, p. 509 (PDF 545); X3.3.1, p. 669 (PDF 705); glossário, p. 705, 715, 718, 723 (PDF 741, 751, 754, 759).
 - PMBOK 7: Padrão, p. 12 e 34–36 (PDF 39 e 61–63); X2, p. 207–208 (PDF 302–303).
 - Rework: RW-002, RW-025, RW-035 (links nos itens); RW-006 (https://resources.rework.com/libraries/project-management/stakeholder-analysis-matrix); RW-007 (https://resources.rework.com/libraries/project-management/triple-constraint); RW-020 (https://resources.rework.com/libraries/project-management/project-kickoff-meeting).
-- `checklist.md` (2 a 9, 12); `experiencia.md` §1 e §2; `licitacoes.md` 2.6; SKILL.md; decisão 0013.
+- `checklist.md` (PC1 a PC8); `experiencia.md` §1 e §2; `licitacoes.md` 2.6; SKILL.md; decisão 0013.

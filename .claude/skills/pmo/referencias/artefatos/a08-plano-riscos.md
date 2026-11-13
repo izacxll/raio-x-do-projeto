@@ -6,7 +6,7 @@ etapas: [4, 5]
 gravidade: grave
 categoria: incerteza
 sinonimos: ["plano de riscos", "plano de gerenciamento de riscos", "plano de gestão de riscos", "gestão de riscos", "gerenciamento de riscos", "metodologia de riscos"]
-versao: 0.1.0
+versao: 0.2.0
 ---
 
 # A8 — Plano de gerenciamento dos riscos
@@ -70,12 +70,17 @@ Descreve "como as atividades de gerenciamento de riscos serão estruturadas e ex
   - sinais: "análise quantitativa" | "Monte Carlo" | "simulação" | "valor monetário esperado" | "nível de confiança"
   - confere: código
   - dispensa: porte pequeno ou porte médio
+- **A8.12** Tratamento das premissas críticas que se aplicam ao projeto: o plano diz que elas são acompanhadas como riscos, quem valida cada uma e quando são revistas
+  - fonte: decisão 0021; `checklist.md` (PC1 a PC8); PMBOK 6, 11.2, p. 415 (PDF 451) (análise de premissas e restrições)
+  - sinais: "premissas críticas" | "premissa crítica" | "análise de premissas" | "validação das premissas" | "registro de premissas"
+  - confere: código
+  - dispensa: nunca
 
 ## Perguntas de qualidade
-- O método pede a **causa estrutural** de cada risco, e não o sintoma? Ex.: baixa adesão atribuída às famílias quando ninguém tem a obrigação de divulgar (checklist 12).
+- O método pede a **causa estrutural** de cada risco, e não o sintoma? Ex.: baixa adesão atribuída às famílias quando ninguém tem a obrigação de divulgar (PC6).
 - Todo risco prioritário terá **resposta com dono e gatilho**? (PMBOK 6, p. 439, PDF 475)
 - O plano conversa com o **cronograma** (respostas viram atividades no B15) e com a **reserva** (A15, condição de uso)? (experiencia.md §8)
-- As escalas usam consequências deste contrato (prazo de produto, rejeição, multa), e não um modelo copiado? (checklist 2; Rework RW-012, observação do leitor)
+- As escalas usam consequências deste contrato (prazo de produto, rejeição, multa), e não um modelo copiado? (conflituoso, CP8; Rework RW-012, observação do leitor)
 - Há matriz de riscos no contrato? O plano diz como os riscos alocados à contratada vão para o B27? (`licitacoes.md` 2.5)
 - A análise quantitativa é exigida pelo contrato ou pelo contratante? Senão, é dispensável (PMBOK 6, p. 429, PDF 465).
 
@@ -90,7 +95,7 @@ Não se dispensa: o PMBOK autoriza **simplificar**, não omitir (PMBOK 6, p. 400
 Linha para a tela: "Riscos simplificados, junto com o registro: porte pequeno (PMBOK 6, p. 400 e 407)."
 
 ## Ligações
-- **Vem de:** TAP (risco geral, TAP5; PMBOK 6, p. 402, PDF 438); B31 (atitudes diante do risco); demais componentes; brechas da etapa 1; checklist; matriz de riscos do edital.
+- **Vem de:** TAP (risco geral, TAP5; PMBOK 6, p. 402, PDF 438); B31 (atitudes diante do risco); demais componentes; brechas da etapa 1; premissas críticas (PC1 a PC8); matriz de riscos do edital.
 - **Vai para:** B27 e B28 (formato); A4 e A15 (contingência na linha de base dos custos; p. 248, PDF 284); A3 e B15 (atividades de riscos, reserva de cronograma; p. 202, PDF 238); A10; A5; A9.
 - Requisitos da RFP que pedem "plano de riscos" ou "matriz de riscos" caem aqui (número R).
 
@@ -111,4 +116,4 @@ Linha para a tela: "Riscos simplificados, junto com o registro: porte pequeno (P
 - PMBOK 6: cap. 11, 11.1 a 11.7, p. 397–457 (PDF 433–493); 6.4, p. 202 (PDF 238); 7.3, p. 248 (PDF 284); X5.8, p. 683 (PDF 719); glossário, p. 719 (PDF 755).
 - PMBOK 7: 2.8 Incerteza, p. 116–129 (PDF 211–224).
 - Rework: RW-004 (https://resources.rework.com/libraries/project-management/raid-log); RW-005 (https://resources.rework.com/libraries/project-management/risk-register); RW-011 (https://resources.rework.com/libraries/project-management/project-risk-management); RW-012 e RW-013 (links nos itens); RW-042 (https://resources.rework.com/libraries/project-management/pre-mortem).
-- `licitacoes.md` 2.5; `checklist.md` (2, 12); `experiencia.md` §8 e §9.
+- `licitacoes.md` 2.5; `checklist.md` (PC1 a PC8, CP8); `experiencia.md` §8 e §9.
