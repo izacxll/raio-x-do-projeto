@@ -1,10 +1,16 @@
 # Andamento
 
-Atualizado em 13/11/2026 (F1 pronta, aguardando o teste da responsável).
+Atualizado em 13/11/2026 (F2 construída sem a chave; F1 aguardando o teste da responsável).
 
 ## Onde estamos
 
-**F1 (leitura da RFP, só código) pronta na branch `fase/f1-leitura-rfp`, com o PR aberto e a prévia publicada no mesmo endereço** (decisão 0018): https://izacxll.github.io/raio-x-do-projeto/ — etapa 1. Falta o teste e o ok da responsável; depois, merge, tag **v0.4.0** e release (decisão 0024).
+**F2 (proposta com o PMO) construída sem a chave, na branch `fase/f2-proposta`** (nasceu da branch da F1, que ainda espera o teste). Prévia no mesmo endereço (decisão 0018): https://izacxll.github.io/raio-x-do-projeto/ — etapa 2. Tudo o que não depende da chave está pronto e testado com a API simulada. **Falta, com a chave:** o teste real da etapa 2 e a comparação Opus 5.5 × Sonnet 5.5 (`npm run comparar-modelos`), que fecha a decisão 0002. Depois, o ok da responsável: merge da F1 e da F2, tags v0.4.0 e v0.5.0.
+
+**O que a F2 entregou:** tela "Conectar ao Claude" (chave só na sessão, testar, esquecer); ponto de partida vindo da etapa 1; três passos do PMO (estratégia e abordagens; conteúdo técnico e SOW; EAP, estimativas e equipe), com o custo estimado antes e o uso real depois; escolha da abordagem e das premissas críticas pelo GP; conferência de cada citação, da redação e dos números sem fonte; cronograma PERT com caminho crítico e prazos (total e de cada produto) contra a RFP; preço com os valores do GP; matriz de atendimento e checklist de envio; quatro saídas. Decisão 0025.
+
+**O que falta na proposta (próximas versões):** planilha de preço no formato do próprio edital; estrutura de uma proposta antiga da FGV (`referencias/modelos/`, se a responsável tiver uma); leitura, pelo código, da tabela de prazos por produto da RFP (hoje vem do PMO, conferida pela citação); vocabulário de dispensa ampliado (decisão 0016).
+
+**F1 (leitura da RFP, só código) pronta na branch `fase/f1-leitura-rfp`, com o PR #6 aberto.** Falta o teste e o ok da responsável; depois, merge, tag **v0.4.0** e release (decisão 0024).
 
 **O que a F1 entregou:** "Analisar a RFP" com pontos de atenção, identificação, mapa do documento (seções, cláusulas, anexos e o tema de cada uma), requisitos numerados (produtos, equipe, quantidades, local; número fixo no dossiê, que segue para a etapa 5), prazos do certame e da execução com o limite de esclarecimento calculado e o alerta, julgamento, habilitação (catálogo de 31 documentos), apresentação, condições contratuais com o valor tirado por código, partes interessadas e vagos e brechas com a pergunta de esclarecimento sugerida. Revisão item a item, decisão de participar (só do GP) e as quatro saídas (Análise DOCX/PDF, Requisitos e prazos XLSX, Checklist de habilitação XLSX, Perguntas DOCX). Testada em 8 RFPs públicas.
 
@@ -65,7 +71,7 @@ Atualizado em 13/11/2026 (F1 pronta, aguardando o teste da responsável).
 | P | Prova de conceito com um caso real de política pública, sem código do app; inclui a comparação regras de código × leitura do PMO | adiada pela responsável pelo projeto (depois da F5) | a definir |
 | F5 | Etapa 5: conferência do PGP só com código, com a base do "ausente" em três níveis | concluída (PR #5), teste da responsável pendente (decisão 0023) | v0.3.0 |
 | F1 | Etapa 1: leitura da RFP (só código) | pronta (PR aberto), teste da responsável pendente | v0.4.0 |
-| F2 | Etapa 2: proposta, com o PMO; tela da chave; comparação de modelos | a fazer | v0.5.0 |
+| F2 | Etapa 2: proposta, com o PMO; tela da chave; comparação de modelos | construída sem a chave (PR aberto); teste com a chave e comparação de modelos pendentes | v0.5.0 |
 | F5b | Leitura opcional do PMO na etapa 5 | a fazer | v0.6.0 |
 | F3 | Etapa 3: TAP, com o PMO | a fazer | v0.7.0 |
 | F4 | Etapa 4: PGP, com o PMO | a fazer | v0.8.0 |
@@ -73,16 +79,20 @@ Atualizado em 13/11/2026 (F1 pronta, aguardando o teste da responsável).
 
 ## Decisões pendentes
 
-- **Modelo padrão da API:** Opus 5.5 é provisório; a escolha final sai da comparação na F2 (decisão 0002).
+- **Modelo padrão da API:** Opus 5.5 é provisório; a escolha final sai da comparação, que já está pronta e só espera a chave (`npm run comparar-modelos`, decisões 0002 e 0025).
 - **Na fase P:** confirmar se os três PDFs do caso real são do mesmo contrato, antes de abrir qualquer um.
 - **Na F5:** fechar a lista de características do projeto (porte, campo, beneficiários etc.) e a tela em que o GP as confirma.
-- **Na F2:** ampliar o vocabulário de dispensa com as características da proposta (decisão 0016).
+- **Depois da F2:** ampliar o vocabulário de dispensa com as características da proposta (decisão 0016).
 
 ## Próximo passo
 
-1. **Responsável pelo projeto:** testar a etapa 1 na prévia (e a etapa 5, ainda pendente); dar o ok no PR da F1. Com o ok: merge, tag v0.4.0 e release.
-2. **Vale abrir uma conversa nova** para a próxima fase (F2: proposta com o PMO e a tela da chave, que pede a chave da API da FGV; ou a P, se a responsável quiser retomá-la).
-3. Na tela, nunca citar fases do plano: para o GP, o que falta é "em construção".
+1. **Responsável pelo projeto:** testar a etapa 1 na prévia (e a etapa 5, ainda pendente) e dar o ok no PR da F1.
+2. **Quando a chave da API chegar** (pedir ao administrador do Claude da FGV, no Claude Console):
+   - no PowerShell, na pasta do projeto: `$env:ANTHROPIC_API_KEY = "<chave>"; npm run comparar-modelos` (custa cerca de US$ 2 a 3); o resultado fica em `tests/fixtures/gerados/comparacao-modelos/resumo.md`. A responsável escolhe o modelo e a decisão 0002 é atualizada;
+   - testar a etapa 2 na prévia com a chave, numa RFP pública; o que aparecer entra como ajuste antes do merge da F2.
+3. Com os dois oks: merge da F1 e da F2 (nessa ordem), tags v0.4.0 e v0.5.0 e as releases.
+4. **Vale abrir uma conversa nova** para a F5b (leitura opcional do PMO na conferência) ou a F3 (TAP), que também usam a chave.
+5. Na tela, nunca citar fases do plano: para o GP, o que falta é "em construção".
 
 **Lembretes técnicos:**
 - O Poppler (`pdftotext`, `pdfinfo`) não está no PATH do Git Bash; use o caminho completo ou a leitura do próprio app (`npm test` lê as RFPs de teste em Node).

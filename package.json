@@ -1,7 +1,7 @@
 {
   "name": "raio-x-do-projeto",
   "private": true,
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "Ferramenta web para gerentes de projeto da FGV Projetos: RFP, proposta, TAP, PGP e conferência do PGP.",
   "type": "module",
   "engines": {
@@ -18,7 +18,8 @@
     "tipos": "tsc -b",
     "test": "vitest run",
     "test:fumaca": "playwright test",
-    "verificar-repositorio": "node scripts/verificar-repositorio.mjs"
+    "verificar-repositorio": "node scripts/verificar-repositorio.mjs",
+    "comparar-modelos": "node scripts/comparar-modelos.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "1.6.0",

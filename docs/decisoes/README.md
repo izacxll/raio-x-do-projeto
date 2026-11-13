@@ -28,6 +28,7 @@ Uma decisão por arquivo, numerada em ordem. Cada uma registra o contexto, o que
 | [0022](0022-regras-da-conferencia-f5.md) | Regras da conferência por código (F5), primeira versão; F5 com a tag v0.3.0 | aceita |
 | [0023](0023-f5-publicada-antes-do-teste.md) | F5 e skill 0.2.0 publicadas antes do teste da responsável (só esta fase) | aceita |
 | [0024](0024-leitura-da-rfp-f1.md) | Leitura da RFP só com código (F1): mapa, extração, prazos calculados, brechas com pergunta, revisão do GP | aceita |
+| [0025](0025-proposta-com-o-pmo-f2.md) | Proposta com o PMO (F2), construída sem a chave: três passos do PMO, conferência do que ele devolve, contas do código, tela da chave, comparação de modelos | aceita (teste com a chave pendente) |
 
 Modelo para uma nova decisão:
 
