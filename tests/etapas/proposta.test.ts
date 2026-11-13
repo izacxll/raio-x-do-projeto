@@ -4,7 +4,11 @@ import { readFileSync } from "node:fs";
 import { beforeAll, describe, expect, it } from "vitest";
 import type { DocumentoLido } from "../../src/dossie/esquema";
 import { conferirMinuta } from "../../src/etapas/2-proposta/conferencia-final";
-import { calcularCronograma, duracaoEsperada } from "../../src/etapas/2-proposta/cronograma";
+import {
+  calcularCronograma,
+  conferirPrazosDosProdutos,
+  duracaoEsperada,
+} from "../../src/etapas/2-proposta/cronograma";
 import { pedidoConteudo, pedidoEap, pedidoEstrategia } from "../../src/etapas/2-proposta/pedidos";
 import { calcularPreco, conferirValor, lerValorEmReais } from "../../src/etapas/2-proposta/preco";
 import { montarPontoDePartida, type PontoDePartida } from "../../src/etapas/2-proposta/ponto-de-partida";
@@ -223,4 +227,66 @@ describe("conferência final sem a seção de um quesito", () => {
       m.matriz.find((l) => l.chave === "Qualificação e experiência da empresa proponente")?.situacao,
     ).toBe("nao-localizado");
   }, 120000);
+});
+
+describe("prazo de cada produto (código)", () => {
+  it("confere a entrega de cada produto da OEI contra a tabela de prazos do edital", async () => {
+    const ler = (n: string) =>
+      JSON.parse(
+        readFileSync(new URL(`../fixtures/gerados/proposta-oei/${n}.json`, import.meta.url), "utf-8"),
+      ) as unknown;
+    const c = RespostaConteudo.parse(ler("conteudo"));
+    const eap = RespostaEap.parse(ler("eap"));
+    const doc = await lerRfpPublica("concorrencia-tecnica-preco-oei-mdhc-criancas-situacao-rua-2026.pdf");
+    const crono = calcularCronograma(eap.atividades, { aprovacaoDias: 10 });
+    const r = conferirPrazosDosProdutos(crono, c.produtos, [doc], new Date(2027, 0, 4));
+    expect(r.map((x) => x.prazo?.dias)).toEqual([30, 75, 135, 210, 300]);
+    // plano de trabalho: entrega no dia útil 17 (a aprovação vem depois), dentro dos 30 dias
+    expect(r[0]).toMatchObject({ fim: 17, situacao: "cabe" });
+    // com 10 dias úteis de aprovação por produto, os cadernos 1 e 2 passam dos 75 dias: o código avisa
+    expect(r[1]?.situacao).toBe("nao-cabe");
+    expect(r[1]?.texto).toMatch(/contagem não informada: tratada como dias corridos/);
+  }, 120000);
+
+  it("prazo com número que não está no trecho citado não é usado", () => {
+    const crono = calcularCronograma([atv("A", [], [5, 5, 5])]);
+    const r = conferirPrazosDosProdutos(
+      crono,
+      [
+        {
+          id: "P1",
+          nome: "Produto",
+          descricao: "",
+          requisitos: [],
+          criteriosAceite: [],
+          fontes: [],
+          prazo: {
+            dias: 45,
+            contagem: "dias corridos",
+            aPartirDe: "",
+            fonte: { doc: "rfp", pagina: 1, trecho: "O prazo de vigência do contrato é de 12 (doze) meses" },
+          },
+        },
+      ],
+      [
+        {
+          id: "r",
+          papel: "rfp",
+          nomeArquivo: "r.pdf",
+          tamanhoBytes: 1,
+          totalPaginas: 1,
+          lidoEm: "",
+          paginas: [
+            {
+              numero: 1,
+              origem: "texto",
+              texto: "O prazo de vigência do contrato é de 12 (doze) meses.",
+              caracteres: 50,
+            },
+          ],
+        },
+      ],
+    );
+    expect(r[0]?.situacao).toBe("nao-conferido");
+  });
 });

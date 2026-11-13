@@ -175,7 +175,17 @@
           "pagina": 19,
           "trecho": "Este produto consiste na elaboração de plano de trabalho detalhado"
         }
-      ]
+      ],
+      "prazo": {
+        "dias": 30,
+        "contagem": "não informada",
+        "aPartirDe": "após a assinatura do contrato",
+        "fonte": {
+          "doc": "rfp",
+          "pagina": 21,
+          "trecho": "Produto 1 – Plano de trabalho da consultoria 30 5%"
+        }
+      }
     },
     {
       "id": "P2",
@@ -193,7 +203,17 @@
           "pagina": 19,
           "trecho": "Crianças e adolescentes em situação de rua e relações raci-ais"
         }
-      ]
+      ],
+      "prazo": {
+        "dias": 75,
+        "contagem": "não informada",
+        "aPartirDe": "após a assinatura do contrato",
+        "fonte": {
+          "doc": "rfp",
+          "pagina": 21,
+          "trecho": "Produto 2 – Dois cadernos temáticos sobre direitos\t75 20%"
+        }
+      }
     },
     {
       "id": "P3",
@@ -211,7 +231,17 @@
           "pagina": 20,
           "trecho": "Crianças e adolescentes em situação de rua e trabalho infantil"
         }
-      ]
+      ],
+      "prazo": {
+        "dias": 135,
+        "contagem": "não informada",
+        "aPartirDe": "após a assinatura do contrato",
+        "fonte": {
+          "doc": "rfp",
+          "pagina": 21,
+          "trecho": "Produto 3 – Dois cadernos temáticos sobre direitos\t135 20%"
+        }
+      }
     },
     {
       "id": "P4",
@@ -229,7 +259,17 @@
           "pagina": 20,
           "trecho": "Este produto consiste na elaboração do quinto caderno temático"
         }
-      ]
+      ],
+      "prazo": {
+        "dias": 210,
+        "contagem": "não informada",
+        "aPartirDe": "após a assinatura do contrato",
+        "fonte": {
+          "doc": "rfp",
+          "pagina": 21,
+          "trecho": "Produto 4 – Caderno temático final e documento\t210 25%"
+        }
+      }
     },
     {
       "id": "P5",
@@ -247,7 +287,17 @@
           "pagina": 20,
           "trecho": "Este produto consiste na elaboração de guia técnico destinado aos"
         }
-      ]
+      ],
+      "prazo": {
+        "dias": 300,
+        "contagem": "não informada",
+        "aPartirDe": "após a assinatura do contrato",
+        "fonte": {
+          "doc": "rfp",
+          "pagina": 21,
+          "trecho": "Produto 5 – Guia de orientação sobre direitos de cri-\t300 30%"
+        }
+      }
     }
   ],
   "exclusoes": [

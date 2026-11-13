@@ -92,8 +92,10 @@ export const ETAPAS: Etapa[] = [
       "Matriz que liga cada requisito ao ponto da proposta que o atende",
     ],
     saidas: [
-      { nome: "Minuta da proposta", formatos: ["DOCX", "PDF"] },
+      { nome: "Minuta da proposta técnica", formatos: ["DOCX", "PDF"] },
       { nome: "Planilha de preço", formatos: ["XLSX"] },
+      { nome: "Matriz de atendimento e checklist de envio", formatos: ["XLSX"] },
+      { nome: "Perguntas de esclarecimento", formatos: ["DOCX"] },
     ],
   },
   {

@@ -4,7 +4,7 @@
 // Cabeçalho de minuta enquanto houver item pendente. Sem preço nem nomes quando o GP não preencheu.
 import type { DocumentoLido, Dossie, PropostaDossie } from "../dossie/esquema";
 import { conferirMinuta } from "../etapas/2-proposta/conferencia-final";
-import { calcularCronograma } from "../etapas/2-proposta/cronograma";
+import { calcularCronograma, conferirPrazosDosProdutos } from "../etapas/2-proposta/cronograma";
 import { calcularPreco, conferirValor, lerValorEmReais } from "../etapas/2-proposta/preco";
 import type { PontoDePartida } from "../etapas/2-proposta/ponto-de-partida";
 import {
@@ -149,6 +149,25 @@ export function montarPropostaTecnica(
         ]),
       },
     });
+    const prazos = conferirPrazosDosProdutos(
+      crono,
+      conteudo?.produtos ?? [],
+      docs,
+      p.parametros.inicio ? new Date(`${p.parametros.inicio}T00:00:00`) : undefined,
+    );
+    if (prazos.length)
+      secoes.push({
+        titulo: "Prazo de entrega de cada produto (conferência do código)",
+        tabela: {
+          colunas: ["Produto", "Conferência", "Situação"],
+          larguras: [2.5, 5, 1],
+          linhas: prazos.map((x) => [
+            `${x.produto} — ${x.nome}`,
+            x.texto,
+            x.situacao === "cabe" ? "cabe" : x.situacao === "nao-cabe" ? "não cabe" : "não conferido",
+          ]),
+        },
+      });
     secoes.push({
       titulo: "Equipe",
       tabela: {

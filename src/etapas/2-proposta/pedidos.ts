@@ -78,7 +78,7 @@ ${resumoEstrategia(e, premissasConfirmadas)}
 
 # O que fazer
 1. estrutura: as seções da proposta técnica, em ordem. ${modelo} Cada seção traz os itens de texto (entendimento do contexto e do problema, objetivos, metodologia da abordagem escolhida), e o campo "criterio" diz a que critério de pontuação ela responde.
-2. produtos: o SOW, um produto por entregável, ligado aos números R, com critérios de aceite verificáveis.
+2. produtos: o SOW, um produto por entregável, ligado aos números R, com critérios de aceite verificáveis. Em "prazo", o prazo de entrega do produto como o documento diz (dias, contagem, a partir de quando e a fonte com o trecho literal); null se o documento não diz.
 3. exclusoes explícitas, premissas e restricoes. Cada premissa crítica confirmada sai escrita com a consequência se não se confirmar (PROP-SOW.11), e a que depende do contratante também como obrigação dele (PROP-SOW.8).
 4. obrigacoesContratante: o que fica com o contratante, com o prazo como o documento diz, ou "não informado no documento — a definir pelo GP".
 

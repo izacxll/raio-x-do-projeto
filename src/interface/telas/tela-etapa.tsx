@@ -12,6 +12,7 @@ import { resumirLeitura, type Progresso } from "../../leitura/ler-documento";
 import { EtiquetaRotulo, LegendaRotulos, RotuloSecao, Titulo } from "../componentes/basicos";
 import { AnaliseDaRfp } from "./analise-rfp";
 import { ConferenciaPgp } from "./conferencia";
+import { PropostaDoFornecedor } from "./proposta";
 
 const PASSOS = [
   "Escolher a etapa",
@@ -52,6 +53,17 @@ function PassosFluxo({ lidos }: { lidos: boolean }) {
 }
 
 function AvisoEnvio({ etapa }: { etapa: Etapa }) {
+  if (etapa.numero === 2) {
+    return (
+      <div className="aviso aviso--pmo">
+        <p>
+          <b>Etapa com o PMO (inteligência artificial).</b> A leitura dos PDFs e as contas acontecem aqui no
+          navegador. Quando você pede um passo ao PMO, o texto dos PDFs da RFP é enviado à API do Claude, pela
+          sua chave, na organização da FGV. Nada é enviado sem o seu clique, e o custo aparece antes.
+        </p>
+      </div>
+    );
+  }
   if (!etapa.usaPmo) {
     return (
       <div className="aviso">
@@ -385,6 +397,18 @@ export function TelaEtapa() {
             <section className="bloco">
               <RotuloSecao>Análise da RFP</RotuloSecao>
               <p className="texto-apoio">Envie a RFP para analisar.</p>
+            </section>
+          ))}
+
+        {etapa.numero === 2 &&
+          (rfp ? (
+            <PropostaDoFornecedor todos={dossie.documentos} />
+          ) : (
+            <section className="bloco">
+              <RotuloSecao>Proposta</RotuloSecao>
+              <p className="texto-apoio">
+                Envie a RFP (ou abra o dossiê da etapa 1) para começar a proposta.
+              </p>
             </section>
           ))}
 

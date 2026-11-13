@@ -2,7 +2,9 @@
 // O PMO estima em três pontos; o código calcula a duração esperada (PERT: (o + 4m + p) / 6), soma o tempo de
 // aprovação do cliente (decisão do GP), faz a rede (ida e volta), acha o caminho crítico e confere contra o prazo
 // da RFP. Dias úteis descontam só sábados e domingos: a tela pede para conferir feriados.
-import type { AtividadeEap } from "../../pmo/schemas/proposta";
+import type { DocumentoLido } from "../../dossie/esquema";
+import { citacaoValeComoFato, conferirCitacao } from "../../pmo/citacoes";
+import type { AtividadeEap, PrazoProduto, ProdutoSow } from "../../pmo/schemas/proposta";
 import { diasEntre, somarDiasUteis, soData, ehDiaUtil } from "../../texto/datas";
 import type { PrazoEmDias } from "./ponto-de-partida";
 
@@ -211,4 +213,86 @@ function conferirPrazo(
     situacao: cabe ? "cabe" : "nao-cabe",
     texto: `Cronograma: ${total} dias úteis, cerca de ${aproximado} dias corridos (aproximação do código: 5 dias úteis por semana, sem feriados; informe o início para a conta com datas); prazo da RFP: ${prazo.texto}${onde}, ${prazo.dias} dias${convertido}. ${cabe ? "Cabe, pela aproximação." : "Passa, pela aproximação."}`,
   };
+}
+
+// ---------- prazo de cada produto ----------
+
+export interface ConferenciaProduto {
+  produto: string;
+  nome: string;
+  /** Entrega do produto no cronograma, em dias úteis desde o início (sem a aprovação, que vem depois). */
+  fim: number;
+  dataFim?: Date;
+  prazo?: PrazoProduto;
+  situacao: SituacaoPrazo;
+  texto: string;
+}
+
+/**
+ * Cada produto contra o prazo de entrega que o documento dá. O prazo vem do PMO com a fonte: só vale se a citação
+ * for achada pelo código e o número estiver no trecho. Contagem não informada é tratada como dias corridos (a
+ * leitura mais apertada), e a tela diz isso.
+ */
+export function conferirPrazosDosProdutos(
+  crono: Cronograma,
+  produtos: ProdutoSow[],
+  documentos: DocumentoLido[],
+  inicio?: Date,
+): ConferenciaProduto[] {
+  return produtos.map((p) => {
+    const atividades = crono.atividades.filter((a) => a.produto === p.id);
+    // o prazo é de entrega: a aprovação do cliente vem depois dela e não conta
+    const entrega = (a: AtividadeCalculada) => a.fimMaisCedo - a.aprovacao;
+    const fim = atividades.length ? Math.max(...atividades.map(entrega)) : 0;
+    const dataFim =
+      inicio && fim > 0
+        ? somarDiasUteis(primeiroDiaUtil(inicio), fim - 1)
+        : inicio
+          ? primeiroDiaUtil(inicio)
+          : undefined;
+    const base = { produto: p.id, nome: p.nome, fim, dataFim, prazo: p.prazo ?? undefined };
+    if (!atividades.length)
+      return {
+        ...base,
+        situacao: "nao-conferido" as const,
+        texto: "Nenhuma atividade da EAP ligada a este produto.",
+      };
+    if (!p.prazo)
+      return {
+        ...base,
+        situacao: "nao-conferido" as const,
+        texto: "Prazo do produto não informado pelo PMO — conferir no documento.",
+      };
+    const citacao = conferirCitacao(p.prazo.fonte, documentos);
+    if (
+      !citacaoValeComoFato(citacao) ||
+      !p.prazo.fonte.trecho.replace(/\D/g, " ").split(" ").includes(String(p.prazo.dias))
+    )
+      return {
+        ...base,
+        situacao: "nao-conferido" as const,
+        texto: `Prazo de ${p.prazo.dias} dias com citação não conferida pelo código — conferir no documento.`,
+      };
+    const onde = `RFP, p. ${citacao.pagina ?? p.prazo.fonte.pagina}`;
+    if (p.prazo.contagem === "dias úteis") {
+      const cabe = fim <= p.prazo.dias;
+      return {
+        ...base,
+        situacao: cabe ? ("cabe" as const) : ("nao-cabe" as const),
+        texto: `Entrega no dia útil ${fim}; prazo: ${p.prazo.dias} dias úteis ${p.prazo.aPartirDe} (${onde}).`,
+      };
+    }
+    const aviso =
+      p.prazo.contagem === "não informada" ? " (contagem não informada: tratada como dias corridos)" : "";
+    const corridos =
+      inicio && dataFim ? diasEntre(primeiroDiaUtil(inicio), dataFim) + 1 : Math.ceil((fim * 7) / 5);
+    const conta =
+      inicio && dataFim ? `${corridos} dias corridos` : `cerca de ${corridos} dias corridos (aproximação)`;
+    const cabe = corridos <= p.prazo.dias;
+    return {
+      ...base,
+      situacao: cabe ? ("cabe" as const) : ("nao-cabe" as const),
+      texto: `Entrega em ${conta}; prazo: ${p.prazo.dias} dias ${p.prazo.aPartirDe}${aviso} (${onde}).`,
+    };
+  });
 }

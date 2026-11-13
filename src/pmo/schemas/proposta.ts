@@ -84,6 +84,16 @@ export const SecaoProposta = z.object({
 });
 export type SecaoProposta = z.infer<typeof SecaoProposta>;
 
+/** Prazo de entrega do produto como o documento diz (com a fonte, que o código confere), ou null se não diz. */
+export const PrazoProduto = z.object({
+  dias: z.number(),
+  contagem: z.enum(["dias corridos", "dias úteis", "não informada"]),
+  /** De onde se conta ("após a assinatura do contrato"). */
+  aPartirDe: z.string(),
+  fonte: FontePmo,
+});
+export type PrazoProduto = z.infer<typeof PrazoProduto>;
+
 export const ProdutoSow = z.object({
   id: z.string(),
   nome: z.string(),
@@ -91,6 +101,7 @@ export const ProdutoSow = z.object({
   requisitos: z.array(z.string()),
   criteriosAceite: z.array(z.string()),
   fontes: z.array(FontePmo),
+  prazo: PrazoProduto.nullable(),
 });
 export type ProdutoSow = z.infer<typeof ProdutoSow>;
 
