@@ -1,9 +1,11 @@
-# Materiais de referencia (nao versionar)
+# Materiais de referencia (nao versionar: PMBOK, casos reais, documentos internos)
 referencias/
 
-# PDFs
+# PDFs: nenhum, exceto as RFPs publicas de teste (com fonte no README da pasta)
 *.pdf
 *.PDF
+!tests/fixtures/rfps-publicas/**/*.pdf
+!tests/fixtures/rfps-publicas/**/*.PDF
 
 # Segredos
 .env
@@ -17,3 +19,14 @@ secrets/
 
 # Dependencias
 node_modules/
+
+# Build, testes e ferramentas
+dist/
+coverage/
+.vite/
+playwright-report/
+test-results/
+*.log
+
+# Claude Code: configuracao local (a skill em .claude/skills/ vai para o Git)
+.claude/settings.local.json
