@@ -17,6 +17,8 @@ Uma decisão por arquivo, numerada em ordem. Cada uma registra o contexto, o que
 | [0011](0011-nome-do-b32.md) | Nome do B32: "Termo de nomeação da equipe" (team charter), com sinônimos | aceita |
 | [0012](0012-logo-da-fgv-projetos.md) | Logo da FGV Projetos: único arquivo de `referencias/` que entra no Git | aceita |
 | [0013](0013-base-do-ausente-e-leitura-do-pmo.md) | Base do "ausente" em três níveis; leitura opcional do PMO na etapa 5 (F5b) | aceita |
+| [0014](0014-leitura-das-fontes-da-skill.md) | Leitura das fontes da skill: texto extraído, notas e índices fora do Git | aceita |
+| [0015](0015-formato-das-fichas.md) | Formato fixo das fichas de artefato (conteúdo mínimo legível pelo código) | aceita |
 
 Modelo para uma nova decisão:
 
