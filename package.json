@@ -1,0 +1,58 @@
+{
+  "name": "raio-x-do-projeto",
+  "private": true,
+  "version": "0.2.0",
+  "description": "Ferramenta web para gerentes de projeto da FGV Projetos: RFP, proposta, TAP, PGP e conferência do PGP.",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "preparar-ativos": "node scripts/copiar-ativos-leitura.mjs",
+    "dev": "npm run preparar-ativos && vite",
+    "build": "npm run preparar-ativos && tsc -b && vite build",
+    "preview": "vite preview",
+    "lint": "eslint .",
+    "formatar": "prettier --write .",
+    "verificar-formato": "prettier --check .",
+    "tipos": "tsc -b",
+    "test": "vitest run",
+    "test:fumaca": "playwright test",
+    "verificar-repositorio": "node scripts/verificar-repositorio.mjs"
+  },
+  "dependencies": {
+    "docx": "9.15.0",
+    "exceljs": "4.4.0",
+    "pdfjs-dist": "6.4.299",
+    "pdfmake": "0.3.13",
+    "react": "19.2.9",
+    "react-dom": "19.2.9",
+    "react-router-dom": "7.18.5",
+    "tesseract.js": "7.0.0",
+    "zod": "4.6.7",
+    "zustand": "5.0.16"
+  },
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "@expo-google-fonts/arimo": "0.4.3",
+    "@playwright/test": "1.64.1",
+    "@tesseract.js-data/por": "1.0.0",
+    "@testing-library/dom": "10.4.2",
+    "@testing-library/react": "16.3.3",
+    "@types/node": "24.19.2",
+    "@types/pdfmake": "0.3.3",
+    "@types/react": "19.2.18",
+    "@types/react-dom": "19.2.7",
+    "@vitejs/plugin-react": "6.1.2",
+    "eslint": "10.13.0",
+    "eslint-plugin-react-hooks": "7.1.1",
+    "fflate": "0.8.2",
+    "globals": "17.13.0",
+    "jsdom": "30.1.3",
+    "prettier": "3.9.10",
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.72.1",
+    "vite": "8.3.5",
+    "vitest": "4.1.12"
+  }
+}

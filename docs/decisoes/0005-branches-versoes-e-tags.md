@@ -17,8 +17,8 @@
 |---|---|
 | Fundação | sem tag |
 | S — skill PMO | v0.1.0 |
-| P — prova de conceito | v0.2.0 |
-| F0 — esqueleto | v0.3.0 |
+| F0 — esqueleto | v0.2.0 |
+| P — prova de conceito | v0.3.0 |
 | F5 — conferência | v0.4.0 |
 | F1 — leitura da RFP | v0.5.0 |
 | F2 — proposta | v0.6.0 |
@@ -27,7 +27,7 @@
 | F4 — PGP | v0.9.0 |
 | MVP aceito | v1.0.0 |
 
-A F5b foi incluída depois da aprovação do plano (decisão 0013), e as tags da F3 e da F4 subiram uma posição.
+A F5b foi incluída depois da aprovação do plano (decisão 0013), e as tags da F3 e da F4 subiram uma posição. A F0 passou para antes da P, e as tags das duas trocaram de lugar (decisão 0017).
 
 Correções entre fases aumentam o último número (v0.4.1).
 

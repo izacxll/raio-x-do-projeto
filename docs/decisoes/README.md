@@ -20,6 +20,10 @@ Uma decisão por arquivo, numerada em ordem. Cada uma registra o contexto, o que
 | [0014](0014-leitura-das-fontes-da-skill.md) | Leitura das fontes da skill: texto extraído, notas e índices fora do Git | aceita |
 | [0015](0015-formato-das-fichas.md) | Formato fixo das fichas de artefato (conteúdo mínimo legível pelo código) | aceita |
 | [0016](0016-codigos-dos-itens-das-fichas.md) | Códigos dos itens das fichas (TAP1.1, TAP-PR, PROP-SOW.1, RK01) e pendências do vocabulário | aceita |
+| [0017](0017-f0-antes-da-fase-p.md) | F0 antes da fase P; as tags das duas trocam de lugar | aceita |
+| [0018](0018-publicacao-e-previa-da-fase.md) | Publicação no GitHub Pages e prévia da fase antes do merge | aceita |
+| [0019](0019-leitura-de-pdf.md) | Leitura de PDF: bibliotecas, OCR local e estado de cada página | aceita |
+| [0020](0020-rfps-publicas-sem-mostrar-a-lista.md) | RFPs públicas de teste entram no Git sem a lista ser mostrada antes | aceita |
 
 Modelo para uma nova decisão:
 

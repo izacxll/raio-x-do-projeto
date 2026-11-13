@@ -56,7 +56,7 @@ O Raio-X do Plano de Trabalho (código em `referencias/raio-x/`, fora do Git) ap
 - **Nomes** (decisão 0004): domínio em português, sem acento nos identificadores; funções em camelCase com verbo; tipos e componentes em PascalCase; arquivos em kebab-case.
 - **Decisões:** toda decisão tomada pela responsável pelo projeto ou por você em nome dela vira um arquivo em `docs/decisoes/`.
 - **Documentos de teste:** público pode, confidencial nunca.
-  - RFPs publicadas oficialmente → `tests/fixtures/rfps-publicas/`, com fonte e data no README da pasta. Mostrar a lista antes de comitar.
+  - RFPs publicadas oficialmente → `tests/fixtures/rfps-publicas/`, com fonte (link) e data do download no README da pasta. Não é preciso mostrar a lista antes de comitar (decisão 0020).
   - Saídas geradas a partir delas, antes de qualquer edição de GP e sem preço nem nomes → `tests/fixtures/gerados/`.
   - **Nunca no Git:** RFP privada não publicada; documentos escritos por pessoas da FGV (TAPs, planos, o caso da prova de conceito); versões finais do GP; qualquer documento interno. Ficam em `referencias/`, assim como o que for gerado a partir deles.
   - O caso real da prova de conceito nunca é identificado no Git: em `docs/` ele é só "um caso real de política pública".

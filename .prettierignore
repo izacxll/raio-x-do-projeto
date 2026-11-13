@@ -1,0 +1,12 @@
+node_modules
+dist
+public/vendor
+coverage
+playwright-report
+test-results
+referencias
+.claude
+docs
+*.md
+package-lock.json
+tests/fixtures

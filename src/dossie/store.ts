@@ -1,0 +1,44 @@
+// Estado do app: o próprio dossiê. Fica só na memória da aba; o GP salva o arquivo quando quiser.
+// A chave da API (a partir da F2) nunca entra neste store.
+import { create } from "zustand";
+import type { PapelDocumento } from "../etapas/etapas";
+import { criarDossieVazio } from "./arquivo";
+import type { Dossie, DocumentoLido } from "./esquema";
+
+interface EstadoDossie {
+  dossie: Dossie;
+  /** Há mudança desde o último "Salvar projeto" ou "Abrir projeto". */
+  alterado: boolean;
+  definirNomeProjeto: (nome: string) => void;
+  guardarDocumento: (documento: DocumentoLido, varios: boolean) => void;
+  removerDocumento: (id: string) => void;
+  abrirDossie: (dossie: Dossie) => void;
+  novoProjeto: () => void;
+  marcarSalvo: () => void;
+}
+
+export const useDossie = create<EstadoDossie>((set) => ({
+  dossie: criarDossieVazio(),
+  alterado: false,
+  definirNomeProjeto: (nome) => set((s) => ({ dossie: { ...s.dossie, projeto: { nome } }, alterado: true })),
+  guardarDocumento: (documento, varios) =>
+    set((s) => {
+      // papel de um documento só (RFP, TAP, PGP...): o novo PDF substitui o anterior
+      const outros = s.dossie.documentos.filter(
+        (d) => d.id !== documento.id && (varios || d.papel !== documento.papel),
+      );
+      return { dossie: { ...s.dossie, documentos: [...outros, documento] }, alterado: true };
+    }),
+  removerDocumento: (id) =>
+    set((s) => ({
+      dossie: { ...s.dossie, documentos: s.dossie.documentos.filter((d) => d.id !== id) },
+      alterado: true,
+    })),
+  abrirDossie: (dossie) => set({ dossie, alterado: false }),
+  novoProjeto: () => set({ dossie: criarDossieVazio(), alterado: false }),
+  marcarSalvo: () => set({ alterado: false }),
+}));
+
+export function documentosDoPapel(dossie: Dossie, papel: PapelDocumento): DocumentoLido[] {
+  return dossie.documentos.filter((d) => d.papel === papel);
+}
