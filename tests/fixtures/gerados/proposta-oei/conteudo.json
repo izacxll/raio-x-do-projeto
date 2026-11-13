@@ -1,0 +1,347 @@
+{
+  "estrutura": [
+    {
+      "codigo": "EDITAL",
+      "titulo": "Apresentação institucional sintética",
+      "criterio": "Qualificação e experiência da empresa proponente",
+      "itens": [
+        {
+          "id": "inst-1",
+          "texto": "Atestados e experiências da FGV escolhidos para cada subitem: a definir pelo GP.",
+          "rotulo": "decisao_gp",
+          "motivo": "Quais atestados usar é decisão do GP; uma experiência não conta em dois subitens.",
+          "fontes": [
+            {
+              "doc": "rfp",
+              "pagina": 31,
+              "trecho": "Uma mesma experiência não poderá ser considerada em mais de um subitem."
+            }
+          ],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "PROP-ESTRUTURA"
+        }
+      ]
+    },
+    {
+      "codigo": "EDITAL",
+      "titulo": "Compreensão do objeto",
+      "criterio": "Qualidade técnica da metodologia e estratégia de execução dos trabalhos",
+      "itens": [
+        {
+          "id": "comp-1",
+          "texto": "O objeto é a produção de subsídios técnicos para o fortalecimento do Sistema de Garantia de Direitos na proteção integral de crianças e adolescentes em situação de rua: cinco cadernos temáticos, um documento sintético de consolidação e um guia de orientação.",
+          "rotulo": "documento",
+          "motivo": "Objeto e produtos do termo de referência.",
+          "fontes": [
+            {
+              "doc": "rfp",
+              "pagina": 18,
+              "trecho": "Produzir cinco cadernos temáticos sobre direitos de crianças e adolescentes em situação de rua"
+            }
+          ],
+          "alternativas": [],
+          "requisitos": [
+            "R02",
+            "R03",
+            "R04",
+            "R05"
+          ],
+          "ficha": "PROP-ENTENDIMENTO"
+        },
+        {
+          "id": "comp-2",
+          "texto": "Sugere-se apresentar a articulação entre os produtos como uma sequência: os cadernos aprofundam os temas, o documento sintético reúne os achados transversais e o guia transforma esses achados em orientação prática para os profissionais.",
+          "rotulo": "sugestao",
+          "motivo": "O conteúdo mínimo pede a articulação entre os cinco cadernos, o documento sintético e o guia.",
+          "fontes": [
+            {
+              "doc": "rfp",
+              "pagina": 27,
+              "trecho": "a articulação entre os cinco cadernos temáticos, o documento sintético de consolidação e o guia de orientação"
+            }
+          ],
+          "alternativas": [],
+          "requisitos": [
+            "R02",
+            "R03",
+            "R04",
+            "R05"
+          ],
+          "ficha": "PROP-ENTENDIMENTO"
+        }
+      ]
+    },
+    {
+      "codigo": "EDITAL",
+      "titulo": "Metodologia de execução dos trabalhos",
+      "criterio": "Qualidade técnica da metodologia e estratégia de execução dos trabalhos",
+      "itens": [
+        {
+          "id": "met-1",
+          "texto": "Sugere-se organizar a metodologia em quatro movimentos: levantamento bibliográfico, documental e normativo; seleção e análise das referências; oficinas remotas de escuta com profissionais da rede; e sistematização com validação pela contratante.",
+          "rotulo": "sugestao",
+          "motivo": "Abordagem B escolhida pelo GP; etapas pedidas no item II do conteúdo mínimo.",
+          "fontes": [
+            {
+              "doc": "rfp",
+              "pagina": 27,
+              "trecho": "Metodologia de execução dos trabalhos, contemplando as etapas de pesquisa, levantamento, se-leção, análise e sistematização"
+            }
+          ],
+          "alternativas": [
+            {
+              "texto": "Oficinas remotas por tema de caderno.",
+              "pros": "Escuta focada em cada tema.",
+              "contras": "Mais oficinas para mobilizar."
+            },
+            {
+              "texto": "Oficinas remotas só para testar o guia.",
+              "pros": "Menos mobilização.",
+              "contras": "Os cadernos ficam só com a pesquisa documental."
+            }
+          ],
+          "requisitos": [
+            "R01",
+            "R02",
+            "R03",
+            "R04",
+            "R05"
+          ],
+          "ficha": "PROP-METODOLOGIA"
+        }
+      ]
+    },
+    {
+      "codigo": "EDITAL",
+      "titulo": "Identificação de riscos e medidas mitigadoras",
+      "criterio": "Qualidade técnica da metodologia e estratégia de execução dos trabalhos",
+      "itens": [
+        {
+          "id": "risco-1",
+          "texto": "Recomenda-se tratar, entre os riscos, a consolidação das contribuições da contratante, com prazo de análise de cada produto proposto na própria proposta.",
+          "rotulo": "sugestao",
+          "motivo": "O conteúdo mínimo pede riscos ligados à consolidação das contribuições da contratante; premissa crítica PC3.",
+          "fontes": [
+            {
+              "doc": "rfp",
+              "pagina": 27,
+              "trecho": "à consolidação das contribuições da contratante"
+            }
+          ],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "PROP-METODOLOGIA"
+        }
+      ]
+    },
+    {
+      "codigo": "EDITAL",
+      "titulo": "Relação nominal da equipe-chave",
+      "criterio": "Qualificação e experiência da equipe-chave indicada",
+      "itens": [
+        {
+          "id": "eq-1",
+          "texto": "Nomes e currículos da equipe-chave: a definir pelo GP.",
+          "rotulo": "decisao_gp",
+          "motivo": "Nomes são decisão do GP.",
+          "fontes": [],
+          "alternativas": [],
+          "requisitos": [
+            "R06",
+            "R07",
+            "R08",
+            "R09"
+          ],
+          "ficha": "PROP-EQUIPE"
+        }
+      ]
+    }
+  ],
+  "produtos": [
+    {
+      "id": "P1",
+      "nome": "Plano de trabalho da consultoria",
+      "descricao": "Metodologia, cronograma executivo, estratégia de levantamento e estrutura dos cadernos e do guia.",
+      "requisitos": [
+        "R01"
+      ],
+      "criteriosAceite": [
+        "Contém todos os itens mínimos listados no termo de referência para o produto 1."
+      ],
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 19,
+          "trecho": "Este produto consiste na elaboração de plano de trabalho detalhado"
+        }
+      ]
+    },
+    {
+      "id": "P2",
+      "nome": "Dois cadernos temáticos (relações raciais; convivência familiar e comunitária)",
+      "descricao": "Cadernos com referenciais normativos, institucionais e programáticos.",
+      "requisitos": [
+        "R02"
+      ],
+      "criteriosAceite": [
+        "Aborda os dois temas indicados no termo de referência."
+      ],
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 19,
+          "trecho": "Crianças e adolescentes em situação de rua e relações raci-ais"
+        }
+      ]
+    },
+    {
+      "id": "P3",
+      "nome": "Dois cadernos temáticos (trabalho infantil; trajetórias territoriais e institucionais)",
+      "descricao": "Cadernos com subsídios técnicos para o debate público e a atuação dos atores.",
+      "requisitos": [
+        "R03"
+      ],
+      "criteriosAceite": [
+        "Aborda os dois temas indicados no termo de referência."
+      ],
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 20,
+          "trecho": "Crianças e adolescentes em situação de rua e trabalho infantil"
+        }
+      ]
+    },
+    {
+      "id": "P4",
+      "nome": "Caderno final e documento sintético de consolidação",
+      "descricao": "Quinto caderno (violências múltiplas) e síntese dos achados transversais.",
+      "requisitos": [
+        "R04"
+      ],
+      "criteriosAceite": [
+        "Inclui o quinto caderno e o documento sintético."
+      ],
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 20,
+          "trecho": "Este produto consiste na elaboração do quinto caderno temático"
+        }
+      ]
+    },
+    {
+      "id": "P5",
+      "nome": "Guia de orientação",
+      "descricao": "Guia técnico com direitos, atribuições, fluxos e materiais de apoio.",
+      "requisitos": [
+        "R05"
+      ],
+      "criteriosAceite": [
+        "Contempla todos os itens mínimos do guia listados no termo de referência."
+      ],
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 20,
+          "trecho": "Este produto consiste na elaboração de guia técnico destinado aos"
+        }
+      ]
+    }
+  ],
+  "exclusoes": [
+    {
+      "id": "exc-1",
+      "texto": "Sugere-se excluir do preço a impressão gráfica dos cadernos e do guia, já que o termo de referência pede versão pronta para publicação online.",
+      "rotulo": "sugestao",
+      "motivo": "Limite do escopo editorial.",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 21,
+          "trecho": "revisada e pronta para publicação online"
+        }
+      ],
+      "alternativas": [],
+      "requisitos": [
+        "R02",
+        "R03",
+        "R04",
+        "R05"
+      ],
+      "ficha": "PROP-SOW.5"
+    }
+  ],
+  "premissas": [
+    {
+      "item": {
+        "id": "prem-1",
+        "texto": "Sugere-se escrever como premissa que a contratante analisa cada produto em prazo combinado (a definir pelo GP) e que as rodadas de revisão são limitadas (número a definir pelo GP).",
+        "rotulo": "sugestao",
+        "motivo": "O termo de referência não informa prazo de análise nem limite de revisões.",
+        "fontes": [
+          {
+            "doc": "rfp",
+            "pagina": 21,
+            "trecho": "O pagamento é realizado somente após ateste de conformidade e aprovação pela Contratante."
+          }
+        ],
+        "alternativas": [],
+        "requisitos": [],
+        "ficha": "PROP-SOW.11"
+      },
+      "premissaCritica": "PC3",
+      "consequencia": "Se a análise passar do prazo combinado, os prazos dos produtos seguintes são recalculados, e rodadas além do limite pedem ajuste de prazo e de preço."
+    },
+    {
+      "item": {
+        "id": "prem-2",
+        "texto": "Sugere-se escrever como premissa que a contratante mobiliza os profissionais da rede para as oficinas remotas de escuta.",
+        "rotulo": "sugestao",
+        "motivo": "A abordagem B depende da participação de atores da rede.",
+        "fontes": [],
+        "alternativas": [],
+        "requisitos": [],
+        "ficha": "PROP-SOW.11"
+      },
+      "premissaCritica": "PC6",
+      "consequencia": "Sem a mobilização, as oficinas são substituídas por consulta documental, e o plano de trabalho registra a mudança."
+    }
+  ],
+  "restricoes": [
+    {
+      "id": "res-1",
+      "texto": "Os serviços são prestados, como regra, em formato remoto.",
+      "rotulo": "documento",
+      "motivo": "Local de execução do termo de referência.",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 21,
+          "trecho": "Os serviços serão prestados, como regra, em formato remoto."
+        }
+      ],
+      "alternativas": [],
+      "requisitos": [
+        "R10"
+      ],
+      "ficha": "PROP-SOW.7"
+    }
+  ],
+  "obrigacoesContratante": [
+    {
+      "item": {
+        "id": "obr-1",
+        "texto": "Sugere-se propor como obrigação da contratante analisar e aprovar cada produto, com o registro das contribuições num documento só.",
+        "rotulo": "sugestao",
+        "motivo": "Premissa crítica PC3.",
+        "fontes": [],
+        "alternativas": [],
+        "requisitos": [],
+        "ficha": "PROP-SOW.8"
+      },
+      "prazo": "não informado no documento — a definir pelo GP"
+    }
+  ]
+}

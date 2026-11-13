@@ -1,0 +1,312 @@
+{
+  "comoSeraAvaliada": [
+    {
+      "id": "aval-1",
+      "texto": "Julgamento por técnica e preço, com 70% para a técnica e 30% para o preço.",
+      "rotulo": "documento",
+      "motivo": "Critério de julgamento do edital.",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 37,
+          "trecho": "segundo o critério de Técnica e Preço, com ponderação de 70% para a técnica e 30% para o preço"
+        }
+      ],
+      "alternativas": [],
+      "requisitos": [],
+      "ficha": "PROP-ESTRATEGIA.1"
+    },
+    {
+      "id": "aval-2",
+      "texto": "A nota técnica vai até 100 pontos, em três quesitos: experiência da empresa (20), metodologia e estratégia de execução (50) e equipe-chave (30).",
+      "rotulo": "documento",
+      "motivo": "Quadro geral de pontuação técnica.",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 29,
+          "trecho": "A pontuação da Proposta Técnica está limitada a 100 (cem) pontos"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 30,
+          "trecho": "Pontuação Total da Proposta Técnica 100 pontos"
+        }
+      ],
+      "alternativas": [],
+      "requisitos": [],
+      "ficha": "PROP-ESTRATEGIA.2"
+    },
+    {
+      "id": "aval-3",
+      "texto": "A comissão julga só pelo que estiver na proposta e nos documentos entregues no certame.",
+      "rotulo": "documento",
+      "motivo": "Regra que pesa na redação: o que não estiver escrito não pontua.",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 26,
+          "trecho": "com base exclusivamente nas informações e nos documentos apresentados pela proponente no momento próprio do certame"
+        }
+      ],
+      "alternativas": [],
+      "requisitos": [],
+      "ficha": "PROP-ESTRATEGIA.1"
+    }
+  ],
+  "criterios": [
+    {
+      "criterio": "Qualificação e experiência da empresa proponente",
+      "pontuacaoMaxima": "20 pontos",
+      "oQuePontua": "Experiência institucional compatível com o objeto, em quatro subitens.",
+      "evidenciaExigida": "Atestados, declarações, contratos ou documentos idôneos, em anexos próprios.",
+      "secaoDaProposta": "Apresentação institucional sintética",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 30,
+          "trecho": "Experiência institucional compatível com"
+        }
+      ]
+    },
+    {
+      "criterio": "Qualidade técnica da metodologia e estratégia de execução dos trabalhos",
+      "pontuacaoMaxima": "50 pontos",
+      "oQuePontua": "Metodologia, estratégia de execução, cronograma, interlocução, riscos, linguagem e organização editorial.",
+      "evidenciaExigida": "Texto da proposta técnica, nos itens I a IX do conteúdo mínimo.",
+      "secaoDaProposta": "Metodologia de execução dos trabalhos",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 30,
+          "trecho": "Metodologia, estratégia de execução, cro-"
+        }
+      ]
+    },
+    {
+      "criterio": "Qualificação e experiência da equipe-chave indicada",
+      "pontuacaoMaxima": "30 pontos",
+      "oQuePontua": "Formação e experiência dos profissionais indicados para as funções estratégicas.",
+      "evidenciaExigida": "Currículo, diplomas e comprovantes de experiência de cada profissional.",
+      "secaoDaProposta": "Relação nominal da equipe-chave",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 30,
+          "trecho": "Formação e experiência dos profissionais"
+        }
+      ]
+    }
+  ],
+  "ondeEstaoOsPontos": [
+    {
+      "id": "pontos-1",
+      "texto": "Sugere-se concentrar o esforço de redação no quesito de metodologia, que vale metade da nota técnica, com um título para cada subquesito, como o edital recomenda.",
+      "rotulo": "sugestao",
+      "motivo": "O edital pede títulos compatíveis com os quesitos de avaliação.",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 29,
+          "trecho": "títulos e subtítulos compatíveis com os quesitos de avaliação técnica"
+        }
+      ],
+      "alternativas": [],
+      "requisitos": [],
+      "ficha": "PROP-ESTRATEGIA.3"
+    },
+    {
+      "id": "pontos-2",
+      "texto": "Recomenda-se avaliar quais atestados da FGV cobrem cada subitem de experiência institucional, porque uma mesma experiência não pode ser contada em dois subitens.",
+      "rotulo": "sugestao",
+      "motivo": "Regra de pontuação que limita o reaproveitamento de atestados.",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 31,
+          "trecho": "Uma mesma experiência não poderá ser considerada em mais de um subitem."
+        }
+      ],
+      "alternativas": [],
+      "requisitos": [],
+      "ficha": "PROP-ESTRATEGIA.3"
+    }
+  ],
+  "abordagens": [
+    {
+      "id": "A",
+      "nome": "Pesquisa documental com diálogo técnico remoto",
+      "descricao": "Levantamento bibliográfico, documental e normativo, com rodadas de diálogo técnico remoto com atores do Sistema de Garantia de Direitos e validação de cada produto com a equipe técnica da contratante.",
+      "pros": [
+        "Compatível com o formato remoto previsto no termo de referência.",
+        "Menor dependência de agendas e deslocamentos."
+      ],
+      "contras": [
+        "Menos subsídio vindo da prática dos serviços nos territórios."
+      ],
+      "requisitos": [
+        "R01",
+        "R02",
+        "R03",
+        "R04",
+        "R05",
+        "R10"
+      ],
+      "riscos": [
+        "Conteúdo pouco aplicado à rotina dos profissionais, o que pesa no guia."
+      ],
+      "impactoPrazo": "menor que B e C",
+      "impactoCusto": "menor que B e C"
+    },
+    {
+      "id": "B",
+      "nome": "Pesquisa documental com escuta de profissionais da rede",
+      "descricao": "A pesquisa da abordagem A, mais oficinas remotas de escuta com profissionais da rede de proteção, para testar fluxos e materiais de apoio do guia antes da versão final.",
+      "pros": [
+        "Fortalece a aplicabilidade prática do guia, que é critério de avaliação.",
+        "Mantém o formato remoto."
+      ],
+      "contras": [
+        "Mais etapas e mais tempo de consolidação."
+      ],
+      "requisitos": [
+        "R01",
+        "R02",
+        "R03",
+        "R04",
+        "R05",
+        "R10"
+      ],
+      "riscos": [
+        "Adesão dos profissionais às oficinas depende de mobilização pela contratante."
+      ],
+      "impactoPrazo": "maior que A",
+      "impactoCusto": "maior que A, menor que C"
+    },
+    {
+      "id": "C",
+      "nome": "Pesquisa com escuta qualificada de crianças e adolescentes",
+      "descricao": "A abordagem B, mais processos de escuta qualificada de crianças e adolescentes, condicionados à aprovação prévia de plano metodológico específico pela contratante.",
+      "pros": [
+        "Considera as perspectivas do público, como o termo de referência prevê quando viável."
+      ],
+      "contras": [
+        "Depende de aprovação prévia da contratante e, possivelmente, de instância ética.",
+        "Exige protocolos de proteção e anonimização."
+      ],
+      "requisitos": [
+        "R01",
+        "R02",
+        "R03",
+        "R04",
+        "R05"
+      ],
+      "riscos": [
+        "Aprovação ética ou institucional sem prazo pode atrasar os cadernos."
+      ],
+      "impactoPrazo": "maior que B",
+      "impactoCusto": "maior que B"
+    }
+  ],
+  "destinos": [
+    {
+      "origem": "brechas:vago:se-for-o-caso:rfp:19",
+      "descricaoOrigem": "Escuta de crianças e adolescentes 'quando aplicável', sem critério.",
+      "destino": "pergunta",
+      "texto": "Solicita-se informar em que casos a escuta direta de crianças e adolescentes é esperada e qual o prazo de aprovação do plano metodológico específico.",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 19,
+          "trecho": "A realização de escuta direta de crianças e adolescentes somente poderá ocorrer mediante aprova-ção prévia de plano metodológico específico pela contratante"
+        }
+      ]
+    },
+    {
+      "origem": "",
+      "descricaoOrigem": "Reuniões presenciais em Brasília sem custos adicionais para a contratante.",
+      "destino": "premissa",
+      "texto": "Sugere-se escrever, como premissa, o número de reuniões presenciais em Brasília previsto no preço (a definir pelo GP), com a consequência de reajuste se a contratante pedir mais.",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 21,
+          "trecho": "participar de reuniões presenciais em Brasília/DF, sem custos adicionais para a CONTRATANTE"
+        }
+      ]
+    },
+    {
+      "origem": "",
+      "descricaoOrigem": "Correções no prazo fixado pela contratante, sem prazo de análise dos produtos.",
+      "destino": "obrigacao-contratante",
+      "texto": "Sugere-se propor um prazo de análise de cada produto pela contratante e um número de rodadas de revisão (a definir pelo GP).",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 24,
+          "trecho": "devendo ser corrigidos/refeitos/substituídos no prazo fixado pela CONTRATANTE"
+        }
+      ]
+    }
+  ],
+  "premissasCriticas": [
+    {
+      "codigo": "PC1",
+      "aplica": "sim",
+      "motivo": "Os cadernos dependem de documentos e referências indicados pela equipe técnica da contratante."
+    },
+    {
+      "codigo": "PC2",
+      "aplica": "nao",
+      "motivo": "O termo de referência não prevê uso de sistema da contratante."
+    },
+    {
+      "codigo": "PC3",
+      "aplica": "sim",
+      "motivo": "O pagamento só ocorre após ateste e aprovação de cada produto, e o prazo de análise não está no texto."
+    },
+    {
+      "codigo": "PC4",
+      "aplica": "a-confirmar",
+      "motivo": "Os prazos dos produtos contam da assinatura do contrato."
+    },
+    {
+      "codigo": "PC5",
+      "aplica": "a-confirmar",
+      "motivo": "A validação depende da coordenação-geral indicada no termo de referência."
+    },
+    {
+      "codigo": "PC6",
+      "aplica": "sim",
+      "motivo": "O diálogo técnico depende da participação de atores do Sistema de Garantia de Direitos."
+    },
+    {
+      "codigo": "PC7",
+      "aplica": "a-confirmar",
+      "motivo": "A equipe-chave tem quatro perfis; o volume de cinco cadernos e um guia pede conferência."
+    },
+    {
+      "codigo": "PC8",
+      "aplica": "sim",
+      "motivo": "O termo de referência não limita as rodadas de revisão dos produtos."
+    }
+  ],
+  "observacoes": [
+    {
+      "id": "obs-1",
+      "texto": "O edital cita um limite para a parte narrativa da proposta técnica, mas o trecho localizado não informa o número de páginas: recomenda-se conferir no edital ou perguntar.",
+      "rotulo": "sugestao",
+      "motivo": "Páginas excedentes podem ser desconsideradas na pontuação.",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 29,
+          "trecho": "páginas excedentes ao limite estabelecido para a parte narrativa da Proposta Técnica"
+        }
+      ],
+      "alternativas": [],
+      "requisitos": [],
+      "ficha": "PROP-ESTRUTURA"
+    }
+  ]
+}
