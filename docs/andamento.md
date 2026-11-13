@@ -4,7 +4,7 @@ Atualizado em 13/11/2026.
 
 ## Onde estamos
 
-**A fase S (skill PMO) terminou e está em revisão** na branch `fase/s-skill-pmo`. Falta a responsável pelo projeto revisar e dar o ok; depois disso vêm o merge e a tag v0.1.0. A prova de conceito (fase P) só começa com esse ok.
+**A fase S (skill PMO 0.1.0) foi aprovada e publicada como v0.1.0 em 13/11/2026.** Próxima: fase P (prova de conceito), numa conversa nova.
 
 **O que a skill tem** (em `.claude/skills/pmo/`, versão 0.1.0):
 
@@ -34,7 +34,7 @@ Atualizado em 13/11/2026.
 | Fase | O que é | Situação | Tag |
 |---|---|---|---|
 | Fundação | Organização do repositório e decisões do plano | concluída (PR #1) | — |
-| S | Skill PMO, rascunho para aprovação | **em revisão** | v0.1.0 |
+| S | Skill PMO 0.1.0 | concluída (PR #2; checklist aprovado) | v0.1.0 |
 | P | Prova de conceito com um caso real de política pública, sem código do app; inclui a comparação regras de código × leitura do PMO | a fazer | v0.2.0 |
 | F0 | Esqueleto, identidade visual com o logo, fluxo de tela, leitura de PDF, dossiê `.dossie.json`, exportação básica, CI com a verificação dos formatos | a fazer | v0.3.0 |
 | F5 | Etapa 5: conferência do PGP só com código, com a base do "ausente" em três níveis | a fazer | v0.4.0 |
@@ -47,7 +47,6 @@ Atualizado em 13/11/2026.
 
 ## Decisões pendentes
 
-- **Revisão da skill pela responsável pelo projeto.** A especificação pede que o `checklist.md` final seja mostrado antes de ser usado.
 - **Modelo padrão da API:** Opus 5.5 é provisório; a escolha final sai da comparação na F2 (decisão 0002).
 - **Na fase P:** confirmar se os três PDFs do caso real são do mesmo contrato, antes de abrir qualquer um.
 - **Na F0:** receber a apresentação HTML e o logo da FGV Projetos em `referencias/identidade/`. Incluir os formatos da decisão 0010 na verificação do CI.
@@ -56,7 +55,7 @@ Atualizado em 13/11/2026.
 
 ## Próximo passo
 
-1. A responsável pelo projeto revisa o PR da fase S. Depois do ok: merge, tag v0.1.0 e release.
+1. Fase S concluída: merge, tag v0.1.0 e release feitos.
 2. **Vale abrir uma conversa nova** para a fase P. Esta já está muito longa. A conversa nova começa lendo o `CLAUDE.md` e este arquivo.
 3. Fase P: perguntar se os três PDFs do caso são do mesmo contrato; pedir que sejam salvos em `referencias/casos/<caso>/entrada/` como `1-chamamento.pdf`, `2-tap.pdf` e `3-plano.pdf`; seguir a seção 15 da especificação, com a regra contra contaminação.
 

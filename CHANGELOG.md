@@ -4,7 +4,9 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 
 ## [Não publicado]
 
-### Fase S — skill PMO 0.1.0 (rascunho para aprovação)
+## [0.1.0] — 13/11/2026
+
+### Fase S — skill PMO 0.1.0 (aprovada)
 - `SKILL.md`: papel, princípios ("sugerir, nunca afirmar"), passo a passo das etapas 2, 3, 4 e 5 (F5b), formato de saída e o que carregar em cada etapa.
 - Referências:
   - `pmbok6.md`, `pmbok7.md`, `rework.md`;
