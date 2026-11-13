@@ -1,18 +1,26 @@
-// Extração dos requisitos da RFP (primeira versão, construída na F5 e reaproveitada na F1).
-// Nesta versão, só os produtos e entregáveis rotulados ("Produto 1 – Plano de trabalho").
+// Extração dos requisitos da RFP (construída na F5 e ampliada na F1).
+// Aqui ficam os produtos e entregáveis rotulados ("Produto 1 – Plano de trabalho"); equipe, quantidades e local
+// ficam em src/extracao/rfp/requisitos-rfp.ts.
 // O que o código não acha, o GP acrescenta na tela: requisito não localizado pelo código nunca vira "ausente".
 import type { PaginaLida } from "../dossie/esquema";
 import { normalizarTermo, trechoEmVolta } from "../regras/busca";
 
+/** Produto ou entregável, equipe mínima, quantidade, local, ou outro (incluído pelo GP). */
+export type TipoRequisito = "produto" | "equipe" | "quantidade" | "local" | "outro";
+
 export interface Requisito {
   /** R01, R02… O número não muda se o GP editar a lista; requisito novo ganha o próximo. */
   numero: string;
-  /** "Produto 1", "Entregável 3". */
+  /** "Produto 1", "Entregável 3", "Equipe: Coordenador". */
   rotulo: string;
   descricao: string;
   pagina: number;
   trecho: string;
   origem: "codigo" | "gp";
+  /** Sem tipo, é produto (dossiês da F5). */
+  tipo?: TipoRequisito;
+  /** "RFP" ou "Anexo: <arquivo>", quando veio do código. */
+  documento?: string;
 }
 
 const ROMANOS: Record<string, number> = {
@@ -76,6 +84,7 @@ export function extrairRequisitos(paginas: PaginaLida[]): Requisito[] {
         pagina: anterior?.pagina ?? p.numero,
         trecho: anterior?.trecho ?? trechoEmVolta(p.texto, inicio, linha.length, 20),
         origem: "codigo",
+        tipo: "produto",
       });
     });
   }

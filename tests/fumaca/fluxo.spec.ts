@@ -134,3 +134,33 @@ test("etapa 5: mapa, conferência, decisão do GP e exportação do relatório",
   }
   expect(erros).toEqual([]);
 });
+
+test("etapa 1: análise da RFP, revisão do GP e as quatro saídas", async ({ page }) => {
+  const erros = vigiarErros(page);
+  await page.goto("./#/etapa/1");
+  await page
+    .getByTestId("enviar-rfp")
+    .setInputFiles(`${FIXTURES}/pregao-eletronico-politicas-mulheres-barra-bonita-2026.pdf`);
+  await expect(page.locator(".envio__arquivo").first()).toContainText("barra-bonita", { timeout: 60_000 });
+  await page.getByTestId("analisar-rfp").click();
+  await expect(page.getByText("Pontos de atenção para participar ou não", { exact: true })).toBeVisible();
+  await expect(page.getByText("Vagos e brechas", { exact: true })).toBeVisible();
+  await expect(page.getByTestId("item-identificacao:modalidade")).toContainText("Pregão eletrônico");
+  await page.getByLabel("Participar da disputa?").selectOption("participar");
+  await page.getByTestId("item-identificacao:modalidade").getByRole("combobox").selectOption("aceito");
+  for (const [botao, extensao] of [
+    ["Análise da RFP · DOCX", "docx"],
+    ["Análise da RFP · PDF", "pdf"],
+    ["Requisitos e prazos · XLSX", "xlsx"],
+    ["Checklist de habilitação · XLSX", "xlsx"],
+    ["Perguntas de esclarecimento · DOCX", "docx"],
+  ]) {
+    const download = page.waitForEvent("download");
+    await page.getByRole("button", { name: botao }).click();
+    const arquivo = await download;
+    expect(arquivo.suggestedFilename().endsWith(`.${extensao}`)).toBe(true);
+    expect(readFileSync(await arquivo.path()).length).toBeGreaterThan(2000);
+  }
+  expect(await page.locator("body").innerText()).not.toMatch(/não informado no documento/);
+  expect(erros).toEqual([]);
+});

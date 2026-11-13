@@ -28,7 +28,7 @@ export const PADROES_VAGO: PadraoVago[] = [
   },
   {
     id: "quando-necessario",
-    re: /\bquando (?:for )?necessari[oa]s?\b|\bsempre que necessari[oa]\b|\bse necessari[oa]\b/,
+    re: /\bquando (?:for )?necessari[oa]s?\b|\bsempre que necessari[oa]\b|(?<!-)\bse necessari[oa]\b/,
     falta: "prazo",
     sugestao: 'Sugere-se trocar "quando necessário" por uma frequência ou por um gatilho verificável.',
   },

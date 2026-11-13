@@ -27,6 +27,7 @@ Uma decisão por arquivo, numerada em ordem. Cada uma registra o contexto, o que
 | [0021](0021-riscos-da-v29-viram-premissas-criticas.md) | Riscos da V29 viram premissas críticas do plano (PC1 a PC8); skill PMO 0.2.0 | aceita |
 | [0022](0022-regras-da-conferencia-f5.md) | Regras da conferência por código (F5), primeira versão; F5 com a tag v0.3.0 | aceita |
 | [0023](0023-f5-publicada-antes-do-teste.md) | F5 e skill 0.2.0 publicadas antes do teste da responsável (só esta fase) | aceita |
+| [0024](0024-leitura-da-rfp-f1.md) | Leitura da RFP só com código (F1): mapa, extração, prazos calculados, brechas com pergunta, revisão do GP | aceita |
 
 Modelo para uma nova decisão:
 

@@ -3,8 +3,9 @@
 import { useMemo, useState } from "react";
 import { CARACTERISTICAS_PADRAO, type Caracteristicas } from "../../dominio/caracteristicas";
 import { PARTES_PGP, PREMISSAS_CRITICAS } from "../../dominio/skill";
-import type { Conferencia, DecisaoAchado, DocumentoLido } from "../../dossie/esquema";
+import type { AnaliseRfpDossie, Conferencia, DecisaoAchado, DocumentoLido } from "../../dossie/esquema";
 import { useDossie } from "../../dossie/store";
+import { requisitosValidos } from "../../etapas/1-rfp/revisao";
 import { extrairRequisitos, type Requisito } from "../../extracao/requisitos";
 import { exportar, type FormatoExportacao } from "../../exportacao/exportar";
 import {
@@ -48,15 +49,20 @@ interface Props {
 }
 
 /** Valores iniciais da conferência: a proposta do código, para o GP confirmar. */
-function conferenciaInicial(props: Props, mapa: ParteNoMapa[]): Conferencia {
-  const requisitos = props.rfp ? extrairRequisitos(props.rfp.paginas) : [];
+function conferenciaInicial(props: Props, mapa: ParteNoMapa[], analiseRfp?: AnaliseRfpDossie): Conferencia {
+  // os requisitos da etapa 1 (revisados pelo GP) mantêm os números; sem ela, o código extrai os produtos da RFP
+  const requisitos = analiseRfp
+    ? requisitosValidos(analiseRfp)
+    : props.rfp
+      ? extrairRequisitos(props.rfp.paginas)
+      : [];
   return {
     caracteristicas: CARACTERISTICAS_PADRAO,
     mapa: confirmacaoInicial(mapa),
     // na dúvida, a premissa "se aplica", para o GP decidir (decisão 0021)
     premissasAplicaveis: Object.fromEntries(PREMISSAS_CRITICAS.map((p) => [p.codigo, true])),
     requisitos,
-    proximoRequisito: requisitos.length + 1,
+    proximoRequisito: analiseRfp?.proximoRequisito ?? requisitos.length + 1,
     decisoes: {},
   };
 }
@@ -64,7 +70,7 @@ function conferenciaInicial(props: Props, mapa: ParteNoMapa[]): Conferencia {
 export function ConferenciaPgp(props: Props) {
   const { dossie, guardarConferencia } = useDossie();
   const proposta = useMemo(() => proporMapa(props.pgp.paginas, PARTES_PGP), [props.pgp]);
-  const conf = dossie.conferencia ?? conferenciaInicial(props, proposta);
+  const conf = dossie.conferencia ?? conferenciaInicial(props, proposta, dossie.analiseRfp);
   const [executar, setExecutar] = useState(Boolean(dossie.conferencia?.executadaEm));
   const atualizar = (mudanca: Partial<Conferencia>) => guardarConferencia({ ...conf, ...mudanca });
 

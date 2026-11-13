@@ -903,3 +903,25 @@ select,
   background: var(--white);
   color: var(--navy950);
 }
+
+/* ---------- etapa 1: itens da análise da RFP ---------- */
+.item-rfp[data-estado="descartado"] {
+  opacity: 0.55;
+}
+
+.item-rfp[data-estado="aceito"],
+.item-rfp[data-estado="editado"] {
+  --cor-borda: var(--navy);
+}
+
+.item-rfp[data-situacao="nao-localizado"],
+.item-rfp[data-situacao="nao-verificavel"] {
+  --cor-borda: var(--line4);
+}
+
+.item-rfp textarea {
+  font: inherit;
+  padding: var(--esp-2);
+  border: 1px solid var(--bd);
+  border-radius: var(--raio);
+}
