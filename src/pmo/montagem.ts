@@ -61,6 +61,19 @@ export function referenciasEtapa2(): BlocoTexto[] {
   ];
 }
 
+/** Fichas da etapa 3 (SKILL.md, seção 5): o TAP, o registro de premissas e o de partes interessadas. */
+export const FICHAS_ETAPA_3 = ["tap", "b03-registro-premissas", "b31-registro-partes-interessadas"];
+
+/** O que vai como instrução de sistema na etapa 3. */
+export function referenciasEtapa3(): BlocoTexto[] {
+  return [
+    { titulo: "SKILL.md", texto: textoSkill },
+    { titulo: "referencias/checklist.md", texto: textoChecklist },
+    { titulo: "referencias/experiencia.md", texto: textoExperiencia },
+    ...FICHAS_ETAPA_3.map((f) => ({ titulo: `referencias/artefatos/${f}.md`, texto: ficha(f) })),
+  ];
+}
+
 export function textoDeSistema(blocos: BlocoTexto[]): string {
   return [
     "Você está sendo usado pelo app Raio-X do Projeto, na etapa indicada no pedido. Siga a skill abaixo à risca.",
@@ -76,7 +89,11 @@ export function textoDosDocumentos(documentos: DocumentoLido[]): string {
   const partes: string[] = [];
   for (const d of documentos) {
     const papel =
-      d.papel === "anexo-rfp" ? "anexo da RFP (doc: rfp)" : d.papel === "rfp" ? "RFP (doc: rfp)" : d.papel;
+      d.papel === "anexo-rfp"
+        ? "anexo da RFP (doc: rfp)"
+        : d.papel === "rfp"
+          ? "RFP (doc: rfp)"
+          : `${d.papel === "proposta" ? "proposta" : d.papel.toUpperCase()} (doc: ${d.papel})`;
     partes.push(`<documento papel="${papel}" arquivo="${d.nomeArquivo}" paginas="${d.totalPaginas}">`);
     for (const p of d.paginas) {
       partes.push(`=== Página ${p.numero} ===`);

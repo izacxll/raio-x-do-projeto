@@ -242,8 +242,9 @@ function valorEstimado(docs: DocumentoRfp[], capa: CampoDaCapa[], mapa: MapaRfp)
       origem: origemDe(sigiloso),
       situacao: "localizado",
     };
+  // "valor estimado… R$", e também "os recursos (ou as despesas)… estimados em R$" (seção do orçamento)
   const re =
-    /\b(?:valor (?:total |global |maximo |anual |mensal )?(?:estimado|da contratacao|previsto|de referencia|maximo)|orcamento estimado|valor previsto)\b[^.;]{0,140}?r\$ ?[\d.]+,\d{2}/;
+    /\b(?:valor (?:total |global |maximo |anual |mensal )?(?:estimado|da contratacao|previsto|de referencia|maximo)|orcamento estimado|valor previsto|(?:recursos|despesas)\b[^.;]{0,120}?\bestimad[oa]s? em)\b[^.;]{0,140}?r\$ ?[\d.]+,\d{2}/;
   const l =
     localizarPrimeiro(docs, re, faixasDoTema(mapa, "orcamento", "objeto")) ?? localizarPrimeiro(docs, re);
   if (!l) return itemSemAchado(docs, base);

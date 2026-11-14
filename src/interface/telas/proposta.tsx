@@ -4,7 +4,7 @@
 import { useMemo, useRef, useState, type ReactNode } from "react";
 import { LIMITE_DOCUMENTO_TOKENS, MODELOS, type IdModelo } from "../../config/modelo";
 import { MOEDA, PRECOS_CONSULTADOS_EM } from "../../config/precos";
-import type { DocumentoLido, EstadoItem, PropostaDossie } from "../../dossie/esquema";
+import type { DocumentoLido, PropostaDossie } from "../../dossie/esquema";
 import { useDossie } from "../../dossie/store";
 import { conferirMinuta } from "../../etapas/2-proposta/conferencia-final";
 import { calcularCronograma, conferirPrazosDosProdutos } from "../../etapas/2-proposta/cronograma";
@@ -13,7 +13,6 @@ import { calcularPreco, conferirValor, lerValorEmReais } from "../../etapas/2-pr
 import { montarPontoDePartida, type PontoDePartida } from "../../etapas/2-proposta/ponto-de-partida";
 import {
   contarPendentesProposta,
-  estadoDe,
   itensDaProposta,
   propostaInicial,
   registrarUso,
@@ -28,14 +27,14 @@ import {
   montarPropostaTecnica,
 } from "../../exportacao/relatorio-proposta";
 import type { ErroPmo } from "../../pmo/cliente";
-import { NOME_ESTADO_CITACAO } from "../../pmo/citacoes";
 import { estimarCusto, formatarDolar, formatarTokens } from "../../pmo/custo";
 import { estimarTokens, referenciasEtapa2, textoDeSistema, textoDosDocumentos } from "../../pmo/montagem";
 import { SCHEMAS } from "../../pmo/schemas/proposta";
 import { formatarData } from "../../texto/datas";
 import { PREMISSAS_CRITICAS } from "../../dominio/skill";
-import { EtiquetaRotulo, NOME_ESTADO, RotuloSecao } from "../componentes/basicos";
+import { EtiquetaRotulo, RotuloSecao } from "../componentes/basicos";
 import { ConectarClaude, useChave } from "../componentes/conectar-claude";
+import { ItensPmo } from "../componentes/item-pmo";
 import { ABORDAGEM_GRAVADA, MODELO_GRAVADO, respostaGravada } from "../../demonstracao/demonstracao";
 
 const NOME_PASSO: Record<PassoProposta, string> = {
@@ -43,7 +42,6 @@ const NOME_PASSO: Record<PassoProposta, string> = {
   conteudo: "Conteúdo técnico e SOW",
   eap: "EAP, estimativas e equipe",
 };
-const ROTULO_APP = { documento: "documento", sugestao: "sugestao", decisao_gp: "decisao-gp" } as const;
 const NOME_DESTINO = {
   premissa: "premissa",
   exclusao: "exclusão",
@@ -418,105 +416,6 @@ function PontoDePartidaNaTela({ ponto }: { ponto: PontoDePartida }) {
   );
 }
 
-function ItemNaTela({
-  i,
-  p,
-  atualizar,
-}: {
-  i: ItemProposta;
-  p: PropostaDossie;
-  atualizar: (np: PropostaDossie) => void;
-}) {
-  const estado = estadoDe(p.revisoes, i.id);
-  const editado = p.revisoes[i.id]?.textoEditado;
-  const mudar = (e: EstadoItem, texto?: string) =>
-    atualizar({ ...p, revisoes: { ...p.revisoes, [i.id]: { estado: e, textoEditado: texto ?? editado } } });
-  const rotulo = ROTULO_APP[i.item.rotulo];
-  const pagina = i.conferencia.citacoes.find((c) => c.pagina)?.pagina;
-  const c = i.conferencia;
-  return (
-    <article
-      className="cartao cartao--borda bloco item-rfp"
-      data-estado={estado}
-      data-testid={`item-${i.id}`}
-    >
-      <div className="cartao__corpo">
-        <div className="achado__cabeca">
-          <EtiquetaRotulo
-            rotulo={rotulo}
-            pagina={rotulo === "documento" && !c.citacaoNaoConferida ? pagina : undefined}
-          />
-          {c.citacaoNaoConferida && (
-            <span className="lb aviso-item">citação não conferida — não vale como fato</span>
-          )}
-          {c.redacaoAConferir && <span className="lb aviso-item">redação a conferir (afirmativa)</span>}
-          {c.numerosSemFonte.length > 0 && (
-            <span className="lb aviso-item">número sem fonte — conferir: {c.numerosSemFonte.join(", ")}</span>
-          )}
-          {i.item.ficha && <span className="lb">{i.item.ficha}</span>}
-          {i.item.requisitos.length > 0 && <span className="lb">{i.item.requisitos.join(", ")}</span>}
-        </div>
-        <p>{estado === "editado" && editado ? editado : i.item.texto}</p>
-        {i.complemento && <p className="envio__obs">{i.complemento}</p>}
-        {i.item.alternativas.length > 0 && (
-          <table className="tabela">
-            <thead>
-              <tr>
-                <th>Alternativa (sugestão)</th>
-                <th>Prós</th>
-                <th>Contras</th>
-              </tr>
-            </thead>
-            <tbody>
-              {i.item.alternativas.map((a, k) => (
-                <tr key={k}>
-                  <td>{a.texto}</td>
-                  <td>{a.pros}</td>
-                  <td>{a.contras}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
-        {i.item.motivo && <p className="envio__obs">Motivo: {i.item.motivo}</p>}
-        {i.item.fontes.map((f, k) => (
-          <details key={k}>
-            <summary className="envio__obs">
-              Trecho citado (RFP, p. {f.pagina}) ·{" "}
-              {NOME_ESTADO_CITACAO[c.citacoes[k]?.estado ?? "nao-conferida"]}
-              {c.citacoes[k]?.estado === "outra-pagina" ? ` (p. ${c.citacoes[k]?.pagina})` : ""}
-            </summary>
-            <p className="envio__obs">“{f.trecho}”</p>
-          </details>
-        ))}
-        <div className="decisao">
-          <span className="lb">Revisão do GP</span>
-          <select
-            aria-label={`Revisão de ${i.id}`}
-            value={estado}
-            onChange={(e) => mudar(e.target.value as EstadoItem, editado ?? i.item.texto)}
-          >
-            {(["pendente", "aceito", "editado", "descartado"] as const).map((s) => (
-              <option key={s} value={s}>
-                {NOME_ESTADO[s].toLowerCase()}
-              </option>
-            ))}
-          </select>
-          {estado === "editado" && (
-            <textarea
-              aria-label={`Texto editado de ${i.id}`}
-              rows={3}
-              style={{ flex: 1, minWidth: 260 }}
-              value={editado ?? i.item.texto}
-              onChange={(e) => mudar("editado", e.target.value)}
-            />
-          )}
-        </div>
-      </div>
-    </article>
-  );
-}
-
 function Itens({
   itens,
   p,
@@ -526,35 +425,8 @@ function Itens({
   p: PropostaDossie;
   atualizar: (np: PropostaDossie) => void;
 }) {
-  const grupos = [...new Set(itens.map((i) => i.grupo))];
-  const pendentes = itens.filter((i) => estadoDe(p.revisoes, i.id) === "pendente");
   return (
-    <>
-      {pendentes.length > 1 && (
-        <button
-          className="botao botao--discreto"
-          type="button"
-          style={{ margin: "8px 0" }}
-          onClick={() => {
-            const revisoes = { ...p.revisoes };
-            for (const i of pendentes) revisoes[i.id] = { estado: "aceito" };
-            atualizar({ ...p, revisoes });
-          }}
-        >
-          Aceitar os {pendentes.length} pendentes deste passo
-        </button>
-      )}
-      {grupos.map((g) => (
-        <div key={g}>
-          <h3 className="subtitulo-grupo">{g}</h3>
-          {itens
-            .filter((i) => i.grupo === g)
-            .map((i) => (
-              <ItemNaTela key={i.id} i={i} p={p} atualizar={atualizar} />
-            ))}
-        </div>
-      ))}
-    </>
+    <ItensPmo itens={itens} revisoes={p.revisoes} aoMudar={(revisoes) => atualizar({ ...p, revisoes })} />
   );
 }
 

@@ -16,7 +16,7 @@ As etapas 1 e 5 rodam só com código e sem chave.
 | Pasta | O que tem | Desde |
 |---|---|---|
 | `dominio/` | A skill lida no build: fichas (partes do PGP, conteúdo mínimo, gravidade, categoria), premissas críticas e características do projeto | F5 |
-| `etapas/` | As cinco etapas: documentos pedidos, o que a ferramenta faz, saídas. `1-rfp/`: a análise da RFP (junta os passos 1 a 11) e a revisão do GP. `2-proposta/`: ponto de partida, pedidos ao PMO, cronograma (PERT, caminho crítico, prazos), preço, conferência final e os itens do PMO com a revisão do GP | F0, F1, F2 |
+| `etapas/` | As cinco etapas: documentos pedidos, o que a ferramenta faz, saídas. `1-rfp/`: a análise da RFP (junta os passos 1 a 11) e a revisão do GP. `2-proposta/`: ponto de partida, pedidos ao PMO, cronograma (PERT, caminho crítico, prazos), preço, conferência final e os itens do PMO com a revisão do GP. `3-tap/`: entrada (a proposta do dossiê como documento), divergências RFP × proposta, o que vem dos documentos, pedidos ao PMO, itens e pendências, conferência do TAP | F0, F1, F2, F3 |
 | `leitura/` | PDF página a página (pdf.js), OCR (Tesseract.js), imagens na página, estado de cada página | F0 |
 | `texto/` | Normalização para comparar trechos, limpeza de carimbos, nome de arquivo; datas no texto e contas de prazo (dias úteis), frase em volta de uma posição, cabeçalho repetido | F0, F1 |
 | `dossie/` | Esquema do dossiê (zod), salvar e abrir, estado do app (zustand) | F0 |
@@ -25,7 +25,8 @@ As etapas 1 e 5 rodam só com código e sem chave.
 | `extracao/` | Requisitos (produtos rotulados) e prazo total da RFP. `rfp/`: mapa da RFP, quadro da capa, identificação, requisitos (equipe, quantidades, local), prazos do certame e da execução, julgamento, habilitação, temas (apresentação e condições contratuais) e partes interessadas | F5, F1 |
 | `regras/` | Busca com página e trecho, mapa do PGP, vago, conflituoso, ausente, conferência; brechas da RFP com a pergunta de esclarecimento (`brechas-rfp.ts`) | F5, F1 |
 | `config/` | Modelo, esforço e limites de cada passo do PMO (`modelo.ts`) e tabela de preços (`precos.ts`) | F2 |
-| `pmo/` | Único módulo que chama a API (`cliente.ts`); chave só no `sessionStorage` (`chave.ts`); montagem do pedido com a skill e o texto dos documentos (`montagem.ts`); schemas Zod de cada passo (`schemas/`); custo à vista (`custo.ts`); conferência de citações (`citacoes.ts`) e de redação e números sem fonte (`redacao.ts`) | F2 |
+| `demonstracao/` | Modo demonstração (decisão 0027): respostas gravadas do PMO para a RFP pública da OEI, empacotadas no build, e a preparação das etapas anteriores | F2 |
+| `pmo/` | Único módulo que chama a API (`cliente.ts`); itens do PMO com a conferência, comuns às etapas (`itens.ts`); chave só no `sessionStorage` (`chave.ts`); montagem do pedido com a skill e o texto dos documentos (`montagem.ts`); schemas Zod de cada passo (`schemas/`); custo à vista (`custo.ts`); conferência de citações (`citacoes.ts`) e de redação e números sem fonte (`redacao.ts`) | F2 |
 
 ## Fluxo de uma etapa (seção 5.0 da especificação)
 
@@ -37,13 +38,15 @@ As etapas 1 e 5 rodam só com código e sem chave.
 6. **Exportar:** o conteúdo vira um `DocumentoExportavel` (`src/exportacao/modelo.ts`), e cada montador gera o seu formato. As bibliotecas são carregadas só na hora do download.
 7. **Salvar o dossiê.**
 
-## Etapa com o PMO (etapa 2, decisão 0025)
+## Etapas com o PMO (etapa 2, decisão 0025; etapa 3, decisão 0028)
 
 1. O código monta o **ponto de partida** a partir da etapa 1 (ou roda a leitura da RFP, se ela não foi feita).
 2. Cada passo do PMO (estratégia → conteúdo → EAP) é um pedido à API: a skill e o texto dos documentos vão com cache; depois vai o pedido do passo. A resposta é JSON estruturado, validado pelo schema.
 3. O código confere cada item: citação na página indicada, redação condicional, números sem fonte.
 4. O GP decide no meio (abordagem, premissas críticas) e revisa cada item; o código faz as contas (cronograma, prazos, preço) e a conferência final.
 5. O uso de cada chamada (tokens e valor) fica no dossiê.
+6. Na etapa 3, o código compara a RFP e a proposta (PDF final do GP ou a proposta da etapa 2, que vira um documento com uma "página" por seção), traz o que vem dos documentos e confere o TAP; o PMO redige os 12 elementos e o registro de premissas. Os componentes de passo e de item do PMO são comuns (`interface/componentes/passo-pmo.tsx`, `item-pmo.tsx`).
+7. **Demonstração** (decisão 0027): com o dossiê marcado, cada passo carrega a resposta gravada em `tests/fixtures/gerados/<etapa>-oei/`, validada pelo mesmo schema, sem chamar a API.
 
 ## Dossiê
 

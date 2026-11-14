@@ -3,7 +3,14 @@
 import { create } from "zustand";
 import type { PapelDocumento } from "../etapas/etapas";
 import { criarDossieVazio } from "./arquivo";
-import type { AnaliseRfpDossie, Conferencia, Dossie, DocumentoLido, PropostaDossie } from "./esquema";
+import type {
+  AnaliseRfpDossie,
+  Conferencia,
+  Dossie,
+  DocumentoLido,
+  PropostaDossie,
+  TapDossie,
+} from "./esquema";
 
 interface EstadoDossie {
   dossie: Dossie;
@@ -16,6 +23,7 @@ interface EstadoDossie {
   guardarAnaliseRfp: (analise: AnaliseRfpDossie) => void;
   guardarConferencia: (conferencia: Conferencia) => void;
   guardarProposta: (proposta: PropostaDossie) => void;
+  guardarTap: (tap: TapDossie) => void;
   novoProjeto: () => void;
   /** Começa um projeto de demonstração (decisão 0027) com a RFP já lida. */
   iniciarDemonstracao: (rfp: DocumentoLido, nome: string) => void;
@@ -43,6 +51,7 @@ export const useDossie = create<EstadoDossie>((set) => ({
   guardarAnaliseRfp: (analiseRfp) => set((s) => ({ dossie: { ...s.dossie, analiseRfp }, alterado: true })),
   guardarConferencia: (conferencia) => set((s) => ({ dossie: { ...s.dossie, conferencia }, alterado: true })),
   guardarProposta: (proposta) => set((s) => ({ dossie: { ...s.dossie, proposta }, alterado: true })),
+  guardarTap: (tap) => set((s) => ({ dossie: { ...s.dossie, tap }, alterado: true })),
   novoProjeto: () => set({ dossie: criarDossieVazio(), alterado: false }),
   iniciarDemonstracao: (rfp, nome) =>
     set({

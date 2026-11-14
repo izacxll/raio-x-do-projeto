@@ -1002,3 +1002,10 @@ tr[data-critica="sim"] td:first-child {
   margin-top: 12px;
   border-left: var(--borda-destaque) solid var(--laranja);
 }
+
+/* Tabela com texto longo nas primeiras colunas (divergências, dados dos documentos): só a 1ª coluna fica numa linha */
+.tabela--texto td:nth-child(n + 2),
+.tabela--texto th:nth-child(n + 2) {
+  white-space: normal;
+  width: auto;
+}

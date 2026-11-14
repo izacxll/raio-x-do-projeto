@@ -1,0 +1,635 @@
+{
+  "finalidade": [
+    {
+      "id": "tap-1-1",
+      "texto": "O projeto atende à necessidade de subsídios técnicos para o fortalecimento do Sistema de Garantia de Direitos na proteção integral de crianças e adolescentes em situação de rua.",
+      "rotulo": "documento",
+      "motivo": "Objeto da RFP.",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 1,
+          "trecho": "prestação de serviços de desenvolvi- mento de subsídios técnicos voltados ao fortalecimento do Sistema de Garantia de Direitos na proteção integral de crianças e adolescentes em situação de rua"
+        }
+      ],
+      "alternativas": [],
+      "requisitos": [],
+      "ficha": "TAP1.1"
+    },
+    {
+      "id": "tap-1-2",
+      "texto": "Sugere-se descrever o resultado esperado como a qualificação da atuação dos profissionais do Sistema de Garantia de Direitos, por meio de cadernos temáticos, de um documento sintético de consolidação e de um guia de orientação com fluxos de atendimento intersetorial.",
+      "rotulo": "sugestao",
+      "motivo": "A RFP pede que a proposta trate da contribuição dos produtos para a atuação dos profissionais; o resultado vai além da entrega dos produtos (TAP1.2).",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 27,
+          "trecho": "bem como a contribuição dos produtos para a atuação dos profissionais do Sistema de Garantia de Direitos"
+        }
+      ],
+      "alternativas": [],
+      "requisitos": ["R05"],
+      "ficha": "TAP1.2"
+    }
+  ],
+  "objetivos": [
+    {
+      "item": {
+        "id": "tap-2-1",
+        "texto": "Sugere-se como objetivo entregar os cinco cadernos temáticos e o documento sintético de consolidação com abordagem conceitual e analítica consistente e linguagem técnica acessível.",
+        "rotulo": "sugestao",
+        "motivo": "A RFP descreve a qualidade esperada dos cadernos, mas não traz indicador nem meta.",
+        "fontes": [
+          {
+            "doc": "rfp",
+            "pagina": 19,
+            "trecho": "Cada caderno deverá apresentar abordagem conceitual e analítica consistente, com linguagem técnica acessível"
+          }
+        ],
+        "alternativas": [],
+        "requisitos": ["R02", "R03", "R04"],
+        "ficha": "TAP2.1"
+      },
+      "criterioDeSucesso": "Uma opção é medir pelo aceite de cada caderno pela contratante, sem rodada de revisão além do limite que o GP definir (indicador e meta a definir pelo GP).",
+      "origemDaMetrica": "sugestao"
+    },
+    {
+      "item": {
+        "id": "tap-2-2",
+        "texto": "Sugere-se como objetivo entregar o guia de orientação com todos os itens mínimos listados no termo de referência, em versão final diagramada e pronta para publicação online.",
+        "rotulo": "sugestao",
+        "motivo": "Os itens mínimos do guia e o formato de entrega estão na RFP; a meta de uso pelos profissionais não está.",
+        "fontes": [
+          {
+            "doc": "rfp",
+            "pagina": 21,
+            "trecho": "deverão ser entregues em versão final diagramada, revisada e pronta para publicação online"
+          }
+        ],
+        "alternativas": [],
+        "requisitos": ["R05"],
+        "ficha": "TAP2.1"
+      },
+      "criterioDeSucesso": "Recomenda-se avaliar como critério o aceite do guia pela contratante com todos os itens mínimos atendidos, conferidos por uma lista de verificação.",
+      "origemDaMetrica": "sugestao"
+    },
+    {
+      "item": {
+        "id": "tap-2-3",
+        "texto": "Sugere-se como objetivo entregar cada produto dentro do prazo máximo do cronograma de entrega da RFP.",
+        "rotulo": "sugestao",
+        "motivo": "Os prazos máximos por produto estão na tabela do termo de referência.",
+        "fontes": [
+          {
+            "doc": "rfp",
+            "pagina": 21,
+            "trecho": "As datas da tabela se referem ao prazo máximo para entrega dos produtos."
+          }
+        ],
+        "alternativas": [],
+        "requisitos": ["R01", "R02", "R03", "R04", "R05"],
+        "ficha": "TAP2.2"
+      },
+      "criterioDeSucesso": "Produto entregue até o prazo máximo da tabela da RFP (métrica do documento).",
+      "origemDaMetrica": "documento"
+    }
+  ],
+  "requisitosAltoNivel": [
+    {
+      "id": "tap-3-1",
+      "texto": "Plano de trabalho da consultoria, com metodologia, cronograma executivo e estrutura preliminar dos cadernos e do guia.",
+      "rotulo": "documento",
+      "motivo": "Produto 1 do termo de referência.",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 19,
+          "trecho": "Este produto consiste na elaboração de plano de trabalho detalhado"
+        }
+      ],
+      "alternativas": [],
+      "requisitos": ["R01"],
+      "ficha": "TAP3.1"
+    },
+    {
+      "id": "tap-3-2",
+      "texto": "Cinco cadernos temáticos sobre direitos de crianças e adolescentes em situação de rua e um documento sintético de consolidação.",
+      "rotulo": "documento",
+      "motivo": "Produtos 2, 3 e 4 do termo de referência.",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 18,
+          "trecho": "Produzir cinco cadernos temáticos sobre direitos de crianças e adolescentes em situação de rua"
+        }
+      ],
+      "alternativas": [],
+      "requisitos": ["R02", "R03", "R04"],
+      "ficha": "TAP3.1"
+    },
+    {
+      "id": "tap-3-3",
+      "texto": "Guia de orientação destinado aos profissionais do Sistema de Garantia de Direitos, com materiais de apoio.",
+      "rotulo": "documento",
+      "motivo": "Produto 5 do termo de referência.",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 20,
+          "trecho": "Este produto consiste na elaboração de guia técnico destinado aos profissionais do Sistema de Garantia de Direitos"
+        }
+      ],
+      "alternativas": [],
+      "requisitos": ["R05"],
+      "ficha": "TAP3.1"
+    },
+    {
+      "id": "tap-3-4",
+      "texto": "Equipe-chave com coordenação geral e três especialistas, nos perfis do termo de referência.",
+      "rotulo": "documento",
+      "motivo": "Equipe-chave indicada para a avaliação técnica.",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 27,
+          "trecho": "Relação nominal da equipe-chave indicada para fins de avaliação técnica"
+        }
+      ],
+      "alternativas": [],
+      "requisitos": ["R06", "R07", "R08", "R09"],
+      "ficha": "TAP3.1"
+    },
+    {
+      "id": "tap-3-5",
+      "texto": "Serviços prestados, como regra, em formato remoto, com reuniões presenciais em Brasília quando a contratante solicitar.",
+      "rotulo": "documento",
+      "motivo": "Local de realização.",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 21,
+          "trecho": "Os serviços serão prestados, como regra, em formato remoto."
+        }
+      ],
+      "alternativas": [],
+      "requisitos": ["R10"],
+      "ficha": "TAP3.1"
+    }
+  ],
+  "descricao": [
+    {
+      "id": "tap-4-1",
+      "texto": "Sugere-se descrever o projeto como pesquisa bibliográfica, documental e normativa com escuta de profissionais da rede, que resulta em cadernos temáticos, em um documento sintético e em um guia de orientação, conforme a abordagem escolhida na proposta.",
+      "rotulo": "sugestao",
+      "motivo": "Abordagem B, escolhida pelo GP na proposta.",
+      "fontes": [
+        {
+          "doc": "proposta",
+          "pagina": 1,
+          "trecho": "Pesquisa documental com escuta de profissionais da rede"
+        }
+      ],
+      "alternativas": [],
+      "requisitos": [],
+      "ficha": "TAP4.1"
+    }
+  ],
+  "entregas": [
+    {
+      "id": "tap-4-2",
+      "texto": "Entregas-chave: plano de trabalho (P1); dois cadernos temáticos (P2); dois cadernos temáticos (P3); caderno final e documento sintético de consolidação (P4); guia de orientação (P5).",
+      "rotulo": "documento",
+      "motivo": "Produtos do SOW da proposta, ligados aos requisitos da RFP.",
+      "fontes": [
+        {
+          "doc": "proposta",
+          "pagina": 7,
+          "trecho": "P4 — Caderno final e documento sintético de consolidação"
+        }
+      ],
+      "alternativas": [],
+      "requisitos": ["R01", "R02", "R03", "R04", "R05"],
+      "ficha": "TAP4.2"
+    }
+  ],
+  "limites": [
+    {
+      "id": "tap-4-3",
+      "texto": "Sugere-se registrar como fora do escopo a impressão gráfica dos cadernos e do guia, como na exclusão sugerida na proposta.",
+      "rotulo": "sugestao",
+      "motivo": "Exclusão da proposta; a RFP pede versão pronta para publicação online.",
+      "fontes": [
+        {
+          "doc": "proposta",
+          "pagina": 8,
+          "trecho": "Sugere-se excluir do preço a impressão gráfica dos cadernos e do guia"
+        }
+      ],
+      "alternativas": [],
+      "requisitos": ["R05"],
+      "ficha": "TAP4.3"
+    },
+    {
+      "id": "tap-4-4",
+      "texto": "Sugere-se registrar que a escuta direta de crianças e adolescentes só entra no projeto se a contratante aprovar antes um plano metodológico específico; sem essa aprovação, ela fica fora do escopo.",
+      "rotulo": "sugestao",
+      "motivo": "Condição da RFP para a escuta direta; a abordagem escolhida faz escuta com profissionais da rede.",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 19,
+          "trecho": "A realização de escuta direta de crianças e adolescentes somente poderá ocorrer mediante aprova- ção prévia de plano metodológico específico pela contratante"
+        }
+      ],
+      "alternativas": [],
+      "requisitos": [],
+      "ficha": "TAP4.3"
+    }
+  ],
+  "riscoGeral": [
+    {
+      "id": "tap-5-1",
+      "texto": "Sugere-se resumir o risco geral em três fontes de incerteza: o tempo de análise e as rodadas de revisão de cada produto pela contratante (premissa crítica PC3); a mobilização dos profissionais da rede para as oficinas de escuta (premissa crítica PC6); e o prazo do segundo produto, que no cronograma da proposta passa do prazo máximo da RFP (conta do código).",
+      "rotulo": "sugestao",
+      "motivo": "Premissas críticas confirmadas na proposta e a conferência de prazos do código; nenhuma delas é brecha do texto da RFP.",
+      "fontes": [
+        {
+          "doc": "proposta",
+          "pagina": 9,
+          "trecho": "Sugere-se escrever como premissa que a contratante mobiliza os profissionais da rede para as oficinas remotas de escuta."
+        }
+      ],
+      "alternativas": [],
+      "requisitos": ["R02"],
+      "ficha": "TAP5.2"
+    }
+  ],
+  "marcos": [
+    {
+      "item": {
+        "id": "tap-6-1",
+        "texto": "Plano de trabalho da consultoria entregue.",
+        "rotulo": "documento",
+        "motivo": "Tabela de entregas do termo de referência.",
+        "fontes": [
+          {
+            "doc": "rfp",
+            "pagina": 21,
+            "trecho": "Produto 1 – Plano de trabalho da consultoria 30 5%"
+          }
+        ],
+        "alternativas": [],
+        "requisitos": ["R01"],
+        "ficha": "TAP6.1"
+      },
+      "produto": "P1",
+      "prazo": "até 30 dias após a assinatura do contrato"
+    },
+    {
+      "item": {
+        "id": "tap-6-2",
+        "texto": "Dois primeiros cadernos temáticos entregues.",
+        "rotulo": "documento",
+        "motivo": "Tabela de entregas do termo de referência.",
+        "fontes": [
+          {
+            "doc": "rfp",
+            "pagina": 21,
+            "trecho": "Produto 2 – Dois cadernos temáticos sobre direitos 75 20%"
+          }
+        ],
+        "alternativas": [],
+        "requisitos": ["R02"],
+        "ficha": "TAP6.1"
+      },
+      "produto": "P2",
+      "prazo": "até 75 dias após a assinatura do contrato"
+    },
+    {
+      "item": {
+        "id": "tap-6-3",
+        "texto": "Terceiro e quarto cadernos temáticos entregues.",
+        "rotulo": "documento",
+        "motivo": "Tabela de entregas do termo de referência.",
+        "fontes": [
+          {
+            "doc": "rfp",
+            "pagina": 21,
+            "trecho": "Produto 3 – Dois cadernos temáticos sobre direitos 135 20%"
+          }
+        ],
+        "alternativas": [],
+        "requisitos": ["R03"],
+        "ficha": "TAP6.1"
+      },
+      "produto": "P3",
+      "prazo": "até 135 dias após a assinatura do contrato"
+    },
+    {
+      "item": {
+        "id": "tap-6-4",
+        "texto": "Caderno final e documento sintético de consolidação entregues.",
+        "rotulo": "documento",
+        "motivo": "Tabela de entregas do termo de referência.",
+        "fontes": [
+          {
+            "doc": "rfp",
+            "pagina": 21,
+            "trecho": "Produto 4 – Caderno temático final e documento 210 25%"
+          }
+        ],
+        "alternativas": [],
+        "requisitos": ["R04"],
+        "ficha": "TAP6.1"
+      },
+      "produto": "P4",
+      "prazo": "até 210 dias após a assinatura do contrato"
+    },
+    {
+      "item": {
+        "id": "tap-6-5",
+        "texto": "Guia de orientação entregue.",
+        "rotulo": "documento",
+        "motivo": "Tabela de entregas do termo de referência.",
+        "fontes": [
+          {
+            "doc": "rfp",
+            "pagina": 21,
+            "trecho": "Produto 5 – Guia de orientação sobre direitos de cri- 300 30%"
+          }
+        ],
+        "alternativas": [],
+        "requisitos": ["R05"],
+        "ficha": "TAP6.1"
+      },
+      "produto": "P5",
+      "prazo": "até 300 dias após a assinatura do contrato"
+    },
+    {
+      "item": {
+        "id": "tap-6-6",
+        "texto": "Sugere-se incluir como marco a aprovação de cada produto pela contratante, que é condição do pagamento, com o prazo de análise a definir pelo GP.",
+        "rotulo": "sugestao",
+        "motivo": "O pagamento só ocorre após o ateste e a aprovação; o marco depende do contratante (TAP6.3).",
+        "fontes": [
+          {
+            "doc": "rfp",
+            "pagina": 21,
+            "trecho": "O pagamento é realizado somente após ateste de conformidade e aprovação pela Contratante."
+          }
+        ],
+        "alternativas": [],
+        "requisitos": [],
+        "ficha": "TAP6.3"
+      },
+      "produto": "",
+      "prazo": ""
+    }
+  ],
+  "recursosFinanceiros": [
+    {
+      "id": "tap-7-1",
+      "texto": "Redação sugerida: \"Recursos financeiros pré-aprovados: o valor global do contrato, igual ao da proposta vencedora.\" O valor é decisão do GP.",
+      "rotulo": "decisao_gp",
+      "motivo": "TAP.7 é decisão do GP; o preço final da proposta ainda não foi preenchido.",
+      "fontes": [],
+      "alternativas": [],
+      "requisitos": [],
+      "ficha": "TAP7.1"
+    }
+  ],
+  "partesInteressadas": [
+    {
+      "item": {
+        "id": "tap-8-1",
+        "texto": "Coordenação-Geral de Políticas para a Convivência Familiar e Comunitária e Primeira Infância (CGCFC), com quem a contratada faz as reuniões de alinhamento e de validação dos produtos.",
+        "rotulo": "documento",
+        "motivo": "Área técnica citada no objeto da contratação.",
+        "fontes": [
+          {
+            "doc": "rfp",
+            "pagina": 18,
+            "trecho": "Participar de reuniões periódicas com a equipe da Coordenação-Geral de Políticas para a Convi- vência Familiar e Comunitária e Primeira Infância – CGCFC"
+          }
+        ],
+        "alternativas": [],
+        "requisitos": [],
+        "ficha": "TAP8.1"
+      },
+      "papel": "área técnica da contratante que acompanha a execução",
+      "decide": "validação técnica das etapas e dos produtos"
+    },
+    {
+      "item": {
+        "id": "tap-8-2",
+        "texto": "OEI, que firma o contrato com a empresa vencedora.",
+        "rotulo": "documento",
+        "motivo": "Contratante formal.",
+        "fontes": [
+          {
+            "doc": "rfp",
+            "pagina": 23,
+            "trecho": "O contrato a ser firmado entre a Organização de Estados Ibero-americanos para a Educação, a Ciên- cia e a Cultura (OEI) e a empresa vencedora"
+          }
+        ],
+        "alternativas": [],
+        "requisitos": [],
+        "ficha": "TAP8.1"
+      },
+      "papel": "contratante",
+      "decide": "assinatura, aditivos e extinção do contrato"
+    },
+    {
+      "item": {
+        "id": "tap-8-3",
+        "texto": "Supervisor técnico, gestor e fiscal do contrato do lado da contratante: nomes não informados no documento — a definir pelo GP.",
+        "rotulo": "decisao_gp",
+        "motivo": "A RFP cita o supervisor técnico e o fiscal, sem os nomes (TAP8.2).",
+        "fontes": [
+          {
+            "doc": "rfp",
+            "pagina": 21,
+            "trecho": "É facultado ao Supervisor Técnico da Contratante solicitar a entrega de uma versão prévia"
+          }
+        ],
+        "alternativas": [],
+        "requisitos": [],
+        "ficha": "TAP8.2"
+      },
+      "papel": "quem acompanha e fiscaliza a execução",
+      "decide": "recebimento e ateste dos produtos"
+    },
+    {
+      "item": {
+        "id": "tap-8-4",
+        "texto": "Sugere-se incluir entre as partes-chave os profissionais da rede que participam das oficinas de escuta, de quem depende a premissa crítica PC6.",
+        "rotulo": "sugestao",
+        "motivo": "Terceiros de quem o projeto depende entram como parte-chave (PC6).",
+        "fontes": [],
+        "alternativas": [],
+        "requisitos": [],
+        "ficha": "TAP8.1"
+      },
+      "papel": "participantes das oficinas de escuta",
+      "decide": ""
+    }
+  ],
+  "aprovacao": [
+    {
+      "id": "tap-9-1",
+      "texto": "O aceite de cada produto é o recebimento definitivo pela contratante, que concretiza o ateste da execução dos serviços.",
+      "rotulo": "documento",
+      "motivo": "Cláusula de recebimento e aceitação do objeto.",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 24,
+          "trecho": "A CONTRATANTE deverá providenciar o recebimento definitivo, ato que concretiza o ateste da execução dos serviços"
+        }
+      ],
+      "alternativas": [],
+      "requisitos": [],
+      "ficha": "TAP9.2"
+    },
+    {
+      "id": "tap-9-2",
+      "texto": "O prazo de análise de cada produto pela contratante não é informado no documento — a definir pelo GP.",
+      "rotulo": "decisao_gp",
+      "motivo": "A RFP não fixa prazo de análise; ele afeta os marcos (PC3).",
+      "fontes": [],
+      "alternativas": [],
+      "requisitos": [],
+      "ficha": "TAP9.4"
+    },
+    {
+      "id": "tap-9-3",
+      "texto": "Sugere-se considerar o projeto bem-sucedido quando os cinco produtos forem recebidos em definitivo dentro dos prazos máximos da RFP e os objetivos do TAP.2 forem atingidos.",
+      "rotulo": "sugestao",
+      "motivo": "TAP9.1 remete ao TAP.2.",
+      "fontes": [],
+      "alternativas": [],
+      "requisitos": ["R01", "R02", "R03", "R04", "R05"],
+      "ficha": "TAP9.1"
+    }
+  ],
+  "termino": [
+    {
+      "id": "tap-10-1",
+      "texto": "O contrato se extingue quando cumpridas as obrigações de ambas as partes, ainda que antes do prazo.",
+      "rotulo": "documento",
+      "motivo": "Cláusula de extinção contratual.",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 53,
+          "trecho": "O contrato se extingue quando cumpridas as obrigações de ambas as partes, ainda que isso ocorra antes do prazo estipulado para tanto."
+        }
+      ],
+      "alternativas": [],
+      "requisitos": [],
+      "ficha": "TAP10.1"
+    },
+    {
+      "id": "tap-10-2",
+      "texto": "O cancelamento antecipado segue os motivos do artigo 137 da Lei 14.133/2021 ou o acordo entre as partes, assegurados o contraditório e a ampla defesa.",
+      "rotulo": "documento",
+      "motivo": "Cláusula de extinção antecipada; conferir a lei citada.",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 53,
+          "trecho": "O contrato pode ser extinto antes de cumpridas as obrigações nele estipuladas, ou antes do prazo nele fixado, por algum dos motivos previstos no artigo 137 da Lei nº 14.133/21"
+        }
+      ],
+      "alternativas": [],
+      "requisitos": [],
+      "ficha": "TAP10.2"
+    },
+    {
+      "id": "tap-10-3",
+      "texto": "Sugere-se registrar que, se as obrigações não forem cumpridas no prazo, a vigência fica prorrogada até a conclusão do objeto, com a readequação do cronograma, e que o GP avalie com a contratante como isso afeta os marcos.",
+      "rotulo": "sugestao",
+      "motivo": "Subcláusula do contrato sobre prorrogação até a conclusão.",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 53,
+          "trecho": "Se as obrigações não forem cumpridas no prazo estipulado, a vigência ficará prorrogada até a conclusão do objeto"
+        }
+      ],
+      "alternativas": [],
+      "requisitos": [],
+      "ficha": "TAP10.1"
+    }
+  ],
+  "gerente": [
+    {
+      "id": "tap-11-1",
+      "texto": "Redação sugerida: \"O GP [nome a definir] decide sobre a organização da equipe, o cronograma interno e as mudanças que não alteram escopo, prazo contratual ou valor; escala ao patrocinador as demais.\" Nome e alçada são decisão do GP.",
+      "rotulo": "decisao_gp",
+      "motivo": "TAP.11 é decisão do GP; o PMO só sugere a redação.",
+      "fontes": [],
+      "alternativas": [
+        {
+          "texto": "Alçada por tipo de decisão (equipe, cronograma interno, mudanças).",
+          "pros": "Clara para o dia a dia.",
+          "contras": "Pede revisão se surgir decisão não prevista."
+        },
+        {
+          "texto": "Alçada por impacto (sem impacto no contrato decide o GP; com impacto, o patrocinador).",
+          "pros": "Cobre casos não previstos.",
+          "contras": "Exige julgar o impacto a cada caso."
+        }
+      ],
+      "requisitos": [],
+      "ficha": "TAP11.2"
+    }
+  ],
+  "patrocinador": [
+    {
+      "id": "tap-12-1",
+      "texto": "Redação sugerida: \"Patrocinador: [nome e cargo a definir], que aprova o TAP, decide sobre mudanças de escopo, prazo ou valor e é a rota de escalonamento do GP.\" Nome e cargo são decisão do GP.",
+      "rotulo": "decisao_gp",
+      "motivo": "TAP.12 é decisão do GP.",
+      "fontes": [],
+      "alternativas": [],
+      "requisitos": [],
+      "ficha": "TAP12.1"
+    }
+  ],
+  "observacoes": [
+    {
+      "id": "tap-obs-1",
+      "texto": "Recomenda-se avaliar a diferença entre o prazo máximo do segundo produto na RFP e a entrega no cronograma da proposta, apontada pelo código, antes de assinar o TAP.",
+      "rotulo": "sugestao",
+      "motivo": "A conferência de prazos do código marca o P2 como fora do prazo.",
+      "fontes": [
+        {
+          "doc": "proposta",
+          "pagina": 13,
+          "trecho": "P2 — Dois cadernos temáticos (relações raciais; convivência familiar e comunitária)"
+        }
+      ],
+      "alternativas": [],
+      "requisitos": ["R02"],
+      "ficha": ""
+    },
+    {
+      "id": "tap-obs-2",
+      "texto": "O edital estima os recursos do contrato no item do orçamento.",
+      "rotulo": "documento",
+      "motivo": "Valor do orçamento do edital.",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 11,
+          "trecho": "Os recursos necessários para fazer frente às despesas com o objeto deste Edital, estimados em R$ 500.000,00"
+        }
+      ],
+      "alternativas": [],
+      "requisitos": [],
+      "ficha": "TAP7.2"
+    }
+  ]
+}

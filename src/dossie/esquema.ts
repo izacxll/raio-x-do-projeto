@@ -4,6 +4,7 @@
 // descartados na leitura e na gravação (z.object remove chaves que não estão no esquema).
 import { z } from "zod";
 import { RespostaConteudo, RespostaEap, RespostaEstrategia } from "../pmo/schemas/proposta";
+import { RespostaPremissas, RespostaTap } from "../pmo/schemas/tap";
 
 export const FORMATO_DOSSIE = "raio-x-do-projeto/dossie";
 export const VERSAO_FORMATO_DOSSIE = 1;
@@ -200,6 +201,43 @@ export const PropostaDossie = z.object({
 });
 export type PropostaDossie = z.infer<typeof PropostaDossie>;
 
+// ---------- etapa 3: TAP ----------
+
+/** Decisão do GP numa divergência entre a RFP e a proposta: qual versão vale. */
+export const DecisaoDivergencia = z.object({
+  vale: z.enum(["rfp", "proposta", "outra"]),
+  texto: z.string().optional(),
+});
+export type DecisaoDivergencia = z.infer<typeof DecisaoDivergencia>;
+
+/** Campos do TAP que só o GP preenche (TAP.7, TAP.11, TAP.12 e a aprovação). Vazio = "a definir pelo GP". */
+export const DecisoesTap = z.object({
+  recursos: z.string().optional(),
+  gerente: z.string().optional(),
+  autoridade: z.string().optional(),
+  patrocinador: z.string().optional(),
+  autoridadePatrocinador: z.string().optional(),
+  /** Aprovação final do TAP: quem aprovou e quando (aaaa-mm-dd). */
+  aprovadoPor: z.string().optional(),
+  aprovadoEm: z.string().optional(),
+});
+export type DecisoesTap = z.infer<typeof DecisoesTap>;
+
+export const TapDossie = z.object({
+  modelo: z.string(),
+  tap: RespostaGuardada(RespostaTap).optional(),
+  premissas: RespostaGuardada(RespostaPremissas).optional(),
+  /** Revisão do GP de cada item, pelo id estável (tap:…, premissas:…). */
+  revisoes: z.record(z.string(), RevisaoItem),
+  /** Decisão do GP em cada divergência, pelo id da divergência. */
+  divergencias: z.record(z.string(), DecisaoDivergencia),
+  decisoes: DecisoesTap,
+  /** Decisão do GP: premissas críticas que se aplicam (vêm da etapa 2, quando houver). */
+  premissasAplicaveis: z.record(z.string(), z.boolean()).optional(),
+  uso: z.array(UsoPmo),
+});
+export type TapDossie = z.infer<typeof TapDossie>;
+
 export const Dossie = z.object({
   formato: z.literal(FORMATO_DOSSIE),
   versaoFormato: z.literal(VERSAO_FORMATO_DOSSIE),
@@ -215,5 +253,6 @@ export const Dossie = z.object({
   analiseRfp: AnaliseRfpDossie.optional(),
   conferencia: Conferencia.optional(),
   proposta: PropostaDossie.optional(),
+  tap: TapDossie.optional(),
 });
 export type Dossie = z.infer<typeof Dossie>;
