@@ -300,7 +300,11 @@ export function conferirPlano(e: EntradaConferencia): ResultadoConferencia {
   const lugarDaEquipe = ["B18", "A6", "B26"].find((c) => presente(c)) ?? "A6";
   for (const r of e.requisitos) {
     const id = `requisito:${r.numero}`;
-    const termos = termosDoRequisito(r);
+    // o número R e o rótulo "Produto N" também valem: a descrição pode vir partida da tabela de duas colunas da RFP
+    const descritivos = termosDoRequisito(r);
+    const termos = descritivos.length
+      ? [...descritivos, r.numero, ...(/^produto \d+$/i.test(r.rotulo.trim()) ? [r.rotulo.trim()] : [])]
+      : [];
     const base = { id, alvo: r.numero, descricao: `${r.rotulo}: ${r.descricao}` };
     // quantidade e local dependem de leitura (o plano pode escrever "doze oficinas" ou o nome do município)
     if (r.tipo === "quantidade" || r.tipo === "local") {

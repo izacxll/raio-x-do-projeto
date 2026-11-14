@@ -62,7 +62,8 @@ export function paragrafoDoItem(i: ItemConferido, revisoes: Record<string, Revis
       : "",
     estadoDe(revisoes, i.id) === "pendente" ? "pendente de revisão do GP" : "",
   ].filter(Boolean);
-  return `${rotuloDoItem(i)} ${textoFinal(i, revisoes)}${i.complemento ? ` ${i.complemento}` : ""}${avisos.length ? ` (${avisos.join("; ")})` : ""}`;
+  const requisitos = i.item.requisitos.length ? ` [${i.item.requisitos.join(", ")}]` : "";
+  return `${rotuloDoItem(i)} ${textoFinal(i, revisoes)}${i.complemento ? ` ${i.complemento}` : ""}${requisitos}${avisos.length ? ` (${avisos.join("; ")})` : ""}`;
 }
 
 /** Uso de uma chamada, para o dossiê (tokens e valor, nunca a chave). */
