@@ -14,6 +14,7 @@ import { BotaoDemonstracao } from "../componentes/demonstracao";
 import { AnaliseDaRfp } from "./analise-rfp";
 import { ConferenciaPgp } from "./conferencia";
 import { PropostaDoFornecedor } from "./proposta";
+import { TermoDeAbertura } from "./tap";
 
 const PASSOS = [
   "Escolher a etapa",
@@ -66,13 +67,14 @@ function AvisoEnvio({ etapa }: { etapa: Etapa }) {
       </div>
     );
   }
-  if (etapa.numero === 2) {
+  if (etapa.numero === 2 || etapa.numero === 3) {
     return (
       <div className="aviso aviso--pmo">
         <p>
           <b>Etapa com o PMO (inteligência artificial).</b> A leitura dos PDFs e as contas acontecem aqui no
-          navegador. Quando você pede um passo ao PMO, o texto dos PDFs da RFP é enviado à API do Claude, pela
-          sua chave, na organização da FGV. Nada é enviado sem o seu clique, e o custo aparece antes.
+          navegador. Quando você pede um passo ao PMO, o texto dos PDFs{" "}
+          {etapa.numero === 3 ? "da RFP e da proposta" : "da RFP"} é enviado à API do Claude, pela sua chave,
+          na organização da FGV. Nada é enviado sem o seu clique, e o custo aparece antes.
         </p>
       </div>
     );
@@ -380,7 +382,7 @@ export function TelaEtapa() {
         <Titulo>{etapa.nome}</Titulo>
         <PassosFluxo lidos={obrigatoriosLidos} />
         <AvisoEnvio etapa={etapa} />
-        {etapa.numero === 2 && <BotaoDemonstracao etapa={etapa.numero} />}
+        {(etapa.numero === 2 || etapa.numero === 3) && <BotaoDemonstracao etapa={etapa.numero} />}
 
         <section className="bloco">
           <RotuloSecao>Documentos</RotuloSecao>
@@ -422,6 +424,18 @@ export function TelaEtapa() {
               <RotuloSecao>Proposta</RotuloSecao>
               <p className="texto-apoio">
                 Envie a RFP (ou abra o dossiê da etapa 1) para começar a proposta.
+              </p>
+            </section>
+          ))}
+
+        {etapa.numero === 3 &&
+          (rfp ? (
+            <TermoDeAbertura />
+          ) : (
+            <section className="bloco">
+              <RotuloSecao>Termo de abertura</RotuloSecao>
+              <p className="texto-apoio">
+                Envie a RFP e a proposta final (ou abra o dossiê das etapas 1 e 2) para começar o TAP.
               </p>
             </section>
           ))}

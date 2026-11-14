@@ -107,14 +107,29 @@ export const ETAPAS: Etapa[] = [
     fase: "F3",
     documentos: [
       { papel: "rfp", nome: "RFP", obrigatorio: true },
-      { papel: "proposta", nome: "Proposta final do gerente", obrigatorio: true },
+      {
+        papel: "anexo-rfp",
+        nome: "Anexos da RFP",
+        obrigatorio: false,
+        varios: true,
+      },
+      {
+        papel: "proposta",
+        nome: "Proposta final do gerente",
+        obrigatorio: false,
+        observacao:
+          "Obrigatória se a etapa 2 não foi feita neste dossiê. Se o GP editou a proposta fora da ferramenta, envie o PDF da versão final: ele vale no lugar da minuta da etapa 2.",
+      },
     ],
     ferramentaFaz: [
       "Os 12 elementos do TAP, cada um com a origem",
       "Divergências entre a RFP e a proposta",
       "Campos que só o gerente preenche, como patrocinador e nível de autoridade",
     ],
-    saidas: [{ nome: "Termo de abertura do projeto", formatos: ["DOCX", "PDF"] }],
+    saidas: [
+      { nome: "Termo de abertura do projeto", formatos: ["DOCX", "PDF"] },
+      { nome: "Registro de premissas inicial", formatos: ["XLSX"] },
+    ],
   },
   {
     numero: 4,
