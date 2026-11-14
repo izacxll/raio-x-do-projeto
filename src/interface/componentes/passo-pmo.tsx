@@ -21,7 +21,7 @@ export interface RespostaDoPasso<T> {
 }
 
 export interface PedidoDoPasso<S extends z.ZodType> {
-  etapa: 3 | 4;
+  etapa: 3 | 4 | 5;
   passo: PassoComPmo;
   /** Nome do arquivo da resposta gravada (tests/fixtures/gerados/<etapa>-oei/<gravacao>.json). */
   gravacao?: string;
@@ -210,6 +210,13 @@ const NOME_PASSO: Record<string, string> = {
   eap: "EAP, estimativas e equipe",
   tap: "Os 12 elementos do TAP",
   premissas: "Registro de premissas inicial",
+  adaptacao: "Adaptação, ciclo de vida e abordagem",
+  escopo: "Escopo e requisitos",
+  cronograma: "Atividades, recursos e cronograma",
+  riscos: "Riscos, custos e premissas",
+  planos: "Demais planos e documentos",
+  execucao: "Medição e documentos de execução",
+  leitura: "Leitura do PMO na conferência",
 };
 
 export function UsoNaTela({ uso, titulo }: { uso: UsoPmo[]; titulo: string }) {
