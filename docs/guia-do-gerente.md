@@ -21,7 +21,7 @@ Nada sai do navegador.
 
 ## Demonstração, sem a chave
 
-Nas etapas 2 e 3, o botão **"Ver demonstração"** abre uma concorrência pública (OEI) com as respostas do PMO gravadas. Nada é enviado à API e não há custo. Cada passo do PMO vira "Carregar a resposta gravada"; as decisões do GP, a conferência das citações, o cronograma, o preço e as saídas funcionam como no uso real.
+Nas etapas 2, 3 e 4, o botão **"Ver demonstração"** abre uma concorrência pública (OEI) com as respostas do PMO gravadas. Nada é enviado à API e não há custo. Cada passo do PMO vira "Carregar a resposta gravada"; as decisões do GP, a conferência das citações, o cronograma, o preço e as saídas funcionam como no uso real.
 
 - A faixa laranja "Demonstração com respostas gravadas, sem chamada à IA" fica no alto de todas as telas enquanto o projeto for de demonstração, e o mesmo aviso vai no cabeçalho de todo documento exportado.
 - As respostas gravadas partem da abordagem B: com outra escolha, a demonstração pede para escolher a B antes do conteúdo técnico.
@@ -58,8 +58,13 @@ O custo de cada chamada (tokens e valor estimado em dólar) fica na tabela "Uso 
 7. Veja a **conferência do TAP** (código): elementos vazios, requisitos sem número, marcos fora do prazo, valor diferente do da proposta, citações não conferidas, premissas críticas sem consequência.
 8. Registre a **aprovação** (quem e quando) e baixe o TAP (DOCX ou PDF) e o registro de premissas (XLSX). Enquanto houver pendência, os arquivos saem como minuta.
 
-### Etapa 4
-Em construção.
+### Etapa 4 — Plano de gerenciamento (PGP)
+1. Envie a RFP. O TAP vem da etapa 3, se ela foi feita no mesmo dossiê; se ele foi aprovado com mudanças fora da ferramenta, envie o PDF do TAP aprovado. A proposta é opcional.
+2. Confira as **premissas críticas**: cada uma que se aplica vai para o registro de premissas, o registro de riscos e o plano de mudanças.
+3. Peça a **adaptação** ao PMO. Ele sugere, para cada uma das 51 partes, se é essencial, recomendada ou dispensável. **Você marca o que gerar** e escolhe a abordagem. O que você dispensar não é apontado como ausente na conferência do plano (etapa 5).
+4. Peça os passos seguintes, na ordem: **escopo** (com a matriz de rastreabilidade feita pelo código), **atividades, recursos e cronograma** (informe o início e o tempo de aprovação de cada produto; o código calcula o cronograma, o caminho crítico e os marcos, e confere com o TAP), **riscos, custos e premissas** (informe o valor-hora de cada perfil e as reservas), **demais planos** e **medição e documentos de execução**. Revise item a item.
+5. **Autoconferência:** confirme as características do projeto e clique em "Conferir o plano gerado". As regras da etapa 5 apontam o que está vago, conflituoso ou ausente; os trechos "a definir pelo GP" aparecem à parte, como decisões que só você preenche.
+6. Baixe o plano (DOCX ou PDF), os registros (XLSX), a EAP e o diagrama de rede (SVG) ou o **pacote completo (.zip)**, com o índice das partes.
 
 ## Dossiê
 
