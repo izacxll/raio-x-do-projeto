@@ -1,0 +1,388 @@
+{
+  "partes": [
+    {
+      "codigo": "A1",
+      "recomendacao": "recomendado",
+      "justificativa": "Escopo fechado em cinco produtos; plano curto, com o aceite e o controle."
+    },
+    {
+      "codigo": "A2",
+      "recomendacao": "dispensavel",
+      "justificativa": "Requisitos já numerados na RFP; a documentação dos requisitos (B22) e o plano do escopo cobrem a gestão deles."
+    },
+    {
+      "codigo": "A3",
+      "recomendacao": "recomendado",
+      "justificativa": "Cronograma com prazos máximos por produto; plano curto, com a regra de atualização."
+    },
+    {
+      "codigo": "A4",
+      "recomendacao": "recomendado",
+      "justificativa": "Preço fixo por produto; plano curto, com reservas e a ligação com o pagamento."
+    },
+    {
+      "codigo": "A5",
+      "recomendacao": "essencial",
+      "justificativa": "O pagamento depende do ateste de cada produto: critérios de aceite e revisão interna são centrais."
+    },
+    {
+      "codigo": "A6",
+      "recomendacao": "recomendado",
+      "justificativa": "Equipe-chave pequena e definida pela RFP; plano curto."
+    },
+    {
+      "codigo": "A7",
+      "recomendacao": "essencial",
+      "justificativa": "Validação dos produtos pela área técnica da contratante, com reuniões periódicas previstas no TR."
+    },
+    {
+      "codigo": "A8",
+      "recomendacao": "essencial",
+      "justificativa": "Premissas críticas confirmadas e o tratamento delas no plano de riscos."
+    },
+    {
+      "codigo": "A9",
+      "recomendacao": "dispensavel",
+      "justificativa": "Subcontratação vedada pelo contrato e sem compras relevantes: basta registrar a decisão de não adquirir."
+    },
+    {
+      "codigo": "A10",
+      "recomendacao": "recomendado",
+      "justificativa": "Poucas partes, mas a escuta depende da rede: engajamento curto."
+    },
+    {
+      "codigo": "A11",
+      "recomendacao": "essencial",
+      "justificativa": "Preço fixo e escopo fechado: mudanças e reajuste quando uma premissa crítica falhar."
+    },
+    {
+      "codigo": "A12",
+      "recomendacao": "recomendado",
+      "justificativa": "Versões dos cadernos e do guia e os arquivos-fonte exigidos pela RFP."
+    },
+    {
+      "codigo": "A13",
+      "recomendacao": "essencial",
+      "justificativa": "Base do aceite dos cinco produtos."
+    },
+    {
+      "codigo": "A14",
+      "recomendacao": "essencial",
+      "justificativa": "Prazos máximos por produto no TR."
+    },
+    {
+      "codigo": "A15",
+      "recomendacao": "essencial",
+      "justificativa": "Preço fixo: a linha de base dos custos é a referência do controle."
+    },
+    {
+      "codigo": "A16",
+      "recomendacao": "recomendado",
+      "justificativa": "Medição simples por produto entregue e aceito, proporcional ao porte."
+    },
+    {
+      "codigo": "A17",
+      "recomendacao": "essencial",
+      "justificativa": "Fases ligadas aos produtos e ao pagamento por produto."
+    },
+    {
+      "codigo": "A18",
+      "recomendacao": "essencial",
+      "justificativa": "Requisitos estáveis e entregas definidas: abordagem preditiva declarada."
+    },
+    {
+      "codigo": "B1",
+      "recomendacao": "dispensavel",
+      "justificativa": "Projeto pequeno: os atributos das atividades cabem na lista de atividades (B2)."
+    },
+    {
+      "codigo": "B2",
+      "recomendacao": "essencial",
+      "justificativa": "Base do cronograma."
+    },
+    {
+      "codigo": "B3",
+      "recomendacao": "essencial",
+      "justificativa": "Premissas críticas confirmadas, com a consequência."
+    },
+    {
+      "codigo": "B4",
+      "recomendacao": "recomendado",
+      "justificativa": "As estimativas em três pontos precisam da base para serem refeitas."
+    },
+    {
+      "codigo": "B5",
+      "recomendacao": "essencial",
+      "justificativa": "Modelo inicial do registro das mudanças, ligado ao plano de mudanças."
+    },
+    {
+      "codigo": "B6",
+      "recomendacao": "essencial",
+      "justificativa": "Horas por perfil, conta do código com o valor-hora do GP."
+    },
+    {
+      "codigo": "B7",
+      "recomendacao": "dispensavel",
+      "justificativa": "Documento de execução; com preço fixo e projeto curto, a previsão entra no relatório mensal."
+    },
+    {
+      "codigo": "B8",
+      "recomendacao": "essencial",
+      "justificativa": "Durações em três pontos do cronograma."
+    },
+    {
+      "codigo": "B9",
+      "recomendacao": "recomendado",
+      "justificativa": "Modelo inicial do registro das questões."
+    },
+    {
+      "codigo": "B10",
+      "recomendacao": "recomendado",
+      "justificativa": "Modelo inicial do registro das lições, com captura ao fim de cada produto."
+    },
+    {
+      "codigo": "B11",
+      "recomendacao": "essencial",
+      "justificativa": "Prazos máximos por produto na RFP."
+    },
+    {
+      "codigo": "B12",
+      "recomendacao": "dispensavel",
+      "justificativa": "Trabalho remoto, sem recursos físicos a designar."
+    },
+    {
+      "codigo": "B13",
+      "recomendacao": "dispensavel",
+      "justificativa": "Calendário em dias úteis já está no plano do cronograma; feriados a conferir pelo GP."
+    },
+    {
+      "codigo": "B14",
+      "recomendacao": "dispensavel",
+      "justificativa": "Documento de execução: as comunicações feitas entram no repositório do projeto."
+    },
+    {
+      "codigo": "B15",
+      "recomendacao": "essencial",
+      "justificativa": "Cronograma calculado pelo código."
+    },
+    {
+      "codigo": "B16",
+      "recomendacao": "recomendado",
+      "justificativa": "Rede curta, útil para mostrar o caminho crítico."
+    },
+    {
+      "codigo": "B17",
+      "recomendacao": "essencial",
+      "justificativa": "Especificação do escopo com exclusões e critérios de aceite."
+    },
+    {
+      "codigo": "B18",
+      "recomendacao": "essencial",
+      "justificativa": "Equipe-chave exigida pela RFP, com os papéis."
+    },
+    {
+      "codigo": "B19",
+      "recomendacao": "dispensavel",
+      "justificativa": "Documento de execução; as medições ficam no relatório de cada produto."
+    },
+    {
+      "codigo": "B20",
+      "recomendacao": "recomendado",
+      "justificativa": "Métricas simples ligadas ao aceite dos produtos."
+    },
+    {
+      "codigo": "B21",
+      "recomendacao": "dispensavel",
+      "justificativa": "Documento de execução, coberto pelo relatório mensal."
+    },
+    {
+      "codigo": "B22",
+      "recomendacao": "essencial",
+      "justificativa": "Requisitos numerados da RFP, base da rastreabilidade."
+    },
+    {
+      "codigo": "B23",
+      "recomendacao": "essencial",
+      "justificativa": "Rastreabilidade RFP → TAP → plano."
+    },
+    {
+      "codigo": "B24",
+      "recomendacao": "dispensavel",
+      "justificativa": "Equipe pequena: a estrutura dos recursos cabe nos requisitos de recursos (B26)."
+    },
+    {
+      "codigo": "B25",
+      "recomendacao": "dispensavel",
+      "justificativa": "Disponibilidade da equipe tratada nas designações (B18)."
+    },
+    {
+      "codigo": "B26",
+      "recomendacao": "recomendado",
+      "justificativa": "Perfis e horas por atividade."
+    },
+    {
+      "codigo": "B27",
+      "recomendacao": "essencial",
+      "justificativa": "Premissas críticas viram riscos com resposta e gatilho."
+    },
+    {
+      "codigo": "B28",
+      "recomendacao": "dispensavel",
+      "justificativa": "Documento de execução; os riscos entram no relatório mensal."
+    },
+    {
+      "codigo": "B29",
+      "recomendacao": "dispensavel",
+      "justificativa": "Projeto pequeno: os dados do cronograma estão no próprio cronograma."
+    },
+    {
+      "codigo": "B30",
+      "recomendacao": "dispensavel",
+      "justificativa": "Documento de execução, coberto pelo relatório mensal."
+    },
+    {
+      "codigo": "B31",
+      "recomendacao": "essencial",
+      "justificativa": "Partes que validam os produtos e a rede da escuta."
+    },
+    {
+      "codigo": "B32",
+      "recomendacao": "recomendado",
+      "justificativa": "Combinados da equipe para o trabalho remoto."
+    },
+    {
+      "codigo": "B33",
+      "recomendacao": "dispensavel",
+      "justificativa": "Sem produto de software ou de teste."
+    }
+  ],
+  "abordagem": "preditiva",
+  "fases": [
+    {
+      "nome": "Planejamento",
+      "entregas": [
+        "P1"
+      ],
+      "criterioDeSaida": "Plano de trabalho aprovado pela contratante."
+    },
+    {
+      "nome": "Cadernos temáticos",
+      "entregas": [
+        "P2",
+        "P3",
+        "P4"
+      ],
+      "criterioDeSaida": "Cinco cadernos e o documento sintético aceitos pela contratante."
+    },
+    {
+      "nome": "Guia e encerramento",
+      "entregas": [
+        "P5"
+      ],
+      "criterioDeSaida": "Guia aceito, arquivos-fonte entregues e lições registradas."
+    }
+  ],
+  "textos": [
+    {
+      "codigo": "A17",
+      "itens": [
+        {
+          "id": "a17-1",
+          "texto": "Sugere-se organizar o ciclo de vida em três fases: planejamento (plano de trabalho), cadernos temáticos (do segundo ao quarto produto) e guia e encerramento (quinto produto, aceite final e lições).",
+          "rotulo": "sugestao",
+          "motivo": "Os produtos seguem uma sequência: os cadernos alimentam o documento sintético, que alimenta o guia.",
+          "fontes": [],
+          "alternativas": [],
+          "requisitos": [
+            "R01",
+            "R02",
+            "R03",
+            "R04",
+            "R05"
+          ],
+          "ficha": "A17.1"
+        },
+        {
+          "id": "a17-2",
+          "texto": "Recomenda-se que cada fase termine com o aceite dos seus produtos pela contratante, que é também a condição do pagamento.",
+          "rotulo": "sugestao",
+          "motivo": "",
+          "fontes": [
+            {
+              "doc": "rfp",
+              "pagina": 21,
+              "trecho": "O pagamento é realizado somente após ateste de conformidade e aprovação pela Contratante."
+            }
+          ],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "A17.5"
+        },
+        {
+          "id": "a17-4",
+          "texto": "Sugere-se como critério de entrada de cada fase a aprovação do produto que fecha a fase anterior, com uma revisão de fase com a contratante antes de seguir.",
+          "rotulo": "sugestao",
+          "motivo": "",
+          "fontes": [],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "A17.4"
+        },
+        {
+          "id": "a17-3",
+          "texto": "Sugere-se tratar o encerramento como fase própria, com o aceite final, a entrega dos arquivos-fonte e o registro das lições aprendidas.",
+          "rotulo": "sugestao",
+          "motivo": "",
+          "fontes": [
+            {
+              "doc": "rfp",
+              "pagina": 21,
+              "trecho": "As entregas deverão compreender, além do conteúdo técnico, todos os arquivos-fonte correspondentes"
+            }
+          ],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "A17.9"
+        }
+      ]
+    },
+    {
+      "codigo": "A18",
+      "itens": [
+        {
+          "id": "a18-1",
+          "texto": "Sugere-se declarar a abordagem preditiva: os produtos, os temas e os prazos máximos estão definidos no termo de referência.",
+          "rotulo": "sugestao",
+          "motivo": "Requisitos estáveis e entregas únicas por produto.",
+          "fontes": [
+            {
+              "doc": "rfp",
+              "pagina": 21,
+              "trecho": "As datas da tabela se referem ao prazo máximo para entrega dos produtos."
+            }
+          ],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "A18.1"
+        },
+        {
+          "id": "a18-2",
+          "texto": "Recomenda-se prever versões prévias dos produtos quando a contratante pedir, sem mudar a abordagem: elas servem ao acompanhamento e à orientação do trabalho.",
+          "rotulo": "sugestao",
+          "motivo": "",
+          "fontes": [
+            {
+              "doc": "rfp",
+              "pagina": 21,
+              "trecho": "facultado ao Supervisor Técnico da Contratante solicitar a entrega de uma versão prévia"
+            }
+          ],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "A18.9"
+        }
+      ]
+    }
+  ],
+  "observacoes": []
+}

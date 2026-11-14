@@ -86,7 +86,7 @@ function ordenar(atividades: AtividadeEap[]): AtividadeEap[] | null {
 }
 
 /** O primeiro dia útil a partir de `d` (o próprio, se for útil). */
-function primeiroDiaUtil(d: Date): Date {
+export function primeiroDiaUtil(d: Date): Date {
   const r = soData(d);
   while (!ehDiaUtil(r)) r.setDate(r.getDate() + 1);
   return r;

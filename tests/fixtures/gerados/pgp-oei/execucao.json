@@ -1,0 +1,118 @@
+{
+  "textos": [
+    {
+      "codigo": "A16",
+      "itens": [
+        {
+          "id": "a16-1",
+          "texto": "Sugere-se medir o desempenho juntando as três linhas de base (escopo, cronograma e custos), com o produto aprovado pela contratante como critério de medição do progresso.",
+          "rotulo": "sugestao",
+          "motivo": "",
+          "fontes": [],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "A16.2"
+        },
+        {
+          "id": "a16-3",
+          "texto": "Sugere-se que a linha de base só mude por mudança aprovada, com a nova linha de base registrada e a versão anterior guardada.",
+          "rotulo": "sugestao",
+          "motivo": "",
+          "fontes": [],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "A16.9"
+        },
+        {
+          "id": "a16-2",
+          "texto": "Recomenda-se, pelo porte, comparar mensalmente previsto e realizado (horas e produtos aprovados), sem o cálculo completo de valor agregado, com os limites de desvio a definir pelo GP.",
+          "rotulo": "sugestao",
+          "motivo": "",
+          "fontes": [],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "A16.5"
+        }
+      ]
+    },
+    {
+      "codigo": "B5",
+      "itens": [
+        {
+          "id": "b5-1",
+          "texto": "Sugere-se iniciar o registro das mudanças vazio, com as colunas: identificador, data, quem pediu, descrição, impacto em escopo, prazo e custo, decisão, quem decidiu e efeito no contrato.",
+          "rotulo": "sugestao",
+          "motivo": "",
+          "fontes": [],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "B5.1"
+        }
+      ]
+    },
+    {
+      "codigo": "B9",
+      "itens": [
+        {
+          "id": "b9-1",
+          "texto": "Sugere-se iniciar o registro das questões vazio, com as colunas: identificador, descrição, quem levantou, prioridade, responsável, data-alvo, status e solução.",
+          "rotulo": "sugestao",
+          "motivo": "",
+          "fontes": [],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "B9.1"
+        }
+      ]
+    },
+    {
+      "codigo": "B10",
+      "itens": [
+        {
+          "id": "b10-2",
+          "texto": "Recomenda-se consultar no início as lições de projetos anteriores semelhantes da FGV.",
+          "rotulo": "sugestao",
+          "motivo": "",
+          "fontes": [],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "B10.9"
+        },
+        {
+          "id": "b10-1",
+          "texto": "Sugere-se iniciar o registro das lições vazio e capturar lições a cada produto e ao final de cada fase, com situação, causa, recomendação e responsável.",
+          "rotulo": "sugestao",
+          "motivo": "",
+          "fontes": [],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "B10.8"
+        }
+      ]
+    }
+  ],
+  "indicadores": [
+    {
+      "nome": "Entregas no prazo",
+      "formula": "produtos entregues até o prazo máximo ÷ produtos com prazo vencido",
+      "meta": "todos os produtos dentro do prazo máximo da RFP",
+      "frequencia": "mensal e a cada entrega",
+      "fonte": "lista de marcos (B11)"
+    },
+    {
+      "nome": "Aceite na primeira submissão",
+      "formula": "produtos aceitos sem devolução ÷ produtos submetidos",
+      "meta": "a definir pelo GP",
+      "frequencia": "a cada entrega",
+      "fonte": "registro de aceites"
+    },
+    {
+      "nome": "Horas apontadas × previstas",
+      "formula": "horas apontadas ÷ horas previstas até a data, por perfil",
+      "meta": "a definir pelo GP",
+      "frequencia": "mensal",
+      "fonte": "apontamento de horas da FGV"
+    }
+  ],
+  "observacoes": []
+}

@@ -7,6 +7,8 @@ export default defineConfig({
   testDir: "tests/fumaca",
   timeout: 240_000,
   retries: process.env.CI ? 1 : 0,
+  // cada teste das etapas com o PMO lê uma RFP de 56 páginas no navegador: mais de dois em paralelo disputam a CPU
+  workers: 2,
   reporter: process.env.CI ? "github" : "list",
   use: {
     baseURL: `http://localhost:${PORTA}/raio-x-do-projeto/`,

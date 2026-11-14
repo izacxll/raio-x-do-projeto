@@ -5,6 +5,14 @@
 import { z } from "zod";
 import { RespostaConteudo, RespostaEap, RespostaEstrategia } from "../pmo/schemas/proposta";
 import { RespostaPremissas, RespostaTap } from "../pmo/schemas/tap";
+import {
+  RespostaAdaptacao,
+  RespostaCronograma,
+  RespostaEscopo,
+  RespostaExecucao,
+  RespostaPlanos,
+  RespostaRiscos,
+} from "../pmo/schemas/pgp";
 
 export const FORMATO_DOSSIE = "raio-x-do-projeto/dossie";
 export const VERSAO_FORMATO_DOSSIE = 1;
@@ -238,6 +246,45 @@ export const TapDossie = z.object({
 });
 export type TapDossie = z.infer<typeof TapDossie>;
 
+// ---------- etapa 4: PGP ----------
+
+/** Valores e escolhas da etapa 4 que só o GP preenche. Vazio = "a definir pelo GP". */
+export const ParametrosPgp = z.object({
+  /** Início previsto da execução (aaaa-mm-dd). */
+  inicio: z.string().optional(),
+  /** Dias úteis de aprovação de cada produto pelo contratante. */
+  aprovacaoDias: z.number().nonnegative().optional(),
+  valoresHora: z.record(z.string(), z.number().nonnegative()),
+  /** Reserva de contingência (dentro da linha de base) e gerencial (fora dela), em R$. */
+  contingencia: z.number().nonnegative().optional(),
+  gerencial: z.number().nonnegative().optional(),
+  /** Nomes da equipe, pelo id do perfil. */
+  nomes: z.record(z.string(), z.string()),
+});
+export type ParametrosPgp = z.infer<typeof ParametrosPgp>;
+
+export const PgpDossie = z.object({
+  modelo: z.string(),
+  adaptacao: RespostaGuardada(RespostaAdaptacao).optional(),
+  escopo: RespostaGuardada(RespostaEscopo).optional(),
+  cronograma: RespostaGuardada(RespostaCronograma).optional(),
+  riscos: RespostaGuardada(RespostaRiscos).optional(),
+  planos: RespostaGuardada(RespostaPlanos).optional(),
+  execucao: RespostaGuardada(RespostaExecucao).optional(),
+  /** Decisão do GP: o que gerar (parte → sim/não). O que ele dispensar a etapa 5 não aponta como ausente. */
+  gerar: z.record(z.string(), z.boolean()),
+  /** Decisão do GP: abordagem do ciclo de vida (vem sugerida pelo PMO). */
+  abordagem: z.enum(["preditiva", "adaptativa", "hibrida"]).optional(),
+  revisoes: z.record(z.string(), RevisaoItem),
+  parametros: ParametrosPgp,
+  /** Decisão do GP: premissas críticas que se aplicam (vêm do TAP ou da proposta, quando houver). */
+  premissasAplicaveis: z.record(z.string(), z.boolean()).optional(),
+  /** Características do projeto para a autoconferência (as mesmas da etapa 5), confirmadas pelo GP. */
+  caracteristicas: CaracteristicasProjeto.optional(),
+  uso: z.array(UsoPmo),
+});
+export type PgpDossie = z.infer<typeof PgpDossie>;
+
 export const Dossie = z.object({
   formato: z.literal(FORMATO_DOSSIE),
   versaoFormato: z.literal(VERSAO_FORMATO_DOSSIE),
@@ -254,5 +301,6 @@ export const Dossie = z.object({
   conferencia: Conferencia.optional(),
   proposta: PropostaDossie.optional(),
   tap: TapDossie.optional(),
+  pgp: PgpDossie.optional(),
 });
 export type Dossie = z.infer<typeof Dossie>;

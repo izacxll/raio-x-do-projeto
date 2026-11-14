@@ -140,7 +140,26 @@ export const ETAPAS: Etapa[] = [
     fase: "F4",
     documentos: [
       { papel: "rfp", nome: "RFP", obrigatorio: true },
-      { papel: "tap", nome: "TAP aprovado", obrigatorio: true },
+      {
+        papel: "anexo-rfp",
+        nome: "Anexos da RFP",
+        obrigatorio: false,
+        varios: true,
+      },
+      {
+        papel: "tap",
+        nome: "TAP aprovado",
+        obrigatorio: false,
+        observacao:
+          "Obrigatório se a etapa 3 não foi feita neste dossiê. Se o TAP foi aprovado com mudanças fora da ferramenta, envie o PDF: ele vale no lugar do TAP da etapa 3.",
+      },
+      {
+        papel: "proposta",
+        nome: "Proposta final",
+        obrigatorio: false,
+        observacao:
+          "Opcional: útil para cronograma, custos e escopo. Sem ela, vale a proposta da etapa 2, se houver.",
+      },
     ],
     ferramentaFaz: [
       "Quais dos 18 componentes e 33 documentos este projeto precisa",
@@ -148,7 +167,7 @@ export const ETAPAS: Etapa[] = [
       "Rastreabilidade dos requisitos da RFP ao TAP e ao PGP",
     ],
     saidas: [
-      { nome: "Planos do PGP", formatos: ["DOCX", "PDF"] },
+      { nome: "Plano de gerenciamento do projeto", formatos: ["DOCX", "PDF"] },
       { nome: "Registros, cronograma e matrizes", formatos: ["XLSX"] },
     ],
   },

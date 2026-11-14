@@ -11,9 +11,9 @@ import type { ItemPmo } from "./schemas/comum";
 export const AFIRMATIVAS =
   /\b(?:é obrigatório|é ilegal|é nulo|está errad[oa]|a FGV deve|o GP deve|deve-se|é preciso que|certamente|com certeza|sem dúvida|parecer jurídico:)/i;
 
-/** Marca de redação condicional. */
+/** Marca de redação condicional. "Se… então…" é a forma do risco escrito como condição (skill, princípio 5). */
 export const CONDICIONAL =
-  /sugere-se|recomenda-se|uma opção|pode-se|poderia|pode ser|convém avaliar|avaliar|considerar|alternativa|a definir pelo GP|propõe-se|sugest/i;
+  /sugere-se|recomenda-se|uma opção|pode-se|poderia|pode ser|convém avaliar|avaliar|considerar|alternativa|a definir pelo GP|propõe-se|sugest|\bse\b[^.]{3,200}\bent[aã]o\b/i;
 
 export function redacaoAfirmativa(texto: string): boolean {
   return AFIRMATIVAS.test(texto);

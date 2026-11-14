@@ -177,7 +177,23 @@ function atencao(itens: ItemAnalise[], requisitos: Requisito[], docs: DocumentoR
   return out;
 }
 
+/**
+ * A análise é pura: mesmos documentos (o mesmo objeto lido) no mesmo dia dão o mesmo resultado. As etapas 2, 3 e 4
+ * a pedem várias vezes a cada mudança na tela (ponto de partida, TAP, proposta); o resultado fica guardado.
+ */
+const analisesFeitas = new WeakMap<DocumentoLido, { chave: string; analise: AnaliseRfp }>();
+
 export function analisarRfp(documentos: DocumentoLido[], hoje = new Date()): AnaliseRfp {
+  const primeiro = documentos[0];
+  const chave = `${documentos.map((d) => `${d.id}:${d.lidoEm}:${d.papel}`).join("|")}@${hoje.toDateString()}`;
+  const guardada = primeiro ? analisesFeitas.get(primeiro) : undefined;
+  if (guardada && guardada.chave === chave) return guardada.analise;
+  const analise = analisarRfpSemGuardar(documentos, hoje);
+  if (primeiro) analisesFeitas.set(primeiro, { chave, analise });
+  return analise;
+}
+
+function analisarRfpSemGuardar(documentos: DocumentoLido[], hoje: Date): AnaliseRfp {
   const docs = documentosDaRfp(documentos);
   const mapa = mapearRfp(docs);
   const identificacao = extrairIdentificacao(docs, mapa);

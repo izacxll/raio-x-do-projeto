@@ -3,7 +3,13 @@
 import { useMemo, useState } from "react";
 import { CARACTERISTICAS_PADRAO, type Caracteristicas } from "../../dominio/caracteristicas";
 import { PARTES_PGP, PREMISSAS_CRITICAS } from "../../dominio/skill";
-import type { AnaliseRfpDossie, Conferencia, DecisaoAchado, DocumentoLido } from "../../dossie/esquema";
+import type {
+  AnaliseRfpDossie,
+  Conferencia,
+  DecisaoAchado,
+  DocumentoLido,
+  PgpDossie,
+} from "../../dossie/esquema";
 import { useDossie } from "../../dossie/store";
 import { requisitosValidos } from "../../etapas/1-rfp/revisao";
 import { extrairRequisitos, type Requisito } from "../../extracao/requisitos";
@@ -25,7 +31,7 @@ const NOME_SITUACAO_PROPOSTA: Record<ParteNoMapa["situacao"], string> = {
   "nao-localizada": "não localizada pelo código",
 };
 
-const OPCOES: { [K in keyof Caracteristicas]: { rotulo: string; valores: Caracteristicas[K][] } } = {
+export const OPCOES: { [K in keyof Caracteristicas]: { rotulo: string; valores: Caracteristicas[K][] } } = {
   porte: { rotulo: "Porte", valores: ["pequeno", "médio", "grande"] },
   abordagem: { rotulo: "Abordagem", valores: ["preditiva", "adaptativa", "híbrida"] },
   fases: { rotulo: "Fases", valores: ["uma", "várias"] },
@@ -38,7 +44,7 @@ const OPCOES: { [K in keyof Caracteristicas]: { rotulo: string; valores: Caracte
   pagamento: { rotulo: "Pagamento", valores: ["por produto", "por medição", "de outra forma"] },
 };
 
-function rotuloValor(v: string | boolean): string {
+export function rotuloValor(v: string | boolean): string {
   return v === true ? "sim" : v === false ? "não" : v;
 }
 
@@ -48,19 +54,40 @@ interface Props {
   rfp?: DocumentoLido;
 }
 
-/** Valores iniciais da conferência: a proposta do código, para o GP confirmar. */
-function conferenciaInicial(props: Props, mapa: ParteNoMapa[], analiseRfp?: AnaliseRfpDossie): Conferencia {
+/**
+ * Valores iniciais da conferência: a proposta do código, para o GP confirmar. Com a etapa 4 no dossiê, o que o GP
+ * dispensou nela entra como "dispensada" (a especificação pede que a etapa 5 não aponte isso como ausente), e as
+ * características e as premissas críticas vêm de lá.
+ */
+function conferenciaInicial(
+  props: Props,
+  mapa: ParteNoMapa[],
+  analiseRfp?: AnaliseRfpDossie,
+  pgp?: PgpDossie,
+): Conferencia {
   // os requisitos da etapa 1 (revisados pelo GP) mantêm os números; sem ela, o código extrai os produtos da RFP
   const requisitos = analiseRfp
     ? requisitosValidos(analiseRfp)
     : props.rfp
       ? extrairRequisitos(props.rfp.paginas)
       : [];
+  const justificativas = new Map(
+    (pgp?.adaptacao?.resposta.partes ?? []).map((s) => [s.codigo, s.justificativa]),
+  );
   return {
-    caracteristicas: CARACTERISTICAS_PADRAO,
-    mapa: confirmacaoInicial(mapa),
+    caracteristicas: pgp?.caracteristicas ?? CARACTERISTICAS_PADRAO,
+    mapa: confirmacaoInicial(mapa).map((m) =>
+      pgp?.gerar[m.codigo] === false
+        ? {
+            codigo: m.codigo,
+            situacao: "dispensada" as const,
+            justificativa: `Dispensada pelo GP na etapa 4: ${justificativas.get(m.codigo) ?? ""}`.trim(),
+          }
+        : m,
+    ),
     // na dúvida, a premissa "se aplica", para o GP decidir (decisão 0021)
-    premissasAplicaveis: Object.fromEntries(PREMISSAS_CRITICAS.map((p) => [p.codigo, true])),
+    premissasAplicaveis:
+      pgp?.premissasAplicaveis ?? Object.fromEntries(PREMISSAS_CRITICAS.map((p) => [p.codigo, true])),
     requisitos,
     proximoRequisito: analiseRfp?.proximoRequisito ?? requisitos.length + 1,
     decisoes: {},
@@ -70,7 +97,7 @@ function conferenciaInicial(props: Props, mapa: ParteNoMapa[], analiseRfp?: Anal
 export function ConferenciaPgp(props: Props) {
   const { dossie, guardarConferencia } = useDossie();
   const proposta = useMemo(() => proporMapa(props.pgp.paginas, PARTES_PGP), [props.pgp]);
-  const conf = dossie.conferencia ?? conferenciaInicial(props, proposta, dossie.analiseRfp);
+  const conf = dossie.conferencia ?? conferenciaInicial(props, proposta, dossie.analiseRfp, dossie.pgp);
   const [executar, setExecutar] = useState(Boolean(dossie.conferencia?.executadaEm));
   const atualizar = (mudanca: Partial<Conferencia>) => guardarConferencia({ ...conf, ...mudanca });
 

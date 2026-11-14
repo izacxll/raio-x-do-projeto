@@ -1,0 +1,326 @@
+{
+  "textos": [
+    {
+      "codigo": "A5",
+      "itens": [
+        {
+          "id": "a5-1",
+          "texto": "Sugere-se usar como padrões de qualidade as exigências do termo de referência para cada produto: itens mínimos, linguagem acessível, versão editável e PDF e arquivos-fonte.",
+          "rotulo": "sugestao",
+          "motivo": "",
+          "fontes": [
+            {
+              "doc": "rfp",
+              "pagina": 20,
+              "trecho": "Todos os produtos deverão ser entregues em versão editável e em PDF"
+            }
+          ],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "A5.1"
+        },
+        {
+          "id": "a5-2",
+          "texto": "Recomenda-se que cada produto passe por revisão de quem não o produziu antes do envio, com uma lista de verificação dos critérios de aceite.",
+          "rotulo": "sugestao",
+          "motivo": "",
+          "fontes": [],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "A5.5"
+        },
+        {
+          "id": "a5-3",
+          "texto": "Sugere-se registrar cada devolução da contratante, com a causa, para corrigir o produto e evitar a repetição nos seguintes.",
+          "rotulo": "sugestao",
+          "motivo": "",
+          "fontes": [
+            {
+              "doc": "rfp",
+              "pagina": 24,
+              "trecho": "Os serviços poderão ser rejeitados, no todo ou em parte, quando em desacordo com as especifi- cações constantes neste Termo de Referência e na Proposta"
+            }
+          ],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "A5.8"
+        }
+      ]
+    },
+    {
+      "codigo": "A7",
+      "itens": [
+        {
+          "id": "a7-1",
+          "texto": "Sugere-se uma reunião de abertura com a área técnica da contratante e reuniões de acompanhamento periódicas para alinhamento e validação dos produtos, com cadência e responsável a definir pelo GP.",
+          "rotulo": "sugestao",
+          "motivo": "",
+          "fontes": [
+            {
+              "doc": "rfp",
+              "pagina": 18,
+              "trecho": "Participar de reuniões periódicas com a equipe da Coordenação-Geral de Políticas para a Convi- vência Familiar e Comunitária e Primeira Infância – CGCFC"
+            }
+          ],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "A7.8"
+        },
+        {
+          "id": "a7-2",
+          "texto": "Recomenda-se reuniões internas da equipe para acompanhar cada produto e preparar as submissões, com cadência e responsável a definir pelo GP.",
+          "rotulo": "sugestao",
+          "motivo": "",
+          "fontes": [],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "A7.9"
+        },
+        {
+          "id": "a7-3",
+          "texto": "Sugere-se usar um canal formal com a contratante para submissões, aceites e intercorrências, e registrar cada comunicação no repositório do projeto.",
+          "rotulo": "sugestao",
+          "motivo": "",
+          "fontes": [
+            {
+              "doc": "rfp",
+              "pagina": 22,
+              "trecho": "Comunicar à CONTRATANTE, imediata e formalmente, qualquer intercorrência na execução dos serviços prestados."
+            }
+          ],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "A7.6"
+        },
+        {
+          "id": "a7-4",
+          "texto": "Recomenda-se que só a coordenação geral libere informação do contrato para fora da equipe, observado o sigilo.",
+          "rotulo": "sugestao",
+          "motivo": "",
+          "fontes": [
+            {
+              "doc": "rfp",
+              "pagina": 23,
+              "trecho": "Guardar sigilo sobre todas as informações obtidas em decorrência do cumprimento do contrato."
+            }
+          ],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "A7.5"
+        },
+        {
+          "id": "a7-5",
+          "texto": "Sugere-se definir, para cada parte interessada do registro, o público, a informação e o destinatário de cada comunicação.",
+          "rotulo": "sugestao",
+          "motivo": "",
+          "fontes": [],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "A7.1"
+        },
+        {
+          "id": "a7-6",
+          "texto": "Recomenda-se um escalonamento simples: o que não se resolve com a área técnica sobe à coordenação geral e, se preciso, ao patrocinador.",
+          "rotulo": "sugestao",
+          "motivo": "",
+          "fontes": [],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "A7.7"
+        }
+      ]
+    },
+    {
+      "codigo": "A10",
+      "itens": [
+        {
+          "id": "a10-1",
+          "texto": "Sugere-se priorizar a área técnica da contratante, que valida os produtos, e os profissionais da rede que participam das oficinas, de quem depende a escuta.",
+          "rotulo": "sugestao",
+          "motivo": "",
+          "fontes": [],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "A10.3"
+        },
+        {
+          "id": "a10-2",
+          "texto": "Recomenda-se combinar com a contratante, no plano de trabalho, quem convida e acompanha os profissionais da rede nas oficinas.",
+          "rotulo": "sugestao",
+          "motivo": "",
+          "fontes": [],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "A10.5"
+        },
+        {
+          "id": "a10-3",
+          "texto": "Sugere-se uma estratégia de engajamento por parte: gerenciar de perto a área técnica da contratante, manter informados os profissionais da rede e monitorar as demais partes.",
+          "rotulo": "sugestao",
+          "motivo": "",
+          "fontes": [],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "A10.1"
+        }
+      ]
+    },
+    {
+      "codigo": "A11",
+      "itens": [
+        {
+          "id": "a11-1",
+          "texto": "Sugere-se que toda solicitação de mudança seja registrada por escrito, analisada quanto a escopo, prazo, custo e riscos e decidida pelo aprovador da alçada (coordenação geral ou patrocinador), conforme o TAP.",
+          "rotulo": "sugestao",
+          "motivo": "",
+          "fontes": [],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "A11.4"
+        },
+        {
+          "id": "a11-2",
+          "texto": "A prorrogação da vigência é formalizada por instrumento aditivo.",
+          "rotulo": "documento",
+          "motivo": "",
+          "fontes": [
+            {
+              "doc": "rfp",
+              "pagina": 23,
+              "trecho": "A prorrogação será formalizada por instrumento aditivo"
+            }
+          ],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "A11.9"
+        },
+        {
+          "id": "a11-4",
+          "texto": "Recomenda-se avaliar, em toda mudança que altere o valor, o reequilíbrio econômico-financeiro e os limites legais de acréscimos e supressões, a conferir na lei citada no contrato.",
+          "rotulo": "sugestao",
+          "motivo": "",
+          "fontes": [],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "A11.10"
+        },
+        {
+          "id": "a11-3",
+          "texto": "Recomenda-se, se uma premissa crítica falhar, reajustar escopo, prazo e metas assim: PC3 (análise fora do prazo) recalcula os prazos dos produtos seguintes; PC6 (sem mobilização da rede) troca as oficinas por consulta documental; PC1 (informações não fornecidas) usa fontes públicas e revê o prazo do caderno afetado; PC8 (pedido fora do escopo) segue o fluxo de mudança, com ajuste de prazo e de preço quando couber.",
+          "rotulo": "sugestao",
+          "motivo": "",
+          "fontes": [],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "A11.12"
+        }
+      ]
+    },
+    {
+      "codigo": "A12",
+      "itens": [
+        {
+          "id": "a12-1",
+          "texto": "Sugere-se tratar como itens de configuração os produtos e os arquivos-fonte, sob controle de versão (preliminar, submetida, aprovada), com nome de arquivo padronizado.",
+          "rotulo": "sugestao",
+          "motivo": "",
+          "fontes": [
+            {
+              "doc": "rfp",
+              "pagina": 21,
+              "trecho": "As entregas deverão compreender, além do conteúdo técnico, todos os arquivos-fonte correspondentes"
+            }
+          ],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "A12.3"
+        },
+        {
+          "id": "a12-2",
+          "texto": "Recomenda-se proteger no repositório os registros das oficinas que tenham dados pessoais, com acesso restrito à equipe, conforme a LGPD citada no contrato.",
+          "rotulo": "sugestao",
+          "motivo": "",
+          "fontes": [
+            {
+              "doc": "rfp",
+              "pagina": 49,
+              "trecho": "As partes deverão cumprir a Lei nº 13.709, de 14 de agosto de 2018 (LGPD)"
+            }
+          ],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "A12.8"
+        }
+      ]
+    },
+    {
+      "codigo": "B20",
+      "itens": [
+        {
+          "id": "b20-1",
+          "texto": "Sugere-se medir a proporção de produtos aceitos sem devolução e a entrega no prazo máximo de cada produto, com metas a definir pelo GP.",
+          "rotulo": "sugestao",
+          "motivo": "",
+          "fontes": [],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "B20.1"
+        },
+        {
+          "id": "b20-2",
+          "texto": "Recomenda-se uma definição de pronto por produto: itens mínimos do termo de referência atendidos, revisão interna feita, versão editável, PDF e arquivos-fonte.",
+          "rotulo": "sugestao",
+          "motivo": "",
+          "fontes": [
+            {
+              "doc": "rfp",
+              "pagina": 20,
+              "trecho": "Todos os produtos deverão ser entregues em versão editável e em PDF"
+            }
+          ],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "B20.8"
+        }
+      ]
+    },
+    {
+      "codigo": "B31",
+      "itens": [
+        {
+          "id": "b31-1",
+          "texto": "A área técnica da contratante acompanha a execução e valida as etapas e os produtos.",
+          "rotulo": "documento",
+          "motivo": "",
+          "fontes": [
+            {
+              "doc": "rfp",
+              "pagina": 18,
+              "trecho": "Participar de reuniões periódicas com a equipe da Coordenação-Geral de Políticas para a Convi- vência Familiar e Comunitária e Primeira Infância – CGCFC"
+            }
+          ],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "B31.1"
+        },
+        {
+          "id": "b31-2",
+          "texto": "Sugere-se registrar também o supervisor técnico, o gestor e o fiscal do contrato, com os nomes a definir pelo GP, e os profissionais da rede que participam das oficinas.",
+          "rotulo": "sugestao",
+          "motivo": "",
+          "fontes": [
+            {
+              "doc": "rfp",
+              "pagina": 21,
+              "trecho": "facultado ao Supervisor Técnico da Contratante solicitar a entrega de uma versão prévia"
+            }
+          ],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "B31.2"
+        }
+      ]
+    }
+  ],
+  "observacoes": []
+}
