@@ -4,6 +4,19 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 
 ## [Não publicado]
 
+### F3 — termo de abertura com o PMO (versão 0.6.0, construída sem a chave; teste com a chave pendente)
+- **Etapa 3 na tela:** proposta usada (o PDF final do GP ou a proposta da etapa 2 no dossiê, que vira um documento com uma "página" por seção, para as citações serem conferidas), premissas críticas, conexão com o Claude e o custo à vista.
+- **Divergências RFP × proposta (código):** requisito a requisito (produtos e equipe), prazo e valor; o que o código não acha fica "não localizado na proposta — conferir". O GP decide o que vale (RFP, proposta ou outra redação).
+- **O que vem dos documentos (código):** contratante, objeto, vigência, produtos, valor da proposta, entrega de cada produto no cronograma da proposta, aceite, extinção e partes, com a página.
+- **Dois passos do PMO:** os 12 elementos do TAP (objetivos com critério de sucesso, marcos com prazo contado de um evento, partes com papel e decisão) e o registro de premissas inicial (tipo, origem, premissa crítica, consequência, de quem depende, como validar). Campos que só o GP preenche: recursos, gerente e autoridade, patrocinador e a aprovação.
+- **Conferência do TAP (código):** elementos com conteúdo, requisitos com número R e todos os R cobertos, marcos dentro do prazo da RFP (inclusive a entrega de cada produto), recursos iguais ao valor da proposta, citações conferidas e premissas críticas no registro com a consequência.
+- **Saídas:** termo de abertura (DOCX e PDF) e registro de premissas (XLSX), com minuta enquanto houver pendência.
+- **Demonstração** também na etapa 3, com a proposta e o TAP gravados.
+- **Etapa 1:** o valor estimado também é achado em "os recursos… estimados em R$".
+- Componentes comuns de passo e de item do PMO (a etapa 2 passa a usar o item comum). Tabelas de texto longo quebram linha (sem rolagem horizontal).
+- Testes sem chave: respostas do PMO gravadas para a OEI com todas as citações achadas pelo código; divergências com proposta do dossiê e em PDF; conferência; saídas; fumaça na demonstração e com a API simulada.
+- Decisão 0028. Versão do app: 0.6.0.
+
 ## [0.5.1] — 13/11/2026
 
 ### Modo demonstração (decisão 0027)

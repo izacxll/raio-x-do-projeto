@@ -21,7 +21,7 @@ Nada sai do navegador.
 
 ## Demonstração, sem a chave
 
-Na etapa 2, o botão **"Ver demonstração"** abre uma concorrência pública (OEI) com as respostas do PMO gravadas. Nada é enviado à API e não há custo. Cada passo do PMO vira "Carregar a resposta gravada"; as decisões do GP, a conferência das citações, o cronograma, o preço e as saídas funcionam como no uso real.
+Nas etapas 2 e 3, o botão **"Ver demonstração"** abre uma concorrência pública (OEI) com as respostas do PMO gravadas. Nada é enviado à API e não há custo. Cada passo do PMO vira "Carregar a resposta gravada"; as decisões do GP, a conferência das citações, o cronograma, o preço e as saídas funcionam como no uso real.
 
 - A faixa laranja "Demonstração com respostas gravadas, sem chamada à IA" fica no alto de todas as telas enquanto o projeto for de demonstração, e o mesmo aviso vai no cabeçalho de todo documento exportado.
 - As respostas gravadas partem da abordagem B: com outra escolha, a demonstração pede para escolher a B antes do conteúdo técnico.
@@ -48,7 +48,17 @@ Nas etapas com o PMO, o texto dos PDFs vai para a API do Claude, pela sua chave,
 
 O custo de cada chamada (tokens e valor estimado em dólar) fica na tabela "Uso da API nesta proposta" e no dossiê.
 
-### Etapas 3 e 4
+### Etapa 3 — Termo de abertura (TAP)
+1. Envie a RFP. A proposta vem da etapa 2, se ela foi feita no mesmo dossiê; se você editou a proposta fora da ferramenta, envie o PDF da versão final: ele passa a valer.
+2. Confira as **premissas críticas** (vêm confirmadas da etapa 2).
+3. **Divergências RFP × proposta:** o código compara requisito a requisito (produtos e equipe), o prazo e o valor. Onde houver diferença, escolha o que vale: a RFP, a proposta ou outra redação.
+4. **O que vem dos documentos:** contratante, objeto, vigência, produtos, a entrega de cada produto no cronograma da proposta, aceite e extinção, com a página.
+5. Peça ao PMO **os 12 elementos do TAP** e revise item a item. Preencha os campos que só você preenche: recursos financeiros, gerente e nível de autoridade, patrocinador.
+6. Peça o **registro de premissas inicial** e revise.
+7. Veja a **conferência do TAP** (código): elementos vazios, requisitos sem número, marcos fora do prazo, valor diferente do da proposta, citações não conferidas, premissas críticas sem consequência.
+8. Registre a **aprovação** (quem e quando) e baixe o TAP (DOCX ou PDF) e o registro de premissas (XLSX). Enquanto houver pendência, os arquivos saem como minuta.
+
+### Etapa 4
 Em construção.
 
 ## Dossiê
