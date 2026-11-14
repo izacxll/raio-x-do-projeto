@@ -6,7 +6,9 @@ Atualizado em 13/11/2026 (F1 e F2 publicadas antes do teste, decisão 0026).
 
 **F1 e F2 publicadas na `main` como v0.4.0 e v0.5.0 em 13/11/2026, antes do teste da responsável** (decisão 0026). App no ar: https://izacxll.github.io/raio-x-do-projeto/. O teste das etapas 1, 2 e 5 continua pendente; o que ele encontrar sai como v0.4.x ou v0.5.x. A etapa 2 ainda não foi testada com a chave, e a comparação Opus 5.5 × Sonnet 5.5 (`npm run comparar-modelos`, decisão 0002) espera a chave.
 
-**Próximas fases, nesta ordem (decisão 0026):** modo demonstração (respostas gravadas do PMO, sem a chave), F3 (TAP, v0.6.0), F4 (PGP, v0.7.0) e F5b (leitura do PMO na conferência, v0.8.0), cada uma com PR e prévia.
+**Modo demonstração pronto no PR #8 (v0.5.1), aguardando o ok da responsável para o merge** (decisão 0027): na etapa 2, "Ver demonstração" abre a RFP pública da OEI com as respostas gravadas do PMO, sem chamar a API; aviso na tela e nos exportados.
+
+**Próximas fases, nesta ordem (decisão 0026):** F3 (TAP, v0.6.0), F4 (PGP, v0.7.0) e F5b (leitura do PMO na conferência, v0.8.0), cada uma com PR e prévia.
 
 **O que a F2 entregou:** tela "Conectar ao Claude" (chave só na sessão, testar, esquecer); ponto de partida vindo da etapa 1; três passos do PMO (estratégia e abordagens; conteúdo técnico e SOW; EAP, estimativas e equipe), com o custo estimado antes e o uso real depois; escolha da abordagem e das premissas críticas pelo GP; conferência de cada citação, da redação e dos números sem fonte; cronograma PERT com caminho crítico e prazos (total e de cada produto) contra a RFP; preço com os valores do GP; matriz de atendimento e checklist de envio; quatro saídas. Decisão 0025.
 
@@ -88,7 +90,7 @@ Atualizado em 13/11/2026 (F1 e F2 publicadas antes do teste, decisão 0026).
 
 ## Próximo passo
 
-1. **Claude Code:** modo demonstração na etapa 2; depois F3 (TAP) e F4 (PGP), com PR e prévia; se sobrar tempo, F5b.
+1. **Claude Code:** F3 (TAP) e F4 (PGP), com PR e prévia; se sobrar tempo, F5b.
 2. **Responsável pelo projeto:** testar as etapas 1, 2 (no modo demonstração ou com a chave) e 5 na prévia; o que aparecer vira correção (v0.4.x, v0.5.x).
 3. **Quando a chave da API chegar** (pedir ao administrador do Claude da FGV, no Claude Console):
    - no PowerShell, na pasta do projeto: `$env:ANTHROPIC_API_KEY = "<chave>"; npm run comparar-modelos` (custa cerca de US$ 2 a 3); o resultado fica em `tests/fixtures/gerados/comparacao-modelos/resumo.md`. A responsável escolhe o modelo e a decisão 0002 é atualizada;

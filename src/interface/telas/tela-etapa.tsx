@@ -10,6 +10,7 @@ import { exportar, type FormatoExportacao } from "../../exportacao/exportar";
 import { montarRelatorioLeitura, NOME_ORIGEM } from "../../exportacao/relatorio-leitura";
 import { resumirLeitura, type Progresso } from "../../leitura/ler-documento";
 import { EtiquetaRotulo, LegendaRotulos, RotuloSecao, Titulo } from "../componentes/basicos";
+import { BotaoDemonstracao } from "../componentes/demonstracao";
 import { AnaliseDaRfp } from "./analise-rfp";
 import { ConferenciaPgp } from "./conferencia";
 import { PropostaDoFornecedor } from "./proposta";
@@ -53,6 +54,18 @@ function PassosFluxo({ lidos }: { lidos: boolean }) {
 }
 
 function AvisoEnvio({ etapa }: { etapa: Etapa }) {
+  const demonstracao = useDossie((s) => s.dossie.demonstracao);
+  if (demonstracao && etapa.usaPmo) {
+    return (
+      <div className="aviso aviso--pmo">
+        <p>
+          <b>Demonstração.</b> Os passos do PMO carregam respostas gravadas para esta RFP pública: nada é
+          enviado à API do Claude e não há custo. A leitura, a conferência e as contas acontecem aqui no
+          navegador, como no uso real.
+        </p>
+      </div>
+    );
+  }
   if (etapa.numero === 2) {
     return (
       <div className="aviso aviso--pmo">
@@ -367,6 +380,7 @@ export function TelaEtapa() {
         <Titulo>{etapa.nome}</Titulo>
         <PassosFluxo lidos={obrigatoriosLidos} />
         <AvisoEnvio etapa={etapa} />
+        {etapa.numero === 2 && <BotaoDemonstracao etapa={etapa.numero} />}
 
         <section className="bloco">
           <RotuloSecao>Documentos</RotuloSecao>

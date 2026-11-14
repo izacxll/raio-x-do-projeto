@@ -17,6 +17,8 @@ interface EstadoDossie {
   guardarConferencia: (conferencia: Conferencia) => void;
   guardarProposta: (proposta: PropostaDossie) => void;
   novoProjeto: () => void;
+  /** Começa um projeto de demonstração (decisão 0027) com a RFP já lida. */
+  iniciarDemonstracao: (rfp: DocumentoLido, nome: string) => void;
   marcarSalvo: () => void;
 }
 
@@ -42,6 +44,11 @@ export const useDossie = create<EstadoDossie>((set) => ({
   guardarConferencia: (conferencia) => set((s) => ({ dossie: { ...s.dossie, conferencia }, alterado: true })),
   guardarProposta: (proposta) => set((s) => ({ dossie: { ...s.dossie, proposta }, alterado: true })),
   novoProjeto: () => set({ dossie: criarDossieVazio(), alterado: false }),
+  iniciarDemonstracao: (rfp, nome) =>
+    set({
+      dossie: { ...criarDossieVazio(), projeto: { nome }, demonstracao: true, documentos: [rfp] },
+      alterado: false,
+    }),
   marcarSalvo: () => set({ alterado: false }),
 }));
 

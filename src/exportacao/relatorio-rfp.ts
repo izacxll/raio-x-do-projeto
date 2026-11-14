@@ -4,7 +4,7 @@ import type { Dossie, RevisaoItem } from "../dossie/esquema";
 import { NOME_SECAO, ORDEM_SECOES, type AnaliseRfp } from "../etapas/1-rfp/analisar-rfp";
 import { contarPendentes, ehRevisavel, estadoDoItem, itensFinais, textoFinal } from "../etapas/1-rfp/revisao";
 import type { ItemAnalise } from "../extracao/rfp/item";
-import type { DocumentoExportavel, Secao } from "./modelo";
+import { camposDoDossie, type DocumentoExportavel, type Secao } from "./modelo";
 
 const NOME_ROTULO = {
   documento: "Do documento",
@@ -35,11 +35,9 @@ function base(dossie: Dossie, titulo: string, subtitulo: string, minuta: boolean
   return {
     titulo,
     subtitulo,
-    projeto: dossie.projeto.nome.trim() || "Projeto sem nome",
+    ...camposDoDossie(dossie),
     minuta,
     geradoEm: agora,
-    versaoApp: dossie.versaoApp,
-    versaoSkill: dossie.versaoSkill,
   };
 }
 

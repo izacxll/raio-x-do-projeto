@@ -36,6 +36,7 @@ import { formatarData } from "../../texto/datas";
 import { PREMISSAS_CRITICAS } from "../../dominio/skill";
 import { EtiquetaRotulo, NOME_ESTADO, RotuloSecao } from "../componentes/basicos";
 import { ConectarClaude, useChave } from "../componentes/conectar-claude";
+import { ABORDAGEM_GRAVADA, MODELO_GRAVADO, respostaGravada } from "../../demonstracao/demonstracao";
 
 const NOME_PASSO: Record<PassoProposta, string> = {
   estrategia: "Estratégia e abordagens",
@@ -67,6 +68,9 @@ export function PropostaDoFornecedor({ todos }: { todos: DocumentoLido[] }) {
   const ponto = useMemo(() => montarPontoDePartida(docs, dossie.analiseRfp), [docs, dossie.analiseRfp]);
   const p = dossie.proposta ?? propostaInicial();
   const chave = useChave();
+  const demonstracao = Boolean(dossie.demonstracao);
+  /** Na demonstração, o conteúdo e a EAP gravados partem da abordagem da gravação. */
+  const foraDaGravacao = demonstracao && Boolean(p.abordagem) && p.abordagem?.id !== ABORDAGEM_GRAVADA;
   const sistema = useMemo(() => textoDeSistema(referenciasEtapa2()), []);
   const textoDocs = useMemo(() => textoDosDocumentos(docs), [docs]);
   const itens = useMemo(() => itensDaProposta(p, docs), [p, docs]);
@@ -96,9 +100,27 @@ export function PropostaDoFornecedor({ todos }: { todos: DocumentoLido[] }) {
     return c ? pedidoEap(ponto, e, prop.abordagem.id, c) : null;
   }
 
+  /** Demonstração (decisão 0027): a resposta gravada do passo, sem chamar a API e sem custo. */
+  async function carregarGravada(passo: PassoProposta) {
+    setErro(null);
+    try {
+      const resposta = await respostaGravada(2, passo, SCHEMAS[passo]);
+      const atual = useDossie.getState().dossie.proposta ?? propostaInicial(MODELO_GRAVADO);
+      const guardada = { resposta, modelo: MODELO_GRAVADO, em: new Date().toISOString() };
+      atualizar({ ...atual, modelo: MODELO_GRAVADO, [passo]: guardada } as PropostaDossie);
+    } catch (e) {
+      setErro({
+        message: "Não foi possível carregar a resposta gravada.",
+        oQueFazer: e instanceof Error ? e.message : String(e),
+      } as ErroPmo);
+    }
+  }
+
   async function executar(passo: PassoProposta) {
     const pedido = pedidoDo(passo, p);
-    if (!chave || !pedido) return;
+    if (!pedido) return;
+    if (demonstracao) return carregarGravada(passo);
+    if (!chave) return;
     setErro(null);
     const controle = new AbortController();
     cancelar.current = controle;
@@ -145,8 +167,20 @@ export function PropostaDoFornecedor({ todos }: { todos: DocumentoLido[] }) {
     <>
       <section className="bloco">
         <RotuloSecao>Conexão com o PMO</RotuloSecao>
-        <ConectarClaude modelo={p.modelo as IdModelo} />
-        <div className="cartao cartao__corpo acoes-exportar" style={{ marginTop: 8 }}>
+        {demonstracao ? (
+          <div className="cartao cartao__corpo">
+            <p className="texto-apoio">
+              Demonstração: a chave não é usada e nada é enviado à API. Cada passo do PMO carrega a resposta
+              gravada para esta RFP; as decisões do GP, a conferência e as contas são as de verdade.
+            </p>
+          </div>
+        ) : (
+          <ConectarClaude modelo={p.modelo as IdModelo} />
+        )}
+        <div
+          className="cartao cartao__corpo acoes-exportar"
+          style={{ marginTop: 8, display: demonstracao ? "none" : undefined }}
+        >
           <label>
             <span className="lb">Modelo</span>{" "}
             <select
@@ -197,7 +231,14 @@ export function PropostaDoFornecedor({ todos }: { todos: DocumentoLido[] }) {
                 </p>
               ) : (
                 <>
-                  {est && (
+                  {demonstracao && passo !== "estrategia" && (
+                    <p className="envio__obs" data-testid={`gravacao-${passo}`}>
+                      {foraDaGravacao
+                        ? `As respostas gravadas partem da abordagem ${ABORDAGEM_GRAVADA}. Para seguir a demonstração, escolha a ${ABORDAGEM_GRAVADA} na estratégia.`
+                        : `Resposta gravada a partir da abordagem ${ABORDAGEM_GRAVADA}.`}
+                    </p>
+                  )}
+                  {est && !demonstracao && (
                     <p className="envio__obs" data-testid={`custo-${passo}`}>
                       Estimativa antes de chamar: cerca de {formatarTokens(est.tokensEntrada)} tokens de
                       entrada e {formatarTokens(est.saidaMin)} a {formatarTokens(est.saidaMax)} de saída:{" "}
@@ -206,15 +247,21 @@ export function PropostaDoFornecedor({ todos }: { todos: DocumentoLido[] }) {
                       em até 5 minutos depois da anterior (skill e documentos lidos do cache).
                     </p>
                   )}
-                  <p className="envio__obs">
-                    O texto dos PDFs da RFP vai para a API do Claude, pela sua chave, na organização da FGV.
-                  </p>
+                  {!demonstracao && (
+                    <p className="envio__obs">
+                      O texto dos PDFs da RFP vai para a API do Claude, pela sua chave, na organização da FGV.
+                    </p>
+                  )}
                   <div className="acoes-exportar">
                     <button
                       className="botao botao--cheio"
                       type="button"
                       data-testid={`pedir-${passo}`}
-                      disabled={!chave || Boolean(rodando) || grandeDemais}
+                      disabled={
+                        demonstracao
+                          ? foraDaGravacao && passo !== "estrategia"
+                          : !chave || Boolean(rodando) || grandeDemais
+                      }
                       onClick={() => {
                         if (
                           feito &&
@@ -226,9 +273,17 @@ export function PropostaDoFornecedor({ todos }: { todos: DocumentoLido[] }) {
                         void executar(passo);
                       }}
                     >
-                      {feito ? "Pedir de novo ao PMO" : "Pedir ao PMO"}
+                      {demonstracao
+                        ? feito
+                          ? "Carregar de novo a resposta gravada"
+                          : "Carregar a resposta gravada"
+                        : feito
+                          ? "Pedir de novo ao PMO"
+                          : "Pedir ao PMO"}
                     </button>
-                    {!chave && <span className="envio__obs">Conecte a chave acima para pedir.</span>}
+                    {!chave && !demonstracao && (
+                      <span className="envio__obs">Conecte a chave acima para pedir.</span>
+                    )}
                     {rodando?.passo === passo && (
                       <>
                         <span className="envio__obs" aria-live="polite">
@@ -256,7 +311,9 @@ export function PropostaDoFornecedor({ todos }: { todos: DocumentoLido[] }) {
               )}
               {feito && (
                 <p className="envio__obs">
-                  Resposta de {p[passo]?.modelo} em {new Date(p[passo]?.em ?? "").toLocaleString("pt-BR")}.
+                  {p[passo]?.modelo === MODELO_GRAVADO
+                    ? "Resposta gravada (demonstração), sem chamada à IA."
+                    : `Resposta de ${p[passo]?.modelo} em ${new Date(p[passo]?.em ?? "").toLocaleString("pt-BR")}.`}
                 </p>
               )}
             </div>
