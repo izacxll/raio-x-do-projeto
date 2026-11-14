@@ -4,6 +4,13 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 
 ## [Não publicado]
 
+### F5b — leitura opcional do PMO na conferência (versão 0.8.0, construída sem a chave; teste com a chave pendente)
+- **Etapa 5:** depois da conferência por código, o GP pode pedir a leitura do PMO, com o custo antes e o uso depois. Vão o plano, o TAP e a RFP, o que o código já apontou e só o conteúdo mínimo e as perguntas de qualidade das partes presentes.
+- **Travas em código:** todo achado do PMO é sugestão ("leitura do PMO"); citação procurada na página ("citação não conferida" quando não acha); ausente procurado no plano inteiro e rebaixado se o código achar, mostrando onde; gravidade e categoria pela parte do plano; achado que o código já apontou é marcado.
+- **Decisão do GP** em cada achado do PMO; seção "Leitura do PMO (sugestões)" no relatório e aba na lista de achados; minuta até o GP decidir.
+- Testes sem chave: leitura gravada para o plano de teste da etapa 5 (vagos com citação, ausente rebaixado, ausente que vale, citação falsa); fumaça com a API simulada.
+- Decisão 0030. Versão do app: 0.8.0.
+
 ### F4 — plano de gerenciamento com o PMO (versão 0.7.0, construída sem a chave; teste com a chave pendente)
 - **Etapa 4 na tela:** documentos usados (o TAP da etapa 3 ou o PDF aprovado; a proposta, opcional), premissas críticas, conexão com o Claude e o custo à vista.
 - **Seis passos do PMO, na ordem da decisão 0007:** adaptação, ciclo de vida e abordagem; escopo; atividades, recursos e cronograma; riscos, custos e premissas; demais planos; medição e documentos de execução. As fichas das partes vão no pedido de cada passo (o prefixo fica no cache), e só as que o GP marcou.

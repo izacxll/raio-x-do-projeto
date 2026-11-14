@@ -17,7 +17,7 @@ Enquanto houver item pendente, os documentos exportados saem com o cabeçalho **
 Nada sai do navegador.
 
 - **Etapa 1 — Leitura da RFP:** envie a RFP (e os anexos, se vierem em PDFs separados) e clique em "Analisar a RFP". Revise os requisitos (R01, R02…): os números seguem até a conferência do plano. Decida se participa. Baixe a análise, a lista de requisitos e prazos, o checklist de habilitação e as perguntas de esclarecimento.
-- **Etapa 5 — Conferência do PGP:** envie o PGP (e, se tiver, o TAP e a RFP), confirme o mapa do plano e as características do projeto e clique em "Conferir o plano".
+- **Etapa 5 — Conferência do PGP:** envie o PGP (e, se tiver, o TAP e a RFP), confirme o mapa do plano e as características do projeto e clique em "Conferir o plano". Se a etapa 4 foi feita no mesmo dossiê, o que você dispensou nela já vem marcado como dispensado.
 
 ## Demonstração, sem a chave
 
@@ -65,6 +65,9 @@ O custo de cada chamada (tokens e valor estimado em dólar) fica na tabela "Uso 
 4. Peça os passos seguintes, na ordem: **escopo** (com a matriz de rastreabilidade feita pelo código), **atividades, recursos e cronograma** (informe o início e o tempo de aprovação de cada produto; o código calcula o cronograma, o caminho crítico e os marcos, e confere com o TAP), **riscos, custos e premissas** (informe o valor-hora de cada perfil e as reservas), **demais planos** e **medição e documentos de execução**. Revise item a item.
 5. **Autoconferência:** confirme as características do projeto e clique em "Conferir o plano gerado". As regras da etapa 5 apontam o que está vago, conflituoso ou ausente; os trechos "a definir pelo GP" aparecem à parte, como decisões que só você preenche.
 6. Baixe o plano (DOCX ou PDF), os registros (XLSX), a EAP e o diagrama de rede (SVG) ou o **pacote completo (.zip)**, com o índice das partes.
+
+### Etapa 5 — Leitura do PMO (opcional, com a chave)
+Depois da conferência por código, você pode pedir a leitura do PMO: ele aponta o que depende de interpretação (equipe pequena para o volume, critério de aceite que não dá para medir, premissa crítica mal escrita). Todo achado dele é sugestão: o código confere cada citação, procura no plano o que ele diz estar ausente (se achar, rebaixa e mostra onde) e dá a gravidade pela parte do plano. Você decide se cada um procede; eles saem numa seção própria do relatório.
 
 ## Dossiê
 

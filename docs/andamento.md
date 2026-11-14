@@ -12,6 +12,8 @@ Atualizado em 13/11/2026 (F1 e F2 publicadas antes do teste, decisão 0026).
 
 **F4 (PGP com o PMO) construída sem a chave, na branch `fase/f4-pgp`** (decisão 0029): adaptação decidida pelo GP, seis passos do PMO, contas do código (rastreabilidade, cronograma, marcos, custos), autoconferência pelas regras da etapa 5, pacote .zip e demonstração. Falta, com a chave: o teste real da etapa 4.
 
+**F5b (leitura opcional do PMO na conferência) construída sem a chave, na branch `fase/f5b-leitura-pmo`** (decisão 0030): travas em código (citação, ausente procurado no plano, gravidade pela parte), decisão do GP e seção no relatório. Falta, com a chave: o teste real.
+
 **Próximas fases, nesta ordem (decisão 0026):** F3 (TAP, v0.6.0), F4 (PGP, v0.7.0) e F5b (leitura do PMO na conferência, v0.8.0), cada uma com PR e prévia.
 
 **O que a F2 entregou:** tela "Conectar ao Claude" (chave só na sessão, testar, esquecer); ponto de partida vindo da etapa 1; três passos do PMO (estratégia e abordagens; conteúdo técnico e SOW; EAP, estimativas e equipe), com o custo estimado antes e o uso real depois; escolha da abordagem e das premissas críticas pelo GP; conferência de cada citação, da redação e dos números sem fonte; cronograma PERT com caminho crítico e prazos (total e de cada produto) contra a RFP; preço com os valores do GP; matriz de atendimento e checklist de envio; quatro saídas. Decisão 0025.
@@ -82,7 +84,7 @@ Atualizado em 13/11/2026 (F1 e F2 publicadas antes do teste, decisão 0026).
 | F2 | Etapa 2: proposta, com o PMO; tela da chave; comparação de modelos | concluída (PR #7) sem a chave; teste da responsável, teste com a chave e comparação de modelos pendentes (decisão 0026) | v0.5.0 |
 | F3 | Etapa 3: TAP, com o PMO | construída sem a chave (PR aberto); teste com a chave pendente | v0.6.0 |
 | F4 | Etapa 4: PGP, com o PMO | construída sem a chave (PR aberto); teste com a chave pendente | v0.7.0 |
-| F5b | Leitura opcional do PMO na etapa 5 | a fazer | v0.8.0 |
+| F5b | Leitura opcional do PMO na etapa 5 | construída sem a chave (PR aberto); teste com a chave pendente | v0.8.0 |
 | MVP | Critérios de aceite da seção 14 | a fazer | v1.0.0 |
 
 ## Decisões pendentes
@@ -94,7 +96,7 @@ Atualizado em 13/11/2026 (F1 e F2 publicadas antes do teste, decisão 0026).
 
 ## Próximo passo
 
-1. **Claude Code:** F5b (leitura opcional do PMO na conferência); F3 e F4 prontas nos PRs (TAP) e F4 (PGP), com PR e prévia; se sobrar tempo, F5b.
+1. **Claude Code:** F3, F4 e F5b prontas nos PRs, em cadeia (#8 → #9 → #10 → F5b). Depois dos oks, merge em ordem, com as tags v0.5.1, v0.6.0, v0.7.0 e v0.8.0; depois, a fase P e o MVP (TAP) e F4 (PGP), com PR e prévia; se sobrar tempo, F5b.
 2. **Responsável pelo projeto:** testar as etapas 1, 2 (no modo demonstração ou com a chave) e 5 na prévia; o que aparecer vira correção (v0.4.x, v0.5.x).
 3. **Quando a chave da API chegar** (pedir ao administrador do Claude da FGV, no Claude Console):
    - no PowerShell, na pasta do projeto: `$env:ANTHROPIC_API_KEY = "<chave>"; npm run comparar-modelos` (custa cerca de US$ 2 a 3); o resultado fica em `tests/fixtures/gerados/comparacao-modelos/resumo.md`. A responsável escolhe o modelo e a decisão 0002 é atualizada;

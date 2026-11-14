@@ -33,6 +33,7 @@ Uma decisão por arquivo, numerada em ordem. Cada uma registra o contexto, o que
 | [0027](0027-modo-demonstracao.md) | Modo demonstração: botão "Ver demonstração" com as respostas gravadas do PMO para a RFP pública da OEI, sem chamada à API; aviso na tela e nos exportados | aceita |
 | [0028](0028-termo-de-abertura-f3.md) | Termo de abertura com o PMO (F3), construído sem a chave: proposta do dossiê como documento, divergências RFP × proposta, o que vem dos documentos, 12 elementos e registro de premissas, conferência do TAP | aceita (teste com a chave pendente) |
 | [0029](0029-plano-de-gerenciamento-f4.md) | Plano de gerenciamento com o PMO (F4), construído sem a chave: seis passos na ordem da 0007, adaptação decidida pelo GP, contas do código, autoconferência pelas regras da etapa 5, pacote .zip | aceita (teste com a chave pendente) |
+| [0030](0030-leitura-do-pmo-na-conferencia-f5b.md) | Leitura opcional do PMO na conferência (F5b), construída sem a chave: travas em código (citação, ausente procurado no plano, gravidade pela parte) e decisão do GP | aceita (teste com a chave pendente) |
 
 Modelo para uma nova decisão:
 
