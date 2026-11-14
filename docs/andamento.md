@@ -6,7 +6,7 @@ Atualizado em 13/11/2026 (F1 e F2 publicadas antes do teste, decisão 0026).
 
 **F1 e F2 publicadas na `main` como v0.4.0 e v0.5.0 em 13/11/2026, antes do teste da responsável** (decisão 0026). App no ar: https://izacxll.github.io/raio-x-do-projeto/. O teste das etapas 1, 2 e 5 continua pendente; o que ele encontrar sai como v0.4.x ou v0.5.x. A etapa 2 ainda não foi testada com a chave, e a comparação Opus 5.5 × Sonnet 5.5 (`npm run comparar-modelos`, decisão 0002) espera a chave.
 
-**Modo demonstração publicado como v0.5.1** (decisão 0027): na etapa 2, "Ver demonstração" abre a RFP pública da OEI com as respostas gravadas do PMO, sem chamar a API; aviso na tela e nos exportados.
+**Modo demonstração pronto no PR #8 (v0.5.1), aguardando o ok da responsável para o merge** (decisão 0027): na etapa 2, "Ver demonstração" abre a RFP pública da OEI com as respostas gravadas do PMO, sem chamar a API; aviso na tela e nos exportados.
 
 **Próximas fases, nesta ordem (decisão 0026):** F3 (TAP, v0.6.0), F4 (PGP, v0.7.0) e F5b (leitura do PMO na conferência, v0.8.0), cada uma com PR e prévia.
 
