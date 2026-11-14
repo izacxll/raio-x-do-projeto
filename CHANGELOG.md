@@ -4,6 +4,9 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 
 ## [Não publicado]
 
+### Documentação
+- README: situação do projeto (as cinco etapas construídas, v0.8.0, e o modo demonstração sem a chave) e um espaço antes de vírgula.
+
 ## [0.8.0] — 13/11/2026
 
 ### F5b — leitura opcional do PMO na conferência (construída sem a chave; teste com a chave pendente)
