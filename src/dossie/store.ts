@@ -9,6 +9,7 @@ import type {
   Dossie,
   DocumentoLido,
   PropostaDossie,
+  PgpDossie,
   TapDossie,
 } from "./esquema";
 
@@ -24,6 +25,7 @@ interface EstadoDossie {
   guardarConferencia: (conferencia: Conferencia) => void;
   guardarProposta: (proposta: PropostaDossie) => void;
   guardarTap: (tap: TapDossie) => void;
+  guardarPgp: (pgp: PgpDossie) => void;
   novoProjeto: () => void;
   /** Começa um projeto de demonstração (decisão 0027) com a RFP já lida. */
   iniciarDemonstracao: (rfp: DocumentoLido, nome: string) => void;
@@ -52,6 +54,7 @@ export const useDossie = create<EstadoDossie>((set) => ({
   guardarConferencia: (conferencia) => set((s) => ({ dossie: { ...s.dossie, conferencia }, alterado: true })),
   guardarProposta: (proposta) => set((s) => ({ dossie: { ...s.dossie, proposta }, alterado: true })),
   guardarTap: (tap) => set((s) => ({ dossie: { ...s.dossie, tap }, alterado: true })),
+  guardarPgp: (pgp) => set((s) => ({ dossie: { ...s.dossie, pgp }, alterado: true })),
   novoProjeto: () => set({ dossie: criarDossieVazio(), alterado: false }),
   iniciarDemonstracao: (rfp, nome) =>
     set({

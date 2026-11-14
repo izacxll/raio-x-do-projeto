@@ -3,6 +3,7 @@
 // página por seção da minuta exportada: assim o PMO a cita como cita a RFP, e o código confere a citação.
 import type { DocumentoLido, Dossie } from "../../dossie/esquema";
 import { montarPropostaTecnica } from "../../exportacao/relatorio-proposta";
+import { documentoDeExportavel } from "../documento-virtual";
 import { calcularCronograma, conferirPrazosDosProdutos, type Cronograma } from "../2-proposta/cronograma";
 import { lerValorEmReais } from "../2-proposta/preco";
 import { montarPontoDePartida, type PontoDePartida } from "../2-proposta/ponto-de-partida";
@@ -55,24 +56,12 @@ export function propostaComoDocumento(
 ): DocumentoLido | undefined {
   if (!dossie.proposta?.conteudo) return undefined;
   const minuta = montarPropostaTecnica(dossie, ponto, rfp, new Date(dossie.criadoEm));
-  const paginas = minuta.secoes.map((s, k) => {
-    const linhas = [
-      s.titulo,
-      ...(s.paragrafos ?? []),
-      ...(s.tabela ? [s.tabela.colunas.join("\t"), ...s.tabela.linhas.map((l) => l.join("\t"))] : []),
-    ];
-    const texto = linhas.join("\n");
-    return { numero: k + 1, origem: "texto" as const, texto, caracteres: texto.length };
-  });
-  return {
+  return documentoDeExportavel(minuta, {
     id: "proposta-do-dossie",
     papel: "proposta",
     nomeArquivo: NOME_PROPOSTA_DO_DOSSIE,
-    tamanhoBytes: 0,
-    totalPaginas: paginas.length,
     lidoEm: dossie.proposta.conteudo.em,
-    paginas,
-  };
+  });
 }
 
 export function dadosDaProposta(

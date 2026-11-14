@@ -1,0 +1,292 @@
+{
+  "textos": [
+    {
+      "codigo": "A1",
+      "itens": [
+        {
+          "id": "a1-1",
+          "texto": "Sugere-se preparar a especificação do escopo (B17) a partir do termo de referência, da proposta e do TAP, e montar a EAP por produto, com um ramo de gerenciamento.",
+          "rotulo": "sugestao",
+          "motivo": "",
+          "fontes": [],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "A1.1"
+        },
+        {
+          "id": "a1-2",
+          "texto": "Recomenda-se que cada produto seja aceito formalmente pela área técnica da contratante, com o prazo de análise e o limite de rodadas de revisão a definir pelo GP e registrados no plano de trabalho.",
+          "rotulo": "sugestao",
+          "motivo": "",
+          "fontes": [
+            {
+              "doc": "rfp",
+              "pagina": 21,
+              "trecho": "O pagamento é realizado somente após ateste de conformidade e aprovação pela Contratante."
+            }
+          ],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "A1.5"
+        },
+        {
+          "id": "a1-3",
+          "texto": "Sugere-se controlar o escopo comparando cada pedido com a linha de base: pedido fora dela segue o plano de mudanças antes de ser feito.",
+          "rotulo": "sugestao",
+          "motivo": "",
+          "fontes": [],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "A1.6"
+        },
+        {
+          "id": "a1-4",
+          "texto": "Recomenda-se uma revisão interna de cada produto antes do envio, separada do aceite da contratante.",
+          "rotulo": "sugestao",
+          "motivo": "",
+          "fontes": [],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "A1.8"
+        }
+      ]
+    },
+    {
+      "codigo": "B22",
+      "itens": [
+        {
+          "id": "b22-1",
+          "texto": "Sugere-se documentar cada requisito com o número da RFP (R01 a R10), a origem com a página, o tipo e a forma de verificação; a lista numerada da etapa 1 é a base.",
+          "rotulo": "sugestao",
+          "motivo": "",
+          "fontes": [],
+          "alternativas": [],
+          "requisitos": [
+            "R01",
+            "R02",
+            "R03",
+            "R04",
+            "R05",
+            "R06",
+            "R07",
+            "R08",
+            "R09",
+            "R10"
+          ],
+          "ficha": "B22.1"
+        },
+        {
+          "id": "b22-2",
+          "texto": "Todos os produtos devem ser entregues em versão editável e em PDF, com os arquivos-fonte.",
+          "rotulo": "documento",
+          "motivo": "",
+          "fontes": [
+            {
+              "doc": "rfp",
+              "pagina": 20,
+              "trecho": "Todos os produtos deverão ser entregues em versão editável e em PDF"
+            }
+          ],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "B22.5"
+        }
+      ]
+    },
+    {
+      "codigo": "B17",
+      "itens": [
+        {
+          "id": "b17-1",
+          "texto": "Sugere-se descrever o escopo como cinco cadernos temáticos, um documento sintético e um guia de orientação, com o plano de trabalho no início e o gerenciamento ao longo do projeto.",
+          "rotulo": "sugestao",
+          "motivo": "",
+          "fontes": [],
+          "alternativas": [],
+          "requisitos": [
+            "R01",
+            "R02",
+            "R03",
+            "R04",
+            "R05"
+          ],
+          "ficha": "B17.1"
+        },
+        {
+          "id": "b17-2",
+          "texto": "Os cadernos e o guia devem ser entregues em versão final diagramada, revisada e pronta para publicação online.",
+          "rotulo": "documento",
+          "motivo": "",
+          "fontes": [
+            {
+              "doc": "rfp",
+              "pagina": 21,
+              "trecho": "deverão ser entregues em versão final diagramada, revisada e pronta para publicação online"
+            }
+          ],
+          "alternativas": [],
+          "requisitos": [
+            "R05"
+          ],
+          "ficha": "B17.4"
+        },
+        {
+          "id": "b17-3",
+          "texto": "Sugere-se manter como exclusão a impressão gráfica dos cadernos e do guia, como na proposta.",
+          "rotulo": "sugestao",
+          "motivo": "",
+          "fontes": [
+            {
+              "doc": "proposta",
+              "pagina": 8,
+              "trecho": "Sugere-se excluir do preço a impressão gráfica dos cadernos e do guia"
+            }
+          ],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "B17.5"
+        },
+        {
+          "id": "b17-4",
+          "texto": "Recomenda-se registrar que a escuta direta de crianças e adolescentes só entra se a contratante aprovar antes um plano metodológico específico.",
+          "rotulo": "sugestao",
+          "motivo": "",
+          "fontes": [
+            {
+              "doc": "rfp",
+              "pagina": 19,
+              "trecho": "A realização de escuta direta de crianças e adolescentes somente poderá ocorrer mediante aprova- ção prévia de plano metodológico específico pela contratante"
+            }
+          ],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "B17.6"
+        },
+        {
+          "id": "b17-5",
+          "texto": "A subcontratação do objeto não é admitida.",
+          "rotulo": "documento",
+          "motivo": "",
+          "fontes": [
+            {
+              "doc": "rfp",
+              "pagina": 46,
+              "trecho": "Não será admitida a subcontratação do objeto contratual."
+            }
+          ],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "B17.9"
+        }
+      ]
+    },
+    {
+      "codigo": "A13",
+      "itens": [
+        {
+          "id": "a13-1",
+          "texto": "Sugere-se aprovar a linha de base do escopo com o plano de trabalho, com versão e data registradas; a EAP abaixo tem um pacote por produto e o ramo de gerenciamento.",
+          "rotulo": "sugestao",
+          "motivo": "",
+          "fontes": [],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "A13.1"
+        },
+        {
+          "id": "a13-2",
+          "texto": "Recomenda-se conferir a regra dos cem por cento: todo produto do contrato está num pacote e nenhum pacote fica fora do contrato.",
+          "rotulo": "sugestao",
+          "motivo": "",
+          "fontes": [],
+          "alternativas": [],
+          "requisitos": [
+            "R01",
+            "R02",
+            "R03",
+            "R04",
+            "R05"
+          ],
+          "ficha": "A13.6"
+        }
+      ]
+    }
+  ],
+  "eap": [
+    {
+      "id": "P1.1",
+      "nome": "Alinhamento e plano de trabalho",
+      "produto": "P1",
+      "requisitos": [
+        "R01"
+      ],
+      "descricao": "Reunião de alinhamento e plano de trabalho com os itens mínimos do termo de referência.",
+      "criterioDeAceite": "Plano com todos os itens mínimos do produto 1 aprovado pela contratante."
+    },
+    {
+      "id": "P2.1",
+      "nome": "Levantamento e escuta dos cadernos 1 e 2",
+      "produto": "P2",
+      "requisitos": [
+        "R02"
+      ],
+      "descricao": "Levantamento bibliográfico, documental e normativo e oficinas remotas com profissionais da rede.",
+      "criterioDeAceite": "Referências e registros das oficinas organizados para a redação."
+    },
+    {
+      "id": "P2.2",
+      "nome": "Cadernos 1 e 2",
+      "produto": "P2",
+      "requisitos": [
+        "R02"
+      ],
+      "descricao": "Cadernos sobre relações raciais e convivência familiar e comunitária.",
+      "criterioDeAceite": "Os dois temas do termo de referência abordados e aceitos."
+    },
+    {
+      "id": "P3.1",
+      "nome": "Cadernos 3 e 4",
+      "produto": "P3",
+      "requisitos": [
+        "R03"
+      ],
+      "descricao": "Levantamento e redação dos cadernos sobre trabalho infantil e trajetórias territoriais e institucionais.",
+      "criterioDeAceite": "Os dois temas do termo de referência abordados e aceitos."
+    },
+    {
+      "id": "P4.1",
+      "nome": "Caderno 5 e documento sintético",
+      "produto": "P4",
+      "requisitos": [
+        "R04"
+      ],
+      "descricao": "Caderno sobre violências múltiplas e consolidação dos achados dos cinco cadernos.",
+      "criterioDeAceite": "Caderno e documento sintético aceitos."
+    },
+    {
+      "id": "P5.1",
+      "nome": "Guia de orientação",
+      "produto": "P5",
+      "requisitos": [
+        "R05"
+      ],
+      "descricao": "Oficinas de teste, redação, revisão, diagramação e arquivos-fonte do guia.",
+      "criterioDeAceite": "Todos os itens mínimos do guia atendidos, em versão diagramada e editável."
+    },
+    {
+      "id": "G.1",
+      "nome": "Gerenciamento do projeto",
+      "produto": "G",
+      "requisitos": [
+        "R06",
+        "R07",
+        "R08",
+        "R09",
+        "R10"
+      ],
+      "descricao": "Coordenação da equipe-chave, reuniões com a contratante, controle de prazos e versões, trabalho remoto.",
+      "criterioDeAceite": "Reuniões registradas e equipe-chave mantida durante a vigência."
+    }
+  ],
+  "observacoes": []
+}

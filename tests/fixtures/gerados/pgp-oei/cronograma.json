@@ -1,0 +1,956 @@
+{
+  "textos": [
+    {
+      "codigo": "A3",
+      "itens": [
+        {
+          "id": "a3-1",
+          "texto": "Sugere-se o método do caminho crítico, com as durações em dias úteis e as datas contadas da assinatura do contrato; feriados a conferir pelo GP.",
+          "rotulo": "sugestao",
+          "motivo": "",
+          "fontes": [],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "A3.2"
+        },
+        {
+          "id": "a3-2",
+          "texto": "Recomenda-se incluir no cronograma o tempo de análise de cada produto pela contratante, a definir pelo GP, porque o pagamento só ocorre depois do ateste.",
+          "rotulo": "sugestao",
+          "motivo": "",
+          "fontes": [
+            {
+              "doc": "rfp",
+              "pagina": 21,
+              "trecho": "O pagamento é realizado somente após ateste de conformidade e aprovação pela Contratante."
+            }
+          ],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "A3.6"
+        },
+        {
+          "id": "a3-3",
+          "texto": "Sugere-se conferir o cronograma contra o prazo máximo de cada produto na RFP e contra os marcos do TAP a cada atualização.",
+          "rotulo": "sugestao",
+          "motivo": "",
+          "fontes": [
+            {
+              "doc": "rfp",
+              "pagina": 21,
+              "trecho": "As datas da tabela se referem ao prazo máximo para entrega dos produtos."
+            }
+          ],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "A3.8"
+        },
+        {
+          "id": "a3-4",
+          "texto": "Recomenda-se atualizar o cronograma a cada entrega, com o desvio tolerado antes de agir a definir pelo GP.",
+          "rotulo": "sugestao",
+          "motivo": "",
+          "fontes": [],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "A3.9"
+        }
+      ]
+    },
+    {
+      "codigo": "A6",
+      "itens": [
+        {
+          "id": "a6-1",
+          "texto": "Sugere-se compor a equipe com os quatro perfis da equipe-chave exigidos pela RFP e um perfil de revisão e diagramação; os nomes são decisão do GP.",
+          "rotulo": "sugestao",
+          "motivo": "",
+          "fontes": [],
+          "alternativas": [],
+          "requisitos": [
+            "R06",
+            "R07",
+            "R08",
+            "R09"
+          ],
+          "ficha": "A6.3"
+        },
+        {
+          "id": "a6-2",
+          "texto": "Caso um membro da equipe não esteja disponível, a contratada deve substituí-lo por pessoa com as mesmas qualificações, sem afetar os prazos.",
+          "rotulo": "documento",
+          "motivo": "",
+          "fontes": [
+            {
+              "doc": "rfp",
+              "pagina": 23,
+              "trecho": "Caso um de seus membros não esteja disponível e isso possa causar atrasos na execução dos serviços"
+            }
+          ],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "A6.7"
+        },
+        {
+          "id": "a6-3",
+          "texto": "Recomenda-se que cada produto tenha um responsável definido na matriz RACI e que a coordenação geral aprove a entrega.",
+          "rotulo": "sugestao",
+          "motivo": "",
+          "fontes": [],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "A6.6"
+        },
+        {
+          "id": "a6-4",
+          "texto": "Sugere-se registrar os papéis e responsabilidades e a autoridade de cada perfil: a coordenação geral aceita as entregas internas e responde à contratante; cada especialista responde pelos cadernos do seu tema.",
+          "rotulo": "sugestao",
+          "motivo": "",
+          "fontes": [],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "A6.3"
+        },
+        {
+          "id": "a6-5",
+          "texto": "Recomenda-se um organograma simples, com a coordenação geral como ponto focal com a contratante e os especialistas ligados a ela.",
+          "rotulo": "sugestao",
+          "motivo": "",
+          "fontes": [],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "A6.5"
+        },
+        {
+          "id": "a6-6",
+          "texto": "Sugere-se acompanhar a carga da equipe comparando horas previstas e horas realizadas a cada mês, para evitar sobrecarga.",
+          "rotulo": "sugestao",
+          "motivo": "",
+          "fontes": [],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "A6.11"
+        }
+      ]
+    },
+    {
+      "codigo": "B4",
+      "itens": [
+        {
+          "id": "b4-1",
+          "texto": "Sugere-se registrar que as durações e as horas são estimativas em três pontos pelo volume de cada produto, a conferir com o histórico de projetos semelhantes da FGV.",
+          "rotulo": "sugestao",
+          "motivo": "",
+          "fontes": [],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "B4.1"
+        },
+        {
+          "id": "b4-3",
+          "texto": "Recomenda-se registrar que as estimativas de custo incluem só as horas da equipe; custos indiretos, tributos e despesas reembolsáveis ficam no preço da proposta.",
+          "rotulo": "sugestao",
+          "motivo": "",
+          "fontes": [],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "B4.10"
+        },
+        {
+          "id": "b4-2",
+          "texto": "Recomenda-se escrever as premissas das estimativas: trabalho remoto, equipe-chave disponível durante a vigência e análise da contratante no prazo combinado.",
+          "rotulo": "sugestao",
+          "motivo": "",
+          "fontes": [
+            {
+              "doc": "rfp",
+              "pagina": 21,
+              "trecho": "Os serviços serão prestados, como regra, em formato remoto."
+            }
+          ],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "B4.3"
+        }
+      ]
+    },
+    {
+      "codigo": "B26",
+      "itens": [
+        {
+          "id": "b26-1",
+          "texto": "Sugere-se listar como recursos os perfis da equipe e as horas de cada um por atividade (conta do código), sem recursos físicos, já que o trabalho é remoto.",
+          "rotulo": "sugestao",
+          "motivo": "",
+          "fontes": [
+            {
+              "doc": "rfp",
+              "pagina": 21,
+              "trecho": "Os serviços serão prestados, como regra, em formato remoto."
+            }
+          ],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "B26.1"
+        },
+        {
+          "id": "b26-2",
+          "texto": "Recomenda-se prever as reuniões presenciais em Brasília quando a contratante solicitar, sem custo adicional para ela, como manda o termo de referência.",
+          "rotulo": "sugestao",
+          "motivo": "",
+          "fontes": [
+            {
+              "doc": "rfp",
+              "pagina": 21,
+              "trecho": "participar de reuniões presenciais em Brasília/DF, sem custos adicionais para a CONTRATANTE"
+            }
+          ],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "B26.3"
+        }
+      ]
+    },
+    {
+      "codigo": "B32",
+      "itens": [
+        {
+          "id": "b32-1",
+          "texto": "Sugere-se combinar com a equipe as regras do trabalho remoto: canal da equipe, prazos de resposta, versões dos arquivos e como se decide quando há divergência técnica.",
+          "rotulo": "sugestao",
+          "motivo": "",
+          "fontes": [],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "B32.1"
+        },
+        {
+          "id": "b32-3",
+          "texto": "Sugere-se combinar como a equipe decide: por consenso técnico entre os especialistas e, sem consenso, quem decide é a coordenação geral.",
+          "rotulo": "sugestao",
+          "motivo": "",
+          "fontes": [],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "B32.3"
+        },
+        {
+          "id": "b32-4",
+          "texto": "Recomenda-se que toda reunião interna tenha pauta, ata e encaminhamentos.",
+          "rotulo": "sugestao",
+          "motivo": "",
+          "fontes": [],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "B32.5"
+        },
+        {
+          "id": "b32-2",
+          "texto": "Recomenda-se incluir nos combinados o sigilo sobre as informações do contrato e o cuidado com dados pessoais.",
+          "rotulo": "sugestao",
+          "motivo": "",
+          "fontes": [
+            {
+              "doc": "rfp",
+              "pagina": 23,
+              "trecho": "Guardar sigilo sobre todas as informações obtidas em decorrência do cumprimento do contrato."
+            }
+          ],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "B32.2"
+        }
+      ]
+    }
+  ],
+  "atividades": [
+    {
+      "id": "1.1",
+      "produto": "P1",
+      "nome": "Reunião de alinhamento com a contratante",
+      "predecessoras": [],
+      "duracao": {
+        "otimista": 2,
+        "mais_provavel": 3,
+        "pessimista": 5,
+        "base": "Agenda de uma reunião inicial e registro."
+      },
+      "aprovacaoCliente": false,
+      "requisitos": [
+        "R01"
+      ]
+    },
+    {
+      "id": "1.2",
+      "produto": "P1",
+      "nome": "Elaboração do plano de trabalho",
+      "predecessoras": [
+        "1.1"
+      ],
+      "duracao": {
+        "otimista": 10,
+        "mais_provavel": 12,
+        "pessimista": 15,
+        "base": "Plano com os itens mínimos do produto 1."
+      },
+      "aprovacaoCliente": true,
+      "requisitos": [
+        "R01"
+      ]
+    },
+    {
+      "id": "2.1",
+      "produto": "P2",
+      "nome": "Levantamento bibliográfico, documental e normativo",
+      "predecessoras": [
+        "1.2"
+      ],
+      "duracao": {
+        "otimista": 15,
+        "mais_provavel": 20,
+        "pessimista": 25,
+        "base": "Volume de referências de dois temas."
+      },
+      "aprovacaoCliente": false,
+      "requisitos": [
+        "R02",
+        "R03"
+      ]
+    },
+    {
+      "id": "2.2",
+      "produto": "P2",
+      "nome": "Oficinas remotas de escuta com a rede (cadernos 1 e 2)",
+      "predecessoras": [
+        "1.2"
+      ],
+      "duracao": {
+        "otimista": 5,
+        "mais_provavel": 8,
+        "pessimista": 12,
+        "base": "Mobilização e realização das oficinas."
+      },
+      "aprovacaoCliente": false,
+      "requisitos": [
+        "R02"
+      ]
+    },
+    {
+      "id": "2.3",
+      "produto": "P2",
+      "nome": "Redação dos cadernos 1 e 2",
+      "predecessoras": [
+        "2.1",
+        "2.2"
+      ],
+      "duracao": {
+        "otimista": 15,
+        "mais_provavel": 20,
+        "pessimista": 28,
+        "base": "Dois cadernos com referenciais normativos."
+      },
+      "aprovacaoCliente": true,
+      "requisitos": [
+        "R02"
+      ]
+    },
+    {
+      "id": "3.1",
+      "produto": "P3",
+      "nome": "Levantamento para os cadernos 3 e 4",
+      "predecessoras": [
+        "2.1"
+      ],
+      "duracao": {
+        "otimista": 10,
+        "mais_provavel": 15,
+        "pessimista": 20,
+        "base": "Aproveita parte do levantamento inicial."
+      },
+      "aprovacaoCliente": false,
+      "requisitos": [
+        "R03"
+      ]
+    },
+    {
+      "id": "3.2",
+      "produto": "P3",
+      "nome": "Redação dos cadernos 3 e 4",
+      "predecessoras": [
+        "3.1",
+        "2.3"
+      ],
+      "duracao": {
+        "otimista": 20,
+        "mais_provavel": 25,
+        "pessimista": 32,
+        "base": "Dois cadernos, com a experiência dos primeiros."
+      },
+      "aprovacaoCliente": true,
+      "requisitos": [
+        "R03"
+      ]
+    },
+    {
+      "id": "4.1",
+      "produto": "P4",
+      "nome": "Redação do caderno 5",
+      "predecessoras": [
+        "3.2"
+      ],
+      "duracao": {
+        "otimista": 15,
+        "mais_provavel": 20,
+        "pessimista": 25,
+        "base": "Um caderno."
+      },
+      "aprovacaoCliente": false,
+      "requisitos": [
+        "R04"
+      ]
+    },
+    {
+      "id": "4.2",
+      "produto": "P4",
+      "nome": "Documento sintético de consolidação",
+      "predecessoras": [
+        "4.1"
+      ],
+      "duracao": {
+        "otimista": 8,
+        "mais_provavel": 10,
+        "pessimista": 15,
+        "base": "Síntese dos cinco cadernos."
+      },
+      "aprovacaoCliente": true,
+      "requisitos": [
+        "R04"
+      ]
+    },
+    {
+      "id": "5.1",
+      "produto": "P5",
+      "nome": "Oficinas remotas de teste do guia",
+      "predecessoras": [
+        "4.2"
+      ],
+      "duracao": {
+        "otimista": 8,
+        "mais_provavel": 10,
+        "pessimista": 15,
+        "base": "Teste de fluxos e materiais de apoio."
+      },
+      "aprovacaoCliente": false,
+      "requisitos": [
+        "R05"
+      ]
+    },
+    {
+      "id": "5.2",
+      "produto": "P5",
+      "nome": "Redação do guia de orientação",
+      "predecessoras": [
+        "5.1"
+      ],
+      "duracao": {
+        "otimista": 20,
+        "mais_provavel": 25,
+        "pessimista": 35,
+        "base": "Guia com os itens mínimos do produto 5."
+      },
+      "aprovacaoCliente": false,
+      "requisitos": [
+        "R05"
+      ]
+    },
+    {
+      "id": "5.3",
+      "produto": "P5",
+      "nome": "Revisão, diagramação e arquivos-fonte",
+      "predecessoras": [
+        "5.2"
+      ],
+      "duracao": {
+        "otimista": 10,
+        "mais_provavel": 12,
+        "pessimista": 18,
+        "base": "Revisão técnico-textual e diagramação final."
+      },
+      "aprovacaoCliente": true,
+      "requisitos": [
+        "R05"
+      ]
+    },
+    {
+      "id": "G.1",
+      "produto": "G",
+      "nome": "Gestão do projeto e reuniões de acompanhamento",
+      "predecessoras": [],
+      "duracao": {
+        "otimista": 140,
+        "mais_provavel": 160,
+        "pessimista": 170,
+        "base": "Acompanha a execução dos produtos do início ao guia."
+      },
+      "aprovacaoCliente": false,
+      "requisitos": [
+        "R06",
+        "R07",
+        "R08",
+        "R09",
+        "R10"
+      ]
+    }
+  ],
+  "perfis": [
+    {
+      "id": "coord",
+      "nome": "Coordenador(a) Geral",
+      "exigido": true,
+      "qualificacao": "Conforme o termo de referência.",
+      "requisito": "R06",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 27,
+          "trecho": "1 (um) Coordenador(a) Geral"
+        }
+      ]
+    },
+    {
+      "id": "esp-pp",
+      "nome": "Especialista em Políticas Públicas e Direitos da Criança e do Adolescente",
+      "exigido": true,
+      "qualificacao": "Conforme o termo de referência.",
+      "requisito": "R07",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 27,
+          "trecho": "1 (um) Especialista em Políticas Públicas e Direitos da Criança e do Adolescente"
+        }
+      ]
+    },
+    {
+      "id": "esp-as",
+      "nome": "Especialista em Assistência Social, Convivência Familiar e Comunitária e Situação de Rua",
+      "exigido": true,
+      "qualificacao": "Conforme o termo de referência.",
+      "requisito": "R08",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 27,
+          "trecho": "1 (um) Especialista em Assistência Social, Convivência Familiar e Comunitária e Situação de Rua"
+        }
+      ]
+    },
+    {
+      "id": "esp-cont",
+      "nome": "Especialista em Produção de Conteúdos Técnicos e Metodologias Participativas",
+      "exigido": true,
+      "qualificacao": "Conforme o termo de referência.",
+      "requisito": "R09",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 27,
+          "trecho": "1 (um) Especialista em Produção de Conteúdos Técnicos e Metodologias Participativas"
+        }
+      ]
+    },
+    {
+      "id": "editorial",
+      "nome": "Revisão e diagramação",
+      "exigido": false,
+      "qualificacao": "Sugere-se perfil de revisão textual e projeto gráfico.",
+      "requisito": "",
+      "fontes": []
+    }
+  ],
+  "horas": [
+    {
+      "atividade": "1.2",
+      "perfil": "coord",
+      "horas": {
+        "otimista": 30,
+        "mais_provavel": 40,
+        "pessimista": 60,
+        "base": "Estimativa do PMO pelo volume do produto; conferir com o histórico da FGV."
+      }
+    },
+    {
+      "atividade": "1.2",
+      "perfil": "esp-cont",
+      "horas": {
+        "otimista": 20,
+        "mais_provavel": 30,
+        "pessimista": 40,
+        "base": "Estimativa do PMO pelo volume do produto; conferir com o histórico da FGV."
+      }
+    },
+    {
+      "atividade": "2.1",
+      "perfil": "esp-pp",
+      "horas": {
+        "otimista": 80,
+        "mais_provavel": 100,
+        "pessimista": 140,
+        "base": "Estimativa do PMO pelo volume do produto; conferir com o histórico da FGV."
+      }
+    },
+    {
+      "atividade": "2.1",
+      "perfil": "esp-as",
+      "horas": {
+        "otimista": 60,
+        "mais_provavel": 80,
+        "pessimista": 110,
+        "base": "Estimativa do PMO pelo volume do produto; conferir com o histórico da FGV."
+      }
+    },
+    {
+      "atividade": "2.2",
+      "perfil": "esp-cont",
+      "horas": {
+        "otimista": 30,
+        "mais_provavel": 40,
+        "pessimista": 60,
+        "base": "Estimativa do PMO pelo volume do produto; conferir com o histórico da FGV."
+      }
+    },
+    {
+      "atividade": "2.2",
+      "perfil": "esp-as",
+      "horas": {
+        "otimista": 16,
+        "mais_provavel": 24,
+        "pessimista": 32,
+        "base": "Estimativa do PMO pelo volume do produto; conferir com o histórico da FGV."
+      }
+    },
+    {
+      "atividade": "2.3",
+      "perfil": "esp-pp",
+      "horas": {
+        "otimista": 80,
+        "mais_provavel": 100,
+        "pessimista": 130,
+        "base": "Estimativa do PMO pelo volume do produto; conferir com o histórico da FGV."
+      }
+    },
+    {
+      "atividade": "2.3",
+      "perfil": "esp-as",
+      "horas": {
+        "otimista": 80,
+        "mais_provavel": 100,
+        "pessimista": 130,
+        "base": "Estimativa do PMO pelo volume do produto; conferir com o histórico da FGV."
+      }
+    },
+    {
+      "atividade": "2.3",
+      "perfil": "coord",
+      "horas": {
+        "otimista": 16,
+        "mais_provavel": 24,
+        "pessimista": 32,
+        "base": "Estimativa do PMO pelo volume do produto; conferir com o histórico da FGV."
+      }
+    },
+    {
+      "atividade": "3.1",
+      "perfil": "esp-pp",
+      "horas": {
+        "otimista": 40,
+        "mais_provavel": 60,
+        "pessimista": 80,
+        "base": "Estimativa do PMO pelo volume do produto; conferir com o histórico da FGV."
+      }
+    },
+    {
+      "atividade": "3.2",
+      "perfil": "esp-pp",
+      "horas": {
+        "otimista": 100,
+        "mais_provavel": 120,
+        "pessimista": 160,
+        "base": "Estimativa do PMO pelo volume do produto; conferir com o histórico da FGV."
+      }
+    },
+    {
+      "atividade": "3.2",
+      "perfil": "esp-as",
+      "horas": {
+        "otimista": 80,
+        "mais_provavel": 100,
+        "pessimista": 130,
+        "base": "Estimativa do PMO pelo volume do produto; conferir com o histórico da FGV."
+      }
+    },
+    {
+      "atividade": "3.2",
+      "perfil": "coord",
+      "horas": {
+        "otimista": 16,
+        "mais_provavel": 24,
+        "pessimista": 32,
+        "base": "Estimativa do PMO pelo volume do produto; conferir com o histórico da FGV."
+      }
+    },
+    {
+      "atividade": "4.1",
+      "perfil": "esp-as",
+      "horas": {
+        "otimista": 60,
+        "mais_provavel": 80,
+        "pessimista": 100,
+        "base": "Estimativa do PMO pelo volume do produto; conferir com o histórico da FGV."
+      }
+    },
+    {
+      "atividade": "4.2",
+      "perfil": "coord",
+      "horas": {
+        "otimista": 30,
+        "mais_provavel": 40,
+        "pessimista": 60,
+        "base": "Estimativa do PMO pelo volume do produto; conferir com o histórico da FGV."
+      }
+    },
+    {
+      "atividade": "4.2",
+      "perfil": "esp-pp",
+      "horas": {
+        "otimista": 30,
+        "mais_provavel": 40,
+        "pessimista": 50,
+        "base": "Estimativa do PMO pelo volume do produto; conferir com o histórico da FGV."
+      }
+    },
+    {
+      "atividade": "5.1",
+      "perfil": "esp-cont",
+      "horas": {
+        "otimista": 30,
+        "mais_provavel": 40,
+        "pessimista": 60,
+        "base": "Estimativa do PMO pelo volume do produto; conferir com o histórico da FGV."
+      }
+    },
+    {
+      "atividade": "5.2",
+      "perfil": "esp-cont",
+      "horas": {
+        "otimista": 100,
+        "mais_provavel": 120,
+        "pessimista": 160,
+        "base": "Estimativa do PMO pelo volume do produto; conferir com o histórico da FGV."
+      }
+    },
+    {
+      "atividade": "5.2",
+      "perfil": "esp-as",
+      "horas": {
+        "otimista": 40,
+        "mais_provavel": 60,
+        "pessimista": 80,
+        "base": "Estimativa do PMO pelo volume do produto; conferir com o histórico da FGV."
+      }
+    },
+    {
+      "atividade": "5.2",
+      "perfil": "coord",
+      "horas": {
+        "otimista": 20,
+        "mais_provavel": 30,
+        "pessimista": 40,
+        "base": "Estimativa do PMO pelo volume do produto; conferir com o histórico da FGV."
+      }
+    },
+    {
+      "atividade": "5.3",
+      "perfil": "editorial",
+      "horas": {
+        "otimista": 60,
+        "mais_provavel": 80,
+        "pessimista": 120,
+        "base": "Estimativa do PMO pelo volume do produto; conferir com o histórico da FGV."
+      }
+    },
+    {
+      "atividade": "5.3",
+      "perfil": "coord",
+      "horas": {
+        "otimista": 10,
+        "mais_provavel": 16,
+        "pessimista": 24,
+        "base": "Estimativa do PMO pelo volume do produto; conferir com o histórico da FGV."
+      }
+    },
+    {
+      "atividade": "G.1",
+      "perfil": "coord",
+      "horas": {
+        "otimista": 80,
+        "mais_provavel": 100,
+        "pessimista": 140,
+        "base": "Reuniões de acompanhamento e controle; conferir com o histórico da FGV."
+      }
+    }
+  ],
+  "raci": [
+    {
+      "atividade": "1.1",
+      "perfil": "coord",
+      "papel": "A"
+    },
+    {
+      "atividade": "1.2",
+      "perfil": "coord",
+      "papel": "A"
+    },
+    {
+      "atividade": "2.1",
+      "perfil": "coord",
+      "papel": "A"
+    },
+    {
+      "atividade": "2.2",
+      "perfil": "coord",
+      "papel": "A"
+    },
+    {
+      "atividade": "2.3",
+      "perfil": "coord",
+      "papel": "A"
+    },
+    {
+      "atividade": "3.1",
+      "perfil": "coord",
+      "papel": "A"
+    },
+    {
+      "atividade": "3.2",
+      "perfil": "coord",
+      "papel": "A"
+    },
+    {
+      "atividade": "4.1",
+      "perfil": "coord",
+      "papel": "A"
+    },
+    {
+      "atividade": "4.2",
+      "perfil": "coord",
+      "papel": "A"
+    },
+    {
+      "atividade": "5.1",
+      "perfil": "coord",
+      "papel": "A"
+    },
+    {
+      "atividade": "5.2",
+      "perfil": "coord",
+      "papel": "A"
+    },
+    {
+      "atividade": "5.3",
+      "perfil": "coord",
+      "papel": "A"
+    },
+    {
+      "atividade": "1.2",
+      "perfil": "esp-cont",
+      "papel": "R"
+    },
+    {
+      "atividade": "2.1",
+      "perfil": "esp-pp",
+      "papel": "R"
+    },
+    {
+      "atividade": "2.1",
+      "perfil": "esp-as",
+      "papel": "R"
+    },
+    {
+      "atividade": "2.2",
+      "perfil": "esp-cont",
+      "papel": "R"
+    },
+    {
+      "atividade": "2.2",
+      "perfil": "esp-as",
+      "papel": "R"
+    },
+    {
+      "atividade": "2.3",
+      "perfil": "esp-pp",
+      "papel": "R"
+    },
+    {
+      "atividade": "2.3",
+      "perfil": "esp-as",
+      "papel": "R"
+    },
+    {
+      "atividade": "3.1",
+      "perfil": "esp-pp",
+      "papel": "R"
+    },
+    {
+      "atividade": "3.2",
+      "perfil": "esp-pp",
+      "papel": "R"
+    },
+    {
+      "atividade": "3.2",
+      "perfil": "esp-as",
+      "papel": "R"
+    },
+    {
+      "atividade": "4.1",
+      "perfil": "esp-as",
+      "papel": "R"
+    },
+    {
+      "atividade": "4.2",
+      "perfil": "esp-pp",
+      "papel": "R"
+    },
+    {
+      "atividade": "5.1",
+      "perfil": "esp-cont",
+      "papel": "R"
+    },
+    {
+      "atividade": "5.2",
+      "perfil": "esp-cont",
+      "papel": "R"
+    },
+    {
+      "atividade": "5.2",
+      "perfil": "esp-as",
+      "papel": "R"
+    },
+    {
+      "atividade": "5.3",
+      "perfil": "editorial",
+      "papel": "R"
+    },
+    {
+      "atividade": "G.1",
+      "perfil": "coord",
+      "papel": "A"
+    },
+    {
+      "atividade": "G.1",
+      "perfil": "coord",
+      "papel": "R"
+    }
+  ],
+  "observacoes": []
+}

@@ -1,0 +1,301 @@
+{
+  "textos": [
+    {
+      "codigo": "A8",
+      "itens": [
+        {
+          "id": "a8-1",
+          "texto": "Sugere-se identificar os riscos com a equipe no plano de trabalho e revê-los a cada entrega, com probabilidade e impacto qualitativos (baixo, médio, alto).",
+          "rotulo": "sugestao",
+          "motivo": "",
+          "fontes": [],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "A8.1"
+        },
+        {
+          "id": "a8-2",
+          "texto": "Recomenda-se definir os papéis e responsabilidades: a coordenação geral conduz o processo e cada risco tem um dono do risco, por papel, no registro.",
+          "rotulo": "sugestao",
+          "motivo": "",
+          "fontes": [],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "A8.2"
+        },
+        {
+          "id": "a8-3",
+          "texto": "Sugere-se usar a reserva de contingência só para os riscos marcados no registro, com o acionamento decidido pela coordenação; a reserva gerencial fica com o patrocinador. Os valores são decisão do GP.",
+          "rotulo": "sugestao",
+          "motivo": "",
+          "fontes": [],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "A8.3"
+        },
+        {
+          "id": "a8-4",
+          "texto": "Recomenda-se tratar as premissas críticas que se aplicam (PC1, PC3, PC6 e PC8) assim: cada uma está no registro de premissas, vira risco com resposta e gatilho e tem no plano de mudanças o modo de reajustar escopo, prazo e metas.",
+          "rotulo": "sugestao",
+          "motivo": "",
+          "fontes": [],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "A8.12"
+        }
+      ]
+    },
+    {
+      "codigo": "A4",
+      "itens": [
+        {
+          "id": "a4-1",
+          "texto": "Sugere-se estimar os custos por horas de cada perfil vezes o valor-hora decidido pelo GP, ligados aos pacotes da EAP.",
+          "rotulo": "sugestao",
+          "motivo": "",
+          "fontes": [],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "A4.2"
+        },
+        {
+          "id": "a4-2",
+          "texto": "Recomenda-se manter a reserva de contingência dentro da linha de base dos custos e a reserva gerencial fora dela, com os valores decididos pelo GP.",
+          "rotulo": "sugestao",
+          "motivo": "",
+          "fontes": [],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "A4.5"
+        },
+        {
+          "id": "a4-3",
+          "texto": "Sugere-se ligar o controle dos custos ao pagamento por produto: o faturamento de cada produto só ocorre depois do ateste.",
+          "rotulo": "sugestao",
+          "motivo": "",
+          "fontes": [
+            {
+              "doc": "rfp",
+              "pagina": 21,
+              "trecho": "O pagamento é realizado somente após ateste de conformidade e aprovação pela Contratante."
+            }
+          ],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "A4.9"
+        }
+      ]
+    }
+  ],
+  "riscos": [
+    {
+      "id": "RK01",
+      "item": {
+        "id": "rk01",
+        "texto": "Se a análise de cada produto pela contratante passar do prazo combinado, então as entregas seguintes atrasam.",
+        "rotulo": "sugestao",
+        "motivo": "",
+        "fontes": [
+          {
+            "doc": "rfp",
+            "pagina": 21,
+            "trecho": "O pagamento é realizado somente após ateste de conformidade e aprovação pela Contratante."
+          }
+        ],
+        "alternativas": [],
+        "requisitos": [],
+        "ficha": "B27.1"
+      },
+      "categoria": "prazo",
+      "probabilidade": "media",
+      "impacto": "alto",
+      "estrategia": "mitigar",
+      "resposta": "Combinar o prazo de análise no plano de trabalho e acompanhar cada submissão.",
+      "gatilho": "Produto sem retorno da contratante no prazo combinado.",
+      "responsavel": "coordenação geral",
+      "premissaCritica": "PC3",
+      "pedeReserva": false
+    },
+    {
+      "id": "RK02",
+      "item": {
+        "id": "rk02",
+        "texto": "Se a contratante não mobilizar os profissionais da rede para as oficinas remotas, então a escuta fica comprometida.",
+        "rotulo": "sugestao",
+        "motivo": "",
+        "fontes": [],
+        "alternativas": [],
+        "requisitos": [],
+        "ficha": "B27.1"
+      },
+      "categoria": "escopo",
+      "probabilidade": "media",
+      "impacto": "medio",
+      "estrategia": "mitigar",
+      "resposta": "Confirmar no plano de trabalho quem convida os participantes; se não houver adesão, usar consulta documental e registrar a mudança.",
+      "gatilho": "Oficina com adesão abaixo da prevista no plano de trabalho.",
+      "responsavel": "coordenação geral",
+      "premissaCritica": "PC6",
+      "pedeReserva": false
+    },
+    {
+      "id": "RK03",
+      "item": {
+        "id": "rk03",
+        "texto": "Se as informações pedidas à contratante não chegarem a tempo, então o levantamento dos cadernos atrasa.",
+        "rotulo": "sugestao",
+        "motivo": "",
+        "fontes": [
+          {
+            "doc": "rfp",
+            "pagina": 23,
+            "trecho": "Fornecer as informações necessárias para o desenvolvimento dos serviços objeto do contrato."
+          }
+        ],
+        "alternativas": [],
+        "requisitos": [],
+        "ficha": "B27.1"
+      },
+      "categoria": "prazo",
+      "probabilidade": "baixa",
+      "impacto": "medio",
+      "estrategia": "mitigar",
+      "resposta": "Listar as informações no plano de trabalho, com data de entrega, e usar fontes públicas enquanto isso.",
+      "gatilho": "Informação pedida sem retorno na data combinada.",
+      "responsavel": "especialista responsável pelo caderno",
+      "premissaCritica": "PC1",
+      "pedeReserva": false
+    },
+    {
+      "id": "RK04",
+      "item": {
+        "id": "rk04",
+        "texto": "Se a contratante pedir trabalho fora do escopo ou rodadas além do limite, então o prazo e as horas passam do planejado sem reajuste.",
+        "rotulo": "sugestao",
+        "motivo": "",
+        "fontes": [
+          {
+            "doc": "rfp",
+            "pagina": 24,
+            "trecho": "Os serviços poderão ser rejeitados, no todo ou em parte, quando em desacordo com as especifi- cações constantes neste Termo de Referência e na Proposta"
+          }
+        ],
+        "alternativas": [],
+        "requisitos": [],
+        "ficha": "B27.1"
+      },
+      "categoria": "escopo",
+      "probabilidade": "media",
+      "impacto": "alto",
+      "estrategia": "evitar",
+      "resposta": "Registrar o limite de rodadas e levar cada pedido novo ao controle de mudanças antes de fazê-lo.",
+      "gatilho": "Pedido não previsto na especificação do escopo.",
+      "responsavel": "coordenação geral",
+      "premissaCritica": "PC8",
+      "pedeReserva": true
+    },
+    {
+      "id": "RK05",
+      "item": {
+        "id": "rk05",
+        "texto": "Se a sequência do cronograma não for revista, então a entrega do segundo produto passa do prazo máximo da RFP.",
+        "rotulo": "sugestao",
+        "motivo": "",
+        "fontes": [
+          {
+            "doc": "rfp",
+            "pagina": 21,
+            "trecho": "As datas da tabela se referem ao prazo máximo para entrega dos produtos."
+          }
+        ],
+        "alternativas": [],
+        "requisitos": [
+          "R02"
+        ],
+        "ficha": "B27.1"
+      },
+      "categoria": "prazo",
+      "probabilidade": "alta",
+      "impacto": "alto",
+      "estrategia": "evitar",
+      "resposta": "Rever no plano de trabalho a sequência das atividades do segundo produto e antecipar o levantamento.",
+      "gatilho": "Entrega do segundo produto acima do prazo máximo no cronograma calculado.",
+      "responsavel": "coordenação geral",
+      "premissaCritica": "",
+      "pedeReserva": false
+    },
+    {
+      "id": "RK06",
+      "item": {
+        "id": "rk06",
+        "texto": "Se um membro da equipe-chave ficar indisponível, então a substituição consome tempo e pode atrasar o produto em curso.",
+        "rotulo": "sugestao",
+        "motivo": "",
+        "fontes": [
+          {
+            "doc": "rfp",
+            "pagina": 23,
+            "trecho": "Caso um de seus membros não esteja disponível e isso possa causar atrasos na execução dos serviços"
+          }
+        ],
+        "alternativas": [],
+        "requisitos": [],
+        "ficha": "B27.1"
+      },
+      "categoria": "recursos",
+      "probabilidade": "baixa",
+      "impacto": "alto",
+      "estrategia": "mitigar",
+      "resposta": "Manter perfis de reserva identificados e repassar o trabalho com registro.",
+      "gatilho": "Ausência de membro da equipe-chave por período que afete a entrega.",
+      "responsavel": "coordenação geral",
+      "premissaCritica": "",
+      "pedeReserva": true
+    }
+  ],
+  "premissas": [
+    {
+      "item": {
+        "id": "b3-n1",
+        "texto": "Sugere-se assumir que a produtividade da redação dos cadernos segue a base das estimativas de horas e que ela é revista ao fim do primeiro caderno.",
+        "rotulo": "sugestao",
+        "motivo": "",
+        "fontes": [],
+        "alternativas": [],
+        "requisitos": [],
+        "ficha": "B3.4"
+      },
+      "tipo": "premissa",
+      "origem": "estimativa",
+      "premissaCritica": "",
+      "consequencia": "Se a produtividade for menor, as horas dos cadernos seguintes são reestimadas e o cronograma é revisto.",
+      "dependeDe": "FGV",
+      "comoValidar": "Comparar horas previstas e apontadas ao fim do primeiro caderno."
+    },
+    {
+      "item": {
+        "id": "b3-n2",
+        "texto": "Sugere-se assumir que as oficinas remotas usam ferramenta de videoconferência já disponível na FGV, sem custo adicional.",
+        "rotulo": "sugestao",
+        "motivo": "",
+        "fontes": [
+          {
+            "doc": "rfp",
+            "pagina": 21,
+            "trecho": "Os serviços serão prestados, como regra, em formato remoto."
+          }
+        ],
+        "alternativas": [],
+        "requisitos": [],
+        "ficha": "B3.4"
+      },
+      "tipo": "premissa",
+      "origem": "estimativa",
+      "premissaCritica": "",
+      "consequencia": "Se a contratante exigir outra ferramenta, a mudança passa pelo plano de mudanças.",
+      "dependeDe": "FGV e contratante",
+      "comoValidar": "Confirmar a ferramenta no plano de trabalho."
+    }
+  ],
+  "observacoes": []
+}

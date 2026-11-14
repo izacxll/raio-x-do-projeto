@@ -18,9 +18,21 @@ export type Esforco = "low" | "medium" | "high" | "xhigh" | "max";
 
 /**
  * Passos que chamam o PMO. O teste da chave é uma chamada mínima. Etapa 2: estratégia, conteúdo e EAP.
- * Etapa 3: os 12 elementos do TAP e o registro de premissas inicial.
+ * Etapa 3: os 12 elementos do TAP e o registro de premissas inicial. Etapa 4: os seis passos do PGP (decisão 0007).
  */
-export type PassoPmo = "teste" | "estrategia" | "conteudo" | "eap" | "tap" | "premissas";
+export type PassoPmo =
+  | "teste"
+  | "estrategia"
+  | "conteudo"
+  | "eap"
+  | "tap"
+  | "premissas"
+  | "adaptacao"
+  | "escopo"
+  | "cronograma"
+  | "riscos"
+  | "planos"
+  | "execucao";
 
 /**
  * Esforço explícito por passo: no Opus 5.5 o padrão da API é "medium", e o pensamento não pode ser desligado
@@ -33,6 +45,12 @@ export const ESFORCO: Record<PassoPmo, Esforco> = {
   eap: "high",
   tap: "high",
   premissas: "high",
+  adaptacao: "high",
+  escopo: "high",
+  cronograma: "high",
+  riscos: "high",
+  planos: "high",
+  execucao: "high",
 };
 
 /** Limite de saída de cada passo (tokens), já com a folga do raciocínio. A chamada é por streaming. */
@@ -43,6 +61,12 @@ export const LIMITE_SAIDA: Record<PassoPmo, number> = {
   eap: 48000,
   tap: 48000,
   premissas: 32000,
+  adaptacao: 32000,
+  escopo: 48000,
+  cronograma: 64000,
+  riscos: 48000,
+  planos: 64000,
+  execucao: 48000,
 };
 
 /** Saída que se espera de cada passo (tokens), só para a estimativa de custo antes da chamada. */
@@ -53,6 +77,12 @@ export const SAIDA_ESPERADA: Record<PassoPmo, { min: number; max: number }> = {
   eap: { min: 6000, max: 22000 },
   tap: { min: 6000, max: 20000 },
   premissas: { min: 3000, max: 12000 },
+  adaptacao: { min: 4000, max: 12000 },
+  escopo: { min: 6000, max: 20000 },
+  cronograma: { min: 8000, max: 28000 },
+  riscos: { min: 6000, max: 20000 },
+  planos: { min: 8000, max: 30000 },
+  execucao: { min: 5000, max: 18000 },
 };
 
 /**

@@ -5,6 +5,7 @@ import textoSkill from "../../.claude/skills/pmo/SKILL.md?raw";
 import textoChecklist from "../../.claude/skills/pmo/referencias/checklist.md?raw";
 import textoExperiencia from "../../.claude/skills/pmo/referencias/experiencia.md?raw";
 import textoLicitacoes from "../../.claude/skills/pmo/referencias/licitacoes.md?raw";
+import textoPmbok7 from "../../.claude/skills/pmo/referencias/pmbok7.md?raw";
 import textoRework from "../../.claude/skills/pmo/referencias/rework.md?raw";
 import type { DocumentoLido } from "../dossie/esquema";
 
@@ -72,6 +73,59 @@ export function referenciasEtapa3(): BlocoTexto[] {
     { titulo: "referencias/experiencia.md", texto: textoExperiencia },
     ...FICHAS_ETAPA_3.map((f) => ({ titulo: `referencias/artefatos/${f}.md`, texto: ficha(f) })),
   ];
+}
+
+/**
+ * O que vai como instrução de sistema na etapa 4 (SKILL.md, seção 5). As fichas das partes vão no pedido de cada
+ * passo, e não aqui: assim o prefixo (skill + documentos) é o mesmo nos seis passos e fica no cache.
+ */
+export function referenciasEtapa4(): BlocoTexto[] {
+  return [
+    { titulo: "SKILL.md", texto: textoSkill },
+    { titulo: "referencias/pmbok7.md", texto: textoPmbok7 },
+    { titulo: "referencias/checklist.md", texto: textoChecklist },
+    { titulo: "referencias/experiencia.md", texto: textoExperiencia },
+    { titulo: "referencias/licitacoes.md", texto: textoLicitacoes },
+  ];
+}
+
+/** Arquivo da ficha de uma parte do PGP pelo código (A1 → a01-…, B27 → b27-…). */
+export function fichaDaParte(codigo: string): string | undefined {
+  const m = /^([AB])(\d+)$/.exec(codigo);
+  if (!m) return undefined;
+  const prefixo = `/${m[1]!.toLowerCase()}${m[2]!.padStart(2, "0")}-`;
+  return Object.entries(fichas).find(([c]) => c.includes(prefixo))?.[1];
+}
+
+/** As fichas inteiras das partes, para o pedido do passo. */
+export function fichasDasPartes(codigos: string[]): string {
+  return codigos
+    .map((c) => {
+      const f = fichaDaParte(c);
+      return f ? `<ficha parte="${c}">\n${f.replace(/^---[\s\S]*?---\s*/, "").trim()}\n</ficha>` : "";
+    })
+    .filter(Boolean)
+    .join("\n\n");
+}
+
+/** Só o "Quando dispensar" de cada ficha, para a adaptação (as 51 fichas inteiras passariam de 100 mil tokens). */
+export function dispensaDasFichas(codigos: string[]): string {
+  return codigos
+    .map((c) => {
+      const f = fichaDaParte(c) ?? "";
+      const nome = /^nome:\s*(.+)$/m.exec(f)?.[1] ?? c;
+      const ini = f.indexOf("## Quando dispensar");
+      const fim = ini < 0 ? -1 : f.indexOf("\n## ", ini + 5);
+      const secao =
+        ini < 0
+          ? "(sem a seção)"
+          : f
+              .slice(ini, fim < 0 ? undefined : fim)
+              .replace(/^## [^\n]*\n/, "")
+              .trim();
+      return `### ${c} — ${nome}\n${secao}`;
+    })
+    .join("\n\n");
 }
 
 export function textoDeSistema(blocos: BlocoTexto[]): string {
