@@ -17,15 +17,15 @@ export const NOME_PROJETO_DEMONSTRACAO = "Demonstração — concorrência públ
 export const ABORDAGEM_GRAVADA = "B";
 
 /** Pasta de cada etapa em tests/fixtures/gerados/. */
-const PASTA: Record<number, string> = { 2: "proposta-oei", 3: "tap-oei", 4: "pgp-oei" };
+const PASTA: Record<number, string> = { 2: "proposta-oei", 3: "tap-oei", 4: "pgp-oei", 5: "leitura-oei" };
 
-const gravadas = import.meta.glob("../../tests/fixtures/gerados/{proposta,tap,pgp}-oei/*.json", {
+const gravadas = import.meta.glob("../../tests/fixtures/gerados/{proposta,tap,pgp,leitura}-oei/*.json", {
   import: "default",
 });
 
 /** Resposta gravada de um passo, validada pelo mesmo schema da resposta da API. */
 export async function respostaGravada<S extends z.ZodType>(
-  etapa: 2 | 3 | 4,
+  etapa: 2 | 3 | 4 | 5,
   passo: string,
   schema: S,
 ): Promise<z.infer<S>> {

@@ -4,7 +4,18 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 
 ## [Não publicado]
 
-### F4 — plano de gerenciamento com o PMO (versão 0.7.0, construída sem a chave; teste com a chave pendente)
+## [0.8.0] — 13/11/2026
+
+### F5b — leitura opcional do PMO na conferência (construída sem a chave; teste com a chave pendente)
+- **Etapa 5:** depois da conferência por código, o GP pode pedir a leitura do PMO, com o custo antes e o uso depois. Vão o plano, o TAP e a RFP, o que o código já apontou e só o conteúdo mínimo e as perguntas de qualidade das partes presentes.
+- **Travas em código:** todo achado do PMO é sugestão ("leitura do PMO"); citação procurada na página ("citação não conferida" quando não acha); ausente procurado no plano inteiro e rebaixado se o código achar, mostrando onde; gravidade e categoria pela parte do plano; achado que o código já apontou é marcado.
+- **Decisão do GP** em cada achado do PMO; seção "Leitura do PMO (sugestões)" no relatório e aba na lista de achados; minuta até o GP decidir.
+- Testes sem chave: leitura gravada para o plano de teste da etapa 5 (vagos com citação, ausente rebaixado, ausente que vale, citação falsa); fumaça com a API simulada.
+- Decisão 0030. Versão do app: 0.8.0.
+
+## [0.7.0] — 13/11/2026
+
+### F4 — plano de gerenciamento com o PMO (construída sem a chave; teste com a chave pendente)
 - **Etapa 4 na tela:** documentos usados (o TAP da etapa 3 ou o PDF aprovado; a proposta, opcional), premissas críticas, conexão com o Claude e o custo à vista.
 - **Seis passos do PMO, na ordem da decisão 0007:** adaptação, ciclo de vida e abordagem; escopo; atividades, recursos e cronograma; riscos, custos e premissas; demais planos; medição e documentos de execução. As fichas das partes vão no pedido de cada passo (o prefixo fica no cache), e só as que o GP marcou.
 - **Adaptação decidida pelo GP:** as 51 partes com a sugestão do PMO (essencial, recomendado, dispensável) e a justificativa; o GP marca o que gerar e escolhe a abordagem.
@@ -18,7 +29,9 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 - Testes sem chave: respostas do PMO gravadas para a OEI com todas as citações achadas; contas; autoconferência; saídas; fumaça da demonstração com o pacote .zip.
 - Decisão 0029. Versão do app: 0.7.0.
 
-### F3 — termo de abertura com o PMO (versão 0.6.0, construída sem a chave; teste com a chave pendente)
+## [0.6.0] — 13/11/2026
+
+### F3 — termo de abertura com o PMO (construída sem a chave; teste com a chave pendente)
 - **Etapa 3 na tela:** proposta usada (o PDF final do GP ou a proposta da etapa 2 no dossiê, que vira um documento com uma "página" por seção, para as citações serem conferidas), premissas críticas, conexão com o Claude e o custo à vista.
 - **Divergências RFP × proposta (código):** requisito a requisito (produtos e equipe), prazo e valor; o que o código não acha fica "não localizado na proposta — conferir". O GP decide o que vale (RFP, proposta ou outra redação).
 - **O que vem dos documentos (código):** contratante, objeto, vigência, produtos, valor da proposta, entrega de cada produto no cronograma da proposta, aceite, extinção e partes, com a página.

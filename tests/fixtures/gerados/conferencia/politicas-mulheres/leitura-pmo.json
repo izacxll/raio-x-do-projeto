@@ -1,0 +1,68 @@
+{
+  "achados": [
+    {
+      "id": "pmo-1",
+      "tipo": "vago",
+      "parte": "B18",
+      "item": "",
+      "titulo": "Dedicação da equipe sem horas nem percentual",
+      "descricao": "As designações dizem só \"tempo parcial\" para todos os perfis. Sem horas ou percentual de dedicação, não dá para conferir se a equipe dá conta do volume no pico do mês 3 (premissa crítica PC7).",
+      "evidencias": [{ "doc": "pgp", "pagina": 11, "trecho": "Tempo parcial, de D+16 a D+110" }],
+      "sugestao": "Sugere-se indicar as horas ou o percentual de dedicação de cada perfil no período, ligados aos requisitos de recursos da seção 14.",
+      "termosProcurados": []
+    },
+    {
+      "id": "pmo-2",
+      "tipo": "vago",
+      "parte": "A8",
+      "item": "",
+      "titulo": "Lista de verificação de riscos não identificada",
+      "descricao": "A identificação dos riscos usa \"a lista de verificação da FGV\", sem dizer qual é nem onde está; quem for revisar o plano não consegue refazer a identificação.",
+      "evidencias": [
+        {
+          "doc": "pgp",
+          "pagina": 18,
+          "trecho": "identificação na elaboração deste plano, com a lista de verificação da FGV e a leitura do TR"
+        }
+      ],
+      "sugestao": "Recomenda-se nomear a lista usada (versão e local) ou anexá-la ao plano.",
+      "termosProcurados": []
+    },
+    {
+      "id": "pmo-3",
+      "tipo": "vago",
+      "parte": "A5",
+      "item": "A5.2",
+      "titulo": "Validação coletiva do protocolo sem critério",
+      "descricao": "O objetivo de qualidade pede o protocolo \"validado coletivamente pelos representantes da rede\", mas o plano não diz quem representa cada órgão, que quórum vale nem como a validação é registrada.",
+      "evidencias": [
+        { "doc": "pgp", "pagina": 14, "trecho": "protocolo validado coletivamente pelos representantes da rede" }
+      ],
+      "sugestao": "Sugere-se definir quem valida (um representante por órgão da rede), o registro (ata da oficina 4) e o que acontece se houver divergência.",
+      "termosProcurados": []
+    },
+    {
+      "id": "pmo-4",
+      "tipo": "ausente",
+      "parte": "A6",
+      "item": "A6.11",
+      "titulo": "Acompanhamento da carga da equipe",
+      "descricao": "O plano de recursos não diz como a carga de cada perfil é acompanhada ao longo do projeto.",
+      "evidencias": [],
+      "sugestao": "Sugere-se comparar horas previstas e realizadas de cada perfil no relatório de andamento.",
+      "termosProcurados": ["previsto × realizado", "sobrecarga"]
+    },
+    {
+      "id": "pmo-5",
+      "tipo": "ausente",
+      "parte": "A10",
+      "item": "",
+      "titulo": "Órgão da rede que resiste ao protocolo",
+      "descricao": "O plano de engajamento não trata do órgão da rede que pode resistir ao protocolo ou não aderir ao fluxo, embora a validação coletiva dependa de todos.",
+      "evidencias": [],
+      "sugestao": "Recomenda-se prever a estratégia para o órgão que resistir (conversa prévia com a Secretaria, registro da divergência no protocolo).",
+      "termosProcurados": ["resistência", "oposição", "se opor"]
+    }
+  ],
+  "observacoes": []
+}

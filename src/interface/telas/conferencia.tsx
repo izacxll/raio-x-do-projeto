@@ -23,6 +23,8 @@ import {
 import { procurarSinais } from "../../regras/busca";
 import { conferirPlano, resumirAchados } from "../../regras/conferencia";
 import { confirmacaoInicial, proporMapa, type ParteNoMapa } from "../../regras/mapa-pgp";
+import { LeituraDoPmo } from "./leitura-pmo";
+import { conferirLeitura, type AchadoPmoConferido } from "../../etapas/5-conferencia/leitura-pmo";
 import { EtiquetaRotulo, RotuloSecao } from "../componentes/basicos";
 
 const NOME_SITUACAO_PROPOSTA: Record<ParteNoMapa["situacao"], string> = {
@@ -171,6 +173,25 @@ export function ConferenciaPgp(props: Props) {
           verificacoes={resultado.verificacoes}
           conf={conf}
           atualizar={atualizar}
+          leitura={
+            conf.leituraPmo
+              ? conferirLeitura(
+                  conf.leituraPmo.resposta,
+                  { pgp: props.pgp, tap: props.tap, rfp: props.rfp },
+                  resultado.achados,
+                )
+              : []
+          }
+        />
+      )}
+      {resultado && (
+        <LeituraDoPmo
+          pgp={props.pgp}
+          tap={props.tap}
+          rfp={props.rfp}
+          conf={conf}
+          atualizar={atualizar}
+          achadosDoCodigo={resultado.achados}
         />
       )}
     </>
@@ -507,11 +528,13 @@ function Resultado({
   verificacoes,
   conf,
   atualizar,
+  leitura,
 }: {
   achados: ReturnType<typeof conferirPlano>["achados"];
   verificacoes: ReturnType<typeof conferirPlano>["verificacoes"];
   conf: Conferencia;
   atualizar: (m: Partial<Conferencia>) => void;
+  leitura: AchadoPmoConferido[];
 }) {
   const dossie = useDossie((s) => s.dossie);
   const [mensagem, setMensagem] = useState("");
@@ -526,8 +549,8 @@ function Resultado({
     try {
       const doc =
         formato === "xlsx"
-          ? montarListaAchados(dossie, achados)
-          : montarRelatorioConformidade(dossie, achados, verificacoes);
+          ? montarListaAchados(dossie, achados, new Date(), leitura)
+          : montarRelatorioConformidade(dossie, achados, verificacoes, new Date(), leitura);
       const nome = await exportar(
         doc,
         formato,

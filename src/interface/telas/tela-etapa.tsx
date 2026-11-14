@@ -91,6 +91,8 @@ function AvisoEnvio({ etapa }: { etapa: Etapa }) {
         <p>
           <b>Sem IA.</b> Os PDFs são lidos e analisados aqui no navegador, só com código; nada é enviado para
           fora.
+          {etapa.numero === 5 &&
+            " Depois da conferência, você pode pedir, se quiser, a leitura do PMO: só então o texto do plano, do TAP e da RFP vai para a API do Claude, com o custo à vista."}
         </p>
       </div>
     );

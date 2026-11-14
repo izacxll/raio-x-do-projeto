@@ -16,7 +16,7 @@ As etapas 1 e 5 rodam só com código e sem chave.
 | Pasta | O que tem | Desde |
 |---|---|---|
 | `dominio/` | A skill lida no build: fichas (partes do PGP, conteúdo mínimo, gravidade, categoria), premissas críticas e características do projeto | F5 |
-| `etapas/` | As cinco etapas: documentos pedidos, o que a ferramenta faz, saídas. `1-rfp/`: a análise da RFP (junta os passos 1 a 11) e a revisão do GP. `2-proposta/`: ponto de partida, pedidos ao PMO, cronograma (PERT, caminho crítico, prazos), preço, conferência final e os itens do PMO com a revisão do GP. `3-tap/`: entrada (a proposta do dossiê como documento), divergências RFP × proposta, o que vem dos documentos, pedidos ao PMO, itens e pendências, conferência do TAP. `4-pgp/`: entrada (TAP e proposta como documentos), passos na ordem da decisão 0007, pedidos, itens, contas (cronograma, marcos, custos, rastreabilidade) e a autoconferência. `documento-virtual.ts`: documento gerado na ferramenta como documento "lido" | F0, F1, F2, F3, F4 |
+| `etapas/` | As cinco etapas: documentos pedidos, o que a ferramenta faz, saídas. `1-rfp/`: a análise da RFP (junta os passos 1 a 11) e a revisão do GP. `2-proposta/`: ponto de partida, pedidos ao PMO, cronograma (PERT, caminho crítico, prazos), preço, conferência final e os itens do PMO com a revisão do GP. `3-tap/`: entrada (a proposta do dossiê como documento), divergências RFP × proposta, o que vem dos documentos, pedidos ao PMO, itens e pendências, conferência do TAP. `4-pgp/`: entrada (TAP e proposta como documentos), passos na ordem da decisão 0007, pedidos, itens, contas (cronograma, marcos, custos, rastreabilidade) e a autoconferência. `documento-virtual.ts`: documento gerado na ferramenta como documento "lido". `5-conferencia/`: a leitura opcional do PMO com as travas do código | F0, F1, F2, F3, F4, F5b |
 | `leitura/` | PDF página a página (pdf.js), OCR (Tesseract.js), imagens na página, estado de cada página | F0 |
 | `texto/` | Normalização para comparar trechos, limpeza de carimbos, nome de arquivo; datas no texto e contas de prazo (dias úteis), frase em volta de uma posição, cabeçalho repetido | F0, F1 |
 | `dossie/` | Esquema do dossiê (zod), salvar e abrir, estado do app (zustand) | F0 |
@@ -47,7 +47,8 @@ As etapas 1 e 5 rodam só com código e sem chave.
 5. O uso de cada chamada (tokens e valor) fica no dossiê.
 6. Na etapa 3, o código compara a RFP e a proposta (PDF final do GP ou a proposta da etapa 2, que vira um documento com uma "página" por seção), traz o que vem dos documentos e confere o TAP; o PMO redige os 12 elementos e o registro de premissas. Os componentes de passo e de item do PMO são comuns (`interface/componentes/passo-pmo.tsx`, `item-pmo.tsx`).
 7. Na etapa 4, seis pedidos ao PMO na ordem da decisão 0007; as fichas vão no pedido de cada passo (o prefixo com a skill e os documentos fica no cache). O código monta as tabelas de cronograma, marcos, custos, designações e rastreabilidade, desenha a EAP e a rede em SVG e roda a autoconferência: o plano gerado, como documento "lido", passa por `conferirPlano` (etapa 5), com o que o GP dispensou marcado como dispensado.
-8. **Demonstração** (decisão 0027): com o dossiê marcado, cada passo carrega a resposta gravada em `tests/fixtures/gerados/<etapa>-oei/`, validada pelo mesmo schema, sem chamar a API.
+8. Na etapa 5, a leitura do PMO é opcional (decisão 0030): o código confere as citações, procura no plano inteiro o que o PMO diz estar ausente (e rebaixa se achar) e aplica a gravidade e a categoria pela parte.
+9. **Demonstração** (decisão 0027): com o dossiê marcado, cada passo carrega a resposta gravada em `tests/fixtures/gerados/<etapa>-oei/`, validada pelo mesmo schema, sem chamar a API.
 
 ## Dossiê
 

@@ -5,6 +5,7 @@
 import { z } from "zod";
 import { RespostaConteudo, RespostaEap, RespostaEstrategia } from "../pmo/schemas/proposta";
 import { RespostaPremissas, RespostaTap } from "../pmo/schemas/tap";
+import { RespostaLeitura } from "../pmo/schemas/leitura";
 import {
   RespostaAdaptacao,
   RespostaCronograma,
@@ -154,6 +155,23 @@ export const Conferencia = z.object({
   proximoRequisito: z.number().int().positive(),
   decisoes: z.record(z.string(), DecisaoAchado),
   executadaEm: z.string().optional(),
+  /** Leitura opcional do PMO (F5b, decisão 0013): a resposta, o modelo e o uso. As decisões ficam em "pmo:…". */
+  leituraPmo: z.object({ resposta: RespostaLeitura, modelo: z.string(), em: z.string() }).optional(),
+  modeloPmo: z.string().optional(),
+  usoPmo: z
+    .array(
+      z.object({
+        passo: z.string(),
+        modelo: z.string(),
+        entrada: z.number().int().nonnegative(),
+        saida: z.number().int().nonnegative(),
+        escritaCache: z.number().int().nonnegative(),
+        leituraCache: z.number().int().nonnegative(),
+        custoUsd: z.number().nonnegative().optional(),
+        em: z.string(),
+      }),
+    )
+    .optional(),
 });
 export type Conferencia = z.infer<typeof Conferencia>;
 

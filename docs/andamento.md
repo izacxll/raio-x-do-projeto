@@ -1,24 +1,24 @@
 # Andamento
 
-Atualizado em 13/11/2026 (F1 e F2 publicadas antes do teste, decisão 0026).
+Atualizado em 13/11/2026 (demonstração, F3, F4 e F5b publicadas com o ok da responsável).
 
 ## Onde estamos
 
-**F1 e F2 publicadas na `main` como v0.4.0 e v0.5.0 em 13/11/2026, antes do teste da responsável** (decisão 0026). App no ar: https://izacxll.github.io/raio-x-do-projeto/. O teste das etapas 1, 2 e 5 continua pendente; o que ele encontrar sai como v0.4.x ou v0.5.x. A etapa 2 ainda não foi testada com a chave, e a comparação Opus 5.5 × Sonnet 5.5 (`npm run comparar-modelos`, decisão 0002) espera a chave.
+**Demonstração, F3, F4 e F5b publicadas na `main` em 13/11/2026, com o ok da responsável pelo projeto** (PRs #8 a #11): v0.5.1 (modo demonstração, decisão 0027), v0.6.0 (TAP, decisão 0028), v0.7.0 (PGP, decisão 0029) e v0.8.0 (leitura opcional do PMO na conferência, decisão 0030). App no ar: https://izacxll.github.io/raio-x-do-projeto/. A demonstração das etapas 2, 3 e 4 foi conferida na `main` depois do merge.
 
-**Modo demonstração pronto no PR #8 (v0.5.1), aguardando o ok da responsável para o merge** (decisão 0027): na etapa 2, "Ver demonstração" abre a RFP pública da OEI com as respostas gravadas do PMO, sem chamar a API; aviso na tela e nos exportados.
+**Falta, com a chave da API:** o teste real das etapas 2, 3 e 4 e da leitura do PMO na etapa 5, e a comparação Opus 5.5 × Sonnet 5.5 (`npm run comparar-modelos`, decisão 0002). O teste das etapas 1, 2 e 5 pela responsável continua pendente. O que esses testes encontrarem sai como correção (v0.8.x).
 
-**F3 (TAP com o PMO) construída sem a chave, na branch `fase/f3-tap`** (decisão 0028): divergências RFP × proposta, o que vem dos documentos, 12 elementos e registro de premissas pelo PMO, conferência do TAP, saídas e demonstração. Falta, com a chave: o teste real da etapa 3.
+**F1 e F2 publicadas como v0.4.0 e v0.5.0, antes do teste da responsável** (decisão 0026).
 
-**F4 (PGP com o PMO) construída sem a chave, na branch `fase/f4-pgp`** (decisão 0029): adaptação decidida pelo GP, seis passos do PMO, contas do código (rastreabilidade, cronograma, marcos, custos), autoconferência pelas regras da etapa 5, pacote .zip e demonstração. Falta, com a chave: o teste real da etapa 4.
+**O que a F3 entregou:** divergências RFP × proposta, o que vem dos documentos, 12 elementos e registro de premissas pelo PMO, conferência do TAP, saídas e demonstração.
 
-**Próximas fases, nesta ordem (decisão 0026):** F3 (TAP, v0.6.0), F4 (PGP, v0.7.0) e F5b (leitura do PMO na conferência, v0.8.0), cada uma com PR e prévia.
+**O que a F4 entregou:** adaptação decidida pelo GP, seis passos do PMO, contas do código (rastreabilidade, cronograma, marcos, custos), autoconferência pelas regras da etapa 5, pacote .zip e demonstração.
+
+**O que a F5b entregou:** travas em código (citação, ausente procurado no plano, gravidade pela parte), decisão do GP em cada achado e seção no relatório.
 
 **O que a F2 entregou:** tela "Conectar ao Claude" (chave só na sessão, testar, esquecer); ponto de partida vindo da etapa 1; três passos do PMO (estratégia e abordagens; conteúdo técnico e SOW; EAP, estimativas e equipe), com o custo estimado antes e o uso real depois; escolha da abordagem e das premissas críticas pelo GP; conferência de cada citação, da redação e dos números sem fonte; cronograma PERT com caminho crítico e prazos (total e de cada produto) contra a RFP; preço com os valores do GP; matriz de atendimento e checklist de envio; quatro saídas. Decisão 0025.
 
 **O que falta na proposta (próximas versões):** planilha de preço no formato do próprio edital; estrutura de uma proposta antiga da FGV (`referencias/modelos/`, se a responsável tiver uma); leitura, pelo código, da tabela de prazos por produto da RFP (hoje vem do PMO, conferida pela citação); vocabulário de dispensa ampliado (decisão 0016).
-
-**F1 (leitura da RFP, só código) pronta na branch `fase/f1-leitura-rfp`, com o PR #6 aberto.** Falta o teste e o ok da responsável; depois, merge, tag **v0.4.0** e release (decisão 0024).
 
 **O que a F1 entregou:** "Analisar a RFP" com pontos de atenção, identificação, mapa do documento (seções, cláusulas, anexos e o tema de cada uma), requisitos numerados (produtos, equipe, quantidades, local; número fixo no dossiê, que segue para a etapa 5), prazos do certame e da execução com o limite de esclarecimento calculado e o alerta, julgamento, habilitação (catálogo de 31 documentos), apresentação, condições contratuais com o valor tirado por código, partes interessadas e vagos e brechas com a pergunta de esclarecimento sugerida. Revisão item a item, decisão de participar (só do GP) e as quatro saídas (Análise DOCX/PDF, Requisitos e prazos XLSX, Checklist de habilitação XLSX, Perguntas DOCX). Testada em 8 RFPs públicas.
 
@@ -80,9 +80,10 @@ Atualizado em 13/11/2026 (F1 e F2 publicadas antes do teste, decisão 0026).
 | F5 | Etapa 5: conferência do PGP só com código, com a base do "ausente" em três níveis | concluída (PR #5), teste da responsável pendente (decisão 0023) | v0.3.0 |
 | F1 | Etapa 1: leitura da RFP (só código) | concluída (PR #6), teste da responsável pendente (decisão 0026) | v0.4.0 |
 | F2 | Etapa 2: proposta, com o PMO; tela da chave; comparação de modelos | concluída (PR #7) sem a chave; teste da responsável, teste com a chave e comparação de modelos pendentes (decisão 0026) | v0.5.0 |
-| F3 | Etapa 3: TAP, com o PMO | construída sem a chave (PR aberto); teste com a chave pendente | v0.6.0 |
-| F4 | Etapa 4: PGP, com o PMO | construída sem a chave (PR aberto); teste com a chave pendente | v0.7.0 |
-| F5b | Leitura opcional do PMO na etapa 5 | a fazer | v0.8.0 |
+| Demonstração | Respostas gravadas do PMO, sem chamada à API | concluída (PR #8) | v0.5.1 |
+| F3 | Etapa 3: TAP, com o PMO | concluída (PR #9) sem a chave; teste com a chave pendente | v0.6.0 |
+| F4 | Etapa 4: PGP, com o PMO | concluída (PR #10) sem a chave; teste com a chave pendente | v0.7.0 |
+| F5b | Leitura opcional do PMO na etapa 5 | concluída (PR #11) sem a chave; teste com a chave pendente | v0.8.0 |
 | MVP | Critérios de aceite da seção 14 | a fazer | v1.0.0 |
 
 ## Decisões pendentes
@@ -94,11 +95,11 @@ Atualizado em 13/11/2026 (F1 e F2 publicadas antes do teste, decisão 0026).
 
 ## Próximo passo
 
-1. **Claude Code:** F5b (leitura opcional do PMO na conferência); F3 e F4 prontas nos PRs (TAP) e F4 (PGP), com PR e prévia; se sobrar tempo, F5b.
-2. **Responsável pelo projeto:** testar as etapas 1, 2 (no modo demonstração ou com a chave) e 5 na prévia; o que aparecer vira correção (v0.4.x, v0.5.x).
+1. **Claude Code:** fase P (caso real, quando a responsável liberar) e MVP (critérios de aceite da seção 14, v1.0.0).
+2. **Responsável pelo projeto:** testar as etapas 1 a 5 no app no ar (as etapas 2, 3 e 4 também no modo demonstração); o que aparecer vira correção (v0.8.x).
 3. **Quando a chave da API chegar** (pedir ao administrador do Claude da FGV, no Claude Console):
    - no PowerShell, na pasta do projeto: `$env:ANTHROPIC_API_KEY = "<chave>"; npm run comparar-modelos` (custa cerca de US$ 2 a 3); o resultado fica em `tests/fixtures/gerados/comparacao-modelos/resumo.md`. A responsável escolhe o modelo e a decisão 0002 é atualizada;
-   - testar a etapa 2 com a chave, numa RFP pública.
+   - testar as etapas 2, 3 e 4 e a leitura do PMO na etapa 5 com a chave, numa RFP pública.
 4. Na tela, nunca citar fases do plano: para o GP, o que falta é "em construção".
 
 **Lembretes técnicos:**
