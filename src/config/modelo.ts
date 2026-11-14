@@ -16,8 +16,11 @@ export const MODELO_COMPARACAO: IdModelo = "claude-sonnet-5-5";
 
 export type Esforco = "low" | "medium" | "high" | "xhigh" | "max";
 
-/** Passos da etapa 2 que chamam o PMO. O teste da chave é uma chamada mínima. */
-export type PassoPmo = "teste" | "estrategia" | "conteudo" | "eap";
+/**
+ * Passos que chamam o PMO. O teste da chave é uma chamada mínima. Etapa 2: estratégia, conteúdo e EAP.
+ * Etapa 3: os 12 elementos do TAP e o registro de premissas inicial.
+ */
+export type PassoPmo = "teste" | "estrategia" | "conteudo" | "eap" | "tap" | "premissas";
 
 /**
  * Esforço explícito por passo: no Opus 5.5 o padrão da API é "medium", e o pensamento não pode ser desligado
@@ -28,6 +31,8 @@ export const ESFORCO: Record<PassoPmo, Esforco> = {
   estrategia: "high",
   conteudo: "high",
   eap: "high",
+  tap: "high",
+  premissas: "high",
 };
 
 /** Limite de saída de cada passo (tokens), já com a folga do raciocínio. A chamada é por streaming. */
@@ -36,6 +41,8 @@ export const LIMITE_SAIDA: Record<PassoPmo, number> = {
   estrategia: 32000,
   conteudo: 48000,
   eap: 48000,
+  tap: 48000,
+  premissas: 32000,
 };
 
 /** Saída que se espera de cada passo (tokens), só para a estimativa de custo antes da chamada. */
@@ -44,6 +51,8 @@ export const SAIDA_ESPERADA: Record<PassoPmo, { min: number; max: number }> = {
   estrategia: { min: 4000, max: 14000 },
   conteudo: { min: 6000, max: 22000 },
   eap: { min: 6000, max: 22000 },
+  tap: { min: 6000, max: 20000 },
+  premissas: { min: 3000, max: 12000 },
 };
 
 /**
