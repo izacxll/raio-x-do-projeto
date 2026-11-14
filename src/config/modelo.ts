@@ -32,7 +32,8 @@ export type PassoPmo =
   | "cronograma"
   | "riscos"
   | "planos"
-  | "execucao";
+  | "execucao"
+  | "leitura";
 
 /**
  * Esforço explícito por passo: no Opus 5.5 o padrão da API é "medium", e o pensamento não pode ser desligado
@@ -51,6 +52,7 @@ export const ESFORCO: Record<PassoPmo, Esforco> = {
   riscos: "high",
   planos: "high",
   execucao: "high",
+  leitura: "high",
 };
 
 /** Limite de saída de cada passo (tokens), já com a folga do raciocínio. A chamada é por streaming. */
@@ -67,6 +69,7 @@ export const LIMITE_SAIDA: Record<PassoPmo, number> = {
   riscos: 48000,
   planos: 64000,
   execucao: 48000,
+  leitura: 32000,
 };
 
 /** Saída que se espera de cada passo (tokens), só para a estimativa de custo antes da chamada. */
@@ -83,6 +86,7 @@ export const SAIDA_ESPERADA: Record<PassoPmo, { min: number; max: number }> = {
   riscos: { min: 6000, max: 20000 },
   planos: { min: 8000, max: 30000 },
   execucao: { min: 5000, max: 18000 },
+  leitura: { min: 3000, max: 12000 },
 };
 
 /**

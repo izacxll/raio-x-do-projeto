@@ -128,6 +128,36 @@ export function dispensaDasFichas(codigos: string[]): string {
     .join("\n\n");
 }
 
+/** O que vai como instrução de sistema na leitura do PMO da etapa 5 (SKILL.md, seção 5). */
+export function referenciasEtapa5(): BlocoTexto[] {
+  return [
+    { titulo: "SKILL.md", texto: textoSkill },
+    { titulo: "referencias/checklist.md", texto: textoChecklist },
+    { titulo: "referencias/experiencia.md", texto: textoExperiencia },
+  ];
+}
+
+/** Só o conteúdo mínimo e as perguntas de qualidade de cada ficha (SKILL.md, seção 5, etapa 5). */
+export function conteudoMinimoDasFichas(codigos: string[]): string {
+  const secao = (f: string, titulo: string) => {
+    const ini = f.indexOf(`## ${titulo}`);
+    if (ini < 0) return "";
+    const fim = f.indexOf("\n## ", ini + 4);
+    return f.slice(ini, fim < 0 ? undefined : fim).trim();
+  };
+  return codigos
+    .map((c) => {
+      const f = fichaDaParte(c);
+      if (!f) return "";
+      const nome = /^nome:\s*(.+)$/m.exec(f)?.[1] ?? c;
+      return [`### ${c} — ${nome}`, secao(f, "Conteúdo mínimo"), secao(f, "Perguntas de qualidade")]
+        .filter(Boolean)
+        .join("\n");
+    })
+    .filter(Boolean)
+    .join("\n\n");
+}
+
 export function textoDeSistema(blocos: BlocoTexto[]): string {
   return [
     "Você está sendo usado pelo app Raio-X do Projeto, na etapa indicada no pedido. Siga a skill abaixo à risca.",
