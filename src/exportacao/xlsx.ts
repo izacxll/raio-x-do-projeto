@@ -1,7 +1,7 @@
 // Montador XLSX: uma aba por seção que tem tabela.
 import ExcelJS from "exceljs";
 import { cor } from "../interface/tokens";
-import { linhaDeVersoes, TEXTO_MINUTA, type DocumentoExportavel } from "./modelo";
+import { linhaDeVersoes, TEXTO_DEMONSTRACAO, TEXTO_MINUTA, type DocumentoExportavel } from "./modelo";
 
 const argb = (nome: string) => `FF${cor(nome)}`;
 
@@ -38,6 +38,7 @@ export async function gerarXlsx(doc: DocumentoExportavel, logo: ArrayBuffer): Pr
       [linhaDeVersoes(doc), "ink", false],
     ];
     if (doc.minuta) linhasTopo.unshift([TEXTO_MINUTA, "vinho", true]);
+    if (doc.demonstracao) linhasTopo.unshift([TEXTO_DEMONSTRACAO, "laranja-txt", true]);
     let linha = 2;
     for (const [texto, nomeCor, negrito] of linhasTopo) {
       const c = aba.getCell(linha, 1);

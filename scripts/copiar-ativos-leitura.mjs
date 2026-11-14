@@ -1,5 +1,6 @@
 // Copia para public/vendor/ os arquivos que o navegador baixa em tempo de execução:
-// o motor e o worker do OCR, os dados do português, os auxiliares do pdf.js e as fontes do PDF exportado.
+// o motor e o worker do OCR, os dados do português, os auxiliares do pdf.js, as fontes do PDF exportado e a RFP
+// pública do modo demonstração.
 // Tudo é servido pelo próprio site (nenhum CDN), como pede a Content-Security-Policy (decisões 0001 e 0019).
 // A pasta public/vendor/ fica fora do Git: ela é refeita a partir de node_modules antes de cada dev e build.
 import { cpSync, existsSync, mkdirSync, readdirSync, rmSync } from "node:fs";
@@ -46,5 +47,13 @@ for (const [pasta, arquivo] of [
   copiar(`@expo-google-fonts/arimo/${pasta}`, fontes, (n) => n === arquivo);
 }
 copiar("@expo-google-fonts/arimo", fontes, (n) => n === "LICENSE_FONT");
+
+// Modo demonstração (decisão 0027): a RFP pública da OEI, lida pelo app com as respostas gravadas do PMO
+const rfpDemonstracao = "concorrencia-tecnica-preco-oei-mdhc-criancas-situacao-rua-2026.pdf";
+mkdirSync(join(destino, "demonstracao"), { recursive: true });
+cpSync(
+  join(raiz, "tests", "fixtures", "rfps-publicas", rfpDemonstracao),
+  join(destino, "demonstracao", rfpDemonstracao),
+);
 
 console.log("ativos de leitura copiados para public/vendor/");

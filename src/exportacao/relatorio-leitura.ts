@@ -4,7 +4,7 @@
 import type { Dossie, DocumentoLido, PaginaLida } from "../dossie/esquema";
 import { NOME_PAPEL } from "../etapas/etapas";
 import { resumirLeitura } from "../leitura/ler-documento";
-import { precisaDeMinuta, type DocumentoExportavel, type Secao } from "./modelo";
+import { camposDoDossie, precisaDeMinuta, type DocumentoExportavel, type Secao } from "./modelo";
 
 export const NOME_ORIGEM: Record<PaginaLida["origem"], string> = {
   texto: "Texto do PDF",
@@ -48,16 +48,13 @@ function secaoDocumento(d: DocumentoLido): Secao {
 }
 
 export function montarRelatorioLeitura(dossie: Dossie, agora = new Date()): DocumentoExportavel {
-  const projeto = dossie.projeto.nome.trim() || "Projeto sem nome";
   return {
     titulo: "Relatório de leitura dos documentos",
     subtitulo:
       "O que o código conseguiu ler de cada PDF. Página não verificável não quer dizer que o conteúdo não exista: conferir no documento.",
-    projeto,
+    ...camposDoDossie(dossie),
     minuta: precisaDeMinuta(dossie.itens),
     geradoEm: agora,
-    versaoApp: dossie.versaoApp,
-    versaoSkill: dossie.versaoSkill,
     secoes: dossie.documentos.map(secaoDocumento),
   };
 }

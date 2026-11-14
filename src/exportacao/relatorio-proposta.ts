@@ -15,7 +15,7 @@ import {
   type ItemProposta,
 } from "../etapas/2-proposta/proposta";
 import { formatarData } from "../texto/datas";
-import type { DocumentoExportavel, Secao } from "./modelo";
+import { camposDoDossie, type DocumentoExportavel, type Secao } from "./modelo";
 
 const ROTULO = { documento: "Do documento", sugestao: "Sugestão", decisao_gp: "Decisão do GP" } as const;
 const A_DEFINIR = "a definir pelo GP";
@@ -24,11 +24,9 @@ function base(dossie: Dossie, titulo: string, subtitulo: string, minuta: boolean
   return {
     titulo,
     subtitulo,
-    projeto: dossie.projeto.nome.trim() || "Projeto sem nome",
+    ...camposDoDossie(dossie),
     minuta,
     geradoEm: agora,
-    versaoApp: dossie.versaoApp,
-    versaoSkill: dossie.versaoSkill,
   };
 }
 

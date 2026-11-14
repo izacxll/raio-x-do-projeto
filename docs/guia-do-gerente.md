@@ -19,6 +19,14 @@ Nada sai do navegador.
 - **Etapa 1 — Leitura da RFP:** envie a RFP (e os anexos, se vierem em PDFs separados) e clique em "Analisar a RFP". Revise os requisitos (R01, R02…): os números seguem até a conferência do plano. Decida se participa. Baixe a análise, a lista de requisitos e prazos, o checklist de habilitação e as perguntas de esclarecimento.
 - **Etapa 5 — Conferência do PGP:** envie o PGP (e, se tiver, o TAP e a RFP), confirme o mapa do plano e as características do projeto e clique em "Conferir o plano".
 
+## Demonstração, sem a chave
+
+Na etapa 2, o botão **"Ver demonstração"** abre uma concorrência pública (OEI) com as respostas do PMO gravadas. Nada é enviado à API e não há custo. Cada passo do PMO vira "Carregar a resposta gravada"; as decisões do GP, a conferência das citações, o cronograma, o preço e as saídas funcionam como no uso real.
+
+- A faixa laranja "Demonstração com respostas gravadas, sem chamada à IA" fica no alto de todas as telas enquanto o projeto for de demonstração, e o mesmo aviso vai no cabeçalho de todo documento exportado.
+- As respostas gravadas partem da abordagem B: com outra escolha, a demonstração pede para escolher a B antes do conteúdo técnico.
+- "Sair da demonstração" (na faixa) fecha o projeto de demonstração.
+
 ## Com a chave da API
 
 ### A chave

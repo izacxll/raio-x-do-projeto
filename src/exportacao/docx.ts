@@ -18,7 +18,13 @@ import {
   WidthType,
 } from "docx";
 import { cor } from "../interface/tokens";
-import { linhaDeVersoes, TEXTO_MINUTA, type DocumentoExportavel, type Tabela } from "./modelo";
+import {
+  linhaDeVersoes,
+  TEXTO_DEMONSTRACAO,
+  TEXTO_MINUTA,
+  type DocumentoExportavel,
+  type Tabela,
+} from "./modelo";
 
 const FONTE = "Arial";
 
@@ -68,6 +74,22 @@ export async function gerarDocx(doc: DocumentoExportavel, logo: ArrayBuffer): Pr
       children: [new ImageRun({ type: "jpg", data: logo, transformation: { width: 180, height: 30 } })],
     }),
   ];
+  if (doc.demonstracao) {
+    cabecalho.push(
+      new Paragraph({
+        spacing: { before: 120 },
+        children: [
+          new TextRun({
+            text: TEXTO_DEMONSTRACAO,
+            font: FONTE,
+            size: 18,
+            bold: true,
+            color: cor("laranja-txt"),
+          }),
+        ],
+      }),
+    );
+  }
   if (doc.minuta) {
     cabecalho.push(
       new Paragraph({

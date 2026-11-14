@@ -4,6 +4,15 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 
 ## [Não publicado]
 
+## [0.5.1] — 13/11/2026
+
+### Modo demonstração (decisão 0027)
+- **"Ver demonstração"** na etapa 2: abre a concorrência pública da OEI com as respostas do PMO gravadas, sem chamar a API e sem custo. Cada passo do PMO vira "Carregar a resposta gravada"; a conferência das citações, o cronograma, o preço, a revisão e as saídas funcionam como no uso real.
+- Aviso sempre visível, "Demonstração com respostas gravadas, sem chamada à IA", no alto de todas as telas e no cabeçalho de todo documento exportado (DOCX, PDF e XLSX). O dossiê guarda o modo.
+- As respostas gravadas partem da abordagem B: com outra escolha, o app pede a B antes do conteúdo técnico, em vez de mostrar o conteúdo da B como se fosse da escolhida.
+- Testes: as respostas gravadas passam pelo schema da API; o aviso vai no cabeçalho; fumaça da demonstração no navegador sem nenhuma chamada externa.
+- Decisão 0027. Versão do app: 0.5.1.
+
 ## [0.5.0] — 13/11/2026
 
 ### F2 — proposta com o PMO (publicada antes do teste da responsável e sem o teste com a chave, decisão 0026)

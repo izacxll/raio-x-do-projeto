@@ -3,7 +3,7 @@ import type { Gravidade } from "../dominio/fichas";
 import type { DecisaoAchado, Dossie } from "../dossie/esquema";
 import type { Achado, Verificacao } from "../regras/achado";
 import { resumirAchados } from "../regras/conferencia";
-import type { DocumentoExportavel, Secao } from "./modelo";
+import { camposDoDossie, type DocumentoExportavel, type Secao } from "./modelo";
 
 export const NOME_TIPO = { vago: "Vago", conflituoso: "Conflituoso", ausente: "Ausente" } as const;
 
@@ -113,11 +113,9 @@ export function montarRelatorioConformidade(
     titulo: "Relatório de conformidade do plano",
     subtitulo:
       "Conferência do PGP feita por código, contra o TAP, a RFP e o conteúdo mínimo das fichas da skill PMO. Cada achado é sugestão: quem decide se procede é o GP.",
-    projeto: dossie.projeto.nome.trim() || "Projeto sem nome",
+    ...camposDoDossie(dossie),
     minuta: pendentes > 0 || finais.length === 0,
     geradoEm: agora,
-    versaoApp: dossie.versaoApp,
-    versaoSkill: dossie.versaoSkill,
     secoes,
   };
 }

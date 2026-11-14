@@ -30,6 +30,7 @@ Uma decisão por arquivo, numerada em ordem. Cada uma registra o contexto, o que
 | [0024](0024-leitura-da-rfp-f1.md) | Leitura da RFP só com código (F1): mapa, extração, prazos calculados, brechas com pergunta, revisão do GP | aceita |
 | [0025](0025-proposta-com-o-pmo-f2.md) | Proposta com o PMO (F2), construída sem a chave: três passos do PMO, conferência do que ele devolve, contas do código, tela da chave, comparação de modelos | aceita (teste com a chave pendente) |
 | [0026](0026-f1-e-f2-publicadas-antes-do-teste.md) | F1 e F2 publicadas antes do teste da responsável; ordem F3, F4 e F5b e as tags v0.6.0, v0.7.0 e v0.8.0 | aceita |
+| [0027](0027-modo-demonstracao.md) | Modo demonstração: botão "Ver demonstração" com as respostas gravadas do PMO para a RFP pública da OEI, sem chamada à API; aviso na tela e nos exportados | aceita |
 
 Modelo para uma nova decisão:
 

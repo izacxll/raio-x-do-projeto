@@ -208,6 +208,8 @@ export const Dossie = z.object({
   criadoEm: z.string(),
   atualizadoEm: z.string(),
   projeto: z.object({ nome: z.string() }),
+  /** Modo demonstração (decisão 0027): respostas gravadas do PMO, sem chamada à IA. Vai no cabeçalho dos exportados. */
+  demonstracao: z.boolean().optional(),
   documentos: z.array(DocumentoLido),
   itens: z.array(ItemRotulado),
   analiseRfp: AnaliseRfpDossie.optional(),
