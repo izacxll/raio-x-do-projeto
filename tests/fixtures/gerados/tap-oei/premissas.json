@@ -1,0 +1,238 @@
+{
+  "premissas": [
+    {
+      "item": {
+        "id": "b3-1",
+        "texto": "Sugere-se assumir que a contratante analisa cada produto em prazo combinado no início do projeto e que as rodadas de revisão são limitadas.",
+        "rotulo": "sugestao",
+        "motivo": "Premissa da proposta; a RFP não fixa prazo de análise nem limite de revisões.",
+        "fontes": [
+          {
+            "doc": "proposta",
+            "pagina": 9,
+            "trecho": "Sugere-se escrever como premissa que a contratante analisa cada produto em prazo combinado"
+          }
+        ],
+        "alternativas": [],
+        "requisitos": ["R01", "R02", "R03", "R04", "R05"],
+        "ficha": "B3.9"
+      },
+      "tipo": "premissa",
+      "origem": "proposta",
+      "premissaCritica": "PC3",
+      "consequencia": "Se a análise passar do prazo combinado, os prazos dos produtos seguintes são recalculados e as rodadas além do limite pedem ajuste de prazo e de preço, pelo plano de mudanças.",
+      "dependeDe": "contratante",
+      "comoValidar": "Combinar o prazo de análise e o limite de rodadas na reunião de alinhamento e registrar em ata (data a definir pelo GP)."
+    },
+    {
+      "item": {
+        "id": "b3-2",
+        "texto": "Sugere-se assumir que a contratante mobiliza os profissionais da rede para as oficinas remotas de escuta.",
+        "rotulo": "sugestao",
+        "motivo": "Premissa da proposta; a escuta é parte da abordagem escolhida.",
+        "fontes": [
+          {
+            "doc": "proposta",
+            "pagina": 9,
+            "trecho": "Sugere-se escrever como premissa que a contratante mobiliza os profissionais da rede para as oficinas remotas de escuta."
+          }
+        ],
+        "alternativas": [],
+        "requisitos": ["R02", "R03", "R05"],
+        "ficha": "B3.9"
+      },
+      "tipo": "premissa",
+      "origem": "proposta",
+      "premissaCritica": "PC6",
+      "consequencia": "Sem a mobilização, as oficinas são substituídas por consulta documental e o plano de trabalho registra a mudança.",
+      "dependeDe": "contratante e profissionais da rede",
+      "comoValidar": "Confirmar com a contratante, no plano de trabalho, quem convida os participantes e com que antecedência."
+    },
+    {
+      "item": {
+        "id": "b3-3",
+        "texto": "Sugere-se assumir que a contratante fornece as informações necessárias ao desenvolvimento dos serviços, como prevê o termo de referência.",
+        "rotulo": "sugestao",
+        "motivo": "Obrigação da contratante na RFP, sem prazo; os cadernos dependem das referências institucionais.",
+        "fontes": [
+          {
+            "doc": "rfp",
+            "pagina": 23,
+            "trecho": "Fornecer as informações necessárias para o desenvolvimento dos serviços objeto do contrato."
+          }
+        ],
+        "alternativas": [],
+        "requisitos": [],
+        "ficha": "B3.9"
+      },
+      "tipo": "premissa",
+      "origem": "rfp",
+      "premissaCritica": "PC1",
+      "consequencia": "Se as informações não chegarem a tempo, o levantamento usa só fontes públicas e os prazos dos cadernos afetados são revistos com a contratante.",
+      "dependeDe": "contratante",
+      "comoValidar": "Listar no plano de trabalho as informações pedidas à contratante, com a data de entrega (a definir pelo GP)."
+    },
+    {
+      "item": {
+        "id": "b3-4",
+        "texto": "Sugere-se assumir que o escopo é o do termo de referência e da proposta, e que pedidos novos da contratante passam pelo controle de mudanças antes de serem feitos.",
+        "rotulo": "sugestao",
+        "motivo": "A RFP prevê que serviços em desacordo podem ser rejeitados e refeitos; sem limite claro, o escopo pode crescer.",
+        "fontes": [
+          {
+            "doc": "rfp",
+            "pagina": 24,
+            "trecho": "Os serviços poderão ser rejeitados, no todo ou em parte, quando em desacordo com as especifi- cações constantes neste Termo de Referência e na Proposta"
+          }
+        ],
+        "alternativas": [],
+        "requisitos": [],
+        "ficha": "B3.9"
+      },
+      "tipo": "premissa",
+      "origem": "tap",
+      "premissaCritica": "PC8",
+      "consequencia": "Pedido fora do escopo feito sem o controle de mudanças consome prazo e horas sem reajuste; o plano de mudanças diz como reajustar escopo, prazo e valor.",
+      "dependeDe": "contratante e FGV",
+      "comoValidar": "Registrar o escopo aceito no plano de trabalho aprovado e cada pedido novo no registro de mudanças."
+    },
+    {
+      "item": {
+        "id": "b3-5",
+        "texto": "Prazo de vigência de 12 meses, contados da assinatura do contrato.",
+        "rotulo": "documento",
+        "motivo": "Restrição do contrato.",
+        "fontes": [
+          {
+            "doc": "rfp",
+            "pagina": 23,
+            "trecho": "terá vigência total de 12 (doze) meses, contados a partir da data de sua assinatura"
+          }
+        ],
+        "alternativas": [],
+        "requisitos": [],
+        "ficha": "B3.5"
+      },
+      "tipo": "restricao",
+      "origem": "rfp",
+      "premissaCritica": "",
+      "consequencia": "",
+      "dependeDe": "contratante",
+      "comoValidar": "Conferir a data de assinatura do contrato."
+    },
+    {
+      "item": {
+        "id": "b3-6",
+        "texto": "Não é admitida a subcontratação do objeto contratual.",
+        "rotulo": "documento",
+        "motivo": "Restrição do contrato.",
+        "fontes": [
+          {
+            "doc": "rfp",
+            "pagina": 46,
+            "trecho": "Não será admitida a subcontratação do objeto contratual."
+          }
+        ],
+        "alternativas": [],
+        "requisitos": [],
+        "ficha": "B3.5"
+      },
+      "tipo": "restricao",
+      "origem": "rfp",
+      "premissaCritica": "",
+      "consequencia": "",
+      "dependeDe": "FGV",
+      "comoValidar": "Conferir na formação da equipe que nenhum produto depende de empresa subcontratada."
+    },
+    {
+      "item": {
+        "id": "b3-7",
+        "texto": "O pagamento de cada produto só ocorre depois do ateste de conformidade e da aprovação pela contratante.",
+        "rotulo": "documento",
+        "motivo": "Restrição do contrato sobre pagamento.",
+        "fontes": [
+          {
+            "doc": "rfp",
+            "pagina": 21,
+            "trecho": "O pagamento é realizado somente após ateste de conformidade e aprovação pela Contratante."
+          }
+        ],
+        "alternativas": [],
+        "requisitos": [],
+        "ficha": "B3.5"
+      },
+      "tipo": "restricao",
+      "origem": "rfp",
+      "premissaCritica": "",
+      "consequencia": "",
+      "dependeDe": "contratante",
+      "comoValidar": "Acompanhar o ateste de cada produto no registro de entregas."
+    },
+    {
+      "item": {
+        "id": "b3-8",
+        "texto": "Os preços contratados são fixos e irreajustáveis no prazo de um ano contado da data do orçamento estimado.",
+        "rotulo": "documento",
+        "motivo": "Restrição do contrato sobre preço.",
+        "fontes": [
+          {
+            "doc": "rfp",
+            "pagina": 46,
+            "trecho": "Os preços inicialmente contratados são fixos e irreajustáveis no prazo de um ano contado da data do orçamento estimado."
+          }
+        ],
+        "alternativas": [],
+        "requisitos": [],
+        "ficha": "B3.5"
+      },
+      "tipo": "restricao",
+      "origem": "rfp",
+      "premissaCritica": "",
+      "consequencia": "",
+      "dependeDe": "contratante",
+      "comoValidar": "Conferir a data do orçamento estimado no contrato assinado."
+    },
+    {
+      "item": {
+        "id": "b3-9",
+        "texto": "Sugere-se assumir que a escuta direta de crianças e adolescentes não faz parte do trabalho, salvo se a contratante aprovar antes um plano metodológico específico.",
+        "rotulo": "sugestao",
+        "motivo": "Condição da RFP; a abordagem escolhida faz escuta com profissionais da rede.",
+        "fontes": [
+          {
+            "doc": "rfp",
+            "pagina": 19,
+            "trecho": "somente poderá ocorrer mediante aprova- ção prévia de plano metodológico específico pela contratante"
+          }
+        ],
+        "alternativas": [],
+        "requisitos": [],
+        "ficha": "B3.3"
+      },
+      "tipo": "premissa",
+      "origem": "tap",
+      "premissaCritica": "",
+      "consequencia": "Se a contratante pedir a escuta direta, ela entra como mudança, com o plano metodológico e o ajuste de prazo e de preço.",
+      "dependeDe": "contratante",
+      "comoValidar": "Registrar no plano de trabalho se haverá escuta direta."
+    }
+  ],
+  "observacoes": [
+    {
+      "id": "b3-obs-1",
+      "texto": "Recomenda-se avaliar, com o GP, se o reajuste após a vigência pelo IPCA afeta o preço caso o contrato seja prorrogado.",
+      "rotulo": "sugestao",
+      "motivo": "A cláusula de reajuste prevê o índice depois da vigência.",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 46,
+          "trecho": "Índice Preços ao Consumidor Amplo – IPCA, exclusivamente para as obrigações iniciadas e concluídas após a ocorrência da anualidade"
+        }
+      ],
+      "alternativas": [],
+      "requisitos": [],
+      "ficha": ""
+    }
+  ]
+}
