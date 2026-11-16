@@ -41,6 +41,7 @@ Uma decisão por arquivo, numerada em ordem. Cada uma registra o contexto, o que
 | [0035](0035-pmo-le-codigo-monta-e-confere.md) | O PMO faz a leitura em todas as etapas; o código monta o esqueleto e confere depois; sem chave, as etapas 1 e 5 mostravam o esqueleto (mudado pela 0037) | aceita |
 | [0036](0036-etapa-1-pelo-metodo-m1.md) | Etapa 1 pelo método (M1): leitura em 8 seções, regras do esqueleto, R = entregas e obrigações específicas, leitura do PMO com travas, gabaritos e leitura gravada | aceita |
 | [0037](0037-conexao-antes-de-analisar.md) | Nenhuma etapa analisa sem a conexão com o Claude: sai o "leitura parcial por código", o esqueleto só vai no pedido, demonstração em todas as etapas (muda o item 5 da 0035) | aceita |
+| [0038](0038-etapa-2-pelo-metodo-m2.md) | Etapa 2 pelo método (M2): tipo de contrato e de projeto, as 9 seções e a minuta redigida na ordem do edital, preço pelo tipo, pontos por preço, caixa, produtividade e duração × vigência por código | aceita |
 
 Modelo para uma nova decisão:
 

@@ -4,6 +4,13 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 
 ## [Não publicado]
 
+### Fase M2 — etapa 2 pelo método (decisão 0038)
+- **A minuta redigida por inteiro**, na ordem do modelo do edital (quadros do modelo obrigatório ou a lista de partes), com a capa e as 9 seções do método: estratégia, estrutura, escopo, premissas críticas, metas/equipe/cronograma, preço, matriz e checklist, decisões do GP. Seção não redigida ou só descrita é alerta.
+- **Tipo de contrato e de projeto** sugerido pelo código e confirmado pelo GP; o preço segue o tipo: consultoria por produtos com horas × valor-hora; operação contínua e parceria com a folha mês a mês e as despesas por natureza, sem valor-hora nem taxa de administração (também na planilha exportada).
+- **Contas novas do código:** pontos de texto × de documento ("a FGV tem?"), regra do preço e tabela de pontos por preço (com a equivalência em pontos técnicos), caixa pelo acumulado com a folga de cada parcela, quadro de equipe × produtividade (volume ÷ pessoas ÷ 21 dias úteis × teto escrito) e duração × vigência.
+- **Pedidos ao PMO** com o esqueleto do código e o teste de cada item; campos novos nos schemas (abordagem que muda o resultado, metodologia por fase, metas, riscos com gatilho, premissa com dependência, prazo e reajuste, quadro de equipe e volumes). Dossiês antigos abrem com os campos vazios.
+- **Gabaritos e leituras gravadas** da SMPED e da OEI na estrutura do método, e placar (`docs/estudos/placar-m2-etapa-2.md`).
+
 ### Documentação — métodos revisados e engenharia reversa das cinco etapas
 - **Métodos das etapas 1 a 5 substituídos** pela versão revisada pela responsável pelo projeto. Saem os detalhes que identificavam o caso real (número de páginas, meses do cronograma e da vigência, duração da jornada); também na decisão 0033 e na 0034.
 - **O que muda nos métodos:**

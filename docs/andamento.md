@@ -21,7 +21,7 @@ Os gabaritos e as leituras gravadas foram feitos pelo Claude Code seguindo a ski
 
 **PR #46:** métodos revisados (sem os detalhes que identificavam o caso real) e a engenharia reversa das cinco etapas; a chave dos scripts lida de um arquivo fora do repositório (`RAIO_X_ARQUIVO_CHAVE`, nunca `ANTHROPIC_API_KEY`); documentação coerente com a 0035 e a M1; o roteiro da etapa 5 com um plano real; a decisão 0037 (conexão antes de analisar, demonstração da etapa 5).
 
-**Fase M2 (etapa 2 pelo método) em andamento**, encadeada em cima do #46: a minuta redigida por inteiro, preço pelo tipo de contrato, pontos por preço, caixa e quadro de equipe × produtividade.
+**Fase M2 (etapa 2 pelo método), PR aberto em cima do #46, aguarda o teste e o ok da responsável** (decisão 0038): a minuta redigida por inteiro na ordem do modelo do edital, preço pelo tipo de contrato, pontos por preço, caixa, quadro de equipe × produtividade e duração × vigência por código. Placar em `docs/estudos/placar-m2-etapa-2.md`: o esqueleto do código cobre todos os itens do gabarito que são do código (28 de 28 na SMPED, 31 de 31 na OEI); com a leitura gravada, 40 de 40 e a minuta redigida por inteiro (17 e 14 seções). **Skill 0.3.0 no PR #51 (rascunho), sem publicar antes do ok.**
 
 ## Fases
 
@@ -35,11 +35,11 @@ Os gabaritos e as leituras gravadas foram feitos pelo Claude Code seguindo a ski
 | M0 | Métodos em vigor (0034) e o PMO lê, o código confere (0035) | PR #44 | — |
 | M1 | Etapa 1 pelo método | PR #45; teste da responsável pendente | v0.9.0 |
 | — | Métodos revisados, chave em arquivo, documentação, roteiro da etapa 5, decisão 0037 | PR #46 | — |
-| M2 | Etapa 2 pelo método | em andamento | v0.10.0 |
+| M2 | Etapa 2 pelo método | PR aberto; teste da responsável pendente | v0.10.0 |
 | M3 | Etapa 3 pelo método (contrato como entrada) | a fazer | v0.11.0 |
 | M4 | Etapa 4 pelo método (adaptação por porte e tipo) | a fazer | v0.12.0 |
 | M5 | Etapa 5 pelo método (régua pelo tipo de plano; fases restantes da 0033) | a fazer | v0.13.0 |
-| Skill 0.3.0 | Tipos de projeto e de plano, etapa 1 no SKILL.md, etapa 5 como leitura principal, proposta de parceria, PC com gatilho e reajuste, contrato, caixa | PR próprio, mostrado antes de publicar | — |
+| Skill 0.3.0 | Tipos de projeto e de plano, etapa 1 no SKILL.md, etapa 5 como leitura principal, proposta de parceria, PC com gatilho e reajuste, contrato, caixa (decisão 0039) | PR #51 (rascunho), mostrado antes de publicar | — |
 | MVP | Critérios de aceite da seção 14 | a fazer | v1.0.0 |
 
 O que cada fase M ainda precisa cobrir está nas issues de cada uma (rótulos `etapa-2` a `etapa-5`).
@@ -56,7 +56,7 @@ O que cada fase M ainda precisa cobrir está nas issues de cada uma (rótulos `e
    - ok nos PRs #44, #45 e #46, e o teste da etapa 1 na prévia;
    - conferir os 10 itens do gabarito separados em cada placar antes do merge da fase;
    - com a chave: a comparação de modelos e o roteiro da etapa 5 sobre um plano real (abaixo).
-2. **Claude Code:** fase M2 e o PR da skill 0.3.0 (sem publicar antes do ok).
+2. **Claude Code:** fase M3 (etapa 3 pelo método, contrato como entrada), em cima da M2.
 
 **Com a chave da API** (pedir ao administrador do Claude da FGV, no Claude Console). A chave fica num arquivo fora do projeto; passo a passo no PowerShell em [`tecnico/07-configuracao.md`](tecnico/07-configuracao.md#chave-da-api-nos-scripts-locais-powershell). Nunca defina `ANTHROPIC_API_KEY` no terminal: com ela, o Claude Code passa a cobrar o uso dele nessa chave.
 
