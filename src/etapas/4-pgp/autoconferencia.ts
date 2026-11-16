@@ -77,6 +77,7 @@ export function autoconferir(dossie: Dossie, e: EntradaPgp, agora = new Date()):
   const pgp = pgpComoDocumento(dossie, agora);
   const p = dossie.pgp ?? pgpInicial();
   return conferirPlano({
+    planoDaFerramenta: true,
     pgp: pgp.paginas,
     tap: e.tap?.paginas,
     rfp: e.rfp.flatMap((d) => d.paginas),

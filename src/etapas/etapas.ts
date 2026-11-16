@@ -175,14 +175,14 @@ export const ETAPAS: Etapa[] = [
     numero: 5,
     nome: "Conferência do plano",
     nomeCurto: "Conferência",
-    resumoEntrada: "entra: PGP + TAP + RFP",
+    resumoEntrada: "entra: plano + TAP ou termo + RFP",
     usaPmo: false,
     fase: "F5",
     documentos: [
-      { papel: "pgp", nome: "PGP do gerente", obrigatorio: true },
+      { papel: "pgp", nome: "Plano (PGP ou plano de trabalho)", obrigatorio: true },
       {
         papel: "tap",
-        nome: "TAP",
+        nome: "TAP ou termo assinado",
         obrigatorio: false,
         observacao: "Recomendado: é base para conferir o que o plano deixou de fora.",
       },

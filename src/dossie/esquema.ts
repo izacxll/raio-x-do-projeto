@@ -150,6 +150,8 @@ export type DecisaoAchado = z.infer<typeof DecisaoAchado>;
 export const Conferencia = z.object({
   /** PGP completo (interno) ou plano de trabalho / proposta para o cliente (decisão 0033). */
   tipoPlano: z.enum(["pgp", "plano-trabalho"]).optional(),
+  /** Id do documento do plano a que o mapa se refere: trocado o plano, o mapa volta à proposta do código. */
+  pgpId: z.string().optional(),
   caracteristicas: CaracteristicasProjeto,
   mapa: z.array(ParteDoMapa),
   premissasAplicaveis: z.record(z.string(), z.boolean()),

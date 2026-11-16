@@ -105,11 +105,17 @@ function conferenciaInicial(
 export function ConferenciaPgp(props: Props) {
   const { dossie, guardarConferencia } = useDossie();
   const proposta = useMemo(() => proporMapa(props.pgp.paginas, PARTES_PGP), [props.pgp]);
-  // a parte que o GP não confirmou acompanha a proposta atual do código (o plano pode ter sido trocado)
+  // trocado o plano (outro documento na caixa), o mapa guardado era de outro arquivo e volta à proposta do código;
+  // num dossiê sem o id do plano, o mapa fica como o GP deixou
   const guardada = dossie.conferencia;
-  const conf = guardada
-    ? { ...guardada, mapa: sincronizarMapa(guardada.mapa, proposta) }
-    : conferenciaInicial(props, proposta, dossie.analiseRfp, dossie.pgp);
+  const conf = useMemo(() => {
+    if (!guardada)
+      return { ...conferenciaInicial(props, proposta, dossie.analiseRfp, dossie.pgp), pgpId: props.pgp.id };
+    if (guardada.pgpId && guardada.pgpId !== props.pgp.id)
+      return { ...guardada, pgpId: props.pgp.id, mapa: sincronizarMapa(guardada.mapa, proposta) };
+    return guardada.pgpId ? guardada : { ...guardada, pgpId: props.pgp.id };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [guardada, proposta, props.pgp.id]);
   const [executar, setExecutar] = useState(Boolean(dossie.conferencia?.executadaEm));
   const atualizar = (mudanca: Partial<Conferencia>) => guardarConferencia({ ...conf, ...mudanca });
 

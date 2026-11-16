@@ -7,15 +7,17 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 ### Etapa 5 e telas — primeira fase da decisão 0033 (prévia de 16/11/2026)
 - **Tipo de plano no mapa** ("PGP completo" ou "plano de trabalho/proposta"). No plano de trabalho, configuração, linhas de base, calendários, previsões, lições aprendidas, documentos de teste, dados do cronograma e termo de nomeação vêm dispensados ("não se aplica a plano de trabalho"), e o GP pode reverter.
 - **Falsos positivos da conferência:**
-  - a parte não confirmada pelo GP acompanha a proposta atual do código (antes, "título localizado" podia aparecer como "não está no plano");
+  - trocado o plano na caixa, o mapa volta à proposta do código, menos as partes dispensadas (antes, "título localizado" podia aparecer como "não está no plano"); dossiê antigo fica como o GP deixou;
   - contratação de pessoal não marca o plano de aquisições (A9);
-  - convenções da ferramenta ("R01", "ID", "duração 0", "código EAP") não são procuradas em plano de outra pessoa;
+  - convenções da ferramenta ("R01", "ID", "duração 0", "código EAP") não são procuradas em plano de outra pessoa (no plano gerado pela etapa 4, continuam valendo);
   - item "a comparação é do código" não é busca de palavra;
-  - sinônimos do plano de trabalho valem ("relatórios trimestrais", "equipe responsável", "quadro de metas e indicadores", "composição do custo");
-  - vagos sem texto padrão de LGPD e sigilo, sem "oportunamente" com item do edital e sem descrição de atividade;
-  - "deste edital" num plano que responde ao edital não é texto de outro documento.
+  - sinônimos do plano de trabalho valem nos itens certos (A7.10, B18.1, B20.1, B6.1 e B6.2): "relatórios trimestrais", "equipe responsável", "quadro de metas e indicadores", "composição do custo";
+  - vagos olhando só a frase: sem texto padrão de LGPD e sigilo, sem "oportunamente" que adia o prazo para o item do edital e sem descrição de atividade para o público (compromisso de quem executa continua vago);
+  - "deste edital" no plano de trabalho não é texto de outro documento.
 - **Relatório em ordem de importância:** premissas críticas, conflitos, ausentes e vagos.
-- **Aviso de caixa:** um arquivo que parece de outra caixa (proposta na do PGP, termo de referência na do TAP) ganha um aviso com a caixa sugerida. Quem decide é o GP.
+- **Aviso de caixa:** um arquivo que parece de outra caixa (proposta na do PGP, termo de referência na do TAP) ganha um aviso com a caixa sugerida; capa que cita o pregão e modelo de anexo não enganam. Quem decide é o GP.
+- **Caixas da etapa 5:** "Plano (PGP ou plano de trabalho)" e "TAP ou termo assinado".
+- **Revisão independente** (um subagente que não viu o trabalho, com a skill PMO) antes do PR; o que ela achou está na descrição do PR.
 - **Leitura mais enxuta:** sai a tabela "Resultado da leitura" e o relatório de leitura. Cada arquivo tem uma linha com as páginas lidas e o aviso só quando alguma página falha.
 - **"Salvar para continuar depois"** no lugar de "Salvar projeto", com a explicação: arquivo do app, para reabrir aqui; para ler, use os relatórios.
 - Decisões 0032 e 0033 aceitas, com os ajustes da responsável registrados.
