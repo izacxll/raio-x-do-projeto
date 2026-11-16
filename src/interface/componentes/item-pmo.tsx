@@ -51,7 +51,7 @@ export function ItemNaTela({
         <p>{estado === "editado" && editado ? editado : i.item.texto}</p>
         {i.complemento && <p className="envio__obs">{i.complemento}</p>}
         {i.item.alternativas.length > 0 && (
-          <table className="tabela">
+          <table className="tabela tabela--quebra">
             <thead>
               <tr>
                 <th>Alternativa (sugestão)</th>
