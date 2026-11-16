@@ -14,6 +14,40 @@ versao: 0.2.0
 ## Para que serve
 Documento "que autoriza formalmente a existência de um projeto" e dá ao GP autoridade para aplicar recursos da organização (PMBOK 6, 4.1.3.1, p. 81, PDF 117). Não é contrato: em projeto externo, o contrato é o acordo, e o TAP firma o compromisso interno (p. 77, PDF 113). Na etapa 5, os 12 elementos são a base do "ausente" de nível (a) (decisão 0013). **Decisão do GP** em TAP.7, TAP.11 e TAP.12: o PMO só sugere redação (`decisao_gp`), nunca preenche nome, valor ou alçada como fato.
 
+**Entradas e precedência** (método da etapa 3, seção 2): o TAP parte do que foi **assinado**. O **contrato ou termo assinado** (entrada opcional) prevalece sobre a proposta e a RFP; se ele torna a proposta ou o plano de trabalho "parte integrante", a proposta também obriga. Sem contrato, vale a proposta final; a RFP serve para achar divergências. As **divergências vêm primeiro** (bloco TAP-DV), porque o resto do TAP depende de qual versão vale. O TAP cabe em duas páginas, mais o registro de premissas.
+
+## TAP-DV — Divergências entre contrato, proposta e RFP (antes dos 12 elementos)
+- **TAP-DV.1** Documento que prevalece declarado: o contrato ou termo assinado, com a cláusula que torna a proposta ou o plano de trabalho parte integrante, ou a proposta final quando não há contrato
+  - fonte: método da etapa 3, seção 2; PMBOK 6, 4.1, p. 77 (PDF 113) (em projeto externo, o contrato é o acordo)
+  - sinais: "parte integrante" | "contrato" | "termo de fomento" | "termo de colaboração" | "termo assinado"
+  - confere: código
+  - dispensa: nunca
+- **TAP-DV.2** Divergências de número e de data, uma por linha, com o que diz cada documento e a página: valor; parcelas ou medições (ordem, percentual, prazo); contagem dos meses (mês 1 da proposta × mês 1 da vigência; soma dos períodos do cronograma × vigência); equipe (quantidade e regra: mínimo, referência ou limite); dimensionamento × produtividade (a comparação é do código)
+  - fonte: método da etapa 3, 4.1; SKILL.md, etapa 3 e princípio 6
+  - sinais: "divergência" | tabela ponto × RFP × proposta × contrato
+  - confere: código
+  - dispensa: nunca
+- **TAP-DV.3** Frase de conformidade da proposta ("em conformidade com o item X") que não confere com o item X, como divergência à parte
+  - fonte: método da etapa 3, 4.1; método da etapa 5, 4.2 (conflito grave quando é sobre valor ou parcelas)
+  - sinais: "em conformidade com", "conforme o item" indicam que o código compara com o item citado
+  - confere: só PMO
+  - dispensa: nunca
+- **TAP-DV.4** Produto que a proposta acrescentou e a RFP não pedia: compromisso assinado, entra como entrega-chave (TAP4.2) com critério de aceite
+  - fonte: método da etapa 3, 4.1; PMBOK 6, 4.1.3.1, p. 81 (PDF 117)
+  - sinais: lista de produtos da proposta comparada com a da RFP | "produto acrescentado"
+  - confere: código
+  - dispensa: nunca
+- **TAP-DV.5** Divergências de texto, como Sugestão: proteções da proposta × cláusulas do contrato; quem aprova e em que prazo; critério de conclusão da proposta × término do contrato; orçamento que parece não cobrir uma obrigação
+  - fonte: método da etapa 3, 4.1; `checklist.md` PC3; `experiencia.md` §1
+  - sinais: cláusulas da proposta e do contrato sobre o mesmo evento, com efeitos diferentes
+  - confere: só PMO
+  - dispensa: nunca
+- **TAP-DV.6** Cada divergência com a versão sugerida e o que fazer (confirmar por escrito, levar à reunião de abertura, consultar o jurídico); a versão que vale é Decisão do GP
+  - fonte: método da etapa 3, 4.1 e 4.4; SKILL.md, princípio 1
+  - sinais: "versão sugerida" | "reunião de abertura" | "confirmar por escrito" | "decisão do GP"
+  - confere: código
+  - dispensa: nunca
+
 ## TAP.1 — Finalidade do projeto
 - **TAP1.1** Finalidade: o problema ou a necessidade do contratante que o projeto atende, em poucas frases
   - fonte: PMBOK 6, 4.1.3.1, p. 81 (PDF 117); Rework RW-002 (https://resources.rework.com/libraries/project-management/project-charter)
@@ -80,7 +114,7 @@ Documento "que autoriza formalmente a existência de um projeto" e dá ao GP aut
   - sinais: "marco" | "cronograma de marcos" | "dias após" | "a partir da assinatura" | "ordem de serviço" | tabela de marcos com datas
   - confere: código
   - dispensa: nunca
-- **TAP6.2** Marcos dentro dos prazos da RFP e iguais aos do cronograma da proposta (a conta é do código)
+- **TAP6.2** Marcos dentro dos prazos da RFP e da vigência do contrato e iguais aos do cronograma da proposta (a conta é do código)
   - fonte: SKILL.md, etapa 3 e princípio 6; `checklist.md` PC4; Rework RW-025 (https://resources.rework.com/libraries/project-management/milestone-chart)
   - sinais: datas ou prazos com página da RFP e da proposta
   - confere: código
@@ -194,10 +228,17 @@ Documento "que autoriza formalmente a existência de um projeto" e dá ao GP aut
   - sinais: "premissa crítica" | "premissas críticas" | "premissa" junto de "caso não" | "se não"
   - confere: código
   - dispensa: nunca
+- **TAP-PR.3** Registro inicial na ordem do método: primeiro as premissas que a proposta já escreveu (Do documento), depois as premissas críticas que ela não escreveu (Sugestão) e as restrições do contrato; cada linha com quem valida (Decisão do GP; sugestão: o contratante valida as que dependem dele)
+  - fonte: método da etapa 3, 4.3; decisão 0021; ficha `b03`
+  - sinais: "quem valida" | "validado por" | "responsável pela validação" | coluna de quem valida
+  - confere: código
+  - dispensa: nunca
 
 ## Perguntas de qualidade
 - O sucesso mede o resultado, e não só prazo, custo e "entregar o produto X"? (PMBOK 7, p. 34–36, PDF 61–63)
 - As premissas da proposta estão no TAP ou no B3, com a origem? Qual restrição é menos negociável? (PC1 a PC8; Rework RW-007)
+- Todo número do TAP (valor, parcelas, vigência, equipe) bate com o contrato, e cada divergência tem a versão escolhida pelo GP? (TAP-DV)
+- A proposta diz "em conformidade com o item X" em algum ponto que não confere com o item X? (TAP-DV.3)
 - Quem decide do lado do contratante está nomeado, e o tempo de decisão dele aparece nos marcos? (PC3, CE16; experiencia.md §1)
 - Algum marco está sem data ou contado de evento sem data? O PMO aponta; a conta é do código (PC4).
 - Terceiros de quem o projeto depende e beneficiários estão entre as partes-chave? (PC1 e PC6; Rework RW-006)
@@ -209,18 +250,21 @@ Documento "que autoriza formalmente a existência de um projeto" e dá ao GP aut
 - Objetivos não mensuráveis, sem "fora do escopo" ou sem assinatura (Rework RW-002).
 - Preencher GP, autoridade, patrocinador ou valor como fato; escrever brecha como risco geral (SKILL.md, princípios 1 e 8).
 - Confundir "entregue" com "encerrado" (Rework RW-035).
+- Partir do edital ou da minuta da etapa 2 quando há contrato assinado; deixar de fora produto que a proposta acrescentou (método da etapa 3, seção 1 e 4.1).
 
 ## Quando dispensar a parte inteira
 Nunca: o TAP autoriza o projeto e é a base do "ausente". Adapta-se o detalhe, que varia com a complexidade e com o que se sabe na abertura (PMBOK 6, 4.2.1.1, p. 83, PDF 119). Elemento sem informação fica "a definir pelo GP", nunca some. Em abordagem adaptativa, o TAP é revalidado a cada ciclo (X3.3.1, p. 669, PDF 705).
 Linha para a tela: "TAP curto, um parágrafo por elemento: porte pequeno (PMBOK 6, p. 83)."
 
 ## Ligações
-- **Vem de:** RFP e minuta do contrato (objeto, requisitos R, prazos, valor, cláusulas de aceite e de rescisão); proposta (exclusões, premissas, cronograma, equipe, valor); etapa 1 (brechas, partes); premissas críticas (`checklist.md`).
+- **Vem de:** contrato ou termo assinado, que prevalece (valor, parcelas, vigência, gestor, cláusulas de aceite, prestação de contas e rescisão); RFP e minuta do contrato (objeto, requisitos R, prazos, valor, cláusulas de aceite e de rescisão); proposta final (exclusões, premissas, cronograma, equipe, valor, produtos acrescentados); etapa 1 (brechas, partes); premissas críticas (`checklist.md`).
 - **Nasce junto:** B3 (TAP-PR) e B31 (TAP.8).
 - **Vai para:** reunião de abertura (Rework RW-020); TAP.3 e TAP.4 → B22, B17 (p. 135–152, PDF 171–188); TAP.6 → B11 (p. 180, PDF 216); TAP.7 → A4 (p. 236, PDF 272); TAP.5 → A8, B27 (p. 402, PDF 438); TAP.8 → B31 (p. 509, PDF 545); TAP.9 e TAP.10 → encerramento, 4.7 (p. 124, PDF 160).
 
 ## Modelo de redação
 ```
+0. Divergências: | Ponto | RFP (p.) | Proposta (p.) | Contrato (p.) | Versão sugerida | O que fazer |
+   Prevalece: [contrato ou termo, cláusula p. X; proposta "parte integrante": sim/não]
 1. Finalidade: [2-3 frases; RFP p. X]
 2. Objetivo | Critério de sucesso (indicador e meta) | Origem (RFP p. X ou sugestão)
 3. Requisitos de alto nível: R01 ...
@@ -233,11 +277,11 @@ Linha para a tela: "TAP curto, um parágrafo por elemento: porte pequeno (PMBOK 
 10. Encerra quando [...]; cancelamento ou suspensão conforme cláusula [p. X]
 11. Decisão do GP. Sugestão: "o GP [a definir] decide [...] até [alçada a definir]"
 12. Decisão do GP. Sugestão: "[nome e cargo a definir], que decide [...]"
-Premissas e restrições (ver B3). Assinaturas e data.
+Premissas e restrições (ver B3): | Premissa | Origem (proposta p. X ou PCn) | Consequência | Quem valida |. Assinaturas e data.
 ```
 
 ## Fontes
 - PMBOK 6: 4.1, p. 77–81 (PDF 113–117); 4.2.1.1, p. 83 (PDF 119); 4.7, p. 123–124 (PDF 159–160); 1.2.1, p. 5 (PDF 41); 1.2.6.4, p. 34–35 (PDF 70–71); p. 21 (PDF 57); Tab. 2-1, p. 47 (PDF 83); Tab. 5-1, p. 155 (PDF 191); 5.1–5.2, p. 135–140 (PDF 171–176); 6.1, p. 180 (PDF 216); 13.1, p. 509 (PDF 545); X3.3.1, p. 669 (PDF 705); glossário, p. 705, 715, 718, 723 (PDF 741, 751, 754, 759).
 - PMBOK 7: Padrão, p. 12 e 34–36 (PDF 39 e 61–63); X2, p. 207–208 (PDF 302–303).
 - Rework: RW-002, RW-025, RW-035 (links nos itens); RW-006 (https://resources.rework.com/libraries/project-management/stakeholder-analysis-matrix); RW-007 (https://resources.rework.com/libraries/project-management/triple-constraint); RW-020 (https://resources.rework.com/libraries/project-management/project-kickoff-meeting).
-- `checklist.md` (PC1 a PC8); `experiencia.md` §1 e §2; `licitacoes.md` 2.6; SKILL.md; decisão 0013.
+- `checklist.md` (PC1 a PC8); `experiencia.md` §1 e §2; `licitacoes.md` 2.6; SKILL.md; decisão 0013; método da etapa 3 (seções 2 e 4).
