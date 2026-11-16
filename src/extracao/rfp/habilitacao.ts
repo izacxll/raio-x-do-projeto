@@ -1,9 +1,10 @@
 // Habilitação (etapa 1, passo 6): os documentos exigidos, transformados em checklist. O catálogo segue os
 // grupos da Lei 14.133/2021 (arts. 62 a 70) e o que a Lei 13.019/2014 pede às organizações da sociedade civil.
 // Item do catálogo que o código não acha não entra na lista: não achado não é ausente (o resumo avisa).
+import { tirarAcentos } from "../../texto/normalizar";
 import { type DocumentoRfp, type ItemAnalise } from "./item";
-import { localizarPrimeiro, localizarTodos, origemDe } from "./localizar";
-import { faixasDoTema, type MapaRfp } from "./mapa";
+import { localizarTodos, origemDe, type Localizado } from "./localizar";
+import { faixasDoTema, secaoDaPosicao, type MapaRfp, type TemaSecao } from "./mapa";
 
 export type GrupoHabilitacao =
   | "Jurídica"
@@ -68,7 +69,8 @@ export const CATALOGO_HABILITACAO: DocumentoExigivel[] = [
     id: "fazenda-municipal",
     grupo: "Fiscal, social e trabalhista",
     nome: "Regularidade com a Fazenda Municipal",
-    re: /\bfazenda (?:publica )?municipal\b/,
+    // "Certidão Negativa de Tributos Mobiliários relativos ao Município" é a regularidade municipal
+    re: /\bfazenda (?:publica )?municipal\b|\btributos (?:mobiliarios|municipais)\b|\bdebitos (?:tributarios )?(?:municipais|com o municipio)\b/,
   },
   {
     id: "fgts",
@@ -152,7 +154,9 @@ export const CATALOGO_HABILITACAO: DocumentoExigivel[] = [
     id: "pcd",
     grupo: "Declarações",
     nome: "Declaração de reserva de cargos para pessoa com deficiência",
-    re: /\breserva de cargos\b|\bpessoa com deficiencia\b/,
+    // a declaração é a da reserva de cargos (Lei 14.133/2021, art. 63, IV), não qualquer menção a pessoa com
+    // deficiência: o objeto pode ser sobre elas
+    re: /\breserva de cargos\b|\bcargos? (?:para|a|destinad\w+ a) pessoas? com deficiencia\b|\breabilitad[oa]s? da previdencia\b/,
   },
   {
     id: "cumpre-requisitos",
@@ -206,31 +210,58 @@ export const CATALOGO_HABILITACAO: DocumentoExigivel[] = [
     id: "osc-estatuto",
     grupo: "Organização da sociedade civil",
     nome: "Estatuto com objetivos de relevância pública e destinação do patrimônio",
-    re: /\brelevancia publica e social\b|\bpatrimonio liquido (?:seja )?transferido\b/,
+    re: /\brelevancia publica e social\b|\bpatrimonio liquido (?:seja |sera )?transferido\b/,
   },
 ];
 
+const TEMAS_DA_LISTA: TemaSecao[] = ["habilitacao", "participacao"];
+
+/**
+ * Numa lista numerada sem ponto final entre os itens ("…?validar=form 10 Estatuto Social…"), o trecho começa no
+ * número do item que contém o documento, não no item anterior.
+ */
+function itemDaLista(frase: string, termo: string): string {
+  const k = tirarAcentos(frase).indexOf(termo);
+  if (k <= 0) return frase;
+  const inicios = [...frase.matchAll(/(?:^|\s)(\d{1,2})\s+(?=[A-ZÀ-Ý])/g)].filter((m) => (m.index ?? 0) < k);
+  const ultimo = inicios.at(-1);
+  if (!ultimo?.index) return frase;
+  return frase.slice(ultimo.index).trim();
+}
+
+/**
+ * O trecho está na lista de documentos: dentro de uma seção de habilitação ou de participação, do título até o
+ * título seguinte (não só na mesma página: a página pode ter o fim de outra seção, como a justificativa).
+ */
+function naListaDeDocumentos(mapa: MapaRfp, l: Localizado): boolean {
+  const s = secaoDaPosicao(mapa, l.doc.id, l.pagina, l.posicao);
+  return Boolean(s?.tema && TEMAS_DA_LISTA.includes(s.tema));
+}
+
 export function extrairHabilitacao(docs: DocumentoRfp[], mapa: MapaRfp): ItemAnalise[] {
-  const faixas = faixasDoTema(mapa, "habilitacao", "participacao");
+  const faixas = faixasDoTema(mapa, ...TEMAS_DA_LISTA);
   const itens: ItemAnalise[] = [];
   for (const d of CATALOGO_HABILITACAO) {
-    // primeiro nas seções de habilitação; se não houver, no documento inteiro
-    const l = (faixas && localizarPrimeiro(docs, d.re, faixas)) ?? localizarPrimeiro(docs, d.re);
+    // com seção de habilitação no mapa, só vale o trecho dentro dela: a cláusula da minuta que fala da
+    // "Fazenda Municipal" ou a justificativa que fala de "pessoa com deficiência" não são a lista de documentos.
+    // Sem seção no mapa, procura no documento inteiro e avisa.
+    const todas = localizarTodos(docs, d.re);
+    const l = faixas ? todas.find((x) => naListaDeDocumentos(mapa, x)) : todas[0];
     if (!l) continue;
-    const vezes = localizarTodos(docs, d.re).length;
+    const vezes = todas.length;
+    const trecho = itemDaLista(l.frase, l.termo);
     itens.push({
       id: `habilitacao:${d.id}`,
       secao: "habilitacao",
       rotulo: "documento",
       nome: d.nome,
-      texto: l.frase,
+      texto: trecho,
       campos: { Grupo: d.grupo, Citações: String(vezes) },
-      origem: origemDe(l),
+      origem: origemDe(l, trecho),
       situacao: "localizado",
-      nota:
-        faixas && !faixas.get(l.doc.id)?.has(l.pagina)
-          ? "Citado fora da seção de habilitação: conferir se é exigência."
-          : undefined,
+      nota: faixas
+        ? undefined
+        : "O mapa não achou a seção de habilitação: trecho procurado no documento inteiro, conferir se é exigência.",
     });
   }
   return itens;
