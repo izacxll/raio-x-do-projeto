@@ -56,6 +56,7 @@ A `main` é publicada no GitHub Pages a cada merge (`.github/workflows/publicar.
 | `.claude/skills/pmo/` | Skill PMO: a inteligência das etapas 2, 3 e 4 (fase S) |
 | [`docs/guia-do-gerente.md`](docs/guia-do-gerente.md) | Como usar, com e sem chave |
 | [`docs/arquitetura.md`](docs/arquitetura.md) | Código × PMO, pastas, fluxo das etapas, dossiê, segurança e testes |
+| [`docs/tecnico/`](docs/README.md) | Documentação técnica com diagramas: arquitetura, dependências, integrações, modelo de dados, fluxos, configuração, build e pontos de atenção |
 | [`docs/identidade-visual.md`](docs/identidade-visual.md) | Cores, fonte, componentes e etiquetas |
 | [`src/`](src/) | Código do app |
 | [`tests/`](tests/) | Testes; RFPs públicas de teste em `tests/fixtures/rfps-publicas/` |
