@@ -2,7 +2,7 @@
 // (docs/estudos/metodo-etapa-1.md), seção a seção. O PMO parte do esqueleto do código e não faz contas; o código
 // confere depois cada citação, cada número e cada número R.
 import { z } from "zod";
-import { FontePmo, RotuloPmo } from "./comum";
+import { FontePmo, RotuloPmo, ItemAutoconferencia, CruzamentoPmo } from "./comum";
 
 export const SecaoLeituraPmo = z.enum([
   "uma-pagina",
@@ -42,6 +42,10 @@ export const ItemLeituraRfpPmo = z.object({
 export type ItemLeituraRfpPmo = z.infer<typeof ItemLeituraRfpPmo>;
 
 export const RespostaLeituraRfp = z.object({
+  /** Cruzamentos obrigatórios X1 a X6 (decisão 0046), registrados depois de ler. */
+  cruzamentos: z.array(CruzamentoPmo).default([]),
+  /** Autoconferência (decisão 0044): cada item do método ou das fichas usado, com o estado. */
+  autoconferencia: z.array(ItemAutoconferencia).default([]),
   itens: z.array(ItemLeituraRfpPmo),
 });
 export type RespostaLeituraRfp = z.infer<typeof RespostaLeituraRfp>;

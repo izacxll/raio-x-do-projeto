@@ -3,7 +3,7 @@
 // 2. conteúdo técnico da abordagem escolhida: entendimento, objetivos, metodologia, SOW, obrigações do contratante;
 // 3. EAP, estimativas em três pontos, equipe, horas, RACI, despesas e reservas a considerar.
 import { z } from "zod";
-import { EstimativaTresPontos, FontePmo, ItemPmo, RotuloPmo } from "./comum";
+import { EstimativaTresPontos, FontePmo, ItemPmo, RotuloPmo, ItemAutoconferencia } from "./comum";
 
 // ---------- passo 1: estratégia ----------
 
@@ -64,6 +64,8 @@ export const PremissaCriticaAplicavel = z.object({
 });
 
 export const RespostaEstrategia = z.object({
+  /** Autoconferência (decisão 0044): cada item do método ou das fichas usado, com o estado. */
+  autoconferencia: z.array(ItemAutoconferencia).default([]),
   /** Critério de julgamento e o que pesa na avaliação, com página e trecho. */
   comoSeraAvaliada: z.array(ItemPmo),
   criterios: z.array(CriterioPontuacao),
@@ -163,6 +165,8 @@ export const RiscoProposta = z.object({
 export type RiscoProposta = z.infer<typeof RiscoProposta>;
 
 export const RespostaConteudo = z.object({
+  /** Autoconferência (decisão 0044): cada item do método ou das fichas usado, com o estado. */
+  autoconferencia: z.array(ItemAutoconferencia).default([]),
   /** Seções na ordem da proposta (modelo do edital, se houver), cada uma redigida: os itens são o texto que vai ao cliente. */
   estrutura: z.array(SecaoProposta),
   produtos: z.array(ProdutoSow),
@@ -243,6 +247,8 @@ export const VolumePrevisto = z.object({
 export type VolumePrevisto = z.infer<typeof VolumePrevisto>;
 
 export const RespostaEap = z.object({
+  /** Autoconferência (decisão 0044): cada item do método ou das fichas usado, com o estado. */
+  autoconferencia: z.array(ItemAutoconferencia).default([]),
   atividades: z.array(AtividadeEap),
   perfis: z.array(PerfilEquipe),
   horas: z.array(HorasPerfil),

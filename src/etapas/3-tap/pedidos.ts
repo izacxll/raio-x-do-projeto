@@ -12,6 +12,7 @@ const REGRAS = `Regras deste pedido (além da skill):
 - Sugestão em redação condicional ("sugere-se", "uma opção é", "recomenda-se avaliar"). Nada de valores, prazos ou quantidades que não estejam nos documentos: escreva "não informado no documento — a definir pelo GP".
 - GP designado, nível de autoridade, patrocinador e recursos financeiros são decisao_gp: só redação sugerida, nunca nome, valor ou alçada como fato.
 - Use os números de requisito da RFP (R01, R02…). Requisito novo é sugestão, sem número.
+- Autoconferência (decisão 0044): em "autoconferencia", marque cada item da ficha do TAP (TAP-DV.1… TAP12.3, TAP-PR.1…) como "presente" (onde: o id do item), "dispensado" (motivo) ou "decisao_gp" (motivo). Divergência que muda escopo, custo ou quem executa fica pendente, com a versão que mais obriga a FGV.
 - Campos de texto sem conteúdo ficam com "" e listas sem conteúdo ficam com [].`;
 
 function divergenciasEmTexto(divs: Divergencia[], decisoes: Record<string, DecisaoDivergencia>): string {

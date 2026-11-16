@@ -2,7 +2,7 @@
 // (ParteGerada) e as estruturas que o código usa nas contas (atividades, horas, riscos, indicadores). Contas, datas,
 // caminho crítico, marcos, custos e rastreabilidade são do código.
 import { z } from "zod";
-import { ItemPmo } from "./comum";
+import { ItemPmo, ItemAutoconferencia } from "./comum";
 import { AtividadeEap, HorasPerfil, LinhaRaci, PerfilEquipe } from "./proposta";
 import { PremissaRegistro } from "./tap";
 
@@ -32,6 +32,8 @@ export const FaseCiclo = z.object({
 export type FaseCiclo = z.infer<typeof FaseCiclo>;
 
 export const RespostaAdaptacao = z.object({
+  /** Autoconferência (decisão 0044): cada item do método ou das fichas usado, com o estado. */
+  autoconferencia: z.array(ItemAutoconferencia).default([]),
   partes: z.array(SugestaoAdaptacao),
   abordagem: z.enum(["preditiva", "adaptativa", "hibrida"]),
   fases: z.array(FaseCiclo),
@@ -56,6 +58,8 @@ export const PacoteEap = z.object({
 export type PacoteEap = z.infer<typeof PacoteEap>;
 
 export const RespostaEscopo = z.object({
+  /** Autoconferência (decisão 0044): cada item do método ou das fichas usado, com o estado. */
+  autoconferencia: z.array(ItemAutoconferencia).default([]),
   /** A1, A2, B22, B17, A13. */
   textos: z.array(ParteGerada),
   eap: z.array(PacoteEap),
@@ -66,6 +70,8 @@ export type RespostaEscopo = z.infer<typeof RespostaEscopo>;
 // ---------- passos 4 a 6: atividades, recursos, durações ----------
 
 export const RespostaCronograma = z.object({
+  /** Autoconferência (decisão 0044): cada item do método ou das fichas usado, com o estado. */
+  autoconferencia: z.array(ItemAutoconferencia).default([]),
   /** A3, A6, B1, B4, B12, B13, B24, B25, B26, B32 (as que o GP marcou). */
   textos: z.array(ParteGerada),
   /** Atividades por pacote da EAP (campo "produto" = id do pacote), com durações em três pontos. */
@@ -99,6 +105,8 @@ export const RiscoRegistro = z.object({
 export type RiscoRegistro = z.infer<typeof RiscoRegistro>;
 
 export const RespostaRiscos = z.object({
+  /** Autoconferência (decisão 0044): cada item do método ou das fichas usado, com o estado. */
+  autoconferencia: z.array(ItemAutoconferencia).default([]),
   /** A8 e A4. */
   textos: z.array(ParteGerada),
   riscos: z.array(RiscoRegistro),
@@ -111,6 +119,8 @@ export type RespostaRiscos = z.infer<typeof RespostaRiscos>;
 // ---------- passo 10: demais planos e documentos ----------
 
 export const RespostaPlanos = z.object({
+  /** Autoconferência (decisão 0044): cada item do método ou das fichas usado, com o estado. */
+  autoconferencia: z.array(ItemAutoconferencia).default([]),
   /** A5, A7, A9, A10, A11, A12, B14, B20, B31 (as que o GP marcou). */
   textos: z.array(ParteGerada),
   observacoes: z.array(ItemPmo),
@@ -131,6 +141,8 @@ export const Indicador = z.object({
 export type Indicador = z.infer<typeof Indicador>;
 
 export const RespostaExecucao = z.object({
+  /** Autoconferência (decisão 0044): cada item do método ou das fichas usado, com o estado. */
+  autoconferencia: z.array(ItemAutoconferencia).default([]),
   /** A16 e os modelos iniciais B5, B7, B9, B10, B19, B21, B28, B30, B33 (os que o GP marcou). */
   textos: z.array(ParteGerada),
   indicadores: z.array(Indicador),

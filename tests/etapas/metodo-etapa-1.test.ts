@@ -306,6 +306,8 @@ describe("método da etapa 1 — leitura do PMO conferida pelo código (decisão
     const base = gravada("rfp-smped").itens[0];
     if (!base) throw new Error("vazia");
     const plantados: RespostaLeituraRfp = {
+      cruzamentos: [],
+      autoconferencia: [],
       itens: [
         {
           ...base,
@@ -327,6 +329,14 @@ describe("método da etapa 1 — leitura do PMO conferida pelo código (decisão
         { ...base, id: "X7", texto: "Prazo de análise de 10 dias; 7 profissionais e 3 produtos." },
         // conta do PMO, mesmo com números que estão no edital
         { ...base, id: "X8", texto: "Produtos 4 e 5 somam 55% (25% + 30%)." },
+        // citação que existe na página, mas curta demais para provar o item (decisão 0048)
+        {
+          ...base,
+          id: "X10",
+          fontes: base.fontes
+            .slice(0, 1)
+            .map((f) => ({ ...f, trecho: f.trecho.split(/\s+/).slice(0, 5).join(" ") })),
+        },
       ],
     };
     const c = conferirLeituraRfp(plantados, [d.doc], d.l, analiseInicial(d.a, HOJE), HOJE);
@@ -340,11 +350,12 @@ describe("método da etapa 1 — leitura do PMO conferida pelo código (decisão
     expect(por("X6")?.trava).toBe("valor-nao-conferido");
     expect(por("X7")?.trava).toBe("valor-nao-conferido");
     expect(por("X8")?.trava).toBe("conta-do-pmo");
+    expect(por("X10")?.trava).toBe("citacao-fraca");
     // todo item do PMO é Sugestão (decisão 0035): nunca "Do documento", nem "Decisão do GP"
     const l = combinarLeitura(d.l, c);
     expect(l.itens.filter((i) => i.doPmo && i.rotulo !== "sugestao")).toEqual([]);
     const comDecisao = conferirLeituraRfp(
-      { itens: [{ ...base, id: "X9", rotulo: "decisao_gp" }] },
+      { cruzamentos: [], autoconferencia: [], itens: [{ ...base, id: "X9", rotulo: "decisao_gp" }] },
       [d.doc],
       d.l,
       analiseInicial(d.a, HOJE),

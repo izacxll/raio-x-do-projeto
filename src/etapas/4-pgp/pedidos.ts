@@ -17,6 +17,7 @@ const REGRAS = `Regras deste pedido (além da skill):
 - Valores, reservas, nomes da equipe e cadência das reuniões são decisao_gp.
 - Em cada item, "ficha" é o item do conteúdo mínimo que ele cobre (A7.2, B27.13…). Cubra o conteúdo mínimo de cada parte, deixando de fora, com o motivo, o que a ficha diz ser dispensável para este projeto. Adapte ao porte: o PMBOK é guia, não checklist.
 - Contas, datas, caminho crítico, marcos e totais são do código: não calcule.
+- Autoconferência (decisão 0044): em "autoconferencia", marque CADA item do conteúdo mínimo das fichas das partes deste passo como "presente" (onde: o id do item que o cobre), "dispensado" (motivo: a condição da ficha que vale para o projeto) ou "decisao_gp" (motivo). Não existe "ausente": o que faltaria, gere. Porte pequeno reduz partes, não a cobertura de uma parte mantida. Cadência de reuniões e relatórios é decisao_gp, com sugestão.
 - Campos de texto sem conteúdo ficam com "" e listas sem conteúdo ficam com [].`;
 
 function cabecalho(e: EntradaPgp, p: PgpDossie, titulo: string): string {

@@ -3,7 +3,13 @@
 // fica "dispensada" no mapa e não conta como ausente. O que as regras acharem aparece para o GP corrigir.
 import { CARACTERISTICAS_PADRAO, type Caracteristicas } from "../../dominio/caracteristicas";
 import { PARTES_PGP, PREMISSAS_CRITICAS } from "../../dominio/skill";
-import type { DocumentoLido, Dossie } from "../../dossie/esquema";
+import type { DocumentoLido, Dossie, PgpDossie } from "../../dossie/esquema";
+import {
+  conferirAutoconferencia,
+  partesARegenerar,
+  type ResultadoAutoconferencia,
+} from "../../pmo/autoconferencia";
+import type { ItemAutoconferencia } from "../../pmo/schemas/comum";
 import { montarPgp } from "../../exportacao/relatorio-pgp";
 import type { Achado } from "../../regras/achado";
 import { conferirPlano, type ResultadoConferencia } from "../../regras/conferencia";
@@ -98,4 +104,33 @@ export function separarDecisoesPendentes(achados: Achado[]): { decisoes: Achado[
   const decisao = (a: Achado) =>
     a.tipo === "vago" && a.evidencias.some((e) => /a definir pelo GP|decis[aã]o do GP/i.test(e.trecho));
   return { decisoes: achados.filter(decisao), demais: achados.filter((a) => !decisao(a)) };
+}
+
+// ---------- Autoconferência do PMO, item a item das fichas (decisão 0044) ----------
+
+/**
+ * Itens esperados na autoconferência do PMO: todos os itens das fichas das partes que o GP manteve (as que ele
+ * dispensou não entram). Item que a condição de dispensa da ficha tira para o projeto continua esperado: o PMO o
+ * marca como "dispensado", com o motivo. Porte pequeno reduz partes, não a cobertura das partes mantidas.
+ */
+export function itensEsperadosDoPgp(gerar: Record<string, boolean>): string[] {
+  return PARTES_PGP.filter((p) => gerar[p.codigo] === true).flatMap((p) => p.itens.map((i) => i.codigo));
+}
+
+/** As marcas de autoconferência de todos os passos do PGP que o PMO já respondeu. */
+export function marcasDoPgp(p: PgpDossie): ItemAutoconferencia[] {
+  return [p.adaptacao, p.escopo, p.cronograma, p.riscos, p.planos, p.execucao].flatMap(
+    (r) => r?.resposta.autoconferencia ?? [],
+  );
+}
+
+/**
+ * Confere a autoconferência do PMO no PGP: item sem marca ou com marca incompleta volta ao PMO, num pedido só da
+ * parte dele ("ausente" não é estado final de item de parte essencial).
+ */
+export function conferirAutoconferenciaDoPgp(
+  p: PgpDossie,
+): ResultadoAutoconferencia & { regenerar: string[] } {
+  const r = conferirAutoconferencia(itensEsperadosDoPgp(p.gerar), marcasDoPgp(p));
+  return { ...r, regenerar: partesARegenerar(r) };
 }
