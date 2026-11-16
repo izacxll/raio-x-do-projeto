@@ -149,6 +149,7 @@ Cada premissa tem um bloco com campos fixos, lidos pelo código da etapa 5:
 - **confere:** código (presença); só PMO (se o reajuste proposto é viável)
 - **Limite do PMO:** o PMO não avalia se o prazo total "é suficiente". O código calcula datas e folgas; o PMO aponta o que depende de datas (marco sem data, prazo contado de evento sem data).
 - **Exemplo de redação:** "Premissa: o projeto começa em [data a definir pelo GP]. Os prazos são contados em dias a partir da ordem de serviço; se o início atrasar, sugere-se reajustar as datas dos produtos ou, com prazo final fixo, renegociar o escopo (A11)."
+- **Exemplo (janela antes de marco externo fixo):** num estudo com pesquisa de campo presa a um evento, o que precisa acabar antes dele (método aprovado, questionário, autorização, treinamento) cabe na janela entre o início e o evento? O código conta a janela; se o início atrasar, ela encolhe e o campo perde parte do período (decisão 0045).
 
 ### PC5 — As prioridades e os interlocutores do cliente se mantêm (CE17)
 

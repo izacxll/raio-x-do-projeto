@@ -70,6 +70,16 @@ Fixa o que a FGV entrega, como cada produto será aceito, o que fica fora, sob q
   - sinais: "premissa" junto de "caso não" | "se não" | "hipótese de" | "fica condicionad" | "os prazos passam a contar"
   - confere: código
   - dispensa: nunca
+- **PROP-SOW.12** Cada exclusão conferida contra os requisitos R: nenhuma tira requisito; a que encosta num R diz o que continua dentro; a que contradiz o TR vira pergunta, não exclusão
+  - fonte: decisão 0047; PMBOK 6, 5.3.3.1, p. 154 (PDF 190); `licitacoes.md`, "Como usar"
+  - sinais: exclusão ao lado do número R que ela toca; "continua incluído" | "permanece no escopo"
+  - confere: só PMO
+  - dispensa: nunca
+- **PROP-SOW.13** Compromissos numerados (C01, C02…): cada premissa, exclusão, obrigação do contratante e compromisso de método (protocolo de campo, dados pessoais, revisão, independência), para seguirem ao TAP e ao plano
+  - fonte: decisão 0047; PMBOK 6, 5.2.3.2, p. 148–149 (PDF 184–185) (rastreabilidade)
+  - sinais: "C01" | "C02" | "compromisso" | tabela compromisso × tipo
+  - confere: código
+  - dispensa: nunca
 
 ## Perguntas de qualidade
 - Cada produto do TR está no quadro, sem produto a mais nem a menos? (PMBOK 6, p. 154; regra dos 100% em A13)

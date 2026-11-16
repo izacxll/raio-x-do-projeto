@@ -15,9 +15,9 @@ versao: 0.3.0
 Documento interno de decisão, que não vai ao contratante. Lê o edital do lado de quem avalia: método de seleção, critérios, pesos e onde estão os pontos (PMBOK 6, 12.1, p. 473–474 e 478–479, PDF 509–510 e 514–515). Depois oferece ao GP 2 ou 3 abordagens técnicas comparáveis. **O GP escolhe uma** (`decisao_gp`), e o resto da proposta parte dela. Também dá destino a cada brecha da etapa 1; as premissas críticas que se aplicam (PC1 a PC8) saem escritas com a consequência no SOW (PROP-SOW.11).
 
 ## Conteúdo mínimo
-- **PROP-ESTRATEGIA.1** Critério de julgamento do edital (menor preço, técnica e preço, melhor técnica etc.), com página e trecho
+- **PROP-ESTRATEGIA.1** Critério de julgamento do edital (menor preço, técnica e preço, melhor técnica etc.), com página e trecho; na contratação direta, a hipótese legal (inexigibilidade ou dispensa, com o artigo); na parceria, os critérios de seleção do chamamento
   - fonte: PMBOK 6, 12.1, p. 473–474 (PDF 509–510); `licitacoes.md` 2.2
-  - sinais: "critério de julgamento" | "técnica e preço" | "melhor técnica" | "menor preço" | página da RFP
+  - sinais: "critério de julgamento" | "técnica e preço" | "melhor técnica" | "menor preço" | "inexigibilidade" | "dispensa de licitação" | "critérios de seleção" | página da RFP
   - confere: código
   - dispensa: nunca
 - **PROP-ESTRATEGIA.2** Critérios de pontuação técnica, com pontos máximos e pesos de técnica e preço, como o edital os traz; ou a nota de que o edital não pontua técnica
@@ -65,8 +65,15 @@ Documento interno de decisão, que não vai ao contratante. Lê o edital do lado
   - sinais: "esclarecimento" | "impugnação" | "até" | data | "decisão do GP"
   - confere: código
   - dispensa: nunca
+- **PROP-ESTRATEGIA.11** O que sustenta a escolha, pela modalidade: na licitação, os pontos (PROP-ESTRATEGIA.3); na contratação direta, a notória especialização **no objeto** (os estudos e a equipe que a provam), a justificativa de preço e os documentos do art. 72; na parceria, o plano de trabalho e a capacidade da organização
+  - fonte: `licitacoes.md` 2.4 (arts. 72 e 74) e 4 (Lei 13.019); SKILL.md, seção 3 (modalidade); decisão 0042
+  - sinais: "notória especialização" | "justificativa de preço" | "art. 72" | "experiência no objeto" | "plano de trabalho"
+  - confere: só PMO
+  - dispensa: nunca
 
 ## Perguntas de qualidade
+- Na contratação direta, a justificativa de notória especialização do TR descreve o objeto, ou outras áreas? Texto de outro projeto é conflituoso (CP8) e vira pergunta (decisão 0042).
+- O TR diz "conforme a proposta" ou "conforme objeto da proposta"? Então ele foi montado a partir de uma proposta da FGV, e as perguntas viram ajustes na minuta do contrato antes da assinatura (decisão 0042).
 - A estratégia mira o que o avaliador pontua, ou o que a equipe gosta de fazer? (Rework RW-071)
 - As abordagens são de fato diferentes (método, alcance, intensidade de campo), e não variações da mesma? (PMBOK 6, p. 150–155)
 - Alguma abordagem promete o que não cabe no preço ou no prazo do edital? (Rework RW-071, erros comuns)

@@ -55,9 +55,9 @@ Componente que diz "como os custos serão planejados, estruturados e controlados
   - sinais: "relatório de custos" | "orçado × realizado" | "previsto × realizado" | "mensal" | "frequência"
   - confere: código
   - dispensa: nunca
-- **A4.9** Ligação com as regras do contrato: evento de faturamento (entrega ou aceite), cronograma de desembolso e índice de reajuste, quando houver
+- **A4.9** Ligação com as regras do contrato: evento de faturamento como o texto diz (entrega; aceite; nota "aprovada pelo fiscal" = entrega e aprovação), cronograma de desembolso e índice de reajuste, quando houver
   - fonte: PMBOK 6, 7.3, p. 253 e 256 (PDF 289 e 292); `licitacoes.md` 2.6; `checklist.md` PC3
-  - sinais: "cronograma de desembolso" | "físico-financeiro" | "parcela" | "nota fiscal" | "pagamento" | "reajuste" | "medição"
+  - sinais: "cronograma de desembolso" | "físico-financeiro" | "parcela" | "nota fiscal" | "pagamento" | "reajuste" | "medição" | "aceite" | "aprovada pelo"
   - confere: código
   - dispensa: nunca
 - **A4.10** Procedimento de registro dos custos reais (apontamento de horas, despesas) e quem aprova gastos

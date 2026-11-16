@@ -65,6 +65,11 @@ Descreve **como** a FGV vai executar a abordagem que o GP escolheu (PROP-ESTRATE
   - sinais: "revisão interna" | "controle de qualidade" | "capacitação" | "transferência de conhecimento" | "repasse"
   - confere: código
   - dispensa: nunca
+- **PROP-METODOLOGIA.11** Validação dos resultados e régua metodológica: o método aprovado é o critério para aceitar ou contestar resultados, e resultado aceito só muda por erro técnico registrado (independência técnica)
+  - fonte: decisão 0043; SKILL.md, seção 3 (estudo sensível); `checklist.md` PC5 (CE17)
+  - sinais: "régua metodológica" | "validação dos resultados" | "independência" | "erro técnico" | "metodologia aprovada"
+  - confere: só PMO
+  - dispensa: estudo comum
 
 ## Perguntas de qualidade
 - A metodologia responde ao critério de pontuação que a avalia, item a item? (`licitacoes.md` 2.2)

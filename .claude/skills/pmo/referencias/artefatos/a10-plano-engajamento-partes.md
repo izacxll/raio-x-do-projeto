@@ -42,9 +42,9 @@ versao: 0.3.0
   - dispensa: sem campo e sem beneficiários
 - **A10.6** Tratamento das partes que podem se opor e gestão das expectativas
   - fonte: PMBOK 6, 13.3, p. 524–525 (PDF 560–561), orientação sobre expectativas atribuída ao plano fora da lista; PMBOK 7, 2.1, p. 8 (PDF 103)
-  - sinais: "resistência" | "oposição" | "resistente" | "expectativas" | "conflito"
+  - sinais: "resistência" | "oposição" | "resistente" | "expectativas" | "conflito" | "CPI" | "comissão" | "órgão de controle"
   - confere: só PMO
-  - dispensa: porte pequeno
+  - dispensa: porte pequeno e estudo comum
 - **A10.7** Como e quando o engajamento é monitorado (reuniões, pesquisas, revisão do nível atual × desejado)
   - fonte: PMBOK 6, 13.4, p. 535 (PDF 571), reuniões acordadas no plano, fora da lista; PMBOK 7, 2.1, p. 14 (PDF 109)
   - sinais: "monitoramento do engajamento" | "pesquisa de satisfação" | "avaliação do engajamento" | "feedback"

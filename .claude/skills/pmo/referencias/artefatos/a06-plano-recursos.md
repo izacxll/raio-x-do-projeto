@@ -45,9 +45,9 @@ Diz como os recursos de equipe e os físicos serão identificados, obtidos, orga
   - sinais: "RACI" | "matriz de responsabilidades" | "responsável" por produto | remissão ao B18
   - confere: código
   - dispensa: nunca
-- **A6.7** Gestão da equipe ao longo do projeto: entrada, acompanhamento, liberação e regra de substituição de profissional
-  - fonte: PMBOK 6, 9.1.3.1, p. 318 (PDF 354); 9.3, p. 330 (PDF 366); 9.5, p. 347 (PDF 383); `licitacoes.md` 2.2 (art. 38)
-  - sinais: "desmobilização" | "liberação" | "substituição" | "anuência" | "qualificação equivalente"
+- **A6.7** Gestão da equipe ao longo do projeto: entrada, acompanhamento, liberação e regra de substituição de profissional; na inexigibilidade, só atuam os profissionais que justificaram a contratação (art. 74, § 4º), e a substituição prevê reservas nomeadas e a anuência do contratante
+  - fonte: PMBOK 6, 9.1.3.1, p. 318 (PDF 354); 9.3, p. 330 (PDF 366); 9.5, p. 347 (PDF 383); `licitacoes.md` 2.2 (art. 38) e 2.4 (art. 74, § 4º)
+  - sinais: "desmobilização" | "liberação" | "substituição" | "anuência" | "qualificação equivalente" | "reserva"
   - confere: código
   - dispensa: nunca
 - **A6.8** Treinamento e desenvolvimento da equipe (por exemplo, capacitação da equipe de campo)

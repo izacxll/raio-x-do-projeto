@@ -65,6 +65,16 @@ O PMO monta a EAP por produto e estima as durações em três pontos, com a base
   - sinais: "deslocamento" | "viagem" | "território" | base que cita distância ou logística
   - confere: código
   - dispensa: sem campo
+- **PROP-EAP.11** Marcos externos fixos (evento, safra, ano letivo) como restrição de data, com as atividades que precisam acabar antes de cada um; a janela entre o início e o marco é conta do código
+  - fonte: decisão 0045; PMBOK 6, 6.5, p. 207 (PDF 243); `checklist.md` PC4
+  - sinais: "marco fixo" | "data do evento" | "antes do evento" | "não pode ser adiado" | data fixa no cronograma
+  - confere: código
+  - dispensa: nunca
+- **PROP-EAP.12** Premissa que muda a origem de um dado muda a predecessora da atividade que usa o dado (o produto que usa a pesquisa de outro período depende dela)
+  - fonte: decisão 0045; PMBOK 6, 6.3, p. 187 (PDF 223)
+  - sinais: predecessora ao lado da premissa (P-nn) que muda a origem do dado
+  - confere: só PMO
+  - dispensa: nunca
 
 ## Perguntas de qualidade
 - Somando os filhos chega-se ao produto, sem trabalho órfão? (PMBOK 6, p. 161; ficha A13)

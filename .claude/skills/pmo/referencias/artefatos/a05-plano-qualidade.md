@@ -75,6 +75,11 @@ Descreve como políticas, procedimentos e diretrizes serão aplicados para ating
   - sinais: "protocolo de coleta" | "consistência" | "checagem" | "anonimização" | "LGPD"
   - confere: código
   - dispensa: sem campo e sem dados pessoais
+- **A5.13** Estabilidade do resultado aceito: depois do aceite, o resultado só muda por erro técnico registrado no registro de mudanças (B5), e a régua é o método aprovado (PROP-METODOLOGIA.11)
+  - fonte: decisão 0043; SKILL.md, seção 3 (estudo sensível)
+  - sinais: "erro técnico" | "resultado aprovado" | "resultado aceito" | "independência" | "régua metodológica"
+  - confere: só PMO
+  - dispensa: estudo comum
 
 ## Perguntas de qualidade
 - Cada produto do contrato tem critério de aceite, prazo de análise e responsável do lado do contratante com capacidade de avaliar? (PC3; `experiencia.md` §1)

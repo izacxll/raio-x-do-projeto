@@ -75,6 +75,11 @@ Componente que "estabelece os critérios e as atividades para o desenvolvimento,
   - sinais: "ondas sucessivas" | "onda" | "replanejamento" | "nível de detalhe" | "pacote de planejamento"
   - confere: só PMO
   - dispensa: nunca
+- **A3.13** Referências de início e marcos externos fixos: quando o contrato traz mais de uma referência (data fixa, ordem de serviço, assinatura, publicação), o plano diz qual conta para quê (prazos, vigência, marcos); marcos externos fixos (evento, safra, ano letivo) entram como restrição de data, com a janela até eles (conta do código)
+  - fonte: decisão 0045; PMBOK 6, 6.5, p. 207 (PDF 243); `checklist.md` PC4
+  - sinais: "vigência" junto de "ordem de serviço" | "contados a partir" | "marco fixo" | "data do evento" | "restrição de data"
+  - confere: só PMO
+  - dispensa: nunca
 
 ## Perguntas de qualidade
 - O plano diz de que evento as datas são contadas, e esse evento tem data? (PC4)

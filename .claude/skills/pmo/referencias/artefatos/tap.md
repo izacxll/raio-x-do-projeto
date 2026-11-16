@@ -47,6 +47,11 @@ Documento "que autoriza formalmente a existência de um projeto" e dá ao GP aut
   - sinais: "versão sugerida" | "reunião de abertura" | "confirmar por escrito" | "decisão do GP"
   - confere: código
   - dispensa: nunca
+- **TAP-DV.7** Divergência que muda escopo, custo ou quem executa (formato do produto, quem faz o campo, fonte dos dados): o contrato prevalece; sem resposta dele, o TAP adota a versão que mais obriga a FGV, marca a divergência como pendente com o contratante e só troca de versão com resposta por escrito; antes de abrir a divergência, confere se a RFP já responde
+  - fonte: decisão 0047; método da etapa 3, seção 2 (precedência)
+  - sinais: "pendente" | "versão adotada" | "até a resposta" | "confirmar por escrito"
+  - confere: só PMO
+  - dispensa: nunca
 
 ## TAP.1 — Finalidade do projeto
 - **TAP1.1** Finalidade: o problema ou a necessidade do contratante que o projeto atende, em poucas frases
@@ -231,6 +236,11 @@ Documento "que autoriza formalmente a existência de um projeto" e dá ao GP aut
 - **TAP-PR.3** Registro inicial na ordem do método: primeiro as premissas que a proposta já escreveu (Do documento), depois as premissas críticas que ela não escreveu (Sugestão) e as restrições do contrato; cada linha com quem valida (Decisão do GP; sugestão: o contratante valida as que dependem dele)
   - fonte: método da etapa 3, 4.3; decisão 0021; ficha `b03`
   - sinais: "quem valida" | "validado por" | "responsável pela validação" | coluna de quem valida
+  - confere: código
+  - dispensa: nunca
+- **TAP-PR.4** Cada compromisso C da proposta (premissa, exclusão, obrigação do contratante, método) com destino no TAP: premissa, limite, entrega-chave ou divergência
+  - fonte: decisão 0047
+  - sinais: "C01" | "C02" | coluna de destino ao lado do compromisso
   - confere: código
   - dispensa: nunca
 

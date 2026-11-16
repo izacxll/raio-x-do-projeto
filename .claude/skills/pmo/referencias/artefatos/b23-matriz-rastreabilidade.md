@@ -60,6 +60,11 @@ versao: 0.3.0
   - sinais: "não atendido" | "atendido parcialmente" | "fora do escopo" | "pendente de esclarecimento" | célula de entrega vazia
   - confere: só PMO
   - dispensa: nunca
+- **B23.10** Compromissos numerados da proposta (C01…) ao lado dos requisitos R, cada um com destino no TAP e no plano; compromisso sem destino é ausente
+  - fonte: decisão 0047; PMBOK 6, 5.2.3.2, p. 148–149 (PDF 184–185)
+  - sinais: "C01" | "compromisso" | coluna de destino ao lado do compromisso
+  - confere: código
+  - dispensa: nunca
 
 ## Perguntas de qualidade
 - Todo R da etapa 1 está na matriz, com o mesmo número? (SKILL.md, princípio 9)

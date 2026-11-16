@@ -77,6 +77,7 @@ Diz como as solicitações de mudança serão autorizadas e incorporadas ao proj
   - dispensa: nunca
 
 ## Perguntas de qualidade
+- O reajuste de prazo usa apostila só nas hipóteses que o contrato prevê (impedimento, paralisação, suspensão)? A prorrogação da vigência vem por aditivo ou pelo art. 111 (contrato de escopo), com conferência do jurídico? (`licitacoes.md` 2.7; decisão 0045)
 - O plano dá ao pedido fora do escopo (rodada extra de revisão, produto novo pedido em oficina) um caminho escrito com resposta de impacto? (PC8)
 - Quem decide do lado do contratante está nomeado por papel, com prazo? Sem instância de decisão, a mudança simples para (PC3; experiencia.md §1).
 - O que depende de terceiro (dado de outro órgão que mudou) também entra como pedido de mudança? (PC1)
