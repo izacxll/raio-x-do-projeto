@@ -12,6 +12,7 @@ import {
   incluirRequisito,
   itensFinais,
 } from "../../etapas/1-rfp/revisao";
+import { sugerirNomeProjeto } from "../../etapas/1-rfp/nome-do-projeto";
 import { exportar, type FormatoExportacao } from "../../exportacao/exportar";
 import {
   montarAnaliseRfp,
@@ -111,6 +112,7 @@ function Analise({
               <span>· todos revisados</span>
             )}
           </p>
+          <NomeDoProjeto analise={analise} />
           <Participacao salva={salva} atualizar={atualizar} />
           <Exportar analise={analise} />
           <button
@@ -208,6 +210,45 @@ function Analise({
         </div>
       </section>
     </>
+  );
+}
+
+/**
+ * Nome do projeto sugerido pela RFP (instrumento e objeto), como sugestão editável. Só vira o nome do projeto
+ * quando o GP clica; até lá, os documentos exportados usam a sugestão com o aviso "a confirmar pelo GP".
+ */
+function NomeDoProjeto({ analise }: { analise: AnaliseRfp }) {
+  const { dossie, definirNomeProjeto } = useDossie();
+  const sugestao = useMemo(() => sugerirNomeProjeto(analise), [analise]);
+  const [texto, setTexto] = useState(sugestao?.nome ?? "");
+  if (!sugestao) return null;
+  const atual = dossie.projeto.nome.trim();
+  return (
+    <div className="decisao" style={{ margin: "12px 0" }} data-testid="nome-sugerido">
+      <EtiquetaRotulo rotulo="sugestao" />
+      <label>
+        <span className="lb">Nome do projeto sugerido (instrumento e objeto da RFP)</span>{" "}
+        <input
+          aria-label="Nome do projeto sugerido"
+          value={texto}
+          onChange={(e) => setTexto(e.target.value)}
+          style={{ minWidth: "min(100%, 520px)" }}
+        />
+      </label>
+      <button
+        className="botao"
+        type="button"
+        disabled={!texto.trim() || texto.trim() === atual}
+        onClick={() => definirNomeProjeto(texto.trim())}
+      >
+        Usar como nome do projeto
+      </button>
+      <span className="texto-apoio">
+        {atual
+          ? `Nome atual: ${atual}.`
+          : 'Sem nome dado pelo GP: os documentos saem com esta sugestão e o aviso "a confirmar pelo GP".'}
+      </span>
+    </div>
   );
 }
 

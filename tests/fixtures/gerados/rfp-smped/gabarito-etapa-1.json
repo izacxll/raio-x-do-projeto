@@ -1,0 +1,981 @@
+{
+  "descricao": "Gabarito da etapa 1 (leitura da RFP) para o Edital de Chamamento Público SMPED nº 001/2025, feito pelo PMO (Claude Code seguindo a skill PMO 0.2.0), sem a chave da API e antes de qualquer edição de GP. Sem preço e sem nomes de pessoas. Cada trecho é literal e o teste confere que o código do app acha todos na página indicada.",
+  "rfp": "tests/fixtures/rfps-publicas/chamamento-publico-termo-fomento-smped-sp-2025.pdf",
+  "skill": "0.2.0",
+  "geradoEm": "16/11/2026",
+  "itens": [
+    {
+      "id": "ID-01",
+      "secao": "identificacao",
+      "nome": "Instrumento",
+      "valor": "Edital de Chamamento Público SMPED nº 001/2025",
+      "rotulo": "documento",
+      "fontes": [{ "doc": "rfp", "pagina": 1, "trecho": "Edital de Chamamento Público SMPED nº 001/2025" }]
+    },
+    {
+      "id": "ID-02",
+      "secao": "identificacao",
+      "nome": "Modalidade e tipo de parceria",
+      "valor": "Chamamento público para termo de fomento com organização da sociedade civil (Lei 13.019/2014): parceria, não licitação",
+      "rotulo": "documento",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 1,
+          "trecho": "visando à seleção de projetos apresentados por Organizações da Sociedade Civil interessadas em celebrar TERMO DE FOMENTO"
+        }
+      ]
+    },
+    {
+      "id": "ID-03",
+      "secao": "identificacao",
+      "nome": "Contratante (parceiro público)",
+      "valor": "Prefeitura do Município de São Paulo, por intermédio da Secretaria Municipal da Pessoa com Deficiência (SMPED)",
+      "rotulo": "documento",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 1,
+          "trecho": "A PREFEITURA DO MUNICÍPIO DE SÃO PAULO, por intermédio da SECRETARIA MUNICIPAL DA PESSOA COM DEFICIÊNCIA"
+        }
+      ]
+    },
+    {
+      "id": "ID-04",
+      "secao": "identificacao",
+      "nome": "Objeto",
+      "valor": "Desenvolvimento de ações em temáticas de políticas públicas que promovam inclusão, autonomia, cidadania, conscientização contra o capacitismo e qualidade de vida de pessoas com deficiência e com TEA residentes no município (item 2.1). O item 1.1 é o propósito, não o objeto.",
+      "rotulo": "documento",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 1,
+          "trecho": "2.1 O TERMO DE FOMENTO terá por objeto o desenvolvimento de ações em temáticas de políticas públicas diversas que visem à promoção da inclusão"
+        }
+      ]
+    },
+    {
+      "id": "ID-05",
+      "secao": "identificacao",
+      "nome": "Número do processo",
+      "valor": "6065.2025/0000119-7",
+      "rotulo": "documento",
+      "fontes": [{ "doc": "rfp", "pagina": 1, "trecho": "PROCESSO Nº 6065.2025/0000119-7" }]
+    },
+    {
+      "id": "ID-06",
+      "secao": "identificacao",
+      "nome": "Valor",
+      "valor": "Até R$ 200.000,00 por projeto (teto do repasse). O documento não declara o valor global: até 15 projetos, conforme a disponibilidade orçamentária.",
+      "rotulo": "documento",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 1,
+          "trecho": "1.7 O valor máximo a ser repassado pela Administração Pública Municipal para o desenvolvimento de cada projeto é de R$ 200.000,00"
+        },
+        { "doc": "rfp", "pagina": 8, "trecho": "8.3 O valor teto a ser repassado pela Administração Pública Municipal" }
+      ]
+    },
+    {
+      "id": "ID-07",
+      "secao": "identificacao",
+      "nome": "Dotação orçamentária",
+      "valor": "36.10.14.242.3006.7110.3350.39.00.00.1.500.9001.1",
+      "rotulo": "documento",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 1,
+          "trecho": "1.8 A execução do projeto estará vinculada à dotação orçamentária 36.10.14.242.3006.7110.3350.39.00.00.1.500.9001.1"
+        }
+      ]
+    },
+    {
+      "id": "ID-08",
+      "secao": "identificacao",
+      "nome": "Legislação de base",
+      "valor": "Lei 13.019/2014, alterada pela Lei 13.204/2015; Decreto Municipal 57.575/2016; Portaria 41/SMPED-GAB/2023. O que o documento cita prevalece; conferir.",
+      "rotulo": "documento",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 1,
+          "trecho": "com esteio na Lei Federal nº 13.019, de 31 de julho de 2014, alterada pela Lei Federal nº 13.204, de 14 de dezembro de 2015, no Decreto Municipal nº 57.575, de 29 de dezembro de 2016, e na Portaria nº 41/SMPED-GAB, de 13 de junho de 2023"
+        }
+      ]
+    },
+    {
+      "id": "ID-09",
+      "secao": "identificacao",
+      "nome": "Forma de envio da proposta",
+      "valor": "Por e-mail, em arquivo PDF de até 10 MB, com o assunto indicado no edital",
+      "rotulo": "documento",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 3,
+          "trecho": "6.5.1 As propostas deverão ser apresentadas pelas Organizações da Sociedade Civil em arquivo PDF, no tamanho máximo de 10"
+        },
+        { "doc": "rfp", "pagina": 4, "trecho": "6.5.2 A proposta deverá ser enviada para o e-mail" }
+      ]
+    },
+
+    {
+      "id": "RQ-01",
+      "secao": "requisitos",
+      "nome": "Propósito do projeto",
+      "valor": "O projeto deve promover cidadania, igualdade e direitos da pessoa com deficiência no município",
+      "rotulo": "documento",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 1,
+          "trecho": "1.1 O projeto encaminhado pela Organização da Sociedade Civil deverá promover a cidadania, a igualdade, o exercício dos direitos"
+        }
+      ]
+    },
+    {
+      "id": "RQ-02",
+      "secao": "requisitos",
+      "nome": "Público-alvo",
+      "valor": "Pessoas com deficiência, seus familiares, grupos de apoio ou profissionais que atuem junto a esse público",
+      "rotulo": "documento",
+      "fontes": [{ "doc": "rfp", "pagina": 1, "trecho": "tendo como público-alvo as pessoas com deficiência, seus familiares ou grupos de apoio ou profissionais que atuem junto a este público" }]
+    },
+    {
+      "id": "RQ-03",
+      "secao": "requisitos",
+      "nome": "Conteúdo mínimo das ações",
+      "valor": "Ações de inclusão que deem autonomia, independência e qualidade de vida e ampliem o acesso às redes de apoio de familiares e cuidadores",
+      "rotulo": "documento",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 1,
+          "trecho": "1.3 O projeto apresentado pela Organização da Sociedade Civil deverá contemplar ações direcionadas a promover a inclusão da pessoa com deficiência"
+        }
+      ]
+    },
+    {
+      "id": "RQ-04",
+      "secao": "requisitos",
+      "nome": "Número de projetos selecionados",
+      "valor": "Até 15 projetos, pela ordem de classificação e pela disponibilidade orçamentária",
+      "rotulo": "documento",
+      "fontes": [{ "doc": "rfp", "pagina": 1, "trecho": "1.4 Serão selecionados até 15 (quinze) projetos" }]
+    },
+    {
+      "id": "RQ-05",
+      "secao": "requisitos",
+      "nome": "Limite por proponente",
+      "valor": "Um único projeto por proponente",
+      "rotulo": "documento",
+      "fontes": [{ "doc": "rfp", "pagina": 1, "trecho": "1.5 Cada proponente deverá apresentar apenas 01 (um) único projeto" }]
+    },
+    {
+      "id": "RQ-06",
+      "secao": "requisitos",
+      "nome": "Originalidade",
+      "valor": "O projeto não pode ter sido contemplado em termo de fomento da SMPED nem ser continuidade evidente de projeto já contemplado",
+      "rotulo": "documento",
+      "fontes": [{ "doc": "rfp", "pagina": 1, "trecho": "1.5.1 O projeto submetido deverá ser original" }]
+    },
+    {
+      "id": "RQ-07",
+      "secao": "requisitos",
+      "nome": "Complementaridade",
+      "valor": "Os projetos devem complementar as ações do poder público no município",
+      "rotulo": "documento",
+      "fontes": [{ "doc": "rfp", "pagina": 1, "trecho": "1.6 Os projetos apresentados deverão ser complementares em relação às ações já desenvolvidas pelo poder público" }]
+    },
+    {
+      "id": "RQ-08",
+      "secao": "requisitos",
+      "nome": "Prazo de execução",
+      "valor": "12 meses, a partir da publicação do extrato do termo de fomento",
+      "rotulo": "documento",
+      "fontes": [{ "doc": "rfp", "pagina": 1, "trecho": "1.9 O projeto deverá ser desenvolvido integralmente no período de 12 (doze) meses" }]
+    },
+    {
+      "id": "RQ-09",
+      "secao": "requisitos",
+      "nome": "Forma de execução",
+      "valor": "Presencial e/ou a distância",
+      "rotulo": "documento",
+      "fontes": [{ "doc": "rfp", "pagina": 1, "trecho": "poderá ser executado de forma presencial e/ou à distância" }]
+    },
+    {
+      "id": "RQ-10",
+      "secao": "requisitos",
+      "nome": "Público do objeto",
+      "valor": "Pessoas com deficiência física, visual, auditiva, intelectual, múltipla e/ou com TEA, residentes no município",
+      "rotulo": "documento",
+      "fontes": [{ "doc": "rfp", "pagina": 1, "trecho": "deficiência física, visual, auditiva, intelectual, múltipla e/ou pessoas com Transtorno do Espectro do Autismo (TEA)" }]
+    },
+    {
+      "id": "RQ-11",
+      "secao": "requisitos",
+      "nome": "Acessibilidade",
+      "valor": "Materiais, espaços e metodologias com recursos de acessibilidade adequados ao público",
+      "rotulo": "documento",
+      "fontes": [{ "doc": "rfp", "pagina": 1, "trecho": "2.3 Todos os materiais, espaços e metodologias utilizados no projeto devem necessariamente prever recursos de acessibilidade" }]
+    },
+    {
+      "id": "RQ-12",
+      "secao": "requisitos",
+      "nome": "Atuação no município",
+      "valor": "A proponente (ou a rede) deve ter atuação comprovada no Município de São Paulo",
+      "rotulo": "documento",
+      "fontes": [{ "doc": "rfp", "pagina": 2, "trecho": "4.2.1 A proponente (ou as organizações integrantes da atuação em rede) deve ter atuação comprovada no Município de São Paulo" }]
+    },
+    {
+      "id": "RQ-13",
+      "secao": "requisitos",
+      "nome": "Plano de Trabalho no modelo do Anexo I",
+      "valor": "Plano de Trabalho conforme o Anexo I, com os 17 quadros (identificação, metas e meios de aferição, cronogramas de execução e de receitas e despesas, equipe, materiais, serviços, contrapartida, tabela orçamentária e resumo)",
+      "rotulo": "documento",
+      "fontes": [{ "doc": "rfp", "pagina": 4, "trecho": "6.5.6 O Plano de Trabalho é parte integrante de cada proposta e deverá ser apresentado de acordo com o modelo do Anexo I" }]
+    },
+    {
+      "id": "RQ-14",
+      "secao": "requisitos",
+      "nome": "Currículos no modelo do Anexo II",
+      "valor": "Currículo de cada profissional do projeto, no modelo do Anexo II",
+      "rotulo": "documento",
+      "fontes": [{ "doc": "rfp", "pagina": 4, "trecho": "6.5.7 Os Currículos dos profissionais integrantes do projeto deverão ser apresentados conforme modelo do Anexo II" }]
+    },
+    {
+      "id": "RQ-15",
+      "secao": "requisitos",
+      "nome": "Pesquisa de preços",
+      "valor": "Orçamentos de no mínimo 3 fornecedores para cada item de despesa, comprovados",
+      "rotulo": "documento",
+      "fontes": [{ "doc": "rfp", "pagina": 4, "trecho": "deverá apresentar o orçamento de preços de no mínimo 03 (três) fornecedores para cada item" }]
+    },
+    {
+      "id": "RQ-16",
+      "secao": "requisitos",
+      "nome": "Participação gratuita",
+      "valor": "Vedada a cobrança dos beneficiários (minuta, 3.3.3)",
+      "rotulo": "documento",
+      "fontes": [{ "doc": "rfp", "pagina": 19, "trecho": "3.3.3 Garantir que a participação seja totalmente gratuita" }]
+    },
+    {
+      "id": "RQ-17",
+      "secao": "requisitos",
+      "nome": "Entrega do conteúdo do projeto",
+      "valor": "Ao final, entregar à SMPED o conteúdo do projeto em formato aberto e os vídeos em HD; streaming gravado e de acesso exclusivo; canais de interação nas atividades remotas (minuta, 3.4)",
+      "rotulo": "documento",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 19,
+          "trecho": "3.4 Ao final da execução da parceria, a PARCEIRA deverá disponibilizar à SMPED o conteúdo do projeto, sendo garantido que o documento digital seja em formato aberto e os vídeos com qualidade HD"
+        }
+      ]
+    },
+    {
+      "id": "RQ-18",
+      "secao": "requisitos",
+      "nome": "Escuta do público-alvo",
+      "valor": "A parceira facilita o preenchimento, pelo público, de formulários de satisfação definidos pela SMPED (minuta, 6.6)",
+      "rotulo": "documento",
+      "fontes": [{ "doc": "rfp", "pagina": 20, "trecho": "sendo de responsabilidade da PARCEIRA a intermediação e/ou facilitação do processo de preenchimento pelo público-alvo de formulários" }]
+    },
+    {
+      "id": "RQ-19",
+      "secao": "requisitos",
+      "nome": "Divulgação com a marca do fomento",
+      "valor": "Toda divulgação traz a ação de fomento da Prefeitura; apresentação em eventos com autorização prévia da SMPED (minuta, 12.2 e 12.3)",
+      "rotulo": "documento",
+      "fontes": [{ "doc": "rfp", "pagina": 24, "trecho": "12.2 Toda e qualquer veiculação, divulgação ou referência ao projeto deverá trazer obrigatoriamente e de forma clara e visível a ação de FOMENTO" }]
+    },
+    {
+      "id": "RQ-20",
+      "secao": "requisitos",
+      "nome": "Aquisições com três orçamentos",
+      "valor": "Bens e serviços comprados com recursos da parceria exigem pesquisa de mercado com no mínimo 3 orçamentos (minuta, 5.2.1)",
+      "rotulo": "documento",
+      "fontes": [{ "doc": "rfp", "pagina": 20, "trecho": "5.2.1 Para a aquisição de bens e contratação de serviços, será exigida pesquisa de mercado previamente à contratação" }]
+    },
+
+    {
+      "id": "PZ-01",
+      "secao": "prazos",
+      "nome": "Publicação do edital",
+      "valor": "não informado no documento — a data de publicação marca o início da contagem do envio das propostas",
+      "rotulo": "decisao_gp",
+      "fontes": [{ "doc": "rfp", "pagina": 3, "trecho": "6.4.1 O presente Edital será divulgado em página do sítio eletrônico oficial da SMPED e no Diário Oficial da Cidade de São Paulo" }]
+    },
+    {
+      "id": "PZ-02",
+      "secao": "prazos",
+      "nome": "Envio das propostas",
+      "valor": "Até 30 dias corridos após a publicação do edital, prorrogável",
+      "rotulo": "documento",
+      "fontes": [{ "doc": "rfp", "pagina": 4, "trecho": "6.5.5 A proposta deverá ser enviada em até 30 (trinta) dias corridos após a publicação do edital" }]
+    },
+    {
+      "id": "PZ-03",
+      "secao": "prazos",
+      "nome": "Esclarecimentos e impugnação",
+      "valor": "Até 5 dias úteis antes da data limite para envio, só por e-mail; não suspendem os prazos",
+      "rotulo": "documento",
+      "fontes": [
+        { "doc": "rfp", "pagina": 9, "trecho": "encaminhados com antecedência mínima de 05 (cinco) dias úteis da data limite para envio do projeto" },
+        { "doc": "rfp", "pagina": 9, "trecho": "10.4 As impugnações e pedidos de esclarecimentos não suspendem os prazos previstos no Edital" }
+      ]
+    },
+    {
+      "id": "PZ-04",
+      "secao": "prazos",
+      "nome": "Confirmação do recebimento da proposta",
+      "valor": "Sem confirmação em 48 horas, reenviar com o comprovante do envio anterior",
+      "rotulo": "documento",
+      "fontes": [{ "doc": "rfp", "pagina": 4, "trecho": "Caso a confirmação não seja recebida dentro do prazo de 48 (quarenta e oito) horas" }]
+    },
+    {
+      "id": "PZ-05",
+      "secao": "prazos",
+      "nome": "Resultado preliminar",
+      "valor": "Até 25 dias úteis do fim do prazo de inscrição, prorrogável",
+      "rotulo": "documento",
+      "fontes": [{ "doc": "rfp", "pagina": 4, "trecho": "no prazo de até 25 (vinte e cinco) dias úteis contados do fim do prazo de inscrição" }]
+    },
+    {
+      "id": "PZ-06",
+      "secao": "prazos",
+      "nome": "Recurso contra o resultado preliminar",
+      "valor": "5 dias úteis da publicação da decisão, por e-mail, até as 17h do último dia",
+      "rotulo": "documento",
+      "fontes": [
+        { "doc": "rfp", "pagina": 6, "trecho": "no prazo de 05 (cinco) dias úteis contados da publicação da decisão" },
+        { "doc": "rfp", "pagina": 6, "trecho": "até às 17h00 (dezessete horas) do último dia do prazo previsto" }
+      ]
+    },
+    {
+      "id": "PZ-07",
+      "secao": "prazos",
+      "nome": "Análise dos recursos pela Comissão",
+      "valor": "5 dias úteis do recebimento do recurso",
+      "rotulo": "documento",
+      "fontes": [{ "doc": "rfp", "pagina": 6, "trecho": "6.10.1 Havendo recursos, a Comissão de Seleção analisará sua decisão no prazo de 05 (cinco) dias úteis" }]
+    },
+    {
+      "id": "PZ-08",
+      "secao": "prazos",
+      "nome": "Envio dos documentos da celebração",
+      "valor": "5 dias úteis após a publicação no Diário Oficial",
+      "rotulo": "documento",
+      "fontes": [{ "doc": "rfp", "pagina": 6, "trecho": "em até 05 (cinco) dias úteis após publicação no Diário Oficial do Município" }]
+    },
+    {
+      "id": "PZ-09",
+      "secao": "prazos",
+      "nome": "Análise da documentação",
+      "valor": "Até 10 dias úteis do recebimento, prorrogável",
+      "rotulo": "documento",
+      "fontes": [{ "doc": "rfp", "pagina": 7, "trecho": "7.3.2 A Comissão de Seleção, no prazo de até 10 (dez) dias úteis, contados do recebimento dos documentos" }]
+    },
+    {
+      "id": "PZ-10",
+      "secao": "prazos",
+      "nome": "Validade dos documentos",
+      "valor": "90 dias da expedição, quando o documento ou a lei não disser outro prazo",
+      "rotulo": "documento",
+      "fontes": [{ "doc": "rfp", "pagina": 7, "trecho": "será considerado o prazo de validade de 90 (noventa) dias a contar da data de sua expedição" }]
+    },
+    {
+      "id": "PZ-11",
+      "secao": "prazos",
+      "nome": "Regularização de documentação",
+      "valor": "5 dias úteis da notificação, sob pena de não celebração",
+      "rotulo": "documento",
+      "fontes": [{ "doc": "rfp", "pagina": 8, "trecho": "notificada a regularizar sua situação no prazo de 05 (cinco) dias úteis" }]
+    },
+    {
+      "id": "PZ-12",
+      "secao": "prazos",
+      "nome": "Assinatura do termo de fomento",
+      "valor": "Até 10 dias úteis da publicação da convocação, prorrogável uma vez",
+      "rotulo": "documento",
+      "fontes": [{ "doc": "rfp", "pagina": 8, "trecho": "7.6.1 O prazo para assinatura do TERMO DE FOMENTO será de até 10 (dez) dias úteis" }]
+    },
+    {
+      "id": "PZ-13",
+      "secao": "prazos",
+      "nome": "Vigência",
+      "valor": "12 meses, com efeitos a partir da publicação do extrato",
+      "rotulo": "documento",
+      "fontes": [
+        { "doc": "rfp", "pagina": 9, "trecho": "9.1 O TERMO DE FOMENTO vigorará pelo período de 12 (doze) meses" },
+        { "doc": "rfp", "pagina": 24, "trecho": "13.1 O presente TERMO DE FOMENTO vigorará pelo período de 12 (doze) meses" }
+      ]
+    },
+    {
+      "id": "PZ-14",
+      "secao": "prazos",
+      "nome": "Publicação do extrato",
+      "valor": "Até 30 dias da assinatura (minuta, 12.4)",
+      "rotulo": "documento",
+      "fontes": [{ "doc": "rfp", "pagina": 24, "trecho": "no prazo máximo de 30 (trinta) dias a contar de sua assinatura" }]
+    },
+    {
+      "id": "PZ-15",
+      "secao": "prazos",
+      "nome": "Prestação de contas",
+      "valor": "Trimestral, semestral e final",
+      "rotulo": "documento",
+      "fontes": [{ "doc": "rfp", "pagina": 9, "trecho": "9.3 A Organização da Sociedade Civil está obrigada a prestar contas da boa e regular aplicação dos recursos recebidos trimestralmente, semestralmente" }]
+    },
+    {
+      "id": "PZ-16",
+      "secao": "prazos",
+      "nome": "Pedido de alteração ou prorrogação",
+      "valor": "No mínimo 30 dias antes do fim da vigência (minuta, 3.2.4 e 13.2)",
+      "rotulo": "documento",
+      "fontes": [{ "doc": "rfp", "pagina": 24, "trecho": "a ser apresentada à Administração Pública em, no mínimo, 30 (trinta) dias antes da data inicialmente prevista para seu encerramento" }]
+    },
+    {
+      "id": "PZ-17",
+      "secao": "prazos",
+      "nome": "Prazos da prestação de contas (minuta)",
+      "valor": "Sanar irregularidade em até 45 dias corridos (7.9); restituir em 30 dias corridos (7.11); apreciação final em até 150 dias (7.12); recurso em 10 dias úteis (7.13)",
+      "rotulo": "documento",
+      "fontes": [
+        { "doc": "rfp", "pagina": 22, "trecho": "cumprir a obrigação no prazo de até 45 (quarenta e cinco) dias corridos" },
+        { "doc": "rfp", "pagina": 22, "trecho": "no prazo de até 150 (cento e cinquenta) dias corridos" }
+      ]
+    },
+    {
+      "id": "PZ-18",
+      "secao": "prazos",
+      "nome": "Devolução de saldo e denúncia",
+      "valor": "Saldo devolvido em 30 dias (9.5); denúncia unilateral com 60 dias corridos de aviso (9.4.1)",
+      "rotulo": "documento",
+      "fontes": [
+        { "doc": "rfp", "pagina": 23, "trecho": "deverá a parte comunicar à outra com antecedência mínima de 60 (sessenta) dias corridos" }
+      ]
+    },
+    {
+      "id": "PZ-19",
+      "secao": "prazos",
+      "nome": "Guarda dos documentos",
+      "valor": "10 anos do dia útil seguinte à prestação de contas final (minuta, 3.3.7)",
+      "rotulo": "documento",
+      "fontes": [{ "doc": "rfp", "pagina": 19, "trecho": "pelo prazo de 10 (dez) anos, contado do dia útil subsequente ao da prestação de contas final" }]
+    },
+
+    {
+      "id": "JG-01",
+      "secao": "julgamento",
+      "nome": "Critério",
+      "valor": "Pontuação por 13 critérios (A a M), máximo 60 pontos; eliminada abaixo de 40",
+      "rotulo": "documento",
+      "fontes": [
+        { "doc": "rfp", "pagina": 4, "trecho": "6.7.1 A avaliação e a pontuação serão feitas com base nos critérios de julgamento apresentados a seguir" },
+        { "doc": "rfp", "pagina": 5, "trecho": "Cuja pontuação for inferior a 40 (quarenta) pontos" }
+      ]
+    },
+    {
+      "id": "JG-02",
+      "secao": "julgamento",
+      "nome": "Tabela de critérios",
+      "valor": "A 5, B 5, C 3, D 5, E 5, F 5, G 5, H 2, I 5, J 5, K 5, L 5, M 5 (soma 60, igual à pontuação máxima)",
+      "rotulo": "documento",
+      "fontes": [{ "doc": "rfp", "pagina": 5, "trecho": "Pontuação máxima 60 pontos" }]
+    },
+    {
+      "id": "JG-03",
+      "secao": "julgamento",
+      "nome": "Critérios eliminatórios",
+      "valor": "Nota IRREGULAR em A, B ou C exclui a proposta",
+      "rotulo": "documento",
+      "fontes": [{ "doc": "rfp", "pagina": 5, "trecho": "6.7.4 Os critérios constantes das letras (A), (B) ou (C) são critérios de exclusão direta" }]
+    },
+    {
+      "id": "JG-04",
+      "secao": "julgamento",
+      "nome": "Desempate",
+      "valor": "Maior nota em F; depois E, I, D e L; por fim, sorteio",
+      "rotulo": "documento",
+      "fontes": [{ "doc": "rfp", "pagina": 5, "trecho": "o desempate será feito com base na maior pontuação obtida no critério de julgamento constante da letra (F)" }]
+    },
+    {
+      "id": "JG-05",
+      "secao": "julgamento",
+      "nome": "Outras causas de eliminação",
+      "valor": "Desacordo com o edital ou valor incompatível com o objeto",
+      "rotulo": "documento",
+      "fontes": [{ "doc": "rfp", "pagina": 5, "trecho": "Com valor incompatível com o objeto da parceria" }]
+    },
+
+    {
+      "id": "HB-01",
+      "secao": "habilitacao",
+      "nome": "CNPJ com pelo menos 1 ano",
+      "valor": "Tabela 04, item 1 (e condição 4.1 c)",
+      "rotulo": "documento",
+      "fontes": [{ "doc": "rfp", "pagina": 6, "trecho": "1 Comprovante de inscrição no CNPJ que demonstre sua existência jurídica há, no mínimo, 1 (um) ano" }]
+    },
+    {
+      "id": "HB-02",
+      "secao": "habilitacao",
+      "nome": "Certidão de débitos federais e dívida ativa da União",
+      "valor": "Tabela 04, item 2",
+      "rotulo": "documento",
+      "fontes": [{ "doc": "rfp", "pagina": 6, "trecho": "2 CND/INSS – Certidão Negativa de Débitos Relativos a Créditos Tributários Federais e à Dívida Ativa da União" }]
+    },
+    {
+      "id": "HB-03",
+      "secao": "habilitacao",
+      "nome": "Regularidade com o FGTS",
+      "valor": "Tabela 04, item 3",
+      "rotulo": "documento",
+      "fontes": [{ "doc": "rfp", "pagina": 6, "trecho": "3 FGTS – Certidão de Regularidade referente ao Fundo de Garantia" }]
+    },
+    {
+      "id": "HB-04",
+      "secao": "habilitacao",
+      "nome": "Tributos mobiliários do município",
+      "valor": "Tabela 04, item 4",
+      "rotulo": "documento",
+      "fontes": [{ "doc": "rfp", "pagina": 6, "trecho": "4 Certidão Negativa de Tributos Mobiliários relativos ao Município de São Paulo" }]
+    },
+    {
+      "id": "HB-05",
+      "secao": "habilitacao",
+      "nome": "Inexistência de registro no CADIN municipal",
+      "valor": "Tabela 04, item 5",
+      "rotulo": "documento",
+      "fontes": [{ "doc": "rfp", "pagina": 6, "trecho": "5 Comprovante de inexistência de registros no CADIN" }]
+    },
+    {
+      "id": "HB-06",
+      "secao": "habilitacao",
+      "nome": "Certidões de contas julgadas irregulares (TCU, TCE e TCM)",
+      "valor": "Tabela 04, itens 6, 7 e 8, da organização e dos dirigentes",
+      "rotulo": "documento",
+      "fontes": [{ "doc": "rfp", "pagina": 6, "trecho": "6 Certidão Negativa de Contas Julgadas Irregulares emitida pelo Tribunal de Contas da União" }]
+    },
+    {
+      "id": "HB-07",
+      "secao": "habilitacao",
+      "nome": "Certidão negativa de condenação cível",
+      "valor": "Tabela 04, item 9, dos dirigentes e da organização",
+      "rotulo": "documento",
+      "fontes": [{ "doc": "rfp", "pagina": 7, "trecho": "9 Certidão Negativa de Condenação Cível dos dirigentes e da Organização da Sociedade Civil" }]
+    },
+    {
+      "id": "HB-08",
+      "secao": "habilitacao",
+      "nome": "Estatuto registrado",
+      "valor": "Tabela 04, item 10, com as disposições do art. 33 da Lei 13.019",
+      "rotulo": "documento",
+      "fontes": [{ "doc": "rfp", "pagina": 7, "trecho": "10 Estatuto Social consolidado ou de constituição vigente, devidamente registrado no Cartório Civil competente" }]
+    },
+    {
+      "id": "HB-09",
+      "secao": "habilitacao",
+      "nome": "Ata de eleição e relação dos dirigentes",
+      "valor": "Tabela 04, itens 11 e 12",
+      "rotulo": "documento",
+      "fontes": [{ "doc": "rfp", "pagina": 7, "trecho": "11 Ata de eleição do quadro dirigente atual" }]
+    },
+    {
+      "id": "HB-10",
+      "secao": "habilitacao",
+      "nome": "Comprovante de endereço",
+      "valor": "Tabela 04, item 13",
+      "rotulo": "documento",
+      "fontes": [{ "doc": "rfp", "pagina": 7, "trecho": "13 Comprovante de Endereço, que demonstre o regular funcionamento da Organização da Sociedade Civil" }]
+    },
+    {
+      "id": "HB-11",
+      "secao": "habilitacao",
+      "nome": "Ficha de Dados Cadastrais (contribuinte mobiliário)",
+      "valor": "Tabela 04, item 14",
+      "rotulo": "documento",
+      "fontes": [{ "doc": "rfp", "pagina": 7, "trecho": "14 Ficha de Dados Cadastrais – FDC" }]
+    },
+    {
+      "id": "HB-12",
+      "secao": "habilitacao",
+      "nome": "Inscrição no CENTS",
+      "valor": "Tabela 04, item 15; sem cadastro, aceita-se o formulário de solicitação (7.3.5.1)",
+      "rotulo": "documento",
+      "fontes": [{ "doc": "rfp", "pagina": 7, "trecho": "15 Comprovante de regularidade de inscrição no Cadastro Municipal de Entidades do Terceiro Setor – CENTS" }]
+    },
+    {
+      "id": "HB-13",
+      "secao": "habilitacao",
+      "nome": "Declaração de inexistência de impedimentos (art. 39)",
+      "valor": "Tabela 04, item 16; modelo no Anexo III",
+      "rotulo": "documento",
+      "fontes": [{ "doc": "rfp", "pagina": 7, "trecho": "16 Declaração, sob as penas da lei, de inexistência de impedimentos para celebrar qualquer modalidade de parceria" }]
+    },
+    {
+      "id": "HB-14",
+      "secao": "habilitacao",
+      "nome": "Declaração de Ficha Limpa",
+      "valor": "Tabela 04, item 17; modelo no Anexo IV",
+      "rotulo": "documento",
+      "fontes": [{ "doc": "rfp", "pagina": 7, "trecho": "17 Declaração de Ficha Limpa" }]
+    },
+    {
+      "id": "HB-15",
+      "secao": "habilitacao",
+      "nome": "Declaração sobre trabalho de menores",
+      "valor": "Tabela 04, item 18; modelo no Anexo V",
+      "rotulo": "documento",
+      "fontes": [{ "doc": "rfp", "pagina": 7, "trecho": "18 Declaração, sob as penas da lei, de que não emprega menor de 18 (dezoito) anos" }]
+    },
+    {
+      "id": "HB-16",
+      "secao": "habilitacao",
+      "nome": "Declaração de não contratar empresas de dirigentes e agentes públicos",
+      "valor": "Tabela 04, item 19; modelo no Anexo VI",
+      "rotulo": "documento",
+      "fontes": [{ "doc": "rfp", "pagina": 7, "trecho": "19 Declaração de compromisso de que não será contratada empresa pertencente a dirigentes da entidade" }]
+    },
+    {
+      "id": "HB-17",
+      "secao": "habilitacao",
+      "nome": "Comprovantes de experiência prévia",
+      "valor": "Tabela 04, item 20 (parcerias, relatórios, publicações, currículos, declarações ou prêmios)",
+      "rotulo": "documento",
+      "fontes": [{ "doc": "rfp", "pagina": 7, "trecho": "20 Comprovantes de Experiência Prévia no desenvolvimento e realização de atividades ou projetos relacionados ao objeto da" }]
+    },
+    {
+      "id": "HB-18",
+      "secao": "habilitacao",
+      "nome": "Estatuto com destinação do patrimônio e escrituração contábil",
+      "valor": "Condições de participação 4.1 g e h",
+      "rotulo": "documento",
+      "fontes": [{ "doc": "rfp", "pagina": 2, "trecho": "o respectivo patrimônio líquido será transferido a outra pessoa jurídica de igual natureza" }]
+    },
+    {
+      "id": "HB-19",
+      "secao": "habilitacao",
+      "nome": "Impedimentos de participação",
+      "valor": "Dez situações em 4.3 (a a j): dirigente com cargo público, contas rejeitadas, CADIN, mora, sanções, improbidade, omissão de prestar contas",
+      "rotulo": "documento",
+      "fontes": [{ "doc": "rfp", "pagina": 2, "trecho": "4.3 Não poderá participar deste Edital a Organização da Sociedade Civil que" }]
+    },
+
+    {
+      "id": "CD-01",
+      "secao": "condicoes",
+      "nome": "Liberação do recurso",
+      "valor": "Integral, em parcela única",
+      "rotulo": "documento",
+      "fontes": [{ "doc": "rfp", "pagina": 8, "trecho": "8.6 Para a realização da parceria, o recurso será liberado de forma integral, em parcela única" }]
+    },
+    {
+      "id": "CD-02",
+      "secao": "condicoes",
+      "nome": "Conta específica e aplicação",
+      "valor": "Conta específica em instituição financeira pública; aplicação em caderneta de poupança do Banco do Brasil",
+      "rotulo": "documento",
+      "fontes": [{ "doc": "rfp", "pagina": 9, "trecho": "os recursos deverão ser aplicados em caderneta de poupança do Banco do Brasil" }]
+    },
+    {
+      "id": "CD-03",
+      "secao": "condicoes",
+      "nome": "Contrapartida",
+      "valor": "Opcional (\"se houver\"); o documento não a exige",
+      "rotulo": "documento",
+      "fontes": [{ "doc": "rfp", "pagina": 18, "trecho": "3.3.1 Prestar a contrapartida em conformidade com a CLÁUSULA SEGUNDA, quando houver" }]
+    },
+    {
+      "id": "CD-04",
+      "secao": "condicoes",
+      "nome": "Despesas admitidas e vedadas",
+      "valor": "Equipe pode ser paga com recursos da parceria (2.10); vedado remunerar servidor (8.9); remanejamento sem alterar o total, com autorização do gestor (8.13)",
+      "rotulo": "documento",
+      "fontes": [
+        { "doc": "rfp", "pagina": 18, "trecho": "2.10 Poderá ser paga com recursos da parceria a remuneração da equipe dimensionada no Plano de Trabalho" },
+        { "doc": "rfp", "pagina": 9, "trecho": "8.13 Durante a vigência do TERMO DE FOMENTO é permitido o remanejamento de recursos" }
+      ]
+    },
+    {
+      "id": "CD-05",
+      "secao": "condicoes",
+      "nome": "Sanções",
+      "valor": "Advertência; suspensão de até 2 anos; declaração de inidoneidade. Não há multa.",
+      "rotulo": "documento",
+      "fontes": [{ "doc": "rfp", "pagina": 23, "trecho": "configuram irregularidades passíveis das seguintes penalidades" }]
+    },
+    {
+      "id": "CD-06",
+      "secao": "condicoes",
+      "nome": "Garantia, reajuste e matriz de riscos",
+      "valor": "Não se aplicam à parceria; o documento não os declara",
+      "rotulo": "documento",
+      "fontes": []
+    },
+    {
+      "id": "CD-07",
+      "secao": "condicoes",
+      "nome": "Glosa por meta descumprida",
+      "valor": "Valores de metas descumpridas sem justificativa são glosados",
+      "rotulo": "documento",
+      "fontes": [{ "doc": "rfp", "pagina": 9, "trecho": "9.4.2 Serão glosados os valores relacionados a metas e resultados descumpridos sem justificativa suficiente" }]
+    },
+    {
+      "id": "CD-08",
+      "secao": "condicoes",
+      "nome": "Aprovação final (análogo do aceite)",
+      "valor": "Prestação de contas final aprovada, aprovada com ressalvas ou rejeitada (7.7)",
+      "rotulo": "documento",
+      "fontes": [{ "doc": "rfp", "pagina": 21, "trecho": "7.7 A Administração Pública realizará manifestação conclusiva sobre a prestação de contas final" }]
+    },
+    {
+      "id": "CD-09",
+      "secao": "condicoes",
+      "nome": "Alteração, denúncia e rescisão",
+      "valor": "Alteração a critério da administração, com revisão do Plano de Trabalho; denúncia a qualquer tempo; rescisão por inadimplemento (Cláusula 9ª)",
+      "rotulo": "documento",
+      "fontes": [{ "doc": "rfp", "pagina": 23, "trecho": "9.1 A critério da Administração Pública, admite-se a alteração da parceria" }]
+    },
+    {
+      "id": "CD-10",
+      "secao": "condicoes",
+      "nome": "Bens remanescentes",
+      "valor": "Incorporados ao patrimônio do município, podendo ser doados a critério da SMPED",
+      "rotulo": "documento",
+      "fontes": [{ "doc": "rfp", "pagina": 10, "trecho": "10.15 Os bens remanescentes que tenham sido adquiridos com recursos públicos serão incorporados ao patrimônio do Município" }]
+    },
+    {
+      "id": "CD-11",
+      "secao": "condicoes",
+      "nome": "Contratação de terceiros",
+      "valor": "O documento não usa \"subcontratação\": admite aquisições e contratações com recursos da parceria (5.2), com três orçamentos e a vedação de empresas de dirigentes e agentes públicos (Anexo VI)",
+      "rotulo": "documento",
+      "fontes": [{ "doc": "rfp", "pagina": 20, "trecho": "5.2 As aquisições e contratações realizadas com recursos da parceria deverão observar os princípios da impessoalidade" }]
+    },
+    {
+      "id": "CD-12",
+      "secao": "condicoes",
+      "nome": "Propriedade intelectual e dados pessoais",
+      "valor": "O documento não declara cláusula de propriedade intelectual nem de proteção de dados pessoais. O mais próximo é a entrega do conteúdo à SMPED em formato aberto (3.4).",
+      "rotulo": "documento",
+      "fontes": []
+    },
+
+    {
+      "id": "PT-01",
+      "secao": "partes",
+      "nome": "Contratante",
+      "valor": "Prefeitura do Município de São Paulo, por meio da SMPED",
+      "rotulo": "documento",
+      "fontes": [{ "doc": "rfp", "pagina": 1, "trecho": "por intermédio da SECRETARIA MUNICIPAL DA PESSOA COM DEFICIÊNCIA" }]
+    },
+    {
+      "id": "PT-02",
+      "secao": "partes",
+      "nome": "Comissão de Seleção",
+      "valor": "Processa e julga o chamamento (Portaria 16/SMPED-GAB/2025)",
+      "rotulo": "documento",
+      "fontes": [{ "doc": "rfp", "pagina": 3, "trecho": "5.1 A Comissão de Seleção é o órgão colegiado destinado a processar e julgar o presente chamamento público" }]
+    },
+    {
+      "id": "PT-03",
+      "secao": "partes",
+      "nome": "Coordenação de Políticas e Projetos de Inclusão (COPPI)",
+      "valor": "Responde esclarecimentos e impugnações e resolve os casos omissos",
+      "rotulo": "documento",
+      "fontes": [{ "doc": "rfp", "pagina": 9, "trecho": "10.6 A Coordenação de Políticas e Projetos de Inclusão – COPPI resolverá os casos omissos" }]
+    },
+    {
+      "id": "PT-04",
+      "secao": "partes",
+      "nome": "Gestor da parceria",
+      "valor": "Servidora designada na Cláusula 8ª da minuta (nome e registro no documento), com as atribuições das alíneas a a g",
+      "rotulo": "documento",
+      "fontes": [{ "doc": "rfp", "pagina": 22, "trecho": "8.1 A gestão da parceria será exercida por intermédio da servidora" }]
+    },
+    {
+      "id": "PT-05",
+      "secao": "partes",
+      "nome": "Comissão de Monitoramento e Avaliação",
+      "valor": "Homologa o relatório de monitoramento e julga o recurso (Portaria 17/SMPED-GAB/2025)",
+      "rotulo": "documento",
+      "fontes": [{ "doc": "rfp", "pagina": 20, "trecho": "6.7 A Comissão de Monitoramento e Avaliação está prevista na PORTARIA Nº 17" }]
+    },
+    {
+      "id": "PT-06",
+      "secao": "partes",
+      "nome": "Chefia de Gabinete",
+      "valor": "Recebe o recurso encaminhado pela Comissão para a decisão final",
+      "rotulo": "documento",
+      "fontes": [{ "doc": "rfp", "pagina": 6, "trecho": "6.10.2 Caberá à Comissão de Seleção encaminhar o recurso à Chefia de Gabinete" }]
+    },
+    {
+      "id": "PT-07",
+      "secao": "partes",
+      "nome": "Beneficiários",
+      "valor": "Pessoas com deficiência e com TEA, familiares, grupos de apoio e profissionais; beneficiários diretos e indiretos quantificados no Plano de Trabalho",
+      "rotulo": "documento",
+      "fontes": [{ "doc": "rfp", "pagina": 1, "trecho": "tendo como público-alvo as pessoas com deficiência" }]
+    },
+    {
+      "id": "PT-08",
+      "secao": "partes",
+      "nome": "Conselho Municipal da Pessoa com Deficiência (CMPD)",
+      "valor": "Citado na justificativa como parceiro da política municipal",
+      "rotulo": "documento",
+      "fontes": [{ "doc": "rfp", "pagina": 2, "trecho": "Conselho Municipal da Pessoa com Deficiência - CMPD" }]
+    },
+
+    {
+      "id": "BR-01",
+      "secao": "brechas",
+      "nome": "Repasse em parcela única × empenho proporcional aos meses",
+      "tipo": "contraditório",
+      "valor": "O 6.7.8 e o 8.6 dizem que o recurso é liberado de forma integral em parcela única; o 8.2 diz que os valores empenhados guardam proporcionalidade aos meses do exercício. Se o empenho for parcelado pelo exercício, o repasse pode não vir de uma vez.",
+      "rotulo": "sugestao",
+      "pergunta": "Solicita-se confirmar se o repasse será feito em parcela única logo após a celebração (itens 6.7.8 e 8.6) e como se aplica a proporcionalidade aos meses do exercício prevista no item 8.2.",
+      "fontes": [
+        { "doc": "rfp", "pagina": 8, "trecho": "8.2 Os valores a serem empenhados guardarão proporcionalidade aos meses do exercício financeiro" },
+        { "doc": "rfp", "pagina": 8, "trecho": "o recurso será liberado de forma integral, em parcela única" }
+      ]
+    },
+    {
+      "id": "BR-02",
+      "secao": "brechas",
+      "nome": "Data limite das propostas depende da publicação, que o documento não traz",
+      "tipo": "em aberto",
+      "valor": "O prazo é de 30 dias corridos após a publicação, prorrogável a critério da administração; o esclarecimento se conta dessa data limite.",
+      "rotulo": "sugestao",
+      "pergunta": "Solicita-se informar a data de publicação do edital e a data limite para envio dos projetos (item 6.5.5), para o cálculo do prazo de esclarecimento (item 10.2).",
+      "fontes": [{ "doc": "rfp", "pagina": 4, "trecho": "podendo o prazo ser prorrogado por igual ou menor período a critério da Administração Pública" }]
+    },
+    {
+      "id": "BR-03",
+      "secao": "brechas",
+      "nome": "Seleção não obriga a celebrar",
+      "tipo": "em aberto",
+      "valor": "Até 15 projetos, conforme a disponibilidade orçamentária; a homologação e a seleção não dão direito à parceria. O documento não declara o valor global disponível.",
+      "rotulo": "sugestao",
+      "pergunta": "Solicita-se informar o valor global disponível para o chamamento e quantos projetos se prevê celebrar com ele (item 1.4).",
+      "fontes": [{ "doc": "rfp", "pagina": 8, "trecho": "8.11.1 A seleção de projetos não obriga a Administração Pública a firmar o instrumento de parceria" }]
+    },
+    {
+      "id": "BR-04",
+      "secao": "brechas",
+      "nome": "Originalidade com critério aberto",
+      "tipo": "vago",
+      "valor": "\"Evidente continuidade de projetos já contemplados\" admite mais de uma leitura (CTR7) e pode eliminar a proposta.",
+      "rotulo": "sugestao",
+      "pergunta": "Solicita-se informar o critério para considerar um projeto \"evidente continuidade\" de projeto já contemplado (item 1.5.1) e se a mesma organização pode propor ação nova para público já atendido.",
+      "fontes": [{ "doc": "rfp", "pagina": 1, "trecho": "nem se caracterizem como evidente continuidade de projetos já contemplados" }]
+    },
+    {
+      "id": "BR-05",
+      "secao": "brechas",
+      "nome": "Início móvel da execução",
+      "tipo": "em aberto",
+      "valor": "Execução e vigência contam da publicação do extrato, que pode sair até 30 dias depois da assinatura (12.4): o início e o fim dos 12 meses dependem da administração (PC4).",
+      "rotulo": "sugestao",
+      "pergunta": "Solicita-se confirmar que o prazo de 12 meses (item 1.9) começa na publicação do extrato e informar a previsão dessa publicação, que a minuta admite até 30 dias depois da assinatura (item 12.4).",
+      "fontes": [{ "doc": "rfp", "pagina": 1, "trecho": "a partir da publicação do Extrato do Termo de Fomento no Diário Oficial da Cidade" }]
+    },
+    {
+      "id": "BR-06",
+      "secao": "brechas",
+      "nome": "Denunciação da lide",
+      "tipo": "transfere responsabilidade",
+      "valor": "Se a SMPED for acionada por responsabilidade da parceira, a parceira se obriga a assumir o polo passivo (CTR2).",
+      "rotulo": "sugestao",
+      "pergunta": "Solicita-se esclarecer o alcance do item 3.3.14.1 da minuta: a obrigação de assumir o polo passivo vale só para encargos trabalhistas, sociais e previdenciários da equipe do projeto?",
+      "fontes": [{ "doc": "rfp", "pagina": 19, "trecho": "a qual se obriga a assumir o polo passivo da relação processual" }]
+    },
+    {
+      "id": "BR-07",
+      "secao": "brechas",
+      "nome": "Cancelamento a juízo da administração",
+      "tipo": "em aberto",
+      "valor": "A parceria pode ser cancelada a juízo da administração, sem critério nem prazo no texto.",
+      "rotulo": "sugestao",
+      "pergunta": "Solicita-se informar em que hipóteses a parceria pode ser cancelada a juízo da Administração (item 10.13) e como ficam as despesas já realizadas.",
+      "fontes": [{ "doc": "rfp", "pagina": 10, "trecho": "10.13 Salvo motivo de força maior, plenamente justificado, a parceria poderá ser cancelada a juízo da Administração Pública" }]
+    },
+    {
+      "id": "BR-08",
+      "secao": "brechas",
+      "nome": "Declaração de instalações fora da lista de documentos",
+      "tipo": "contraditório",
+      "valor": "A condição 4.1 i pede declaração do representante legal sobre instalações; a Tabela 04 não a lista.",
+      "rotulo": "sugestao",
+      "pergunta": "Solicita-se confirmar se a declaração sobre instalações e condições materiais (item 4.1, i) deve ser enviada e em que momento, já que não consta da Tabela 04.",
+      "fontes": [{ "doc": "rfp", "pagina": 2, "trecho": "a ser atestado mediante declaração de seu representante legal" }]
+    },
+    {
+      "id": "BR-09",
+      "secao": "brechas",
+      "nome": "Normas citadas com ano diferente",
+      "tipo": "contraditório",
+      "valor": "O Decreto Municipal 57.575 aparece como de 2016 em todo o documento e como de 2014 no 7.3.5.1; o Anexo III cita a \"Lei Federal nº 13.204/2014\", que no resto do documento é de 2015.",
+      "rotulo": "sugestao",
+      "pergunta": "Solicita-se confirmar o ano do Decreto Municipal nº 57.575 citado no item 7.3.5.1 e a lei citada no inciso IV da declaração do Anexo III.",
+      "fontes": [
+        { "doc": "rfp", "pagina": 8, "trecho": "Decreto Municipal nº 57.575/2014" },
+        { "doc": "rfp", "pagina": 16, "trecho": "da Lei Federal nº 13.204/2014" }
+      ]
+    },
+    {
+      "id": "BR-10",
+      "secao": "brechas",
+      "nome": "Formulários de satisfação a definir",
+      "tipo": "vago",
+      "valor": "A parceira responde pela aplicação de formulários que a SMPED ainda vai definir, sem prazo nem volume.",
+      "rotulo": "sugestao",
+      "pergunta": "Solicita-se informar quando e com que periodicidade os formulários de satisfação serão definidos e aplicados (minuta, item 6.6), para o dimensionamento da equipe.",
+      "fontes": [{ "doc": "rfp", "pagina": 20, "trecho": "pelo público-alvo de formulários a serem definidos pela SMPED" }]
+    },
+    {
+      "id": "BR-11",
+      "secao": "brechas",
+      "nome": "Valor de referência não informado além do teto",
+      "tipo": "vago",
+      "valor": "A Comissão pode eliminar proposta com valor incompatível com o objeto, \"à luz da estimativa realizada\", que o documento não traz.",
+      "rotulo": "sugestao",
+      "pergunta": "Solicita-se informar a estimativa ou o valor de referência usado para avaliar a compatibilidade do valor com o objeto (itens 6.7.2, c, e 6.7.6).",
+      "fontes": [{ "doc": "rfp", "pagina": 5, "trecho": "a ser avaliado pela Comissão de Seleção à luz da estimativa realizada" }]
+    },
+    {
+      "id": "BR-12",
+      "secao": "brechas",
+      "nome": "Esclarecimentos e impugnações não suspendem prazos",
+      "tipo": "em aberto",
+      "valor": "Resposta tardia a um esclarecimento não muda a data limite.",
+      "rotulo": "sugestao",
+      "pergunta": "Solicita-se informar o prazo de resposta aos pedidos de esclarecimento (item 10.2).",
+      "fontes": [{ "doc": "rfp", "pagina": 9, "trecho": "10.4 As impugnações e pedidos de esclarecimentos não suspendem os prazos previstos no Edital" }]
+    }
+  ],
+  "naoSaoBrechas": [
+    {
+      "trecho": "de modo que possam ser eventualmente incorporados aos serviços ofertados pela rede pública municipal",
+      "pagina": 1,
+      "motivo": "Fala do que a administração talvez faça depois, não de obrigação de quem executa."
+    },
+    {
+      "trecho": "para dirimir controvérsias eventualmente resultantes da execução da presente parceria",
+      "pagina": 24,
+      "motivo": "Cláusula de foro."
+    },
+    {
+      "trecho": "devendo, entre outras atribuições da Lei Federal nº 13.019/2014",
+      "pagina": 20,
+      "motivo": "Atribuições do gestor público, não escopo da parceira."
+    },
+    {
+      "trecho": "7.4 Etapa 03: Ajustes no Plano de Trabalho e regularização de documentação, se necessário",
+      "pagina": 8,
+      "motivo": "Título da etapa; o prazo está no subitem seguinte (7.4.1: 5 dias úteis)."
+    }
+  ]
+}
