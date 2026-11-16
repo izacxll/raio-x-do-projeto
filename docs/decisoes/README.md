@@ -44,6 +44,8 @@ Uma decisão por arquivo, numerada em ordem. Cada uma registra o contexto, o que
 | [0038](0038-etapa-2-pelo-metodo-m2.md) | Etapa 2 pelo método (M2): tipo de contrato e de projeto, as 9 seções e a minuta redigida na ordem do edital, preço pelo tipo, pontos por preço, caixa, produtividade e duração × vigência por código | aceita |
 | [0040](0040-custos-indiretos-em-parceria.md) | Parceria: sem valor-hora; custos indiretos só como despesa com memória de cálculo; taxa de administração conferida no edital e na norma local | aceita |
 | [0041](0041-etapa-3-pelo-metodo-m3.md) | Etapa 3 pelo método (M3): contrato assinado como entrada, divergências RFP × proposta × contrato primeiro (valor, parcelas, conformidade, duração, equipe, produtividade), divergências de texto do PMO, conferência pelo método | aceita |
+| [0048](0048-esqueleto-da-etapa-1-e-autoconferencia-no-codigo.md) | Esqueleto da etapa 1 corrigido (SMPED e TR de contratação direta), contratação direta no código, cruzamentos X1 a X6, citação fraca, autoconferência nos esquemas e o teste que reprova | aceita |
+| [0049](0049-leituras-gravadas-externas.md) | Leituras gravadas externas: evidência, nunca gabarito; fora do Git; o caso sem o nome da cidade | aceita |
 
 Modelo para uma nova decisão:
 

@@ -4,6 +4,15 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 
 ## [Não publicado]
 
+### Correções do esqueleto da etapa 1 e autoconferência (decisões 0048 e 0049)
+- **Testes externos da skill** (SMPED e um TR municipal de contratação direta), guardados fora do Git como leituras gravadas externas (decisão 0049).
+- **SMPED:** habilitação com os itens 7 e 8 e sem as alíneas de exemplo; "Diário Oficial" não é obrigação diária; eliminação com as alíneas; requisitos não cortados em "Decreto Municipal nº"; público-alvo e "poderá ser executado" fora dos R.
+- **Contratação direta:** modalidade declarada em qualquer página, objeto pelo título "1. OBJETO: …", seção "Como é escolhida", hipótese legal, documentos como pergunta e "não se aplica" próprio; terceira opção no tipo de contrato da etapa 2.
+- **Parcelas em valor no texto**, com percentual e soma × valor global por código; produtos com número do item na frente; quantidade com erro de digitação; frase que não corta em "Av. Dr."; recurso contra sanção fora do certame.
+- **Cruzamentos X1 a X6** no esqueleto e no pedido ao PMO; prazo sem termo inicial; sinal de estudo sensível.
+- **Citação fraca:** citação conferida com menos de 6 palavras ganha a trava.
+- **Autoconferência** nos esquemas das etapas 1 a 4, validador e o teste que reprova; na etapa 4, item sem marca devolve só a sua parte ao PMO.
+
 ### Fase M3 — etapa 3 pelo método (decisão 0041)
 - **Testar sem a chave:** `npm run exportar-pedido` grava, fora do Git, o pedido de um passo do PMO exatamente como iria à API (sistema, mensagem com os PDFs e o esqueleto, schema), para o Claude do claude.ai responder; `npm run importar-resposta` valida a resposta, grava no dossiê, roda as travas e mede contra o gabarito numa seção "leitura independente". Por ora, a etapa 1.
 - **Contrato ou termo assinado como entrada da etapa 3**, com prioridade sobre a proposta e a RFP: o código lê dele o valor, a vigência, as parcelas, a cláusula de parte integrante e quem acompanha.
