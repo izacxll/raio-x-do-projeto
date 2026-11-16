@@ -16,7 +16,16 @@ import { extrairPartesInteressadas } from "../../extracao/rfp/partes-interessada
 import { extrairPrazos } from "../../extracao/rfp/prazos";
 import { extrairRequisitosRfp } from "../../extracao/rfp/requisitos-rfp";
 import { extrairTemas, valorDoTema } from "../../extracao/rfp/temas";
+import {
+  extrairDesembolso,
+  extrairDinheiro,
+  type AchadoDinheiro,
+  type Desembolso,
+} from "../../extracao/rfp/dinheiro";
+import { extrairListaDeDocumentos, type ListaDeDocumentos } from "../../extracao/rfp/documentacao";
+import { extrairObrigacoes, type Obrigacao } from "../../extracao/rfp/obrigacoes";
 import { aplicarRegrasRfp, type EstadoRegra } from "../../regras/brechas-rfp";
+import { extrairPontosDeAtencao, type ResultadoPremissas } from "../../regras/premissas-rfp";
 
 export const NOME_SECAO: Record<SecaoAnalise, string> = {
   atencao: "Pontos de atenção para participar ou não",
@@ -53,6 +62,12 @@ export interface AnaliseRfp {
   /** Requisitos que o código extraiu agora. Os que valem são os guardados no dossiê (com os números fixos). */
   requisitosDoCodigo: Requisito[];
   regras: EstadoRegra[];
+  /** Regras do método da etapa 1 (decisão 0034): a base das seções 2, 4, 6 e 7 da leitura. */
+  obrigacoes: Obrigacao[];
+  desembolso: Desembolso;
+  dinheiro: AchadoDinheiro[];
+  listaDeDocumentos: ListaDeDocumentos;
+  premissas: ResultadoPremissas;
 }
 
 export function documentosDaRfp(documentos: DocumentoLido[]): DocumentoRfp[] {
@@ -231,5 +246,10 @@ function analisarRfpSemGuardar(documentos: DocumentoLido[], hoje: Date): Analise
     itens: [...atencao(itens, requisitosDoCodigo, docs), ...itens],
     requisitosDoCodigo,
     regras: brechas.regras,
+    obrigacoes: extrairObrigacoes(docs, mapa),
+    desembolso: extrairDesembolso(docs),
+    dinheiro: extrairDinheiro(docs, mapa),
+    listaDeDocumentos: extrairListaDeDocumentos(docs, mapa),
+    premissas: extrairPontosDeAtencao(docs, mapa),
   };
 }

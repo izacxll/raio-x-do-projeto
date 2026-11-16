@@ -93,6 +93,8 @@ function quantidades(docs: DocumentoRfp[], mapa: MapaRfp): Omit<Requisito, "nume
     const inicioDaLinha = pagina.lastIndexOf("\n", l.posicao - 1) + 1;
     if (m[1].startsWith("0") && !pagina.slice(inicioDaLinha, l.posicao).trim()) continue;
     const chave = `${n} ${m[2]}`;
+    // "até 15 projetos" selecionados é o tamanho do chamamento, não entrega de quem executa (método, seção 3.1)
+    if (/^(?:projetos?|propostas?)$/.test(m[2])) continue;
     // "cada proponente… apenas 01 projeto" é limite por proponente (condição), não quantidade a entregar
     if (vistos.has(chave) || RE_POR_PROPONENTE.test(normalizarTermo(l.frase))) continue;
     vistos.add(chave);
@@ -142,17 +144,16 @@ function local(docs: DocumentoRfp[]): Omit<Requisito, "numero">[] {
   return out;
 }
 
-const RE_POR_PROPONENTE =
+export const RE_POR_PROPONENTE =
   /\bcada (?:proponente|organizacao|osc|entidade|instituicao|licitante|participante)\b[^.;]{0,60}\b(?:apenas|somente|no maximo|ate|um unico|uma unica)\b/;
 
-/** Condições do objeto, com o rótulo: o que a proposta precisa respeitar sem ser produto, equipe ou número. */
+/**
+ * Condições do objeto, com o rótulo: o que a proposta precisa respeitar sem ser produto, equipe ou número. O limite
+ * por proponente (quem pode participar) e o prazo de execução (prazos) não são obrigação nem entrega: no método da
+ * etapa 1 (decisão 0034) eles saem dos requisitos numerados e vão para a seção 1 e para os prazos.
+ */
 const CONDICOES: [string, RegExp][] = [
   ["Público-alvo", /\bpublico[- ]alvo\b|\bbeneficiarios? (?:diretos?|finais?) (?:serao|sao)\b/],
-  ["Limite por proponente", RE_POR_PROPONENTE],
-  [
-    "Prazo de execução",
-    /\b(?:desenvolvid|executad|realizad|concluid)[oa]s?\b[^.;]{0,40}\b(?:no|pelo|em|dentro do) (?:periodo|prazo) (?:maximo )?de\s+\d/,
-  ],
   [
     "Forma de execução",
     /\b(?:executad|realizad|desenvolvid|ofertad|prestad)[oa]s?\b[^.;]{0,60}\b(?:presencial|a distancia|remot[oa]|hibrid[oa]|on-?line)\b/,
