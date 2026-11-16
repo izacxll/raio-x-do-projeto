@@ -27,6 +27,36 @@ A fase M1 aplica o método da etapa 1 (`docs/estudos/metodo-etapa-1.md`) com o d
 5. **Gabaritos e leitura gravada:** os gabaritos da SMPED e da OEI na estrutura do método (`tests/fixtures/gerados/rfp-smped/` e `rfp-oei/`, feitos pelo PMO com todas as citações conferidas) e as leituras gravadas derivadas deles (`leitura-pmo.json`). A da OEI serve à demonstração, que agora também abre na etapa 1.
 6. **Contagem da meta de 30 a 50:** conta os cartões; os requisitos R são linhas de uma tabela da seção 2 e aparecem em separado no placar.
 
+7. **Ajustes da revisão independente** (19 achados, antes do PR):
+   - **Todo item do PMO é Sugestão**, inclusive o que ele marcar como "decisão do GP"; a citação achada pelo código aparece como "citação conferida".
+   - **Travas mais duras:** o número vale só no trecho conferido, na cláusula em volta dele ou no esqueleto da mesma seção; contagens também pedem fonte; trava nova "conta feita pelo PMO" (soma, acumulado, "sobram").
+   - **Item do PMO que repete uma conta do código** vai para os recolhidos, nunca some.
+   - **Cláusulas:**
+     - o parágrafo fecha no ponto final;
+     - o trecho mostrado é a frase em volta do que casou;
+     - páginas de modelo (declaração, ficha, "(Nome do…)") ficam de fora;
+     - certame reconhecido também pelo conteúdo (licitante, proposta, homologação);
+     - cláusula que atravessa a página é juntada.
+   - **Regras:**
+     - a lista de obrigações acaba nas sanções;
+     - parcela única só com repasse;
+     - "não obriga" só sobre a contratação;
+     - sem retenção de tributo como condição de pagamento;
+     - sem devolução de garantia como glosa;
+     - a PC1 da brecha não vale quando quem fornece é a contratada;
+     - um ponto por premissa crítica;
+     - sem "justificativa suficiente" solta nas proteções;
+     - "ata" só como ata de eleição ou assembleia;
+     - cláusulas-padrão (sigilo, reserva de cargos, assédio) não viram R;
+     - nomes dos órgãos dos gabaritos tirados das regras.
+   - **Tela:**
+     - pedir de novo mostra o custo;
+     - revisar um item não reconfere tudo;
+     - aviso para dossiê revisado numa versão anterior;
+     - o R incluído a partir do PMO guarda a página e o trecho conferidos, como obrigação;
+     - a etapa 2 mostra as obrigações à parte;
+     - seção 2 sem obrigação específica diz "não localizado pelo código".
+
 ## Consequências
 
 - Placar em `docs/estudos/placar-m1-etapa-1.md`.

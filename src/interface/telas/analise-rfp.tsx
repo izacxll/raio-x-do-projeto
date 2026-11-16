@@ -21,7 +21,12 @@ import {
   pedidoLeituraRfp,
 } from "../../etapas/1-rfp/leitura-pmo";
 import { sugerirNomeProjeto } from "../../etapas/1-rfp/nome-do-projeto";
-import { analiseInicial, estadoDoItem, incluirRequisito } from "../../etapas/1-rfp/revisao";
+import {
+  analiseInicial,
+  estadoDoItem,
+  incluirRequisito,
+  incluirRequisitoDaLeitura,
+} from "../../etapas/1-rfp/revisao";
 import { exportar, type FormatoExportacao } from "../../exportacao/exportar";
 import {
   montarAnaliseRfp,
@@ -92,7 +97,18 @@ function Analise({
   todos: DocumentoLido[];
   atualizar: (a: AnaliseRfpDossie) => void;
 }) {
-  const leitura = useMemo(() => leituraDoDossie(analise, salva, todos), [analise, salva, todos]);
+  // a leitura (e a conferência das citações do PMO) só refaz quando muda o que ela usa: os requisitos, a resposta
+  // do PMO e os requisitos descartados; revisar um item não reconfere tudo
+  const descartados = Object.entries(salva.revisoes)
+    .filter(([id, r]) => id.startsWith("requisito:") && r.estado === "descartado")
+    .map(([id]) => id)
+    .join(",");
+  const { requisitos, leituraPmo } = salva;
+  const leitura = useMemo(
+    () => leituraDoDossie(analise, { ...salva, requisitos, leituraPmo }, todos),
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- as revisões só pesam pelos requisitos descartados
+    [analise, requisitos, leituraPmo, descartados, todos],
+  );
   const pendentes = contarPendentesDaLeitura(leitura, salva);
   const revisaveis = itensRevisaveis(leitura).length;
   const mudarEstado = (ids: string[], estado: EstadoItem, textoEditado?: string) => {
@@ -134,6 +150,16 @@ function Analise({
         </div>
       </section>
 
+      {revisoesDeOutraVersao(salva, leitura) > 0 && (
+        <div className="aviso" role="note" data-testid="revisoes-antigas">
+          <p>
+            <b>Esta análise foi revisada numa versão anterior do app.</b> A leitura mudou de estrutura (8
+            seções): as revisões dos requisitos numerados continuam valendo, mas{" "}
+            {revisoesDeOutraVersao(salva, leitura)} revisões de itens que não existem mais ficaram de fora, e
+            os itens novos estão pendentes.
+          </p>
+        </div>
+      )}
       {leitura.fonte === "codigo" && (
         <div className="aviso" role="note" data-testid="leitura-parcial">
           <p>
@@ -308,13 +334,16 @@ function LeituraDoPmoNaEtapa1({
   const docs = useMemo(() => todos.filter((d) => d.papel === "rfp" || d.papel === "anexo-rfp"), [todos]);
   const textoDocs = useMemo(() => textoDosDocumentos(docs), [docs]);
   // o pedido parte do esqueleto (sem a leitura anterior do PMO)
-  const esqueleto = leitura.fonte === "codigo" ? leitura : undefined;
-  const pedido = useMemo(() => (esqueleto ? pedidoLeituraRfp(esqueleto) : null), [esqueleto]);
+  // pedir de novo também mostra o custo antes (decisão 0035): o pedido parte do esqueleto
+  const pedido = useMemo(
+    () => pedidoLeituraRfp(leitura.fonte === "codigo" ? leitura : leituraSemPmo(leitura)),
+    [leitura],
+  );
   const uso = salva.usoPmo ?? [];
   const travados = leitura.itens.filter((i) => i.trava).length;
 
   async function pedir() {
-    const base = pedido ?? pedidoLeituraRfp(leituraSemPmo(leitura));
+    const base = pedido;
     const r = await chamar({
       etapa: 1,
       passo: "leitura-rfp",
@@ -367,21 +396,17 @@ function LeituraDoPmoNaEtapa1({
       <PassoPmoNaTela
         passo="leitura-rfp"
         titulo="Leitura da RFP"
-        pedido={pedido ?? "refazer"}
+        pedido={pedido}
         semPedido=""
         feito={salva.leituraPmo ? { modelo: salva.leituraPmo.modelo, em: salva.leituraPmo.em } : undefined}
         demonstracao={demonstracao}
         chave={chave}
-        estimativa={
-          pedido
-            ? estimarCusto(
-                modelo,
-                "leitura-rfp",
-                estimarTokens(sistema) + estimarTokens(textoDocs),
-                estimarTokens(pedido),
-              )
-            : undefined
-        }
+        estimativa={estimarCusto(
+          modelo,
+          "leitura-rfp",
+          estimarTokens(sistema) + estimarTokens(textoDocs),
+          estimarTokens(pedido),
+        )}
         rodando={rodando}
         erro={erro}
         aoPedir={() => void pedir()}
@@ -401,6 +426,12 @@ function LeituraDoPmoNaEtapa1({
       {!demonstracao && <UsoNaTela uso={uso} titulo="Uso da API na leitura da RFP" />}
     </>
   );
+}
+
+/** Revisões guardadas no dossiê para ids que a leitura não tem mais (dossiê revisado antes da decisão 0034). */
+function revisoesDeOutraVersao(salva: AnaliseRfpDossie, leitura: LeituraRfp): number {
+  const ids = new Set([...leitura.itens, ...Object.values(leitura.doCodigo).flat()].map((i) => i.id));
+  return Object.keys(salva.revisoes).filter((id) => !id.startsWith("requisito:") && !ids.has(id)).length;
 }
 
 /** Para pedir de novo, o esqueleto: os itens do PMO saem e os recolhidos voltam. */
@@ -554,6 +585,9 @@ function ItemDaLeitura({
             pagina={item.rotulo === "documento" ? item.origem?.pagina : undefined}
           />
           {item.doPmo && <span className="lb">leitura do PMO</span>}
+          {item.doPmo && item.citacaoConferida && !item.trava && (
+            <span className="lb">citação conferida</span>
+          )}
           {item.rotulo !== "documento" && item.origem && <span className="lb">p. {item.origem.pagina}</span>}
           {item.premissa && (
             <span className="lb" title={NOME_PREMISSA[item.premissa]}>
@@ -602,7 +636,9 @@ function ItemDaLeitura({
         {item.origem?.trecho && (
           <details>
             <summary className="envio__obs">
-              Trecho do documento ({item.origem.documento}, p. {item.origem.pagina})
+              {item.trava === "citacao-nao-conferida"
+                ? `Trecho citado pelo PMO, não achado na p. ${item.origem.pagina}`
+                : `Trecho do documento (${item.origem.documento}, p. ${item.origem.pagina})`}
             </summary>
             <p className="envio__obs">“{item.origem.trecho}”</p>
           </details>
@@ -614,7 +650,7 @@ function ItemDaLeitura({
             className="botao botao--discreto"
             type="button"
             data-testid={`virar-requisito-${item.id}`}
-            onClick={() => atualizar(incluirRequisito(salva, item.nome, item.texto))}
+            onClick={() => atualizar(incluirRequisitoDaLeitura(salva, item))}
           >
             Incluir como requisito R{String(salva.proximoRequisito).padStart(2, "0")} (decisão do GP)
           </button>

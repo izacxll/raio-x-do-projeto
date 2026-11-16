@@ -1,13 +1,13 @@
 // Etapa 1, leitura do PMO (decisões 0032 e 0035): o PMO lê a RFP na estrutura do método, a partir do esqueleto do
 // código; o código confere depois. Travas:
-// - toda citação é procurada na página indicada; item "Do documento" sem citação conferida vira sugestão, e
-//   item com citação que não é achada fica "citação não conferida" (nunca aparece como fato);
-// - todo número do texto é relido nos trechos citados, nas páginas deles e no esqueleto; o que não está lá deixa o
-//   item "valor não conferido";
+// - todo item do PMO é Sugestão; a citação é procurada na página indicada, e a que não é achada deixa o item
+//   "citação não conferida" (nunca aparece como fato);
+// - todo número do texto é relido nos trechos conferidos e no esqueleto da mesma seção; o que não está lá deixa o
+//   item "valor não conferido"; soma, acumulado ou "sobram" deixam "conta feita pelo PMO";
 // - número R que não está na lista do dossiê é tirado do item (o PMO não cria requisito);
 // - as contas (datas × hoje, soma das parcelas, caixa) continuam do código: os itens calculados do esqueleto ficam.
 import textoMetodo from "../../../docs/estudos/metodo-etapa-1.md?raw";
-import type { AnaliseRfpDossie, DocumentoLido, Rotulo } from "../../dossie/esquema";
+import type { AnaliseRfpDossie, DocumentoLido } from "../../dossie/esquema";
 import { citacaoValeComoFato, conferirCitacao, type ResultadoCitacao } from "../../pmo/citacoes";
 import type { ItemLeituraRfpPmo, RespostaLeituraRfp } from "../../pmo/schemas/leitura-rfp";
 import type { CodigoPremissa, Impacto } from "../../regras/premissas-rfp";
@@ -22,18 +22,19 @@ import {
 } from "./leitura";
 import { estadoDoItem } from "./revisao";
 
-export type TravaPmo = "citacao-nao-conferida" | "valor-nao-conferido";
+export type TravaPmo = "citacao-nao-conferida" | "valor-nao-conferido" | "conta-do-pmo";
 
 export const NOME_TRAVA: Record<TravaPmo, string> = {
   "citacao-nao-conferida": "citação não conferida — não vale como fato",
   "valor-nao-conferido": "valor não conferido — o número não está no trecho citado",
+  "conta-do-pmo": "conta feita pelo PMO — conferir; as contas são do código",
 };
 
 export interface ItemPmoConferido {
   item: ItemLeituraRfpPmo;
   citacoes: ResultadoCitacao[];
   trava?: TravaPmo;
-  /** Números do texto que o código não achou nos trechos, nas páginas citadas nem no esqueleto. */
+  /** Números do texto que o código não achou nos trechos conferidos nem no esqueleto da mesma seção. */
   numerosSemFonte: string[];
   /** Números R citados pelo PMO que não existem no dossiê (tirados do item). */
   requisitosInexistentes: string[];
@@ -41,18 +42,19 @@ export interface ItemPmoConferido {
 
 const normal = (t: string) => tirarAcentos(t).replace(/\s+/g, " ");
 
-/** Números que pedem fonte: tira páginas, números R, PC, itens do edital ("item 6.7.8") e contagens. */
+/**
+ * Números que pedem fonte: tira só o que é referência, não valor (página, número R, PC, número de item, de
+ * artigo ou de cláusula do edital). Contagens ("5 produtos", "12 parcelas") também pedem fonte.
+ */
 export function numerosQuePedemFonte(texto: string): string[] {
   const limpo = normal(texto)
     .replace(/\bp\. ?\d+(?:\s*(?:,|e|a)\s*\d+)*/g, " ")
     .replace(/\br\d{2}\b/g, " ")
     .replace(/\bpc\d\b/g, " ")
+    // ids de itens e de meses citados pelo PMO ("AT-01", "UP-08", "M01"): referência, não valor
+    .replace(/\b[a-z]{1,2}-?\d{2}\b/g, " ")
     .replace(
-      /\b(?:itens?|subitens?|clausulas?|art\.?|artigos?|anexos?|quadros?|tabelas?|criterios?) (?:n[º°o.]\s*)?[\d.]+[a-z]?(?:\s*(?:,|e)\s*[\d.]+)*/g,
-      " ",
-    )
-    .replace(
-      /\b\d{1,3} (?:obrigac\w+|criterios?|parcelas|documentos|trechos|pontos que|normas|perfis?|produtos?|itens|linhas)\b/g,
+      /\b(?:itens?|subitens?|clausulas?|art\.?|artigos?|anexos?|quadros?|tabelas?|incisos?) (?:n[º°o.]\s*)?[\d.]+[a-z]?(?:\s*(?:,|e)\s*[\d.]+)*/g,
       " ",
     )
     // número de cláusula entre parênteses ou solto ("(7.12.2)", "6.7.8"): referência ao edital, não valor
@@ -60,11 +62,17 @@ export function numerosQuePedemFonte(texto: string): string[] {
   return [...new Set((limpo.match(/\d[\d.,/]*\d|\d/g) ?? []).map((n) => n.replace(/[.,]$/, "")))];
 }
 
+/** O número está na base como número (não como pedaço de outro: "5" não vale por estar em "15" ou em "2025"). */
 function temFonte(n: string, base: string): boolean {
-  if (base.includes(n)) return true;
-  const digitos = n.replace(/[^0-9]/g, "");
-  // "200.000,00" no texto e "200.000" no edital
-  if (digitos.length >= 2 && base.replace(/[.\s]/g, "").includes(n.replace(/[.\s]/g, ""))) return true;
+  const escapado = n.replace(/[.*+?^${}()|[\]\\/]/g, (x) => `\\${x}`);
+  if (new RegExp(`(?<![\\d.,])${escapado}(?![\\d]|[.,]\\d)`).test(base)) return true;
+  // "200.000,00" no texto e "200000,00" ou "200.000" no edital
+  const sem = n.replace(/\./g, "");
+  if (
+    sem.length >= 4 &&
+    new RegExp(`(?<![\\d])${sem.replace(",", "[,.]?")}(?![\\d])`).test(base.replace(/(\d)\.(\d{3})/g, "$1$2"))
+  )
+    return true;
   // número de norma ("Portaria 757/2025" e "Portaria nº 757, de … de 2025"): o número e o ano, cada um no texto.
   // Data ("16/04/2025") não entra aqui: data que o documento não traz é conta, e conta é do código.
   const partes = n.split("/");
@@ -72,9 +80,13 @@ function temFonte(n: string, base: string): boolean {
     partes.length === 2 &&
     (partes[1]?.length ?? 0) === 4 &&
     (partes[0]?.length ?? 0) >= 3 &&
-    partes.every((x) => new RegExp(`\\b${x.replace(/\./g, "\\.?")}\\b`).test(base))
+    partes.every((x) => new RegExp(`(?<![\\d])${x.replace(/\./g, "\\.?")}(?![\\d])`).test(base))
   );
 }
+
+/** Conta feita pelo PMO: soma, diferença, acumulado, "sobram", "no máximo X% até…". As contas são do código. */
+const RE_CONTA =
+  /\d\s*[+−–=]\s*\d|\(\s*\d+\s*%?\s*\+|\b(?:acumulad[oa]s?|somam|soma de|calculad[oa]|sobram|restam|faltam \d|no maximo \d{1,3}\s*%|d\+\d)/;
 
 export function conferirLeituraRfp(
   r: RespostaLeituraRfp,
@@ -85,33 +97,73 @@ export function conferirLeituraRfp(
 ): ItemPmoConferido[] {
   // a data de hoje vai no pedido: o PMO pode citá-la
   const dataDeHoje = hoje.toLocaleDateString("pt-BR");
+  // o número vale se está no trecho que o código conferiu ou no esqueleto da mesma seção (o que o código já leu)
+  const esqueletoDaSecao = new Map<string, string>();
+  for (const s of SECOES_LEITURA)
+    esqueletoDaSecao.set(
+      s.id,
+      normal(
+        esqueleto.itens
+          .filter((i) => i.secao === s.id)
+          .flatMap((i) => [i.texto, i.nota ?? "", i.origem?.trecho ?? "", ...(i.tabela?.linhas.flat() ?? [])])
+          .join(" "),
+      ),
+    );
+  const numeros = new Set(dossie.requisitos.map((x) => x.numero));
+  // o texto de cada página, sem acento e com os espaços colapsados, para achar a vizinhança do trecho citado
   const paginas = new Map<number, string>();
   for (const d of documentos)
     for (const p of d.paginas) paginas.set(p.numero, `${paginas.get(p.numero) ?? ""} ${normal(p.texto)}`);
-  const doEsqueleto = normal(
-    esqueleto.itens
-      .flatMap((i) => [i.texto, i.origem?.trecho ?? "", ...(i.tabela?.linhas.flat() ?? [])])
-      .join(" "),
-  );
-  const numeros = new Set(dossie.requisitos.map((x) => x.numero));
+  /**
+   * A vizinhança do trecho conferido (a cláusula em que ele está, até 400 caracteres de cada lado): o PMO cita um
+   * pedaço e resume os números da mesma cláusula. A página inteira não vale (qualquer número passaria).
+   */
+  const vizinhanca = (f: { pagina: number; trecho: string }, pagina?: number) => {
+    const texto = paginas.get(pagina ?? f.pagina) ?? "";
+    const trecho = normal(f.trecho).replace(/…/g, " ").trim();
+    // localiza pelo texto só de letras e números (como a conferência da citação): hífen de quebra, ligadura e
+    // espaço não atrapalham; depois volta à posição no texto da página
+    const posicoes: number[] = [];
+    let compacto = "";
+    for (let i = 0; i < texto.length; i++)
+      if (/[a-z0-9]/.test(texto[i] ?? "")) {
+        compacto += texto[i];
+        posicoes.push(i);
+      }
+    const comeco = trecho.replace(/[^a-z0-9]/g, "").slice(0, 30);
+    const k = comeco.length >= 12 ? compacto.indexOf(comeco) : -1;
+    if (k < 0) return trecho;
+    const ini = posicoes[k] ?? 0;
+    return texto.slice(Math.max(0, ini - 400), ini + trecho.length + 400);
+  };
   return r.itens.map((item) => {
     const citacoes = item.fontes.map((f) => conferirCitacao(f, documentos));
     const alguma = citacoes.some(citacaoValeComoFato);
     const base = [
-      ...item.fontes.map((f) => normal(f.trecho)),
-      ...item.fontes.map((f) => paginas.get(f.pagina) ?? ""),
-      doEsqueleto,
+      ...item.fontes
+        .map((f, k) => ({ f, c: citacoes[k] }))
+        .filter(({ c }) => c && citacaoValeComoFato(c))
+        .map(({ f, c }) => vizinhanca(f, c?.pagina)),
+      esqueletoDaSecao.get(item.secao) ?? "",
       dataDeHoje,
     ].join(" ");
-    const numerosSemFonte = numerosQuePedemFonte(item.texto).filter((n) => !temFonte(normal(n), base));
+    // ano ("2025") e número de norma ou de edital ("13046/2026") valem se estão na página citada (são do
+    // cabeçalho ou da abertura, longe do trecho); valor, prazo e quantidade, só na vizinhança do trecho
+    const paginasCitadas = item.fontes.map((f) => paginas.get(f.pagina) ?? "").join(" ");
+    const ehReferencia = (n: string) => /^(?:19|20)\d{2}$/.test(n) || /^\d{3,6}\/(?:19|20)\d{2}$/.test(n);
+    const numerosSemFonte = numerosQuePedemFonte(item.texto).filter(
+      (n) => !temFonte(normal(n), base) && !(ehReferencia(n) && temFonte(normal(n), paginasCitadas)),
+    );
     const trava: TravaPmo | undefined =
       item.fontes.length && !alguma
         ? "citacao-nao-conferida"
         : item.rotulo === "documento" && !alguma
           ? "citacao-nao-conferida"
-          : numerosSemFonte.length
-            ? "valor-nao-conferido"
-            : undefined;
+          : RE_CONTA.test(normal(item.texto).toLowerCase())
+            ? "conta-do-pmo"
+            : numerosSemFonte.length
+              ? "valor-nao-conferido"
+              : undefined;
     return {
       item: { ...item, requisitos: item.requisitos.filter((x) => numeros.has(x)) },
       citacoes,
@@ -122,24 +174,20 @@ export function conferirLeituraRfp(
   });
 }
 
-const ROTULO: Record<ItemLeituraRfpPmo["rotulo"], Rotulo> = {
-  documento: "documento",
-  sugestao: "sugestao",
-  decisao_gp: "decisao-gp",
-};
-
-/** O item do PMO na forma da leitura: "Do documento" só com citação conferida; o resto é Sugestão. */
+/**
+ * O item do PMO na forma da leitura: sempre Sugestão (decisão 0035), inclusive o que o PMO marcou como "decisão do
+ * GP" (só o GP decide). A citação que o código achou na página fica marcada como conferida.
+ */
 function comoItemDaLeitura(c: ItemPmoConferido): ItemLeitura {
   const i = c.item;
   const k = c.citacoes.findIndex(citacaoValeComoFato);
   const fonte = i.fontes[k >= 0 ? k : 0];
   const conferida = k >= 0 ? c.citacoes[k] : undefined;
-  const rotulo: Rotulo = i.rotulo === "documento" && (!conferida || c.trava) ? "sugestao" : ROTULO[i.rotulo];
   const outras = i.fontes.filter((_, n) => n !== k).map((f) => f.pagina);
   return {
     id: `pmo:${i.id}`,
     secao: i.secao,
-    rotulo,
+    rotulo: "sugestao",
     nome: i.nome,
     texto: i.texto,
     origem: fonte
@@ -148,6 +196,7 @@ function comoItemDaLeitura(c: ItemPmoConferido): ItemLeitura {
     situacao: "localizado",
     nota:
       [
+        i.rotulo === "decisao_gp" ? "O PMO marcou como decisão do GP: a decidir pelo GP." : "",
         outras.length ? `Também nas p. ${[...new Set(outras)].join(", ")}.` : "",
         i.requisitos.length ? `Requisitos: ${i.requisitos.join(", ")}.` : "",
         c.requisitosInexistentes.length
@@ -163,14 +212,20 @@ function comoItemDaLeitura(c: ItemPmoConferido): ItemLeitura {
     porquePesa: i.porquePesa || undefined,
     impacto: i.impacto ? (Math.min(6, Math.max(1, i.impacto)) as Impacto) : undefined,
     doPmo: true,
+    citacaoConferida: Boolean(conferida),
     trava: c.trava,
   };
 }
 
+/** As contas do código que valem mais que a do PMO sobre o mesmo assunto (por id, não pelo nome). */
+const CONTAS_DO_CODIGO: Record<string, RegExp> = {
+  "leitura:situacao": /\bsitua[cç][aã]o\b|datas? × hoje|datas x hoje/i,
+};
+
 /**
  * A leitura que a tela mostra com a resposta do PMO: em cada seção, os itens do PMO; os requisitos numerados (que
  * só o código e o GP mexem) e as contas do código ficam; o resto do esqueleto vai para "o que o código leu nesta
- * seção", recolhido.
+ * seção", recolhido. O item do PMO que repete uma conta do código também vai para os recolhidos (nunca some).
  */
 export function combinarLeitura(esqueleto: LeituraRfp, conferidos: ItemPmoConferido[]): LeituraRfp {
   const doPmo = conferidos.map(comoItemDaLeitura);
@@ -188,14 +243,9 @@ export function combinarLeitura(esqueleto: LeituraRfp, conferidos: ItemPmoConfer
     const ficam = codigo.filter(
       (i) => i.numero || (i.situacao === "calculado" && s.id !== "atencao") || i.rotulo === "decisao-gp",
     );
-    // a conta do código vale mais que a do PMO: o item do PMO com o mesmo assunto sai ("Situação (datas × hoje)")
-    const assunto = (n: string) =>
-      tirarAcentos(n)
-        .replace(/\(.*\)/g, "")
-        .trim()
-        .split(/\s+/)[0] ?? "";
-    const contas = new Set(ficam.filter((i) => i.situacao === "calculado").map((i) => assunto(i.nome)));
-    const doPmoNaSecao = pmo.filter((i) => !contas.has(assunto(i.nome)));
+    const contas = ficam.filter((i) => CONTAS_DO_CODIGO[i.id]);
+    const repeteConta = (i: ItemLeitura) => contas.some((c) => CONTAS_DO_CODIGO[c.id]?.test(i.nome));
+    const doPmoNaSecao = pmo.filter((i) => !repeteConta(i));
     const ordenados =
       s.id === "atencao"
         ? [...doPmoNaSecao].sort((a, b) => (a.impacto ?? 6) - (b.impacto ?? 6))
@@ -205,7 +255,12 @@ export function combinarLeitura(esqueleto: LeituraRfp, conferidos: ItemPmoConfer
       ...ordenados,
       ...ficam.filter((i) => i.situacao !== "calculado"),
     );
-    const recolhidos = codigo.filter((i) => !ficam.includes(i));
+    const recolhidos = [
+      ...codigo.filter((i) => !ficam.includes(i)),
+      ...pmo
+        .filter(repeteConta)
+        .map((i) => ({ ...i, nota: `Do PMO; vale a conta do código. ${i.nota ?? ""}`.trim() })),
+    ];
     if (recolhidos.length) doCodigo[s.id as SecaoLeitura] = recolhidos;
   }
   return { ...esqueleto, itens, doCodigo, fonte: "pmo" };

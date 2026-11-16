@@ -3,7 +3,7 @@
 // sugerida, por modelo de texto e em redação condicional. Também entram, sem premissa, a pressão de preço,
 // "esclarecimentos não suspendem os prazos" e as restrições operacionais; e as proteções que o texto dá à
 // contratada, numa linha só. O código acha o padrão; quem decide o que perguntar é o GP.
-import { ehDoCertame, lerClausulas, trechoDaClausula, type Clausula } from "../extracao/rfp/clausulas";
+import { ehDoCertame, lerClausulas, trechoEmVolta, type Clausula } from "../extracao/rfp/clausulas";
 import type { DocumentoRfp, OrigemItem } from "../extracao/rfp/item";
 import type { MapaRfp } from "../extracao/rfp/mapa";
 import { normalizarTermo } from "./busca";
@@ -49,13 +49,15 @@ interface Padrao {
   junto?: RegExp;
   /** Vale também nas cláusulas do certame (proposta, julgamento, habilitação). Sem isto, só na execução. */
   noCertame?: boolean;
+  /** A cláusula que casar com isto não conta (outro assunto com as mesmas palavras). */
+  fora?: RegExp;
   porquePesa: string;
   pergunta: string;
   impacto: Impacto;
 }
 
 const PRAZO =
-  /\b(?:no prazo de|em ate|ate|dentro de|antecedencia de)\s+\d{1,3}\s*(?:\([^)]{1,25}\)\s*)?(?:dias?|horas?|meses)\b/;
+  /\b(?:no prazo (?:maximo )?de|em ate|ate|dentro de|antecedencia de)\s+\d{1,3}\s*(?:\([^)]{1,25}\)\s*)?(?:dias?|horas?|meses)\b/;
 
 // Modelos de texto: sempre com o trecho e a página no item, em redação de pedido de esclarecimento.
 const PADROES: Padrao[] = [
@@ -63,7 +65,7 @@ const PADROES: Padrao[] = [
     id: "pc1-fornecido",
     premissa: "PC1",
     nome: "Dado ou insumo fornecido pelo contratante, sem prazo",
-    re: /\b(?:a ser(?:em)? (?:fornecid|disponibilizad|enviad|encaminhad|definid|indicad)[oa]s? pel[ao]|informacoes necessarias|diretrizes (?:graficas|visuais|editoriais)|(?:fornecid|disponibilizad)[oa]s? pel[ao] (?:contratante|administracao|secretaria|ministerio|orgao|prefeitura|smped|oei)|lista(?:s)? (?:enviada|fornecida|disponibilizada)s? pel[ao]|a contratante (?:fornecera|disponibilizara|encaminhara))\b/,
+    re: /\b(?:a ser(?:em)? (?:fornecid|disponibilizad|enviad|encaminhad|definid|indicad)[oa]s? pel[ao]|informacoes necessarias|diretrizes (?:graficas|visuais|editoriais)|(?:fornecid|disponibilizad)[oa]s? pel[ao] (?:contratante|administracao|secretaria|ministerio|orgao|prefeitura|concedente|orgao gerenciador)|lista(?:s)? (?:enviada|fornecida|disponibilizada)s? pel[ao]|a contratante (?:fornecera|disponibilizara|encaminhara))\b/,
     semPrazo: true,
     porquePesa:
       "O trabalho depende de algo que a FGV não produz; sem data, o atraso do contratante vira atraso da FGV.",
@@ -90,6 +92,8 @@ const PADROES: Padrao[] = [
     semPrazo: true,
     junto:
       /\b(?:aprova|valida|aceite|ateste|atesto|analise|pagamento|repasse|produtos?|entregas?|relatorios?)/,
+    // a reposição da garantia e o pedido de reequilíbrio são da contratada, não aprovação de entrega
+    fora: /\bgarantia\b|\brepactuac|\breequilibrio\b/,
     porquePesa:
       "Sem prazo para o contratante aprovar, a entrega fica parada e, se o pagamento depende da aprovação, o caixa também.",
     pergunta:
@@ -182,7 +186,7 @@ const OUTROS: Padrao[] = [
     id: "preco-inexequivel",
     noCertame: true,
     nome: "Pressão de preço",
-    re: /\b(?:inexequ\w+|valor incompativel|preco incompativel|manifestamente inexequ|desclassificad[oa]s? .{0,40}preco)\b/,
+    re: /\b(?:inexequ\w+|valor incompativel|preco incompativel|precos? (?:irrisori|simbolic)\w*|manifestamente inexequ)/,
     porquePesa:
       "O edital elimina por preço baixo demais: o desconto tem um piso que precisa sair do custo real.",
     pergunta:
@@ -214,7 +218,7 @@ const OUTROS: Padrao[] = [
 
 /** Proteções que o texto dá à contratada: viram uma linha só, no fim dos pontos de atenção. */
 const PROTECOES =
-  /\b(?:prorrogacao de oficio|prorrogad[oa] de oficio|atraso na liberacao .{0,60}prorroga|justificativa suficiente|devidamente justificad[oa] .{0,40}(?:meta|cumprimento parcial)|cumprimento parcial (?:ser|seja) devidamente justificado|nao implicara (?:glosa|penalidade)|sem prejuizo .{0,20}contratada|juros de mora|parcela incontroversa|atualizacao (?:monetaria|financeira))\b/;
+  /\b(?:prorrogacao de oficio|prorrogad[oa] de oficio|atraso na liberacao .{0,60}prorroga|(?<!sem )justificativa suficiente .{0,40}(?:meta|resultado)|devidamente justificad[oa] .{0,40}(?:meta|cumprimento parcial)|cumprimento parcial (?:ser|seja) devidamente justificado|nao implicara (?:glosa|penalidade)|sem prejuizo .{0,20}contratada|juros de mora|parcela incontroversa|atualizacao (?:monetaria|financeira))\b/;
 
 function semPrazoNaClausula(c: Clausula): boolean {
   return !PRAZO.test(normalizarTermo(c.texto));
@@ -239,16 +243,19 @@ export function extrairPontosDeAtencao(docs: DocumentoRfp[], mapa: MapaRfp): Res
       const normal = normalizarTermo(c.texto);
       if (!p.re.test(normal)) continue;
       if (p.junto && !p.junto.test(normal)) continue;
+      if (p.fora?.test(normal)) continue;
       if (p.semPrazo && !semPrazoNaClausula(c)) continue;
-      if (!p.noCertame && ehDoCertame(c)) continue;
+      if ((!p.noCertame && ehDoCertame(c)) || c.noModelo) continue;
       if (ponto) {
         if (ponto.origem.pagina !== c.pagina && !ponto.outrasPaginas.includes(c.pagina))
           ponto.outrasPaginas.push(c.pagina);
         continue;
       }
-      const trecho = trechoDaClausula(c, 280);
+      // o trecho é a frase em volta do padrão: o que se mostra sustenta o ponto
+      const trecho = trechoEmVolta(c, p.re, 280);
       ponto = {
-        id: `${p.id}:${c.doc.id}:${c.pagina}:${c.posicao}`,
+        // id estável (padrão, documento e página): a revisão do GP não se perde se o corte da cláusula mudar
+        id: `${p.id}:${c.doc.id}:${c.pagina}`,
         premissa: p.premissa,
         nome: p.nome,
         texto: trecho,
@@ -266,12 +273,12 @@ export function extrairPontosDeAtencao(docs: DocumentoRfp[], mapa: MapaRfp): Res
   for (const c of clausulas) {
     if (protecoes.length >= 4) break;
     const normal = normalizarTermo(c.texto);
-    if (!PROTECOES.test(normal) || ehDoCertame(c)) continue;
+    if (!PROTECOES.test(normal) || ehDoCertame(c) || c.noModelo) continue;
     // a mesma proteção no edital e na minuta entra uma vez
     const chave = normal.replace(/^[\d.]+\s*/, "").slice(0, 60);
     if (vistas.has(chave)) continue;
     vistas.add(chave);
-    const trecho = trechoDaClausula(c, 240);
+    const trecho = trechoEmVolta(c, PROTECOES, 240);
     protecoes.push({ texto: trecho, origem: { documento: c.doc.rotulo, pagina: c.pagina, trecho } });
   }
   return { pontos, protecoes };

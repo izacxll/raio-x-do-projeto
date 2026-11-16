@@ -4,7 +4,7 @@
 import { normalizarTermo } from "../../regras/busca";
 import { limparEspacos } from "../../texto/frase";
 import { tirarAcentos } from "../../texto/normalizar";
-import { ehDoCertame, lerClausulas, trechoDaClausula, type Clausula } from "./clausulas";
+import { ehDoCertame, lerClausulas, trechoEmVolta, type Clausula } from "./clausulas";
 import type { DocumentoRfp, OrigemItem } from "./item";
 import type { MapaRfp } from "./mapa";
 
@@ -91,8 +91,15 @@ export function extrairDesembolso(docs: DocumentoRfp[]): Desembolso {
         const pct = percentual(m[3]);
         if (!pct || pct > 100) return;
         const rotulo = m[1].replace(/\s+\d{1,4}$/, "").trim();
-        // a mesma parcela em duas tabelas (o TR e a minuta) entra uma vez
-        if (parcelas.some((x) => normalizarTermo(x.rotulo) === normalizarTermo(rotulo))) return;
+        // a mesma parcela em duas tabelas (o TR e a minuta) entra uma vez: pelo número ("Produto 2", "3ª parcela"),
+        // mesmo que o resto do rótulo mude de uma tabela para a outra
+        const chave = (r: string) =>
+          /^(?:(produto|parcela|etapa|entrega|medicao|meta|fase)\s*(?:n[º°o.]\s*)?(\d{1,2})|(\d{1,2})\s*[ªa]\s*parcela)/i
+            .exec(normalizarTermo(r))
+            ?.slice(1)
+            .filter(Boolean)
+            .join(" ") ?? normalizarTermo(r);
+        if (parcelas.some((x) => chave(x.rotulo) === chave(rotulo))) return;
         parcelas.push({
           rotulo,
           percentual: pct,
@@ -102,16 +109,23 @@ export function extrairDesembolso(docs: DocumentoRfp[]): Desembolso {
       });
       if (!unica) {
         const n = tirarAcentos(p.texto.replace(/\s+/g, " "));
-        const m = RE_PARCELA_UNICA.exec(n);
-        if (m) {
+        const original = p.texto.replace(/\s+/g, " ");
+        for (const m of n.matchAll(new RegExp(RE_PARCELA_UNICA.source, "g"))) {
           const ini = Math.max(0, n.lastIndexOf(". ", m.index) + 2);
           const fim = n.indexOf(".", m.index + m[0].length);
-          const original = p.texto.replace(/\s+/g, " ");
+          const frase = n.slice(ini, fim < 0 ? undefined : fim + 1);
+          // só o repasse ou o desembolso em parcela única ("a garantia… por pagamento único" não é cronograma)
+          if (
+            !/\b(?:repasse|desembolso|liberad\w*|recursos?|transferid\w*)\b/.test(frase) ||
+            /\bgarantia\b/.test(frase)
+          )
+            continue;
           unica = {
             documento: doc.rotulo,
             pagina: p.numero,
             trecho: original.slice(ini, fim < 0 ? undefined : fim + 1).trim(),
           };
+          break;
         }
       }
     }
@@ -121,19 +135,54 @@ export function extrairDesembolso(docs: DocumentoRfp[]): Desembolso {
   return { parcelas, unica, soma };
 }
 
+/** O padrão de cada tipo: o trecho mostrado é o que está em volta dele. */
+const PADRAO_DO_TIPO: Record<TipoAchadoDinheiro, RegExp> = {
+  condicao: CONDICAO,
+  glosa: GLOSA,
+  contrapartida: CONTRAPARTIDA,
+  "nao-obriga": NAO_OBRIGA,
+  "despesa-vedada": DESPESA_VEDADA,
+  "prazo-pagamento": PRAZO_PAGAMENTO,
+  "atraso-pagamento": ATRASO,
+};
+
 function tipoDaClausula(c: Clausula): TipoAchadoDinheiro[] {
   const n = normalizarTermo(c.texto);
   const out: TipoAchadoDinheiro[] = [];
-  if (CONDICAO.test(n) && PAGAMENTO.test(n)) out.push("condicao");
-  if (GLOSA.test(n) && !/\bpenalidade|\bmulta\b/.test(n.slice(0, 60))) out.push("glosa");
+  // retenção de tributo (Simples Nacional) e "não pode estar condicionado" não são condição de pagamento
+  if (
+    CONDICAO.test(n) &&
+    PAGAMENTO.test(n) &&
+    !/\bretenc|\bsimples nacional\b|nao (?:pode|podera) (?:estar|ser|ficar) condicionad/.test(n)
+  )
+    out.push("condicao");
+  // glosa: valor que deixa de ser pago ou volta; não a restituição de um prazo
+  if (
+    GLOSA.test(n) &&
+    !/\bpenalidade|\bmulta\b/.test(n.slice(0, 60)) &&
+    !/restituid\w* .{0,40}\bprazo|\bprazo\b.{0,40}restituid/.test(n) &&
+    // a devolução da garantia ao fim do contrato não é glosa
+    !/\bgarantia\b.{0,60}(?:liberad|restituid|devolvid)|(?:liberad|restituid|devolvid)\w* .{0,40}\bgarantia\b/.test(
+      n,
+    )
+  )
+    out.push("glosa");
   // contrapartida dita numa regra (com verbo), não o rótulo de um campo do formulário ("Contrapartida (Se houver)")
   if (
     CONTRAPARTIDA.test(n) &&
     /\b(?:sera|serao|devera|deverao|exigid[oa]|prestar|nao ha|nao havera|admitid[oa])\b/.test(n)
   )
     out.push("contrapartida");
-  if (NAO_OBRIGA.test(n)) out.push("nao-obriga");
-  if (DESPESA_VEDADA.test(n)) out.push("despesa-vedada");
+  // "não obriga a contratar": falando da celebração ou da contratação, não da prorrogação
+  if (
+    NAO_OBRIGA.test(n) &&
+    /\b(?:celebra|contrata(?:r|cao)|firmar|parceria|selecao|homologacao)/.test(n) &&
+    !/\bprorrogac/.test(n)
+  )
+    out.push("nao-obriga");
+  // despesa vedada: com recursos ou despesa na frase (não a vedação de usar material de terceiros)
+  if (DESPESA_VEDADA.test(n) && /\b(?:recursos?|despesas?|pagamento de)\b/.test(n))
+    out.push("despesa-vedada");
   if (PRAZO_PAGAMENTO.test(n)) out.push("prazo-pagamento");
   if (ATRASO.test(n)) out.push("atraso-pagamento");
   return out;
@@ -150,15 +199,15 @@ export function extrairDinheiro(docs: DocumentoRfp[], mapa: MapaRfp, limite = 3)
   const vistas = new Set<string>();
   for (const c of lerClausulas(docs, mapa)) {
     for (const tipo of tipoDaClausula(c)) {
-      // no certame, só o "não obriga a contratar": devolução de envelope não é glosa
-      if (tipo !== "nao-obriga" && ehDoCertame(c)) continue;
+      // no certame, só o "não obriga a contratar": devolução de envelope não é glosa; modelo não conta
+      if ((tipo !== "nao-obriga" && ehDoCertame(c)) || c.noModelo) continue;
       const n = porTipo.get(tipo) ?? 0;
       if (n >= limite) continue;
       const chave = `${tipo}:${normalizarTermo(c.texto).slice(0, 80)}`;
       if (vistas.has(chave)) continue;
       vistas.add(chave);
       porTipo.set(tipo, n + 1);
-      const trecho = trechoDaClausula(c);
+      const trecho = trechoEmVolta(c, PADRAO_DO_TIPO[tipo]);
       out.push({
         tipo,
         texto: trecho.replace(/^(?:\d{1,2}(?:\.\d{1,2}){0,4}\.?|[a-z]\))\s*/, ""),

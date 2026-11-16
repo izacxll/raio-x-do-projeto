@@ -97,6 +97,9 @@ const RE_OBRIGA =
 const RE_VEDA =
   /\b(?:e vedad[oa]|ficam? vedad[oa]s?|sera vedad[oa]|e proibid[oa]|nao poder(?:a|ao)|e defeso|nao sera (?:permitid|admitid)[oa])\b/;
 /** Título de seção ou cláusula de obrigações de quem executa. */
+/** Abre a lista de condutas puníveis: os incisos que vêm depois não são obrigações. */
+const RE_ABRE_SANCOES =
+  /\b(?:comete(?:ra)? infrac\w*|nos seguintes casos|sujeitar\w* (?:o|a) (?:contratad|licitante|parceir)\w* as (?:sancoes|penalidades)|das (?:sancoes|infracoes|penalidades) administrativas)\b|^(?:das? )?(?:sancoes|infracoes|penalidades)\b/;
 const RE_SECAO_OBRIGACOES =
   /obrigac\w* d[ao]s? (?:contratad|parceir|osc|organizac|executor)|compete a (?:contratad|parceir|osc)|responsabilidades d[ao]s? (?:contratad|parceir)|deveres d[ao]s? (?:contratad|parceir)/;
 /** Item de lista que começa por verbo no infinitivo ("manter…", "apresentar…"). */
@@ -193,7 +196,10 @@ const RE_SUJEITO_PROJETO = /^(?:o|os|a|as)\s+(?:projetos?|acoes|acao|propostas?|
  * "executar satisfatoriamente o objeto", "manter a regularidade fiscal"). Fica no cartão do tema, sem número R.
  */
 const RE_GENERICA =
-  /^(?:executar (?:satisfatoria|os servicos|o objeto)|observar(?: e respeitar)?\b|cumprir(?:,| as| os| todas| alem| durante)|manter(?:,|\s+durante)?\s+(?:toda|as condicoes|regular|durante|em compatibilidade)|responsabilizar-se (?:por (?:manter|todos|todo)|pelos vicios)|fornecer todas as informacoes|prestar (?:todo|os|todos os) esclarecimentos|atender as determinacoes|prevenir|gerir o valor|promover a organizacao|reparar|utilizar empregados|arcar com|indenizar|nos casos de|a (?:contratada|parceira|organizacao da sociedade civil) deve cumprir|alem daquelas obrigacoes|iniciar as atividades)/;
+  /^(?:executar (?:satisfatoria|os servicos|o objeto)|observar(?: e respeitar)?\b|cumprir(?:,| as| os| todas| alem| durante)|manter(?:,|\s+durante)?\s+(?:toda|as condicoes|regular|durante|em compatibilidade)|responsabilizar-se (?:por (?:manter|todos|todo)|pelos vicios)|fornecer todas as informacoes|prestar (?:todo|os|todos os) esclarecimentos|atender as determinacoes|prevenir|gerir o valor|promover a organizacao|reparar|utilizar empregados|arcar com|indenizar|nos casos de|a (?:contratada|parceira|organizacao da sociedade civil) deve cumprir|alem daquelas obrigacoes|iniciar as atividades|guardar sigilo|manter sigilo|cumprir a reserva de cargos|comprovar a reserva de cargos|estar apt[ao]|prevenir, coibir|nao tolerar|observar e respeitar integralmente)/;
+/** Cláusula-padrão que todo contrato tem: não vira requisito R (fica no cartão do tema). */
+const RE_CLAUSULA_PADRAO =
+  /\b(?:sigilo|confidencialidade|reserva de cargos|assedio|discriminacao|exploracao sexual|trabalho infantil|trabalho escravo|suboperador\w*|lei geral de protecao de dados|lgpd)\b/;
 
 /** Verbo de entrega concreta: o que dá para procurar no plano e cobrar na execução. */
 const RE_ENTREGA_CONCRETA =
@@ -214,6 +220,7 @@ export function ehObrigacaoEspecifica(o: Obrigacao): boolean {
   );
   if (
     RE_GENERICA.test(t) ||
+    RE_CLAUSULA_PADRAO.test(t.slice(0, 160)) ||
     /\b(?:legislacao|lei federal|normas vigentes|codigo de defesa)\b/.test(t.slice(0, 120))
   )
     return false;
@@ -226,6 +233,7 @@ export function extrairObrigacoes(docs: DocumentoRfp[], mapa: MapaRfp): Obrigaca
   const vistas = new Set<string>();
   // a lista aberta por "compete à PARCEIRA:" vale dentro da mesma seção do mapa, até 3 páginas adiante
   let listaAtiva: { secao: Clausula["secao"]; doc: string; ate: number } | undefined;
+  let emSancoes: { secao: Clausula["secao"] } | undefined;
   const clausulas = lerClausulas(docs, mapa);
   for (const [k, c] of clausulas.entries()) {
     const normal = normalizarTermo(c.texto);
@@ -235,12 +243,21 @@ export function extrairObrigacoes(docs: DocumentoRfp[], mapa: MapaRfp): Obrigaca
       listaAtiva = { secao: c.secao, doc: c.doc.id, ate: c.pagina + 3 };
       continue;
     }
+    // a lista de obrigações acaba na de sanções ("comete infração… nos seguintes casos:"): os incisos dela são
+    // condutas puníveis, não obrigações
+    if (RE_ABRE_SANCOES.test(normal)) {
+      listaAtiva = undefined;
+      emSancoes = { secao: c.secao };
+      continue;
+    }
+    if (emSancoes && c.secao !== emSancoes.secao) emSancoes = undefined;
     if (
       listaAtiva &&
       (c.doc.id !== listaAtiva.doc || c.pagina > listaAtiva.ate || c.secao !== listaAtiva.secao)
     )
       listaAtiva = undefined;
-    if (ehDoCertame(c)) continue;
+    if (ehDoCertame(c) || c.noModelo || (emSancoes && /^[a-z]\)$|^[ivx]{1,5}\s*[-–.)]$/i.test(c.numero)))
+      continue;
     const naLista = Boolean(listaAtiva) || RE_SECAO_OBRIGACOES.test(normalizarTermo(c.secao?.titulo ?? ""));
     const tipo = ehObrigacao(c, naLista);
     if (!tipo) continue;
@@ -258,10 +275,15 @@ export function extrairObrigacoes(docs: DocumentoRfp[], mapa: MapaRfp): Obrigaca
     const original = semNumero(c.texto);
     const corpo = tirarAcentos(original);
     const prazo = RE_PRAZO.exec(corpo);
+    // a cláusula que atravessa a página ("apresentar compro-" + "vante…") vai inteira no texto; o trecho citado
+    // fica o da primeira página (a citação é conferida página a página)
+    const completo = c.continuacao
+      ? `${semNumero(c.texto)}${/-$/.test(c.texto) ? "" : " "}${c.continuacao}`
+      : semNumero(texto);
     out.push({
       tema: tema(corpo),
       vedacao: tipo === "vedacao",
-      texto: semNumero(texto),
+      texto: completo.length > 420 ? `${completo.slice(0, completo.lastIndexOf(" ", 420))}…` : completo,
       origem: { documento: c.doc.rotulo, pagina: c.pagina, trecho: texto },
       numero: c.numero,
       recorrencia: RE_RECORRENTE.exec(corpo)?.[1],

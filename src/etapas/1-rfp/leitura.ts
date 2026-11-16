@@ -8,7 +8,8 @@ import type { AnaliseRfpDossie, Rotulo } from "../../dossie/esquema";
 import { NOME_ACHADO_DINHEIRO, type TipoAchadoDinheiro } from "../../extracao/rfp/dinheiro";
 import type { ItemAnalise, OrigemItem, SituacaoItem } from "../../extracao/rfp/item";
 import { localizarTodos } from "../../extracao/rfp/localizar";
-import { NOME_TEMA_OBRIGACAO, ORDEM_TEMAS } from "../../extracao/rfp/obrigacoes";
+import { ehPaginaDeModelo } from "../../extracao/rfp/clausulas";
+import { ehObrigacaoEspecifica, NOME_TEMA_OBRIGACAO, ORDEM_TEMAS } from "../../extracao/rfp/obrigacoes";
 import { RE_POR_PROPONENTE } from "../../extracao/rfp/requisitos-rfp";
 import { NOME_PREMISSA, type CodigoPremissa, type Impacto } from "../../regras/premissas-rfp";
 import { encontrarDatas, formatarData, diasEntre, soData } from "../../texto/datas";
@@ -103,8 +104,10 @@ export interface ItemLeitura {
   numero?: string;
   /** Item da leitura do PMO (Sugestão até o GP revisar; o código conferiu as citações e os números). */
   doPmo?: boolean;
-  /** Trava do código sobre o item do PMO: citação ou valor não conferido. */
-  trava?: "citacao-nao-conferida" | "valor-nao-conferido";
+  /** O código achou na página a citação do item do PMO. */
+  citacaoConferida?: boolean;
+  /** Trava do código sobre o item do PMO: citação, valor ou conta não conferidos. */
+  trava?: "citacao-nao-conferida" | "valor-nao-conferido" | "conta-do-pmo";
 }
 
 export interface LeituraRfp {
@@ -264,7 +267,7 @@ export function montarLeituraRfp(
       id: "leitura:mais-pesam",
       secao: "uma-pagina",
       rotulo: "sugestao",
-      nome: `Os ${maisPesam.length} pontos que mais pesam`,
+      nome: maisPesam.length === 1 ? "O ponto que mais pesa" : `Os ${maisPesam.length} pontos que mais pesam`,
       texto: maisPesam.map((a, k) => `${k + 1}. ${a.nome}, ${pag(a.origem)}`).join("; "),
       situacao: "localizado",
       nota: "Em ordem de impacto: caixa, dependência do contratante, preço, prazo, escopo. Detalhe e pergunta na seção 7. Quem decide é o GP.",
@@ -272,6 +275,12 @@ export function montarLeituraRfp(
 
   // ---------- 2. O que a contratada teria de fazer e entregar ----------
   out.push(...fazerEEntregar(analise, dossie));
+  // sem nenhuma obrigação específica nem entrega, a seção 2 diz que o código não achou (não achado não é ausente)
+  if (!analise.obrigacoes.some(ehObrigacaoEspecifica) && !dossie.requisitos.some((r) => r.tipo === "produto"))
+    naoAchado(
+      "fazer-e-entregar",
+      "obrigações e entregas específicas de quem executa (podem estar em texto corrido)",
+    );
 
   // ---------- 3. Prazos ----------
   out.push(...prazos(analise, naoAchado));
@@ -328,7 +337,8 @@ function marcoDoPrazo(execucao: ItemAnalise): string {
 
 function textoDoValor(valor: ItemAnalise): string {
   const t = normalizarTermo(valor.origem?.trecho ?? "");
-  if (/cada projeto|por projeto|por proposta|valor (?:maximo|teto)|teto/.test(t))
+  // teto por projeto só quando o trecho fala de cada projeto ou proposta (em licitação, "valor máximo" é o global)
+  if (/cada projeto|por projeto|por proposta|cada proposta/.test(t) && /\b(?:maximo|teto|ate)\b/.test(t))
     return `${valor.texto} por projeto (teto); o valor global não é declarado no trecho.`;
   return valor.texto;
 }
@@ -364,7 +374,10 @@ function quemPodeParticipar(analise: AnaliseRfp): ItemLeitura | undefined {
 }
 
 function tamanho(analise: AnaliseRfp, dossie: AnaliseRfpDossie): ItemLeitura {
-  const req = dossie.requisitos;
+  // os requisitos que o GP descartou não contam
+  const req = dossie.requisitos.filter(
+    (r) => estadoDoItem(dossie.revisoes, `requisito:${r.numero}`) !== "descartado",
+  );
   const produtos = req.filter((r) => r.tipo === "produto");
   const equipe = req.filter((r) => r.tipo === "equipe");
   const quantidades = req.filter((r) => r.tipo === "quantidade");
@@ -388,15 +401,17 @@ function tamanho(analise: AnaliseRfp, dossie: AnaliseRfpDossie): ItemLeitura {
         .map((r) => `${r.rotulo.replace(/^Quantidade: /, "")} (${r.numero}, p. ${r.pagina})`)
         .join("; "),
     );
+  const primeiro = [...produtos, ...equipe, ...quantidades].find((r) => r.pagina > 0);
   const origem = selecao
     ? { documento: selecao.doc.rotulo, pagina: selecao.pagina, trecho: selecao.frase }
-    : produtos[0]
-      ? { documento: produtos[0].documento ?? "RFP", pagina: produtos[0].pagina, trecho: produtos[0].trecho }
+    : primeiro
+      ? { documento: primeiro.documento ?? "RFP", pagina: primeiro.pagina, trecho: primeiro.trecho }
       : undefined;
   return {
     id: "leitura:tamanho",
     secao: "uma-pagina",
-    rotulo: "documento",
+    // consolidado pelo código: Do documento só quando há trecho que o sustente
+    rotulo: origem ? "documento" : "sugestao",
     nome: "Tamanho",
     texto: partes.length ? `${partes.join("; ")}.` : "não localizado pelo código — conferir no documento",
     origem,
@@ -586,7 +601,10 @@ function prazos(analise: AnaliseRfp, naoAchado: (s: SecaoLeitura, n: string) => 
     });
   else naoAchado("prazos", "datas do certame");
 
-  const execucao = itens.filter((i) => i.id.startsWith("prazos:execucao:") && util(i));
+  // a validade da proposta é do certame, não da execução
+  const execucao = itens.filter(
+    (i) => i.id.startsWith("prazos:execucao:") && util(i) && !/proposta/i.test(i.nome),
+  );
   const daMinuta = analise.obrigacoes.filter((o) => o.prazo && !o.recorrencia);
   if (execucao.length || daMinuta.length)
     out.push({
@@ -752,7 +770,9 @@ function dinheiro(
 
 const RE_ELIMINA =
   /\b(?:sera(?:o)? (?:desclassificad|eliminad|inabilitad)|implicara (?:a )?(?:desclassificacao|eliminacao)|causa de (?:desclassificacao|eliminacao)|nao (?:sera|serao) (?:aceit|considerad)[oa]s? (?:as )?propostas?)/;
-const RE_DESEMPATE = /\b(?:desempate|em caso de empate|empate entre)\b/;
+/** Desempate como regra (com verbo ou critério), não a palavra solta ("não se considerará… de desempate"). */
+const RE_DESEMPATE =
+  /\b(?:(?:o|como|os) criterios? de desempate|(?:em caso|havendo|na hipotese) de empate|empate entre .{0,60}(?:sera|serao|dar-se-a|decidid|resolvid|desempate sera))\b/;
 
 function julgamento(analise: AnaliseRfp, naoAchado: (s: SecaoLeitura, n: string) => void): ItemLeitura[] {
   const out: ItemLeitura[] = [];
@@ -885,8 +905,16 @@ function habilitacao(analise: AnaliseRfp, naoAchado: (s: SecaoLeitura, n: string
       origem: primeiro?.origem,
       situacao: "localizado",
       tabela: {
-        colunas: ["Nº", "Documento", "Página", "Providenciado"],
-        linhas: lista.documentos.map((d) => [d.numero, d.texto, String(d.origem.pagina), ""]),
+        // com mais de uma lista no edital (a da organização e a da rede), a coluna diz de qual é cada linha
+        colunas:
+          new Set(lista.documentos.map((d) => d.lista)).size > 1
+            ? ["Nº", "Documento", "Lista", "Página", "Providenciado"]
+            : ["Nº", "Documento", "Página", "Providenciado"],
+        linhas: lista.documentos.map((d) =>
+          new Set(lista.documentos.map((x) => x.lista)).size > 1
+            ? [d.numero, d.texto, d.lista, String(d.origem.pagina), ""]
+            : [d.numero, d.texto, String(d.origem.pagina), ""],
+        ),
       },
     });
   } else if (catalogo.length)
@@ -993,28 +1021,46 @@ function caixaConcentrado(analise: AnaliseRfp): ItemLeitura | undefined {
 
 function pontosDeAtencao(analise: AnaliseRfp): ItemLeitura[] {
   const out: ItemLeitura[] = [];
-  const vistos = new Set<string>();
+  // um ponto por premissa crítica: o mesmo assunto em outra página entra como "também nas p. …" no primeiro
+  const porPremissa = new Map<string, ItemLeitura>();
   const ja = (premissa: string | undefined, pagina: number | undefined) => {
-    const chave = `${premissa ?? "-"}:${pagina ?? "-"}`;
-    if (vistos.has(chave)) return true;
-    vistos.add(chave);
-    return false;
+    if (!premissa) return false;
+    const primeiro = porPremissa.get(premissa);
+    if (!primeiro) return false;
+    if (pagina && primeiro.origem?.pagina !== pagina && !primeiro.nota?.includes(`p. ${pagina}`))
+      primeiro.nota = `${primeiro.nota ? `${primeiro.nota} ` : ""}Também na p. ${pagina}.`;
+    return true;
   };
+  const paginasDeModelo = new Set(
+    analise.documentos.flatMap((d) =>
+      d.paginas.filter((p) => ehPaginaDeModelo(p.texto)).map((p) => `${d.rotulo}:${p.numero}`),
+    ),
+  );
   // as brechas do Raio-X que não são só vagas
   for (const b of analise.itens.filter((i) => i.secao === "brechas" && i.campos?.Tipo !== "vago")) {
+    if (b.origem && paginasDeModelo.has(`${b.origem.documento}:${b.origem.pagina}`)) continue;
+    // a dependência que é da própria contratada ("a serem fornecidos pelo Contratado a seus empregados") não é
+    // premissa sobre o contratante
+    const trecho = normalizarTermo(b.origem?.trecho ?? "");
+    if (
+      /(?:fornecid|disponibilizad|providenciad)\w* pel[ao] (?:contratad|parceir)|a cargo d[ao] (?:contratad|parceir)/.test(
+        trecho,
+      )
+    )
+      continue;
     const premissa = PREMISSA_DA_REGRA[b.campos?.Regra ?? ""];
-    if (ja(premissa ?? b.id, b.origem?.pagina)) continue;
-    out.push(
-      doItem(b, "atencao", {
-        premissa,
-        rotulo: "sugestao",
-        impacto: premissa ? IMPACTO_DA_PREMISSA[premissa] : 4,
-        porquePesa: b.texto,
-      }),
-    );
+    if (ja(premissa, b.origem?.pagina)) continue;
+    const item = doItem(b, "atencao", {
+      premissa,
+      rotulo: "sugestao",
+      impacto: premissa ? IMPACTO_DA_PREMISSA[premissa] : 4,
+      nota: premissa ? `Premissa crítica ${premissa}: ${NOME_PREMISSA[premissa]}.` : b.nota,
+    });
+    if (premissa) porPremissa.set(premissa, item);
+    out.push(item);
   }
   for (const p of analise.premissas.pontos) {
-    if (ja(p.premissa ?? p.id, p.origem.pagina)) continue;
+    if (ja(p.premissa, p.origem.pagina)) continue;
     out.push({
       id: `atencao:${p.id}`,
       secao: "atencao",

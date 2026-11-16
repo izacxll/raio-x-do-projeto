@@ -10,6 +10,8 @@ import type { MapaRfp } from "./mapa";
 
 export interface DocumentoDaLista {
   numero: string;
+  /** A lista de onde veio (o título da seção do edital): editais com duas listas (a da OSC e a da rede). */
+  lista: string;
   /** O nome do documento, sem o endereço do site e sem o número. */
   texto: string;
   origem: OrigemItem;
@@ -23,7 +25,7 @@ export interface ListaDeDocumentos {
 
 /** Começo de linha que nomeia um documento. */
 const RE_DOCUMENTO =
-  /^(?:(?:cnd|crf|fgts|inss|cadin|cents|fdc)\b[^a-z]{0,6}){0,3}(?:comprovante|comprovacao|certidao|certidoes|certificado|declarac|estatuto|ata\b|relacao|ficha|copia|prova\b|prova de|balanco|atestado|registro|inscricao|alvara|contrato social|ato constitutivo|documento|curriculo|cartao|demonstrac|ccmei|decreto de autorizacao|indicacao|termo de)/;
+  /^(?:(?:cnd|crf|fgts|inss|cadin|cents|fdc)\b[^a-z]{0,6}){0,3}(?:comprovante|comprovacao|certidao|certidoes|certificado|declarac|estatuto|ata de (?:eleicao|assembleia|posse|constituicao|fundacao)|relacao|ficha|copia|prova\b|prova de|balanco|atestado|registro|inscricao|alvara|contrato social|ato constitutivo|documento|curriculo|cartao|demonstrac|ccmei|decreto de autorizacao|indicacao|termo de)/;
 /** Seção onde a lista fica: habilitação, celebração ou "documentação obrigatória". */
 const RE_SECAO_DA_LISTA =
   /habilita|celebracao|documentacao obrigatoria|comprovacao das exigencias|documentos (?:exigidos|necessarios|obrigatorios)/;
@@ -50,7 +52,7 @@ export function extrairListaDeDocumentos(docs: DocumentoRfp[], mapa: MapaRfp): L
   let quemEntrega: ListaDeDocumentos["quemEntrega"];
   const clausulas = lerClausulas(docs, mapa);
   for (const c of clausulas) {
-    if (!naSecaoDaLista(c)) continue;
+    if (!naSecaoDaLista(c) || c.noModelo) continue;
     const corpo = normalizarTermo(textoDoDocumento(c));
     if (!quemEntrega && RE_SO_O_PRIMEIRO.test(normalizarTermo(c.texto))) {
       const trecho = trechoDaClausula(c, 260);
@@ -65,6 +67,7 @@ export function extrairListaDeDocumentos(docs: DocumentoRfp[], mapa: MapaRfp): L
     const trecho = trechoDaClausula({ ...c, texto: `${c.numero} ${texto}`.trim() }, 260);
     documentos.push({
       numero: c.numero,
+      lista: c.secao?.titulo ?? "",
       texto: texto.length > 220 ? `${texto.slice(0, texto.lastIndexOf(" ", 220))}…` : texto,
       origem: { documento: c.doc.rotulo, pagina: c.pagina, trecho },
     });

@@ -322,6 +322,11 @@ describe("método da etapa 1 — leitura do PMO conferida pelo código (decisão
         { ...base, id: "X3", requisitos: ["R99"] },
         { ...base, id: "X4", rotulo: "sugestao", fontes: [], texto: "Faltam 413 dias para o envio." },
         { ...base, id: "X5", rotulo: "documento", fontes: [] },
+        // números pequenos e comuns (a revisão independente mostrou que passavam): "45", "12", "8%"
+        { ...base, id: "X6", texto: "Pagamento em 45 dias após aprovação; 12 parcelas de 8%." },
+        { ...base, id: "X7", texto: "Prazo de análise de 10 dias; 7 profissionais e 3 produtos." },
+        // conta do PMO, mesmo com números que estão no edital
+        { ...base, id: "X8", texto: "Produtos 4 e 5 somam 55% (25% + 30%)." },
       ],
     };
     const c = conferirLeituraRfp(plantados, [d.doc], d.l, analiseInicial(d.a, HOJE), HOJE);
@@ -330,10 +335,21 @@ describe("método da etapa 1 — leitura do PMO conferida pelo código (decisão
     expect(por("X2")?.trava).toBe("valor-nao-conferido");
     expect(por("X3")?.requisitosInexistentes).toEqual(["R99"]);
     expect(por("X3")?.item.requisitos).toEqual([]);
-    expect(por("X4")?.trava).toBe("valor-nao-conferido");
+    expect(por("X4")?.trava).toBe("conta-do-pmo");
     expect(por("X5")?.trava).toBe("citacao-nao-conferida");
-    // na leitura, item travado nunca aparece como "Do documento"
+    expect(por("X6")?.trava).toBe("valor-nao-conferido");
+    expect(por("X7")?.trava).toBe("valor-nao-conferido");
+    expect(por("X8")?.trava).toBe("conta-do-pmo");
+    // todo item do PMO é Sugestão (decisão 0035): nunca "Do documento", nem "Decisão do GP"
     const l = combinarLeitura(d.l, c);
-    expect(l.itens.filter((i) => i.trava && i.rotulo === "documento")).toEqual([]);
+    expect(l.itens.filter((i) => i.doPmo && i.rotulo !== "sugestao")).toEqual([]);
+    const comDecisao = conferirLeituraRfp(
+      { itens: [{ ...base, id: "X9", rotulo: "decisao_gp" }] },
+      [d.doc],
+      d.l,
+      analiseInicial(d.a, HOJE),
+      HOJE,
+    );
+    expect(combinarLeitura(d.l, comDecisao).itens.find((i) => i.id === "pmo:X9")?.rotulo).toBe("sugestao");
   });
 });

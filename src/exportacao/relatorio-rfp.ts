@@ -94,7 +94,13 @@ function perguntaFinal(i: ItemLeitura, revisoes: Record<string, RevisaoItem>): s
 }
 
 function marcas(i: ItemLeitura): string {
-  return [i.doPmo ? "leitura do PMO" : "", i.trava ? NOME_TRAVA[i.trava] : ""].filter(Boolean).join("; ");
+  return [
+    i.doPmo ? "leitura do PMO" : "",
+    i.doPmo && i.citacaoConferida && !i.trava ? "citação conferida" : "",
+    i.trava ? NOME_TRAVA[i.trava] : "",
+  ]
+    .filter(Boolean)
+    .join("; ");
 }
 
 function tabelaDaSecao(itens: ItemLeitura[], revisoes: Record<string, RevisaoItem>): Secao["tabela"] {
@@ -113,7 +119,9 @@ function tabelaDaSecao(itens: ItemLeitura[], revisoes: Record<string, RevisaoIte
         `${i.premissa ? `${i.premissa} · ` : ""}${i.nome}`,
         [texto, ...extras].join("\n"),
         NOME_ROTULO[i.rotulo],
-        origemETrecho(i, texto, itens[k - 1]),
+        i.trava === "citacao-nao-conferida" && i.origem
+          ? `Trecho citado pelo PMO, não achado na p. ${i.origem.pagina}: ${i.origem.trecho}`
+          : origemETrecho(i, texto, itens[k - 1]),
         NOME_ESTADO[estadoDoItem(revisoes, i.id)],
       ];
     }),
@@ -277,7 +285,7 @@ export function montarChecklistHabilitacao(
               tabela: {
                 colunas: lista.tabela.colunas,
                 linhas: lista.tabela.linhas,
-                larguras: [0.5, 5, 0.7, 1.1],
+                larguras: lista.tabela.colunas.length === 5 ? [0.5, 4, 1.6, 0.7, 1.1] : [0.5, 5, 0.7, 1.1],
               },
             },
           ]
@@ -313,7 +321,7 @@ export function montarPerguntas(
     const pendente = estadoDoItem(a.revisoes, i.id) === "pendente" ? " [pendente de revisão do GP]" : "";
     if (i.pergunta)
       perguntas.push(
-        `${perguntas.length + 1}. ${perguntaFinal(i, a.revisoes)} (${i.premissa ? `${i.premissa}; ` : ""}referência: ${origem(i)}.)${pendente}`,
+        `${perguntas.length + 1}. ${perguntaFinal(i, a.revisoes)} (${i.premissa ? `${i.premissa}; ` : ""}referência: ${origem(i)}${i.trava ? `; ${NOME_TRAVA[i.trava]}` : ""}.)${pendente}`,
       );
     // os vagos juntos num item: uma pergunta por linha da tabela
     else if (i.tabela?.colunas.includes("Pergunta sugerida"))
