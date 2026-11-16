@@ -69,6 +69,28 @@ export async function planoDaDemonstracao(): Promise<DocumentoLido> {
   };
 }
 
+/** O contrato inventado da demonstração da etapa 3 (decisão 0041): fictício, sobre o edital público da OEI. */
+export async function contratoDaDemonstracao(): Promise<DocumentoLido | undefined> {
+  const carregar = gravadas["../../tests/fixtures/gerados/tap-oei/contrato-teste.json"];
+  if (!carregar) return undefined;
+  const c = (await carregar()) as { nomeArquivo: string; paginas: string[] };
+  const paginas = c.paginas.map((texto, k) => ({
+    numero: k + 1,
+    origem: "texto" as const,
+    texto,
+    caracteres: texto.length,
+  }));
+  return {
+    id: crypto.randomUUID(),
+    papel: "contrato",
+    nomeArquivo: c.nomeArquivo,
+    tamanhoBytes: 0,
+    totalPaginas: paginas.length,
+    lidoEm: new Date().toISOString(),
+    paginas,
+  };
+}
+
 /** Lê o PDF da RFP da demonstração, servido pelo próprio site, com a leitura de verdade. */
 export async function lerRfpDaDemonstracao(
   aoProgredir?: (pagina: number, total: number) => void,

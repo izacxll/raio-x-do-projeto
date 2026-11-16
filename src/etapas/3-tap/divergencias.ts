@@ -10,8 +10,18 @@ import { lerNumero } from "../../texto/datas";
 import { lerValorEmReais } from "../2-proposta/preco";
 import { prazoEmDias, type PrazoEmDias } from "../2-proposta/ponto-de-partida";
 import { valorNaProposta, type EntradaTap } from "./entrada";
+import { divergenciasDoMetodo } from "./divergencias-metodo";
 
-export type TemaDivergencia = "produto" | "equipe" | "prazo" | "valor";
+export type TemaDivergencia =
+  | "produto"
+  | "equipe"
+  | "prazo"
+  | "valor"
+  | "parcelas"
+  | "conformidade"
+  | "duracao"
+  | "equipe-regra"
+  | "produtividade";
 export type SituacaoDivergencia = "igual" | "diferente" | "so-na-rfp" | "so-na-proposta" | "nao-conferido";
 
 export interface LadoDivergencia {
@@ -27,9 +37,15 @@ export interface Divergencia {
   requisito?: string;
   rfp: LadoDivergencia;
   proposta: LadoDivergencia;
+  /** O que o contrato ou termo assinado diz (decisão 0041), quando ele foi enviado. */
+  contrato?: LadoDivergencia;
   situacao: SituacaoDivergencia;
   /** Explicação por modelo de texto, em redação condicional. */
   observacao: string;
+  /** Versão que a ferramenta sugere (o contrato assinado costuma prevalecer); quem decide é o GP. */
+  versaoSugerida?: "rfp" | "proposta" | "contrato";
+  /** O que fazer: confirmar por escrito, levar à reunião de abertura, consultar o jurídico. */
+  oQueFazer?: string;
 }
 
 export const NOME_SITUACAO_DIVERGENCIA: Record<SituacaoDivergencia, string> = {
@@ -246,6 +262,8 @@ export function compararRfpEProposta(e: EntradaTap): Divergencia[] {
     ...produtosSoNaProposta(e),
     divergenciaDePrazo(e),
     divergenciaDeValor(e),
+    // método da etapa 3 (decisão 0041): contrato, parcelas, conformidade, duração, regra da equipe, produtividade
+    ...divergenciasDoMetodo(e),
   ];
 }
 

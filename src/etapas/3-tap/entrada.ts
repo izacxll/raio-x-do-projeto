@@ -7,6 +7,8 @@ import { documentoDeExportavel } from "../documento-virtual";
 import { calcularCronograma, conferirPrazosDosProdutos, type Cronograma } from "../2-proposta/cronograma";
 import { lerValorEmReais } from "../2-proposta/preco";
 import { montarPontoDePartida, type PontoDePartida } from "../2-proposta/ponto-de-partida";
+import { lerContrato, type LidoDoContrato } from "./contrato";
+import type { RespostaEap } from "../../pmo/schemas/proposta";
 
 export type FonteProposta = "pdf" | "dossie" | "nenhuma";
 
@@ -26,7 +28,7 @@ export interface MarcoDaProposta {
 
 /** O que o código tira da proposta da etapa 2, quando ela está no dossiê. */
 export interface DadosProposta {
-  produtos: { id: string; nome: string; requisitos: string[] }[];
+  produtos: { id: string; nome: string; requisitos: string[]; criteriosAceite: string[] }[];
   perfis: { id: string; nome: string; exigido: boolean; requisito: string }[];
   cronograma?: Cronograma;
   marcos: MarcoDaProposta[];
@@ -35,6 +37,10 @@ export interface DadosProposta {
   aprovacaoDias?: number;
   /** Preço final (decisão do GP na etapa 2). */
   valor?: number;
+  /** Fases da metodologia com os meses (etapa 2 pelo método), para conferir a duração × vigência. */
+  fases: { nome: string; meses: number }[];
+  /** Operação contínua: quadro de equipe e volumes da etapa 2, para conferir a produtividade. */
+  operacao?: Pick<RespostaEap, "volumes" | "quadroEquipe">;
   abordagem?: string;
 }
 
@@ -44,7 +50,10 @@ export interface EntradaTap {
   fonte: FonteProposta;
   proposta?: DocumentoLido;
   dados?: DadosProposta;
-  /** RFP + proposta: o que vai ao PMO e onde o código confere as citações. */
+  /** Contrato ou termo assinado (decisão 0041): prevalece sobre a proposta e a RFP. */
+  contrato?: DocumentoLido;
+  lidoDoContrato?: LidoDoContrato;
+  /** RFP + proposta + contrato: o que vai ao PMO e onde o código confere as citações. */
   documentos: DocumentoLido[];
 }
 
@@ -92,7 +101,12 @@ export function dadosDaProposta(
       }))
     : [];
   return {
-    produtos: c.produtos.map((x) => ({ id: x.id, nome: x.nome, requisitos: x.requisitos })),
+    produtos: c.produtos.map((x) => ({
+      id: x.id,
+      nome: x.nome,
+      requisitos: x.requisitos,
+      criteriosAceite: x.criteriosAceite,
+    })),
     perfis: (eap?.perfis ?? []).map((x) => ({
       id: x.id,
       nome: x.nome,
@@ -104,6 +118,8 @@ export function dadosDaProposta(
     inicio,
     aprovacaoDias: p.parametros.aprovacaoDias,
     valor: p.parametros.precoFinal,
+    fases: c.metodologia.map((f) => ({ nome: f.nome, meses: f.meses })),
+    operacao: eap ? { volumes: eap.volumes, quadroEquipe: eap.quadroEquipe } : undefined,
     abordagem: p.abordagem?.id,
   };
 }
@@ -128,12 +144,15 @@ export function montarEntradaTap(dossie: Dossie, hoje = new Date()): EntradaTap 
   const pdf = dossie.documentos.find((d) => d.papel === "proposta");
   const doDossie = pdf ? undefined : propostaComoDocumento(dossie, ponto, rfp);
   const proposta = pdf ?? doDossie;
+  const contrato = dossie.documentos.find((d) => d.papel === "contrato");
   return {
     ponto,
     rfp,
     fonte: pdf ? "pdf" : doDossie ? "dossie" : "nenhuma",
     proposta,
     dados: pdf ? undefined : dadosDaProposta(dossie, rfp, ponto),
-    documentos: proposta ? [...rfp, proposta] : rfp,
+    contrato,
+    lidoDoContrato: contrato ? lerContrato(contrato) : undefined,
+    documentos: [...rfp, ...(proposta ? [proposta] : []), ...(contrato ? [contrato] : [])],
   };
 }

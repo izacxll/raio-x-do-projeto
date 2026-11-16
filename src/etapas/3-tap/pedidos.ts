@@ -8,7 +8,7 @@ import type { EntradaTap } from "./entrada";
 
 const REGRAS = `Regras deste pedido (além da skill):
 - Responda só com o objeto JSON do passo, no schema enviado.
-- "rotulo" usa: documento | sugestao | decisao_gp. Item "documento" sempre com fonte: doc "rfp" (RFP e anexos) ou "proposta", página do arquivo e trecho literal. Na proposta do dossiê, cada "página" é uma seção da minuta. O app confere cada trecho na página; o que não for achado vira "citação não conferida".
+- "rotulo" usa: documento | sugestao | decisao_gp. Item "documento" sempre com fonte: doc "rfp" (RFP e anexos), "proposta" ou "contrato", página do arquivo e trecho literal. Na proposta do dossiê, cada "página" é uma seção da minuta. O app confere cada trecho na página; o que não for achado vira "citação não conferida".
 - Sugestão em redação condicional ("sugere-se", "uma opção é", "recomenda-se avaliar"). Nada de valores, prazos ou quantidades que não estejam nos documentos: escreva "não informado no documento — a definir pelo GP".
 - GP designado, nível de autoridade, patrocinador e recursos financeiros são decisao_gp: só redação sugerida, nunca nome, valor ou alçada como fato.
 - Use os números de requisito da RFP (R01, R02…). Requisito novo é sugestão, sem número.
@@ -20,9 +20,9 @@ function divergenciasEmTexto(divs: Divergencia[], decisoes: Record<string, Decis
     .map((d) => {
       const dec = decisoes[d.id];
       const vale = dec
-        ? `decisão do GP: vale ${dec.vale === "rfp" ? "a RFP" : dec.vale === "proposta" ? "a proposta" : `outra redação (${dec.texto ?? ""})`}`
-        : "sem decisão do GP ainda";
-      return `- ${d.id} · ${NOME_SITUACAO_DIVERGENCIA[d.situacao]} · RFP: ${d.rfp.texto}${d.rfp.onde ? ` [${d.rfp.onde}]` : ""} · proposta: ${d.proposta.texto}${d.proposta.onde ? ` [${d.proposta.onde}]` : ""} · ${vale}`;
+        ? `decisão do GP: vale ${dec.vale === "rfp" ? "a RFP" : dec.vale === "proposta" ? "a proposta" : dec.vale === "contrato" ? "o contrato" : `outra redação (${dec.texto ?? ""})`}`
+        : `sem decisão do GP ainda${d.versaoSugerida ? ` (o código sugere: ${d.versaoSugerida})` : ""}`;
+      return `- ${d.id} · ${NOME_SITUACAO_DIVERGENCIA[d.situacao]} · RFP: ${d.rfp.texto}${d.rfp.onde ? ` [${d.rfp.onde}]` : ""} · proposta: ${d.proposta.texto}${d.proposta.onde ? ` [${d.proposta.onde}]` : ""}${d.contrato ? ` · contrato: ${d.contrato.texto}${d.contrato.onde ? ` [${d.contrato.onde}]` : ""}` : ""} · ${vale}`;
     })
     .join("\n");
 }
@@ -47,9 +47,14 @@ export function pedidoTap(
     e.fonte === "pdf"
       ? "a proposta final do GP, em PDF (doc: proposta)"
       : "a proposta da etapa 2, do dossiê (doc: proposta; cada página é uma seção da minuta)";
-  return `# Etapa 3 — Termo de abertura · os 12 elementos (ficha TAP)
+  const contrato = e.contrato
+    ? `O contrato ou termo assinado foi enviado (doc: contrato) e **prevalece** sobre a proposta e a RFP (decisão 0041).${e.lidoDoContrato?.parteIntegrante ? ` Ele torna a proposta ou o plano de trabalho parte integrante (contrato, p. ${e.lidoDoContrato.parteIntegrante.pagina}): a proposta também obriga.` : ""}`
+    : "O contrato assinado não foi enviado: o TAP parte da proposta e da RFP, e o que depender do contrato fica a confirmar.";
+  return `# Etapa 3 — Termo de abertura · os 12 elementos (ficha TAP), pelo método da etapa 3
 
-A proposta é ${fonte}.
+A proposta é ${fonte}. ${contrato}
+
+Teste de cada item (método da etapa 3): "isto está assinado, ou é algo que o GP precisa decidir ou validar antes de começar?" O resto não entra. O TAP cabe em duas páginas, mais o registro de premissas.
 
 ## Ponto de partida da RFP (código, etapa 1)
 ${pontoDePartidaEmTexto(e.ponto)}
@@ -57,23 +62,24 @@ ${pontoDePartidaEmTexto(e.ponto)}
 ## O que vem direto dos documentos (código)
 ${dadosEmTexto(dados)}
 
-## Divergências RFP × proposta (código) e a decisão do GP
+## Divergências RFP × proposta × contrato (código) e a decisão do GP
 ${divergenciasEmTexto(divs, decisoes)}
 
 Premissas críticas que se aplicam (decisão do GP): ${premissasEmTexto(premissas)}
 
 # O que fazer
-Redija os 12 elementos do TAP, em alto nível (o detalhe é do plano), seguindo a ficha TAP item a item:
+0. divergenciasTexto (primeiro): as divergências que só a leitura acha, entre RFP, proposta e contrato: frase de conformidade ("em conformidade com o item X") que não confere com o item X; cláusula de proteção da proposta × cláusula do contrato; quem aprova e em que prazo; critério de conclusão da proposta × término do contrato; orçamento que parece não cobrir uma obrigação. Cada uma com as citações dos dois lados, a versão sugerida (rfp, proposta, contrato) e o que fazer. Não repita as do código.
+Depois, redija os 12 elementos do TAP, em alto nível (o detalhe é do plano), a partir do que foi assinado, seguindo a ficha TAP item a item:
 1. finalidade (TAP.1): o problema ou a necessidade e o resultado esperado, com a fonte.
 2. objetivos (TAP.2): cada um com o critério de sucesso (indicador e meta). Se a RFP não traz a métrica, origemDaMetrica "sugestao".
 3. requisitosAltoNivel (TAP.3): cada item com os números R que cobre; todos os R da RFP devem estar em algum item.
-4. descricao, entregas (os produtos) e limites (TAP.4): os limites incluem as exclusões da proposta, com a fonte.
+4. descricao, entregas (os produtos) e limites (TAP.4): produto que a proposta acrescentou e a RFP não pedia é compromisso assinado: entra como entrega-chave, com critério de aceite. Os limites incluem as exclusões da proposta, as vedações da RFP e o que é do contratante, com a fonte.
 5. riscoGeral (TAP.5): as fontes de incerteza do projeto, resumidas das brechas e das premissas críticas. Brecha não vira risco: diga a origem.
-6. marcos (TAP.6): cada marco é um resultado concluído (entrega, aprovação, decisão), com o prazo contado de um evento, como os documentos dizem. Use as entregas calculadas pelo código; não calcule datas.
+6. marcos (TAP.6): cada marco é um resultado concluído (entrega, aprovação, decisão), com o prazo contado de um evento, como os documentos dizem, **dentro da vigência** (a do contrato, quando houver). Entram os marcos que dependem do contratante (dados recebidos, sistema liberado, plano aprovado). Use as entregas calculadas pelo código; não calcule datas.
 7. recursosFinanceiros (TAP.7), gerente (TAP.11) e patrocinador (TAP.12): decisao_gp, só a redação sugerida.
 8. partesInteressadas (TAP.8): papel e o que decide; quem decide do lado do contratante (gestor e fiscal) nominal ou "a definir pelo GP".
-9. aprovacao (TAP.9) e termino (TAP.10): ligados às cláusulas de recebimento e de extinção da RFP, com a fonte.
-10. Em cada divergência com decisão do GP, siga a decisão; sem decisão, escreva a diferença como pendente do GP.
+9. aprovacao (TAP.9): quem avalia (gestor, comissão, fiscal), quem dá o aceite e quem autoriza o encerramento, ligados às cláusulas do contrato (ou da RFP), com a fonte; prazo que o documento não dá é "a definir pelo GP". termino (TAP.10): vigência, prorrogação (pedida e de ofício), prestação de contas final, devolução de saldo e de dados, denúncia e rescisão.
+10. Em cada divergência com decisão do GP, siga a decisão; sem decisão, siga o contrato quando houver e escreva a diferença como pendente do GP. Itens da RFP que o contrato mudou não entram.
 11. observacoes: o que você achou e o código não, sempre com fonte.
 
 ${REGRAS}`;
@@ -99,10 +105,11 @@ ${risco}
 Premissas críticas que se aplicam (decisão do GP): ${premissasEmTexto(premissas)}
 
 # O que fazer
-1. premissas: as premissas e restrições assumidas na proposta e no TAP, cada uma numa frase verificável, com o tipo e a origem (rfp, proposta, tap ou estimativa) e a fonte com o trecho literal quando vier de documento (B3.1, B3.2, B3.3, B3.5).
-2. Cada premissa crítica confirmada pelo GP sai numa linha própria, com o código (PC1…PC8), de quem depende, até quando e a consequência se não se confirmar (B3.9, TAP-PR.2).
-3. Restrições do contrato: prazo final, valor, vedação de subcontratação, regras de aceite e de pagamento, com a fonte (B3.5).
-4. dependeDe e comoValidar: como os documentos dizem, ou "a definir pelo GP".
+Na ordem do método da etapa 3 (seção 4.3):
+1. primeiro, as premissas que a **proposta já escreveu** (dimensionamento, ritmo, produtividade), origem "proposta", rotulo "documento", com a fonte e o trecho literal (B3.1, B3.2, B3.3);
+2. depois, cada premissa crítica que se aplica e a proposta **não escreveu**, numa linha própria, rotulo "sugestao", com o código (PC1…PC8), de quem depende, até quando e a consequência se não se confirmar (B3.9, TAP-PR.2);
+3. restrições do contrato (ou da RFP, sem contrato): vigência, valor, sistemas obrigatórios, vedações, dados, regras de aceite e de pagamento, com a fonte (B3.5);
+4. dependeDe e comoValidar: quem valida é decisão do GP; sugira que o contratante valide as que dependem dele. O que o documento não diz fica "a definir pelo GP". Esse registro é a entrada do registro de premissas (B3) da etapa 4.
 5. observacoes: o que você achou e o código não, com fonte.
 
 ${REGRAS}`;

@@ -17,7 +17,7 @@ import { EtiquetaRotulo, RotuloSecao } from "../componentes/basicos";
 import { ConectarClaude, useChave } from "../componentes/conectar-claude";
 import { PassoPmoNaTela, UsoNaTela, useChamadaPmo } from "../componentes/passo-pmo";
 
-const NOME_DOC = { rfp: "RFP", proposta: "proposta", tap: "TAP", pgp: "PGP" } as const;
+const NOME_DOC = { rfp: "RFP", proposta: "proposta", contrato: "contrato", tap: "TAP", pgp: "PGP" } as const;
 
 export function LeituraDoPmo({
   pgp,

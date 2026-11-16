@@ -29,6 +29,7 @@ function valeDaDivergencia(t: TapDossie, id: string): string {
   if (!d) return "pendente do GP";
   if (d.vale === "rfp") return "[Decisão do GP] vale a RFP";
   if (d.vale === "proposta") return "[Decisão do GP] vale a proposta";
+  if (d.vale === "contrato") return "[Decisão do GP] vale o contrato";
   return `[Decisão do GP] ${d.texto?.trim() || "outra redação, a definir"}`;
 }
 
@@ -40,6 +41,9 @@ export function montarTap(dossie: Dossie, agora = new Date()): DocumentoExportav
       titulo: "Situação da minuta",
       paragrafos: [
         `Proposta usada: ${entrada.fonte === "pdf" ? `PDF da versão final (${entrada.proposta?.nomeArquivo})` : entrada.fonte === "dossie" ? NOME_PROPOSTA_DO_DOSSIE : "nenhuma (o TAP parte só da RFP)"}.`,
+        entrada.contrato
+          ? `Contrato ou termo assinado: ${entrada.contrato.nomeArquivo}. Ele prevalece sobre a proposta e a RFP.`
+          : "Sem o contrato ou termo assinado: os números do TAP ficam a confirmar contra o que for assinado.",
         `${pendentes} pendências do GP (revisão de itens, divergências sem decisão e a aprovação do TAP).`,
         "Os itens [Sugestão] são propostas do PMO em redação condicional; os [Decisão do GP] só o GP preenche.",
       ],
@@ -48,18 +52,32 @@ export function montarTap(dossie: Dossie, agora = new Date()): DocumentoExportav
   const divsDecisao = divergencias.filter(pedeDecisao);
   if (divsDecisao.length)
     secoes.push({
-      titulo: "Divergências entre a RFP e a proposta",
+      titulo: "1. Divergências para o GP decidir",
+      paragrafos: [
+        "Vêm primeiro: o resto do TAP depende de qual versão vale. O contrato assinado costuma prevalecer; quem decide é o GP.",
+      ],
       tabela: {
-        colunas: ["Item", "RFP", "Proposta", "Situação (código)", "O que vale"],
-        larguras: [1, 3, 3, 2, 2],
+        colunas: entrada.contrato
+          ? ["Item", "RFP", "Proposta", "Contrato", "Situação, sugestão e o que fazer", "O que vale"]
+          : ["Item", "RFP", "Proposta", "Situação, sugestão e o que fazer", "O que vale"],
+        larguras: entrada.contrato ? [1, 2.5, 2.5, 2.5, 3, 1.5] : [1, 3, 3, 3, 2],
         linhas: divsDecisao.map((d) => [
           d.requisito ?? d.tema,
           `${d.rfp.texto}${d.rfp.onde ? ` (${d.rfp.onde})` : ""}`,
           `${d.proposta.texto}${d.proposta.onde ? ` (${d.proposta.onde})` : ""}`,
-          NOME_SITUACAO_DIVERGENCIA[d.situacao],
+          ...(entrada.contrato
+            ? [`${d.contrato?.texto ?? "—"}${d.contrato?.onde ? ` (${d.contrato.onde})` : ""}`]
+            : []),
+          `${NOME_SITUACAO_DIVERGENCIA[d.situacao]}. ${d.observacao}${d.versaoSugerida ? ` [Sugestão] Versão sugerida: ${d.versaoSugerida}.` : ""}${d.oQueFazer ? ` ${d.oQueFazer}` : ""}`,
           valeDaDivergencia(t, d.id),
         ]),
       },
+    });
+  const divsTexto = itens.filter((i) => i.id.startsWith("tap:divergenciasTexto:"));
+  if (divsTexto.length)
+    secoes.push({
+      titulo: "Divergências de texto (leitura do PMO)",
+      paragrafos: divsTexto.map((i) => paragrafoDoItem(i, t.revisoes)),
     });
 
   for (const el of ELEMENTOS_TAP) {
@@ -152,7 +170,7 @@ export function montarTap(dossie: Dossie, agora = new Date()): DocumentoExportav
     tabela: {
       colunas: ["Verificação", "Situação", "Detalhe"],
       larguras: [3, 1, 5],
-      linhas: conferirTap(entrada, t, todos, premissas).map((v) => [
+      linhas: conferirTap(entrada, t, todos, premissas, compararRfpEProposta(entrada)).map((v) => [
         v.nome,
         NOME_SITUACAO_VERIFICACAO[v.situacao],
         v.texto,

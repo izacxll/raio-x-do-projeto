@@ -70,6 +70,15 @@ export function itensDoTap(r: RespostaTap, docs: DocumentoLido[]): ItemConferido
   const out: ItemConferido[] = [];
   const add = (id: string, grupo: string, item: ItemPmo, complemento?: string) =>
     out.push({ id, passo: "tap", grupo, item, complemento, conferencia: conferirItem(item, docs) });
+  // método da etapa 3: as divergências de texto vêm primeiro, e o GP revisa cada uma
+  (r.divergenciasTexto ?? []).forEach((d, k) =>
+    add(
+      `tap:divergenciasTexto:${k}`,
+      "Divergências de texto (leitura do PMO)",
+      d.item,
+      `${d.ponto ? `${d.ponto}. ` : ""}Versão sugerida: ${d.versaoSugerida || "a decidir pelo GP"}. O que fazer: ${d.oQueFazer || "a definir pelo GP"}.`,
+    ),
+  );
   for (const el of ELEMENTOS_TAP)
     for (const campo of el.campos) {
       const grupo = grupoDoElemento(el.codigo, el.campos.length > 1 ? campo : undefined);

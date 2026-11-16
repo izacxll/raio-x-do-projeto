@@ -6,7 +6,7 @@ import { estadoDe, type ItemConferido } from "../../pmo/itens";
 import { EtiquetaRotulo, NOME_ESTADO } from "./basicos";
 
 const ROTULO_APP = { documento: "documento", sugestao: "sugestao", decisao_gp: "decisao-gp" } as const;
-const NOME_DOC = { rfp: "RFP", proposta: "proposta", tap: "TAP", pgp: "PGP" } as const;
+const NOME_DOC = { rfp: "RFP", proposta: "proposta", contrato: "contrato", tap: "TAP", pgp: "PGP" } as const;
 
 export type Revisoes = Record<string, RevisaoItem>;
 

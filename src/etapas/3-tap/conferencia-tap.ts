@@ -4,7 +4,7 @@
 import type { TapDossie } from "../../dossie/esquema";
 import { estadoDe, type ItemConferido } from "../../pmo/itens";
 import { lerValorEmReais } from "../2-proposta/preco";
-import { diasDoTexto } from "./divergencias";
+import { diasDoTexto, pedeDecisao, type Divergencia } from "./divergencias";
 import { valorNaProposta, type EntradaTap } from "./entrada";
 import { ELEMENTOS_TAP } from "./tap";
 
@@ -34,6 +34,7 @@ export function conferirTap(
   t: TapDossie,
   itens: ItemConferido[],
   premissasConfirmadas: Record<string, boolean>,
+  divergencias: Divergencia[] = [],
 ): VerificacaoTap[] {
   const out: VerificacaoTap[] = [];
   const valido = (i: ItemConferido) => estadoDe(t.revisoes, i.id) !== "descartado";
@@ -80,13 +81,17 @@ export function conferirTap(
       .join(" "),
   });
 
-  // 3. marcos dentro do prazo da RFP (a conta é do código)
-  const prazo = e.ponto.prazoExecucao;
+  // 3. marcos dentro da vigência: a do contrato assinado, quando houver (decisão 0041); senão, o prazo da RFP
+  const vigContrato = e.lidoDoContrato?.vigencia;
+  const prazo =
+    vigContrato?.meses !== undefined
+      ? { dias: vigContrato.meses * 30, texto: `${vigContrato.texto} (contrato)` }
+      : e.ponto.prazoExecucao;
   const marcos = resposta.marcos.filter((_, k) => valido({ id: `tap:marcos:${k}` } as ItemConferido));
   if (!prazo) {
     out.push({
       id: "marcos",
-      nome: "Marcos dentro do prazo da RFP",
+      nome: "Marcos dentro da vigência",
       situacao: "nao-conferido",
       texto: "Prazo de execução da RFP não localizado pelo código — conferir os marcos no documento.",
     });
@@ -99,12 +104,12 @@ export function conferirTap(
     const produtosFora = (e.dados?.marcos ?? []).filter((m) => m.situacao === "nao-cabe");
     out.push({
       id: "marcos",
-      nome: "Marcos dentro do prazo da RFP",
+      nome: "Marcos dentro da vigência",
       situacao: fora.length || produtosFora.length || crono?.situacao === "nao-cabe" ? "atencao" : "ok",
       texto: [
         fora.length
-          ? `Marco(s) além do prazo da RFP (${prazo.texto}): ${fora.map((x) => x.m.prazo).join("; ")}.`
-          : `Nenhum marco com prazo além de ${prazo.texto} (RFP).`,
+          ? `Marco(s) além da vigência (${prazo.texto}): ${fora.map((x) => x.m.prazo).join("; ")}.`
+          : `Nenhum marco com prazo além de ${prazo.texto}.`,
         semPrazo.length ? `${semPrazo.length} marco(s) sem prazo em dias: conferir.` : "",
         produtosFora.length
           ? `No cronograma da proposta, a entrega passa do prazo do produto na RFP: ${produtosFora.map((m) => `${m.produto} (${m.textoConferencia})`).join("; ")}`
@@ -132,6 +137,69 @@ export function conferirTap(
         : !t.decisoes.recursos
           ? "Recursos financeiros a definir pelo GP."
           : "O código não tem os dois valores em reais para comparar.",
+  });
+
+  // 4b. valor e parcelas iguais ao contrato, somando 100% (método da etapa 3, seção 4.4)
+  if (e.lidoDoContrato) {
+    const doContrato = divergencias.filter((d) => d.id === "valor-contrato" || d.id === "parcelas");
+    const diferentes = doContrato.filter((d) => d.situacao === "diferente");
+    const naoConferidos = doContrato.filter((d) => d.situacao === "nao-conferido");
+    out.push({
+      id: "contrato",
+      nome: "Valor e parcelas iguais ao contrato, somando 100%",
+      situacao: diferentes.length
+        ? "atencao"
+        : naoConferidos.length || !doContrato.length
+          ? "nao-conferido"
+          : "ok",
+      texto: diferentes.length
+        ? diferentes.map((d) => d.observacao).join(" ")
+        : naoConferidos.length || !doContrato.length
+          ? "O código não achou no contrato o valor ou as parcelas para comparar — conferir no documento."
+          : "O valor e as parcelas conferem com o contrato e somam 100% (conta do código).",
+    });
+  } else
+    out.push({
+      id: "contrato",
+      nome: "Valor e parcelas iguais ao contrato, somando 100%",
+      situacao: "nao-conferido",
+      texto:
+        "Sem o contrato ou termo assinado: os números do TAP ficam a confirmar contra o que for assinado.",
+    });
+
+  // 4c. toda entrega-chave com critério de aceite; produto que a proposta acrescentou é compromisso
+  const produtos = e.dados?.produtos ?? [];
+  const semAceite = produtos.filter((x) => !x.criteriosAceite.some((c) => c.trim()));
+  const acrescentados = divergencias.filter((d) => d.situacao === "so-na-proposta" && d.tema === "produto");
+  out.push({
+    id: "aceite",
+    nome: "Toda entrega-chave com critério de aceite",
+    situacao: !produtos.length ? "nao-conferido" : semAceite.length ? "atencao" : "ok",
+    texto: !produtos.length
+      ? "Sem os produtos da proposta no dossiê: conferir o aceite de cada entrega no documento."
+      : [
+          semAceite.length
+            ? `Entrega(s) sem critério de aceite: ${semAceite.map((x) => `${x.id} — ${x.nome}`).join("; ")}.`
+            : `As ${produtos.length} entregas têm critério de aceite.`,
+          acrescentados.length
+            ? `Produto(s) que a proposta acrescentou e a RFP não pedia: compromisso assinado, entra como entrega-chave com aceite (${acrescentados.map((d) => d.proposta.texto).join("; ")}).`
+            : "",
+        ]
+          .filter(Boolean)
+          .join(" "),
+  });
+
+  // 4d. toda divergência com a versão escolhida pelo GP
+  const abertas = divergencias.filter((d) => pedeDecisao(d) && !t.divergencias[d.id]);
+  out.push({
+    id: "divergencias",
+    nome: "Toda divergência com a versão escolhida pelo GP",
+    situacao: !divergencias.length ? "nao-conferido" : abertas.length ? "atencao" : "ok",
+    texto: abertas.length
+      ? `${abertas.length} divergência(s) sem versão escolhida: ${abertas.map((d) => d.id).join(", ")}.`
+      : divergencias.length
+        ? "Todas as divergências têm a versão escolhida pelo GP."
+        : "Sem divergências para decidir.",
   });
 
   // 5. citações

@@ -4,7 +4,7 @@
 
 export type NumeroEtapa = 1 | 2 | 3 | 4 | 5;
 
-export type PapelDocumento = "rfp" | "anexo-rfp" | "proposta" | "tap" | "pgp";
+export type PapelDocumento = "rfp" | "anexo-rfp" | "proposta" | "contrato" | "tap" | "pgp";
 
 export interface DocumentoPedido {
   papel: PapelDocumento;
@@ -103,7 +103,7 @@ export const ETAPAS: Etapa[] = [
     numero: 3,
     nome: "Termo de abertura (TAP)",
     nomeCurto: "TAP",
-    resumoEntrada: "entra: RFP + proposta",
+    resumoEntrada: "entra: RFP + proposta (+ contrato assinado)",
     usaPmo: true,
     fase: "F3",
     documentos: [
@@ -121,10 +121,17 @@ export const ETAPAS: Etapa[] = [
         observacao:
           "Obrigatória se a etapa 2 não foi feita neste dossiê. Se o GP editou a proposta fora da ferramenta, envie o PDF da versão final: ele vale no lugar da minuta da etapa 2.",
       },
+      {
+        papel: "contrato",
+        nome: "Contrato ou termo assinado",
+        obrigatorio: false,
+        observacao:
+          "Recomendado: o que foi assinado prevalece sobre a proposta e a RFP. As divergências entre os três vêm primeiro no TAP.",
+      },
     ],
     ferramentaFaz: [
-      "Os 12 elementos do TAP, cada um com a origem",
-      "Divergências entre a RFP e a proposta",
+      "Divergências entre RFP, proposta e contrato, primeiro: valor, parcelas, frase de conformidade, duração × vigência, equipe e produtos",
+      "Os 12 elementos do TAP, cada um com a origem, a partir do que foi assinado",
       "Campos que só o gerente preenche, como patrocinador e nível de autoridade",
     ],
     saidas: [
@@ -216,6 +223,7 @@ export const NOME_PAPEL: Record<PapelDocumento, string> = {
   rfp: "RFP",
   "anexo-rfp": "Anexo da RFP",
   proposta: "Proposta",
+  contrato: "Contrato ou termo assinado",
   tap: "TAP",
   pgp: "PGP",
 };

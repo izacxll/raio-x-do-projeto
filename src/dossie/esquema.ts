@@ -4,7 +4,7 @@
 // descartados na leitura e na gravação (z.object remove chaves que não estão no esquema).
 import { z } from "zod";
 import { comCamposNovos, RespostaConteudo, RespostaEap, RespostaEstrategia } from "../pmo/schemas/proposta";
-import { RespostaPremissas, RespostaTap } from "../pmo/schemas/tap";
+import { RespostaPremissas, RespostaTap, comCamposNovosTap } from "../pmo/schemas/tap";
 import { RespostaLeitura } from "../pmo/schemas/leitura";
 import { RespostaLeituraRfp } from "../pmo/schemas/leitura-rfp";
 import {
@@ -37,7 +37,7 @@ export const PaginaLida = z.object({
 });
 export type PaginaLida = z.infer<typeof PaginaLida>;
 
-export const PapelDocumento = z.enum(["rfp", "anexo-rfp", "proposta", "tap", "pgp"]);
+export const PapelDocumento = z.enum(["rfp", "anexo-rfp", "proposta", "contrato", "tap", "pgp"]);
 
 export const DocumentoLido = z.object({
   id: z.string().min(1),
@@ -268,7 +268,7 @@ export type PropostaDossie = z.infer<typeof PropostaDossie>;
 
 /** Decisão do GP numa divergência entre a RFP e a proposta: qual versão vale. */
 export const DecisaoDivergencia = z.object({
-  vale: z.enum(["rfp", "proposta", "outra"]),
+  vale: z.enum(["rfp", "proposta", "contrato", "outra"]),
   texto: z.string().optional(),
 });
 export type DecisaoDivergencia = z.infer<typeof DecisaoDivergencia>;
@@ -288,7 +288,7 @@ export type DecisoesTap = z.infer<typeof DecisoesTap>;
 
 export const TapDossie = z.object({
   modelo: z.string(),
-  tap: RespostaGuardada(RespostaTap).optional(),
+  tap: RespostaGuardada(z.preprocess(comCamposNovosTap, RespostaTap)).optional(),
   premissas: RespostaGuardada(RespostaPremissas).optional(),
   /** Revisão do GP de cada item, pelo id estável (tap:…, premissas:…). */
   revisoes: z.record(z.string(), RevisaoItem),

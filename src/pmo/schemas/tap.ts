@@ -31,7 +31,21 @@ export const ParteTap = z.object({
 });
 export type ParteTap = z.infer<typeof ParteTap>;
 
+/** Divergência de texto que só a leitura acha (método da etapa 3, seção 4.1): sempre Sugestão. */
+export const DivergenciaTexto = z.object({
+  item: ItemPmo,
+  /** "frase de conformidade", "proteção × cláusula", "quem aprova", "término", "orçamento × obrigação"… */
+  ponto: z.string(),
+  /** Versão que o PMO sugere: rfp, proposta, contrato, ou "" quando não sugere. */
+  versaoSugerida: z.string(),
+  /** Confirmar por escrito, levar à reunião de abertura, consultar o jurídico. */
+  oQueFazer: z.string(),
+});
+export type DivergenciaTexto = z.infer<typeof DivergenciaTexto>;
+
 export const RespostaTap = z.object({
+  /** Divergências de texto entre RFP, proposta e contrato (vêm primeiro no TAP). */
+  divergenciasTexto: z.array(DivergenciaTexto),
   /** TAP.1 */
   finalidade: z.array(ItemPmo),
   /** TAP.2 */
@@ -87,3 +101,11 @@ export const RespostaPremissas = z.object({
 export type RespostaPremissas = z.infer<typeof RespostaPremissas>;
 
 export const SCHEMAS_TAP = { tap: RespostaTap, premissas: RespostaPremissas } as const;
+
+/** Preenche o campo que a fase M3 acrescentou, para abrir dossiês e gravações de antes dela (decisão 0041). */
+export function comCamposNovosTap(dados: unknown): unknown {
+  if (!dados || typeof dados !== "object") return dados;
+  const d = { ...(dados as Record<string, unknown>) };
+  if (!Array.isArray(d.divergenciasTexto)) d.divergenciasTexto = [];
+  return d;
+}

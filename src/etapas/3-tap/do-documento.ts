@@ -46,6 +46,64 @@ export function dadosDosDocumentos(e: EntradaTap): DadoDoDocumento[] {
     doItem("objeto", "TAP.1", "Objeto", porId("identificacao:objeto")),
     doItem("instrumento", "TAP.4", "Instrumento e modalidade", porId("identificacao:modalidade")),
   ];
+  // o contrato assinado prevalece (decisão 0041): o que o código leu dele vem antes do que a RFP dizia
+  const c = e.lidoDoContrato;
+  if (c) {
+    const onde = (o?: { documento: string; pagina: number }) =>
+      o ? `${o.documento}, p. ${o.pagina}` : undefined;
+    out.push(
+      c.valor
+        ? {
+            id: "contrato:valor",
+            elemento: "TAP.7",
+            nome: "Valor do contrato",
+            texto: reais(c.valor.valor),
+            onde: onde(c.valor.origem),
+            origem: "documento",
+          }
+        : {
+            id: "contrato:valor",
+            elemento: "TAP.7",
+            nome: "Valor do contrato",
+            texto: NAO,
+            origem: "nao-localizado",
+          },
+      c.vigencia
+        ? {
+            id: "contrato:vigencia",
+            elemento: "TAP.6",
+            nome: "Vigência do contrato",
+            texto: c.vigencia.texto,
+            onde: onde(c.vigencia.origem),
+            origem: "documento",
+          }
+        : {
+            id: "contrato:vigencia",
+            elemento: "TAP.6",
+            nome: "Vigência do contrato",
+            texto: NAO,
+            origem: "nao-localizado",
+          },
+    );
+    if (c.parteIntegrante)
+      out.push({
+        id: "contrato:parte-integrante",
+        elemento: "TAP.4",
+        nome: "Proposta ou plano de trabalho como parte integrante",
+        texto: c.parteIntegrante.trecho,
+        onde: onde(c.parteIntegrante),
+        origem: "documento",
+      });
+    for (const [k, q] of c.quemAcompanha.entries())
+      out.push({
+        id: `contrato:quem:${k}`,
+        elemento: "TAP.9",
+        nome: "Quem acompanha e aprova (contrato)",
+        texto: q.trecho,
+        onde: onde(q),
+        origem: "documento",
+      });
+  }
   const prazo = e.ponto.prazoExecucao;
   out.push(
     prazo
