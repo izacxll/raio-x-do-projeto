@@ -91,12 +91,45 @@ const RE_SUJEITO_ADMINISTRACAO =
 function vagoSemEfeito(padrao: string, o: Localizado): boolean {
   const frase = tirarAcentos(o.frase);
   if (padrao === "eventualmente" && /\bforo\b|\bdirimir\b|\bcontroversias\b/.test(frase)) return true;
+  // regra geral: a palavra vaga só pesa quando o trecho fala de obrigação, prazo ou entrega de quem executa
+  if (!RE_OBRIGACAO_DE_QUEM_EXECUTA.test(frase)) return true;
+  // e não quando a oração da palavra fala de algo que a administração talvez faça ("de modo que possam ser
+  // eventualmente incorporados aos serviços ofertados pela rede pública")
+  if (oracaoDaAdministracao(frase, o.termo)) return true;
   if (padrao !== "entre-outros") return false;
   const pagina = o.doc.paginas.find((p) => p.numero === o.pagina)?.texto ?? "";
   const depois = tirarAcentos(pagina.slice(o.posicao, o.posicao + 60));
   if (/^entre outr[oa]s\s+(?:atribuicoes|competencias|funcoes|prerrogativas|poderes)\b/.test(depois))
     return true;
   return RE_SUJEITO_ADMINISTRACAO.test(frase.trim());
+}
+
+/** Obrigação, prazo ou entrega de quem executa (a contratada, a proponente, a organização parceira). */
+const RE_OBRIGACAO_DE_QUEM_EXECUTA =
+  /\b(?:contratad[ao]|proponentes?|licitantes?|osc|organizac\w+ da sociedade civil|parceira|executor\w*|consultor\w*|fornecedor\w*)\b|\b(?:deve|devem|devera|deverao|obrigad[ao]s?|obriga-se|compete|cabera|incumbe)\b|\bprazos?\b|\bentreg\w*|\bprodutos?\b|\bservicos?\b|\batividades?\b|\bexecu\w*/;
+const RE_AGENTE_ADMINISTRACAO =
+  /\b(?:administracao|contratante|gestor\w*|fiscal\w*|comissao|secretaria|orgao|poder publico|municipalidade|prefeitura|rede publica|concedente)\b/;
+const RE_EXECUTOR = /\b(?:contratad[ao]|proponente|licitante|osc|organizac\w+ da sociedade civil|parceira)\b/;
+
+/**
+ * A oração em volta da palavra vaga (entre vírgula, ponto e vírgula, ponto ou "de modo que") tem a
+ * administração como agente e não cita quem executa.
+ */
+function oracaoDaAdministracao(frase: string, termo: string): boolean {
+  const k = frase.indexOf(termo);
+  if (k < 0) return false;
+  const antes = frase.slice(0, k);
+  const inicio = Math.max(
+    antes.lastIndexOf(";"),
+    antes.lastIndexOf(". "),
+    ...[...antes.matchAll(/,\s*(?:de modo que|de forma que|a fim de que|para que|desde que)\b/g)].map(
+      (m) => m.index ?? -1,
+    ),
+  );
+  const resto = frase.slice(k);
+  const fim = resto.search(/[;,]|\.\s|\.$/);
+  const oracao = frase.slice(inicio + 1, fim < 0 ? undefined : k + fim);
+  return RE_AGENTE_ADMINISTRACAO.test(oracao) && !RE_EXECUTOR.test(oracao);
 }
 
 function trecho(l: Localizado): ItemAnalise["origem"] {

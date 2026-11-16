@@ -190,6 +190,10 @@ describe("6. brechas", () => {
     expect(vagos.some((v) => /foro/i.test(v.origem?.trecho ?? ""))).toBe(false);
   });
 
+  it("não marca o 'eventualmente' do 1.1 (incorporação futura pela rede pública)", () => {
+    expect(comPrefixo("brechas:vago:eventualmente")).toHaveLength(0);
+  });
+
   it("não marca 'entre outras' nas atribuições do gestor da parceria", () => {
     expect(comPrefixo("brechas:vago:entre-outros")).toHaveLength(0);
   });
