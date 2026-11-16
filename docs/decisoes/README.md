@@ -39,6 +39,7 @@ Uma decisão por arquivo, numerada em ordem. Cada uma registra o contexto, o que
 | [0033](0033-etapa-5-por-tipo-de-plano.md) | Etapa 5 por tipo de plano (PGP × plano de trabalho), premissas críticas nos três lugares, PC5 por código e conflitos com o edital | aceita, com ajustes da responsável |
 | [0034](0034-metodos-das-etapas.md) | Métodos das etapas 1 a 5 (`docs/estudos/`) passam a valer: teste de cada item, saída na ordem da decisão do gerente, régua pelo tipo de contrato e de plano; fases M1 a M5, uma por etapa; skill 0.3.0 | aceita |
 | [0035](0035-pmo-le-codigo-monta-e-confere.md) | O PMO faz a leitura em todas as etapas; o código monta o esqueleto e confere depois; sem chave, as etapas 1 e 5 mostram o esqueleto com o aviso "leitura parcial por código" | aceita |
+| [0036](0036-etapa-1-pelo-metodo-m1.md) | Etapa 1 pelo método (M1): leitura em 8 seções, regras do esqueleto, R = entregas e obrigações específicas, leitura do PMO com travas, gabaritos e leitura gravada | aceita |
 
 Modelo para uma nova decisão:
 
