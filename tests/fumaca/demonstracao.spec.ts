@@ -34,12 +34,16 @@ test("etapa 2 em demonstração: respostas gravadas, decisões do GP, contas e s
   await page.getByLabel(/PC3/).check();
 
   await page.getByTestId("pedir-conteudo").click();
-  await expect(page.getByRole("heading", { name: "Seção 2 — Compreensão do objeto" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Seção 3 — Compreensão do objeto" })).toBeVisible();
   await page.getByTestId("pedir-eap").click();
   await expect(page.getByTestId("cronograma")).toBeVisible();
   await page.getByLabel("Aprovação de cada produto (dias úteis, decisão do GP)").fill("10");
   await expect(page.getByText(/Total: \d+ dias úteis/)).toBeVisible();
   await expect(page.getByTestId("matriz")).toContainText("R05");
+  // a minuta pelo método (decisão 0038): a capa, as seções e a minuta redigida na ordem do edital
+  await expect(page.locator('[data-secao="capa"]')).toContainText("Consultoria por produtos");
+  await expect(page.locator('[data-secao="preco"]')).toContainText("Pontos por preço");
+  await expect(page.locator('[data-secao="minuta-redigida"]')).toContainText("14 de 14 seções redigidas");
   await expect(page.getByTestId("uso")).toHaveCount(0);
 
   const download = page.waitForEvent("download");

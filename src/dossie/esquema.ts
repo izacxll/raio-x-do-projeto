@@ -3,7 +3,7 @@
 // O dossiê NUNCA guarda a chave da API: o esquema não tem campo para ela, e campos desconhecidos são
 // descartados na leitura e na gravação (z.object remove chaves que não estão no esquema).
 import { z } from "zod";
-import { RespostaConteudo, RespostaEap, RespostaEstrategia } from "../pmo/schemas/proposta";
+import { comCamposNovos, RespostaConteudo, RespostaEap, RespostaEstrategia } from "../pmo/schemas/proposta";
 import { RespostaPremissas, RespostaTap } from "../pmo/schemas/tap";
 import { RespostaLeitura } from "../pmo/schemas/leitura";
 import { RespostaLeituraRfp } from "../pmo/schemas/leitura-rfp";
@@ -230,19 +230,33 @@ export const ParametrosProposta = z.object({
   precoFinal: z.number().nonnegative().optional(),
   /** Nomes da equipe, pelo id do perfil: só o GP preenche. */
   nomes: z.record(z.string(), z.string()),
+  /** Operação contínua: custo mensal de cada função (salário, encargos e benefícios), decisão do GP. */
+  custoMensal: z.record(z.string(), z.number().nonnegative()).optional(),
+  /** Mês em que entra cada parcela sem prazo no documento (pelo rótulo da parcela), decisão do GP. */
+  mesesParcelas: z.record(z.string(), z.number().int().positive()).optional(),
 });
 export type ParametrosProposta = z.infer<typeof ParametrosProposta>;
+
+/** Decisão do GP: o tipo de contrato e de projeto (decisão 0034), sugerido pelo código. */
+export const TipoConfirmado = z.object({
+  contrato: z.enum(["licitacao", "parceria"]),
+  projeto: z.enum(["produtos", "operacao", "hibrido"]),
+});
+export type TipoConfirmado = z.infer<typeof TipoConfirmado>;
 
 export const PropostaDossie = z.object({
   /** Modelo escolhido para as chamadas desta proposta. */
   modelo: z.string(),
-  estrategia: RespostaGuardada(RespostaEstrategia).optional(),
+  tipo: TipoConfirmado.optional(),
+  estrategia: RespostaGuardada(
+    z.preprocess((d) => comCamposNovos("estrategia", d), RespostaEstrategia),
+  ).optional(),
   /** Decisão do GP: a abordagem escolhida (id) e a justificativa. */
   abordagem: z.object({ id: z.string(), justificativa: z.string().optional() }).optional(),
   /** Decisão do GP: premissas críticas que se aplicam (PC1…PC8 → sim/não). */
   premissasAplicaveis: z.record(z.string(), z.boolean()),
-  conteudo: RespostaGuardada(RespostaConteudo).optional(),
-  eap: RespostaGuardada(RespostaEap).optional(),
+  conteudo: RespostaGuardada(z.preprocess((d) => comCamposNovos("conteudo", d), RespostaConteudo)).optional(),
+  eap: RespostaGuardada(z.preprocess((d) => comCamposNovos("eap", d), RespostaEap)).optional(),
   /** Revisão do GP de cada item, pelo id estável (estrategia:…, conteudo:…, eap:…). */
   revisoes: z.record(z.string(), RevisaoItem),
   parametros: ParametrosProposta,

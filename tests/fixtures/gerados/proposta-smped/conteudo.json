@@ -1,0 +1,1811 @@
+{
+  "estrutura": [
+    {
+      "codigo": "QUADRO 01",
+      "titulo": "Identificação da OSC",
+      "criterio": "(A) Plano de Trabalho no modelo do edital",
+      "itens": [
+        {
+          "id": "q01-1",
+          "texto": "Nome da OSC, CNPJ, CEP, endereço, telefones, e-mail e site: a definir pelo GP.",
+          "rotulo": "decisao_gp",
+          "motivo": "Campos do modelo.",
+          "fontes": [
+            {
+              "doc": "rfp",
+              "pagina": 10,
+              "trecho": "QUADRO 01 - IDENTIFICAÇÃO DA OSC"
+            }
+          ],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "PROP-ESTRUTURA.1"
+        },
+        {
+          "id": "q01-2",
+          "texto": "Nome, CPF, endereço, e-mail e telefone do dirigente da OSC: a definir pelo GP.",
+          "rotulo": "decisao_gp",
+          "motivo": "Campos do modelo.",
+          "fontes": [
+            {
+              "doc": "rfp",
+              "pagina": 10,
+              "trecho": "QUADRO 01 - IDENTIFICAÇÃO DA OSC"
+            }
+          ],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "PROP-ESTRUTURA.1"
+        }
+      ]
+    },
+    {
+      "codigo": "QUADRO 02",
+      "titulo": "Dados do projeto",
+      "criterio": "(A) Plano de Trabalho no modelo do edital",
+      "itens": [
+        {
+          "id": "q02-1",
+          "texto": "Nome do projeto: a definir pelo GP (sugestão: um nome curto que diga formação em acessibilidade e inclusão na rede).",
+          "rotulo": "decisao_gp",
+          "motivo": "Campo do modelo.",
+          "fontes": [
+            {
+              "doc": "rfp",
+              "pagina": 10,
+              "trecho": "QUADRO 02 - DADOS DO PROJETO"
+            }
+          ],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "PROP-ESTRUTURA.1"
+        },
+        {
+          "id": "q02-2",
+          "texto": "Duração do projeto: 12 meses, a partir da publicação do extrato do termo de fomento no Diário Oficial da Cidade.",
+          "rotulo": "documento",
+          "motivo": "Prazo do edital.",
+          "fontes": [
+            {
+              "doc": "rfp",
+              "pagina": 1,
+              "trecho": "1.9 O projeto deverá ser desenvolvido integralmente no período de 12 (doze) meses a partir da publicação do Extrato"
+            }
+          ],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "PROP-EAP"
+        },
+        {
+          "id": "q02-3",
+          "texto": "Local e horários de realização: a definir pelo GP; propõe-se combinar turmas presenciais em territórios priorizados com turmas a distância.",
+          "rotulo": "decisao_gp",
+          "motivo": "Execução presencial e/ou a distância.",
+          "fontes": [
+            {
+              "doc": "rfp",
+              "pagina": 1,
+              "trecho": "O projeto apresentado pela Organização da Sociedade Civil poderá ser executado de forma presencial e/ou à distância."
+            }
+          ],
+          "alternativas": [],
+          "requisitos": [
+            "R02"
+          ],
+          "ficha": "PROP-ESTRUTURA.1"
+        },
+        {
+          "id": "q02-4",
+          "texto": "Responsável técnico do projeto e registro profissional: a definir pelo GP.",
+          "rotulo": "decisao_gp",
+          "motivo": "Campo do modelo.",
+          "fontes": [
+            {
+              "doc": "rfp",
+              "pagina": 11,
+              "trecho": "Nome do responsável técnico do projeto"
+            }
+          ],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "PROP-EQUIPE"
+        },
+        {
+          "id": "q02-5",
+          "texto": "Valor repassado pela SMPED, em algarismos e por extenso: a definir pelo GP, até o teto de R$ 200.000,00; valor de contrapartida: a definir pelo GP.",
+          "rotulo": "decisao_gp",
+          "motivo": "Valor é decisão do GP.",
+          "fontes": [
+            {
+              "doc": "rfp",
+              "pagina": 11,
+              "trecho": "Valor repassado pela SMPED: R$ (extenso)"
+            },
+            {
+              "doc": "rfp",
+              "pagina": 1,
+              "trecho": "1.7 O valor máximo a ser repassado pela Administração Pública Municipal para o desenvolvimento de cada projeto é de R$ 200.000,00"
+            }
+          ],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "PROP-PRECO"
+        }
+      ]
+    },
+    {
+      "codigo": "QUADRO 03",
+      "titulo": "Experiência da OSC",
+      "criterio": "(E) Experiência da OSC com pessoas com deficiência; (M) Parcerias com a sociedade civil e a rede de serviços",
+      "itens": [
+        {
+          "id": "q03-1",
+          "texto": "Propõe-se apresentar a OSC pelos projetos já executados para pessoas com deficiência, para profissionais que atuam com esse público ou em formação e acessibilidade, cada um com data de início e de fim, alcance e parceiros envolvidos.",
+          "rotulo": "sugestao",
+          "motivo": "Instrução do Quadro 03.",
+          "fontes": [
+            {
+              "doc": "rfp",
+              "pagina": 11,
+              "trecho": "Apresentar a OSC destacando suas ações, atividades e projetos executados semelhantes ao objeto proposto"
+            }
+          ],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "PROP-ESTRATEGIA.3"
+        },
+        {
+          "id": "q03-2",
+          "texto": "Projetos a citar, com datas, alcance e comprovantes de experiência prévia no objeto: a definir pelo GP.",
+          "rotulo": "decisao_gp",
+          "motivo": "Critério E é de documento.",
+          "fontes": [
+            {
+              "doc": "rfp",
+              "pagina": 7,
+              "trecho": "Comprovantes de Experiência Prévia no desenvolvimento e realização de atividades ou projetos relacionados ao objeto"
+            }
+          ],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "PROP-ESTRATEGIA.3"
+        },
+        {
+          "id": "q03-3",
+          "texto": "Propõe-se destacar as parcerias já realizadas com organizações da sociedade civil e com serviços públicos, porque o critério M pontua essa experiência.",
+          "rotulo": "sugestao",
+          "motivo": "Critério M.",
+          "fontes": [
+            {
+              "doc": "rfp",
+              "pagina": 5,
+              "trecho": "(M) Experiência na realização de parcerias com a sociedade"
+            }
+          ],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "PROP-ESTRATEGIA.3"
+        }
+      ]
+    },
+    {
+      "codigo": "QUADRO 04",
+      "titulo": "Objeto do projeto",
+      "criterio": "(D) Políticas de inclusão, autonomia e qualidade de vida; (I) Inovação em relação às políticas municipais",
+      "itens": [
+        {
+          "id": "q04-1",
+          "texto": "Propõe-se como ação principal a formação em acessibilidade comunicacional e atitudinal e em enfrentamento do capacitismo para profissionais que atendem pessoas com deficiência e com TEA no Município de São Paulo, com encontros para familiares e cuidadores e materiais acessíveis abertos para uso da rede.",
+          "rotulo": "sugestao",
+          "motivo": "Objeto do edital: inclusão, autonomia e conscientização contra o capacitismo.",
+          "fontes": [
+            {
+              "doc": "rfp",
+              "pagina": 1,
+              "trecho": "O TERMO DE FOMENTO terá por objeto o desenvolvimento de ações em temáticas de políticas públicas diversas"
+            },
+            {
+              "doc": "rfp",
+              "pagina": 1,
+              "trecho": "da conscientização contra o capacitismo e da qualidade de vida de pessoas com"
+            },
+            {
+              "doc": "rfp",
+              "pagina": 1,
+              "trecho": "tendo como público-alvo as pessoas com deficiência, seus familiares ou grupos de apoio ou profissionais que atuem junto a este público"
+            }
+          ],
+          "alternativas": [],
+          "requisitos": [
+            "R01",
+            "R04"
+          ],
+          "ficha": "PROP-ENTENDIMENTO"
+        },
+        {
+          "id": "q04-2",
+          "texto": "Propõe-se que o projeto complemente as ações já desenvolvidas pelo poder público, sem repetir projeto já contemplado em termo de fomento da SMPED; a originalidade é confirmada pelo GP antes do envio.",
+          "rotulo": "sugestao",
+          "motivo": "Projeto original e complementar.",
+          "fontes": [
+            {
+              "doc": "rfp",
+              "pagina": 1,
+              "trecho": "1.6 Os projetos apresentados deverão ser complementares em relação às ações já desenvolvidas pelo poder público"
+            },
+            {
+              "doc": "rfp",
+              "pagina": 1,
+              "trecho": "nem se caracterizem como evidente continuidade de projetos já contemplados"
+            }
+          ],
+          "alternativas": [],
+          "requisitos": [
+            "R05"
+          ],
+          "ficha": "PROP-ENTENDIMENTO"
+        }
+      ]
+    },
+    {
+      "codigo": "QUADRO 05",
+      "titulo": "Objetivos do projeto",
+      "criterio": "(D) Políticas de inclusão, autonomia e qualidade de vida; (K) Metas, atividades e meios de aferição",
+      "itens": [
+        {
+          "id": "q05-1",
+          "texto": "Propõe-se como objetivo geral ampliar a inclusão e a autonomia das pessoas com deficiência e com TEA por meio de profissionais e familiares mais preparados para acolher, comunicar e apoiar.",
+          "rotulo": "sugestao",
+          "motivo": "Finalidade do edital.",
+          "fontes": [
+            {
+              "doc": "rfp",
+              "pagina": 11,
+              "trecho": "Apontar as finalidades principais do projeto para os beneficiários diretos e indiretos."
+            },
+            {
+              "doc": "rfp",
+              "pagina": 1,
+              "trecho": "proporcionar maior autonomia, independência e melhora na qualidade de vida e ampliar o"
+            }
+          ],
+          "alternativas": [],
+          "requisitos": [
+            "R04"
+          ],
+          "ficha": "PROP-ENTENDIMENTO"
+        },
+        {
+          "id": "q05-2",
+          "texto": "Propõe-se como objetivos específicos: formar profissionais em acessibilidade comunicacional e atitudinal; apoiar familiares e cuidadores no acesso às redes de apoio; produzir e entregar à SMPED materiais acessíveis em formato aberto; e registrar resultados para a política municipal.",
+          "rotulo": "sugestao",
+          "motivo": "Cada objetivo específico vira meta no Quadro 09.",
+          "fontes": [
+            {
+              "doc": "rfp",
+              "pagina": 19,
+              "trecho": "3.4 Ao final da execução da parceria, a PARCEIRA deverá disponibilizar à SMPED o conteúdo do projeto"
+            }
+          ],
+          "alternativas": [],
+          "requisitos": [
+            "R04",
+            "R13"
+          ],
+          "ficha": "PROP-ENTENDIMENTO"
+        }
+      ]
+    },
+    {
+      "codigo": "QUADRO 06",
+      "titulo": "Justificativa do projeto",
+      "criterio": "(G) Vulnerabilidade social dos beneficiários; (H) Vulnerabilidade territorial; (I) Inovação em relação às políticas municipais",
+      "itens": [
+        {
+          "id": "q06-1",
+          "texto": "Propõe-se justificar o projeto pelas barreiras atitudinais e comunicacionais que as pessoas com deficiência e com TEA encontram nos serviços, com dados oficiais do município escolhidos pelo GP e citados com a fonte.",
+          "rotulo": "sugestao",
+          "motivo": "Critério G: vulnerabilidade social dos beneficiários.",
+          "fontes": [
+            {
+              "doc": "rfp",
+              "pagina": 11,
+              "trecho": "Descrever de forma clara e objetiva a importância do projeto para os beneficiários diretos e indiretos."
+            }
+          ],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "PROP-ENTENDIMENTO"
+        },
+        {
+          "id": "q06-2",
+          "texto": "Propõe-se priorizar as turmas presenciais em territórios de maior vulnerabilidade, escolhidos pelo GP a partir de indicadores públicos, e explicar por que esses territórios.",
+          "rotulo": "sugestao",
+          "motivo": "Critério H: vulnerabilidade territorial.",
+          "fontes": [
+            {
+              "doc": "rfp",
+              "pagina": 5,
+              "trecho": "vulnerabilidade territorial do município"
+            }
+          ],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "PROP-ENTENDIMENTO"
+        },
+        {
+          "id": "q06-3",
+          "texto": "Propõe-se apresentar como inovação o material acessível aberto, com vídeos com Libras e legendas, que a SMPED recebe ao final e pode incorporar aos serviços da rede municipal.",
+          "rotulo": "sugestao",
+          "motivo": "Critério I: inovação; conteúdo entregue à SMPED.",
+          "fontes": [
+            {
+              "doc": "rfp",
+              "pagina": 19,
+              "trecho": "documento digital seja em formato aberto e os vídeos com qualidade HD"
+            },
+            {
+              "doc": "rfp",
+              "pagina": 1,
+              "trecho": "de modo que possam ser eventualmente incorporados aos serviços ofertados pela rede pública municipal"
+            }
+          ],
+          "alternativas": [],
+          "requisitos": [
+            "R13"
+          ],
+          "ficha": "PROP-ENTENDIMENTO"
+        }
+      ]
+    },
+    {
+      "codigo": "QUADRO 07",
+      "titulo": "Beneficiários diretos e indiretos",
+      "criterio": "(F) Beneficiários diretos e indiretos e diversidade de deficiências",
+      "itens": [
+        {
+          "id": "q07-1",
+          "texto": "Propõe-se como beneficiários diretos os profissionais que atendem pessoas com deficiência e com TEA e os familiares e cuidadores inscritos nas turmas, e como beneficiários indiretos as pessoas com deficiência e com TEA atendidas por eles.",
+          "rotulo": "sugestao",
+          "motivo": "Público-alvo do edital.",
+          "fontes": [
+            {
+              "doc": "rfp",
+              "pagina": 1,
+              "trecho": "tendo como público-alvo as pessoas com deficiência, seus familiares ou grupos de apoio ou profissionais que atuem junto a este público"
+            }
+          ],
+          "alternativas": [],
+          "requisitos": [
+            "R01"
+          ],
+          "ficha": "PROP-ENTENDIMENTO"
+        },
+        {
+          "id": "q07-2",
+          "texto": "Quantidade de beneficiários diretos e indiretos, faixa etária, tipos de deficiência, gênero e perfil: a definir pelo GP, compatível com a equipe do Quadro 12.",
+          "rotulo": "decisao_gp",
+          "motivo": "O edital pede quantificar; o número é decisão do GP e vira meta.",
+          "fontes": [
+            {
+              "doc": "rfp",
+              "pagina": 11,
+              "trecho": "Quantificar e descrever as características do público que será atendido, sua faixa etária, tipo de deficiência"
+            }
+          ],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "PROP-EQUIPE.4"
+        },
+        {
+          "id": "q07-3",
+          "texto": "Propõe-se contemplar a diversidade de deficiências — física, visual, auditiva, intelectual, múltipla e TEA — nos conteúdos e na seleção das turmas, porque o critério F a considera.",
+          "rotulo": "sugestao",
+          "motivo": "Critério F.",
+          "fontes": [
+            {
+              "doc": "rfp",
+              "pagina": 5,
+              "trecho": "(F) Relação entre a quantidade de beneficiários diretos e"
+            }
+          ],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "PROP-ENTENDIMENTO"
+        }
+      ]
+    },
+    {
+      "codigo": "QUADRO 08",
+      "titulo": "Metodologia do projeto",
+      "criterio": "(D) Políticas de inclusão, autonomia e qualidade de vida; (J) Acessibilidade atitudinal, comunicacional, digital ou arquitetônica; (M) Parcerias com a sociedade civil e a rede de serviços; (H) Vulnerabilidade territorial",
+      "itens": [
+        {
+          "id": "q08-1",
+          "texto": "Propõe-se executar o projeto em quatro fases: mobilização e divulgação; primeiro ciclo de turmas; segundo ciclo de turmas; encerramento com entrega do conteúdo à SMPED e prestação de contas final. Grade horária, número de turmas e beneficiários por turma: a definir pelo GP.",
+          "rotulo": "sugestao",
+          "motivo": "Instrução do Quadro 08.",
+          "fontes": [
+            {
+              "doc": "rfp",
+              "pagina": 11,
+              "trecho": "Apresentar grade horária, número de turmas, quantitativo de beneficiários por turma"
+            }
+          ],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "PROP-METODOLOGIA"
+        },
+        {
+          "id": "q08-2",
+          "texto": "Propõe-se garantir acessibilidade em todos os materiais, espaços e atividades: intérprete de Libras e legendas, audiodescrição, materiais em formato acessível, espaços sem barreiras arquitetônicas e plataforma digital acessível nas turmas a distância, com canais de interação para dúvidas e problemas de acesso.",
+          "rotulo": "sugestao",
+          "motivo": "Critério J e exigência de acessibilidade.",
+          "fontes": [
+            {
+              "doc": "rfp",
+              "pagina": 1,
+              "trecho": "2.3 Todos os materiais, espaços e metodologias utilizados no projeto devem necessariamente prever recursos de acessibilidade"
+            },
+            {
+              "doc": "rfp",
+              "pagina": 11,
+              "trecho": "Informar as condições de acessibilidade do projeto."
+            },
+            {
+              "doc": "rfp",
+              "pagina": 19,
+              "trecho": "a PARCEIRA deverá oferecer canais de interação com os participantes"
+            }
+          ],
+          "alternativas": [],
+          "requisitos": [
+            "R03",
+            "R14"
+          ],
+          "ficha": "PROP-METODOLOGIA"
+        },
+        {
+          "id": "q08-3",
+          "texto": "Propõe-se selecionar os participantes por inscrição aberta e gratuita, com prioridade para profissionais e familiares dos territórios priorizados, e registrar as parcerias com serviços e organizações da rede que ajudam na mobilização e cedem espaços.",
+          "rotulo": "sugestao",
+          "motivo": "Critérios de seleção e parcerias (Quadro 08; critério M).",
+          "fontes": [
+            {
+              "doc": "rfp",
+              "pagina": 11,
+              "trecho": "Apresentar os critérios de seleção dos beneficiários."
+            },
+            {
+              "doc": "rfp",
+              "pagina": 11,
+              "trecho": "Registrar parcerias, financeiras ou não, para a execução do projeto."
+            },
+            {
+              "doc": "rfp",
+              "pagina": 19,
+              "trecho": "Garantir que a participação seja totalmente gratuita, vedada a cobrança de qualquer montante dos beneficiários"
+            }
+          ],
+          "alternativas": [],
+          "requisitos": [
+            "R07"
+          ],
+          "ficha": "PROP-METODOLOGIA"
+        },
+        {
+          "id": "q08-4",
+          "texto": "Propõe-se divulgar o projeto nas redes sociais, nos serviços parceiros e nos canais da SMPED, com a marca da ação de fomento da Prefeitura; locais, frequência e endereços das redes sociais: a definir pelo GP.",
+          "rotulo": "sugestao",
+          "motivo": "Instrução de divulgação do Quadro 08.",
+          "fontes": [
+            {
+              "doc": "rfp",
+              "pagina": 11,
+              "trecho": "Descrever como o projeto será divulgado: locais de divulgação e frequência."
+            },
+            {
+              "doc": "rfp",
+              "pagina": 24,
+              "trecho": "12.2 Toda e qualquer veiculação, divulgação ou referência ao projeto deverá trazer obrigatoriamente e de forma clara e visível a ação"
+            },
+            {
+              "doc": "rfp",
+              "pagina": 19,
+              "trecho": "3.3.17 Divulgar o projeto de forma a possibilitar o maior acesso possível aos interessados."
+            }
+          ],
+          "alternativas": [],
+          "requisitos": [
+            "R11",
+            "R12"
+          ],
+          "ficha": "PROP-METODOLOGIA"
+        }
+      ]
+    },
+    {
+      "codigo": "QUADRO 09",
+      "titulo": "Metas, atividades e meios de aferição",
+      "criterio": "(K) Metas, atividades e meios de aferição",
+      "itens": [
+        {
+          "id": "q09-1",
+          "texto": "Propõe-se a Meta 1 — profissionais formados em acessibilidade comunicacional e atitudinal (quantidade a definir pelo GP), com as atividades de inscrição, turmas e certificação, aferida por listas de presença, fotos e relatório de execução.",
+          "rotulo": "sugestao",
+          "motivo": "Meta escrita pela proposta (o edital não fixa).",
+          "fontes": [
+            {
+              "doc": "rfp",
+              "pagina": 11,
+              "trecho": "Metas: são os resultados parciais a serem atingidos considerando os objetivos e a metodologia do projeto."
+            },
+            {
+              "doc": "rfp",
+              "pagina": 21,
+              "trecho": "acompanhados de fotos, listas de presença, entre outros documentos para comprovação das metas aferidas"
+            }
+          ],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "PROP-ENTENDIMENTO.5"
+        },
+        {
+          "id": "q09-2",
+          "texto": "Propõe-se a Meta 2 — familiares e cuidadores participantes dos encontros (quantidade a definir pelo GP), aferida por listas de presença, registros e formulários de satisfação definidos pela SMPED.",
+          "rotulo": "sugestao",
+          "motivo": "Meta escrita pela proposta.",
+          "fontes": [
+            {
+              "doc": "rfp",
+              "pagina": 11,
+              "trecho": "Meios de aferição: documentos de comprovação da execução das atividades e metas propostas"
+            },
+            {
+              "doc": "rfp",
+              "pagina": 20,
+              "trecho": "formulários a serem definidos pela SMPED"
+            }
+          ],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "PROP-ENTENDIMENTO.5"
+        },
+        {
+          "id": "q09-3",
+          "texto": "Propõe-se a Meta 3 — conteúdo do projeto entregue à SMPED em formato aberto e com vídeos em HD, aferida pelo termo de entrega.",
+          "rotulo": "sugestao",
+          "motivo": "Obrigação de entrega do conteúdo.",
+          "fontes": [
+            {
+              "doc": "rfp",
+              "pagina": 19,
+              "trecho": "3.4 Ao final da execução da parceria, a PARCEIRA deverá disponibilizar à SMPED o conteúdo do projeto"
+            },
+            {
+              "doc": "rfp",
+              "pagina": 19,
+              "trecho": "documento digital seja em formato aberto e os vídeos com qualidade HD"
+            }
+          ],
+          "alternativas": [],
+          "requisitos": [
+            "R13"
+          ],
+          "ficha": "PROP-ENTENDIMENTO.5"
+        },
+        {
+          "id": "q09-4",
+          "texto": "Recomenda-se fixar cada quantidade pela capacidade da equipe do Quadro 12 e prever que o cumprimento parcial seja justificado, porque meta descumprida sem justificativa suficiente é glosada.",
+          "rotulo": "sugestao",
+          "motivo": "Glosa (AT-03) e proteção do próprio termo.",
+          "fontes": [
+            {
+              "doc": "rfp",
+              "pagina": 9,
+              "trecho": "9.4.2 Serão glosados os valores relacionados a metas e resultados descumpridos sem justificativa suficiente."
+            },
+            {
+              "doc": "rfp",
+              "pagina": 20,
+              "trecho": "devendo o eventual cumprimento parcial ser devidamente justificado"
+            }
+          ],
+          "alternativas": [],
+          "requisitos": [
+            "R16"
+          ],
+          "ficha": "PROP-SOW.11"
+        }
+      ]
+    },
+    {
+      "codigo": "QUADRO 10",
+      "titulo": "Cronograma de execução do projeto",
+      "criterio": "(K) Metas, atividades e meios de aferição",
+      "itens": [
+        {
+          "id": "q10-1",
+          "texto": "Propõe-se o cronograma em Mês 01 a Mês 12, contados do extrato: mobilização e divulgação nos Meses 01 e 02; primeiro ciclo de turmas nos Meses 03 a 06; segundo ciclo nos Meses 07 a 10; encerramento, entrega do conteúdo e prestação final nos Meses 11 e 12.",
+          "rotulo": "sugestao",
+          "motivo": "Quadro 10 mês a mês; a soma cabe na vigência.",
+          "fontes": [
+            {
+              "doc": "rfp",
+              "pagina": 12,
+              "trecho": "Detalhar quando serão realizadas as ações e atividades no período do projeto, com suas quantidades"
+            },
+            {
+              "doc": "rfp",
+              "pagina": 1,
+              "trecho": "1.9 O projeto deverá ser desenvolvido integralmente no período de 12 (doze) meses a partir da publicação do Extrato"
+            }
+          ],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "PROP-EAP"
+        },
+        {
+          "id": "q10-2",
+          "texto": "Propõe-se indicar em cada mês a meta referenciada e as quantidades (a definir pelo GP), e as prestações de contas trimestral, semestral e final.",
+          "rotulo": "sugestao",
+          "motivo": "Prestação de contas periódica.",
+          "fontes": [
+            {
+              "doc": "rfp",
+              "pagina": 9,
+              "trecho": "trimestralmente, semestralmente e, em caráter final, ao término do Termo De Fomento"
+            }
+          ],
+          "alternativas": [],
+          "requisitos": [
+            "R06",
+            "R09"
+          ],
+          "ficha": "PROP-EAP"
+        }
+      ]
+    },
+    {
+      "codigo": "QUADRO 11",
+      "titulo": "Cronograma de receitas e despesas",
+      "criterio": "(L) Gastos compatíveis e custo-benefício",
+      "itens": [
+        {
+          "id": "q11-1",
+          "texto": "Propõe-se registrar em cada mês as despesas previstas por natureza (equipe, materiais e serviços), com a origem da receita, e o repasse da SMPED conforme a forma de liberação confirmada no esclarecimento; valores a definir pelo GP.",
+          "rotulo": "sugestao",
+          "motivo": "Parcela única (6.7.8 e 8.6) × pagamento pelo Quadro 11 (cláusula 2.3).",
+          "fontes": [
+            {
+              "doc": "rfp",
+              "pagina": 12,
+              "trecho": "Informar o período das despesas do projeto, considerando o valor do repasse da SMPED e o valor da contrapartida."
+            },
+            {
+              "doc": "rfp",
+              "pagina": 5,
+              "trecho": "6.7.8 Para a realização da parceria, o recurso será liberado de forma integral em parcela única"
+            },
+            {
+              "doc": "rfp",
+              "pagina": 17,
+              "trecho": "2.3 O pagamento será realizado nos termos do Quadro 11 – Cronograma de Receitas e Despesas"
+            }
+          ],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "PROP-PRECO.8"
+        },
+        {
+          "id": "q11-2",
+          "texto": "Sugere-se não prever despesa antes do início nem depois do fim da vigência, que não pode ser paga com o repasse.",
+          "rotulo": "sugestao",
+          "motivo": "Vedação do termo.",
+          "fontes": [
+            {
+              "doc": "rfp",
+              "pagina": 18,
+              "trecho": "no pagamento de despesas efetuadas anterior ou posteriormente ao período acordado"
+            }
+          ],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "PROP-PRECO"
+        }
+      ]
+    },
+    {
+      "codigo": "QUADRO 12",
+      "titulo": "Equipe de trabalho",
+      "criterio": "(B) Capacidade técnica da equipe; (L) Gastos compatíveis e custo-benefício",
+      "itens": [
+        {
+          "id": "q12-1",
+          "texto": "Propõe-se a equipe por função: coordenação técnica (responsável técnico), formadores em acessibilidade, intérprete de Libras, apoio administrativo-financeiro e comunicação acessível, cada uma com as atribuições descritas no Quadro 08.",
+          "rotulo": "sugestao",
+          "motivo": "Instrução do Quadro 12.",
+          "fontes": [
+            {
+              "doc": "rfp",
+              "pagina": 14,
+              "trecho": "Apresentar a relação de função de todos os profissionais que farão parte do projeto."
+            },
+            {
+              "doc": "rfp",
+              "pagina": 19,
+              "trecho": "4.1 A PARCEIRA fica obrigada a manter em seu quadro profissionais aptos a exercer as funções designadas no projeto"
+            }
+          ],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "PROP-EQUIPE"
+        },
+        {
+          "id": "q12-2",
+          "texto": "Nomes, tipo de contratação, valor base, benefícios, encargos e número de parcelas de cada função: a definir pelo GP, compatíveis com os currículos e as cotações.",
+          "rotulo": "decisao_gp",
+          "motivo": "Folha mês a mês sem valor-hora nem taxa de administração.",
+          "fontes": [
+            {
+              "doc": "rfp",
+              "pagina": 14,
+              "trecho": "As informações devem estar compatíveis com os currículos e cotações anexos ao Plano de Trabalho."
+            },
+            {
+              "doc": "rfp",
+              "pagina": 18,
+              "trecho": "2.10 Poderá ser paga com recursos da parceria a remuneração da equipe dimensionada no Plano de Trabalho"
+            }
+          ],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "PROP-PRECO.7"
+        },
+        {
+          "id": "q12-3",
+          "texto": "Recomenda-se anexar os currículos no modelo do Anexo II, com os comprovantes, porque a nota IRREGULAR em B exclui a proposta.",
+          "rotulo": "sugestao",
+          "motivo": "Critério B eliminatório.",
+          "fontes": [
+            {
+              "doc": "rfp",
+              "pagina": 4,
+              "trecho": "6.5.7 Os Currículos dos profissionais integrantes do projeto deverão ser apresentados conforme modelo do Anexo II"
+            },
+            {
+              "doc": "rfp",
+              "pagina": 5,
+              "trecho": "6.7.4 Os critérios constantes das letras (A), (B) ou (C) são critérios de exclusão direta"
+            }
+          ],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "PROP-EQUIPE"
+        }
+      ]
+    },
+    {
+      "codigo": "QUADRO 13",
+      "titulo": "Materiais",
+      "criterio": "(L) Gastos compatíveis e custo-benefício; (C) Três pesquisas de preço por item",
+      "itens": [
+        {
+          "id": "q13-1",
+          "texto": "Propõe-se listar os materiais com descrição, unidade, quantidade e valores: materiais didáticos em formatos acessíveis, equipamentos para gravação e transmissão das turmas a distância e materiais de escritório; quantidades e valores a definir pelo GP.",
+          "rotulo": "sugestao",
+          "motivo": "Instrução do Quadro 13.",
+          "fontes": [
+            {
+              "doc": "rfp",
+              "pagina": 14,
+              "trecho": "Materiais: itens de bens que serão utilizados no projeto, como mobiliário, materiais de escritório, equipamentos de tecnologia"
+            }
+          ],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "PROP-PRECO.3"
+        }
+      ]
+    },
+    {
+      "codigo": "QUADRO 14",
+      "titulo": "Serviços",
+      "criterio": "(L) Gastos compatíveis e custo-benefício; (C) Três pesquisas de preço por item",
+      "itens": [
+        {
+          "id": "q14-1",
+          "texto": "Propõe-se listar os serviços de terceiros: interpretação em Libras e audiodescrição (se não estiverem na equipe), legendagem e edição dos vídeos, plataforma de ensino a distância acessível, locação de espaços acessíveis, transporte e contabilidade; parcelas e valores a definir pelo GP.",
+          "rotulo": "sugestao",
+          "motivo": "Instrução do Quadro 14.",
+          "fontes": [
+            {
+              "doc": "rfp",
+              "pagina": 14,
+              "trecho": "Serviços: atividades ligadas a serviços terceirizados que serão utilizadas no projeto, como transporte, contabilidade"
+            },
+            {
+              "doc": "rfp",
+              "pagina": 19,
+              "trecho": "deverá ser transmitido por meio de plataforma que permita o acesso exclusivo"
+            }
+          ],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "PROP-PRECO.3"
+        }
+      ]
+    },
+    {
+      "codigo": "QUADRO 15",
+      "titulo": "Contrapartida",
+      "criterio": "",
+      "itens": [
+        {
+          "id": "q15-1",
+          "texto": "Contrapartida (equipe, espaço, equipamentos, serviços ou materiais): a definir pelo GP; o quadro só é preenchido se houver contrapartida.",
+          "rotulo": "decisao_gp",
+          "motivo": "Contrapartida não é exigida.",
+          "fontes": [
+            {
+              "doc": "rfp",
+              "pagina": 14,
+              "trecho": "Preencher o quadro APENAS se houver contrapartida da OSC"
+            }
+          ],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "PROP-PRECO"
+        },
+        {
+          "id": "q15-2",
+          "texto": "Uma opção é não oferecer contrapartida, já que ela não é exigida e, se oferecida, precisa ser comprovada na prestação de contas.",
+          "rotulo": "sugestao",
+          "motivo": "Contrapartida comprovada na prestação de contas (etapa 1, DI-05).",
+          "fontes": [
+            {
+              "doc": "rfp",
+              "pagina": 18,
+              "trecho": "3.3.1 Prestar a contrapartida em conformidade com a CLÁUSULA SEGUNDA, quando houver."
+            }
+          ],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "PROP-PRECO"
+        }
+      ]
+    },
+    {
+      "codigo": "QUADRO 16",
+      "titulo": "Tabela orçamentária",
+      "criterio": "(C) Três pesquisas de preço por item",
+      "itens": [
+        {
+          "id": "q16-1",
+          "texto": "Propõe-se apresentar três cotações para cada item de despesa, com descrição, unidade e valor unitário de cada cotação, e anexar os comprovantes com a data e o fornecedor.",
+          "rotulo": "sugestao",
+          "motivo": "Critério C, eliminatório se IRREGULAR.",
+          "fontes": [
+            {
+              "doc": "rfp",
+              "pagina": 14,
+              "trecho": "Apresentar três cotações para cada um dos itens de despesas previstas no projeto, discriminado individualmente."
+            },
+            {
+              "doc": "rfp",
+              "pagina": 4,
+              "trecho": "deverá apresentar o orçamento de preços de no mínimo 03 (três) fornecedores para cada"
+            }
+          ],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "PROP-PRECO"
+        },
+        {
+          "id": "q16-2",
+          "texto": "Fornecedores e valores das cotações: a definir pelo GP.",
+          "rotulo": "decisao_gp",
+          "motivo": "Valores são do GP.",
+          "fontes": [
+            {
+              "doc": "rfp",
+              "pagina": 14,
+              "trecho": "Apresentar três cotações para cada um dos itens de despesas previstas no projeto, discriminado individualmente."
+            }
+          ],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "PROP-PRECO"
+        }
+      ]
+    },
+    {
+      "codigo": "QUADRO 17",
+      "titulo": "Resumo das despesas",
+      "criterio": "(L) Gastos compatíveis e custo-benefício",
+      "itens": [
+        {
+          "id": "q17-1",
+          "texto": "Propõe-se o resumo por rubrica — equipe de trabalho, materiais e serviços —, com o valor do repasse da SMPED, a contrapartida e os rendimentos financeiros, se houver, e o valor total do projeto; valores a definir pelo GP, dentro do teto de R$ 200.000,00.",
+          "rotulo": "sugestao",
+          "motivo": "Instrução do Quadro 17.",
+          "fontes": [
+            {
+              "doc": "rfp",
+              "pagina": 15,
+              "trecho": "Apresentar as o valor das despesas por rubrica e valor total a ser gasto no projeto."
+            },
+            {
+              "doc": "rfp",
+              "pagina": 1,
+              "trecho": "1.7 O valor máximo a ser repassado pela Administração Pública Municipal para o desenvolvimento de cada projeto é de R$ 200.000,00"
+            }
+          ],
+          "alternativas": [],
+          "requisitos": [],
+          "ficha": "PROP-PRECO"
+        }
+      ]
+    }
+  ],
+  "produtos": [],
+  "metodologia": [
+    {
+      "nome": "Fase 1 — Mobilização e divulgação",
+      "objetivo": "Contratar a equipe, firmar parcerias com a rede, preparar materiais acessíveis e abrir as inscrições.",
+      "atividades": [
+        "Contratação da equipe",
+        "Acordos com serviços e organizações parceiras",
+        "Preparação dos materiais",
+        "Divulgação e inscrições"
+      ],
+      "quemFaz": "Coordenação técnica e comunicação acessível.",
+      "entrega": "Turmas formadas e materiais prontos.",
+      "duracao": "Meses 01 e 02, contados do extrato (p. 1).",
+      "meses": 2
+    },
+    {
+      "nome": "Fase 2 — Primeiro ciclo de turmas",
+      "objetivo": "Realizar as primeiras turmas presenciais e a distância e os encontros com familiares.",
+      "atividades": [
+        "Turmas de formação",
+        "Encontros com familiares e cuidadores",
+        "Gravação dos conteúdos",
+        "Formulários de satisfação"
+      ],
+      "quemFaz": "Formadores, intérprete de Libras e coordenação técnica.",
+      "entrega": "Relatório do primeiro ciclo.",
+      "duracao": "Meses 03 a 06.",
+      "meses": 4
+    },
+    {
+      "nome": "Fase 3 — Segundo ciclo de turmas",
+      "objetivo": "Realizar as demais turmas com os ajustes do primeiro ciclo.",
+      "atividades": [
+        "Turmas de formação",
+        "Encontros com familiares e cuidadores",
+        "Gravação dos conteúdos"
+      ],
+      "quemFaz": "Formadores, intérprete de Libras e coordenação técnica.",
+      "entrega": "Relatório do segundo ciclo.",
+      "duracao": "Meses 07 a 10.",
+      "meses": 4
+    },
+    {
+      "nome": "Fase 4 — Encerramento",
+      "objetivo": "Entregar o conteúdo à SMPED e prestar contas.",
+      "atividades": [
+        "Consolidação do material aberto",
+        "Relatório final de metas",
+        "Prestação de contas final"
+      ],
+      "quemFaz": "Coordenação técnica e apoio administrativo-financeiro.",
+      "entrega": "Conteúdo do projeto em formato aberto e vídeos em HD; prestação de contas final.",
+      "duracao": "Meses 11 e 12.",
+      "meses": 2
+    },
+    {
+      "nome": "Prestação de contas periódica (em paralelo)",
+      "objetivo": "Prestar contas trimestral e semestralmente.",
+      "atividades": [
+        "Conciliação bancária",
+        "Relatórios de metas e de despesas"
+      ],
+      "quemFaz": "Apoio administrativo-financeiro.",
+      "entrega": "Prestações de contas trimestrais e semestrais.",
+      "duracao": "Toda a vigência, em paralelo (p. 9).",
+      "meses": 0
+    }
+  ],
+  "metas": [
+    {
+      "item": {
+        "id": "meta-1",
+        "texto": "Meta 1 — profissionais formados em acessibilidade comunicacional e atitudinal: quantidade a definir pelo GP.",
+        "rotulo": "decisao_gp",
+        "motivo": "O edital não fixa metas: a proposta as escreve no Quadro 09 e o GP define as quantidades.",
+        "fontes": [
+          {
+            "doc": "rfp",
+            "pagina": 11,
+            "trecho": "Metas: são os resultados parciais a serem atingidos considerando os objetivos e a metodologia do projeto."
+          },
+          {
+            "doc": "rfp",
+            "pagina": 21,
+            "trecho": "acompanhados de fotos, listas de presença, entre outros documentos para comprovação das metas aferidas"
+          }
+        ],
+        "alternativas": [],
+        "requisitos": [],
+        "ficha": "PROP-ENTENDIMENTO.5"
+      },
+      "indicador": "Profissionais concluintes",
+      "formula": "Concluintes com a frequência mínima (a definir pelo GP) ÷ vagas previstas",
+      "meioDeAfericao": "Listas de presença, fotos, certificados e relatório de execução."
+    },
+    {
+      "item": {
+        "id": "meta-2",
+        "texto": "Meta 2 — familiares e cuidadores nos encontros: quantidade a definir pelo GP.",
+        "rotulo": "decisao_gp",
+        "motivo": "O edital não fixa metas: a proposta as escreve no Quadro 09 e o GP define as quantidades.",
+        "fontes": [
+          {
+            "doc": "rfp",
+            "pagina": 11,
+            "trecho": "Meios de aferição: documentos de comprovação da execução das atividades e metas propostas"
+          },
+          {
+            "doc": "rfp",
+            "pagina": 20,
+            "trecho": "formulários a serem definidos pela SMPED"
+          }
+        ],
+        "alternativas": [],
+        "requisitos": [],
+        "ficha": "PROP-ENTENDIMENTO.5"
+      },
+      "indicador": "Participantes dos encontros",
+      "formula": "Participantes ÷ vagas previstas",
+      "meioDeAfericao": "Listas de presença, registros e formulários de satisfação definidos pela SMPED."
+    },
+    {
+      "item": {
+        "id": "meta-3",
+        "texto": "Meta 3 — conteúdo do projeto entregue à SMPED em formato aberto e vídeos em HD: entrega única ao final (a definir pelo GP).",
+        "rotulo": "decisao_gp",
+        "motivo": "O edital não fixa metas: a proposta as escreve no Quadro 09 e o GP define as quantidades.",
+        "fontes": [
+          {
+            "doc": "rfp",
+            "pagina": 19,
+            "trecho": "3.4 Ao final da execução da parceria, a PARCEIRA deverá disponibilizar à SMPED o conteúdo do projeto"
+          },
+          {
+            "doc": "rfp",
+            "pagina": 19,
+            "trecho": "documento digital seja em formato aberto e os vídeos com qualidade HD"
+          }
+        ],
+        "alternativas": [],
+        "requisitos": [
+          "R13"
+        ],
+        "ficha": "PROP-ENTENDIMENTO.5"
+      },
+      "indicador": "Conteúdo entregue",
+      "formula": "Entregue ou não entregue",
+      "meioDeAfericao": "Termo de entrega à SMPED."
+    }
+  ],
+  "exclusoes": [
+    {
+      "id": "exc-1",
+      "texto": "Sugere-se excluir atendimento clínico, terapêutico ou individual a pessoas com deficiência: o projeto é de formação e apoio às redes.",
+      "rotulo": "sugestao",
+      "motivo": "Trabalho vizinho que o contratante pode supor incluído.",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 1,
+          "trecho": "O TERMO DE FOMENTO terá por objeto o desenvolvimento de ações em temáticas de políticas públicas diversas"
+        }
+      ],
+      "alternativas": [],
+      "requisitos": [],
+      "ficha": "PROP-SOW.5"
+    },
+    {
+      "id": "exc-2",
+      "texto": "Sugere-se excluir obras e adaptações arquitetônicas de espaços de terceiros; a acessibilidade dos locais é garantida pela escolha de espaços já acessíveis.",
+      "rotulo": "sugestao",
+      "motivo": "Além do objeto e do repasse.",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 1,
+          "trecho": "2.3 Todos os materiais, espaços e metodologias utilizados no projeto devem necessariamente prever recursos de acessibilidade"
+        }
+      ],
+      "alternativas": [],
+      "requisitos": [],
+      "ficha": "PROP-SOW.5"
+    },
+    {
+      "id": "exc-3",
+      "texto": "Sugere-se excluir a continuidade das turmas depois dos 12 meses e qualquer despesa fora da vigência, que o repasse não cobre.",
+      "rotulo": "sugestao",
+      "motivo": "Vigência e vedação do termo.",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 18,
+          "trecho": "no pagamento de despesas efetuadas anterior ou posteriormente ao período acordado"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 1,
+          "trecho": "1.9 O projeto deverá ser desenvolvido integralmente no período de 12 (doze) meses a partir da publicação do Extrato"
+        }
+      ],
+      "alternativas": [],
+      "requisitos": [],
+      "ficha": "PROP-SOW.5"
+    },
+    {
+      "id": "exc-4",
+      "texto": "Sugere-se excluir a hospedagem do material na plataforma da SMPED depois da entrega e a produção de conteúdos além dos previstos no Quadro 09.",
+      "rotulo": "sugestao",
+      "motivo": "Limite do volume.",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 19,
+          "trecho": "3.4 Ao final da execução da parceria, a PARCEIRA deverá disponibilizar à SMPED o conteúdo do projeto"
+        }
+      ],
+      "alternativas": [],
+      "requisitos": [],
+      "ficha": "PROP-SOW.5"
+    },
+    {
+      "id": "exc-5",
+      "texto": "Sugere-se excluir o transporte e a alimentação dos participantes, salvo se o GP decidir incluí-los e a Portaria 41 os admitir.",
+      "rotulo": "sugestao",
+      "motivo": "Despesas que dependem do plano aprovado.",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 8,
+          "trecho": "8.5 Os recursos da parceria deverão ser utilizados para satisfação de seu objeto, sendo admitidas as despesas aprovadas no Plano"
+        }
+      ],
+      "alternativas": [],
+      "requisitos": [],
+      "ficha": "PROP-SOW.5"
+    }
+  ],
+  "limitesVolume": [
+    {
+      "id": "lim-1",
+      "texto": "Número de turmas, vagas por turma e carga horária: a definir pelo GP.",
+      "rotulo": "decisao_gp",
+      "motivo": "O edital pede no Quadro 08; vira meta.",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 11,
+          "trecho": "Apresentar grade horária, número de turmas, quantitativo de beneficiários por turma"
+        }
+      ],
+      "alternativas": [],
+      "requisitos": [],
+      "ficha": "PROP-SOW"
+    },
+    {
+      "id": "lim-2",
+      "texto": "Número de encontros com familiares e de vagas: a definir pelo GP.",
+      "rotulo": "decisao_gp",
+      "motivo": "Vira meta.",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 11,
+          "trecho": "Apresentar grade horária, número de turmas, quantitativo de beneficiários por turma"
+        }
+      ],
+      "alternativas": [],
+      "requisitos": [],
+      "ficha": "PROP-SOW"
+    }
+  ],
+  "premissas": [
+    {
+      "item": {
+        "id": "pre-pc4",
+        "texto": "Propõe-se assumir que o repasse fica disponível no início da vigência, para que as atividades comecem logo após o extrato.",
+        "rotulo": "sugestao",
+        "motivo": "Premissa crítica PC4 (checklist.md).",
+        "fontes": [
+          {
+            "doc": "rfp",
+            "pagina": 19,
+            "trecho": "3.3.5 Iniciar as atividades necessárias à implementação do projeto imediatamente após o início da vigência desta parceria."
+          },
+          {
+            "doc": "rfp",
+            "pagina": 18,
+            "trecho": "3.2.6 Fiscalizar a execução das metas e resultados, bem como a regularidade financeira para fins de repasse."
+          }
+        ],
+        "alternativas": [],
+        "requisitos": [],
+        "ficha": "PROP-SOW.11"
+      },
+      "premissaCritica": "PC4",
+      "consequencia": "Se o repasse atrasar, então a contratação da equipe e as turmas atrasam e o cronograma do Quadro 10 se desloca.",
+      "dependeDe": "SMPED.",
+      "ateQuando": "Início da vigência; prazo do repasse a definir no esclarecimento.",
+      "reajuste": "Prorrogação de ofício da vigência pelo exato período do atraso (13.3, p. 24) e compensação das despesas comprovadas (8.12, p. 8)."
+    },
+    {
+      "item": {
+        "id": "pre-pc6",
+        "texto": "Propõe-se assumir que o público se inscreve e frequenta as turmas e que os serviços parceiros apoiam a mobilização, e que o cumprimento parcial justificado das metas não é glosado.",
+        "rotulo": "sugestao",
+        "motivo": "Premissa crítica PC6 (checklist.md).",
+        "fontes": [
+          {
+            "doc": "rfp",
+            "pagina": 9,
+            "trecho": "9.4.2 Serão glosados os valores relacionados a metas e resultados descumpridos sem justificativa suficiente."
+          },
+          {
+            "doc": "rfp",
+            "pagina": 20,
+            "trecho": "devendo o eventual cumprimento parcial ser devidamente justificado"
+          }
+        ],
+        "alternativas": [],
+        "requisitos": [
+          "R16"
+        ],
+        "ficha": "PROP-SOW.11"
+      },
+      "premissaCritica": "PC6",
+      "consequencia": "Se a adesão ficar abaixo do previsto, então a meta de participação não é cumprida e os valores ligados a ela podem ser glosados.",
+      "dependeDe": "Público-alvo e serviços parceiros da rede.",
+      "ateQuando": "Cada ciclo de turmas.",
+      "reajuste": "Justificativa do cumprimento parcial na prestação de contas (7.4.1, p. 20) e revisão das metas por alteração da parceria (9.1, p. 23)."
+    },
+    {
+      "item": {
+        "id": "pre-pc7",
+        "texto": "Propõe-se assumir que a equipe do Quadro 12 dá conta das turmas e dos encontros previstos, com as metas fixadas pela capacidade dela.",
+        "rotulo": "sugestao",
+        "motivo": "Premissa crítica PC7 (checklist.md).",
+        "fontes": [
+          {
+            "doc": "rfp",
+            "pagina": 19,
+            "trecho": "4.1 A PARCEIRA fica obrigada a manter em seu quadro profissionais aptos a exercer as funções designadas no projeto"
+          }
+        ],
+        "alternativas": [],
+        "requisitos": [],
+        "ficha": "PROP-SOW.11"
+      },
+      "premissaCritica": "PC7",
+      "consequencia": "Se a equipe não der conta do volume, então turmas são canceladas e as metas não são cumpridas.",
+      "dependeDe": "Parceira (FGV).",
+      "ateQuando": "Toda a vigência.",
+      "reajuste": "Remanejamento de recursos com autorização do gestor, sem mudar o total (8.13, p. 9)."
+    },
+    {
+      "item": {
+        "id": "pre-pc1",
+        "texto": "Propõe-se assumir que a SMPED entrega os formulários de satisfação antes da primeira turma.",
+        "rotulo": "sugestao",
+        "motivo": "Premissa crítica PC1 (checklist.md).",
+        "fontes": [
+          {
+            "doc": "rfp",
+            "pagina": 20,
+            "trecho": "formulários a serem definidos pela SMPED"
+          }
+        ],
+        "alternativas": [],
+        "requisitos": [],
+        "ficha": "PROP-SOW.11"
+      },
+      "premissaCritica": "PC1",
+      "consequencia": "Se os formulários chegarem tarde, então a satisfação das primeiras turmas não é medida e o parecer das contas fica sem esse dado.",
+      "dependeDe": "SMPED.",
+      "ateQuando": "Antes da primeira turma (prazo a definir pelo GP).",
+      "reajuste": "Registro em relatório e aplicação a partir do recebimento."
+    },
+    {
+      "item": {
+        "id": "pre-pc2",
+        "texto": "Propõe-se assumir que a plataforma eletrônica de prestação de contas está disponível e com acesso liberado à parceira desde o início da vigência.",
+        "rotulo": "sugestao",
+        "motivo": "Premissa crítica PC2 (checklist.md).",
+        "fontes": [
+          {
+            "doc": "rfp",
+            "pagina": 20,
+            "trecho": "7.3 A prestação de contas e todos os atos que dela decorram dar-se-ão em plataforma eletrônica"
+          }
+        ],
+        "alternativas": [],
+        "requisitos": [],
+        "ficha": "PROP-SOW.11"
+      },
+      "premissaCritica": "PC2",
+      "consequencia": "Se a plataforma não estiver disponível, então a prestação de contas trimestral atrasa e o repasse ou as contas ficam pendentes.",
+      "dependeDe": "Administração municipal.",
+      "ateQuando": "Primeira prestação de contas trimestral.",
+      "reajuste": "Entrega por outro meio formal registrado, com pedido de prorrogação do prazo da prestação."
+    },
+    {
+      "item": {
+        "id": "pre-pc3",
+        "texto": "Propõe-se assumir que o gestor da parceria analisa os pedidos de remanejamento e de alteração em prazo compatível com o cronograma.",
+        "rotulo": "sugestao",
+        "motivo": "Premissa crítica PC3 (checklist.md).",
+        "fontes": [
+          {
+            "doc": "rfp",
+            "pagina": 9,
+            "trecho": "8.13 Durante a vigência do TERMO DE FOMENTO é permitido o remanejamento de recursos constantes do Plano de Trabalho"
+          },
+          {
+            "doc": "rfp",
+            "pagina": 18,
+            "trecho": "3.2.4 Aprovar a alteração da programação da execução desta parceria, por proposta da PARCEIRA"
+          }
+        ],
+        "alternativas": [],
+        "requisitos": [],
+        "ficha": "PROP-SOW.11"
+      },
+      "premissaCritica": "PC3",
+      "consequencia": "Se a autorização demorar, então despesas remanejadas não podem ser feitas a tempo e as atividades do mês ficam paradas.",
+      "dependeDe": "Gestor da parceria (SMPED).",
+      "ateQuando": "Prazo de análise a definir pelo GP.",
+      "reajuste": "Pedido de alteração com no mínimo 30 dias antes do fim da vigência (p. 18) e revisão do Plano de Trabalho (9.1, p. 23)."
+    },
+    {
+      "item": {
+        "id": "pre-pc8",
+        "texto": "Propõe-se assumir que o escopo é o do Plano de Trabalho aprovado e que pedidos novos da Administração entram por alteração da parceria.",
+        "rotulo": "sugestao",
+        "motivo": "Premissa crítica PC8 (checklist.md).",
+        "fontes": [
+          {
+            "doc": "rfp",
+            "pagina": 23,
+            "trecho": "9.1 A critério da Administração Pública, admite-se a alteração da parceria"
+          },
+          {
+            "doc": "rfp",
+            "pagina": 19,
+            "trecho": "3.3.12 Fornecer todas as informações e esclarecimentos que lhe forem solicitados"
+          }
+        ],
+        "alternativas": [],
+        "requisitos": [],
+        "ficha": "PROP-SOW.11"
+      },
+      "premissaCritica": "PC8",
+      "consequencia": "Se a SMPED pedir atividades fora do plano sem alteração, então equipe e recursos não comportam o acréscimo.",
+      "dependeDe": "SMPED.",
+      "ateQuando": "Toda a vigência.",
+      "reajuste": "Alteração da parceria com revisão do Plano de Trabalho (9.1, p. 23)."
+    }
+  ],
+  "riscos": [
+    {
+      "item": {
+        "id": "ris-1",
+        "texto": "Se o repasse atrasar, então as turmas do primeiro ciclo atrasam; sugere-se pedir a prorrogação de ofício pelo período do atraso.",
+        "rotulo": "sugestao",
+        "motivo": "Risco da execução da parceria.",
+        "fontes": [
+          {
+            "doc": "rfp",
+            "pagina": 24,
+            "trecho": "13.3 A prorrogação de ofício da vigência deste termo deve ser feita pela Administração Pública quando esta der causa a atraso na"
+          }
+        ],
+        "alternativas": [],
+        "requisitos": [],
+        "ficha": "PROP-SOW"
+      },
+      "gatilho": "Repasse não creditado no início da vigência.",
+      "dono": "Coordenação técnica",
+      "resposta": "Pedido formal de prorrogação de ofício e compensação de despesas comprovadas.",
+      "premissaCritica": "PC4"
+    },
+    {
+      "item": {
+        "id": "ris-2",
+        "texto": "Se a adesão a uma turma ficar abaixo do previsto, então a meta pode ser glosada; sugere-se reforçar a divulgação com os parceiros e registrar a justificativa.",
+        "rotulo": "sugestao",
+        "motivo": "Risco da execução da parceria.",
+        "fontes": [
+          {
+            "doc": "rfp",
+            "pagina": 9,
+            "trecho": "9.4.2 Serão glosados os valores relacionados a metas e resultados descumpridos sem justificativa suficiente."
+          }
+        ],
+        "alternativas": [],
+        "requisitos": [],
+        "ficha": "PROP-SOW"
+      },
+      "gatilho": "Inscrições abaixo da meta da turma.",
+      "dono": "Coordenação técnica",
+      "resposta": "Nova rodada de divulgação, remanejamento entre turmas e justificativa na prestação de contas.",
+      "premissaCritica": "PC6"
+    },
+    {
+      "item": {
+        "id": "ris-3",
+        "texto": "Se um formador ou o intérprete de Libras sair, então turmas são canceladas; sugere-se manter cadastro de substitutos com currículo compatível.",
+        "rotulo": "sugestao",
+        "motivo": "Risco da execução da parceria.",
+        "fontes": [
+          {
+            "doc": "rfp",
+            "pagina": 19,
+            "trecho": "4.1 A PARCEIRA fica obrigada a manter em seu quadro profissionais aptos a exercer as funções designadas no projeto"
+          }
+        ],
+        "alternativas": [],
+        "requisitos": [],
+        "ficha": "PROP-SOW"
+      },
+      "gatilho": "Desligamento de profissional da equipe.",
+      "dono": "Coordenação técnica",
+      "resposta": "Substituição por profissional com qualificação equivalente e comunicação ao gestor.",
+      "premissaCritica": "PC7"
+    },
+    {
+      "item": {
+        "id": "ris-4",
+        "texto": "Se a prestação de contas trimestral sair incompleta, então as contas podem ser rejeitadas; sugere-se conciliação bancária mensal.",
+        "rotulo": "sugestao",
+        "motivo": "Risco da execução da parceria.",
+        "fontes": [
+          {
+            "doc": "rfp",
+            "pagina": 21,
+            "trecho": "7.6 A PARCEIRA, para fins de prestação de contas parciais e final, deverá apresentar os seguintes documentos"
+          }
+        ],
+        "alternativas": [],
+        "requisitos": [],
+        "ficha": "PROP-SOW"
+      },
+      "gatilho": "Pendência apontada pelo gestor.",
+      "dono": "Apoio administrativo-financeiro",
+      "resposta": "Correção no prazo da notificação.",
+      "premissaCritica": "PC2"
+    },
+    {
+      "item": {
+        "id": "ris-5",
+        "texto": "Se algum material ou espaço não tiver o recurso de acessibilidade adequado, então o projeto descumpre o edital; sugere-se checklist de acessibilidade antes de cada turma.",
+        "rotulo": "sugestao",
+        "motivo": "Risco da execução da parceria.",
+        "fontes": [
+          {
+            "doc": "rfp",
+            "pagina": 1,
+            "trecho": "2.3 Todos os materiais, espaços e metodologias utilizados no projeto devem necessariamente prever recursos de acessibilidade"
+          }
+        ],
+        "alternativas": [],
+        "requisitos": [],
+        "ficha": "PROP-SOW"
+      },
+      "gatilho": "Participante sem o recurso de que precisa.",
+      "dono": "Coordenação técnica",
+      "resposta": "Ajuste imediato do recurso e registro.",
+      "premissaCritica": ""
+    }
+  ],
+  "restricoes": [
+    {
+      "id": "res-1",
+      "texto": "A participação é totalmente gratuita, sem cobrança de qualquer valor dos beneficiários.",
+      "rotulo": "documento",
+      "motivo": "Vedação do termo.",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 19,
+          "trecho": "Garantir que a participação seja totalmente gratuita, vedada a cobrança de qualquer montante dos beneficiários"
+        }
+      ],
+      "alternativas": [],
+      "requisitos": [
+        "R07"
+      ],
+      "ficha": "PROP-SOW"
+    },
+    {
+      "id": "res-2",
+      "texto": "Todos os materiais, espaços e metodologias têm recursos de acessibilidade adequados ao público participante.",
+      "rotulo": "documento",
+      "motivo": "Exigência do objeto.",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 1,
+          "trecho": "2.3 Todos os materiais, espaços e metodologias utilizados no projeto devem necessariamente prever recursos de acessibilidade"
+        }
+      ],
+      "alternativas": [],
+      "requisitos": [
+        "R03"
+      ],
+      "ficha": "PROP-SOW"
+    },
+    {
+      "id": "res-3",
+      "texto": "Toda divulgação traz, de forma clara e visível, a ação de fomento da Prefeitura; apresentar o projeto em eventos depende de autorização prévia da SMPED.",
+      "rotulo": "documento",
+      "motivo": "Regra de divulgação.",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 24,
+          "trecho": "12.2 Toda e qualquer veiculação, divulgação ou referência ao projeto deverá trazer obrigatoriamente e de forma clara e visível a ação"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 24,
+          "trecho": "desde que obtenham autorização prévia da SMPED"
+        }
+      ],
+      "alternativas": [],
+      "requisitos": [
+        "R11",
+        "R12"
+      ],
+      "ficha": "PROP-SOW"
+    },
+    {
+      "id": "res-4",
+      "texto": "Os recursos não podem remunerar servidor ou empregado público, nem ser usados em finalidade diversa da do projeto.",
+      "rotulo": "documento",
+      "motivo": "Vedações.",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 8,
+          "trecho": "8.9 É vedado remunerar com recursos vinculados à parceria, a qualquer título, servidor ou empregado público"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 18,
+          "trecho": "2.8 É vedada a utilização dos recursos repassados pela SMPED em finalidade diversa da estabelecida no projeto"
+        }
+      ],
+      "alternativas": [],
+      "requisitos": [],
+      "ficha": "PROP-SOW"
+    },
+    {
+      "id": "res-5",
+      "texto": "O conteúdo transmitido por streaming fica em plataforma de acesso exclusivo dos cursistas e é gravado; nas atividades remotas há canais de interação com os participantes.",
+      "rotulo": "documento",
+      "motivo": "Regras das atividades a distância.",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 19,
+          "trecho": "deverá ser transmitido por meio de plataforma que permita o acesso exclusivo"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 19,
+          "trecho": "a PARCEIRA deverá oferecer canais de interação com os participantes"
+        }
+      ],
+      "alternativas": [],
+      "requisitos": [
+        "R14"
+      ],
+      "ficha": "PROP-SOW"
+    },
+    {
+      "id": "res-6",
+      "texto": "Cada compra ou contratação com o repasse é precedida de pesquisa de mercado com orçamentos de três fornecedores, e os recursos ficam em conta específica, aplicados em poupança do Banco do Brasil.",
+      "rotulo": "documento",
+      "motivo": "Gestão financeira da parceria.",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 20,
+          "trecho": "será exigida pesquisa de mercado previamente à contratação, que deverá conter, no mínimo, orçamentos de 03 (três) fornecedores"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 9,
+          "trecho": "os recursos deverão ser aplicados em caderneta de poupança do Banco do Brasil"
+        }
+      ],
+      "alternativas": [],
+      "requisitos": [
+        "R10"
+      ],
+      "ficha": "PROP-SOW"
+    },
+    {
+      "id": "res-7",
+      "texto": "A parceira presta contas trimestral, semestral e, ao final, com os documentos da cláusula sétima, e guarda a documentação por dez anos.",
+      "rotulo": "documento",
+      "motivo": "Prestação de contas.",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 9,
+          "trecho": "trimestralmente, semestralmente e, em caráter final, ao término do Termo De Fomento"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 21,
+          "trecho": "7.6 A PARCEIRA, para fins de prestação de contas parciais e final, deverá apresentar os seguintes documentos"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 19,
+          "trecho": "transferidos pelo prazo de 10 (dez) anos, contado do dia útil subsequente ao da prestação de contas final"
+        }
+      ],
+      "alternativas": [],
+      "requisitos": [
+        "R06",
+        "R08",
+        "R09",
+        "R15"
+      ],
+      "ficha": "PROP-SOW"
+    }
+  ],
+  "obrigacoesContratante": [
+    {
+      "item": {
+        "id": "obr-1",
+        "texto": "Sugere-se registrar como obrigação da SMPED liberar o repasse na forma confirmada no esclarecimento.",
+        "rotulo": "sugestao",
+        "motivo": "PC4: repasse sem prazo.",
+        "fontes": [
+          {
+            "doc": "rfp",
+            "pagina": 8,
+            "trecho": "8.6 Para a realização da parceria, o recurso será liberado de forma integral, em parcela única"
+          },
+          {
+            "doc": "rfp",
+            "pagina": 18,
+            "trecho": "3.2.1 Repassar os recursos financeiros em conformidade com a cláusula segunda"
+          }
+        ],
+        "alternativas": [],
+        "requisitos": [],
+        "ficha": "PROP-SOW.8"
+      },
+      "prazo": "não informado no documento — a definir pelo GP"
+    },
+    {
+      "item": {
+        "id": "obr-2",
+        "texto": "Sugere-se registrar como obrigação da SMPED publicar o extrato do termo de fomento, que dá início à vigência.",
+        "rotulo": "sugestao",
+        "motivo": "Início da execução (AT-04).",
+        "fontes": [
+          {
+            "doc": "rfp",
+            "pagina": 24,
+            "trecho": "no prazo máximo de 30 (trinta) dias a contar de sua assinatura"
+          },
+          {
+            "doc": "rfp",
+            "pagina": 9,
+            "trecho": "9.1 O TERMO DE FOMENTO vigorará pelo período de 12 (doze) meses, passando a produzir efeitos somente a partir da publicação"
+          }
+        ],
+        "alternativas": [],
+        "requisitos": [],
+        "ficha": "PROP-SOW.8"
+      },
+      "prazo": "até 30 dias da assinatura (p. 24)"
+    },
+    {
+      "item": {
+        "id": "obr-3",
+        "texto": "Sugere-se pedir que a SMPED defina e entregue os formulários de satisfação.",
+        "rotulo": "sugestao",
+        "motivo": "PC1.",
+        "fontes": [
+          {
+            "doc": "rfp",
+            "pagina": 20,
+            "trecho": "formulários a serem definidos pela SMPED"
+          }
+        ],
+        "alternativas": [],
+        "requisitos": [],
+        "ficha": "PROP-SOW.8"
+      },
+      "prazo": "não informado no documento — a definir pelo GP"
+    },
+    {
+      "item": {
+        "id": "obr-4",
+        "texto": "Sugere-se pedir que a SMPED informe a plataforma eletrônica de prestação de contas e libere o acesso.",
+        "rotulo": "sugestao",
+        "motivo": "PC2.",
+        "fontes": [
+          {
+            "doc": "rfp",
+            "pagina": 20,
+            "trecho": "7.3 A prestação de contas e todos os atos que dela decorram dar-se-ão em plataforma eletrônica"
+          }
+        ],
+        "alternativas": [],
+        "requisitos": [],
+        "ficha": "PROP-SOW.8"
+      },
+      "prazo": "não informado no documento — a definir pelo GP"
+    },
+    {
+      "item": {
+        "id": "obr-5",
+        "texto": "Sugere-se registrar que o gestor da parceria analisa os pedidos de remanejamento e de alteração.",
+        "rotulo": "sugestao",
+        "motivo": "PC3.",
+        "fontes": [
+          {
+            "doc": "rfp",
+            "pagina": 9,
+            "trecho": "8.13 Durante a vigência do TERMO DE FOMENTO é permitido o remanejamento de recursos constantes do Plano de Trabalho"
+          },
+          {
+            "doc": "rfp",
+            "pagina": 18,
+            "trecho": "3.2.4 Aprovar a alteração da programação da execução desta parceria, por proposta da PARCEIRA"
+          }
+        ],
+        "alternativas": [],
+        "requisitos": [],
+        "ficha": "PROP-SOW.8"
+      },
+      "prazo": "não informado no documento — a definir pelo GP"
+    },
+    {
+      "item": {
+        "id": "obr-6",
+        "texto": "Sugere-se registrar que a SMPED aprecia a prestação de contas final no prazo do termo.",
+        "rotulo": "sugestao",
+        "motivo": "Prazo do próprio termo.",
+        "fontes": [
+          {
+            "doc": "rfp",
+            "pagina": 22,
+            "trecho": "7.12 A Administração Pública apreciará a prestação de contas final apresentada no prazo de até 150 (cento e cinquenta) dias"
+          }
+        ],
+        "alternativas": [],
+        "requisitos": [],
+        "ficha": "PROP-SOW.8"
+      },
+      "prazo": "até 150 dias corridos, prorrogável (p. 22)"
+    }
+  ]
+}

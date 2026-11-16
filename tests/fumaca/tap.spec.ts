@@ -92,9 +92,9 @@ test("etapa 3 com a API simulada: da etapa 2 ao TAP no mesmo dossiê, com o cust
         body: corpoJson("OK"),
       });
     const texto = JSON.stringify(corpo.messages);
-    const [pasta, passo] = texto.includes("passo 2: estratégia")
+    const [pasta, passo] = texto.includes("passo: estratégia")
       ? ["proposta-oei", "estrategia"]
-      : texto.includes("passo 4: conteúdo")
+      : texto.includes("passo: a minuta redigida")
         ? ["proposta-oei", "conteudo"]
         : texto.includes("os 12 elementos (ficha TAP)")
           ? ["tap-oei", "tap"]
@@ -121,7 +121,7 @@ test("etapa 3 com a API simulada: da etapa 2 ao TAP no mesmo dossiê, com o cust
   await page.getByTestId("abordagens").getByText("B — Pesquisa documental com escuta").click();
   await page.getByLabel(/PC3/).check();
   await page.getByTestId("pedir-conteudo").click();
-  await expect(page.getByRole("heading", { name: "Seção 2 — Compreensão do objeto" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Seção 3 — Compreensão do objeto" })).toBeVisible();
   await page.getByTestId("pedir-eap").click();
   await expect(page.getByTestId("cronograma")).toBeVisible();
 

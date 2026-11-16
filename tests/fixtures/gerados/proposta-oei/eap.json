@@ -9,7 +9,7 @@
         "otimista": 2,
         "mais_provavel": 3,
         "pessimista": 5,
-        "base": "Agenda de uma reunião inicial e registro."
+        "base": "Agenda de uma reunião inicial com a SNDCA e registro em ata; o pessimista cobre a remarcação."
       },
       "aprovacaoCliente": false,
       "requisitos": [
@@ -27,7 +27,7 @@
         "otimista": 10,
         "mais_provavel": 12,
         "pessimista": 15,
-        "base": "Plano com os itens mínimos do produto 1."
+        "base": "Plano com os itens mínimos do produto 1, referencial comum e roteiro das oficinas."
       },
       "aprovacaoCliente": true,
       "requisitos": [
@@ -45,7 +45,7 @@
         "otimista": 15,
         "mais_provavel": 20,
         "pessimista": 25,
-        "base": "Volume de referências de dois temas."
+        "base": "Levantamento e seleção de referências de dois temas, com fichas de referência."
       },
       "aprovacaoCliente": false,
       "requisitos": [
@@ -64,7 +64,7 @@
         "otimista": 5,
         "mais_provavel": 8,
         "pessimista": 12,
-        "base": "Mobilização e realização das oficinas."
+        "base": "Mobilização pela contratante e realização das oficinas; o pessimista cobre remarcação (PC6)."
       },
       "aprovacaoCliente": false,
       "requisitos": [
@@ -83,7 +83,7 @@
         "otimista": 15,
         "mais_provavel": 20,
         "pessimista": 28,
-        "base": "Dois cadernos com referenciais normativos."
+        "base": "Dois cadernos com referenciais normativos, revisão técnica e diagramação."
       },
       "aprovacaoCliente": true,
       "requisitos": [
@@ -101,7 +101,7 @@
         "otimista": 10,
         "mais_provavel": 15,
         "pessimista": 20,
-        "base": "Aproveita parte do levantamento inicial."
+        "base": "Aproveita parte do levantamento inicial; levantamento complementar de dois temas."
       },
       "aprovacaoCliente": false,
       "requisitos": [
@@ -120,7 +120,7 @@
         "otimista": 20,
         "mais_provavel": 25,
         "pessimista": 32,
-        "base": "Dois cadernos, com a experiência dos primeiros."
+        "base": "Dois cadernos, com a experiência e o padrão editorial dos primeiros."
       },
       "aprovacaoCliente": true,
       "requisitos": [
@@ -138,7 +138,7 @@
         "otimista": 15,
         "mais_provavel": 20,
         "pessimista": 25,
-        "base": "Um caderno."
+        "base": "Um caderno, com o padrão dos anteriores."
       },
       "aprovacaoCliente": false,
       "requisitos": [
@@ -156,7 +156,7 @@
         "otimista": 8,
         "mais_provavel": 10,
         "pessimista": 15,
-        "base": "Síntese dos cinco cadernos."
+        "base": "Matriz de achados dos cinco cadernos e síntese."
       },
       "aprovacaoCliente": true,
       "requisitos": [
@@ -174,7 +174,7 @@
         "otimista": 8,
         "mais_provavel": 10,
         "pessimista": 15,
-        "base": "Teste de fluxos e materiais de apoio."
+        "base": "Teste de fluxos e materiais de apoio com profissionais da rede (PC6)."
       },
       "aprovacaoCliente": false,
       "requisitos": [
@@ -192,7 +192,7 @@
         "otimista": 20,
         "mais_provavel": 25,
         "pessimista": 35,
-        "base": "Guia com os itens mínimos do produto 5."
+        "base": "Guia com os itens mínimos do produto 5, checklists, quadros-síntese e glossário."
       },
       "aprovacaoCliente": false,
       "requisitos": [
@@ -210,11 +210,12 @@
         "otimista": 10,
         "mais_provavel": 12,
         "pessimista": 18,
-        "base": "Revisão técnico-textual e diagramação final."
+        "base": "Revisão técnico-textual, diagramação final, PDF, versão editável e arquivos-fonte."
       },
       "aprovacaoCliente": true,
       "requisitos": [
-        "R05"
+        "R05",
+        "R11"
       ]
     }
   ],
@@ -223,13 +224,18 @@
       "id": "coord",
       "nome": "Coordenador(a) Geral",
       "exigido": true,
-      "qualificacao": "Conforme o termo de referência.",
+      "qualificacao": "Mestrado em área compatível e experiência mínima de 5 anos em coordenação de pesquisas, consultorias ou produtos técnicos ligados ao objeto.",
       "requisito": "R06",
       "fontes": [
         {
           "doc": "rfp",
           "pagina": 27,
           "trecho": "1 (um) Coordenador(a) Geral"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 33,
+          "trecho": "e experiência profissional mínima de 5 (cinco) anos em coordenação de pesquisas"
         }
       ]
     },
@@ -237,7 +243,7 @@
       "id": "esp-pp",
       "nome": "Especialista em Políticas Públicas e Direitos da Criança e do Adolescente",
       "exigido": true,
-      "qualificacao": "Conforme o termo de referência.",
+      "qualificacao": "Nível superior com pós-graduação em área compatível e experiência mínima de 4 anos em políticas de infância e adolescência.",
       "requisito": "R07",
       "fontes": [
         {
@@ -251,7 +257,7 @@
       "id": "esp-as",
       "nome": "Especialista em Assistência Social, Convivência Familiar e Comunitária e Situação de Rua",
       "exigido": true,
-      "qualificacao": "Conforme o termo de referência.",
+      "qualificacao": "Nível superior com pós-graduação em área compatível e experiência mínima de 4 anos em assistência social e situação de rua.",
       "requisito": "R08",
       "fontes": [
         {
@@ -265,7 +271,7 @@
       "id": "esp-cont",
       "nome": "Especialista em Produção de Conteúdos Técnicos e Metodologias Participativas",
       "exigido": true,
-      "qualificacao": "Conforme o termo de referência.",
+      "qualificacao": "Nível superior com pós-graduação em área compatível e experiência mínima de 4 anos em produção de conteúdos e metodologias participativas.",
       "requisito": "R09",
       "fontes": [
         {
@@ -279,9 +285,15 @@
       "id": "editorial",
       "nome": "Revisão e diagramação",
       "exigido": false,
-      "qualificacao": "Sugere-se perfil de revisão textual e projeto gráfico.",
+      "qualificacao": "Sugere-se perfil de revisão textual e projeto gráfico, dimensionado pela proponente.",
       "requisito": "",
-      "fontes": []
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 28,
+          "trecho": "podendo mobilizar profissionais adicionais, revisores, diagramadores, designers"
+        }
+      ]
     }
   ],
   "horas": [
@@ -292,7 +304,7 @@
         "otimista": 30,
         "mais_provavel": 40,
         "pessimista": 60,
-        "base": "Estimativa do PMO pelo volume do produto; conferir com o histórico da FGV."
+        "base": "Estimativa do PMO pelo volume da atividade; o GP confere."
       }
     },
     {
@@ -302,7 +314,7 @@
         "otimista": 20,
         "mais_provavel": 30,
         "pessimista": 40,
-        "base": "Estimativa do PMO pelo volume do produto; conferir com o histórico da FGV."
+        "base": "Estimativa do PMO pelo volume da atividade; o GP confere."
       }
     },
     {
@@ -312,7 +324,7 @@
         "otimista": 80,
         "mais_provavel": 100,
         "pessimista": 140,
-        "base": "Estimativa do PMO pelo volume do produto; conferir com o histórico da FGV."
+        "base": "Estimativa do PMO pelo volume da atividade; o GP confere."
       }
     },
     {
@@ -322,7 +334,7 @@
         "otimista": 60,
         "mais_provavel": 80,
         "pessimista": 110,
-        "base": "Estimativa do PMO pelo volume do produto; conferir com o histórico da FGV."
+        "base": "Estimativa do PMO pelo volume da atividade; o GP confere."
       }
     },
     {
@@ -332,7 +344,7 @@
         "otimista": 30,
         "mais_provavel": 40,
         "pessimista": 60,
-        "base": "Estimativa do PMO pelo volume do produto; conferir com o histórico da FGV."
+        "base": "Estimativa do PMO pelo volume da atividade; o GP confere."
       }
     },
     {
@@ -342,7 +354,7 @@
         "otimista": 16,
         "mais_provavel": 24,
         "pessimista": 32,
-        "base": "Estimativa do PMO pelo volume do produto; conferir com o histórico da FGV."
+        "base": "Estimativa do PMO pelo volume da atividade; o GP confere."
       }
     },
     {
@@ -352,7 +364,7 @@
         "otimista": 80,
         "mais_provavel": 100,
         "pessimista": 130,
-        "base": "Estimativa do PMO pelo volume do produto; conferir com o histórico da FGV."
+        "base": "Estimativa do PMO pelo volume da atividade; o GP confere."
       }
     },
     {
@@ -362,7 +374,7 @@
         "otimista": 80,
         "mais_provavel": 100,
         "pessimista": 130,
-        "base": "Estimativa do PMO pelo volume do produto; conferir com o histórico da FGV."
+        "base": "Estimativa do PMO pelo volume da atividade; o GP confere."
       }
     },
     {
@@ -372,7 +384,7 @@
         "otimista": 16,
         "mais_provavel": 24,
         "pessimista": 32,
-        "base": "Estimativa do PMO pelo volume do produto; conferir com o histórico da FGV."
+        "base": "Estimativa do PMO pelo volume da atividade; o GP confere."
       }
     },
     {
@@ -382,7 +394,7 @@
         "otimista": 40,
         "mais_provavel": 60,
         "pessimista": 80,
-        "base": "Estimativa do PMO pelo volume do produto; conferir com o histórico da FGV."
+        "base": "Estimativa do PMO pelo volume da atividade; o GP confere."
       }
     },
     {
@@ -392,7 +404,7 @@
         "otimista": 100,
         "mais_provavel": 120,
         "pessimista": 160,
-        "base": "Estimativa do PMO pelo volume do produto; conferir com o histórico da FGV."
+        "base": "Estimativa do PMO pelo volume da atividade; o GP confere."
       }
     },
     {
@@ -402,7 +414,7 @@
         "otimista": 80,
         "mais_provavel": 100,
         "pessimista": 130,
-        "base": "Estimativa do PMO pelo volume do produto; conferir com o histórico da FGV."
+        "base": "Estimativa do PMO pelo volume da atividade; o GP confere."
       }
     },
     {
@@ -412,7 +424,7 @@
         "otimista": 16,
         "mais_provavel": 24,
         "pessimista": 32,
-        "base": "Estimativa do PMO pelo volume do produto; conferir com o histórico da FGV."
+        "base": "Estimativa do PMO pelo volume da atividade; o GP confere."
       }
     },
     {
@@ -422,7 +434,7 @@
         "otimista": 60,
         "mais_provavel": 80,
         "pessimista": 100,
-        "base": "Estimativa do PMO pelo volume do produto; conferir com o histórico da FGV."
+        "base": "Estimativa do PMO pelo volume da atividade; o GP confere."
       }
     },
     {
@@ -432,7 +444,7 @@
         "otimista": 30,
         "mais_provavel": 40,
         "pessimista": 60,
-        "base": "Estimativa do PMO pelo volume do produto; conferir com o histórico da FGV."
+        "base": "Estimativa do PMO pelo volume da atividade; o GP confere."
       }
     },
     {
@@ -442,7 +454,7 @@
         "otimista": 30,
         "mais_provavel": 40,
         "pessimista": 50,
-        "base": "Estimativa do PMO pelo volume do produto; conferir com o histórico da FGV."
+        "base": "Estimativa do PMO pelo volume da atividade; o GP confere."
       }
     },
     {
@@ -452,7 +464,7 @@
         "otimista": 30,
         "mais_provavel": 40,
         "pessimista": 60,
-        "base": "Estimativa do PMO pelo volume do produto; conferir com o histórico da FGV."
+        "base": "Estimativa do PMO pelo volume da atividade; o GP confere."
       }
     },
     {
@@ -462,7 +474,7 @@
         "otimista": 100,
         "mais_provavel": 120,
         "pessimista": 160,
-        "base": "Estimativa do PMO pelo volume do produto; conferir com o histórico da FGV."
+        "base": "Estimativa do PMO pelo volume da atividade; o GP confere."
       }
     },
     {
@@ -472,7 +484,7 @@
         "otimista": 40,
         "mais_provavel": 60,
         "pessimista": 80,
-        "base": "Estimativa do PMO pelo volume do produto; conferir com o histórico da FGV."
+        "base": "Estimativa do PMO pelo volume da atividade; o GP confere."
       }
     },
     {
@@ -482,7 +494,7 @@
         "otimista": 20,
         "mais_provavel": 30,
         "pessimista": 40,
-        "base": "Estimativa do PMO pelo volume do produto; conferir com o histórico da FGV."
+        "base": "Estimativa do PMO pelo volume da atividade; o GP confere."
       }
     },
     {
@@ -492,7 +504,7 @@
         "otimista": 60,
         "mais_provavel": 80,
         "pessimista": 120,
-        "base": "Estimativa do PMO pelo volume do produto; conferir com o histórico da FGV."
+        "base": "Estimativa do PMO pelo volume da atividade; o GP confere."
       }
     },
     {
@@ -502,7 +514,7 @@
         "otimista": 10,
         "mais_provavel": 16,
         "pessimista": 24,
-        "base": "Estimativa do PMO pelo volume do produto; conferir com o histórico da FGV."
+        "base": "Estimativa do PMO pelo volume da atividade; o GP confere."
       }
     }
   ],
@@ -646,14 +658,36 @@
       "atividade": "5.3",
       "perfil": "editorial",
       "papel": "R"
+    },
+    {
+      "atividade": "2.3",
+      "perfil": "esp-cont",
+      "papel": "C"
+    },
+    {
+      "atividade": "3.2",
+      "perfil": "esp-cont",
+      "papel": "C"
+    },
+    {
+      "atividade": "4.2",
+      "perfil": "esp-as",
+      "papel": "C"
+    },
+    {
+      "atividade": "5.2",
+      "perfil": "esp-pp",
+      "papel": "C"
     }
   ],
+  "quadroEquipe": [],
+  "volumes": [],
   "despesas": [
     {
       "id": "desp-1",
-      "texto": "Sugere-se prever deslocamentos para reuniões presenciais em Brasília, que o termo de referência coloca sem custo adicional para a contratante; a quantidade é decisão do GP.",
+      "texto": "Sugere-se prever deslocamentos da equipe para as reuniões presenciais em Brasília, que o termo de referência coloca sem custo adicional para a contratante; a quantidade é decisão do GP.",
       "rotulo": "sugestao",
-      "motivo": "Custo que fica com a contratada.",
+      "motivo": "Custo que fica com a contratada (AT-04).",
       "fontes": [
         {
           "doc": "rfp",
@@ -662,14 +696,34 @@
         }
       ],
       "alternativas": [],
-      "requisitos": [],
-      "ficha": ""
+      "requisitos": [
+        "R12"
+      ],
+      "ficha": "PROP-PRECO.3"
     },
     {
       "id": "desp-2",
-      "texto": "Recomenda-se avaliar licenças de ferramentas de diagramação e de oficinas remotas.",
+      "texto": "Recomenda-se avaliar licenças de bancos de imagem, fontes tipográficas e ferramentas de diagramação, que ficam a cargo da contratada.",
       "rotulo": "sugestao",
-      "motivo": "Insumos de responsabilidade da contratada.",
+      "motivo": "Licenças de terceiros às expensas da contratada.",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 39,
+          "trecho": "deverá assegurar, previamente e às suas expensas, a obtenção das autorizações, licenças ou permissões"
+        }
+      ],
+      "alternativas": [],
+      "requisitos": [
+        "R14"
+      ],
+      "ficha": "PROP-PRECO.3"
+    },
+    {
+      "id": "desp-3",
+      "texto": "Recomenda-se avaliar a ferramenta de videoconferência e de registro das oficinas remotas com a rede.",
+      "rotulo": "sugestao",
+      "motivo": "Custos logísticos da contratada.",
       "fontes": [
         {
           "doc": "rfp",
@@ -679,25 +733,89 @@
       ],
       "alternativas": [],
       "requisitos": [],
-      "ficha": ""
+      "ficha": "PROP-PRECO.3"
+    },
+    {
+      "id": "desp-4",
+      "texto": "Sugere-se considerar os serviços de revisão e diagramação, se forem contratados de terceiros, depois da resposta sobre subcontratação.",
+      "rotulo": "sugestao",
+      "motivo": "Equipe de apoio prevista no termo de referência.",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 28,
+          "trecho": "podendo mobilizar profissionais adicionais, revisores, diagramadores, designers"
+        }
+      ],
+      "alternativas": [],
+      "requisitos": [],
+      "ficha": "PROP-PRECO.3"
     }
   ],
   "reservas": [
     {
-      "id": "res-1",
+      "id": "rsv-1",
       "texto": "Recomenda-se avaliar uma reserva para rodadas de revisão além das previstas, porque o termo de referência não as limita; o valor é decisão do GP.",
       "rotulo": "sugestao",
-      "motivo": "Premissa crítica PC8.",
-      "fontes": [],
+      "motivo": "PC8.",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 24,
+          "trecho": "devendo ser corrigidos/refeitos/substituídos no prazo fixado pela CONTRATANTE"
+        }
+      ],
       "alternativas": [],
       "requisitos": [],
-      "ficha": ""
+      "ficha": "PROP-PRECO.6"
+    },
+    {
+      "id": "rsv-2",
+      "texto": "Recomenda-se avaliar o custo financeiro de manter a equipe até o pagamento dos produtos 4 e 5, que concentram a maior parte do valor; o código mostra o caixa e o GP decide.",
+      "rotulo": "sugestao",
+      "motivo": "Caixa concentrado no fim (AT-02).",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 21,
+          "trecho": "Produto 4 – Caderno temático final e documento\t210 25%"
+        }
+      ],
+      "alternativas": [],
+      "requisitos": [],
+      "ficha": "PROP-PRECO.8"
+    },
+    {
+      "id": "rsv-3",
+      "texto": "Sugere-se considerar uma reserva de prazo para a análise dos produtos pela contratante, que não tem prazo no edital.",
+      "rotulo": "sugestao",
+      "motivo": "PC3.",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 21,
+          "trecho": "O pagamento é realizado somente após ateste de conformidade e aprovação pela Contratante."
+        }
+      ],
+      "alternativas": [],
+      "requisitos": [],
+      "ficha": "PROP-PRECO.6"
     }
   ],
   "estrategiasPreco": [
     {
       "id": "pre-1",
-      "texto": "Uma opção é usar como referência os parâmetros de remuneração da portaria citada no termo de referência, que o edital recomenda não ultrapassar.",
+      "texto": "Recomenda-se partir do custo (horas por perfil × valor-hora, despesas, tributos e reserva) para o desconto, e não o contrário; o valor final é decisão do GP.",
+      "rotulo": "sugestao",
+      "motivo": "Método da etapa 2, 3.6.",
+      "fontes": [],
+      "alternativas": [],
+      "requisitos": [],
+      "ficha": "PROP-PRECO.1"
+    },
+    {
+      "id": "pre-2",
+      "texto": "Uma opção é usar como referência da remuneração os parâmetros da portaria citada no termo de referência, que o edital recomenda não ultrapassar.",
       "rotulo": "sugestao",
       "motivo": "Parâmetro de razoabilidade do edital.",
       "fontes": [
@@ -709,7 +827,28 @@
       ],
       "alternativas": [],
       "requisitos": [],
-      "ficha": ""
+      "ficha": "PROP-PRECO.7"
+    },
+    {
+      "id": "pre-3",
+      "texto": "Sugere-se conferir o preço contra o teto de R$ 500.000,00, acima do qual a proposta é desclassificada, e usar a tabela de pontos por preço do código para escolher o desconto.",
+      "rotulo": "sugestao",
+      "motivo": "Teto e peso do preço.",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 11,
+          "trecho": "em R$ 500.000,00 (quinhentos mil reais), estão devidamente reservados"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 6,
+          "trecho": "apresentarem preços inexequíveis ou permanecerem acima do orçamento estimado para a"
+        }
+      ],
+      "alternativas": [],
+      "requisitos": [],
+      "ficha": "PROP-PRECO.9"
     }
   ]
 }

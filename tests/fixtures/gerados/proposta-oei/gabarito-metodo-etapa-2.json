@@ -1,0 +1,1046 @@
+{
+  "descricao": "Gabarito da etapa 2 na estrutura do método (docs/estudos/metodo-etapa-2.md) para a Concorrência OEI/MDHC (técnica e preço, consultoria por produtos), feito pelo Claude Code seguindo a skill PMO, sem a chave da API e antes de qualquer edição de GP; não é leitura independente. Sem preço da FGV e sem nomes de pessoas. Cada item diz se o app deve produzi-lo por código ou pela leitura do PMO; as chaves são expressões (minúsculas, sem acento) que um item correto da saída contém.",
+  "rfp": "tests/fixtures/rfps-publicas/concorrencia-tecnica-preco-oei-mdhc-criancas-situacao-rua-2026.pdf",
+  "metodo": "docs/estudos/metodo-etapa-2.md",
+  "geradoEm": "2026-11-16",
+  "tipo": {
+    "contrato": "licitacao",
+    "projeto": "produtos"
+  },
+  "secoes": {
+    "capa": [
+      {
+        "id": "CA-01",
+        "nome": "Tipo de contrato e de projeto",
+        "valor": "Licitação (concorrência, técnica e preço, Lei 14.133/2021) para consultoria por cinco produtos pagos por entrega; não é parceria nem operação contínua. O preço segue a estrutura de consultoria por produto.",
+        "rotulo": "documento",
+        "quem": "codigo",
+        "fontes": [
+          {
+            "doc": "rfp",
+            "pagina": 1,
+            "trecho": "licitação, na modalidade Concorrência, critério de julgamento Técnica e Preço"
+          }
+        ],
+        "chaves": [
+          "tecnica e preco",
+          "produto"
+        ]
+      },
+      {
+        "id": "CA-02",
+        "nome": "Estratégia sugerida",
+        "valor": "Abordagem B (pesquisa documental com escuta de profissionais da rede): concentra o texto no quesito de metodologia (50 pontos), com o guia como subitem de maior peso, e parte do custo para um desconto pequeno. Escuta direta de crianças só por plano metodológico próprio e aditivo. A escolha é do GP.",
+        "rotulo": "sugestao",
+        "quem": "pmo",
+        "fontes": [
+          {
+            "doc": "rfp",
+            "pagina": 18,
+            "trecho": "Promover diálogo técnico com atores do Sistema de Garantia de Direitos"
+          },
+          {
+            "doc": "rfp",
+            "pagina": 19,
+            "trecho": "A realização de escuta direta de crianças e adolescentes somente poderá ocorrer mediante aprovação prévia de plano metodológico específico pela contratante"
+          }
+        ],
+        "chaves": [
+          "abordagem b|escuta de profissionais|profissionais da rede",
+          "metodologia"
+        ]
+      },
+      {
+        "id": "CA-03",
+        "nome": "Preço e o que pesa",
+        "valor": "Preço global até o teto de R$ 500.000,00 (acima disso, desclassificação); valor final é decisão do GP. Riscos que pesam: pagamento só após ateste sem prazo de análise, caixa concentrado nos produtos 4 e 5 e escuta que depende de aprovação e de terceiros.",
+        "rotulo": "documento",
+        "quem": "codigo",
+        "fontes": [
+          {
+            "doc": "rfp",
+            "pagina": 11,
+            "trecho": "em R$ 500.000,00 (quinhentos mil reais), estão devidamente reservados"
+          },
+          {
+            "doc": "rfp",
+            "pagina": 6,
+            "trecho": "apresentarem preços inexequíveis ou permanecerem acima do orçamento estimado para a"
+          },
+          {
+            "doc": "rfp",
+            "pagina": 21,
+            "trecho": "O pagamento é realizado somente após ateste de conformidade e aprovação pela Contratante."
+          }
+        ],
+        "chaves": [
+          "500\\.?000",
+          "ateste"
+        ]
+      }
+    ],
+    "estrategia": [
+      {
+        "id": "ES-01",
+        "nome": "Peso técnica × preço",
+        "valor": "Técnica e preço com 70% para a técnica e 30% para o preço.",
+        "rotulo": "documento",
+        "quem": "codigo",
+        "fontes": [
+          {
+            "doc": "rfp",
+            "pagina": 37,
+            "trecho": "com ponderação de 70% para a técnica e 30% para o preço"
+          }
+        ],
+        "chaves": [
+          "70 ?%",
+          "30 ?%"
+        ]
+      },
+      {
+        "id": "ES-02",
+        "nome": "Fórmula da nota final",
+        "valor": "IT = PTP / MPT; IP = PMP / PP (menor preço entre as classificadas ÷ preço da proposta); PF = (IT × 7) + (IP × 3), com duas casas decimais, desprezando as demais.",
+        "rotulo": "documento",
+        "quem": "codigo",
+        "fontes": [
+          {
+            "doc": "rfp",
+            "pagina": 37,
+            "trecho": "O Índice de Preço de cada proponente será obtido pela aplicação da seguinte fórmula"
+          },
+          {
+            "doc": "rfp",
+            "pagina": 38,
+            "trecho": "A Pontuação Final de cada proponente será obtida pela aplicação da seguinte fórmula"
+          },
+          {
+            "doc": "rfp",
+            "pagina": 38,
+            "trecho": "PMP = Proposta de Menor Preço entre as propostas classificadas tecnicamente"
+          }
+        ],
+        "chaves": [
+          "pmp ?/ ?pp|menor preco",
+          "it ?[x×*] ?7|peso tecnico|indice tecnico"
+        ]
+      },
+      {
+        "id": "ES-03",
+        "nome": "Nota técnica e eliminação",
+        "valor": "Técnica até 100 pontos: experiência da empresa 20, metodologia e estratégia 50, equipe-chave 30. Proposta técnica abaixo de 50 pontos é desclassificada.",
+        "rotulo": "documento",
+        "quem": "codigo",
+        "fontes": [
+          {
+            "doc": "rfp",
+            "pagina": 30,
+            "trecho": "Pontuação Total da Proposta Técnica 100 pontos"
+          },
+          {
+            "doc": "rfp",
+            "pagina": 36,
+            "trecho": "obtiver pontuação técnica inferior a 50 (cinquenta) pontos"
+          }
+        ],
+        "chaves": [
+          "50 pontos",
+          "inferior a 50|abaixo de 50|menos de 50"
+        ]
+      },
+      {
+        "id": "ES-04",
+        "nome": "Pontos de texto × pontos de documento",
+        "valor": "Quesito 2 (50 pontos) se ganha escrevendo; quesitos 1 (20) e 3 (30) dependem de atestados, diplomas e comprovantes e viram a pergunta ao GP: a FGV tem? Uma mesma experiência conta em um só subitem; declaração no currículo não basta.",
+        "rotulo": "sugestao",
+        "quem": "codigo",
+        "fontes": [
+          {
+            "doc": "rfp",
+            "pagina": 31,
+            "trecho": "Uma mesma experiência não poderá ser considerada em mais de um subitem."
+          },
+          {
+            "doc": "rfp",
+            "pagina": 36,
+            "trecho": "não sendo suficiente a simples declaração de experiência no currículo"
+          }
+        ],
+        "chaves": [
+          "atestado|comprova",
+          "fgv tem|a definir pelo gp"
+        ]
+      },
+      {
+        "id": "ES-05",
+        "nome": "Pontos por preço",
+        "valor": "Calculado pelo código pela fórmula do edital: com a maior nota técnica em 100, cada 1% a mais de preço custa cerca de 0,42 ponto técnico (0,03 de PF ÷ 7 × 100); a tabela desconto → índice de preço → PF orienta o desconto.",
+        "rotulo": "documento",
+        "quem": "codigo",
+        "fontes": [
+          {
+            "doc": "rfp",
+            "pagina": 38,
+            "trecho": "A Pontuação Final de cada proponente será obtida pela aplicação da seguinte fórmula"
+          }
+        ],
+        "chaves": [
+          "0[,.]4\\d?",
+          "ponto"
+        ]
+      },
+      {
+        "id": "ES-06",
+        "nome": "Desempate",
+        "valor": "Art. 60 da Lei 14.133; persistindo, maior pontuação técnica, maior nota em metodologia, em equipe-chave, em experiência da empresa, menor preço global e sorteio.",
+        "rotulo": "documento",
+        "quem": "codigo",
+        "fontes": [
+          {
+            "doc": "rfp",
+            "pagina": 38,
+            "trecho": "Em caso de empate no resultado da avaliação, será observado o disposto no artigo 60"
+          }
+        ],
+        "chaves": [
+          "art(igo)?\\.? ?60",
+          "sorteio"
+        ]
+      },
+      {
+        "id": "ES-07",
+        "nome": "Abordagens que mudam o resultado",
+        "valor": "Três abordagens: A (documental com diálogo remoto: menor custo, nota de metodologia menor), B (com oficinas com a rede: equilíbrio, recomendada) e C (com escuta de crianças: maior aderência, depende de aprovação ética e custa mais). Cada uma com prós, contras e risco principal, inclusive de eliminação.",
+        "rotulo": "sugestao",
+        "quem": "pmo",
+        "fontes": [
+          {
+            "doc": "rfp",
+            "pagina": 19,
+            "trecho": "A realização de escuta direta de crianças e adolescentes somente poderá ocorrer mediante aprovação prévia de plano metodológico específico pela contratante"
+          },
+          {
+            "doc": "rfp",
+            "pagina": 18,
+            "trecho": "Promover diálogo técnico com atores do Sistema de Garantia de Direitos"
+          }
+        ],
+        "chaves": [
+          "escuta",
+          "custo|desconto"
+        ]
+      }
+    ],
+    "estrutura": [
+      {
+        "id": "EST-01",
+        "nome": "Modelo da proposta técnica",
+        "valor": "O edital sugere, preferencialmente, a estrutura a) a n): identificação; apresentação institucional; compreensão; metodologia; cadernos; consolidação; guia; linguagem e diagramação; cronograma; interlocução; riscos; equipe-chave; anexos da empresa; anexos da equipe. Seguir na ordem, com títulos compatíveis com os quesitos.",
+        "rotulo": "documento",
+        "quem": "codigo",
+        "fontes": [
+          {
+            "doc": "rfp",
+            "pagina": 29,
+            "trecho": "A Proposta Técnica deverá ser organizada, preferencialmente, na seguinte estrutura"
+          },
+          {
+            "doc": "rfp",
+            "pagina": 29,
+            "trecho": "títulos e subtítulos compatíveis com os quesitos de avaliação técnica"
+          }
+        ],
+        "chaves": [
+          "a\\)",
+          "n\\)|anexos comprobatorios"
+        ]
+      },
+      {
+        "id": "EST-02",
+        "nome": "Critério de cada seção",
+        "valor": "b) e m) → quesito 1; c) a k) → quesito 2 (compreensão 6, metodologia 8, cadernos 8, consolidação 5, guia 10, linguagem 3, cronograma 4, interlocução 3, riscos 3); l) e n) → quesito 3; a) sem critério.",
+        "rotulo": "sugestao",
+        "quem": "codigo",
+        "fontes": [
+          {
+            "doc": "rfp",
+            "pagina": 31,
+            "trecho": "está limitado a 50 (cinquenta) pontos e será apurado segundo os crité"
+          }
+        ],
+        "chaves": [
+          "quesito",
+          "guia"
+        ]
+      },
+      {
+        "id": "EST-03",
+        "nome": "Limites de páginas",
+        "valor": "Parte narrativa com no máximo 30 páginas, incluindo capa, sumário, apresentação institucional, quadros e referências; excedentes podem ser desconsiderados. Currículos com até 5 páginas (recomendado).",
+        "rotulo": "documento",
+        "quem": "codigo",
+        "fontes": [
+          {
+            "doc": "rfp",
+            "pagina": 28,
+            "trecho": "deverá conter, no máximo, 30 (trinta) páginas, incluindo capa"
+          },
+          {
+            "doc": "rfp",
+            "pagina": 29,
+            "trecho": "com limite recomendado de 5 (cinco) páginas por profissional"
+          }
+        ],
+        "chaves": [
+          "30 ?(\\(trinta\\) )?paginas",
+          "curricul"
+        ]
+      }
+    ],
+    "escopo": [
+      {
+        "id": "SOW-01",
+        "nome": "O que a contratada faz",
+        "valor": "Cinco produtos: plano de trabalho (D+30), cadernos 1 e 2 (D+75), cadernos 3 e 4 (D+135), caderno 5 e documento sintético (D+210) e guia de orientação (D+300), todos diagramados, em PDF, editáveis e com arquivos-fonte; reuniões periódicas com a CGCFC e presenciais em Brasília quando pedidas.",
+        "rotulo": "documento",
+        "quem": "codigo",
+        "fontes": [
+          {
+            "doc": "rfp",
+            "pagina": 21,
+            "trecho": "Produto 1 – Plano de trabalho da consultoria 30 5%"
+          },
+          {
+            "doc": "rfp",
+            "pagina": 21,
+            "trecho": "deverão ser entregues em versão final diagramada, revisada e pronta para publicação online"
+          },
+          {
+            "doc": "rfp",
+            "pagina": 21,
+            "trecho": "As entregas deverão compreender, além do conteúdo técnico, todos os arquivos-fonte correspondentes"
+          }
+        ],
+        "chaves": [
+          "\\b75\\b",
+          "\\b300\\b"
+        ]
+      },
+      {
+        "id": "SOW-02",
+        "nome": "Exclusões próprias do objeto",
+        "valor": "Impressão gráfica e distribuição física; escuta direta de crianças sem plano aprovado e aditivo; deslocamentos fora de Brasília (custeados pela contratante quando autorizados); execução de cursos e capacitações nos territórios; hospedagem e tradução.",
+        "rotulo": "sugestao",
+        "quem": "pmo",
+        "fontes": [
+          {
+            "doc": "rfp",
+            "pagina": 21,
+            "trecho": "deverão ser entregues em versão final diagramada, revisada e pronta para publicação online"
+          },
+          {
+            "doc": "rfp",
+            "pagina": 22,
+            "trecho": "serão custeados pela CONTRATANTE e estarão condicionadas à disponibilidade orçamentária do projeto"
+          }
+        ],
+        "chaves": [
+          "impressao",
+          "capacita|deslocamento"
+        ]
+      },
+      {
+        "id": "SOW-03",
+        "nome": "O que fica com a contratante, com prazo",
+        "valor": "Analisar e aprovar cada produto (prazo não informado no documento — a definir pelo GP); fornecer informações e protocolos (não informado); entregar diretrizes de identidade visual (não informado); apoiar a mobilização da rede (não informado); pagar em até 10 dias úteis da nota fiscal.",
+        "rotulo": "sugestao",
+        "quem": "codigo",
+        "fontes": [
+          {
+            "doc": "rfp",
+            "pagina": 21,
+            "trecho": "O pagamento é realizado somente após ateste de conformidade e aprovação pela Contratante."
+          },
+          {
+            "doc": "rfp",
+            "pagina": 23,
+            "trecho": "Fornecer as informações necessárias para o desenvolvimento dos serviços objeto do contrato."
+          },
+          {
+            "doc": "rfp",
+            "pagina": 21,
+            "trecho": "com projeto gráfico-visual compatível com as diretrizes definidas pela contratante"
+          },
+          {
+            "doc": "rfp",
+            "pagina": 25,
+            "trecho": "O pagamento será efetuado pela CONTRATANTE no prazo de 10 (dez) dias úteis"
+          }
+        ],
+        "chaves": [
+          "a definir pelo gp|nao informado",
+          "diretrizes|informac"
+        ]
+      },
+      {
+        "id": "SOW-04",
+        "nome": "Restrições do edital",
+        "valor": "Trabalho remoto como regra; subcontratação do objeto vedada; cessão total dos direitos patrimoniais e licenças de terceiros às expensas da contratada; equipe-chave participa diretamente e só é substituída com aprovação.",
+        "rotulo": "documento",
+        "quem": "codigo",
+        "fontes": [
+          {
+            "doc": "rfp",
+            "pagina": 21,
+            "trecho": "Os serviços serão prestados, como regra, em formato remoto."
+          },
+          {
+            "doc": "rfp",
+            "pagina": 46,
+            "trecho": "Não será admitida a subcontratação do objeto contratual."
+          },
+          {
+            "doc": "rfp",
+            "pagina": 39,
+            "trecho": "a cessão dos respectivos direitos patrimoniais de autor"
+          }
+        ],
+        "chaves": [
+          "remot",
+          "subcontrata"
+        ]
+      }
+    ],
+    "premissas": [
+      {
+        "id": "PRE-01",
+        "nome": "PC3 — análise e aprovação no prazo",
+        "valor": "A contratante analisa cada produto em prazo combinado (a definir pelo GP), com quadro único de contribuições e rodadas limitadas; se atrasar, a entrega e o pagamento atrasam e os produtos seguintes se comprimem; reajuste pela readequação do cronograma que a minuta prevê (p. 53) e aditivo; decisão sobre solicitações em até um mês (p. 47).",
+        "rotulo": "sugestao",
+        "quem": "pmo",
+        "fontes": [
+          {
+            "doc": "rfp",
+            "pagina": 21,
+            "trecho": "O pagamento é realizado somente após ateste de conformidade e aprovação pela Contratante."
+          },
+          {
+            "doc": "rfp",
+            "pagina": 53,
+            "trecho": "ficará prorrogada até a conclusão do objeto, caso em que deverá a Administração providenciar"
+          },
+          {
+            "doc": "rfp",
+            "pagina": 47,
+            "trecho": "a Contratante terá o prazo de um mês, a contar da data do recebimento da solicitação"
+          }
+        ],
+        "chaves": [
+          "aprova|analis",
+          "aditivo|prorroga|readequa"
+        ]
+      },
+      {
+        "id": "PRE-02",
+        "nome": "PC1 — informações e diretrizes da contratante",
+        "valor": "A contratante fornece informações, protocolos e diretrizes gráficas a tempo; se atrasar, a diagramação e o guia atrasam; reajuste do cronograma por aditivo.",
+        "rotulo": "sugestao",
+        "quem": "pmo",
+        "fontes": [
+          {
+            "doc": "rfp",
+            "pagina": 23,
+            "trecho": "Fornecer as informações necessárias para o desenvolvimento dos serviços objeto do contrato."
+          },
+          {
+            "doc": "rfp",
+            "pagina": 21,
+            "trecho": "com projeto gráfico-visual compatível com as diretrizes definidas pela contratante"
+          }
+        ],
+        "chaves": [
+          "informac",
+          "diretrizes"
+        ]
+      },
+      {
+        "id": "PRE-03",
+        "nome": "PC6 — rede e escuta",
+        "valor": "A rede participa das oficinas com o apoio da contratante; a escuta direta de crianças depende de plano metodológico aprovado e, se for o caso, de instância ética, sem prazo no edital; se não ocorrer, substitui-se a técnica e readequa-se o prazo.",
+        "rotulo": "sugestao",
+        "quem": "pmo",
+        "fontes": [
+          {
+            "doc": "rfp",
+            "pagina": 18,
+            "trecho": "Promover diálogo técnico com atores do Sistema de Garantia de Direitos"
+          },
+          {
+            "doc": "rfp",
+            "pagina": 19,
+            "trecho": "A realização de escuta direta de crianças e adolescentes somente poderá ocorrer mediante aprovação prévia de plano metodológico específico pela contratante"
+          },
+          {
+            "doc": "rfp",
+            "pagina": 19,
+            "trecho": "avaliação quanto à necessidade de submissão a instância ética competente"
+          }
+        ],
+        "chaves": [
+          "rede",
+          "oficina|escuta"
+        ]
+      },
+      {
+        "id": "PRE-04",
+        "nome": "PC5 — interlocutores e prioridades",
+        "valor": "Os interlocutores da SNDCA e da CGCFC e as prioridades aprovadas se mantêm; a execução pode cruzar a troca de gestão federal; mudança de orientação depois da aprovação vira alteração de escopo por aditivo.",
+        "rotulo": "sugestao",
+        "quem": "pmo",
+        "fontes": [
+          {
+            "doc": "rfp",
+            "pagina": 27,
+            "trecho": "contemplando a forma de comunicação com a equipe técnica da SNDCA"
+          }
+        ],
+        "chaves": [
+          "interlocutor|prioridade",
+          "aditivo|alterac"
+        ]
+      },
+      {
+        "id": "PRE-05",
+        "nome": "PC8 — escopo sem aditivo",
+        "valor": "O escopo é o dos cinco produtos; versões prévias servem para acompanhamento; revisões sem limite e acréscimos até 25% são tratados por número de rodadas e aditivo com revisão de prazo e preço.",
+        "rotulo": "sugestao",
+        "quem": "pmo",
+        "fontes": [
+          {
+            "doc": "rfp",
+            "pagina": 54,
+            "trecho": "os acréscimos ou supressões que se fizerem necessários, até o limite de 25%"
+          },
+          {
+            "doc": "rfp",
+            "pagina": 24,
+            "trecho": "devendo ser corrigidos/refeitos/substituídos no prazo fixado pela CONTRATANTE"
+          }
+        ],
+        "chaves": [
+          "aditivo",
+          "revis|acrescimo"
+        ]
+      },
+      {
+        "id": "PRE-06",
+        "nome": "Premissas críticas que se aplicam",
+        "valor": "Aplicam-se PC1, PC3, PC5, PC6 e PC8; PC4 e PC7 a confirmar pelo GP; PC2 não se aplica (sem sistema da contratante).",
+        "rotulo": "sugestao",
+        "quem": "codigo",
+        "fontes": [],
+        "chaves": [
+          "pc3",
+          "pc6"
+        ]
+      }
+    ],
+    "metas-equipe": [
+      {
+        "id": "MEQ-01",
+        "nome": "Metas",
+        "valor": "Sem metas novas: a meta do contrato é a entrega e o aceite de cada um dos cinco produtos no prazo, com ateste de conformidade da contratante.",
+        "rotulo": "documento",
+        "quem": "codigo",
+        "fontes": [
+          {
+            "doc": "rfp",
+            "pagina": 21,
+            "trecho": "O pagamento é realizado somente após ateste de conformidade e aprovação pela Contratante."
+          },
+          {
+            "doc": "rfp",
+            "pagina": 21,
+            "trecho": "As datas da tabela se referem ao prazo máximo para entrega dos produtos."
+          }
+        ],
+        "chaves": [
+          "ateste|aprova",
+          "produto"
+        ]
+      },
+      {
+        "id": "MEQ-02",
+        "nome": "Equipe-chave exigida",
+        "valor": "Coordenador(a) Geral (mestrado e 5 anos de coordenação) e três especialistas (pós-graduação e 4 anos): políticas públicas e direitos da criança; assistência social e situação de rua; conteúdos técnicos e metodologias participativas (R06 a R09). Equipe de apoio dimensionada pela contratada.",
+        "rotulo": "documento",
+        "quem": "codigo",
+        "fontes": [
+          {
+            "doc": "rfp",
+            "pagina": 27,
+            "trecho": "Relação nominal da equipe-chave indicada para fins de avaliação técnica"
+          },
+          {
+            "doc": "rfp",
+            "pagina": 33,
+            "trecho": "e experiência profissional mínima de 5 (cinco) anos em coordenação de pesquisas"
+          },
+          {
+            "doc": "rfp",
+            "pagina": 28,
+            "trecho": "podendo mobilizar profissionais adicionais, revisores, diagramadores, designers"
+          }
+        ],
+        "chaves": [
+          "coordenador",
+          "especialista"
+        ]
+      },
+      {
+        "id": "MEQ-03",
+        "nome": "Cronograma × vigência",
+        "valor": "Último produto em D+300, dentro da vigência de 12 meses: sobram cerca de 65 dias para análise, ajustes e pagamento. A EAP em três pontos, com o tempo de aprovação do GP, mostra se cada produto cabe no prazo (o produto 2 pode passar de D+75 com 10 dias úteis de aprovação).",
+        "rotulo": "documento",
+        "quem": "codigo",
+        "fontes": [
+          {
+            "doc": "rfp",
+            "pagina": 23,
+            "trecho": "terá vigência total de 12 (doze) meses, contados a partir da data de sua assinatura"
+          },
+          {
+            "doc": "rfp",
+            "pagina": 21,
+            "trecho": "As datas da tabela se referem ao prazo máximo para entrega dos produtos."
+          }
+        ],
+        "chaves": [
+          "12 meses|vigencia",
+          "\\b300\\b"
+        ]
+      }
+    ],
+    "preco": [
+      {
+        "id": "PRC-01",
+        "nome": "Estrutura do preço",
+        "valor": "Consultoria por produto: horas por perfil da EAP × valor-hora do GP, mais despesas (deslocamentos a Brasília, licenças, ferramentas), tributos e reserva; partir do custo para o desconto, nunca o contrário.",
+        "rotulo": "sugestao",
+        "quem": "codigo",
+        "fontes": [
+          {
+            "doc": "rfp",
+            "pagina": 26,
+            "trecho": "A CONTRATADA é responsável pelos custos logísticos atinentes a"
+          },
+          {
+            "doc": "rfp",
+            "pagina": 21,
+            "trecho": "participar de reuniões presenciais em Brasília/DF, sem custos adicionais para a CONTRATANTE"
+          }
+        ],
+        "chaves": [
+          "valor-?hora",
+          "custo"
+        ]
+      },
+      {
+        "id": "PRC-02",
+        "nome": "Teto e desclassificação",
+        "valor": "Valor estimado de R$ 500.000,00; proposta acima do orçamento estimado ou inexequível é desclassificada; preço global com duas casas decimais, por extenso prevalece.",
+        "rotulo": "documento",
+        "quem": "codigo",
+        "fontes": [
+          {
+            "doc": "rfp",
+            "pagina": 11,
+            "trecho": "em R$ 500.000,00 (quinhentos mil reais), estão devidamente reservados"
+          },
+          {
+            "doc": "rfp",
+            "pagina": 6,
+            "trecho": "apresentarem preços inexequíveis ou permanecerem acima do orçamento estimado para a"
+          }
+        ],
+        "chaves": [
+          "500\\.?000",
+          "desclassific|inexequ"
+        ]
+      },
+      {
+        "id": "PRC-03",
+        "nome": "Desembolso por produto",
+        "valor": "Produto 1: 5% (D+30); produto 2: 20% (D+75); produto 3: 20% (D+135); produto 4: 25% (D+210); produto 5: 30% (D+300).",
+        "rotulo": "documento",
+        "quem": "codigo",
+        "fontes": [
+          {
+            "doc": "rfp",
+            "pagina": 21,
+            "trecho": "Produto 1 – Plano de trabalho da consultoria 30 5%"
+          },
+          {
+            "doc": "rfp",
+            "pagina": 21,
+            "trecho": "Produto 4 – Caderno temático final e documento\t210 25%"
+          }
+        ],
+        "chaves": [
+          "20 ?%",
+          "25 ?%"
+        ]
+      },
+      {
+        "id": "PRC-04",
+        "nome": "Caixa",
+        "valor": "Calculado pelo código: 55% do valor nos dois últimos produtos; até D+135 entram no máximo 45% (5%, 25%, 45%, 70%, 100% acumulados), com a equipe trabalhando desde a assinatura; o caixa fica negativo até o produto 4 e a reserva para financiar a equipe é decisão do GP.",
+        "rotulo": "documento",
+        "quem": "codigo",
+        "fontes": [
+          {
+            "doc": "rfp",
+            "pagina": 21,
+            "trecho": "Produto 4 – Caderno temático final e documento\t210 25%"
+          },
+          {
+            "doc": "rfp",
+            "pagina": 21,
+            "trecho": "O pagamento é realizado somente após ateste de conformidade e aprovação pela Contratante."
+          }
+        ],
+        "chaves": [
+          "55 ?%|45 ?%",
+          "caixa|acumulad"
+        ]
+      },
+      {
+        "id": "PRC-05",
+        "nome": "Condição de pagamento",
+        "valor": "Pagamento só após ateste e aprovação; nota fiscal depois do recebimento definitivo; pagamento em até 10 dias úteis da nota. O documento não declara prazo para análise e aprovação.",
+        "rotulo": "documento",
+        "quem": "codigo",
+        "fontes": [
+          {
+            "doc": "rfp",
+            "pagina": 21,
+            "trecho": "O pagamento é realizado somente após ateste de conformidade e aprovação pela Contratante."
+          },
+          {
+            "doc": "rfp",
+            "pagina": 25,
+            "trecho": "A emissão da Nota Fiscal/Fatura será precedida da comprovação do recebimento definitivo"
+          },
+          {
+            "doc": "rfp",
+            "pagina": 25,
+            "trecho": "O pagamento será efetuado pela CONTRATANTE no prazo de 10 (dez) dias úteis"
+          }
+        ],
+        "chaves": [
+          "ateste",
+          "10 (\\(dez\\) )?dias uteis"
+        ]
+      },
+      {
+        "id": "PRC-06",
+        "nome": "Parâmetro de remuneração",
+        "valor": "Remuneração mensal de cada profissional balizada pelo Anexo III da Portaria MDHC 757/2025, que o edital recomenda não ultrapassar.",
+        "rotulo": "documento",
+        "quem": "codigo",
+        "fontes": [
+          {
+            "doc": "rfp",
+            "pagina": 26,
+            "trecho": "Recomenda-se que os valores propostos não ultrapassem os referidos parâmetros."
+          }
+        ],
+        "chaves": [
+          "757|portaria",
+          "remunera|parametro"
+        ]
+      }
+    ],
+    "matriz": [
+      {
+        "id": "MAT-01",
+        "nome": "Requisitos ligados",
+        "valor": "R01 a R05 → produtos P1 a P5; R06 a R09 → perfis da equipe-chave e seção l); R10 → restrição de trabalho remoto. Nenhum requisito sem seção.",
+        "rotulo": "documento",
+        "quem": "codigo",
+        "fontes": [
+          {
+            "doc": "rfp",
+            "pagina": 27,
+            "trecho": "Relação nominal da equipe-chave indicada para fins de avaliação técnica"
+          },
+          {
+            "doc": "rfp",
+            "pagina": 21,
+            "trecho": "Os serviços serão prestados, como regra, em formato remoto."
+          }
+        ],
+        "chaves": [
+          "r01",
+          "r10"
+        ]
+      },
+      {
+        "id": "MAT-02",
+        "nome": "Critérios ligados",
+        "valor": "Os três quesitos têm seção: quesito 1 (empresa) em b) e m); quesito 2 (metodologia) em c) a k); quesito 3 (equipe-chave) em l) e n).",
+        "rotulo": "sugestao",
+        "quem": "codigo",
+        "fontes": [
+          {
+            "doc": "rfp",
+            "pagina": 29,
+            "trecho": "A Proposta Técnica deverá ser organizada, preferencialmente, na seguinte estrutura"
+          }
+        ],
+        "chaves": [
+          "quesito|qualificacao",
+          "metodologia"
+        ]
+      },
+      {
+        "id": "MAT-03",
+        "nome": "Checklist de envio",
+        "valor": "Três envelopes fechados (técnica, preço, habilitação) até 25/08/2026 às 10h; esclarecimentos até 3 dias úteis antes (já passados em 16/11/2026); declarações de habilitação, de disponibilidade e de não substituição da equipe-chave; proposta de preço em caderno único, valor por extenso, validade mínima de 60 dias.",
+        "rotulo": "documento",
+        "quem": "codigo",
+        "fontes": [
+          {
+            "doc": "rfp",
+            "pagina": 4,
+            "trecho": "em 3 (três) envelopes separados, fechados e rubricados"
+          },
+          {
+            "doc": "rfp",
+            "pagina": 1,
+            "trecho": "DATA: 25 de agosto de 2026"
+          },
+          {
+            "doc": "rfp",
+            "pagina": 5,
+            "trecho": "prazo de validade não inferior a 60 (sessenta) dias"
+          }
+        ],
+        "chaves": [
+          "envelope",
+          "declarac"
+        ]
+      }
+    ],
+    "decisoes": [
+      {
+        "id": "DEC-01",
+        "nome": "Participar e enquadramento",
+        "valor": "Participar ou não (o prazo de 25/08/2026 já passou; o edital serve de referência) e confirmar se fundação de direito privado é aceita como empresa especializada.",
+        "rotulo": "decisao_gp",
+        "quem": "codigo",
+        "fontes": [
+          {
+            "doc": "rfp",
+            "pagina": 1,
+            "trecho": "Contratação de empresa especializada para a prestação de serviços"
+          }
+        ],
+        "chaves": [
+          "particip",
+          "fundacao|enquadramento|empresa especializada"
+        ]
+      },
+      {
+        "id": "DEC-02",
+        "nome": "Abordagem",
+        "valor": "Escolher a abordagem: A, B ou C.",
+        "rotulo": "decisao_gp",
+        "quem": "codigo",
+        "fontes": [],
+        "chaves": [
+          "abordagem"
+        ]
+      },
+      {
+        "id": "DEC-03",
+        "nome": "Equipe e documentos de pontuação",
+        "valor": "Equipe-chave nomeada (nomes, currículos, comprovantes e declarações de disponibilidade) e atestados de cada subitem do quesito 1.",
+        "rotulo": "decisao_gp",
+        "quem": "codigo",
+        "fontes": [
+          {
+            "doc": "rfp",
+            "pagina": 31,
+            "trecho": "Uma mesma experiência não poderá ser considerada em mais de um subitem."
+          }
+        ],
+        "chaves": [
+          "equipe-?chave|nomes",
+          "atestado"
+        ]
+      },
+      {
+        "id": "DEC-04",
+        "nome": "Valores e prazos",
+        "valor": "Valor-hora, despesas, reserva, valor final e desconto; prazo de análise e número de rodadas de revisão pedidos à contratante; reuniões em Brasília incluídas no preço.",
+        "rotulo": "decisao_gp",
+        "quem": "codigo",
+        "fontes": [
+          {
+            "doc": "rfp",
+            "pagina": 24,
+            "trecho": "devendo ser corrigidos/refeitos/substituídos no prazo fixado pela CONTRATANTE"
+          },
+          {
+            "doc": "rfp",
+            "pagina": 21,
+            "trecho": "participar de reuniões presenciais em Brasília/DF, sem custos adicionais para a CONTRATANTE"
+          }
+        ],
+        "chaves": [
+          "valor|desconto",
+          "rodadas|prazo de analise|revis"
+        ]
+      },
+      {
+        "id": "DEC-05",
+        "nome": "Perguntas a enviar",
+        "valor": "Escuta direta de crianças (casos, aceite e prazo do plano); subcontratação de revisão e diagramação; regra de reajuste e de atualização por atraso; fundação como licitante.",
+        "rotulo": "sugestao",
+        "quem": "pmo",
+        "fontes": [
+          {
+            "doc": "rfp",
+            "pagina": 19,
+            "trecho": "A realização de escuta direta de crianças e adolescentes somente poderá ocorrer mediante aprovação prévia de plano metodológico específico pela contratante"
+          },
+          {
+            "doc": "rfp",
+            "pagina": 46,
+            "trecho": "Não será admitida a subcontratação do objeto contratual."
+          }
+        ],
+        "chaves": [
+          "escuta",
+          "subcontrata"
+        ]
+      }
+    ]
+  },
+  "minuta": [
+    {
+      "codigo": "a)",
+      "titulo": "Identificação da proponente",
+      "chaves": [
+        "razao social|cnpj|a definir pelo gp",
+        "preposto"
+      ]
+    },
+    {
+      "codigo": "b)",
+      "titulo": "Apresentação institucional sintética",
+      "chaves": [
+        "subitem|experiencia",
+        "editorial|diagramacao"
+      ]
+    },
+    {
+      "codigo": "c)",
+      "titulo": "Compreensão do objeto",
+      "chaves": [
+        "sistema de garantia de direitos",
+        "guia de orientacao|sintese"
+      ]
+    },
+    {
+      "codigo": "d)",
+      "titulo": "Metodologia de execução dos trabalhos",
+      "chaves": [
+        "levantamento",
+        "sistematiza"
+      ]
+    },
+    {
+      "codigo": "e)",
+      "titulo": "Estratégia de elaboração dos cadernos temáticos",
+      "chaves": [
+        "relacoes raciais|trabalho infantil|violencias",
+        "estrutura"
+      ]
+    },
+    {
+      "codigo": "f)",
+      "titulo": "Estratégia de consolidação dos achados transversais",
+      "chaves": [
+        "achados",
+        "convergencia|desafio"
+      ]
+    },
+    {
+      "codigo": "g)",
+      "titulo": "Estratégia de elaboração do guia de orientação",
+      "chaves": [
+        "fluxo",
+        "checklist|quadros?-sintese|glossario"
+      ]
+    },
+    {
+      "codigo": "h)",
+      "titulo": "Estratégia de linguagem, revisão, diagramação e organização editorial",
+      "chaves": [
+        "diagrama",
+        "editavel|arquivos?-fonte"
+      ]
+    },
+    {
+      "codigo": "i)",
+      "titulo": "Cronograma executivo",
+      "chaves": [
+        "\\b30\\b",
+        "\\b300\\b|assinatura"
+      ]
+    },
+    {
+      "codigo": "j)",
+      "titulo": "Estratégia de interlocução com a contratante",
+      "chaves": [
+        "reunio",
+        "contribuic|validac"
+      ]
+    },
+    {
+      "codigo": "k)",
+      "titulo": "Identificação de riscos e medidas mitigadoras",
+      "chaves": [
+        "risco",
+        "cronograma|diagramacao"
+      ]
+    },
+    {
+      "codigo": "l)",
+      "titulo": "Relação nominal da equipe-chave",
+      "chaves": [
+        "coordena",
+        "especialista"
+      ]
+    },
+    {
+      "codigo": "m)",
+      "titulo": "Anexos comprobatórios da experiência institucional",
+      "chaves": [
+        "atestado|comprova",
+        "subitem"
+      ]
+    },
+    {
+      "codigo": "n)",
+      "titulo": "Anexos comprobatórios da formação e experiência da equipe-chave",
+      "chaves": [
+        "curricul",
+        "disponibilidade"
+      ]
+    }
+  ]
+}

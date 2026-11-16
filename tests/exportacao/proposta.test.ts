@@ -123,6 +123,7 @@ describe("saídas da etapa 2", () => {
     expect(perguntas[0]).toMatch(/escuta direta de crianças/);
     // a brecha da p. 19 já tem destino na estratégia: não sai de novo
     expect(perguntas.filter((x) => x.includes("Quando aplicável, deverão ser previstos"))).toHaveLength(0);
-    expect(perguntas.length).toBe(1 + ponto.brechas.length - 1);
+    // duas perguntas da estratégia gravada (escuta de crianças; subcontratação, do ponto de atenção AT-08)
+    expect(perguntas.length).toBe(2 + ponto.brechas.length - 1);
   });
 });

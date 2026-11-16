@@ -1,0 +1,775 @@
+{
+  "comoSeraAvaliada": [
+    {
+      "id": "aval-1",
+      "texto": "Seleção por nota técnica de 0 a 60 pontos em 13 critérios (A a M), sem critério de preço nem de desconto.",
+      "rotulo": "documento",
+      "motivo": "Tabela 02 do edital.",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 5,
+          "trecho": "Pontuação máxima 60 pontos"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 4,
+          "trecho": "6.7.1 A avaliação e a pontuação serão feitas com base nos critérios de julgamento apresentados a seguir"
+        }
+      ],
+      "alternativas": [],
+      "requisitos": [],
+      "ficha": "PROP-ESTRATEGIA.1"
+    },
+    {
+      "id": "aval-2",
+      "texto": "É eliminada a proposta com menos de 40 pontos, e a nota IRREGULAR em A, B ou C exclui a proposta.",
+      "rotulo": "documento",
+      "motivo": "Linhas de corte.",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 5,
+          "trecho": "Cuja pontuação for inferior a 40 (quarenta) pontos"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 5,
+          "trecho": "6.7.4 Os critérios constantes das letras (A), (B) ou (C) são critérios de exclusão direta"
+        }
+      ],
+      "alternativas": [],
+      "requisitos": [],
+      "ficha": "PROP-ESTRATEGIA.1"
+    },
+    {
+      "id": "aval-3",
+      "texto": "Desempate pela maior nota no critério F e, depois, nos critérios E, I, D e L; por fim, sorteio.",
+      "rotulo": "documento",
+      "motivo": "Ordem de desempate: onde o texto rende mais.",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 5,
+          "trecho": "o desempate será feito com base na maior pontuação obtida no critério de julgamento constante da letra (F)"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 5,
+          "trecho": "sucessivamente, nos critérios de julgamento das letras (E), (I), (D) e (L)"
+        }
+      ],
+      "alternativas": [],
+      "requisitos": [],
+      "ficha": "PROP-ESTRATEGIA.1"
+    },
+    {
+      "id": "aval-4",
+      "texto": "Valor incompatível com o objeto elimina a proposta, à luz de uma estimativa que o edital não mostra; o teto do repasse é de R$ 200.000,00 por projeto.",
+      "rotulo": "documento",
+      "motivo": "O custo pesa sem ser critério de preço.",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 5,
+          "trecho": "Com valor incompatível com o objeto da parceria, a ser avaliado pela Comissão de Seleção à luz da estimativa realizada"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 1,
+          "trecho": "1.7 O valor máximo a ser repassado pela Administração Pública Municipal para o desenvolvimento de cada projeto é de R$ 200.000,00"
+        }
+      ],
+      "alternativas": [],
+      "requisitos": [],
+      "ficha": "PROP-PRECO"
+    },
+    {
+      "id": "aval-5",
+      "texto": "A nota máxima de cada critério é a efetiva demonstração de atendimento; a parcial vale menos e a não comprovação vale zero.",
+      "rotulo": "documento",
+      "motivo": "Escala da Tabela 02.",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 4,
+          "trecho": "REGULAR – 5 pontos: efetiva demonstração de atendimento do critério."
+        }
+      ],
+      "alternativas": [],
+      "requisitos": [],
+      "ficha": "PROP-ESTRATEGIA.2"
+    }
+  ],
+  "criterios": [
+    {
+      "criterio": "(A) Plano de Trabalho no modelo do edital",
+      "pontuacaoMaxima": "5 pontos",
+      "oQuePontua": "Plano de Trabalho em conformidade com o modelo do Anexo I; IRREGULAR exclui.",
+      "evidenciaExigida": "Os 17 quadros do Anexo I preenchidos, na ordem.",
+      "secaoDaProposta": "QUADRO 01 a QUADRO 17",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 4,
+          "trecho": "(A) Apresentação do Plano de Trabalho em conformidade"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 4,
+          "trecho": "6.5.6 O Plano de Trabalho é parte integrante de cada proposta e deverá ser apresentado de acordo com o modelo do Anexo I"
+        }
+      ]
+    },
+    {
+      "criterio": "(B) Capacidade técnica da equipe",
+      "pontuacaoMaxima": "5 pontos",
+      "oQuePontua": "Capacidade técnica dos profissionais do projeto; IRREGULAR exclui.",
+      "evidenciaExigida": "Currículos no modelo do Anexo II e documentos comprobatórios.",
+      "secaoDaProposta": "QUADRO 12 – Equipe de trabalho",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 4,
+          "trecho": "(B) Demonstração da capacidade técnica dos profissionais"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 4,
+          "trecho": "6.5.7 Os Currículos dos profissionais integrantes do projeto deverão ser apresentados conforme modelo do Anexo II"
+        }
+      ]
+    },
+    {
+      "criterio": "(C) Três pesquisas de preço por item",
+      "pontuacaoMaxima": "3 pontos",
+      "oQuePontua": "No mínimo três pesquisas de preço para cada item de gasto; IRREGULAR exclui.",
+      "evidenciaExigida": "Três orçamentos por item, com data e fornecedor, e os comprovantes.",
+      "secaoDaProposta": "QUADRO 16 – Tabela orçamentária",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 4,
+          "trecho": "(C) Apresentação de no mínimo 03 (três) pesquisas de"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 4,
+          "trecho": "deverá apresentar o orçamento de preços de no mínimo 03 (três) fornecedores para cada"
+        }
+      ]
+    },
+    {
+      "criterio": "(D) Políticas de inclusão, autonomia e qualidade de vida",
+      "pontuacaoMaxima": "5 pontos",
+      "oQuePontua": "Ações que desenvolvam ou aperfeiçoem políticas de inclusão, autonomia, cidadania e qualidade de vida.",
+      "evidenciaExigida": "Texto do Plano de Trabalho.",
+      "secaoDaProposta": "QUADRO 04, 05 e 08",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 4,
+          "trecho": "(D) Ações do projeto que desenvolvam ou aperfeiçoem"
+        }
+      ]
+    },
+    {
+      "criterio": "(E) Experiência da OSC com pessoas com deficiência",
+      "pontuacaoMaxima": "5 pontos",
+      "oQuePontua": "Experiência da OSC em projetos para pessoas com deficiência ou no objeto.",
+      "evidenciaExigida": "Comprovantes de experiência.",
+      "secaoDaProposta": "QUADRO 03 – Experiência da OSC",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 4,
+          "trecho": "(E) Comprovação de experiência da Organização da"
+        }
+      ]
+    },
+    {
+      "criterio": "(F) Beneficiários diretos e indiretos e diversidade de deficiências",
+      "pontuacaoMaxima": "5 pontos",
+      "oQuePontua": "Beneficiários diretos e indiretos em relação ao objeto, com diversidade de deficiências; primeiro critério de desempate.",
+      "evidenciaExigida": "Quadro 07 quantificado.",
+      "secaoDaProposta": "QUADRO 07 – Beneficiários diretos e indiretos",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 5,
+          "trecho": "(F) Relação entre a quantidade de beneficiários diretos e"
+        }
+      ]
+    },
+    {
+      "criterio": "(G) Vulnerabilidade social dos beneficiários",
+      "pontuacaoMaxima": "5 pontos",
+      "oQuePontua": "Conhecimento da vulnerabilidade social dos beneficiários.",
+      "evidenciaExigida": "Texto do Plano de Trabalho.",
+      "secaoDaProposta": "QUADRO 06 – Justificativa",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 5,
+          "trecho": "(G) Demonstração de conhecimento e compreensão da"
+        }
+      ]
+    },
+    {
+      "criterio": "(H) Vulnerabilidade territorial",
+      "pontuacaoMaxima": "2 pontos",
+      "oQuePontua": "Comprometimento com a vulnerabilidade territorial do município.",
+      "evidenciaExigida": "Texto do Plano de Trabalho.",
+      "secaoDaProposta": "QUADRO 06 e 08",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 5,
+          "trecho": "vulnerabilidade territorial do município"
+        }
+      ]
+    },
+    {
+      "criterio": "(I) Inovação em relação às políticas municipais",
+      "pontuacaoMaxima": "5 pontos",
+      "oQuePontua": "Inovação em relação às políticas municipais para pessoas com deficiência.",
+      "evidenciaExigida": "Texto do Plano de Trabalho.",
+      "secaoDaProposta": "QUADRO 04 e 06",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 5,
+          "trecho": "(I) Grau de inovação do projeto em relação às políticas"
+        }
+      ]
+    },
+    {
+      "criterio": "(J) Acessibilidade atitudinal, comunicacional, digital ou arquitetônica",
+      "pontuacaoMaxima": "5 pontos",
+      "oQuePontua": "Acessibilidade atitudinal, comunicacional, digital ou arquitetônica.",
+      "evidenciaExigida": "Condições de acessibilidade no Quadro 08.",
+      "secaoDaProposta": "QUADRO 08 – Metodologia",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 5,
+          "trecho": "acessibilidade atitudinal, comunicacional, digital ou"
+        }
+      ]
+    },
+    {
+      "criterio": "(K) Metas, atividades e meios de aferição",
+      "pontuacaoMaxima": "5 pontos",
+      "oQuePontua": "Metas, atividades e meios de aferição para o objeto e os objetivos.",
+      "evidenciaExigida": "Quadros 09 e 10.",
+      "secaoDaProposta": "QUADRO 09 e 10",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 5,
+          "trecho": "(K) Indicação de metas, atividades e meios de aferição para"
+        }
+      ]
+    },
+    {
+      "criterio": "(L) Gastos compatíveis e custo-benefício",
+      "pontuacaoMaxima": "5 pontos",
+      "oQuePontua": "Compatibilidade dos gastos com o objeto e custo-benefício do recurso público.",
+      "evidenciaExigida": "Quadros 11 a 17 coerentes entre si e com as cotações.",
+      "secaoDaProposta": "QUADRO 11 a 17",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 5,
+          "trecho": "(L) Compatibilidade entre objeto do projeto com os gastos"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 5,
+          "trecho": "eficiência e custo-benefício do recurso público"
+        }
+      ]
+    },
+    {
+      "criterio": "(M) Parcerias com a sociedade civil e a rede de serviços",
+      "pontuacaoMaxima": "5 pontos",
+      "oQuePontua": "Experiência em parcerias com a sociedade civil e a rede de serviços.",
+      "evidenciaExigida": "Parcerias registradas no Quadro 08 e experiência no Quadro 03.",
+      "secaoDaProposta": "QUADRO 03 e 08",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 5,
+          "trecho": "(M) Experiência na realização de parcerias com a sociedade"
+        }
+      ]
+    }
+  ],
+  "ondeEstaoOsPontos": [
+    {
+      "id": "pontos-1",
+      "texto": "Sugere-se concentrar o texto nos critérios que se ganham escrevendo — D, F, G, H, I, J, K, L e M —, com atenção a F, primeiro critério de desempate, e a K, que vira o compromisso de metas da parceria.",
+      "rotulo": "sugestao",
+      "motivo": "Pontos de texto (método da etapa 2, 3.1).",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 5,
+          "trecho": "o desempate será feito com base na maior pontuação obtida no critério de julgamento constante da letra (F)"
+        }
+      ],
+      "alternativas": [],
+      "requisitos": [],
+      "ficha": "PROP-ESTRATEGIA.2"
+    },
+    {
+      "id": "pontos-2",
+      "texto": "Os critérios B, C e E dependem de documentos e não se ganham escrevendo: a FGV tem currículos comprovados da equipe, três cotações por item e comprovantes de experiência com pessoas com deficiência? A definir pelo GP.",
+      "rotulo": "decisao_gp",
+      "motivo": "Pontos de documento viram pergunta ao GP; B e C também eliminam se IRREGULAR.",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 5,
+          "trecho": "6.7.4 Os critérios constantes das letras (A), (B) ou (C) são critérios de exclusão direta"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 7,
+          "trecho": "Comprovantes de Experiência Prévia no desenvolvimento e realização de atividades ou projetos relacionados ao objeto"
+        }
+      ],
+      "alternativas": [],
+      "requisitos": [],
+      "ficha": "PROP-ESTRATEGIA.3"
+    },
+    {
+      "id": "pontos-3",
+      "texto": "Recomenda-se tratar o custo como critério, embora não haja nota de preço: as cotações valem até 3 pontos em C e a compatibilidade dos gastos até 5 pontos em L, e o valor incompatível com o objeto elimina.",
+      "rotulo": "sugestao",
+      "motivo": "O preço pesa em C e L.",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 5,
+          "trecho": "Com valor incompatível com o objeto da parceria, a ser avaliado pela Comissão de Seleção à luz da estimativa realizada"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 5,
+          "trecho": "eficiência e custo-benefício do recurso público"
+        }
+      ],
+      "alternativas": [],
+      "requisitos": [],
+      "ficha": "PROP-PRECO"
+    },
+    {
+      "id": "pontos-4",
+      "texto": "Sugere-se não inflar o número de beneficiários para ganhar pontos em F: o que a proposta promete vira meta, e meta descumprida sem justificativa suficiente é glosada.",
+      "rotulo": "sugestao",
+      "motivo": "Volume prometido × glosa (etapa 1, AT-03 e AT-07).",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 9,
+          "trecho": "9.4.2 Serão glosados os valores relacionados a metas e resultados descumpridos sem justificativa suficiente."
+        }
+      ],
+      "alternativas": [],
+      "requisitos": [],
+      "ficha": "PROP-ESTRATEGIA.8"
+    },
+    {
+      "id": "pontos-5",
+      "texto": "Sugere-se a abordagem B como ponto de partida: formação híbrida com profissionais e familiares, em parceria com a rede, com metas que a equipe consegue cumprir.",
+      "rotulo": "sugestao",
+      "motivo": "Abordagem recomendada pelo PMO; a escolha é do GP.",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 1,
+          "trecho": "O projeto apresentado pela Organização da Sociedade Civil poderá ser executado de forma presencial e/ou à distância."
+        },
+        {
+          "doc": "rfp",
+          "pagina": 2,
+          "trecho": "4.2 Fica autorizada a atuação em rede."
+        }
+      ],
+      "alternativas": [],
+      "requisitos": [],
+      "ficha": "PROP-ESTRATEGIA.7"
+    }
+  ],
+  "abordagens": [
+    {
+      "id": "A",
+      "nome": "Formação presencial compacta com equipe enxuta",
+      "descricao": "Turmas presenciais de formação em acessibilidade comunicacional e atitudinal para profissionais que atendem pessoas com deficiência e com TEA, num número pequeno de territórios, com equipe mínima.",
+      "pros": [
+        "Menor custo e menor risco de não cumprir metas.",
+        "Gestão e prestação de contas mais simples."
+      ],
+      "contras": [
+        "Menos beneficiários e menos pontos em F, primeiro critério de desempate.",
+        "Menor alcance territorial (H)."
+      ],
+      "requisitos": [
+        "R01",
+        "R03",
+        "R04"
+      ],
+      "riscos": [
+        "Nota baixa em F e H perante propostas de maior alcance."
+      ],
+      "mudaOResultado": "Reduz equipe, metas e custo; troca pontos em F e H por segurança na execução.",
+      "riscoPrincipal": "Ficar perto da linha de 40 pontos se outros critérios também saírem parciais.",
+      "impactoPrazo": "Menor que B.",
+      "impactoCusto": "Menor que B."
+    },
+    {
+      "id": "B",
+      "nome": "Formação híbrida em rede, com profissionais e familiares",
+      "descricao": "Abordagem sugerida pelo PMO. Turmas presenciais em territórios priorizados e turmas a distância, para profissionais da rede e para familiares e cuidadores, com materiais acessíveis abertos entregues à SMPED e parcerias com organizações e serviços da rede.",
+      "pros": [
+        "Equilibra beneficiários (F), território (H), acessibilidade (J) e parcerias (M).",
+        "O material aberto reaproveitável pela rede sustenta o critério de inovação (I)."
+      ],
+      "contras": [
+        "Depende da adesão do público e das parcerias.",
+        "Mais funções na equipe e mais cotações."
+      ],
+      "requisitos": [
+        "R01",
+        "R02",
+        "R03",
+        "R04",
+        "R13",
+        "R14"
+      ],
+      "riscos": [
+        "Baixa adesão em alguma turma, com glosa da meta.",
+        "Atraso do repasse no início."
+      ],
+      "mudaOResultado": "Amplia alcance e parcerias com custo moderado; metas fixadas pela capacidade da equipe, não pelo número que dá mais pontos.",
+      "riscoPrincipal": "Meta de beneficiários não cumprida por falta de adesão, com glosa.",
+      "impactoPrazo": "Intermediário.",
+      "impactoCusto": "Maior que A e menor que C."
+    },
+    {
+      "id": "C",
+      "nome": "Ampliação com turmas a distância em larga escala",
+      "descricao": "Abordagem B com muitas turmas a distância e metas de beneficiários altas, para maximizar F.",
+      "pros": [
+        "Maior número potencial de beneficiários.",
+        "Custo por beneficiário menor."
+      ],
+      "contras": [
+        "Metas altas viram compromisso e base de glosa.",
+        "Exige plataforma acessível, canais de suporte e gravação de todo o conteúdo transmitido."
+      ],
+      "requisitos": [
+        "R01",
+        "R02",
+        "R03",
+        "R14"
+      ],
+      "riscos": [
+        "Evasão nas turmas a distância.",
+        "Equipe insuficiente para o suporte aos participantes."
+      ],
+      "mudaOResultado": "Muda o volume prometido e a estrutura de suporte; aumenta F e o risco de glosa.",
+      "riscoPrincipal": "Glosa de valores por meta de beneficiários não cumprida.",
+      "impactoPrazo": "Maior que B.",
+      "impactoCusto": "Próximo do teto; maior que B."
+    }
+  ],
+  "destinos": [
+    {
+      "origem": "",
+      "descricaoOrigem": "Ponto de atenção AT-01 da etapa 1: repasse em parcela única × pagamento pelo Quadro 11 mensal.",
+      "destino": "pergunta",
+      "texto": "Solicita-se confirmar se o repasse será liberado em parcela única no início da parceria, como dizem os itens 6.7.8 e 8.6, ou mês a mês pelo Quadro 11, como diz a cláusula 2.3 da minuta, e em quantos dias após a publicação do extrato.",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 8,
+          "trecho": "8.6 Para a realização da parceria, o recurso será liberado de forma integral, em parcela única"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 17,
+          "trecho": "2.3 O pagamento será realizado nos termos do Quadro 11 – Cronograma de Receitas e Despesas"
+        }
+      ]
+    },
+    {
+      "origem": "",
+      "descricaoOrigem": "Ponto de atenção AT-02 da etapa 1: repasse sem prazo e atividades que começam logo após a vigência.",
+      "destino": "premissa",
+      "texto": "Sugere-se escrever como premissa que as atividades começam com o repasse disponível, usando a prorrogação de ofício e a compensação de despesas que o próprio termo prevê.",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 19,
+          "trecho": "3.3.5 Iniciar as atividades necessárias à implementação do projeto imediatamente após o início da vigência desta parceria."
+        },
+        {
+          "doc": "rfp",
+          "pagina": 24,
+          "trecho": "13.3 A prorrogação de ofício da vigência deste termo deve ser feita pela Administração Pública quando esta der causa a atraso na"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 8,
+          "trecho": "8.12 O atraso na disponibilidade dos recursos da parceria autoriza a compensação das despesas despendidas"
+        }
+      ]
+    },
+    {
+      "origem": "",
+      "descricaoOrigem": "Ponto de atenção AT-03 da etapa 1: glosa de metas que dependem da adesão do público.",
+      "destino": "premissa",
+      "texto": "Sugere-se escrever como premissa que as metas de participação dependem da adesão voluntária do público e que o cumprimento parcial justificado não é glosado.",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 9,
+          "trecho": "9.4.2 Serão glosados os valores relacionados a metas e resultados descumpridos sem justificativa suficiente."
+        },
+        {
+          "doc": "rfp",
+          "pagina": 20,
+          "trecho": "devendo o eventual cumprimento parcial ser devidamente justificado"
+        }
+      ]
+    },
+    {
+      "origem": "",
+      "descricaoOrigem": "Ponto de atenção AT-04 da etapa 1: início móvel (extrato até 30 dias depois da assinatura).",
+      "destino": "folga",
+      "texto": "Sugere-se escrever o cronograma em Mês 01 a Mês 12 contados do extrato, sem datas de calendário, e concentrar a mobilização nos dois primeiros meses.",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 1,
+          "trecho": "1.9 O projeto deverá ser desenvolvido integralmente no período de 12 (doze) meses a partir da publicação do Extrato"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 24,
+          "trecho": "no prazo máximo de 30 (trinta) dias a contar de sua assinatura"
+        }
+      ]
+    },
+    {
+      "origem": "",
+      "descricaoOrigem": "Ponto de atenção AT-05 da etapa 1: formulários de satisfação definidos pela SMPED, sem prazo.",
+      "destino": "obrigacao-contratante",
+      "texto": "Sugere-se propor que a SMPED entregue os formulários de satisfação antes da primeira turma (prazo a definir pelo GP).",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 20,
+          "trecho": "formulários a serem definidos pela SMPED"
+        }
+      ]
+    },
+    {
+      "origem": "",
+      "descricaoOrigem": "Ponto de atenção AT-06 da etapa 1: estimativa de valor que o edital não mostra.",
+      "destino": "pergunta",
+      "texto": "Solicita-se informar a estimativa ou o valor de referência usado para avaliar se o valor do projeto é compatível com o objeto.",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 5,
+          "trecho": "Com valor incompatível com o objeto da parceria, a ser avaliado pela Comissão de Seleção à luz da estimativa realizada"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 5,
+          "trecho": "proposta que não seja adequado ao valor de referência constante do chamamento público"
+        }
+      ]
+    },
+    {
+      "origem": "",
+      "descricaoOrigem": "Ponto de atenção AT-07 da etapa 1: volume prometido pela própria proposta.",
+      "destino": "premissa",
+      "texto": "Sugere-se fixar as metas pela capacidade da equipe dimensionada no Quadro 12 e escrever a premissa de que a equipe dá conta do volume.",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 19,
+          "trecho": "4.1 A PARCEIRA fica obrigada a manter em seu quadro profissionais aptos a exercer as funções designadas no projeto"
+        }
+      ]
+    },
+    {
+      "origem": "",
+      "descricaoOrigem": "Ponto de atenção AT-09 da etapa 1: pedidos abertos e alteração só a critério da Administração.",
+      "destino": "premissa",
+      "texto": "Sugere-se escrever como premissa que pedidos fora do Plano de Trabalho entram por alteração da parceria, com revisão do plano.",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 23,
+          "trecho": "9.1 A critério da Administração Pública, admite-se a alteração da parceria"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 19,
+          "trecho": "3.3.12 Fornecer todas as informações e esclarecimentos que lhe forem solicitados"
+        }
+      ]
+    },
+    {
+      "origem": "",
+      "descricaoOrigem": "Ponto de atenção AT-10 da etapa 1: denunciação da lide sem limite de alcance.",
+      "destino": "pergunta",
+      "texto": "Solicita-se esclarecer se a obrigação de assumir o polo passivo se limita às ações decorrentes de encargos trabalhistas e de atos da parceira na execução do projeto.",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 19,
+          "trecho": "autorizada a proceder-lhe à denunciação da lide, a qual se obriga a assumir o polo passivo da relação processual"
+        }
+      ]
+    },
+    {
+      "origem": "",
+      "descricaoOrigem": "Plataforma eletrônica de prestação de contas não identificada no edital.",
+      "destino": "obrigacao-contratante",
+      "texto": "Sugere-se pedir que a SMPED informe a plataforma eletrônica de prestação de contas e dê acesso à parceira no início da vigência.",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 20,
+          "trecho": "7.3 A prestação de contas e todos os atos que dela decorram dar-se-ão em plataforma eletrônica"
+        }
+      ]
+    },
+    {
+      "origem": "",
+      "descricaoOrigem": "Ponto de atenção AT-03 e AT-07 da etapa 1: custo de uma eventual glosa.",
+      "destino": "reserva",
+      "texto": "Recomenda-se avaliar se a FGV aceita cobrir com recursos próprios o risco de glosa e de despesas fora do repasse; a decisão é do GP.",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 9,
+          "trecho": "9.4.2 Serão glosados os valores relacionados a metas e resultados descumpridos sem justificativa suficiente."
+        }
+      ]
+    }
+  ],
+  "premissasCriticas": [
+    {
+      "codigo": "PC1",
+      "aplica": "sim",
+      "motivo": "Os formulários de satisfação são definidos pela SMPED, sem prazo (AT-05)."
+    },
+    {
+      "codigo": "PC2",
+      "aplica": "sim",
+      "motivo": "A prestação de contas é feita em plataforma eletrônica da Administração que o edital não identifica."
+    },
+    {
+      "codigo": "PC3",
+      "aplica": "sim",
+      "motivo": "Remanejamentos e alterações dependem de autorização do gestor, e as prestações de contas, de análise da SMPED (AT-09)."
+    },
+    {
+      "codigo": "PC4",
+      "aplica": "sim",
+      "motivo": "A execução conta do extrato e o repasse não tem prazo, mas as atividades começam logo após a vigência (AT-02 e AT-04)."
+    },
+    {
+      "codigo": "PC5",
+      "aplica": "a-confirmar",
+      "motivo": "O acompanhamento é feito por uma gestora designada e uma comissão; troca de interlocutores é possível."
+    },
+    {
+      "codigo": "PC6",
+      "aplica": "sim",
+      "motivo": "As metas de participação dependem da adesão do público e das parcerias com a rede (AT-03)."
+    },
+    {
+      "codigo": "PC7",
+      "aplica": "sim",
+      "motivo": "A própria proposta dimensiona equipe e metas; prometer mais do que a equipe faz gera glosa (AT-07)."
+    },
+    {
+      "codigo": "PC8",
+      "aplica": "sim",
+      "motivo": "A parceira fornece as informações que lhe forem pedidas e a alteração fica a critério da Administração (AT-09)."
+    }
+  ],
+  "observacoes": [
+    {
+      "id": "obs-1",
+      "texto": "A FGV se enquadra como organização da sociedade civil para este chamamento (art. 2º, I, da Lei 13.019) e tem atuação comprovada no Município de São Paulo? A definir pelo GP, com o jurídico.",
+      "rotulo": "decisao_gp",
+      "motivo": "Condição de participação (etapa 1, HA-04).",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 2,
+          "trecho": "Poderá participar deste Edital a Organização da Sociedade Civil, assim considerada aquela definida pelo art. 2º, inciso I"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 2,
+          "trecho": "deve ter atuação comprovada no Município de São Paulo"
+        }
+      ],
+      "alternativas": [],
+      "requisitos": [],
+      "ficha": "PROP-MATRIZ"
+    },
+    {
+      "id": "obs-2",
+      "texto": "Recomenda-se conferir no Diário Oficial e no site da SMPED se o prazo de envio foi reaberto: o envio vai até 30 dias corridos após a publicação do edital, e o edital é de 2025.",
+      "rotulo": "sugestao",
+      "motivo": "Situação do prazo (etapa 1, UP-08).",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 4,
+          "trecho": "6.5.5 A proposta deverá ser enviada em até 30 (trinta) dias corridos após a publicação do edital"
+        }
+      ],
+      "alternativas": [],
+      "requisitos": [],
+      "ficha": "PROP-MATRIZ"
+    },
+    {
+      "id": "obs-3",
+      "texto": "A proposta vai num único arquivo PDF de até 10 MB, por e-mail; sem confirmação em 48 horas, reenvia-se com o comprovante do primeiro envio. Cada proponente apresenta um único projeto.",
+      "rotulo": "documento",
+      "motivo": "Regras de envio que o checklist confere.",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 3,
+          "trecho": "6.5.1 As propostas deverão ser apresentadas pelas Organizações da Sociedade Civil em arquivo PDF, no tamanho máximo de 10"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 4,
+          "trecho": "Caso a confirmação não seja recebida dentro do prazo de 48 (quarenta e oito) horas"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 1,
+          "trecho": "1.5 Cada proponente deverá apresentar apenas 01 (um) único projeto."
+        }
+      ],
+      "alternativas": [],
+      "requisitos": [],
+      "ficha": "PROP-MATRIZ"
+    }
+  ]
+}
