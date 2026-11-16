@@ -37,7 +37,8 @@ O teste da etapa 1 com um chamamento público municipal para termo de fomento (L
 - Numa lista numerada sem ponto final entre os itens, o trecho começa no número do item que tem o documento.
 
 ### Brechas
-- "Eventualmente" na cláusula de foro e "entre outras" nas atribuições da própria administração (gestor, fiscal, comissão…) não são marcados: não abrem escopo nem prazo de quem executa.
+- **Regra geral (decidida pela responsável):** palavra vaga só vira brecha quando o trecho fala de obrigação, prazo ou entrega de quem vai executar, não de algo que a administração talvez faça. O código exige no trecho a menção a quem executa ou a obrigação, prazo, entrega, produto, serviço ou atividade, e descarta a palavra quando a oração em volta dela tem a administração como agente (gestor, comissão, secretaria, rede pública…) sem citar quem executa.
+- Além disso, "eventualmente" na cláusula de foro e "entre outras" nas atribuições da própria administração não são marcados.
 
 ### PDF exportado
 - Cada coluna tem no mínimo a largura da sua palavra mais longa (título em negrito incluído; endereço de site e nome de arquivo muito longos podem quebrar); o resto é dividido pelos pesos. As larguras são de conteúdo: a margem interna da célula fica por fora. Se as tabelas não cabem em retrato, o documento vai para paisagem; por fim, fonte 8.
@@ -47,5 +48,4 @@ O teste da etapa 1 com um chamamento público municipal para termo de fomento (L
 
 - Os editais de licitação continuam com as regras anteriores; as respostas gravadas do PMO (OEI) continuam valendo, com os mesmos números R.
 - Dossiês antigos continuam válidos (o tipo `condicao` só se soma aos anteriores). Análise refeita no edital de teste numera os requisitos de outro jeito; a do dossiê, já salva, não muda.
-- O "eventualmente" do item 1.1 do edital de teste (incorporação futura pela rede pública) continua marcado como vago: fica para a responsável dizer se a regra deve ir além do foro.
 - Testes: `tests/etapas/chamamento-termo-fomento.test.ts`, um bloco por ponto, com o edital de teste.

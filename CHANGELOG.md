@@ -4,13 +4,15 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 
 ## [Não publicado]
 
-### Correção v0.8.1 — etapa 1 com chamamento público para termo de fomento (Lei 13.019/2014)
+## [0.8.1] — 16/11/2026
+
+### Correção — etapa 1 com chamamento público para termo de fomento (Lei 13.019/2014)
 - **Parceria reconhecida:** termo de fomento, de colaboração ou acordo de cooperação na abertura do documento vira o item "Tipo de parceria". Nela, garantia, reajuste, matriz de riscos e sessão pública saem como "não se aplica a esta modalidade — conferir no documento", não "não localizado"; a fase de celebração conta como habilitação; o Plano de Trabalho é o modelo de proposta; as sanções contam como penalidades.
 - **Requisitos:** campo de formulário em branco é ignorado; novo tipo "Condição do objeto" (público-alvo, limite por proponente, prazo e forma de execução, acessibilidade); "projetos" e "propostas" como quantidade.
 - **Prazos:** "vigorará por N meses" e "desenvolvido no período de N meses"; prazos do certame contados de um marco sem data (entrega, resultado, recursos, envio dos documentos), só no corpo; esclarecimento "com antecedência mínima de N dias úteis". A CE17 diz que falta a data do certame quando o prazo de execução foi achado.
 - **Julgamento:** tabela de critérios com coluna REGULAR/PARCIAL/IRREGULAR lida em duas colunas, um item por critério com a pontuação máxima; pontuação máxima conferida com a soma e pontuação mínima; "pontuação por critérios" como critério de julgamento.
 - **Habilitação:** com seção de habilitação no mapa, só vale o trecho dentro dela; tributos mobiliários contam como Fazenda Municipal; reserva de cargos exige a expressão; o trecho começa no item da lista.
-- **Brechas:** sem "eventualmente" no foro nem "entre outras" nas atribuições da administração.
+- **Brechas:** palavra vaga só vira brecha quando o trecho fala de obrigação, prazo ou entrega de quem executa, não de algo que a administração talvez faça; sem "eventualmente" no foro nem "entre outras" nas atribuições da administração.
 - **PDF exportado:** colunas com a largura mínima da palavra mais longa (paisagem quando não cabe), rótulos curtos, origem e trecho numa coluna, trechos e observações repetidos cortados.
 - Edital de teste em `tests/fixtures/rfps-publicas/` (fonte e data no README) e testes de cada ponto. Decisão 0031. Versão do app: 0.8.1.
 
