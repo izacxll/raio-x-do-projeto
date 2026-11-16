@@ -4,11 +4,16 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 
 ## [Não publicado]
 
-### Correção v0.8.2 — nome do projeto e engenharia reversa da etapa 1
+## [0.8.2] — 16/11/2026
+
+### Correção — nome do projeto e engenharia reversa da etapa 1
 - **Nome do projeto sugerido** a partir do instrumento e do objeto da RFP, como sugestão editável na etapa 1 ("Usar como nome do projeto"). Sem nome do GP, os documentos exportados saem com a sugestão e o aviso "a confirmar pelo GP", em vez de "Projeto sem nome".
 - **Objeto:** a seção cujo título diz "objeto" vale mais que a de propósito (no chamamento da SMPED, o 2.1 em vez do 1.1).
 - **Gabarito do PMO** da etapa 1 para o chamamento da SMPED (`tests/fixtures/gerados/rfp-smped/`), com todas as citações conferidas pelo código e a comparação item por item com o app: 34 acertos, 8 parciais e 62 faltas em 104; dos 70 erros, 59 são de regra e 11 pedem leitura com IA (`docs/estudos/`).
-- **Propostas** (aguardam o ok da responsável): leitura opcional do PMO na etapa 1 (decisão 0032) e etapa 5 por tipo de plano, com premissas críticas nos três lugares e conflitos com o edital (decisão 0033).
+- **Propostas** (aprovadas pela responsável com ajustes, registrados nas decisões): leitura opcional do PMO na etapa 1 (decisão 0032) e etapa 5 por tipo de plano, com premissas críticas nos três lugares e conflitos com o edital (decisão 0033).
+
+### Documentação
+- Documentação técnica do app como está no código (v0.8.1), em `docs/tecnico/`. São nove documentos com diagramas: visão geral, arquitetura, dependências (com os ciclos entre pastas), integrações, modelo de dados (o dossiê), fluxos, configuração, build e publicação, e pontos de atenção. Índice novo em `docs/README.md`; `docs/arquitetura.md` e o README passam a apontar para ela.
 
 ## [0.8.1] — 16/11/2026
 

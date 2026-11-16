@@ -1,6 +1,8 @@
 # Arquitetura
 
-O Raio-X do Projeto é uma aplicação estática (TypeScript + React + Vite), publicada no GitHub Pages. Tudo roda no navegador do GP: os PDFs nunca vão para um servidor próprio. Só as etapas com o PMO (2, 3 e 4, a partir da F2) enviam conteúdo, direto do navegador para a API do Claude, com a chave do GP.
+O Raio-X do Projeto é uma aplicação estática (TypeScript + React + Vite), publicada no GitHub Pages. Tudo roda no navegador do GP: os PDFs nunca vão para um servidor próprio. Só as etapas com o PMO (2, 3 e 4, e a leitura opcional da etapa 5) enviam conteúdo, direto do navegador para a API do Claude, com a chave do GP.
+
+Este é o resumo. O detalhe técnico, com diagramas (camadas, dependências e ciclos, integrações, modelo de dados, fluxos, configuração, build e pontos de atenção), está em [`tecnico/`](tecnico/) e no índice [`README.md`](README.md).
 
 ## Código × PMO
 
