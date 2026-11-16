@@ -2,7 +2,7 @@
 // O código propõe; o GP confirma ou corrige na tela, e só então a conferência roda. A gravidade depende deste mapa.
 import type { PaginaLida } from "../dossie/esquema";
 import type { Ficha } from "../dominio/fichas";
-import { normalizarTermo, procurarSinais } from "./busca";
+import { normalizarTermo, procurar, procurarSinais } from "./busca";
 
 export type SituacaoProposta =
   /** Título próprio encontrado: a parte tem páginas. */
@@ -36,6 +36,8 @@ export interface ParteConfirmada {
   /** Posição do título na página inicial (vem do código; some se o GP mudar a página inicial). */
   posicaoTitulo?: number;
   justificativa?: string;
+  /** O GP mexeu nesta parte: ela não acompanha mais a proposta do código. */
+  confirmadaPeloGp?: boolean;
 }
 
 const MAX_TITULO = 110;
@@ -102,11 +104,25 @@ export function encontrarTitulos(paginas: PaginaLida[], partes: Ficha[]): Titulo
   return achados.sort((a, b) => a.ordem - b.ordem);
 }
 
+/**
+ * Contexto que não conta para a parte: contratação de pessoal (CLT, seleção de agentes, equipe) não é plano de
+ * aquisições (A9), que trata de comprar bens e serviços de terceiros (decisão 0033, item 5).
+ */
+const CONTEXTO_QUE_NAO_CONTA: Record<string, RegExp> = {
+  A9: /\bclt\b|celetist|carteira assinada|\bselec[aã]o d[eoa]s? (?:agentes|pessoal|profissionais|equipe|bolsistas)|\bcontrata[cç][aã]o d[eoa]s? (?:pessoal|equipe|profissionais|agentes|bolsistas|recursos humanos)|recursos humanos|\bfolha de pagamento/i,
+};
+
+function achadoQueConta(paginas: PaginaLida[], parte: Ficha, item: Ficha["itens"][number]): boolean {
+  const fora = CONTEXTO_QUE_NAO_CONTA[parte.codigo];
+  if (!fora) return procurarSinais(paginas, item) !== undefined;
+  return procurar(paginas, item.termos).some((o) => !fora.test(o.trecho));
+}
+
 /** Proporção dos itens conferíveis por código cujos termos aparecem no plano. */
 export function coberturaDaParte(paginas: PaginaLida[], parte: Ficha): number {
   const itens = parte.itens.filter((i) => i.confere === "código" && (i.termos.length || i.compostos.length));
   if (!itens.length) return 0;
-  const achados = itens.filter((i) => procurarSinais(paginas, i) !== undefined).length;
+  const achados = itens.filter((i) => achadoQueConta(paginas, parte, i)).length;
   return achados / itens.length;
 }
 
@@ -177,4 +193,57 @@ export function parteDaPosicao(
     if (!melhor || chave > melhor.chave) melhor = { codigo: p.codigo, chave };
   }
   return melhor?.codigo;
+}
+
+/**
+ * Partes que só existem no PGP interno: num plano de trabalho ou proposta para o cliente, já vêm dispensadas, e o
+ * GP pode reverter (configuração, linhas de base, calendários, previsões, lições aprendidas, documentos de teste,
+ * dados do cronograma e termo de nomeação).
+ */
+export const PARTES_SO_DO_PGP = [
+  "A12",
+  "A13",
+  "A14",
+  "A15",
+  "A16",
+  "B7",
+  "B10",
+  "B13",
+  "B25",
+  "B29",
+  "B30",
+  "B32",
+  "B33",
+] as const;
+
+export const JUSTIFICATIVA_PLANO_DE_TRABALHO = "não se aplica a plano de trabalho";
+
+/**
+ * Troca o tipo do plano. No plano de trabalho, as partes só do PGP ficam dispensadas com a justificativa padrão;
+ * de volta ao PGP completo, as que tinham essa justificativa voltam à proposta do código.
+ */
+export function aplicarTipoPlano(
+  mapa: ParteConfirmada[],
+  tipo: "pgp" | "plano-trabalho",
+  proposta: ParteNoMapa[],
+): ParteConfirmada[] {
+  const so = new Set<string>(PARTES_SO_DO_PGP);
+  const inicial = new Map(confirmacaoInicial(proposta).map((p) => [p.codigo, p]));
+  return mapa.map((p) => {
+    if (!so.has(p.codigo)) return p;
+    if (tipo === "plano-trabalho")
+      return { codigo: p.codigo, situacao: "dispensada", justificativa: JUSTIFICATIVA_PLANO_DE_TRABALHO };
+    return p.justificativa === JUSTIFICATIVA_PLANO_DE_TRABALHO ? (inicial.get(p.codigo) ?? p) : p;
+  });
+}
+
+/**
+ * Mapa guardado × proposta atual do código: a parte que o GP não confirmou acompanha a proposta (o plano pode ter
+ * sido trocado, ou o dossiê vir de outra versão). Parte confirmada pelo GP ou dispensada fica como está.
+ */
+export function sincronizarMapa(mapa: ParteConfirmada[], proposta: ParteNoMapa[]): ParteConfirmada[] {
+  const inicial = new Map(confirmacaoInicial(proposta).map((p) => [p.codigo, p]));
+  return mapa.map((p) =>
+    p.confirmadaPeloGp || p.situacao === "dispensada" ? p : (inicial.get(p.codigo) ?? p),
+  );
 }
