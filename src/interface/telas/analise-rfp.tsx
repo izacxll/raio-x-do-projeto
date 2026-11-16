@@ -179,7 +179,13 @@ function Analise({
               </button>
             )}
             {cartoes.map((i) => (
-              <ItemDaLeitura key={i.id} item={i} salva={salva} mudarEstado={mudarEstado} />
+              <ItemDaLeitura
+                key={i.id}
+                item={i}
+                salva={salva}
+                mudarEstado={mudarEstado}
+                atualizar={atualizar}
+              />
             ))}
             {s.id === "fazer-e-entregar" && (
               <Requisitos itens={requisitos} salva={salva} atualizar={atualizar} mudarEstado={mudarEstado} />
@@ -520,11 +526,18 @@ function ItemDaLeitura({
   item,
   salva,
   mudarEstado,
+  atualizar,
 }: {
   item: ItemLeitura;
   salva: AnaliseRfpDossie;
   mudarEstado: (ids: string[], estado: EstadoItem, textoEditado?: string) => void;
+  atualizar: (a: AnaliseRfpDossie) => void;
 }) {
+  // o PMO não cria número R (decisões 0032 e 0035): a obrigação que ele leu vira requisito só se o GP incluir
+  const podeVirarRequisito =
+    item.doPmo &&
+    item.secao === "fazer-e-entregar" &&
+    !salva.requisitos.some((r) => r.descricao === item.texto);
   const estado = estadoDoItem(salva.revisoes, item.id);
   const editado = salva.revisoes[item.id]?.textoEditado;
   const comPergunta = Boolean(item.pergunta);
@@ -598,6 +611,16 @@ function ItemDaLeitura({
         )}
         {item.nota && <p className="envio__obs">{item.nota}</p>}
         <SeletorRevisao item={item} salva={salva} mudarEstado={mudarEstado} />
+        {podeVirarRequisito && (
+          <button
+            className="botao botao--discreto"
+            type="button"
+            data-testid={`virar-requisito-${item.id}`}
+            onClick={() => atualizar(incluirRequisito(salva, item.nome, item.texto))}
+          >
+            Incluir como requisito R{String(salva.proximoRequisito).padStart(2, "0")} (decisão do GP)
+          </button>
+        )}
       </div>
     </article>
   );

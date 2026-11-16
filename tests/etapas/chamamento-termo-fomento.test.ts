@@ -33,7 +33,9 @@ describe("1. requisitos", () => {
   it("ignora o campo em branco do formulário do Anexo I", () => {
     for (const r of a.requisitosDoCodigo) {
       expect(r.descricao).not.toMatch(/Nome do Projeto:|Local de realização:/);
-      expect(r.pagina).toBeLessThan(10);
+      // o formulário do Anexo I começa na p. 10; as obrigações da minuta (p. 18 em diante) são de outro anexo
+      if (r.tipo !== "obrigacao") expect(r.pagina).toBeLessThan(10);
+      else expect(r.pagina === 1 || r.pagina >= 8).toBe(true);
     }
   });
 
@@ -46,7 +48,22 @@ describe("1. requisitos", () => {
     // decisão 0034: cada R é obrigação ou entrega de quem executa; quantos projetos são selecionados (1.4), o
     // limite por proponente (1.5) e o prazo (1.9) vão para a seção 1 e para os prazos da leitura
     for (const n of ["1.4", "1.5", "1.9"]) expect(porItem(n)).toBeUndefined();
-    expect(a.requisitosDoCodigo.map((r) => r.numero)).toEqual(["R01", "R02", "R03"]);
+    expect(a.requisitosDoCodigo.slice(0, 3).map((r) => r.tipo)).toEqual(["condicao", "condicao", "condicao"]);
+    // as obrigações específicas de quem executa vêm depois, numeradas (método, seção 3.2)
+    const obrigacoes = a.requisitosDoCodigo.filter((r) => r.tipo === "obrigacao").map((r) => r.descricao);
+    for (const re of [
+      /totalmente gratuita/,
+      /conteúdo do projeto/,
+      /deverá ser original/,
+      /^Divulgar/,
+      /prestação de contas parcial e final/,
+    ])
+      expect(
+        obrigacoes.some((d) => re.test(d)),
+        String(re),
+      ).toBe(true);
+    // e as genéricas ficam de fora
+    expect(obrigacoes.some((d) => /^Executar satisfatória/.test(d))).toBe(false);
   });
 });
 

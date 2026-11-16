@@ -104,6 +104,7 @@ interface Placar {
   caso: string;
   antes: { itens: number; passam: number; naoPassam: number; cobertos: number; plenos: number };
   depois: {
+    requisitos: number;
     itens: number;
     passam: number;
     naoPassam: number;
@@ -145,7 +146,11 @@ function placar(caso: string, doc: DocumentoLido, a: AnaliseRfp, l: LeituraRfp, 
   );
   const contaveis = doGabarito.filter((i) => i.secao !== "nao-se-aplica");
   // antes: a análise de inventário, com os requisitos numerados (o que a tela mostrava na v0.8.3)
-  const antigos = [...a.itens, ...a.requisitosDoCodigo.map(requisitoComoItem)];
+  const antigos = [
+    ...a.itens,
+    // os requisitos como eram na v0.8.3: sem as obrigações de quem executa, que a M1 numerou
+    ...a.requisitosDoCodigo.filter((r) => r.tipo !== "obrigacao").map(requisitoComoItem),
+  ];
   const textosAntigos = antigos.map((i) => ({ i, t: textoDaAnalise(i) }));
   const novos = l.itens.map((i) => ({ i, t: textoDaLeitura(i) }));
   const antigoPassa = textosAntigos.filter(({ t }) => doGabarito.some((g) => casa(g, t)));
@@ -165,7 +170,8 @@ function placar(caso: string, doc: DocumentoLido, a: AnaliseRfp, l: LeituraRfp, 
       return !citacaoValeComoFato(r);
     })
     .map((i) => i.id);
-  const contaveisNovos = l.itens.filter((i) => i.secao !== "nao-se-aplica");
+  // a meta de 30 a 50 vale para os cartões; os requisitos R são linhas de uma tabela da seção 2
+  const contaveisNovos = l.itens.filter((i) => i.secao !== "nao-se-aplica" && !i.numero);
   return {
     caso,
     gabarito: contaveis.length,
@@ -177,9 +183,11 @@ function placar(caso: string, doc: DocumentoLido, a: AnaliseRfp, l: LeituraRfp, 
       plenos: plenosAntes,
     },
     depois: {
+      requisitos: l.itens.filter((i) => i.numero).length,
       itens: contaveisNovos.length,
-      passam: novoPassa.filter(({ i }) => i.secao !== "nao-se-aplica").length,
-      naoPassam: contaveisNovos.length - novoPassa.filter(({ i }) => i.secao !== "nao-se-aplica").length,
+      passam: novoPassa.filter(({ i }) => i.secao !== "nao-se-aplica" && !i.numero).length,
+      naoPassam:
+        contaveisNovos.length - novoPassa.filter(({ i }) => i.secao !== "nao-se-aplica" && !i.numero).length,
       cobertos: cobertosDepois.length,
       plenos: plenosDepois,
       naSecaoCerta: naSecaoCerta.length,
@@ -208,7 +216,7 @@ function formatarPlacar(ps: Placar[]): string {
     linhas.push(
       `\n=== ${p.caso} — gabarito: ${p.gabarito} itens (seções 1 a 7)`,
       `antes:  ${p.antes.itens} itens; passam ${p.antes.passam}; não passam ${p.antes.naoPassam}; gabarito coberto ${p.antes.cobertos}/${p.gabarito} (pleno ${p.antes.plenos})`,
-      `depois: ${p.depois.itens} itens; passam ${p.depois.passam}; não passam ${p.depois.naoPassam}; gabarito coberto ${p.depois.cobertos}/${p.gabarito} (pleno ${p.depois.plenos}; na seção certa ${p.depois.naSecaoCerta})`,
+      `depois: ${p.depois.itens} cartões + ${p.depois.requisitos} R; passam ${p.depois.passam}; não passam ${p.depois.naoPassam}; gabarito coberto ${p.depois.cobertos}/${p.gabarito} (pleno ${p.depois.plenos}; na seção certa ${p.depois.naSecaoCerta})`,
       `números sem fonte: ${p.semFonte.length} ${JSON.stringify(p.semFonte)}`,
       `citações não conferidas: ${p.citacoesNaoConferidas.length} ${p.citacoesNaoConferidas.join(", ")}`,
       ...p.secoes.map(
@@ -312,7 +320,7 @@ describe("método da etapa 1 — leitura do PMO conferida pelo código (decisão
         },
         { ...base, id: "X2", texto: "Teto de R$ 250.000,00 por projeto." },
         { ...base, id: "X3", requisitos: ["R99"] },
-        { ...base, id: "X4", rotulo: "sugestao", fontes: [], texto: "Faltam 37 dias para o envio." },
+        { ...base, id: "X4", rotulo: "sugestao", fontes: [], texto: "Faltam 413 dias para o envio." },
         { ...base, id: "X5", rotulo: "documento", fontes: [] },
       ],
     };

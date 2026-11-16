@@ -7,6 +7,7 @@ import { ehCampoEmBranco, limparEspacos, MARCA_DE_ITEM } from "../../texto/frase
 import { compactar, tirarAcentos } from "../../texto/normalizar";
 import { extrairRequisitos, type Requisito } from "../requisitos";
 import type { DocumentoRfp } from "./item";
+import { ehObrigacaoEspecifica, extrairObrigacoes, NOME_TEMA_OBRIGACAO } from "./obrigacoes";
 import { localizarTodos } from "./localizar";
 import { faixasDoTema, type MapaRfp } from "./mapa";
 
@@ -214,6 +215,25 @@ export function extrairRequisitosRfp(docs: DocumentoRfp[], mapa: MapaRfp): Requi
       return x.pagina === r.pagina && pedacos.some((p) => outro.includes(p));
     });
   };
-  const todos = [...antes, ...condicoes(docs, mapa).filter((r) => !repetida(r))];
+  const comCondicoes = [...antes, ...condicoes(docs, mapa).filter((r) => !repetida(r))];
+  // as obrigações específicas de quem executa (método da etapa 1, seção 3.2: cada R é uma obrigação ou entrega);
+  // as genéricas ("observar a legislação") ficam só no cartão do tema
+  const jaListadas = (r: Omit<Requisito, "numero">) => {
+    const c = compactar(r.descricao).slice(0, 60);
+    return comCondicoes.some((x) => x.pagina === r.pagina && compactar(x.descricao).includes(c));
+  };
+  const obrigacoes = extrairObrigacoes(docs, mapa)
+    .filter(ehObrigacaoEspecifica)
+    .map((o): Omit<Requisito, "numero"> => ({
+      rotulo: NOME_TEMA_OBRIGACAO[o.tema],
+      descricao: o.texto,
+      pagina: o.origem.pagina,
+      trecho: o.origem.trecho,
+      origem: "codigo",
+      tipo: "obrigacao",
+      documento: o.origem.documento,
+    }))
+    .filter((r) => !jaListadas(r));
+  const todos = [...comCondicoes, ...obrigacoes];
   return todos.map((r, i) => ({ ...r, numero: `R${String(i + 1).padStart(2, "0")}` }));
 }

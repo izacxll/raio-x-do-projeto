@@ -522,8 +522,9 @@ function fazerEEntregar(analise: AnaliseRfp, dossie: AnaliseRfpDossie): ItemLeit
       origem: primeiro.origem,
       situacao: "localizado",
       tabela: {
-        colunas: ["Obrigação", "Página"],
+        colunas: ["R", "Obrigação", "Página"],
         linhas: lista.map((o) => [
+          dossie.requisitos.find((r) => r.descricao === o.texto)?.numero ?? "—",
           `${o.texto}${o.itens?.length ? ` ${o.itens.map((x, n) => `(${n + 1}) ${curto(x, 90)}`).join("; ")}` : ""}`,
           String(o.origem.pagina),
         ]),

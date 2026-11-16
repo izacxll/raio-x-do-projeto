@@ -92,7 +92,7 @@ const RE_EXECUTOR =
   /\b(?:contratad[ao]|parceir[ao]|osc|organizac\w+ da sociedade civil|proponente (?:selecionad|vencedor)\w*|licitante vencedor\w*|executor\w*)\b/;
 /** Verbo ou expressão de obrigação. */
 const RE_OBRIGA =
-  /\b(?:devera|deverao|deve|devem|obriga-se|obrigam-se|esta obrigad[ao]|fica obrigad[ao]|compete|competira|cabe|cabera|incumbe|e responsavel|sera responsavel|responsabilizar-se|responsabiliza-se|comprometendo-se|compromete-se|sob responsabilidade)\b/;
+  /\b(?:devera|deverao|deve|devem|obriga-se|obrigam-se|esta obrigad[ao]|fica obrigad[ao]|compete|competira|cabe|cabera|incumbe|e responsavel|sera responsavel|responsabilizar-se|responsabiliza-se|comprometendo-se|compromete-se|sob responsabilidade|de responsabilidade d[ao])\b/;
 /** Vedação a quem executa. */
 const RE_VEDA =
   /\b(?:e vedad[oa]|ficam? vedad[oa]s?|sera vedad[oa]|e proibid[oa]|nao poder(?:a|ao)|e defeso|nao sera (?:permitid|admitid)[oa])\b/;
@@ -174,7 +174,51 @@ function ehObrigacao(c: Clausula, naListaDeObrigacoes: boolean): "obrigacao" | "
   if (RE_VEDA.test(corpo) && (RE_EXECUTOR.test(corpo) || naListaDeObrigacoes)) return "vedacao";
   if (RE_EXECUTOR.test(corpo) && RE_OBRIGA.test(corpo)) return "obrigacao";
   if (naListaDeObrigacoes && RE_TAREFA.test(corpo)) return "obrigacao";
+  // no objeto e no escopo, o sujeito costuma ser o projeto ("o projeto deverá ser original", "os projetos
+  // deverão complementar as ações do poder público"): é o que quem executa entrega
+  if (
+    (c.secao?.tema === "objeto" || c.secao?.tema === "escopo") &&
+    RE_SUJEITO_PROJETO.test(corpo) &&
+    /\b(?:devera|deverao|deve|devem|nao podera|nao poderao)\b/.test(corpo)
+  )
+    return "obrigacao";
   return undefined;
+}
+
+/** "O projeto…", "As ações…", "A proposta…" como sujeito, no objeto e no escopo. */
+const RE_SUJEITO_PROJETO = /^(?:o|os|a|as)\s+(?:projetos?|acoes|acao|propostas?|atividades)\b/;
+
+/**
+ * Obrigação genérica: todo plano a cumpre e a conferência não teria o que procurar ("observar a legislação",
+ * "executar satisfatoriamente o objeto", "manter a regularidade fiscal"). Fica no cartão do tema, sem número R.
+ */
+const RE_GENERICA =
+  /^(?:executar (?:satisfatoria|os servicos|o objeto)|observar(?: e respeitar)?\b|cumprir(?:,| as| os| todas| alem| durante)|manter(?:,|\s+durante)?\s+(?:toda|as condicoes|regular|durante|em compatibilidade)|responsabilizar-se (?:por (?:manter|todos|todo)|pelos vicios)|fornecer todas as informacoes|prestar (?:todo|os|todos os) esclarecimentos|atender as determinacoes|prevenir|gerir o valor|promover a organizacao|reparar|utilizar empregados|arcar com|indenizar|nos casos de|a (?:contratada|parceira|organizacao da sociedade civil) deve cumprir|alem daquelas obrigacoes|iniciar as atividades)/;
+
+/** Verbo de entrega concreta: o que dá para procurar no plano e cobrar na execução. */
+const RE_ENTREGA_CONCRETA =
+  /\b(?:entregar|entregues|apresentar|disponibilizar|divulgar|garantir|guardar sigilo|manter arquivad\w*|recolher|participar de reunioes|oferecer|elaborar|enviar|encaminhar|publicar|comprovar|prestar contas|realizar a prestacao de contas|ser original|complementar|contemplar|prever recursos|intermediacao|facilitacao)\b/;
+/** Prazo de execução do projeto ("no período de 12 meses"): vai para os prazos, não para os requisitos. */
+const RE_PRAZO_DE_EXECUCAO =
+  /\b(?:no|pelo|em|dentro do) (?:periodo|prazo) (?:maximo )?de\s+\d{1,3}\s*(?:\([^)]*\)\s*)?(?:meses|dias|anos)\b/;
+
+/**
+ * Obrigação que vira requisito numerado (R): específica (não genérica), com entrega concreta, prazo ou
+ * periodicidade. As outras ficam no cartão do tema; a leitura do PMO pode sugerir mais, e o GP decide.
+ */
+export function ehObrigacaoEspecifica(o: Obrigacao): boolean {
+  if (o.vedacao) return false;
+  const t = normalizarTermo(o.texto).replace(
+    /^(?:a|o) (?:contratada|parceira|organizacao da sociedade civil|osc|contratado)\s+(?:devera|deve|esta obrigad[ao] a|fica obrigad[ao] a|e responsavel (?:pel[oa]s?|por))\s+/,
+    "",
+  );
+  if (
+    RE_GENERICA.test(t) ||
+    /\b(?:legislacao|lei federal|normas vigentes|codigo de defesa)\b/.test(t.slice(0, 120))
+  )
+    return false;
+  if (RE_PRAZO_DE_EXECUCAO.test(t) && !RE_ENTREGA_CONCRETA.test(t)) return false;
+  return Boolean(o.recorrencia || o.prazo || o.itens?.length || RE_ENTREGA_CONCRETA.test(t.slice(0, 160)));
 }
 
 export function extrairObrigacoes(docs: DocumentoRfp[], mapa: MapaRfp): Obrigacao[] {

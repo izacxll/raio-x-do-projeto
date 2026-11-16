@@ -167,7 +167,7 @@ const COMPARACAO: Record<
   "RQ-13": {
     situacao: () =>
       s(Boolean(req(/Plano de Trabalho/)), it_("apresentacao:modelo-proposta")?.situacao === "localizado"),
-    esperado: "parcial",
+    esperado: "acerto", // M1: obrigação de quem executa virou R (decisão 0034)
     origem: "regra",
     como: "O modelo obrigatório (Anexo I) também vira requisito de apresentação, com os quadros do anexo.",
   },
@@ -185,13 +185,13 @@ const COMPARACAO: Record<
   },
   "RQ-16": {
     situacao: () => s(Boolean(req(/gratuita/))),
-    esperado: "falta",
+    esperado: "acerto", // M1: obrigação de quem executa virou R (decisão 0034)
     origem: "regra",
     como: 'Obrigações da parceira na minuta ("Compete à PARCEIRA") viram requisitos de execução.',
   },
   "RQ-17": {
     situacao: () => s(Boolean(req(/formato aberto/))),
-    esperado: "falta",
+    esperado: "acerto", // M1: obrigação de quem executa virou R (decisão 0034)
     origem: "regra",
     como: 'Mesmo caminho: obrigações da parceira na minuta; "disponibilizar… o conteúdo" é entrega.',
   },

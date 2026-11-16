@@ -22,6 +22,11 @@ export interface PontoDePartida {
   daEtapa1: boolean;
   analise: AnaliseRfp;
   requisitos: Requisito[];
+  /**
+   * Obrigações de quem executa com número R (método da etapa 1, decisão 0034). Seguem à parte: a proposta, o TAP e
+   * o plano ainda trabalham com as entregas (as fases M2 a M4 levam as obrigações a cada um).
+   */
+  obrigacoes: Requisito[];
   identificacao: ItemAnalise[];
   julgamento: ItemAnalise[];
   apresentacao: ItemAnalise[];
@@ -79,7 +84,8 @@ export function montarPontoDePartida(
   return {
     daEtapa1: Boolean(etapa1),
     analise,
-    requisitos: requisitosValidos(salva),
+    requisitos: requisitosValidos(salva).filter((r) => r.tipo !== "obrigacao"),
+    obrigacoes: requisitosValidos(salva).filter((r) => r.tipo === "obrigacao"),
     identificacao: daSecao("identificacao"),
     julgamento: daSecao("julgamento"),
     apresentacao,
