@@ -6,7 +6,7 @@
 
 ## Contexto
 
-A responsável testou a etapa 5 com um caso real, que não entra no repositório (fase P). O caso: um plano de trabalho de parceria (Lei 13.019/2014) de 64 páginas, com o termo e o chamamento.
+A responsável testou a etapa 5 com um caso real, que não entra no repositório (fase P). O caso: um plano de trabalho de parceria (Lei 13.019/2014), com o termo e o chamamento.
 
 Ela conferiu os 84 achados com a skill PMO:
 

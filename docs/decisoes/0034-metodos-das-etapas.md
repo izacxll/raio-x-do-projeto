@@ -8,7 +8,7 @@
 
 A responsável analisou à mão, item por item, um caso real de parceria (Lei 13.019/2014; fora do Git): o chamamento, a proposta, o termo assinado e o plano de trabalho. Comparou com o que o app devolve hoje. Encontrou dois problemas que atravessam as cinco etapas:
 
-- **Inventário no lugar de leitura:** as etapas devolvem tudo o que acham no documento (todas as leis, todos os órgãos, cada número solto, cada parte do PGP), e não o que o gerente precisa decidir ou fazer. Na etapa 1, um chamamento de 63 páginas deu 107 itens e deixou de fora as condições de repasse e as dependências do contratante. Na etapa 5, um plano de trabalho de 64 páginas deu 84 achados, e só 12 se sustentaram.
+- **Inventário no lugar de leitura:** as etapas devolvem tudo o que acham no documento (todas as leis, todos os órgãos, cada número solto, cada parte do PGP), e não o que o gerente precisa decidir ou fazer. Na etapa 1, um chamamento real deu 107 itens e deixou de fora as condições de repasse e as dependências do contratante. Na etapa 5, um plano de trabalho real deu 84 achados, e só 12 se sustentaram.
 - **Uma régua só:** todo projeto é medido como consultoria por produtos, e todo plano como PGP interno completo. Uma parceria com equipe de campo, paga por parcelas de repasse, recebe valor-hora, EAP com horas, diagrama de rede e as 51 partes do PGP.
 
 Daí saíram cinco métodos, um por etapa, em `docs/estudos/metodo-etapa-1.md` a `metodo-etapa-5.md`. Cada um diz para que serve a etapa, o teste de cada item, a estrutura da saída, as regras de cada seção, o que não entra, o que é código e o que é PMO, e o critério de aceite.

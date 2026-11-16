@@ -4,7 +4,7 @@ Escrito pela responsável pelo projeto, a partir de uma minuta feita à mão par
 
 ## 1. Para que serve
 
-A etapa 2 entrega ao gerente a **minuta da proposta que ganha pontos e protege a FGV**: o que escrever em cada parte, o que prometer, o que deixar de fora, quanto o preço vale em pontos e o que ele precisa decidir. Não é a proposta pronta. É a minuta que o gerente completa.
+A etapa 2 entrega ao gerente a **minuta da proposta que ganha pontos e protege a FGV**: o que escrever em cada parte, o que prometer, o que deixar de fora, quanto o preço vale em pontos e o que ele precisa decidir. É a **minuta redigida por inteiro**, seção por seção, no texto que vai para o cliente: o gerente revisa e completa os campos de decisão, não escreve do zero. Um resumo de estratégia não é a saída; ele é só a primeira página.
 
 **Teste de cada item:** "isto ajuda a ganhar pontos, a cumprir uma exigência ou a proteger a FGV na execução?" Se não ajuda, não entra. Texto genérico sobre o tema, sem ligação com um critério ou uma exigência, não entra.
 
@@ -12,6 +12,7 @@ A etapa 2 entrega ao gerente a **minuta da proposta que ganha pontos e protege a
 
 | # | Seção | Pergunta que responde |
 |---|---|---|
+| 0 | Capa: resumo e decisões | Uma página: estratégia escolhida, preço, riscos, o que o GP decide (a minuta vem depois, inteira) |
 | 1 | Estratégia em uma página | Onde estão os pontos, em que critério concentrar o texto, 2 ou 3 abordagens com prós, contras e risco principal |
 | 2 | Estrutura da proposta | O modelo do edital (ou da FGV, ou da skill), seção por seção, com o critério que cada uma alimenta |
 | 3 | Escopo | O que a contratada faz, as exclusões explícitas e o que fica com o contratante, com prazo |
@@ -20,6 +21,17 @@ A etapa 2 entrega ao gerente a **minuta da proposta que ganha pontos e protege a
 | 6 | Preço | A estrutura de custo certa para o tipo de contrato, a tabela de pontos por preço e o caixa |
 | 7 | Matriz de atendimento e checklist de envio | Cada exigência e critério ligados à seção que responde; o que enviar, como e até quando |
 | 8 | Decisões do GP | A lista do que só ele decide |
+
+### 2.1 Cada seção da proposta, redigida
+Na ordem do modelo do edital, cada seção sai **escrita**, não descrita:
+- **Entendimento:** o problema, o objeto e as metas do edital com as palavras dele, ligados ao que a FGV vai entregar.
+- **Metodologia:** por fase ou módulo, cada etapa com objetivo, atividades, quem faz, entrega e duração.
+- **Escopo (SOW):** o que a contratada faz, exclusões **próprias deste objeto**, o que é do contratante com prazo, limites de volume.
+- **EAP e cronograma:** entregas por pacote; durações com a base escrita; o total cabe na vigência (trimestres × 3 ≤ meses de vigência).
+- **Equipe:** quadro mês a mês ou por trimestre, papéis, RACI; **conferir o quadro contra a produtividade escrita** (ex.: visitas previstas ÷ agentes ÷ dias úteis ≤ teto por dia).
+- **Metas e indicadores:** os do edital, com fórmula e fonte.
+- **Riscos e premissas:** cada premissa crítica escrita; matriz com gatilho e dono.
+- **Preço:** composição por natureza de despesa com a memória da conta e o cronograma de parcelas **igual ao do edital** (ou a diferença dita e justificada).
 
 ## 3. Regras de cada seção
 
@@ -80,7 +92,9 @@ Participar; abordagem; equipe nomeada; curva de contratação; custos; valor e d
 - **PMO:** as abordagens, o texto de cada seção ligado ao critério, as exclusões, a redação das premissas e as perguntas.
 
 ## 6. Critério de aceite
-- O gerente lê a seção 1 e sabe como ganhar pontos e o que decidir.
+- A minuta está redigida em todas as seções do modelo; não há seção só descrita.
+- O quadro de equipe fecha com a produtividade escrita e o cronograma cabe na vigência.
+- O gerente lê a capa e sabe como ganhar pontos e o que decidir.
 - Todo critério e toda exigência do conteúdo mínimo têm seção na matriz.
 - Toda premissa crítica da etapa 1 que se aplica está escrita na proposta.
 - O preço usa a estrutura do tipo de contrato, com a tabela de pontos e o caixa calculados.

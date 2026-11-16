@@ -15,16 +15,26 @@ O PGP é o plano **interno** que diz como a FGV vai executar, acompanhar e encer
 - Proposta final e contrato: rampa de equipe, composição de custo, parcelas ou medições, produtos.
 - Dossiê das etapas 1 a 3.
 
-## 3. Estrutura da saída (nesta ordem)
+## 3. Estrutura da saída (nesta ordem, decisão 0007)
 
-| # | Seção | Pergunta que responde |
+A saída é o **plano inteiro**, não um resumo. Cada parte que a adaptação mantém sai com o conteúdo mínimo da ficha, preenchido com o que os documentos dão e marcado Do documento, Sugestão ou Decisão do GP.
+
+| # | Seção | Partes |
 |---|---|---|
-| 1 | Adaptação | Quais partes são essenciais, recomendadas ou dispensáveis **para este tipo de projeto**, com o motivo |
-| 2 | Ciclo de vida, escopo e aceite | Fases com critério de saída; EAP; aceite de cada entrega; exclusões |
-| 3 | Cronograma, equipe e caixa | Marcos; rampa de equipe; repasse ou faturamento × custo acumulado |
-| 4 | Premissas críticas nos três lugares | Cada PC aplicável em B3, B27 (gatilho e resposta) e A11 (reajuste), com A8 dizendo como são acompanhadas |
-| 5 | Os outros planos | Os recomendados, cada um com o conteúdo mínimo que importa |
-| 6 | Acompanhamento, autoconferência e decisões | Indicadores mensais, documentos da execução, conferência pelas regras da etapa 5, decisões do GP |
+| 0 | O projeto em uma página | Objeto, valor, vigência, parcelas, equipe, metas, produtos |
+| 1 | Adaptação | As 51 partes: essencial, recomendada, fundida ou dispensável, com o motivo da ficha |
+| 2 | Ciclo de vida e abordagem | A17 (A18 fundido): fases com critério de saída, quem decide a passagem, ato formal; parcelas como portões |
+| 3 | Escopo | B22 (requisitos R), B17 (aceite por entrega, limites de volume, exclusões), EAP com dicionário (A13), B23, A1 (A2 fundido) |
+| 4 | Atividades | B2 com B1: predecessora, dependência externa, marco |
+| 5 | Recursos | B26 (rampa), B24, B18 (RACI, um A por linha), A6, B12, B25, B32 |
+| 6 | Durações e cronograma | B8/B4 (três pontos só onde há incerteza, com a base), B16 (predecessoras e caminho crítico), B11/B15 (marcos; entrega ≠ aprovação), B13, B29, A14, A3 |
+| 7 | Riscos | A8 (escalas, reservas, A8.12) e B27 (causa → efeito, P, I, resposta, gatilho, dono, PC) |
+| 8 | Custos | B6 (composição com análise), reservas, A15 e caixa, A4 |
+| 9 | Premissas | B3 atualizado a partir do TAP, com risco e reajuste por linha |
+| 10 | Demais planos | A5 e B20, A7 e B14, A9, A10 e B31, A11 (A12 fundido) com a tabela PC → reajuste |
+| 11 | Medição | A16: planejado × real, limites, plano de exceção |
+| 12 | Documentos da execução | Só modelos (colunas e frequência) |
+| 13 | Autoconferência e decisões do GP | Regras da etapa 5 sobre a adaptação; lista numerada do que o GP decide |
 
 ## 4. Regras de cada seção
 
@@ -34,10 +44,12 @@ A ferramenta reconhece o tipo pelo contrato e pela proposta e sugere a adaptaç�
 | Tipo | Essencial | Normalmente dispensável |
 |---|---|---|
 | Consultoria por produtos encadeados | EAP por produto, cronograma com dependências e caminho crítico, aceite, custos por horas, riscos, mudanças | Rampa de equipe grande, caixa mês a mês (se o pagamento é por produto aceito, o caixa vira "produto × aceite") |
-| Operação contínua (campo, atendimento, equipe grande paga por parcela ou posto) | Rampa de equipe, caixa (parcela × custo), metas como métricas, premissas, mudanças, comunicação interna, substituição de pessoal | Diagrama de rede, caminho crítico, durações em três pontos, valor agregado, calendários, previsões como documentos próprios |
+| Operação contínua (campo, atendimento, equipe grande paga por parcela ou posto) | Rampa de equipe, caixa (parcela × custo), metas como métricas, premissas, mudanças, comunicação interna, substituição de pessoal | Valor agregado completo (substituído por planejado × real de metas, caixa e equipe); três pontos em atividades repetitivas |
 | Híbrido | Os dois blocos, na medida de cada parte | O que nenhum dos dois usa |
 
-Cada linha da adaptação traz o motivo em uma frase. O que o GP dispensar fica no dossiê e não vira "ausente" na etapa 5.
+**O porte vale junto com o tipo**, pela seção "Quando dispensar" de cada ficha. Em porte médio ou grande: as estimativas de duração (B8) não se dispensam; a rede (B16) é recomendada, ao menos como tabela de predecessoras com as dependências externas como marcos; os calendários (B13) são recomendados quando há campo; a configuração (A12) se funde ao plano de mudanças, mas não se omite.
+
+Cada linha da adaptação traz o motivo em uma frase, com a regra da ficha. O que o GP dispensar fica no dossiê e não vira "ausente" na etapa 5.
 
 ### 4.2 Ciclo de vida, escopo e aceite
 - Fases com **critério de saída** verificável (o que precisa estar pronto, aceito ou recebido).
@@ -65,6 +77,14 @@ Cada plano recomendado em poucas linhas, com o conteúdo mínimo das fichas da s
 - Documentos da execução só como modelo (estrutura e escalonamento), sem inventar acontecimentos.
 - Autoconferência pelas regras da etapa 5, já com a adaptação: não acusar o que foi dispensado.
 
+### 4.7 O que montar o plano por inteiro revela (regras novas)
+- **Produtividade × quadro:** visitas (ou atendimentos) previstos ÷ pessoas ÷ dias úteis comparado ao teto escrito na proposta. Se passar, é premissa crítica (PC7) e decisão do GP antes da execução.
+- **Leitura dos meses:** quando o quadro de equipe tem menos meses que a vigência, dizer como os meses se alinham (mobilização antes do campo) e registrar como premissa.
+- **Jornada × vigência:** se o percurso de um beneficiário é maior que o tempo de campo, a meta é de atendimento no período; registrar e prever a transição.
+- **Parcelas:** comparar a ordem e o percentual com o edital; diferença é decisão do GP, e o caixa mostra o efeito.
+- **Reservas em parceria:** o repasse só paga o plano de trabalho; contingência é margem de prazo e remanejamento; reserva gerencial, se houver, é da FGV. Saldo é descontado do repasse seguinte.
+- **Exclusões:** lista de outro tipo de projeto não serve; escrever as do objeto (o que é da rede, do contratante, dos municípios).
+
 ## 5. O que não entra
 - Partes dispensadas pela adaptação (ficam listadas, com o motivo).
 - Texto que repete a proposta ou o plano de trabalho do cliente.
@@ -76,6 +96,8 @@ Cada plano recomendado em poucas linhas, com o conteúdo mínimo das fichas da s
 - **PMO:** adaptação com o motivo, critérios de saída, aceite, premissas com gatilho e resposta, conteúdo dos planos.
 
 ## 7. Critério de aceite
+- O plano sai inteiro (seções 0 a 13); nenhuma parte mantida pela adaptação fica só descrita.
+- O quadro de equipe é conferido contra a produtividade e o cronograma contra a vigência.
 - O plano de um projeto de operação contínua não tem diagrama de rede nem valor agregado por padrão; o de uma consultoria por produtos tem.
 - Toda PC aplicável nos três lugares, com gatilho mensurável.
 - O caixa mostra a folga em cada parcela e o ponto mais apertado.

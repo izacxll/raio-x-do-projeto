@@ -4,6 +4,14 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 
 ## [Não publicado]
 
+### Documentação — métodos revisados e engenharia reversa das cinco etapas
+- **Métodos das etapas 1 a 5 substituídos** pela versão revisada pela responsável pelo projeto. Saem os detalhes que identificavam o caso real (número de páginas, meses do cronograma e da vigência, duração da jornada); também na decisão 0033 e na 0034.
+- **O que muda nos métodos:**
+  - etapas 2 e 4: a saída é o documento inteiro (a minuta redigida seção por seção; o PGP com as seções 0 a 13 da decisão 0007), e o resumo é só a capa;
+  - nova conferência por código, quadro de equipe × produtividade (etapas 2 a 5);
+  - etapa 4: adaptação por porte e tipo, três pontos só nas entregas de conhecimento e reservas em parceria (seção 4.7).
+- **Engenharia reversa das cinco etapas** (`docs/estudos/engenharia-reversa/`): o rastro de cada saída da análise à mão (saída → evidência → regra → código ou PMO → item da skill), com os fluxos, o modelo de dados e os pontos a validar.
+
 ### Fase M1 — etapa 1 pelo método (decisões 0034, 0035 e 0036)
 - **Leitura da RFP em 8 seções,** na ordem da decisão do gerente, na tela e na "Análise da RFP" (DOCX e PDF): em uma página; o que a contratada teria de fazer e entregar; prazos; dinheiro; julgamento e o que vai na proposta; habilitação; pontos de atenção; o que não se aplica à modalidade. Saem o mapa página a página, as normas além do regime, os órgãos sem papel e as faixas da pontuação (contados em "fora da leitura").
 - **O PMO lê; o código monta e confere:** botão "Pedir ao PMO" na etapa 1, com o custo antes e o aviso de envio. A leitura parte do esqueleto do código, e o código confere cada citação, número e número R ("citação não conferida", "valor não conferido"). Sem a chave, a tela mostra o esqueleto com o aviso "leitura parcial por código". Demonstração também na etapa 1.
