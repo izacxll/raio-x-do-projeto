@@ -2,7 +2,7 @@
 
 Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). As versões seguem a decisão [0005](docs/decisoes/0005-branches-versoes-e-tags.md).
 
-## [Não publicado]
+## [0.8.3] — 16/11/2026
 
 ### Etapa 5 e telas — primeira fase da decisão 0033 (prévia de 16/11/2026)
 - **Tipo de plano no mapa** ("PGP completo" ou "plano de trabalho/proposta"). No plano de trabalho, configuração, linhas de base, calendários, previsões, lições aprendidas, documentos de teste, dados do cronograma e termo de nomeação vêm dispensados ("não se aplica a plano de trabalho"), e o GP pode reverter.
