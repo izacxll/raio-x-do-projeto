@@ -50,10 +50,10 @@ A fase M3 aplica o método da etapa 3 (`docs/estudos/metodo-etapa-3.md`) e o ras
 7. **Testes:**
    - o contrato assinado não é público, então cada caso (SMPED e OEI) tem um **contrato inventado** para teste, com divergências plantadas (`tests/fixtures/gerados/tap-*/contrato-teste.json`);
    - a demonstração da etapa 3 abre com o contrato da OEI;
-   - gabaritos e leituras gravadas feitos pelo Claude Code seguindo a skill.
+   - leituras gravadas da OEI feitas pelo Claude Code seguindo a skill. Não há gabarito da etapa 3 (correção de 16/11/2026).
 
 ## Consequências
 
-- Placar em `docs/estudos/placar-m3-etapa-3.md`, com 10 itens para a responsável conferir antes do merge.
+- O placar da etapa 3 vem do teste às cegas no claude.ai (decisão 0049), com os contratos que a responsável vai mandar; não se criam gabaritos só para ele. O teste do método da etapa 3 fica pulado enquanto não houver gabarito.
 - A etapa 4 (fase M4) recebe as divergências decididas e o registro de premissas na ordem do método.
 - A skill 0.3.0 (PR próprio) já descreve o contrato como entrada da etapa 3 (bloco TAP-DV da ficha `tap`).
