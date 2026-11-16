@@ -1,5 +1,5 @@
 # Rework — práticas, modelos e erros comuns
-Versão 0.2.0. Fonte: biblioteca do Rework (resources.rework.com/libraries), lida em 13/11/2026; 93 artigos. Se o Rework e o PMBOK divergirem, prevalece o PMBOK.
+Versão 0.2.0. Fonte: biblioteca do Rework (resources.rework.com/libraries), lida em 13/11/2026; 93 artigos. Se o Rework e o PMBOK divergirem, não há vencedor automático: mostrar as duas leituras, ver qual serve a este contrato e a este porte (lei, edital e contrato sempre limitam) e sugerir com o motivo; o GP decide.
 
 ## Como a skill usa o Rework
 
