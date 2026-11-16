@@ -35,8 +35,8 @@ Uma decisão por arquivo, numerada em ordem. Cada uma registra o contexto, o que
 | [0029](0029-plano-de-gerenciamento-f4.md) | Plano de gerenciamento com o PMO (F4), construído sem a chave: seis passos na ordem da 0007, adaptação decidida pelo GP, contas do código, autoconferência pelas regras da etapa 5, pacote .zip | aceita (teste com a chave pendente) |
 | [0030](0030-leitura-do-pmo-na-conferencia-f5b.md) | Leitura opcional do PMO na conferência (F5b), construída sem a chave: travas em código (citação, ausente procurado no plano, gravidade pela parte) e decisão do GP | aceita (teste com a chave pendente) |
 | [0031](0031-parceria-osc-na-leitura-da-rfp.md) | Parceria com OSC (termo de fomento ou de colaboração) na leitura da RFP: "não se aplica a esta modalidade", condições do objeto, prazos contados de marco, tabela de critérios com coluna de níveis, habilitação só na lista; larguras do PDF (v0.8.1) | aceita |
-| [0032](0032-leitura-do-pmo-na-etapa-1.md) | Leitura opcional do PMO na etapa 1, com as travas da F5b e o custo à vista | proposta (aguarda o ok da responsável) |
-| [0033](0033-etapa-5-por-tipo-de-plano.md) | Etapa 5 por tipo de plano (PGP × plano de trabalho), premissas críticas nos três lugares, PC5 por código e conflitos com o edital | proposta (aguarda o ok da responsável) |
+| [0032](0032-leitura-do-pmo-na-etapa-1.md) | Leitura opcional do PMO na etapa 1, com as travas da F5b e o custo à vista | aceita, com ajustes da responsável |
+| [0033](0033-etapa-5-por-tipo-de-plano.md) | Etapa 5 por tipo de plano (PGP × plano de trabalho), premissas críticas nos três lugares, PC5 por código e conflitos com o edital | aceita, com ajustes da responsável |
 
 Modelo para uma nova decisão:
 

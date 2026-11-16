@@ -1,8 +1,8 @@
-# 0033 — Etapa 5 por tipo de plano, premissas críticas nos três lugares e conflitos com o edital (proposta)
+# 0033 — Etapa 5 por tipo de plano, premissas críticas nos três lugares e conflitos com o edital
 
 - **Data:** 16/11/2026
-- **Status:** proposta (aguarda o ok da responsável pelo projeto: muda a base da etapa 5, decisões 0013, 0021 e 0022)
-- **Quem decidiu:** a decidir pela responsável pelo projeto; proposta do Claude Code a partir do teste dela
+- **Status:** aceita em 16/11/2026, com os ajustes abaixo (muda a base da etapa 5, decisões 0013, 0021 e 0022)
+- **Quem decidiu:** responsável pelo projeto, sobre a proposta do Claude Code a partir do teste dela
 
 ## Contexto
 
@@ -84,7 +84,7 @@ O GP pode desmarcar. É a regra CE17 da etapa 1 trazida para a etapa 5; o nível
 ### 5. Falsos positivos a corrigir
 
 - **Mapa:** proposta "título localizado" ou "conteúdo sem título próprio" nunca começa como "não está no plano". A causa está a confirmar no código, com teste.
-- **Aquisições:** contratação de pessoal (CLT, seleção de agentes) não é plano de aquisições. A ficha A12 passa a pedir compra de bens ou serviços de terceiros.
+- **Aquisições:** contratação de pessoal (CLT, seleção de agentes) não é plano de aquisições (ficha A9; ver os ajustes).
 - **Sinais equivalentes:**
   - "relatórios trimestrais" conta como lista de relatórios;
   - "equipe responsável" conta como lista da equipe;
@@ -143,3 +143,23 @@ Os "não se aplica a este tipo de plano" vão num anexo. A gravidade continua po
   4. 6 e 4 (metas e conflitos).
 
   Cada fase com o teste do plano inventado antes e depois.
+
+## Ajustes da responsável (16/11/2026)
+
+- **Aquisições é a ficha A9**, não a A12 (a A12 é configuração). Contratação de pessoal (CLT, seleção de agentes) não marca o plano de aquisições como presente.
+- **Plano sem registro de premissas:** gera **um** achado grave ("o plano não tem registro de premissas"), com uma linha por PC e os três lugares. Só pré-marca PC com evidência no documento (a PC5 pela conta da eleição).
+- **Núcleo de mudanças da parceria:** art. 57 (aditivo ou apostila) e art. 55 (prorrogação de ofício quando a administração atrasa o repasse).
+- **Teste de precisão, não só de recall:** além do plano com erros plantados, um plano de trabalho correto tem de sair quase limpo. Os falsos positivos são medidos nos dois.
+- **Antes da apresentação de 16/11:** a primeira fase (itens 5 e 8) e uma versão simples do tipo de plano. A versão simples é um seletor no mapa ("PGP completo" ou "plano de trabalho/proposta"). No plano de trabalho, as partes só do PGP interno vêm dispensadas com "não se aplica a plano de trabalho", e o GP pode reverter. São elas:
+  - configuração (A12);
+  - linhas de base (A13 a A16);
+  - calendários (B13, B25);
+  - previsões (B7, B30);
+  - lições aprendidas (B10);
+  - dados do cronograma (B29);
+  - termo de nomeação (B32);
+  - documentos de teste (B33).
+- **Ordem das fases depois da apresentação:**
+  1. 2 e 3 (premissas);
+  2. 1 e 7 (tipo de plano completo, com o art. 22, o núcleo e o anexo);
+  3. 6 e 4 (metas e conflitos).
