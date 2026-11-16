@@ -39,6 +39,7 @@ export const FICHAS_ETAPA_2 = [
   "prop-equipe",
   "prop-preco",
   "prop-matriz-atendimento",
+  "prop-parceria",
   "a13-linha-base-escopo",
   "b08-estimativas-duracao",
   "b04-bases-estimativas",
