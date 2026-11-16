@@ -139,7 +139,7 @@ test("etapa 3 com a API simulada: da etapa 2 ao TAP no mesmo dossiê, com o cust
   expect(xml).not.toContain(CHAVE);
   expect(xml).not.toContain(AVISO);
   const salvar = page.waitForEvent("download");
-  await page.getByRole("button", { name: /Salvar projeto/ }).click();
+  await page.getByRole("button", { name: /Salvar para continuar depois/ }).click();
   const dossie = readFileSync(await (await salvar).path(), "utf-8");
   expect(dossie).not.toContain(CHAVE);
   expect(JSON.parse(dossie).tap.uso).toHaveLength(2);

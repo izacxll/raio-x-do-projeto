@@ -71,4 +71,4 @@ Depois da conferência por código, você pode pedir a leitura do PMO: ele apont
 
 ## Dossiê
 
-"Salvar projeto" baixa o `<projeto>.dossie.json` com tudo o que foi lido, sugerido e decidido. "Abrir projeto" retoma de onde parou. O dossiê não guarda a chave nem os PDFs (só o texto lido deles). Guarde-o com o mesmo cuidado da RFP.
+"Salvar para continuar depois" baixa o `<projeto>.dossie.json` com tudo o que foi lido, sugerido e decidido. É um arquivo do app, para reabrir aqui; para ler e enviar, use os relatórios de cada etapa (DOCX, PDF, XLSX). "Abrir projeto" retoma de onde parou. O dossiê não guarda a chave nem os PDFs (só o texto lido deles). Guarde-o com o mesmo cuidado da RFP.

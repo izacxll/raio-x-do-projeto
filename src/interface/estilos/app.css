@@ -649,6 +649,24 @@ textarea {
   margin: 0;
 }
 
+/* aviso na linha do arquivo: página que não pôde ser lida, arquivo que parece de outra caixa */
+.envio__obs--aviso {
+  margin: 4px 0 8px;
+  padding: 6px 10px;
+  color: var(--laranja-txt);
+  background: var(--laranja-claro);
+  border-left: 3px solid var(--laranja);
+}
+
+/* explicação curta embaixo do botão de salvar */
+.cabecalho__dica {
+  display: block;
+  font-size: var(--fs-pequeno);
+  color: var(--txt);
+  max-width: 260px;
+  line-height: 1.3;
+}
+
 .envio__arquivo {
   display: flex;
   align-items: center;

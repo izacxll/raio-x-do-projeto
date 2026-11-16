@@ -111,7 +111,7 @@ test("etapa 2: chave, três passos do PMO, decisões do GP, contas, conferência
 
   // dossiê sem a chave
   const salvar = page.waitForEvent("download");
-  await page.getByRole("button", { name: /Salvar projeto/ }).click();
+  await page.getByRole("button", { name: /Salvar para continuar depois/ }).click();
   const dossie = readFileSync(await (await salvar).path(), "utf-8");
   expect(dossie).not.toContain(CHAVE);
   expect(JSON.parse(dossie).proposta.abordagem.id).toBe("B");
