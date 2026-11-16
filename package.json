@@ -19,7 +19,8 @@
     "test": "vitest run",
     "test:fumaca": "playwright test",
     "verificar-repositorio": "node scripts/verificar-repositorio.mjs",
-    "comparar-modelos": "node scripts/comparar-modelos.mjs"
+    "comparar-modelos": "node scripts/comparar-modelos.mjs",
+    "conferir-plano-real": "node scripts/conferir-plano-real.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "1.6.0",

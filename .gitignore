@@ -56,3 +56,8 @@ test-results/
 
 # Arquivos de leitura copiados de node_modules antes do dev e do build (scripts/copiar-ativos-leitura.mjs)
 public/vendor/
+
+# chave da API e resumos dos roteiros: sempre fora do repositório (os scripts recusam caminhos aqui dentro)
+.raio-x/
+*chave-api*
+resumo-etapa-5*.json

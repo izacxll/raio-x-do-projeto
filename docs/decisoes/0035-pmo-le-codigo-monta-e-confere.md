@@ -7,14 +7,14 @@
 
 ## Contexto
 
-Na fase M1 (etapa 1 pelo método, decisão 0034), as regras de código foram refeitas na estrutura do método e medidas contra os gabaritos que o PMO fez à mão para dois editais públicos:
+Na fase M1 (etapa 1 pelo método, decisão 0034), as regras de código foram refeitas na estrutura do método e medidas contra gabaritos de dois editais públicos, feitos pelo Claude Code seguindo a skill PMO (não são uma leitura independente; ver a seção "Como se testa sem a chave"). Números do placar final da M1 (`docs/estudos/placar-m1-etapa-1.md`, a fonte deles):
 
 | | SMPED (parceria) | OEI (licitação) |
 |---|---|---|
-| Itens na tela | 122 → 42 | 183 → 50 |
-| Itens que não passam no teste do método | 82 → 9 | 102 → 7 |
-| Gabarito coberto (maioria das chaves do item) | 15 → 27 de 50 | 30 → 36 de 50 |
-| Gabarito coberto por inteiro | 5 → 11 | 9 → 18 |
+| Itens na tela | 122 → 40 cartões + 16 R | 183 → 39 cartões + 16 R |
+| Cartões que não passam no teste do método | 82 → 6 | 102 → 3 |
+| Gabarito coberto (maioria das chaves do item) | 15 → 28 de 50 | 30 → 35 de 50 |
+| Gabarito coberto por inteiro | 5 → 12 | 9 → 20 |
 | Números sem fonte | 0 | 0 |
 
 O código tirou o ruído e acerta o que é mecânico (páginas, números, datas, soma das parcelas, documentos linha a linha, o padrão de cada premissa crítica). O que falta é leitura: cruzar trechos distantes (a "parcela única" de um item contra o repasse mensal de um quadro), dizer por que um ponto pesa e em que ordem, resumir uma obrigação como o gerente lê. Mais regra não chega lá; viraria uma pilha de exceções por edital.
