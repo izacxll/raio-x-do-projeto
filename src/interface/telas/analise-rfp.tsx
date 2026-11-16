@@ -535,9 +535,7 @@ function ItemDaLeitura({
 }) {
   // o PMO não cria número R (decisões 0032 e 0035): a obrigação que ele leu vira requisito só se o GP incluir
   const podeVirarRequisito =
-    item.doPmo &&
-    item.secao === "fazer-e-entregar" &&
-    !salva.requisitos.some((r) => r.descricao === item.texto);
+    item.doPmo && item.secao === "fazer-e-entregar" && !jaEhRequisito(item, salva.requisitos);
   const estado = estadoDoItem(salva.revisoes, item.id);
   const editado = salva.revisoes[item.id]?.textoEditado;
   const comPergunta = Boolean(item.pergunta);
@@ -581,7 +579,7 @@ function ItemDaLeitura({
         {item.tabela && (
           <details>
             <summary className="envio__obs">Detalhe ({item.tabela.linhas.length} linhas)</summary>
-            <table className="tabela">
+            <table className="tabela tabela--livre">
               <thead>
                 <tr>
                   {item.tabela.colunas.map((c) => (
@@ -626,6 +624,19 @@ function ItemDaLeitura({
   );
 }
 
+/**
+ * O item do PMO já é um requisito da lista: ele cita o número, o nome bate com o rótulo ("Produto 2") ou o texto
+ * já foi incluído pelo GP. Nesses casos, o botão de incluir não aparece (o mesmo requisito com dois números).
+ */
+function jaEhRequisito(item: ItemLeitura, requisitos: AnaliseRfpDossie["requisitos"]): boolean {
+  const nome = item.nome.toLowerCase();
+  return requisitos.some((r) => {
+    const rotulo = r.rotulo.trim().toLowerCase();
+    const produto = /^produto \d+$/.test(rotulo) && (nome === rotulo || nome.startsWith(`${rotulo} `));
+    return Boolean(item.nota?.includes(r.numero)) || r.descricao === item.texto || produto;
+  });
+}
+
 /** Os requisitos numerados, numa tabela: o número fixo segue até a conferência do plano. */
 function Requisitos({
   itens,
@@ -644,7 +655,7 @@ function Requisitos({
         <b>Requisitos numerados.</b> Cada R é uma entrega ou obrigação de quem executa e acompanha o projeto
         até a conferência do plano. Corrija e complete a lista; número descartado não é reaproveitado.
       </p>
-      <table className="tabela">
+      <table className="tabela tabela--livre">
         <thead>
           <tr>
             <th>Nº</th>
