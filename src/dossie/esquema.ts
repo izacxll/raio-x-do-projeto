@@ -239,7 +239,7 @@ export type ParametrosProposta = z.infer<typeof ParametrosProposta>;
 
 /** Decisão do GP: o tipo de contrato e de projeto (decisão 0034), sugerido pelo código. */
 export const TipoConfirmado = z.object({
-  contrato: z.enum(["licitacao", "parceria"]),
+  contrato: z.enum(["licitacao", "contratacao-direta", "parceria"]),
   projeto: z.enum(["produtos", "operacao", "hibrido"]),
 });
 export type TipoConfirmado = z.infer<typeof TipoConfirmado>;

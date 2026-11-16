@@ -5,11 +5,13 @@ import type { AnaliseRfp } from "../1-rfp/analisar-rfp";
 import type { Requisito } from "../../extracao/requisitos";
 import { localizarTodos } from "../../extracao/rfp/localizar";
 
-export type TipoContrato = "licitacao" | "parceria";
+/** Chave de modalidade (decisão 0042): licitação, contratação direta ou parceria. */
+export type TipoContrato = "licitacao" | "contratacao-direta" | "parceria";
 export type TipoProjeto = "produtos" | "operacao" | "hibrido";
 
 export const NOME_TIPO_CONTRATO: Record<TipoContrato, string> = {
   licitacao: "Licitação (contrato)",
+  "contratacao-direta": "Contratação direta (inexigibilidade ou dispensa; contrato)",
   parceria: "Parceria (termo de fomento, de colaboração ou acordo)",
 };
 export const NOME_TIPO_PROJETO: Record<TipoProjeto, string> = {
@@ -32,8 +34,18 @@ export function sugerirTipo(analise: AnaliseRfp, requisitos: Requisito[]): TipoS
   const parceria = analise.itens.some(
     (i) => i.id === "identificacao:parceria" && (i.situacao === "localizado" || i.situacao === "calculado"),
   );
+  const modalidade = analise.itens.find(
+    (i) => i.id === "identificacao:modalidade" && (i.situacao === "localizado" || i.situacao === "calculado"),
+  );
+  const direta = !parceria && /^(?:Inexigibilidade|Dispensa de licitação)$/.test(modalidade?.texto ?? "");
   const motivos: string[] = [];
-  motivos.push(parceria ? "o edital é de parceria (Lei 13.019/2014)" : "o edital é de licitação");
+  motivos.push(
+    parceria
+      ? "o edital é de parceria (Lei 13.019/2014)"
+      : direta
+        ? `o documento é de contratação direta (${modalidade?.texto ?? ""})`
+        : "o edital é de licitação",
+  );
   const produtos = requisitos.filter((r) => r.tipo === "produto").length;
   const porEntrega = analise.desembolso.parcelas.filter((p) =>
     /produto|entrega|relatorio/i.test(p.rotulo),
@@ -49,5 +61,5 @@ export function sugerirTipo(analise: AnaliseRfp, requisitos: Requisito[]): TipoS
   else if (parceria && !produtos)
     motivos.push("parceria sem produtos: a equipe trabalha ao longo da vigência");
   const projeto: TipoProjeto = produtos ? (operacao ? "hibrido" : "produtos") : "operacao";
-  return { contrato: parceria ? "parceria" : "licitacao", projeto, motivos };
+  return { contrato: parceria ? "parceria" : direta ? "contratacao-direta" : "licitacao", projeto, motivos };
 }
