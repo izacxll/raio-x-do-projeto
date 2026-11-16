@@ -54,6 +54,23 @@ A fase M2 aplica o método da etapa 2 (`docs/estudos/metodo-etapa-2.md`, revisad
    - A OEI troca a gravação da demonstração.
    - A gravação antiga fica em `proposta-oei/antes-m2/`, para o placar "antes".
 
+9. **Ajustes da revisão independente** (antes do PR):
+   - **a revisão do GP vale na minuta e no anexo exportado:** item descartado sai, editado vale o texto dele, e o que falta revisar aparece "pendente";
+   - **metas, limites de volume e riscos** entram na revisão do GP e na conta das pendências;
+   - **"Do documento" só com a citação conferida** pelo código; o resto do PMO é Sugestão, e o exportado leva "citação não conferida" e "valor não conferido";
+   - **contas do código** (folha, pontos por preço) e premissa sem trecho da etapa 1 saem como Sugestão, não como fato do documento;
+   - **produtividade:**
+     - só unidades de atividade de quem executa (visitas, atendimentos…), e não metas do programa ("até 200 famílias por mês");
+     - nunca contra o teto de outra unidade;
+     - pessoas médias no período (pessoas-mês ÷ meses);
+   - **índice de preço:** a escala vem da fórmula do edital ("IP × 3"); sem ela, sai em % da nota de preço;
+   - **modelo do edital:** "obrigatório" só quando o edital diz ("em conformidade com o modelo", "modelo do Anexo");
+   - **campos do GP:**
+     - o custo apagado sai do dossiê (antes, impedia salvar);
+     - o mês da parcela fica na tela depois de preenchido;
+     - "4500.00" é lido como decimal;
+   - **nota mínima** só com "pontos" depois do número; "R$ 1,5 milhão" não é lido como R$ 1,50.
+
 ## Consequências
 
 - Placar em `docs/estudos/placar-m2-etapa-2.md`, com 10 itens para a responsável conferir antes do merge.

@@ -6,7 +6,14 @@
 //   descrita ("nesta seção, descrever…") ou vazia é alerta.
 // O código monta e confere (pontos, preço pelo tipo de contrato, caixa, produtividade, duração × vigência, matriz);
 // o PMO redige. Nenhum número é inventado: o que o edital não dá fica "a definir pelo GP".
-import type { AnaliseRfpDossie, DocumentoLido, PropostaDossie, Rotulo } from "../../dossie/esquema";
+import type {
+  AnaliseRfpDossie,
+  DocumentoLido,
+  PropostaDossie,
+  RevisaoItem,
+  Rotulo,
+} from "../../dossie/esquema";
+import { citacaoValeComoFato } from "../../pmo/citacoes";
 import type { OrigemItem } from "../../extracao/rfp/item";
 import { localizarTodos, origemDe } from "../../extracao/rfp/localizar";
 import { extrairEstruturaDoEdital, type EstruturaDoEdital } from "../../extracao/rfp/modelo-proposta";
@@ -121,11 +128,16 @@ export interface ItemMinuta {
   /** Item que veio do PMO (Sugestão até o GP revisar), com a conferência das citações e dos números. */
   doPmo?: boolean;
   conferencia?: ConferenciaItem;
+  /** Item do PMO ainda sem revisão do GP (o cabeçalho de minuta fica até ele revisar). */
+  pendente?: boolean;
 }
 
 export interface ParagrafoRedigido {
   id: string;
   item: ItemPmo;
+  /** Rótulo que vale na tela e no exportado: "documento" só com a citação conferida pelo código. */
+  rotulo: Rotulo;
+  pendente: boolean;
   conferencia: ConferenciaItem;
   /** O parágrafo descreve a seção em vez de escrevê-la ("nesta seção, apresentar…"). */
   soDescrito: boolean;
@@ -145,6 +157,8 @@ export interface SecaoRedigida {
 }
 
 export interface ContasProposta {
+  /** Parcelas cujo mês o documento não dá: o mês é decisão do GP. */
+  parcelasSemPrazo: string[];
   pontos: OndeEstaoOsPontos;
   regraPreco: RegraPreco;
   tabelaPreco?: TabelaPontosPreco;
@@ -188,17 +202,44 @@ function casaSecao(modelo: { codigo: string; titulo: string }, s: SecaoProposta)
   return Boolean(a) && (a === b || (a.length > 8 && (b.includes(a) || a.includes(b))));
 }
 
+/** Rótulo que vale: "documento" só se o código achou ao menos uma citação; item do PMO sem isso é Sugestão. */
+function rotuloQueVale(item: ItemPmo, conferencia: ConferenciaItem): Rotulo {
+  if (item.rotulo === "decisao_gp") return "decisao-gp";
+  return item.rotulo === "documento" && conferencia.citacoes.some(citacaoValeComoFato)
+    ? "documento"
+    : "sugestao";
+}
+
+/** O item como o GP deixou: descartado sai; editado vale o texto dele. */
+function comRevisao(id: string, item: ItemPmo, revisoes: Record<string, RevisaoItem>): ItemPmo | undefined {
+  const r = revisoes[id];
+  if (r?.estado === "descartado") return undefined;
+  return r?.estado === "editado" && r.textoEditado?.trim() ? { ...item, texto: r.textoEditado } : item;
+}
+
 function redigir(
   secao: SecaoProposta | undefined,
   chave: string,
   docs: DocumentoLido[],
+  revisoes: Record<string, RevisaoItem>,
 ): ParagrafoRedigido[] {
-  return (secao?.itens ?? []).map((item, k) => ({
-    id: `conteudo:estrutura:${chave}:${k}`,
-    item,
-    conferencia: conferirItem(item, docs),
-    soDescrito: paragrafoSoDescrito(item.texto),
-  }));
+  return (secao?.itens ?? []).flatMap((original, k) => {
+    const id = `conteudo:estrutura:${chave}:${k}`;
+    const item = comRevisao(id, original, revisoes);
+    if (!item) return [];
+    const conferencia = conferirItem(item, docs);
+    const estado = revisoes[id]?.estado ?? "pendente";
+    return [
+      {
+        id,
+        item,
+        rotulo: rotuloQueVale(item, conferencia),
+        pendente: estado === "pendente",
+        conferencia,
+        soDescrito: paragrafoSoDescrito(item.texto),
+      },
+    ];
+  });
 }
 
 function situacaoDe(p: ParagrafoRedigido[]): SecaoRedigida["situacao"] {
@@ -211,6 +252,7 @@ export function documentoRedigido(
   estrutura: EstruturaDoEdital | undefined,
   secoesPmo: SecaoProposta[],
   docs: DocumentoLido[],
+  revisoes: Record<string, RevisaoItem> = {},
 ): SecaoRedigida[] {
   const usadas = new Set<number>();
   const out: SecaoRedigida[] = [];
@@ -218,7 +260,7 @@ export function documentoRedigido(
     const i = secoesPmo.findIndex((s, k) => !usadas.has(k) && casaSecao(m, s));
     if (i >= 0) usadas.add(i);
     const s = i >= 0 ? secoesPmo[i] : undefined;
-    const paragrafos = redigir(s, String(i), docs);
+    const paragrafos = redigir(s, String(i), docs, revisoes);
     out.push({
       codigo: m.codigo,
       titulo: m.titulo,
@@ -231,7 +273,7 @@ export function documentoRedigido(
   }
   secoesPmo.forEach((s, k) => {
     if (usadas.has(k)) return;
-    const paragrafos = redigir(s, String(k), docs);
+    const paragrafos = redigir(s, String(k), docs, revisoes);
     out.push({
       codigo: s.codigo,
       titulo: s.titulo,
@@ -248,22 +290,27 @@ function itemDoPmo(
   id: string,
   secao: SecaoMetodoProposta,
   nome: string,
-  item: ItemPmo,
+  original: ItemPmo,
   docs: DocumentoLido[],
+  revisoes: Record<string, RevisaoItem>,
   extra: Partial<ItemMinuta> = {},
-): ItemMinuta {
+): ItemMinuta | undefined {
+  // a revisão do GP vale aqui também: descartado sai, editado vale o texto dele (CLAUDE.md, seção 1)
+  const item = comRevisao(id, original, revisoes);
+  if (!item) return undefined;
   const f = item.fontes[0];
+  const conferencia = conferirItem(item, docs);
   return {
     id,
     secao,
-    // todo item do PMO é Sugestão até o GP revisar (decisão 0035); o "documento" conferido aparece pela citação
-    rotulo:
-      item.rotulo === "decisao_gp" ? "decisao-gp" : item.rotulo === "documento" ? "documento" : "sugestao",
+    // "documento" só com a citação conferida; o resto do PMO é Sugestão até o GP revisar (decisão 0035)
+    rotulo: rotuloQueVale(item, conferencia),
     nome,
     texto: item.texto,
     origem: f ? { documento: "RFP", pagina: f.pagina, trecho: f.trecho } : undefined,
     doPmo: true,
-    conferencia: conferirItem(item, docs),
+    conferencia,
+    pendente: (revisoes[id]?.estado ?? "pendente") === "pendente",
     ...extra,
   };
 }
@@ -299,7 +346,10 @@ export function montarMinuta(
   const tabelaPreco = tabelaPontosPorPreco(regra, estimado);
   const vigencia = ponto.prazoExecucao ? vigenciaEmMeses(ponto.prazoExecucao.texto) : undefined;
   const itens: ItemMinuta[] = [];
-  const add = (i: ItemMinuta) => itens.push(i);
+  const add = (i?: ItemMinuta) => {
+    if (i) itens.push(i);
+  };
+  const rev = p.revisoes;
 
   // ---------- 1. Estratégia ----------
   if (criterios.length)
@@ -382,9 +432,10 @@ export function montarMinuta(
     (x) =>
       x.id === "julgamento:pontuacao-minima" && (x.situacao === "localizado" || x.situacao === "calculado"),
   );
-  const minimaNaEliminacao = /(?:m[ií]nimo de|inferior a|abaixo de) (\d{1,3})\b/i.exec(
-    (eliminacao?.texto ?? "").replace(/-\s+/g, ""),
-  )?.[1];
+  const minimaNaEliminacao =
+    /(?:m[ií]nimo de|inferior a|abaixo de) (\d{1,3})(?: \([a-zà-ú ]+\))? pontos/i.exec(
+      (eliminacao?.texto ?? "").replace(/-\s+/g, ""),
+    )?.[1];
   if (minima || minimaNaEliminacao)
     add({
       id: "minuta:estrategia:minima",
@@ -406,7 +457,7 @@ export function montarMinuta(
     });
 
   // ---------- 2. Estrutura ----------
-  const documento = documentoRedigido(estrutura, c?.estrutura ?? [], docs);
+  const documento = documentoRedigido(estrutura, c?.estrutura ?? [], docs, rev);
   add({
     id: "minuta:estrutura:modelo",
     secao: "estrutura",
@@ -497,15 +548,25 @@ export function montarMinuta(
       origem: dependencias[0]?.origem,
       nota: "Cada dependência vira obrigação do contratante com prazo. Prazo que o edital não dá é decisão do GP, nunca um número inventado.",
     });
-  c?.exclusoes.forEach((x, k) => add(itemDoPmo(`conteudo:exclusoes:${k}`, "escopo", "Exclusão", x, docs)));
+  c?.exclusoes.forEach((x, k) =>
+    add(itemDoPmo(`conteudo:exclusoes:${k}`, "escopo", "Exclusão", x, docs, rev)),
+  );
   c?.limitesVolume.forEach((x, k) =>
-    add(itemDoPmo(`conteudo:limitesVolume:${k}`, "escopo", "Limite de volume", x, docs)),
+    add(itemDoPmo(`conteudo:limitesVolume:${k}`, "escopo", "Limite de volume", x, docs, rev)),
   );
   c?.obrigacoesContratante.forEach((o, k) =>
     add(
-      itemDoPmo(`conteudo:obrigacoesContratante:${k}`, "escopo", "Obrigação do contratante", o.item, docs, {
-        nota: `Prazo: ${o.prazo || A_DEFINIR}`,
-      }),
+      itemDoPmo(
+        `conteudo:obrigacoesContratante:${k}`,
+        "escopo",
+        "Obrigação do contratante",
+        o.item,
+        docs,
+        rev,
+        {
+          nota: `Prazo: ${o.prazo || A_DEFINIR}`,
+        },
+      ),
     ),
   );
   if (c && !c.exclusoes.length)
@@ -530,14 +591,17 @@ export function montarMinuta(
     .filter(([, v]) => !v)
     .map(([k2]) => k2))
     aplicaveis.delete(k);
-  const escritas = new Set((c?.premissas ?? []).map((x) => x.premissaCritica).filter(Boolean));
   for (const pc of [...aplicaveis].sort()) {
     const ponto1 = atencao.find((a) => a.premissa === pc);
-    const escrita = c?.premissas.find((x) => x.premissaCritica === pc);
+    const k = c?.premissas.findIndex((x) => x.premissaCritica === pc) ?? -1;
+    const original = k >= 0 ? c?.premissas[k] : undefined;
+    // a revisão do GP vale: descartada conta como não escrita; editada vale o texto dele
+    const revisado = original ? comRevisao(`conteudo:premissas:${k}`, original.item, rev) : undefined;
+    const escrita = original && revisado ? { ...original, item: revisado } : undefined;
     add({
       id: `minuta:premissas:${pc}`,
       secao: "premissas",
-      rotulo: escrita ? "sugestao" : "documento",
+      rotulo: escrita || !ponto1 ? "sugestao" : "documento",
       nome: `${pc} — ${NOME_PREMISSA[pc as CodigoPremissa] ?? ""}`,
       texto: escrita
         ? `${escrita.item.texto} De quem depende: ${escrita.dependeDe || A_DEFINIR}. Até quando: ${escrita.ateQuando || A_DEFINIR}. Se falhar: ${escrita.consequencia || "—"}. Reajuste: ${escrita.reajuste || "—"}.`
@@ -545,7 +609,8 @@ export function montarMinuta(
       origem: ponto1?.origem,
       doPmo: Boolean(escrita),
       conferencia: escrita ? conferirItem(escrita.item, docs) : undefined,
-      alerta: Boolean(c) && !escritas.has(pc),
+      pendente: escrita ? (rev[`conteudo:premissas:${k}`]?.estado ?? "pendente") === "pendente" : undefined,
+      alerta: Boolean(c) && !escrita,
       nota:
         escrita && (!escrita.consequencia || !escrita.reajuste)
           ? "Falta a consequência ou o reajuste (método da etapa 2, seção 3.4)."
@@ -566,7 +631,7 @@ export function montarMinuta(
   // ---------- 5. Metas ou produtos, equipe e cronograma ----------
   c?.metas.forEach((m, k) =>
     add(
-      itemDoPmo(`conteudo:metas:${k}`, "metas-equipe", "Meta", m.item, docs, {
+      itemDoPmo(`conteudo:metas:${k}`, "metas-equipe", "Meta", m.item, docs, rev, {
         nota: `Indicador: ${m.indicador || "—"}; fórmula: ${m.formula || "—"}; aferição: ${m.meioDeAfericao || "—"}.`,
       }),
     ),
@@ -601,14 +666,15 @@ export function montarMinuta(
   const tetos = extrairTetos(analise.documentos);
   if (eap?.volumes.length) {
     const periodos: PeriodoQuadro[] = eap.volumes.map((v) => {
-      const pessoas = (eap.quadroEquipe ?? [])
-        .filter(
-          (l) =>
-            normalizarTermo(l.funcao) === normalizarTermo(v.funcao) &&
-            l.deMes <= v.ateMes &&
-            l.ateMes >= v.deMes,
-        )
-        .reduce((s, l) => s + l.quantidade, 0);
+      // pessoas médias no período: as pessoas-mês que se sobrepõem a ele ÷ os meses
+      const meses = v.ateMes - v.deMes + 1;
+      const pessoasMes = (eap.quadroEquipe ?? [])
+        .filter((l) => normalizarTermo(l.funcao) === normalizarTermo(v.funcao))
+        .reduce((s, l) => {
+          const sobreposicao = Math.min(l.ateMes, v.ateMes) - Math.max(l.deMes, v.deMes) + 1;
+          return s + (sobreposicao > 0 ? sobreposicao * l.quantidade : 0);
+        }, 0);
+      const pessoas = meses > 0 ? Math.round((pessoasMes / meses) * 10) / 10 : 0;
       return {
         rotulo: `${v.descricao} (meses ${v.deMes} a ${v.ateMes})`,
         meses: v.ateMes - v.deMes + 1,
@@ -616,12 +682,9 @@ export function montarMinuta(
         volume: v.quantidade,
       };
     });
-    const teto =
-      tetos.find((t) =>
-        eap.volumes.some((v) =>
-          normalizarTermo(v.unidade).startsWith(normalizarTermo(t.unidade).slice(0, 5)),
-        ),
-      ) ?? tetos[0];
+    const teto = tetos.find((t) =>
+      eap.volumes.some((v) => normalizarTermo(v.unidade).startsWith(normalizarTermo(t.unidade).slice(0, 5))),
+    );
     produtividade = conferirProdutividade(periodos, teto);
     add({
       id: "minuta:metas:produtividade",
@@ -679,7 +742,7 @@ export function montarMinuta(
     add({
       id: "minuta:preco:folha",
       secao: "preco",
-      rotulo: folha.total !== undefined ? "documento" : "decisao-gp",
+      rotulo: folha.total !== undefined ? "sugestao" : "decisao-gp",
       nome: "Folha mês a mês e despesas por natureza (conta do código)",
       texto:
         folha.total !== undefined
@@ -700,7 +763,7 @@ export function montarMinuta(
     add({
       id: "minuta:preco:pontos",
       secao: "preco",
-      rotulo: "documento",
+      rotulo: "sugestao",
       nome: "Pontos por preço (conta do código)",
       texto: tabelaPreco.texto,
       nota: `${tabelaPreco.equivalencia ?? ""} Os cenários são hipóteses para comparar, não previsão. Recomenda-se partir do custo para o desconto; o valor final é decisão do GP.`.trim(),
@@ -728,6 +791,8 @@ export function montarMinuta(
       mes: p.parametros.mesesParcelas?.["Parcela única"],
       origem: analise.desembolso.unica,
     });
+  // parcelas cujo mês o documento não dá: o GP informa (o campo fica na tela mesmo depois de preenchido)
+  const parcelasSemPrazo = parcelas.filter((x) => mesDoPrazo(x.prazo) === undefined).map((x) => x.rotulo);
   let caixa: Caixa | undefined;
   let baseDoCaixa: string | undefined;
   if (parcelas.length) {
@@ -771,10 +836,10 @@ export function montarMinuta(
     });
   }
   eap?.despesas.forEach((x, k) =>
-    add(itemDoPmo(`eap:despesas:${k}`, "preco", "Despesa a considerar", x, docs)),
+    add(itemDoPmo(`eap:despesas:${k}`, "preco", "Despesa a considerar", x, docs, rev)),
   );
   eap?.reservas.forEach((x, k) =>
-    add(itemDoPmo(`eap:reservas:${k}`, "preco", "Risco que pede reserva", x, docs)),
+    add(itemDoPmo(`eap:reservas:${k}`, "preco", "Risco que pede reserva", x, docs, rev)),
   );
 
   // ---------- 7. Matriz e checklist ----------
@@ -888,6 +953,7 @@ export function montarMinuta(
     documento,
     estruturaDoEdital: estrutura,
     contas: {
+      parcelasSemPrazo,
       pontos,
       regraPreco: regra,
       tabelaPreco,
@@ -929,8 +995,8 @@ function criterioCasa(criterioDaSecao: string, chave: string, descricao: string)
 }
 
 function lerReais(texto: string): number | undefined {
-  const m = /R\$\s*([\d.]+(?:,\d{1,2})?)/.exec(texto);
-  if (!m?.[1]) return undefined;
+  const m = /R\$\s*([\d.]+(?:,\d{1,2})?)(\s*(?:mil|milh|bilh))?/i.exec(texto);
+  if (!m?.[1] || m[2]) return undefined;
   const v = Number(m[1].replace(/\./g, "").replace(",", "."));
   return Number.isFinite(v) && v > 0 ? v : undefined;
 }

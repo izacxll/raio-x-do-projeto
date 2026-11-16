@@ -214,3 +214,25 @@ describe("folha mês a mês (operação contínua e parceria)", () => {
     expect(com.custoPorMes?.[0]).toBe(10000);
   });
 });
+
+describe("correções da revisão independente da M2", () => {
+  it("meta do programa e 'por mesa' não viram teto de produtividade", () => {
+    const doc = docRfp([
+      "O programa atenderá até 200 famílias por mês no território.",
+      "Cada mesa terá até 4 pessoas por mesa de trabalho.",
+      "Cada agente fará no máximo 6 visitas por dia.",
+    ]);
+    const tetos = extrairTetos([doc]);
+    expect(tetos.map((t) => t.unidade)).toEqual(["visitas"]);
+  });
+
+  it("índice de preço sem fórmula com multiplicador sai em %, sem escala inventada", () => {
+    const t = tabelaPontosPorPreco(
+      { tipo: "indice", pesoTecnica: 60, pesoPreco: 40, origem: { documento: "RFP", pagina: 1, trecho: "" } },
+      100000,
+    );
+    expect(t?.colunas[2]).toMatch(/Índice de preço \(%\)/);
+    expect(t?.linhas[0]?.valores[0]).toBe(90);
+    expect(t?.texto).toMatch(/o preço vale 40% da nota final/);
+  });
+});

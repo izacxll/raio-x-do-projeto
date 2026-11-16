@@ -115,7 +115,10 @@ export function extrairEstruturaDoEdital(docs: DocumentoRfp[]): EstruturaDoEdita
     return {
       fonte: "quadros",
       secoes: q,
-      obrigatoria: /\b(?:modelo|conformidade com o modelo|anexo i)\b/.test(texto),
+      obrigatoria:
+        /\b(?:em conformidade com o modelo|conforme (?:o )?modelo|no modelo d[oa] anexo|modelo (?:constante|obrigatorio|do anexo))\b/.test(
+          texto,
+        ),
     };
   }
   const l = lista(docs);

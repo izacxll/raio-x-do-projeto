@@ -92,7 +92,15 @@ export function ondeEstaoOsPontos(criterios: CriterioPontos[]): OndeEstaoOsPonto
 // ---------- regra do preço ----------
 
 export type RegraPreco =
-  | { tipo: "indice"; pesoTecnica: number; pesoPreco: number; origem: OrigemItem; formula?: OrigemItem }
+  | {
+      tipo: "indice";
+      pesoTecnica: number;
+      pesoPreco: number;
+      /** Quanto o índice de preço vale na nota final, como a fórmula escreve ("IP × 3"); sem fórmula, undefined. */
+      multiplicador?: number;
+      origem: OrigemItem;
+      formula?: OrigemItem;
+    }
   | { tipo: "desconto"; pontos: number; aCada: number; origem: OrigemItem }
   | { tipo: "menor-preco"; origem?: OrigemItem }
   | { tipo: "sem-preco"; criteriosDeCusto: CriterioPontos[] };
@@ -120,11 +128,16 @@ export function regraDoPreco(analise: AnaliseRfp, criterios: CriterioPontos[]): 
     const a = Number(m?.[1]);
     const b = Number(m?.[2]);
     const [pesoTecnica, pesoPreco] = pesos ? [a, b] : [b, a];
+    const mult = localizarTodos(docs, /\(\s*ip\s*(?:x|\*|×)\s*(\d{1,3}(?:,\d{1,2})?)\s*\)/)[0];
+    const multiplicador = mult
+      ? numero(/\(\s*ip\s*(?:x|\*|×)\s*(\d{1,3}(?:,\d{1,2})?)/.exec(mult.termo)?.[1])
+      : undefined;
     if (pesoTecnica + pesoPreco === 100)
       return {
         tipo: "indice",
         pesoTecnica,
         pesoPreco,
+        multiplicador,
         origem: origem((pesos ?? inv) as NonNullable<typeof pesos>),
         formula: indice ? origem(indice) : undefined,
       };
@@ -178,28 +191,35 @@ const fmtR = (v: number) => v.toLocaleString("pt-BR", { style: "currency", curre
 export function tabelaPontosPorPreco(regra: RegraPreco, estimado?: number): TabelaPontosPreco | undefined {
   if (regra.tipo === "indice") {
     const cenarios = [10, 20, 30];
-    const peso = regra.pesoPreco / 10;
+    // a escala vem da fórmula do edital ("IP × 3"); sem ela, o índice sai em % da nota de preço
+    const peso = regra.multiplicador ?? 100;
+    const naEscala = regra.multiplicador !== undefined;
     const linhas = DESCONTOS.map((d) => ({
       desconto: d,
       preco: estimado ? Math.round(estimado * (1 - d / 100) * 100) / 100 : undefined,
       valores: cenarios.map((c) => {
         const menor = 1 - Math.max(c, d) / 100;
-        return trunc2((menor / (1 - d / 100)) * peso);
+        return naEscala
+          ? trunc2((menor / (1 - d / 100)) * peso)
+          : Math.round((menor / (1 - d / 100)) * 1000) / 10;
       }),
     }));
     // 1% acima da menor proposta: IP = 1/1,01. Em pontos técnicos (com a maior técnica = 100):
-    const perdaPf = peso * (1 - 1 / 1.01);
-    const pontoTecnicoPf = regra.pesoTecnica / 10 / 100;
-    const equiv = Math.round((perdaPf / pontoTecnicoPf) * 100) / 100;
+    // 1% acima da menor: perde (1 − 1/1,01) do peso do preço; 1 ponto técnico de 100 vale 1% do peso da técnica
+    const equiv = Math.round(((regra.pesoPreco * (1 - 1 / 1.01)) / (regra.pesoTecnica / 100)) * 100) / 100;
     return {
       colunas: [
         "Desconto sobre o estimado",
         "Preço",
-        ...cenarios.map((c) => `Pontos de preço se a menor proposta for ${c}% abaixo`),
+        ...cenarios.map((c) =>
+          naEscala
+            ? `Pontos de preço se a menor proposta for ${c}% abaixo`
+            : `Índice de preço (%) se a menor proposta for ${c}% abaixo`,
+        ),
       ],
       linhas,
       equivalencia: `Cada 1% de preço acima da menor proposta custa cerca de ${equiv.toLocaleString("pt-BR")} ponto técnico (com a maior nota técnica em 100). Recomenda-se comparar com o que a proposta ganha escrevendo.`,
-      texto: `Técnica ${regra.pesoTecnica}% e preço ${regra.pesoPreco}%: o preço dá até ${peso.toLocaleString("pt-BR")} na pontuação final, pelo índice menor preço ÷ preço (${regra.origem.documento}, p. ${regra.origem.pagina}).`,
+      texto: `Técnica ${regra.pesoTecnica}% e preço ${regra.pesoPreco}%: ${naEscala ? `o preço dá até ${peso.toLocaleString("pt-BR")} na pontuação final` : `o preço vale ${regra.pesoPreco}% da nota final`}, pelo índice menor preço ÷ preço (${regra.origem.documento}, p. ${regra.origem.pagina}).`,
     };
   }
   if (regra.tipo === "desconto") {

@@ -19,11 +19,12 @@ export interface TetoProdutividade {
   origem: OrigemItem;
 }
 
+// só unidades de atividade de quem executa: "até 200 famílias por mês" é meta do programa, não teto por pessoa
 const UNIDADES =
-  "visitas?|atendimentos?|entrevistas?|familias?|domicilios?|questionarios?|acompanhamentos?|abordagens?|oficinas?|sessoes?|aulas?|encontros?|beneficiarios?|pessoas?";
+  "visitas?|atendimentos?|entrevistas?|questionarios?|acompanhamentos?|abordagens?|oficinas?|sessoes?|aulas?|encontros?";
 const NUM = "(\\d{1,3}(?:,\\d)?)(?:\\s*\\([a-z ]+\\))?";
 const POR =
-  "(?:por|ao|a cada|\\/)\\s*(?:agente|profissional|tecnico|pessoa|entrevistador|visitador|educador|orientador|trabalhador)?\\s*(?:(?:por|ao)\\s*)?(dia|semana|mes)";
+  "(?:por|ao|a cada|\\/)\\s*(?:agente|profissional|tecnico|pessoa|entrevistador|visitador|educador|orientador|trabalhador)?\\s*(?:(?:por|ao)\\s*)?(dia|semana|mes)\\b";
 const RE_TETO = new RegExp(
   `\\b(?:no maximo|maximo de|limite de|teto de|ate|nao (?:podera|devera|pode|deve) (?:exceder|ultrapassar|superar)(?: o limite de)?)\\s+${NUM}\\s+(${UNIDADES})\\s+(?:diari[oa]s|${POR})`,
 );

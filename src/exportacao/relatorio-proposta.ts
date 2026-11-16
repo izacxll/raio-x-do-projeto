@@ -218,7 +218,14 @@ function linhaDaMinuta(i: ItemMinuta): string {
       : i.rotulo === "decisao-gp"
         ? "[Decisão do GP]"
         : "[Sugestão]";
-  return `${rotulo}${i.alerta ? " [Alerta]" : ""} ${i.nome}: ${i.texto}${i.nota ? ` ${i.nota}` : ""}`;
+  const avisos = [
+    i.conferencia?.citacaoNaoConferida ? "citação não conferida" : "",
+    i.conferencia?.numerosSemFonte.length
+      ? `valor não conferido: ${i.conferencia.numerosSemFonte.join(", ")}`
+      : "",
+    i.pendente ? "pendente de revisão do GP" : "",
+  ].filter(Boolean);
+  return `${rotulo}${i.alerta ? " [Alerta]" : ""} ${i.nome}: ${i.texto}${i.nota ? ` ${i.nota}` : ""}${avisos.length ? ` (${avisos.join("; ")})` : ""}`;
 }
 
 /** As seções 1 a 8 do método da etapa 2, como anexo da proposta técnica (o que o GP decide e as contas do código). */

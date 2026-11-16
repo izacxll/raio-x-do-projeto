@@ -25,7 +25,7 @@ Ele **não mede a qualidade da redação do PMO de verdade**. Isso só se mede c
 | | SMPED antes | SMPED, só o código | SMPED, com a gravada | OEI antes | OEI, só o código | OEI, com a gravada |
 |---|---|---|---|---|---|---|
 | Itens na saída | 59 | 24 | 60 | 108 | 26 | 58 |
-| Não passam no teste do método | 30 | 1 | 3 | 30 | 0 | 3 |
+| Não passam no teste do método | 30 | 1 | 2 | 30 | 0 | 3 |
 | Gabarito coberto | 28 de 40 | 38 de 40 | 40 de 40 | 33 de 40 | 37 de 40 | 40 de 40 |
 | Itens do gabarito que são do código | — | 28 de 28 | — | — | 31 de 31 | — |
 | Seções da minuta redigidas | — | — | 17 de 17 | — | — | 14 de 14 |

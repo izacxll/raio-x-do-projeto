@@ -20,7 +20,9 @@ import { NOME_ESTADO_CITACAO, citacaoValeComoFato } from "../../pmo/citacoes";
 import { EtiquetaRotulo, RotuloSecao } from "../componentes/basicos";
 
 const numero = (t: string): number | undefined => {
-  const n = Number(t.replace(/\./g, "").replace(",", "."));
+  const s = t.trim();
+  // "4500.00" é decimal com ponto; "4.500,00" é milhar com ponto e decimal com vírgula
+  const n = /^\d+\.\d{1,2}$/.test(s) ? Number(s) : Number(s.replace(/\./g, "").replace(",", "."));
   return t.trim() && Number.isFinite(n) && n >= 0 ? n : undefined;
 };
 
@@ -109,6 +111,7 @@ function ItemDaMinuta({ i }: { i: ItemMinuta }) {
             </span>
           ) : null}
           {i.conferencia?.redacaoAConferir && <span className="lb aviso-item">redação a conferir</span>}
+          {i.pendente && <span className="lb">pendente de revisão do GP (nos passos acima)</span>}
         </div>
         <h3 style={{ margin: "4px 0" }}>{i.nome}</h3>
         <p>{i.texto}</p>
@@ -162,7 +165,8 @@ function CamposDoPreco({
   atualizar: (np: PropostaDossie) => void;
 }) {
   const funcoes = minuta.contas.folha?.funcoes ?? [];
-  const semMes = minuta.contas.caixa?.semMes ?? [];
+  // as parcelas cujo mês o documento não dá: o campo fica mesmo depois de o GP preencher
+  const semMes = minuta.contas.parcelasSemPrazo.map((rotulo) => ({ rotulo }));
   const [textos, setTextos] = useState<Record<string, string>>({});
   if (!funcoes.length && !semMes.length) return null;
   const par = p.parametros;
@@ -181,13 +185,12 @@ function CamposDoPreco({
             }
             onChange={(e) => {
               setTextos({ ...textos, [f.funcao]: e.target.value });
-              atualizar({
-                ...p,
-                parametros: {
-                  ...par,
-                  custoMensal: { ...(par.custoMensal ?? {}), [f.funcao]: numero(e.target.value) as number },
-                },
-              });
+              // vazio ou inválido sai da lista: o dossiê nunca guarda um custo indefinido
+              const custos = { ...(par.custoMensal ?? {}) };
+              const n = numero(e.target.value);
+              if (n === undefined) delete custos[f.funcao];
+              else custos[f.funcao] = n;
+              atualizar({ ...p, parametros: { ...par, custoMensal: custos } });
             }}
           />
         </label>
@@ -233,16 +236,7 @@ function SecaoDoDocumento({ s }: { s: SecaoRedigida }) {
         <h3 style={{ margin: "4px 0" }}>{s.titulo}</h3>
         {s.paragrafos.map((x) => (
           <p key={x.id} data-so-descrito={x.soDescrito || undefined}>
-            <EtiquetaRotulo
-              rotulo={
-                x.item.rotulo === "decisao_gp"
-                  ? "decisao-gp"
-                  : x.item.rotulo === "documento"
-                    ? "documento"
-                    : "sugestao"
-              }
-            />{" "}
-            {x.item.texto}
+            <EtiquetaRotulo rotulo={x.rotulo} /> {x.item.texto}
             {x.conferencia.citacaoNaoConferida && (
               <span className="lb aviso-item"> citação não conferida</span>
             )}

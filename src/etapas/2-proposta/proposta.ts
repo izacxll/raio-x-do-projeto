@@ -42,6 +42,9 @@ export const NOME_GRUPO: Record<string, string> = {
   premissas: "Premissas",
   restricoes: "Restrições",
   obrigacoesContratante: "Obrigações do contratante",
+  metas: "Metas e indicadores",
+  limitesVolume: "Limites de volume",
+  riscos: "Riscos (gatilho e dono)",
   despesas: "Despesas a considerar",
   reservas: "Riscos que pedem reserva",
   estrategiasPreco: "Estratégias de preço",
@@ -75,7 +78,7 @@ export function itensDoConteudo(c: RespostaConteudo, docs: DocumentoLido[]): Ite
       }),
     ),
   );
-  for (const grupo of ["exclusoes", "restricoes"] as const)
+  for (const grupo of ["exclusoes", "limitesVolume", "restricoes"] as const)
     c[grupo].forEach((item, k) =>
       out.push({
         id: `conteudo:${grupo}:${k}`,
@@ -93,6 +96,27 @@ export function itensDoConteudo(c: RespostaConteudo, docs: DocumentoLido[]): Ite
       item: p.item,
       complemento: `${p.premissaCritica ? `Premissa crítica ${p.premissaCritica}. ` : ""}Se não se confirmar: ${p.consequencia}`,
       conferencia: conferirItem(p.item, docs),
+    }),
+  );
+  // campos do método (decisão 0038): o GP revisa as metas e os riscos como os outros itens
+  c.metas.forEach((m, k) =>
+    out.push({
+      id: `conteudo:metas:${k}`,
+      passo: "conteudo",
+      grupo: NOME_GRUPO.metas ?? "Metas",
+      item: m.item,
+      complemento: `Indicador: ${m.indicador || "—"}; fórmula: ${m.formula || "—"}; aferição: ${m.meioDeAfericao || "—"}.`,
+      conferencia: conferirItem(m.item, docs),
+    }),
+  );
+  c.riscos.forEach((x, k) =>
+    out.push({
+      id: `conteudo:riscos:${k}`,
+      passo: "conteudo",
+      grupo: NOME_GRUPO.riscos ?? "Riscos",
+      item: x.item,
+      complemento: `Gatilho: ${x.gatilho || "a definir pelo GP"}; dono: ${x.dono || "a definir pelo GP"}; resposta: ${x.resposta || "—"}${x.premissaCritica ? `; ${x.premissaCritica}` : ""}.`,
+      conferencia: conferirItem(x.item, docs),
     }),
   );
   c.obrigacoesContratante.forEach((o, k) =>

@@ -261,4 +261,40 @@ describe.skipIf(!temGabarito)("método da etapa 2 — placar contra os gabaritos
     expect(m.itens.find((i) => i.id === `minuta:premissas:${pc}`)?.alerta).toBe(true);
     expect(m.itens.some((i) => i.id === "minuta:estrutura:nao-redigidas" && i.alerta)).toBe(true);
   });
+
+  it("a revisão do GP vale na minuta: descartado sai, editado vale o texto dele; 'documento' só com a citação conferida", () => {
+    const d = dados.get("OEI")!;
+    const c = d.p.conteudo!.resposta;
+    const k = c.estrutura.findIndex((s) => s.itens.length >= 2);
+    const revisoes = {
+      ...d.p.revisoes,
+      [`conteudo:estrutura:${k}:0`]: { estado: "descartado" as const },
+      [`conteudo:estrutura:${k}:1`]: { estado: "editado" as const, textoEditado: "Texto editado pelo GP." },
+      "conteudo:exclusoes:0": { estado: "descartado" as const },
+    };
+    const conteudo = structuredClone(c);
+    conteudo.estrutura[k]!.itens.push({
+      ...conteudo.estrutura[k]!.itens[0]!,
+      id: "doc-falso",
+      rotulo: "documento",
+      texto: "O edital exige relatório mensal.",
+      fontes: [{ doc: "rfp", pagina: 3, trecho: "trecho que não existe neste edital de forma alguma" }],
+    });
+    const m = montarMinuta(
+      d.ponto,
+      { ...d.p, revisoes, conteudo: { ...d.p.conteudo!, resposta: conteudo } },
+      [d.doc],
+      undefined,
+      HOJE,
+    );
+    const secao = m.documento.find((s) =>
+      s.paragrafos.some((x) => x.id.startsWith(`conteudo:estrutura:${k}:`)),
+    )!;
+    expect(secao.paragrafos.map((x) => x.id)).not.toContain(`conteudo:estrutura:${k}:0`);
+    expect(secao.paragrafos.find((x) => x.id === `conteudo:estrutura:${k}:1`)?.item.texto).toBe(
+      "Texto editado pelo GP.",
+    );
+    expect(secao.paragrafos.find((x) => x.item.id === "doc-falso")?.rotulo).toBe("sugestao");
+    expect(m.itens.find((i) => i.id === "conteudo:exclusoes:0")).toBeUndefined();
+  });
 });
