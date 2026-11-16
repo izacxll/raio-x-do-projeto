@@ -255,7 +255,7 @@ function divergenciaDeValor(e: EntradaTap): Divergencia {
 }
 
 export function compararRfpEProposta(e: EntradaTap): Divergencia[] {
-  if (e.fonte === "nenhuma") return [];
+  if (e.fonte === "nenhuma") return divergenciasDoMetodo(e);
   const requisitos = e.ponto.requisitos.filter((r) => r.tipo === "produto" || r.tipo === "equipe" || !r.tipo);
   return [
     ...requisitos.map((r) => divergenciaDoRequisito(r, e)),

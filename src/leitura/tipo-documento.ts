@@ -20,6 +20,12 @@ export interface TipoProvavel {
 /** Títulos reconhecidos, sobre a linha sem acento e em minúsculas. A primeira linha que casa decide. */
 const TITULOS: [RegExp, PapelDocumento, string, string][] = [
   [/\btermo de abertura\b/, "tap", "Termo de abertura", "um termo de abertura"],
+  [
+    /^(?:minuta d[eo] )?(?:contrato\b|termo de (?:fomento|colaboracao)\b|acordo de cooperacao\b|termo aditivo\b)/,
+    "contrato",
+    "Contrato ou termo",
+    "um contrato ou termo assinado",
+  ],
   [/\bplano de gerenciamento\b/, "pgp", "Plano de gerenciamento", "um plano de gerenciamento"],
   [/\bplano de trabalho\b/, "pgp", "Plano de trabalho", "um plano de trabalho"],
   [/\bproposta (?:tecnica|comercial|de precos?)\b/, "proposta", "Proposta", "uma proposta"],

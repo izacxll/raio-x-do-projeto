@@ -328,7 +328,7 @@ export function TermoDeAbertura() {
             erro={erro}
             aoPedir={() => void executar(passo)}
             aoCancelar={cancelar}
-            envio="O texto dos PDFs da RFP e da proposta vai para a API do Claude, pela sua chave, na organização da FGV."
+            envio="O texto dos PDFs da RFP, da proposta e do contrato (quando enviado) vai para a API do Claude, pela sua chave, na organização da FGV."
           >
             {t[passo] && (
               <ItensPmo

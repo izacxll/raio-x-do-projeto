@@ -11,7 +11,7 @@ import { conferirProdutividade, extrairTetos } from "../../regras/produtividade"
 import { conferirDuracao, mesesDoRotulo, vigenciaEmMeses } from "../../regras/vigencia";
 import { quadroContraOTeto } from "../2-proposta/minuta";
 import type { Divergencia, LadoDivergencia } from "./divergencias";
-import type { EntradaTap } from "./entrada";
+import { valorNaProposta, type EntradaTap } from "./entrada";
 
 const onde = (o?: OrigemItem) => (o ? `${o.documento}, p. ${o.pagina}` : undefined);
 const reais = (v: number) => v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
@@ -42,7 +42,7 @@ export function parcelasIguais(
 
 /** "Em conformidade com o item 5 do edital": a frase da proposta que declara seguir o edital. */
 const RE_CONFORMIDADE =
-  /\b(?:em conformidade com|conforme|de acordo com|segundo)\s+(?:o |a )?(?:item|subitem|clausula|anexo|quadro|tabela)\s+[\divx.]+[a-z]?(?:\s+d[oa] (?:edital|termo de referencia|chamamento|tr))?/;
+  /\b(?:em conformidade com|conforme|de acordo com|segundo)\s+(?:o |a )?(?:item|subitem|clausula|anexo|quadro|tabela)\s+(?:\d+(?:\.\d+)*[a-z]?|[ivxl]+)\b(?:\s+d[oa] (?:edital|termo de referencia|chamamento|tr))?/;
 const RE_DESEMBOLSO_PERTO = /\b(?:desembolso|parcelas?|repasse|pagamento|percentual)\b/;
 
 function parcelasDaProposta(e: EntradaTap): { parcelas: ParcelaDesembolso[]; onde: string } | undefined {
@@ -78,18 +78,24 @@ function divergenciaDeParcelas(e: EntradaTap): Divergencia[] {
       : { texto: "parcelas não localizadas no contrato pelo código — conferir" }
     : undefined;
   const difs: string[] = [];
-  if (rfp.parcelas.length && prop?.parcelas.length)
-    difs.push(...parcelasIguais(rfp.parcelas, prop.parcelas).diferencas.map((d) => `RFP × proposta: ${d}`));
-  if (ctr?.length && prop?.parcelas.length)
-    difs.push(...parcelasIguais(prop.parcelas, ctr).diferencas.map((d) => `proposta × contrato: ${d}`));
+  // na proposta do dossiê as parcelas são as do edital: a comparação com o contrato sai uma vez só (RFP × contrato)
+  const propPropria = e.fonte === "pdf" ? prop?.parcelas : undefined;
+  if (rfp.parcelas.length && propPropria?.length)
+    difs.push(...parcelasIguais(rfp.parcelas, propPropria).diferencas.map((d) => `RFP × proposta: ${d}`));
+  if (ctr?.length && propPropria?.length)
+    difs.push(...parcelasIguais(propPropria, ctr).diferencas.map((d) => `proposta × contrato: ${d}`));
   if (ctr?.length && rfp.parcelas.length)
     difs.push(...parcelasIguais(rfp.parcelas, ctr).diferencas.map((d) => `RFP × contrato: ${d}`));
-  const somas = [prop?.parcelas, ctr].filter((x): x is ParcelaDesembolso[] => Boolean(x?.length));
+  if (ctr?.length && !rfp.parcelas.length && rfp.unica)
+    difs.push(`RFP × contrato: parcela única × ${ctr.length} parcelas`);
+  const somas = [propPropria, ctr].filter((x): x is ParcelaDesembolso[] => Boolean(x?.length));
   for (const s of somas) {
     const soma = Math.round(s.reduce((t, p) => t + p.percentual, 0) * 100) / 100;
-    if (soma !== 100) difs.push(`as parcelas somam ${pct(soma)}, não 100% (conta do código)`);
+    if (Math.abs(soma - 100) > 0.05) difs.push(`as parcelas somam ${pct(soma)}, não 100% (conta do código)`);
   }
-  const comparou = Boolean(prop?.parcelas.length && (rfp.parcelas.length || ctr?.length));
+  const lados = [rfp.parcelas.length || rfp.unica ? 1 : 0, propPropria?.length ? 1 : 0, ctr?.length ? 1 : 0];
+  const comparou =
+    lados.reduce((a, b) => a + b, 0) >= 2 || (e.fonte === "dossie" && Boolean(rfp.parcelas.length));
   out.push({
     id: "parcelas",
     tema: "parcelas",
@@ -156,7 +162,11 @@ function mesesDaProposta(e: EntradaTap): { meses: number; texto: string; onde: s
   }
   if (!e.proposta || e.fonte !== "pdf") return undefined;
   const d = prepararDocumento(e.proposta.id, "proposta", e.proposta.paginas);
-  const tri = localizarTodos([d], /\b(\d{1,2})[ºo°]?\s*trimestre\b|\btrimestre\s*(\d{1,2})\b/g);
+  // "4º trimestre de 2027" é trimestre do calendário, não do projeto
+  const tri = localizarTodos(
+    [d],
+    /\b(\d{1,2})[ºo°]?\s*trimestre\b(?!\s*(?:de\s*)?\/?\d{4})|\btrimestre\s*(\d{1,2})\b(?!\s*(?:de\s*)?\/?\d{4})/g,
+  );
   const n = Math.max(0, ...tri.map((l) => Number(/(\d{1,2})/.exec(l.termo)?.[1] ?? 0)));
   if (n) {
     const l = tri.find((x) => Number(/(\d{1,2})/.exec(x.termo)?.[1]) === n);
@@ -203,10 +213,16 @@ const RE_LIMITE =
 
 function divergenciaDeRegraDaEquipe(e: EntradaTap): Divergencia | undefined {
   if (!e.proposta) return undefined;
-  const minimo = localizarTodos(e.ponto.analise.documentos, RE_MINIMO)[0];
   const d = prepararDocumento(e.proposta.id, "proposta", e.proposta.paginas);
-  const limite = localizarTodos([d], RE_LIMITE)[0];
-  if (!minimo || !limite) return undefined;
+  const n = (t: string) => /(\d+)/.exec(t)?.[1];
+  // só a mesma quantidade com regra diferente: "no mínimo 5 profissionais" × "limite de contratação de 5"
+  const limites = localizarTodos([d], RE_LIMITE);
+  const par = localizarTodos(e.ponto.analise.documentos, RE_MINIMO)
+    .map((m) => ({ m, l: limites.find((l) => n(l.termo) && n(l.termo) === n(m.termo)) }))
+    .find((x) => x.l);
+  if (!par?.l) return undefined;
+  const minimo = par.m;
+  const limite = par.l;
   return {
     id: "equipe-regra",
     tema: "equipe-regra",
@@ -238,7 +254,6 @@ function divergenciaDeProdutividade(e: EntradaTap): Divergencia | undefined {
     situacao: "diferente",
     observacao:
       "O volume previsto não fecha com o quadro de equipe e o teto escrito (conta do código). Sugere-se rever o quadro ou a meta antes de começar.",
-    versaoSugerida: e.contrato ? "contrato" : "rfp",
     oQueFazer: "Levar à reunião de abertura: rever o quadro, o volume ou a meta, por escrito.",
   };
 }
@@ -246,7 +261,10 @@ function divergenciaDeProdutividade(e: EntradaTap): Divergencia | undefined {
 function divergenciaDeValorNoContrato(e: EntradaTap): Divergencia | undefined {
   const c = e.lidoDoContrato?.valor;
   if (!e.lidoDoContrato) return undefined;
-  const vProp = e.dados?.valor;
+  const vProp =
+    e.dados?.valor ?? (e.fonte === "pdf" && e.proposta ? valorNaProposta(e.proposta)?.valor : undefined);
+  const teto = e.ponto.valorEstimado ? lerReaisSimples(e.ponto.valorEstimado.texto) : undefined;
+  const acimaDoTeto = Boolean(c && teto !== undefined && c.valor > teto + 0.009);
   const ladoCtr: LadoDivergencia = c
     ? { texto: reais(c.valor), onde: onde(c.origem) }
     : { texto: "valor não localizado no contrato pelo código — conferir" };
@@ -256,22 +274,36 @@ function divergenciaDeValorNoContrato(e: EntradaTap): Divergencia | undefined {
     tema: "valor",
     rfp: { texto: e.ponto.valorEstimado?.texto ?? "—", onde: onde(e.ponto.valorEstimado?.origem) },
     proposta: {
-      texto: vProp !== undefined ? reais(vProp) : "preço final não preenchido na etapa 2 — a definir pelo GP",
+      texto:
+        vProp !== undefined
+          ? reais(vProp)
+          : e.fonte === "pdf"
+            ? "valor global não localizado na proposta pelo código — conferir"
+            : "preço final não preenchido na etapa 2 — a definir pelo GP",
     },
     contrato: ladoCtr,
-    situacao: !c || vProp === undefined ? "nao-conferido" : diferente ? "diferente" : "igual",
-    observacao: diferente
-      ? "O valor do contrato é diferente do preço final da proposta. No TAP, vale o valor assinado; sugere-se conferir se houve negociação registrada."
-      : c
-        ? "Os recursos do TAP seguem o valor do contrato assinado."
-        : "O código não achou o valor no contrato — conferir.",
+    situacao: acimaDoTeto || diferente ? "diferente" : !c || vProp === undefined ? "nao-conferido" : "igual",
+    observacao: acimaDoTeto
+      ? "O valor do contrato passa do teto ou valor estimado da RFP: sugere-se conferir com o jurídico."
+      : diferente
+        ? "O valor do contrato é diferente do preço final da proposta. No TAP, vale o valor assinado; sugere-se conferir se houve negociação registrada."
+        : c
+          ? "Os recursos do TAP seguem o valor do contrato assinado."
+          : "O código não achou o valor no contrato — conferir.",
     versaoSugerida: c ? "contrato" : undefined,
     oQueFazer: diferente ? "Confirmar o valor com o jurídico e com o contratante." : undefined,
   };
 }
 
+function lerReaisSimples(texto: string): number | undefined {
+  const m = /R\$\s*([\d.]+(?:,\d{1,2})?)(\s*(?:mil|milh|bilh))?/i.exec(texto);
+  if (!m?.[1] || m[2]) return undefined;
+  const v = Number(m[1].replace(/\./g, "").replace(",", "."));
+  return Number.isFinite(v) && v > 0 ? v : undefined;
+}
+
 export function divergenciasDoMetodo(e: EntradaTap): Divergencia[] {
-  if (e.fonte === "nenhuma") return [];
+  if (e.fonte === "nenhuma" && !e.lidoDoContrato) return [];
   return [
     ...[divergenciaDeValorNoContrato(e)],
     ...divergenciaDeParcelas(e),

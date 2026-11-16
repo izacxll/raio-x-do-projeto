@@ -83,9 +83,11 @@ export function conferirTap(
 
   // 3. marcos dentro da vigência: a do contrato assinado, quando houver (decisão 0041); senão, o prazo da RFP
   const vigContrato = e.lidoDoContrato?.vigencia;
+  // a mesma régua dos marcos (diasDoTexto: meses × 30, anos × 365) nos dois lados
+  const diasContrato = vigContrato ? diasDoTexto(vigContrato.texto) : undefined;
   const prazo =
-    vigContrato?.meses !== undefined
-      ? { dias: vigContrato.meses * 30, texto: `${vigContrato.texto} (contrato)` }
+    diasContrato !== undefined
+      ? { dias: diasContrato, texto: `${vigContrato?.texto} (contrato)` }
       : e.ponto.prazoExecucao;
   const marcos = resposta.marcos.filter((_, k) => valido({ id: `tap:marcos:${k}` } as ItemConferido));
   if (!prazo) {

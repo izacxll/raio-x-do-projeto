@@ -11,6 +11,8 @@ import { vigenciaEmMeses } from "../../regras/vigencia";
 
 export interface LidoDoContrato {
   doc: DocumentoRfp;
+  /** Páginas sem texto legível: o que o código não achou nelas é "não verificável", não "não localizado". */
+  ilegiveis: number[];
   valor?: { valor: number; origem: OrigemItem };
   vigencia?: { texto: string; meses?: number; origem: OrigemItem };
   desembolso: Desembolso;
@@ -23,7 +25,7 @@ export interface LidoDoContrato {
 const RE_VALOR =
   /\bvalor (?:total|global|do (?:contrato|termo|ajuste|repasse)|estimado)\b[^.;]{0,120}?r\$\s*[\d.]+(?:,\d{1,2})?/;
 const RE_PARTE_INTEGRANTE =
-  /\b(?:plano de trabalho|proposta)[^.;]{0,80}\bparte integrante\b|\bparte integrante\b[^.;]{0,80}\b(?:plano de trabalho|proposta)\b/;
+  /\b(?:plano de trabalho|proposta)[^.;]{0,80}\bpartes? integrantes?\b|\bpartes? integrantes?\b[^.;]{0,80}\b(?:plano de trabalho|proposta)\b/;
 const RE_QUEM =
   /\b(?:gestor(?:a)? d[ao] (?:parceria|contrato|termo)|fiscal d[oe] contrato|comissao de (?:monitoramento|fiscalizacao|avaliacao))\b/;
 
@@ -38,12 +40,14 @@ export function lerContrato(contrato: DocumentoLido): LidoDoContrato {
   const doc = prepararDocumento(contrato.id, "Contrato", contrato.paginas);
   const docs = [doc];
   const v = localizarTodos(docs, RE_VALOR)[0];
-  const valor = v ? reais(v.frase) : undefined;
+  // o valor que a regra casou ("valor total ... R$ 96.000,00"), não o primeiro R$ da frase
+  const valor = v ? reais(v.termo) : undefined;
   const p = prazosDeExecucao(docs).find((x) => x.tipo === "vigencia" || x.tipo === "execucao");
   const parte = localizarTodos(docs, RE_PARTE_INTEGRANTE)[0];
   const quem = localizarTodos(docs, RE_QUEM).slice(0, 3);
   return {
     doc,
+    ilegiveis: doc.ilegiveis,
     valor: v && valor ? { valor, origem: origemDe(v) } : undefined,
     vigencia: p
       ? {

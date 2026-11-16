@@ -4,6 +4,8 @@
 // O PDF da RFP é servido pelo próprio site (copiado de tests/fixtures/rfps-publicas/ antes do dev e do build).
 import type { z } from "zod";
 import type { DocumentoLido } from "../dossie/esquema";
+import { comCamposNovos } from "../pmo/schemas/proposta";
+import { comCamposNovosTap } from "../pmo/schemas/tap";
 
 export const TEXTO_DEMONSTRACAO = "Demonstração com respostas gravadas, sem chamada à IA";
 
@@ -38,7 +40,15 @@ export async function respostaGravada<S extends z.ZodType>(
   const caminho = `../../tests/fixtures/gerados/${PASTA[etapa]}/${passo}.json`;
   const carregar = gravadas[caminho];
   if (!carregar) throw new Error(`Resposta gravada não encontrada: etapa ${etapa}, passo ${passo}.`);
-  return schema.parse(await carregar()) as z.infer<S>;
+  const dados = await carregar();
+  // gravações de antes das fases M2 e M3 abrem com os campos novos vazios, como os dossiês
+  const preenchido =
+    etapa === 3 && passo === "tap"
+      ? comCamposNovosTap(dados)
+      : etapa === 2 && (passo === "estrategia" || passo === "conteudo" || passo === "eap")
+        ? comCamposNovos(passo, dados)
+        : dados;
+  return schema.parse(preenchido) as z.infer<S>;
 }
 
 /**

@@ -81,4 +81,30 @@ describe("etapa 3 pelo método: contrato e divergências por código", () => {
     expect(d2.find((d) => d.id === "valor-contrato")).toBeUndefined();
     expect(d2.find((d) => d.id === "parcelas")?.versaoSugerida).toBe("rfp");
   });
+
+  it("correções da revisão: valor certo, trimestre do calendário, partes integrantes, mínimo × limite só com a mesma quantidade", async () => {
+    const { lerContrato } = await import("../../src/etapas/3-tap/contrato");
+    const { tipoProvavel } = await import("../../src/leitura/tipo-documento");
+    const c = lerContrato(
+      doc("contrato", [
+        "TERMO DE FOMENTO (fictício). O valor mensal é de R$ 8.000,00, perfazendo o valor total de R$ 96.000,00. O plano de trabalho e a proposta são partes integrantes deste termo.",
+      ]),
+    );
+    expect(c.valor?.valor).toBe(96000);
+    expect(c.parteIntegrante).toBeDefined();
+    expect(
+      tipoProvavel(doc("contrato", ["TERMO DE FOMENTO Nº 12/2026\nPlano de trabalho em anexo"]).paginas)
+        ?.papel,
+    ).toBe("contrato");
+    const prop = doc("proposta", [
+      "PROPOSTA TÉCNICA. Entregas no 4º trimestre de 2027. No máximo 30 técnicos por município.",
+    ]);
+    const rfp = doc("rfp", [
+      "EDITAL. O contrato terá prazo de vigência de 6 (seis) meses. A equipe terá no mínimo 2 profissionais.",
+    ]);
+    const e = montarEntradaTap({ ...criarDossieVazio(HOJE), documentos: [rfp, prop] }, HOJE);
+    const d = compararRfpEProposta(e);
+    expect(d.find((x) => x.id === "duracao")).toBeUndefined();
+    expect(d.find((x) => x.id === "equipe-regra")).toBeUndefined();
+  });
 });
