@@ -52,11 +52,12 @@ O que cada fase M ainda precisa cobrir está nas issues de cada uma (rótulos `e
 
 ## Próximo passo
 
-1. **Responsável pelo projeto:**
-   - ok nos PRs #44, #45 e #46, e o teste da etapa 1 na prévia;
-   - conferir os 10 itens do gabarito separados em cada placar antes do merge da fase;
-   - com a chave: a comparação de modelos e o roteiro da etapa 5 sobre um plano real (abaixo).
+1. **Responsável pelo projeto** (combinado em 16/11/2026):
+   - testar a demonstração e dar os oks em ordem: #44, #45, #46 e #53; o #52 (skill 0.3.0) depois de ler o diff da skill;
+   - com a chave, no dia seguinte, nesta ordem: etapas 1 e 2 na prévia; o roteiro da etapa 5 com o plano real; a comparação de modelos;
+   - conferir os 10 itens do gabarito separados em cada placar antes do merge da fase.
 2. **Claude Code:** fase M3 (etapa 3 pelo método, contrato como entrada), em cima da M2.
+3. **Histórico do Git:** a responsável decidiu não reescrever a `main` (16/11/2026). Os arquivos atuais e o site estão sem os detalhes do caso real.
 
 **Com a chave da API** (pedir ao administrador do Claude da FGV, no Claude Console). A chave fica num arquivo fora do projeto; passo a passo no PowerShell em [`tecnico/07-configuracao.md`](tecnico/07-configuracao.md#chave-da-api-nos-scripts-locais-powershell). Nunca defina `ANTHROPIC_API_KEY` no terminal: com ela, o Claude Code passa a cobrar o uso dele nessa chave.
 

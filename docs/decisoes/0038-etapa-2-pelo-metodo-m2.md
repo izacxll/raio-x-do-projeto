@@ -43,7 +43,7 @@ A fase M2 aplica o método da etapa 2 (`docs/estudos/metodo-etapa-2.md`, revisad
    - **premissa crítica que se aplica e a minuta não escreve:** alerta.
 5. **Preço pelo tipo de contrato:**
    - consultoria por produtos: horas × valor-hora, como antes;
-   - operação contínua e parceria: a folha mês a mês (quadro do PMO × custo mensal de cada função, que é decisão do GP) mais as despesas por natureza, sem valor-hora, sem horas na EAP e sem taxa de administração. A planilha de preço exportada segue o tipo.
+   - operação contínua e parceria: a folha mês a mês (quadro do PMO × custo mensal de cada função, que é decisão do GP) mais as despesas por natureza, sem valor-hora e sem horas na EAP; custos indiretos só como despesa, com memória de cálculo, e taxa de administração conferida no edital e na norma local (decisão 0040). A planilha de preço exportada segue o tipo.
    A minuta usa o cronograma de parcelas do edital; mudar é decisão do GP, dita e justificada.
 6. **Schemas do PMO** (campos novos, todos obrigatórios na API; dossiês e gravações antigas abrem com os campos vazios):
    - abordagem: `mudaOResultado`, `riscoPrincipal`;

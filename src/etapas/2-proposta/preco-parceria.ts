@@ -1,6 +1,7 @@
 // Etapa 2, preço de operação contínua e de parceria (método da etapa 2, seção 3.6): a folha da equipe mês a mês ao
 // longo da vigência, com o custo mensal de cada função dado pelo GP, mais as despesas por natureza. Sem valor-hora,
-// sem horas na EAP e sem taxa de administração. Sem os valores do GP, a conta fica em branco: o código nunca inventa
+// sem horas na EAP; custos indiretos só como despesa com memória de cálculo, e taxa de administração conferida no edital
+// e na norma local (decisão 0040). Sem os valores do GP, a conta fica em branco: o código nunca inventa
 // salário, encargo nem despesa.
 import type { LinhaQuadro } from "../../pmo/schemas/proposta";
 

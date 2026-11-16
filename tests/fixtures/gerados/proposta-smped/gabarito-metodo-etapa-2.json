@@ -734,7 +734,7 @@
       {
         "id": "PRC-01",
         "nome": "Estrutura do preço",
-        "valor": "Parceria com equipe: folha mês a mês ao longo dos 12 meses (Quadro 12, com encargos, benefícios e rescisões) mais despesas por natureza (Quadros 13 e 14), distribuídas no Quadro 11 e resumidas no Quadro 17; sem valor-hora e sem taxa de administração.",
+        "valor": "Parceria com equipe: folha mês a mês ao longo dos 12 meses (Quadro 12, com encargos, benefícios e rescisões) mais despesas por natureza (Quadros 13 e 14), distribuídas no Quadro 11 e resumidas no Quadro 17; sem valor-hora; custos indiretos só como despesa, com memória de cálculo; taxa de administração a conferir no edital e na norma local.",
         "rotulo": "sugestao",
         "quem": "codigo",
         "fontes": [

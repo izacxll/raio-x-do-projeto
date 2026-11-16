@@ -734,7 +734,7 @@ export function montarMinuta(
     texto:
       tipo.projeto === "produtos"
         ? "EAP × horas por perfil × valor-hora, mais despesas, tributos e reserva. Os valores são do GP."
-        : `Folha da equipe mês a mês ao longo da vigência mais as despesas por natureza, distribuídas nas parcelas${tipo.contrato === "parceria" ? "; sem valor-hora e sem taxa de administração (parceria, Lei 13.019/2014)" : ""}. Os valores são do GP.`,
+        : `Folha da equipe mês a mês ao longo da vigência mais as despesas por natureza, distribuídas nas parcelas${tipo.contrato === "parceria" ? "; sem valor-hora; custos indiretos só como despesa, com memória de cálculo (Lei 13.019/2014, art. 46); taxa de administração: conferir no edital e na norma local" : ""}. Os valores são do GP.`,
   });
   let folha: FolhaMensal | undefined;
   if (operacao && eap?.quadroEquipe.length) {

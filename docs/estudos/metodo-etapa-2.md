@@ -64,7 +64,7 @@ Na ordem do modelo do edital, cada seção sai **escrita**, não descrita:
 | Tipo | Estrutura do preço |
 |---|---|
 | Consultoria por produto | EAP × horas por perfil × valor-hora, mais despesas, tributos e reserva (como na especificação) |
-| Parceria com equipe de campo (Lei 13.019) | Folha da equipe mês a mês ao longo da vigência + despesas por natureza (a tabela do edital) distribuídas nas parcelas; sem valor-hora e sem taxa de administração |
+| Parceria com equipe de campo (Lei 13.019) | Folha da equipe mês a mês ao longo da vigência + despesas por natureza (a tabela do edital) distribuídas nas parcelas; sem valor-hora; custos indiretos só como despesa, com memória de cálculo (Lei 13.019, art. 46); taxa de administração: conferir no edital e na norma local (decisão 0040) |
 | Preço por item ou por posto | Planilha do edital, item a item |
 
 Sempre, por código:

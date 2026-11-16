@@ -169,7 +169,7 @@
   "despesas": [
     {
       "id": "desp-1",
-      "texto": "Sugere-se compor a folha da equipe mês a mês ao longo da vigência (Quadro 12), com encargos, benefícios e as rescisões proporcionais, sem valor-hora e sem taxa de administração; salários a definir pelo GP.",
+      "texto": "Sugere-se compor a folha da equipe mês a mês ao longo da vigência (Quadro 12), com encargos, benefícios e as rescisões proporcionais, sem valor-hora; custos indiretos só como despesa, com memória de cálculo; taxa de administração a conferir no edital e na norma local; salários a definir pelo GP.",
       "rotulo": "sugestao",
       "motivo": "Estrutura de preço de parceria com equipe (método da etapa 2, 3.6).",
       "fontes": [

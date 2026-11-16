@@ -16,7 +16,7 @@
 | Premissa de produtividade | Visitas por família e duração da visita na norma citada | Produtividade explícita (visitas/dia, tempo) como Decisão do GP; conta equipe × volume no código | Código + GP | PROP-EQUIPE .4 |
 | Campo e mobilização | Muitos municípios, segurança, conectividade; adesão voluntária | Campo nas durações e no preço; quem mobiliza | PMO | PROP-METODOLOGIA .7, .8; PROP-EAP .10 |
 | RACI com o contratante | Atividades da metodologia e quem valida | Um só "A" por linha; o contratante como A nas validações | PMO | PROP-EQUIPE .7 |
-| Estrutura do preço | Tipo de contrato (etapa 1) | Consultoria por produto: horas × valor-hora. Parceria com equipe: folha mensal × meses + despesas por natureza, sem taxa de administração. Por item: planilha do edital | Código pelo tipo | PROP-PRECO .1, .3, .7 |
+| Estrutura do preço | Tipo de contrato (etapa 1) | Consultoria por produto: horas × valor-hora. Parceria com equipe: folha mensal × meses + despesas por natureza; custos indiretos com memória de cálculo, taxa de administração conferida no edital e na norma local (decisão 0040). Por item: planilha do edital | Código pelo tipo | PROP-PRECO .1, .3, .7 |
 | Pontos por desconto | Regra de economicidade | Tabela desconto → valor → pontos | Código | PROP-PRECO .9 |
 | Caixa | Parcelas (percentual, prazo, condição) × curva de custo | Acumulado de repasse − acumulado de custo, por parcela; ponto de menor folga | Código (precisa da curva do GP) | PROP-PRECO .8 |
 | Despesas de campo | Municípios, tablets, internet, capacitação, rotatividade | Lista de despesas a não esquecer, por território | PMO | PROP-PRECO .3, .4 |

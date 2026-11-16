@@ -745,7 +745,7 @@
           "id": "q12-2",
           "texto": "Nomes, tipo de contratação, valor base, benefícios, encargos e número de parcelas de cada função: a definir pelo GP, compatíveis com os currículos e as cotações.",
           "rotulo": "decisao_gp",
-          "motivo": "Folha mês a mês sem valor-hora nem taxa de administração.",
+          "motivo": "Folha mês a mês, sem valor-hora; custos indiretos só como despesa, com memória de cálculo; taxa de administração a conferir no edital e na norma local.",
           "fontes": [
             {
               "doc": "rfp",

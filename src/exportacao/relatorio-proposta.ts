@@ -266,7 +266,7 @@ export function montarPlanilhaPreco(
       ...base(
         dossie,
         "Planilha de preço — minuta",
-        "Folha da equipe mês a mês e despesas por natureza, com os valores do GP; sem valor-hora e sem taxa de administração.",
+        "Folha da equipe mês a mês e despesas por natureza, com os valores do GP; sem valor-hora. Custos indiretos só como despesa, com memória de cálculo; taxa de administração: conferir no edital e na norma local.",
         pendentes > 0 || folha.faltando.length > 0 || p.parametros.precoFinal === undefined,
         agora,
       ),
