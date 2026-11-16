@@ -33,7 +33,15 @@ const TITULOS: [RegExp, PapelDocumento, string][] = [
 const LINHAS_OLHADAS = 15;
 const MAX_TITULO = 120;
 
+/** Linha que cita outro documento ou é modelo de anexo: não é o título deste. */
+const NAO_E_TITULO = /\bmodelo\b|\bref\.|\breferente\b|\bem resposta\b/;
+
+/**
+ * O título mais provável. Olha todas as linhas candidatas e prefere proposta, plano ou TAP a edital: a capa de uma
+ * proposta costuma citar o pregão ou o chamamento antes do título (revisão independente da fase).
+ */
 export function tipoProvavel(paginas: PaginaLida[]): TipoProvavel | undefined {
+  const candidatos: TipoProvavel[] = [];
   for (const p of paginas.slice(0, 2)) {
     if (p.origem === "nao-verificavel") continue;
     const linhas = p.texto
@@ -44,11 +52,12 @@ export function tipoProvavel(paginas: PaginaLida[]): TipoProvavel | undefined {
     for (const linha of linhas) {
       if (linha.length > MAX_TITULO) continue;
       const n = tirarAcentos(linha);
+      if (NAO_E_TITULO.test(n)) continue;
       const t = TITULOS.find(([re]) => re.test(n));
-      if (t) return { papel: t[1], nome: t[2], pagina: p.numero, linha };
+      if (t) candidatos.push({ papel: t[1], nome: t[2], pagina: p.numero, linha });
     }
   }
-  return undefined;
+  return candidatos.find((c) => c.papel !== "rfp") ?? candidatos[0];
 }
 
 /** A RFP e os anexos da RFP são a mesma família: um termo de referência na caixa de anexos não é erro. */

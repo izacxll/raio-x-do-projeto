@@ -34,6 +34,15 @@ describe("aviso de caixa", () => {
     expect(caixaParece("tap", [pagina("TERMO DE REFERÊNCIA")])?.caixaSugerida).toBe("rfp");
   });
 
+  it("capa de proposta que cita o pregão e modelo de anexo não enganam", () => {
+    expect(
+      caixaParece("proposta", [
+        pagina("Pregão eletrônico nº 12/2026\nRef.: Edital nº 12/2026\nPROPOSTA TÉCNICA"),
+      ]),
+    ).toBeUndefined();
+    expect(caixaParece("anexo-rfp", [pagina("ANEXO I\nModelo de plano de trabalho")])).toBeUndefined();
+  });
+
   it("na caixa certa, ou em caixa da mesma família, não avisa", () => {
     expect(caixaParece("pgp", [pagina("PLANO DE TRABALHO")])).toBeUndefined();
     expect(caixaParece("anexo-rfp", [pagina("TERMO DE REFERÊNCIA")])).toBeUndefined();
