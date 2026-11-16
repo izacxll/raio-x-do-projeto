@@ -24,7 +24,9 @@ export type SituacaoItem =
   /** Há páginas sem texto legível: o código não pode dizer que não está lá. */
   | "nao-verificavel"
   /** Conta feita pelo código sobre dados do documento (data limite, dias que faltam). */
-  | "calculado";
+  | "calculado"
+  /** Exigência de licitação que não vale para a modalidade reconhecida (parceria da Lei 13.019/2014). */
+  | "nao-se-aplica";
 
 export interface OrigemItem {
   /** "RFP" ou "Anexo: <arquivo>". */

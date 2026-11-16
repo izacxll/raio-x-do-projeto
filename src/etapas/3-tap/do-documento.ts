@@ -19,7 +19,12 @@ export interface DadoDoDocumento {
 const NAO = "não localizado pelo código — conferir no documento";
 
 function doItem(id: string, elemento: string, nome: string, i?: ItemAnalise): DadoDoDocumento {
-  if (!i || i.situacao === "nao-localizado" || i.situacao === "nao-verificavel")
+  if (
+    !i ||
+    i.situacao === "nao-localizado" ||
+    i.situacao === "nao-verificavel" ||
+    i.situacao === "nao-se-aplica"
+  )
     return { id, elemento, nome, texto: NAO, origem: "nao-localizado" };
   return {
     id,

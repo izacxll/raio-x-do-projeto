@@ -11,6 +11,7 @@ export const NOME_TIPO_REQUISITO: Record<TipoRequisito, string> = {
   equipe: "Equipe mínima",
   quantidade: "Quantidade",
   local: "Local",
+  condicao: "Condição do objeto",
   outro: "Incluído pelo GP",
 };
 

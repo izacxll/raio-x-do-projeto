@@ -8,9 +8,17 @@ import { tirarAcentos } from "../../texto/normalizar";
 import { itemSemAchado, type DocumentoRfp, type ItemAnalise } from "./item";
 import { localizarTodos, origemDe, type Localizado } from "./localizar";
 import { faixasDoTema, type MapaRfp } from "./mapa";
+import { NAO_SE_APLICA_PARCERIA, notaNaoSeAplica, parceriaOsc } from "./parceria";
 
 export type EventoCertame =
-  "publicacao" | "esclarecimento" | "entrega" | "sessao" | "resultado" | "recursos" | "celebracao";
+  | "publicacao"
+  | "esclarecimento"
+  | "entrega"
+  | "sessao"
+  | "resultado"
+  | "recursos"
+  | "documentos"
+  | "celebracao";
 
 export const NOME_EVENTO: Record<EventoCertame, string> = {
   publicacao: "Publicação do edital",
@@ -19,6 +27,7 @@ export const NOME_EVENTO: Record<EventoCertame, string> = {
   sessao: "Sessão pública / abertura",
   resultado: "Resultado",
   recursos: "Recursos",
+  documentos: "Envio dos documentos (habilitação ou celebração)",
   celebracao: "Assinatura ou celebração",
 };
 
@@ -161,27 +170,92 @@ export interface PrazoRelativo {
 const RE_RELATIVO =
   /\bate\s+(?:o\s+)?(\d{1,2}|um|dois|tres|quatro|cinco|seis|sete|oito|nove|dez|primeiro|segundo|terceiro|quarto|quinto)\s*(?:\(\s*[a-z]+\s*\)\s*)?(?:dias?|dia)\s*(uteis|util|corridos)?\s*(?:antes|anteriores?|anterior|que antecede[m]?)\s+(?:a|da|ao|do)\s+(data|abertura|sessao|recebimento|realizacao)/g;
 
+/** "Com antecedência mínima de 05 (cinco) dias úteis da data limite para envio do projeto" (chamamento). */
+const RE_ANTECEDENCIA =
+  /\bantecedencia (?:minima )?de\s+(\d{1,2}|um|dois|tres|quatro|cinco|seis|sete|oito|nove|dez)\s*(?:\(\s*[a-z]+\s*\)\s*)?(?:dias?|dia)\s*(uteis|util|corridos)?\s*(?:d[ao]|antes d[ao]|em relacao a)\s+(data limite para (?:o |a )?(?:envio|entrega|apresentacao|inscricao)(?: d[aeo]s? (?:projetos?|propostas?))?|data|abertura|sessao|recebimento|realizacao)/g;
+
 const ORDINAIS: Record<string, number> = { primeiro: 1, segundo: 2, terceiro: 3, quarto: 4, quinto: 5 };
 
 /** "Até 3 dias úteis antes da data fixada para a abertura", dentro de frase de esclarecimento ou impugnação. */
 export function prazosDeEsclarecimento(docs: DocumentoRfp[], mapa: MapaRfp): PrazoRelativo[] {
   const out: PrazoRelativo[] = [];
   const faixas = faixasDoTema(mapa, "esclarecimento");
-  const candidatos = localizarTodos(docs, RE_RELATIVO);
-  for (const l of candidatos) {
-    const naSecao = faixas?.get(l.doc.id)?.has(l.pagina) ?? false;
-    if (!naSecao && !/esclarecimento|impugna/i.test(tirarAcentos(l.frase))) continue;
-    const m = new RegExp(RE_RELATIVO.source).exec(l.termo);
-    if (!m?.[1]) continue;
-    const dias = ORDINAIS[m[1]] ?? lerNumero(m[1]);
-    if (!dias) continue;
-    const contagem =
-      /util|uteis/.test(m[2] ?? "") || /dia util/.test(l.termo)
-        ? "úteis"
-        : m[2] === "corridos"
-          ? "corridos"
-          : "não informada";
-    out.push({ dias, contagem, base: m[3] ?? "data", loc: l });
+  for (const re of [RE_RELATIVO, RE_ANTECEDENCIA]) {
+    for (const l of localizarTodos(docs, re)) {
+      const naSecao = faixas?.get(l.doc.id)?.has(l.pagina) ?? false;
+      if (!naSecao && !/esclarecimento|impugna/i.test(tirarAcentos(l.frase))) continue;
+      const m = new RegExp(re.source).exec(l.termo);
+      if (!m?.[1]) continue;
+      const dias = ORDINAIS[m[1]] ?? lerNumero(m[1]);
+      if (!dias) continue;
+      const contagem =
+        /util|uteis/.test(m[2] ?? "") || /dia util/.test(l.termo)
+          ? "úteis"
+          : m[2] === "corridos"
+            ? "corridos"
+            : "não informada";
+      out.push({ dias, contagem, base: m[3] ?? "data", loc: l });
+    }
+  }
+  return out;
+}
+
+/** Prazo do certame contado de um marco sem data no documento ("30 dias corridos após a publicação"). */
+export interface PrazoContado {
+  evento: EventoCertame;
+  dias: number;
+  contagem: "úteis" | "corridos" | "não informada";
+  /** O prazo como o documento escreve ("em até 30 (trinta) dias corridos após a publicação do edital"). */
+  texto: string;
+  loc: Localizado;
+}
+
+const RE_CONTADO =
+  /\b(?:em ate|no prazo (?:maximo )?de(?: ate)?|dentro de|de ate|ate)\s+(\d{1,3})\s*(?:\(\s*[a-z -]+\s*\)\s*)?dias?\s*(uteis|corridos)?[^.;]{0,15}?\b(?:apos|contad[oa]s?|a contar|a partir)\b[^.;]{0,70}/g;
+
+/** O assunto do prazo, pela frase; a ordem importa ("julgamento das propostas" é resultado, não entrega). */
+function eventoDoPrazo(frase: string): EventoCertame | undefined {
+  const n = tirarAcentos(frase);
+  if (/esclarecimento|impugna/.test(n)) return undefined;
+  if (/\brecurs|\brecorrer\b/.test(n)) return "recursos";
+  if (/\bresultado\b|\bjulgamento\b|\bhomologa/.test(n)) return "resultado";
+  if (/\bdocumentos?\b|\bdocumentacao\b/.test(n) && /\b(?:envi|apresent|encaminh)\w*/.test(n))
+    return "documentos";
+  if (
+    /\bpropostas?\b|\bprojetos?\b|\binscric/.test(n) &&
+    /\b(?:envi|apresent|entreg|submet|inscrev)\w*/.test(n)
+  )
+    return "entrega";
+  return undefined;
+}
+
+/**
+ * Prazos do certame contados de um marco (publicação do edital, fim das inscrições, publicação da decisão),
+ * no corpo do documento: os anexos (a minuta do termo ou do contrato) têm os prazos da execução.
+ */
+export function prazosContados(docs: DocumentoRfp[], mapa: MapaRfp): PrazoContado[] {
+  const out: PrazoContado[] = [];
+  const vistos = new Set<string>();
+  for (const l of localizarTodos(docs, RE_CONTADO)) {
+    const inicioAnexos = mapa.inicioAnexos.get(l.doc.id);
+    if (inicioAnexos && l.pagina >= inicioAnexos) continue;
+    const evento = eventoDoPrazo(l.frase);
+    const m = new RegExp(RE_CONTADO.source).exec(l.termo);
+    if (!evento || !m?.[1]) continue;
+    const dias = Number(m[1]);
+    const contagem = m[2] === "uteis" ? "úteis" : m[2] === "corridos" ? "corridos" : "não informada";
+    const chave = `${evento}:${dias}:${contagem}`;
+    if (!dias || vistos.has(chave)) continue;
+    vistos.add(chave);
+    // o trecho com acento: a frase original, nas posições do que casou na frase sem acento
+    const naFrase = new RegExp(RE_CONTADO.source).exec(tirarAcentos(l.frase));
+    const texto = naFrase
+      ? l.frase
+          .slice(naFrase.index, naFrase.index + naFrase[0].length)
+          .replace(/[\s,]+(?:podendo|sob pena|dever[aá]|far[aá]|ser[aá])(?![\wÀ-ÿ]).*$/i, "")
+          .trim()
+      : `${dias} dias`;
+    out.push({ evento, dias, contagem, texto, loc: l });
   }
   return out;
 }
@@ -199,11 +273,23 @@ export const NOME_PRAZO_EXECUCAO: Record<TipoPrazoExecucao, string> = {
 const NUM = String.raw`(\d{1,3})\s*(?:\(\s*[a-z ]{2,30}\)\s*)?`;
 const RE_EXECUCAO: [TipoPrazoExecucao, RegExp][] = [
   // sem vírgula entre "vigência" e o número: "prorrogação de sua vigência, a garantia… 10 dias" é outra coisa
-  ["vigencia", new RegExp(String.raw`\bvigencia\b[^.;,]{0,90}?\b${NUM}(meses|mes|dias|anos?)\b`, "g")],
+  // "o termo de fomento vigorará pelo período de 12 (doze) meses"
+  [
+    "vigencia",
+    new RegExp(String.raw`\b(?:vigencia|vigorar\w*)\b[^.;,]{0,90}?\b${NUM}(meses|mes|dias|anos?)\b`, "g"),
+  ],
   [
     "execucao",
     new RegExp(
       String.raw`\bprazo (?:total )?(?:de|para a) (?:execucao|prestacao|conclusao)\b[^.;]{0,90}?\b${NUM}(meses|mes|dias|anos?)\b`,
+      "g",
+    ),
+  ],
+  // "o projeto deverá ser desenvolvido integralmente no período de 12 (doze) meses"
+  [
+    "execucao",
+    new RegExp(
+      String.raw`\b(?:desenvolvid|executad|realizad|concluid)[oa]s?\b[^.;]{0,40}\b(?:no|pelo|em|dentro do) (?:periodo|prazo) (?:maximo )?de\s+${NUM}(meses|mes|dias|anos?)\b`,
       "g",
     ),
   ],
@@ -266,6 +352,7 @@ export function prazosDeExecucao(docs: DocumentoRfp[]): PrazoExecucao[] {
 
 export function extrairPrazos(docs: DocumentoRfp[], mapa: MapaRfp, hoje: Date): ItemAnalise[] {
   const itens: ItemAnalise[] = [];
+  const parceria = parceriaOsc(docs);
   const datas = datasDoCertame(docs);
   for (const d of datas) {
     const alerta = alertaDaData(d.data, hoje);
@@ -279,6 +366,24 @@ export function extrairPrazos(docs: DocumentoRfp[], mapa: MapaRfp, hoje: Date): 
       campos: { Momento: "certame", Contagem: "data fixa", Alerta: alerta.texto },
       origem: { documento: d.doc.rotulo, pagina: d.pagina, trecho: d.frase },
       situacao: "localizado",
+    });
+  }
+
+  // prazos do certame contados de um marco sem data (publicação do edital, fim das inscrições, decisão)
+  for (const c of prazosContados(docs, mapa)) {
+    itens.push({
+      id: `prazos:certame:${c.evento}:contado:${c.dias}-${c.contagem}`,
+      secao: "prazos",
+      rotulo: "documento",
+      nome: NOME_EVENTO[c.evento],
+      texto: c.texto,
+      campos: {
+        Momento: "certame",
+        Contagem: c.contagem === "não informada" ? "não informada no trecho" : `dias ${c.contagem}`,
+      },
+      origem: origemDe(c.loc),
+      situacao: "localizado",
+      nota: "Contado de um marco sem data no documento: o código não calcula a data. Conferir a data do marco quando ela for publicada.",
     });
   }
 
@@ -350,7 +455,19 @@ export function extrairPrazos(docs: DocumentoRfp[], mapa: MapaRfp, hoje: Date): 
     const tem = itens.some(
       (i) => i.id.startsWith(`prazos:certame:${evento}`) || i.id.startsWith(`prazos:${evento}`),
     );
-    if (!tem)
+    // parceria da Lei 13.019/2014 não tem sessão pública: a seleção é pela análise das propostas
+    if (!tem && evento === "sessao" && parceria)
+      itens.push({
+        id: `prazos:sem:${evento}`,
+        secao: "prazos",
+        rotulo: "documento",
+        nome,
+        texto: NAO_SE_APLICA_PARCERIA,
+        campos: { Momento: "certame" },
+        situacao: "nao-se-aplica",
+        nota: notaNaoSeAplica(parceria),
+      });
+    else if (!tem)
       itens.push(
         itemSemAchado(docs, {
           id: `prazos:sem:${evento}`,

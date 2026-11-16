@@ -7,6 +7,7 @@ import { campoDaCapa, lerCapa, type CampoDaCapa } from "./capa";
 import { itemSemAchado, type DocumentoRfp, type ItemAnalise } from "./item";
 import { localizarPrimeiro, localizarTodos, origemDe } from "./localizar";
 import { faixasDoTema, type MapaRfp } from "./mapa";
+import { parceriaOsc } from "./parceria";
 
 const MAX_OBJETO = 600;
 
@@ -333,12 +334,31 @@ function legislacao(docs: DocumentoRfp[]): ItemAnalise[] {
   }));
 }
 
+/** A parceria reconhecida (termo de fomento ou de colaboração): muda a leitura das outras seções. */
+function itemDaParceria(docs: DocumentoRfp[]): ItemAnalise[] {
+  const p = parceriaOsc(docs);
+  if (!p) return [];
+  return [
+    {
+      id: "identificacao:parceria",
+      secao: "identificacao",
+      rotulo: "documento",
+      nome: "Tipo de parceria",
+      texto: `${p.instrumento} (Lei 13.019/2014)`,
+      origem: origemDe(p.loc),
+      situacao: "localizado",
+      nota: 'Parceria com organização da sociedade civil, não licitação: a fase de celebração conta como habilitação, o Plano de Trabalho como modelo de proposta e as sanções como penalidades. Sessão pública, garantia, reajuste e matriz de riscos aparecem como "não se aplica a esta modalidade".',
+    },
+  ];
+}
+
 export function extrairIdentificacao(docs: DocumentoRfp[], mapa: MapaRfp): ItemAnalise[] {
   const capa = docs[0] ? lerCapa(docs[0]) : [];
   const doInstrumento = instrumento(docs);
   return [
     doInstrumento,
     modalidade(docs, doInstrumento),
+    ...itemDaParceria(docs),
     contratante(docs, capa),
     objeto(docs, capa, mapa),
     processo(docs),

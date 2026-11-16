@@ -5,8 +5,11 @@
 import type { PaginaLida } from "../dossie/esquema";
 import { normalizarTermo, trechoEmVolta } from "../regras/busca";
 
-/** Produto ou entregável, equipe mínima, quantidade, local, ou outro (incluído pelo GP). */
-export type TipoRequisito = "produto" | "equipe" | "quantidade" | "local" | "outro";
+/**
+ * Produto ou entregável, equipe mínima, quantidade, local, condição do objeto (público-alvo, limite por
+ * proponente, prazo ou forma de execução, acessibilidade) ou outro (incluído pelo GP).
+ */
+export type TipoRequisito = "produto" | "equipe" | "quantidade" | "local" | "condicao" | "outro";
 
 export interface Requisito {
   /** R01, R02… O número não muda se o GP editar a lista; requisito novo ganha o próximo. */

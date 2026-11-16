@@ -39,7 +39,11 @@ const TEMAS: [TemaSecao, RegExp][] = [
   ["garantia", /garantia/],
   ["sancoes", /sanc|infrac|penalidade/],
   ["recursos", /\brecursos?\b(?! orcamentari| financeir)/],
-  ["habilitacao", /habilitacao|qualificacao|documentacao/],
+  // na parceria da Lei 13.019/2014, a habilitação é a "fase de celebração"
+  [
+    "habilitacao",
+    /habilitacao|qualificacao|documentacao|fase de celebracao|requisitos para (?:a )?celebracao/,
+  ],
   [
     "julgamento",
     /julgamento|criterios? de (?:selecao|avaliacao|pontuacao)|avaliacao d[ao]s? propostas?|pontuacao|fase de selecao|classificacao/,

@@ -85,7 +85,13 @@ const NOTA_ATENCAO = "Insumo para a decisão de participar. Quem decide é o GP.
 function atencao(itens: ItemAnalise[], requisitos: Requisito[], docs: DocumentoRfp[]): ItemAnalise[] {
   const out: ItemAnalise[] = [];
   const copia = (id: string, nome: string, fonte: ItemAnalise | undefined, texto?: string) => {
-    if (!fonte || fonte.situacao === "nao-localizado" || fonte.situacao === "nao-verificavel") return;
+    if (
+      !fonte ||
+      fonte.situacao === "nao-localizado" ||
+      fonte.situacao === "nao-verificavel" ||
+      fonte.situacao === "nao-se-aplica"
+    )
+      return;
     out.push({
       id: `atencao:${id}`,
       secao: "atencao",

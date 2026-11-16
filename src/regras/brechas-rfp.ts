@@ -79,6 +79,68 @@ const ELEICOES = [
   { nivel: "geral", nome: "eleições gerais", data: "2030-10-06" },
 ] as const;
 
+/** Quem a frase põe como sujeito: a própria administração (gestor, fiscal, comissão, órgão). */
+const RE_SUJEITO_ADMINISTRACAO =
+  /^(?:\d+(?:\.\d+)*\.?\s*|[a-z]\)\s*)?(?:compete (?:a|ao)\s+|cabe (?:a|ao)\s+)?(?:o|a|os|as)?\s*(?:gestor|gestora|fiscal|fiscais|administracao|contratante|comissao|secretaria|orgao|poder publico|municipio|prefeitura|concedente|parceira publica)\b/;
+
+/**
+ * Vago que não pede esclarecimento da proponente: o foro ("controvérsias eventualmente resultantes da
+ * execução") e a lista aberta de atribuições da própria administração ("o gestor terá, entre outras
+ * atribuições…"). Nos dois casos, a expressão não abre o escopo nem o prazo de quem executa.
+ */
+function vagoSemEfeito(padrao: string, o: Localizado): boolean {
+  const frase = tirarAcentos(o.frase);
+  if (padrao === "eventualmente" && /\bforo\b|\bdirimir\b|\bcontroversias\b/.test(frase)) return true;
+  // regra geral: a palavra vaga só pesa quando o trecho fala de obrigação, prazo ou entrega de quem executa
+  // (ou é item de lista de tarefas, que começa por verbo no infinitivo: "apoiar agendas…, quando necessário")
+  if (!RE_OBRIGACAO_DE_QUEM_EXECUTA.test(frase) && !RE_TAREFA.test(frase.trim())) return true;
+  // e não quando a oração da palavra fala de algo que a administração talvez faça ("de modo que possam ser
+  // eventualmente incorporados aos serviços ofertados pela rede pública"). "A critério do contratante" é o
+  // próprio vago da discricionariedade: fica.
+  if (padrao !== "a-criterio" && oracaoDaAdministracao(frase, o.termo)) return true;
+  // a frase inteira é da administração: ela é o sujeito ("O gestor do contrato acompanhará…, se for o caso") e
+  // quem executa não aparece
+  if (padrao !== "a-criterio" && RE_SUJEITO_ADMINISTRACAO.test(frase.trim()) && !RE_EXECUTOR.test(frase))
+    return true;
+  if (padrao !== "entre-outros") return false;
+  const pagina = o.doc.paginas.find((p) => p.numero === o.pagina)?.texto ?? "";
+  const depois = tirarAcentos(pagina.slice(o.posicao, o.posicao + 60));
+  if (/^entre outr[oa]s\s+(?:atribuicoes|competencias|funcoes|prerrogativas|poderes)\b/.test(depois))
+    return true;
+  return RE_SUJEITO_ADMINISTRACAO.test(frase.trim());
+}
+
+/** Obrigação, prazo ou entrega de quem executa (a contratada, a proponente, a organização parceira). */
+const RE_OBRIGACAO_DE_QUEM_EXECUTA =
+  /\b(?:contratad[ao]|proponentes?|licitantes?|osc|organizac\w+ da sociedade civil|parceira|executor\w*|consultor\w*|fornecedor\w*)\b|\b(?:deve|devem|devera|deverao|obrigad[ao]s?|obriga-se|compete|cabera|incumbe)\b|\bprazos?\b|\bentreg\w*|\bprodutos?\b|\bservicos?\b|\batividades?\b|\bexecu\w*|\brelatorios?\b/;
+/** Item de lista de tarefas: começa (depois do número ou do marcador) por verbo no infinitivo. */
+const RE_TAREFA = /^(?:[\d.]+\s*|[a-z]\)\s*|[-•·]\s*)?[a-z]{3,}(?:ar|er|ir)\b/;
+const ADMINISTRACAO =
+  "(?:administracao(?: publica)?|contratante|gestor\\w*|fiscal\\w*|comissao|secretaria|orgao|poder publico|municipalidade|prefeitura|rede publica|concedente)";
+/**
+ * A administração como agente da oração, não como destinatária: "pela rede pública", "o fiscal informará",
+ * "a Comissão poderá". "À Secretaria" (quem recebe) e "sob demanda da Administração" não contam.
+ */
+const RE_AGENTE_ADMINISTRACAO = new RegExp(
+  `\\bpel[ao]s?\\s+(?:\\w+\\s+){0,2}${ADMINISTRACAO}\\b|\\b(?:o|a|os|as)\\s+${ADMINISTRACAO}\\b(?:\\s+\\w+){0,4}?\\s+(?:podera|poderao|devera|deverao|\\w+(?:ara|era|ira|arao|erao|irao))\\b`,
+);
+const RE_EXECUTOR = /\b(?:contratad[ao]|proponente|licitante|osc|organizac\w+ da sociedade civil|parceira)\b/;
+
+/**
+ * A oração em volta da palavra vaga (entre vírgula, ponto e vírgula, ponto ou "de modo que") tem a
+ * administração como agente e não cita quem executa.
+ */
+function oracaoDaAdministracao(frase: string, termo: string): boolean {
+  const k = frase.indexOf(termo);
+  if (k < 0) return false;
+  const antes = frase.slice(0, k);
+  const inicio = Math.max(antes.lastIndexOf(";"), antes.lastIndexOf(". "), antes.lastIndexOf(","));
+  const resto = frase.slice(k);
+  const fim = resto.search(/[;,]|\.\s|\.$/);
+  const oracao = frase.slice(inicio + 1, fim < 0 ? undefined : k + fim);
+  return RE_AGENTE_ADMINISTRACAO.test(oracao) && !RE_EXECUTOR.test(oracao);
+}
+
 function trecho(l: Localizado): ItemAnalise["origem"] {
   return { documento: l.doc.rotulo, pagina: l.pagina, trecho: l.frase };
 }
@@ -352,7 +414,11 @@ export function aplicarRegrasRfp(docs: DocumentoRfp[], mapa: MapaRfp): Resultado
     estado(
       "CE17",
       achou,
-      prazo ? "período de execução que cruza data de eleição" : "prazo de execução em número",
+      !prazo
+        ? "prazo de execução em número"
+        : !sessao
+          ? `data fixa do certame para contar o início da execução (o prazo foi localizado: ${prazo.valor}, ${prazo.loc.doc.rotulo}, p. ${prazo.loc.pagina}; sem a data, o cruzamento com a eleição não é feito)`
+          : "período de execução que cruza data de eleição",
     );
   }
 
@@ -437,7 +503,7 @@ export function aplicarRegrasRfp(docs: DocumentoRfp[], mapa: MapaRfp): Resultado
     );
     let achou = 0;
     for (const padrao of PADROES_VAGO) {
-      const ocorrencias = localizarTodos(docs, padrao.re, faixas);
+      const ocorrencias = localizarTodos(docs, padrao.re, faixas).filter((o) => !vagoSemEfeito(padrao.id, o));
       const porPagina = new Map<string, Localizado>();
       for (const o of ocorrencias) {
         const chave = `${o.doc.id}:${o.pagina}`;

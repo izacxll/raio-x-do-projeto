@@ -42,7 +42,9 @@ export interface PontoDePartida {
 }
 
 const localizado = (i?: ItemAnalise) =>
-  i && i.situacao !== "nao-localizado" && i.situacao !== "nao-verificavel" ? i : undefined;
+  i && i.situacao !== "nao-localizado" && i.situacao !== "nao-verificavel" && i.situacao !== "nao-se-aplica"
+    ? i
+    : undefined;
 
 /** "12 meses", "180 dias" → dias (meses × 30 e anos × 365, marcados como conversão do código). */
 export function prazoEmDias(item: ItemAnalise): PrazoEmDias | undefined {

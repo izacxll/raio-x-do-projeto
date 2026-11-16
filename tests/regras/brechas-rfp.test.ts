@@ -119,6 +119,30 @@ describe("regras de brecha da RFP", () => {
     expect(r.regras.find((x) => x.regra === "CTR4")?.motivo).toMatch(/p\. 2/);
   });
 
+  it("vago só pesa na obrigação, no prazo ou na entrega de quem executa, não no que a administração talvez faça", () => {
+    const daContratada = rodar([
+      "1. DO OBJETO\nA contratada deverá eventualmente realizar visitas aos municípios.",
+    ]);
+    expect(daRegra(daContratada, "vago")).toHaveLength(1);
+    const daAdministracao = rodar([
+      "1. DO OBJETO\nO projeto deverá promover a cidadania, de modo que possam ser eventualmente incorporados aos serviços ofertados pela rede pública municipal.",
+    ]);
+    expect(daRegra(daAdministracao, "vago")).toEqual([]);
+    // a Secretaria como destinatária não tira a brecha; o fiscal como sujeito, sim
+    const destinataria = rodar([
+      "1. DO OBJETO\nOs materiais produzidos deverão ser disponibilizados à Secretaria em formato editável, quando aplicável.",
+    ]);
+    expect(daRegra(destinataria, "vago")).toHaveLength(1);
+    const doFiscal = rodar([
+      "1. DO OBJETO\nO fiscal técnico do contrato informará ao gestor, em tempo hábil, a situação que demandar decisão.",
+    ]);
+    expect(daRegra(doFiscal, "vago")).toEqual([]);
+    const semObrigacao = rodar([
+      "1. DO OBJETO\nO tema foi eventualmente discutido em conferências anteriores.",
+    ]);
+    expect(daRegra(semObrigacao, "vago")).toEqual([]);
+  });
+
   it("'torna-se necessária' não é o vago 'se necessária'", () => {
     const r = rodar(["1. DO OBJETO\nTorna-se necessária a contratação de empresa especializada."]);
     expect(daRegra(r, "vago")).toEqual([]);

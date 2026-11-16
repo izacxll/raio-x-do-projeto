@@ -1,8 +1,10 @@
 # Andamento
 
-Atualizado em 13/11/2026 (demonstração, F3, F4 e F5b publicadas com o ok da responsável).
+Atualizado em 16/11/2026 (correção v0.8.1 da etapa 1 publicada com o ok da responsável).
 
 ## Onde estamos
+
+**Correção v0.8.1 publicada na `main` em 16/11/2026, com o ok da responsável** (PR #13, decisão 0031): a etapa 1 lê chamamento para termo de fomento ou de colaboração (Lei 13.019/2014), com o edital nas RFPs de teste e um teste por ponto; palavra vaga só vira brecha quando o trecho fala de obrigação, prazo ou entrega de quem executa. **Próximo passo:** engenharia reversa da etapa 1 com esse edital (gabarito do PMO, comparação, origem de cada erro) e proposta de leitura opcional do PMO na etapa 1, que espera o ok da responsável (muda o princípio da etapa só com código). A branch `correcao/rodada-real-com-chave` fica como está até a responsável voltar com a chave.
 
 **Demonstração, F3, F4 e F5b publicadas na `main` em 13/11/2026, com o ok da responsável pelo projeto** (PRs #8 a #11): v0.5.1 (modo demonstração, decisão 0027), v0.6.0 (TAP, decisão 0028), v0.7.0 (PGP, decisão 0029) e v0.8.0 (leitura opcional do PMO na conferência, decisão 0030). App no ar: https://izacxll.github.io/raio-x-do-projeto/. A demonstração das etapas 2, 3 e 4 foi conferida na `main` depois do merge.
 
