@@ -41,6 +41,7 @@ const NOME_SITUACAO: Record<ItemAnalise["situacao"], string> = {
   localizado: "",
   "nao-localizado": "não localizado pelo código",
   "nao-verificavel": "não verificável",
+  "nao-se-aplica": "não se aplica a esta modalidade",
   calculado: "calculado pelo código",
 };
 

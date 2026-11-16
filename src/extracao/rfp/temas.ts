@@ -4,6 +4,8 @@
 import { itemSemAchado, type DocumentoRfp, type ItemAnalise, type SecaoAnalise } from "./item";
 import { localizarPrimeiro, localizarTodos, origemDe, type Localizado } from "./localizar";
 import { faixasDoTema, type MapaRfp, type TemaSecao } from "./mapa";
+import { NAO_SE_APLICA_PARCERIA, notaNaoSeAplica, parceriaOsc } from "./parceria";
+import { normalizarTermo } from "../../regras/busca";
 
 interface Tema {
   id: string;
@@ -17,7 +19,19 @@ interface Tema {
   valor?: (l: Localizado, todas: () => Localizado[]) => string | undefined;
   /** Item que, se não achado, aparece como "não localizado" (os demais só aparecem quando achados). */
   sempre?: boolean;
+  /** Expressões que só valem dentro das seções do tema (palavra comum demais para o documento inteiro). */
+  resNaSecao?: RegExp[];
+  /** Exigência de licitação: na parceria da Lei 13.019/2014, sem achado, sai "não se aplica a esta modalidade". */
+  soLicitacao?: boolean;
 }
+
+const SANCOES: [string, RegExp][] = [
+  ["advertência", /\badvertencia\b/],
+  ["multa", /\bmultas?\b/],
+  ["suspensão", /\bsuspensao (?:temporaria )?(?:de|da|do)\b/],
+  ["impedimento", /\bimpedimento de (?:licitar|contratar|celebrar)\b/],
+  ["declaração de inidoneidade", /\binidoneidade\b/],
+];
 
 const pct = (s: string) => Number(s.replace(",", "."));
 const fmtPct = (n: number) => `${String(n).replace(".", ",")}%`;
@@ -30,6 +44,8 @@ export const TEMAS_RFP: Tema[] = [
     nome: "Modelo de proposta",
     res: [
       /\bmodelo de proposta\b|\bproposta[^.;]{0,40}conforme (?:o )?modelo\b|\banexo[^.;]{0,30}\bproposta (?:de precos?|comercial)\b/,
+      // na parceria da Lei 13.019/2014, a proposta é o Plano de Trabalho no modelo do edital
+      /\bplano de trabalho\b[^.;]{0,90}\b(?:modelo|conforme (?:o )?anexo)\b|\bmodelo de plano de trabalho\b/,
     ],
     sempre: true,
   },
@@ -39,6 +55,8 @@ export const TEMAS_RFP: Tema[] = [
     nome: "Planilha de preços ou de custos",
     res: [
       /\bplanilha (?:de )?(?:custos|precos|orcamentaria)|\bcomposicao de (?:custos|precos)\b|\bformacao de precos\b/,
+      // no Plano de Trabalho da parceria
+      /\btabela orcamentaria\b|\bcronograma de receitas e despesas\b|\bplano de aplicacao (?:dos|de) recursos\b/,
     ],
     sempre: true,
   },
@@ -117,6 +135,7 @@ export const TEMAS_RFP: Tema[] = [
     temas: ["reajuste"],
     valor: (l) => /\b(?:ipca|igp-?m|inpc|ist|icti|incc|ipc-?fipe)\b/.exec(l.termo)?.[0]?.toUpperCase(),
     sempre: true,
+    soLicitacao: true,
   },
   {
     id: "garantia-execucao",
@@ -135,6 +154,7 @@ export const TEMAS_RFP: Tema[] = [
       return m?.[1] ? `${fmtPct(pct(m[1]))} (conferir a base de cálculo)` : undefined;
     },
     sempre: true,
+    soLicitacao: true,
   },
   {
     id: "garantia-proposta",
@@ -149,10 +169,23 @@ export const TEMAS_RFP: Tema[] = [
   {
     id: "penalidades",
     secao: "condicoes",
-    nome: "Penalidades (multas)",
+    nome: "Penalidades (multas e sanções)",
     res: [/\bmulta\b[^.;]{0,200}?\b\d{1,3}(?:[.,]\d+)?\s*%/, /\bmulta\b/],
     temas: ["sancoes"],
-    valor: (_l, todas) => {
+    // sem multa, a seção de sanções (a cláusula "DAS SANÇÕES" do termo de fomento) também é penalidade
+    resNaSecao: [/\bsanc(?:ao|oes)\b|\bpenalidades?\b/],
+    valor: (l, todas) => {
+      if (!/\bmulta\b/.test(l.termo)) {
+        const pagina = l.doc.paginas.find((p) => p.numero === l.pagina);
+        const seguinte = l.doc.paginas.find((p) => p.numero === l.pagina + 1);
+        const texto = normalizarTermo(
+          `${pagina?.texto.slice(l.posicao, l.posicao + 1500) ?? ""} ${seguinte?.texto.slice(0, 500) ?? ""}`,
+        );
+        const previstas = SANCOES.filter(([, re]) => re.test(texto)).map(([n]) => n);
+        return previstas.length
+          ? `sanções citadas: ${previstas.join(", ")}${previstas.includes("multa") ? "" : " (sem multa no trecho)"}; lidas pelo código no trecho da seção`
+          : undefined;
+      }
       const valores = todas()
         .flatMap((x) => [...x.frase.matchAll(/(\d{1,3}(?:[.,]\d+)?)\s*%/g)].map((m) => pct(m[1] ?? "0")))
         .filter((n) => n > 0 && n <= 100);
@@ -171,6 +204,7 @@ export const TEMAS_RFP: Tema[] = [
     nome: "Matriz de riscos",
     res: [/\bmatriz de (?:alocacao de )?riscos?\b/],
     sempre: true,
+    soLicitacao: true,
   },
   {
     id: "subcontratacao",
@@ -232,6 +266,7 @@ export const TEMAS_RFP: Tema[] = [
 
 export function extrairTemas(docs: DocumentoRfp[], mapa: MapaRfp): ItemAnalise[] {
   const itens: ItemAnalise[] = [];
+  const parceria = parceriaOsc(docs);
   for (const t of TEMAS_RFP) {
     const faixas = t.temas ? faixasDoTema(mapa, ...t.temas) : undefined;
     let achado: { l: Localizado; re: RegExp } | undefined;
@@ -242,7 +277,24 @@ export function extrairTemas(docs: DocumentoRfp[], mapa: MapaRfp): ItemAnalise[]
         break;
       }
     }
+    for (const re of faixas && !achado ? (t.resNaSecao ?? []) : []) {
+      const l = localizarPrimeiro(docs, re, faixas);
+      if (l) {
+        achado = { l, re };
+        break;
+      }
+    }
     const base = { id: `${t.secao}:${t.id}`, secao: t.secao, nome: t.nome };
+    if (!achado && parceria && t.soLicitacao) {
+      itens.push({
+        ...base,
+        rotulo: "documento",
+        texto: NAO_SE_APLICA_PARCERIA,
+        situacao: "nao-se-aplica",
+        nota: notaNaoSeAplica(parceria),
+      });
+      continue;
+    }
     if (!achado) {
       if (t.sempre) itens.push(itemSemAchado(docs, base));
       continue;
