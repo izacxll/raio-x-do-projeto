@@ -37,6 +37,7 @@ Uma decisão por arquivo, numerada em ordem. Cada uma registra o contexto, o que
 | [0031](0031-parceria-osc-na-leitura-da-rfp.md) | Parceria com OSC (termo de fomento ou de colaboração) na leitura da RFP: "não se aplica a esta modalidade", condições do objeto, prazos contados de marco, tabela de critérios com coluna de níveis, habilitação só na lista; larguras do PDF (v0.8.1) | aceita |
 | [0032](0032-leitura-do-pmo-na-etapa-1.md) | Leitura opcional do PMO na etapa 1, com as travas da F5b e o custo à vista | aceita, com ajustes da responsável |
 | [0033](0033-etapa-5-por-tipo-de-plano.md) | Etapa 5 por tipo de plano (PGP × plano de trabalho), premissas críticas nos três lugares, PC5 por código e conflitos com o edital | aceita, com ajustes da responsável |
+| [0034](0034-metodos-das-etapas.md) | Métodos das etapas 1 a 5 (`docs/estudos/`) passam a valer: teste de cada item, saída na ordem da decisão do gerente, régua pelo tipo de contrato e de plano; fases M1 a M5, uma por etapa; skill 0.3.0 | aceita |
 
 Modelo para uma nova decisão:
 

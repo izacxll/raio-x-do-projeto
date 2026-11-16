@@ -2,6 +2,13 @@
 
 Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). As versões seguem a decisão [0005](docs/decisoes/0005-branches-versoes-e-tags.md).
 
+## [Não publicado]
+
+### Documentação — métodos das etapas
+- **Métodos das etapas 1 a 5** (`docs/estudos/metodo-etapa-1.md` a `metodo-etapa-5.md`), escritos pela responsável pelo projeto a partir da análise à mão de um caso real de parceria (fora do Git). Passam a valer pela decisão 0034: teste de cada item, saída na ordem da decisão do gerente e régua pelo tipo de contrato, de projeto e de plano. Aplicação em cinco fases, uma por etapa (M1 a M5).
+- **CLAUDE.md** aponta para os métodos; a etapa 1 também tem a leitura opcional do PMO (decisão 0032); a base do "ausente" da etapa 5 depende do tipo de plano.
+- **Decisão 0033 corrigida:** no caso real, 12 dos 84 achados se sustentaram, não 13 ("exclusões ausentes" era falso; a lista era de outro tipo de projeto).
+
 ## [0.8.3] — 16/11/2026
 
 ### Etapa 5 e telas — primeira fase da decisão 0033 (prévia de 16/11/2026)

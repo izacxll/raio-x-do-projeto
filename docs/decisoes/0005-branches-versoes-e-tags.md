@@ -24,6 +24,7 @@
 | F3 — TAP | v0.6.0 |
 | F4 — PGP | v0.7.0 |
 | F5b — leitura do PMO na conferência (decisão 0013) | v0.8.0 |
+| M1 a M5 — etapas 1 a 5 refeitas pelos métodos (decisão 0034) | v0.9.0 a v0.13.0 |
 | P — prova de conceito | a definir |
 | MVP aceito | v1.0.0 |
 

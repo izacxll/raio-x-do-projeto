@@ -1,12 +1,14 @@
 # Andamento
 
-Atualizado em 16/11/2026 (v0.8.1 publicada; v0.8.2 em PR; propostas 0032 e 0033 aguardam a responsável).
+Atualizado em 16/11/2026 (v0.8.3 publicada; métodos das etapas em vigor, decisão 0034; fase M1 em andamento).
 
 ## Onde estamos
 
-**Correção v0.8.1 publicada na `main` em 16/11/2026, com o ok da responsável** (PR #13, decisão 0031): a etapa 1 lê chamamento para termo de fomento ou de colaboração (Lei 13.019/2014), com o edital nas RFPs de teste e um teste por ponto; palavra vaga só vira brecha quando o trecho fala de obrigação, prazo ou entrega de quem executa.  A branch `correcao/rodada-real-com-chave` fica como está até a responsável voltar com a chave.
+**Métodos das etapas em vigor (decisão 0034, 16/11/2026).** A responsável escreveu cinco métodos (`docs/estudos/metodo-etapa-1.md` a `metodo-etapa-5.md`), a partir da análise à mão de um caso real de parceria (fora do Git). Eles prevalecem sobre o que as etapas fazem hoje: leitura e decisão para o gerente, não inventário; a régua pelo tipo de contrato, de projeto e de plano. Aplicação em cinco fases, uma por etapa (M1 a M5, v0.9.0 a v0.13.0), cada uma com a saída refeita, os gabaritos da SMPED e da OEI, o placar antes e depois, a revisão independente e os prints. O sprint de regras da 0032 e as fases restantes da 0033 entram dentro delas. A skill PMO 0.3.0 vai num PR próprio, mostrado à responsável antes de publicar.
 
-**Correção v0.8.2 em PR (branch `correcao/nome-do-projeto`), aguarda o ok da responsável:** nome do projeto sugerido pela RFP e a engenharia reversa da etapa 1 (gabarito do PMO, comparação e origem de cada erro: 59 de regra, 11 de IA). **Decisões pendentes da responsável:** 0032 (leitura opcional do PMO na etapa 1) e 0033 (etapa 5 por tipo de plano, depois do teste dela com um plano de trabalho real: 13 de 84 achados se sustentaram). **Próximo passo:** com o ok, o sprint de regras da etapa 1 (seção 3 do estudo) e as fases da 0033 na ordem proposta.
+**Correção v0.8.3 publicada na `main` em 16/11/2026, com o ok da responsável** (PR #43): primeira fase da decisão 0033 (falsos positivos da conferência, ordem do relatório), tipo de plano em versão simples no mapa e ajustes de tela. A 0033 foi corrigida: no caso real, 12 de 84 achados se sustentaram (não 13).
+
+**Correções v0.8.1 e v0.8.2 publicadas na `main` em 16/11/2026** (PRs #13 e #14): chamamento para termo de fomento ou de colaboração (decisão 0031); nome do projeto sugerido e engenharia reversa da etapa 1 (59 erros de regra, 11 de IA). A branch `correcao/rodada-real-com-chave` fica como está até a responsável voltar com a chave.
 
 **Demonstração, F3, F4 e F5b publicadas na `main` em 13/11/2026, com o ok da responsável pelo projeto** (PRs #8 a #11): v0.5.1 (modo demonstração, decisão 0027), v0.6.0 (TAP, decisão 0028), v0.7.0 (PGP, decisão 0029) e v0.8.0 (leitura opcional do PMO na conferência, decisão 0030). App no ar: https://izacxll.github.io/raio-x-do-projeto/. A demonstração das etapas 2, 3 e 4 foi conferida na `main` depois do merge.
 
@@ -88,6 +90,13 @@ Atualizado em 16/11/2026 (v0.8.1 publicada; v0.8.2 em PR; propostas 0032 e 0033 
 | F3 | Etapa 3: TAP, com o PMO | concluída (PR #9) sem a chave; teste com a chave pendente | v0.6.0 |
 | F4 | Etapa 4: PGP, com o PMO | concluída (PR #10) sem a chave; teste com a chave pendente | v0.7.0 |
 | F5b | Leitura opcional do PMO na etapa 5 | concluída (PR #11) sem a chave; teste com a chave pendente | v0.8.0 |
+| M0 | Métodos das etapas em vigor (decisão 0034), CLAUDE.md | PR aberto | — |
+| M1 | Etapa 1 pelo método | em andamento | v0.9.0 |
+| M2 | Etapa 2 pelo método | a fazer | v0.10.0 |
+| M3 | Etapa 3 pelo método (contrato como entrada) | a fazer | v0.11.0 |
+| M4 | Etapa 4 pelo método (adaptação pelo tipo de projeto) | a fazer | v0.12.0 |
+| M5 | Etapa 5 pelo método (régua pelo tipo de plano; fases restantes da 0033) | a fazer | v0.13.0 |
+| Skill 0.3.0 | Tipos de projeto e de plano, ficha de proposta de parceria, PC com gatilho e reajuste, contrato, caixa | a fazer (mostrar antes de publicar) | — |
 | MVP | Critérios de aceite da seção 14 | a fazer | v1.0.0 |
 
 ## Decisões pendentes
@@ -99,8 +108,8 @@ Atualizado em 16/11/2026 (v0.8.1 publicada; v0.8.2 em PR; propostas 0032 e 0033 
 
 ## Próximo passo
 
-1. **Claude Code:** fase P (caso real, quando a responsável liberar) e MVP (critérios de aceite da seção 14, v1.0.0).
-2. **Responsável pelo projeto:** testar as etapas 1 a 5 no app no ar (as etapas 2, 3 e 4 também no modo demonstração); o que aparecer vira correção (v0.8.x).
+1. **Claude Code:** fase M1 (etapa 1 pelo método): as 8 seções na tela e nos exportados, os gabaritos da SMPED e da OEI nessa estrutura, o placar antes e depois, a revisão independente e os prints. Depois, M2 a M5, na ordem, e a skill 0.3.0.
+2. **Responsável pelo projeto:** ok no PR da decisão 0034; no fim de cada fase, o teste e o ok do PR.
 3. **Quando a chave da API chegar** (pedir ao administrador do Claude da FGV, no Claude Console):
    - no PowerShell, na pasta do projeto: `$env:ANTHROPIC_API_KEY = "<chave>"; npm run comparar-modelos` (custa cerca de US$ 2 a 3); o resultado fica em `tests/fixtures/gerados/comparacao-modelos/resumo.md`. A responsável escolhe o modelo e a decisão 0002 é atualizada;
    - testar as etapas 2, 3 e 4 e a leitura do PMO na etapa 5 com a chave, numa RFP pública.

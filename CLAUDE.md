@@ -2,7 +2,9 @@
 
 App web para gerentes de projeto (GP) da FGV Projetos. Apoia o ciclo **RFP → proposta → TAP → PGP → conferência do PGP**.
 
-**Toda conversa nova começa lendo este arquivo e `docs/andamento.md`.** A especificação completa está em `referencias/prompt-claude-code-raio-x-do-projeto.md` (fora do Git): leia a seção da fase em andamento antes de agir. As decisões já tomadas estão em `docs/decisoes/`.
+**Toda conversa nova começa lendo este arquivo e `docs/andamento.md`.** Antes de mexer numa etapa, leia o **método dela** em `docs/estudos/metodo-etapa-<n>.md` (decisão 0034): para que serve, o teste de cada item, a estrutura da saída, o que não entra e o critério de aceite. O método prevalece sobre o que a etapa faz hoje e sobre a especificação onde os dois divergem. A especificação completa está em `referencias/prompt-claude-code-raio-x-do-projeto.md` (fora do Git): leia a seção da etapa junto com o método. As decisões já tomadas estão em `docs/decisoes/`.
+
+**Leitura e decisão, não inventário.** Cada etapa entrega ao gerente o que muda uma decisão dele ou algo que a FGV terá de fazer, entregar, cumprir ou pagar, na ordem da decisão. A régua depende do **tipo de contrato e de projeto** (consultoria por produtos, operação contínua ou híbrido; licitação ou parceria) e, na etapa 5, do **tipo de plano** (PGP interno ou plano de trabalho para o cliente).
 
 ## 1. Princípio inegociável: sugerir, nunca afirmar
 
@@ -28,9 +30,9 @@ Vale no código e na interface, não só nos prompts.
 | Código | ler PDF (texto por página, OCR, tabelas), extrair, contar, comparar, conferir, calcular, montar documentos | `src/leitura`, `src/texto`, `src/extracao`, `src/regras`, `src/exportacao` |
 | PMO (API do Claude, chave do GP) | criar ou interpretar: estratégia, abordagens, conteúdo técnico, EAP, estimativas, redação do TAP e do PGP | `src/pmo` + `.claude/skills/pmo/` |
 
-- Etapas 1 (RFP) e 5 (conferência) funcionam **só com código e sem chave**. Etapas 2, 3 e 4 usam o PMO.
-- Etapa 5 (decisão 0013):
-  - **Base do "ausente":** (a) requisitos da RFP e elementos do TAP; (b) partes do PGP que o GP não dispensou; (c) conteúdo mínimo de cada parte, que vem das fichas da skill com itens numerados (A7.1…) e diz, item a item, se o código confere ou só o PMO.
+- Etapas 1 (RFP) e 5 (conferência) funcionam inteiras **só com código e sem chave**; nas duas, a leitura do PMO é opcional, com custo à vista e travas em código (decisões 0030 e 0032). Etapas 2, 3 e 4 usam o PMO.
+- Etapa 5 (decisões 0013, 0033 e 0034):
+  - **Base do "ausente" pelo tipo de plano:** num plano de trabalho ou proposta para o cliente, o que a lei e o edital pedem, os requisitos e metas da RFP, as premissas críticas e o núcleo (escopo com exclusões, aceite, cronograma, equipe com substituição, riscos, mudanças, comunicação); o resto vai para "não se aplica a este tipo de plano". Num PGP interno: (a) requisitos da RFP e elementos do TAP; (b) partes do PGP que o GP não dispensou; (c) conteúdo mínimo de cada parte, que vem das fichas da skill com itens numerados (A7.1…) e diz, item a item, se o código confere ou só o PMO.
   - **Leitura do PMO (fase F5b, depois da F2):** opcional, com custo à vista. Todo achado dela é Sugestão. A citação é conferida por código e o "ausente" só vale depois da busca do código no plano inteiro. Categoria e gravidade continuam por regra fixa.
   - **Proporcionalidade:** o PMBOK é guia, não checklist; projeto pequeno não pode sair todo vermelho.
 - Todas as contas são feitas por código, nunca pelo modelo.
@@ -49,7 +51,7 @@ O Raio-X do Plano de Trabalho (código em `referencias/raio-x/`, fora do Git) ap
   - Na etapa 5, a premissa crítica que se aplica e não está no plano é **ausente**. O GP confirma quais se aplicam.
   - Não viram premissa: duas leituras (CTR7) e premissa sem base (CP9) são **vago**; texto de outro projeto (CP8) é **conflituoso**; o que o edital empurra para a FGV (CTR2, CTR3) vai para a etapa 1 (pergunta de esclarecimento) e para a proposta (exclusão ou obrigação do contratante); gestão (CP12) e sigilo/LGPD (CP14) são conteúdo mínimo das fichas dos planos. TC18, TC19, TC21 e TC22 saem.
   - Exemplos no repositório não citam projeto nem sistema real.
-- Na etapa 5, a saída usa só **vago, conflituoso e ausente** e a gravidade pela parte do PGP (decisões 0008 e 0009).
+- Na etapa 5, os achados usam só **vago, conflituoso e ausente** e a gravidade pela parte do plano (decisões 0008 e 0009); ao lado deles, a seção "O que está em ordem" aparece sempre (método da etapa 5).
 
 ## 4. Regras do repositório
 

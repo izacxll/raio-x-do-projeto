@@ -12,10 +12,12 @@ Ela conferiu os 84 achados com a skill PMO:
 
 | Resultado | Achados |
 |---|---|
-| Se sustentam | 13 (3 dos 19 graves) |
-| Falsos | 28 |
+| Se sustentam | 12 (3 dos 19 graves) |
+| Falsos | 29 |
 | Não se aplicam | 36 |
 | De regra errada | 7 |
+
+**Correção da responsável (16/11/2026, decisão 0034):** eram 12, não 13. O achado "exclusões ausentes" não se sustenta, porque o plano tinha lista de exclusões. O problema real era outro: a lista era de outro tipo de projeto (texto de outro documento), que o método da etapa 5 trata como conflito.
 
 Faltaram os problemas mais importantes: premissas críticas sem registro, o cronograma de desembolso invertido e a eleição dentro da vigência.
 
