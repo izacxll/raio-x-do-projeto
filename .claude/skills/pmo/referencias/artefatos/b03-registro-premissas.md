@@ -6,7 +6,7 @@ etapas: [3, 4, 5]
 gravidade: baixa
 categoria: incerteza
 sinonimos: ["registro das premissas", "premissas e restrições", "premissas", "lista de premissas", "registro de premissas e restrições", "assumption log", "RAID"]
-versao: 0.2.0
+versao: 0.3.0
 ---
 
 # B3 — Registro de premissas

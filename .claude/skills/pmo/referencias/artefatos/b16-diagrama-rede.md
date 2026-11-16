@@ -6,7 +6,7 @@ etapas: [2, 4, 5]
 gravidade: baixa
 categoria: tempo
 sinonimos: ["diagrama de rede", "rede do cronograma", "diagrama de precedência", "rede PERT", "diagrama PERT", "rede de atividades", "tabela de predecessoras", "matriz de dependências"]
-versao: 0.2.0
+versao: 0.3.0
 ---
 
 # B16 — Diagrama de rede do cronograma do projeto

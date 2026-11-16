@@ -6,7 +6,7 @@ etapas: [4, 5]
 gravidade: baixa
 categoria: trabalho do projeto
 sinonimos: ["designações de recursos físicos", "recursos físicos", "recursos materiais", "equipamentos e materiais", "infraestrutura do projeto", "lista de equipamentos", "logística de campo"]
-versao: 0.2.0
+versao: 0.3.0
 ---
 
 # B12 — Designações de recursos físicos

@@ -6,7 +6,7 @@ etapas: [4, 5]
 gravidade: baixa
 categoria: equipe
 sinonimos: ["calendário dos recursos", "calendários dos recursos", "disponibilidade da equipe", "disponibilidade dos recursos", "dedicação da equipe", "capacidade da equipe", "mapa de alocação", "histograma de alocação"]
-versao: 0.2.0
+versao: 0.3.0
 ---
 
 # B25 — Calendários dos recursos

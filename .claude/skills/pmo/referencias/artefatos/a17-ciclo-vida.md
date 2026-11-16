@@ -6,7 +6,7 @@ etapas: [4, 5]
 gravidade: baixa
 categoria: abordagem de desenvolvimento e ciclo de vida
 sinonimos: ["ciclo de vida", "ciclo de vida do projeto", "fases do projeto", "etapas do projeto", "fases e marcos", "estrutura de fases"]
-versao: 0.2.0
+versao: 0.3.0
 ---
 
 # A17 — Descrição do ciclo de vida do projeto

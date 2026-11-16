@@ -6,7 +6,7 @@ etapas: [2]
 gravidade: não se aplica
 categoria: não se aplica
 sinonimos: ["EAP", "estrutura analítica do projeto", "plano de trabalho", "cronograma", "cronograma físico", "cronograma de execução", "WBS"]
-versao: 0.2.0
+versao: 0.3.0
 ---
 
 # PROP-EAP — EAP e estimativas de duração da proposta

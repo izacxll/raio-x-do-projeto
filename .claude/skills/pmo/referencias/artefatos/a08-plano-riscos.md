@@ -6,7 +6,7 @@ etapas: [4, 5]
 gravidade: grave
 categoria: incerteza
 sinonimos: ["plano de riscos", "plano de gerenciamento de riscos", "plano de gestão de riscos", "gestão de riscos", "gerenciamento de riscos", "metodologia de riscos"]
-versao: 0.2.0
+versao: 0.3.0
 ---
 
 # A8 — Plano de gerenciamento dos riscos

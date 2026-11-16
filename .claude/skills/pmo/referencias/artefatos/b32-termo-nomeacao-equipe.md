@@ -6,7 +6,7 @@ etapas: [4, 5]
 gravidade: baixa
 categoria: equipe
 sinonimos: ["termo de nomeação da equipe", "termo de abertura da equipe", "termo de abertura da equipe do projeto", "termo de constituição da equipe", "acordo de trabalho da equipe", "regras básicas da equipe", "team charter", "combinados da equipe", "código de conduta da equipe"]
-versao: 0.2.0
+versao: 0.3.0
 ---
 
 # B32 — Termo de nomeação da equipe

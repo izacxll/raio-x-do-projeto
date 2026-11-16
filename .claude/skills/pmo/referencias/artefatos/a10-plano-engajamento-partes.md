@@ -6,7 +6,7 @@ etapas: [4, 5]
 gravidade: grave
 categoria: partes interessadas
 sinonimos: ["plano de engajamento", "plano de gerenciamento das partes interessadas", "engajamento das partes interessadas", "estratégia de engajamento", "gestão de stakeholders", "plano de engajamento de stakeholders"]
-versao: 0.2.0
+versao: 0.3.0
 ---
 
 # A10 — Plano de engajamento das partes interessadas

@@ -6,7 +6,7 @@ etapas: [4, 5]
 gravidade: grave
 categoria: trabalho do projeto
 sinonimos: ["plano de configuração", "gerenciamento de configuração", "gestão de configuração", "controle de versões", "controle de versão", "gestão documental", "gestão de documentos"]
-versao: 0.2.0
+versao: 0.3.0
 ---
 
 # A12 — Plano de gerenciamento de configuração

@@ -6,7 +6,7 @@ etapas: [4, 5]
 gravidade: grave
 categoria: escopo
 sinonimos: ["plano de requisitos", "plano de gerenciamento de requisitos", "gerenciamento dos requisitos", "gestão de requisitos", "gestão dos requisitos", "plano de análise de negócio"]
-versao: 0.2.0
+versao: 0.3.0
 ---
 
 # A2 — Plano de gerenciamento dos requisitos

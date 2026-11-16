@@ -6,7 +6,7 @@ etapas: [4, 5]
 gravidade: grave
 categoria: trabalho do projeto
 sinonimos: ["plano de mudanças", "plano de gerenciamento das mudanças", "controle de mudanças", "plano de controle de mudanças", "gestão de mudanças", "controle de alterações", "gestão de alterações"]
-versao: 0.2.0
+versao: 0.3.0
 ---
 
 # A11 — Plano de gerenciamento de mudanças

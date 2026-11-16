@@ -6,7 +6,7 @@ etapas: [4, 5]
 gravidade: grave
 categoria: equipe
 sinonimos: ["plano de recursos", "plano de gerenciamento de recursos", "plano de gestão de recursos", "plano de gerenciamento da equipe", "plano de recursos humanos", "gestão da equipe", "plano de pessoal"]
-versao: 0.2.0
+versao: 0.3.0
 ---
 
 # A6 — Plano de gerenciamento dos recursos

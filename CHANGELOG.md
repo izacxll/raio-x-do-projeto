@@ -4,6 +4,19 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 
 ## [Não publicado]
 
+### Skill PMO 0.3.0 (mostrada à responsável antes de publicar)
+- **Etapa 1 na skill**, pelo método: as 8 seções, o teste de cada item, o que não entra e, em cada ponto de atenção, a premissa crítica (PC1 a PC8) e a pergunta de esclarecimento.
+- **Etapa 5 como leitura principal** (decisões 0035 e 0037): nenhuma etapa analisa sem a conexão; o código monta o esqueleto e confere depois citações, números e números R.
+- **Etapas 2 e 4 entregam o documento inteiro:** a minuta redigida seção por seção e o PGP nas seções 0 a 13; o resumo é só a capa. O quadro de equipe × produtividade (volume ÷ pessoas ÷ 21 dias úteis contra o teto escrito) é conta do código, e a skill diz o que o PMO entrega para ela (quadro por função e faixa de meses, volume e teto com a fonte; PROP-EQUIPE.11).
+- **Tipos de projeto e de plano** (consultoria por produtos, operação contínua, híbrido; licitação ou parceria; PGP interno ou plano de trabalho): o que muda no vocabulário, no preço, na adaptação (`pmbok7.md`, seção 3) e na régua da etapa 5.
+- **Ficha nova `prop-parceria`** (PROP-PARCERIA.1 a .13): plano de trabalho da Lei 13.019 com o art. 22, metas e parâmetros do edital, folha mês a mês, despesas por natureza, sem valor-hora nem taxa de administração, cronograma de desembolso igual ao do edital e caixa. A ficha `prop-preco` ganha a operação contínua (PROP-PRECO.12 a .14). São 62 fichas.
+- **Premissas críticas com gatilho e reajuste** nos três lugares (B3, B27 e A11): o número do gatilho é decisão do GP; o reajuste segue o caminho do contrato (aditivo, prorrogação, revisão de metas).
+- **Contrato ou termo assinado na etapa 3**, prevalecendo sobre a proposta e a RFP, com as divergências primeiro (bloco TAP-DV e TAP-PR.3).
+- **Caixa nos custos** (A4.12 e B6.11: acumulado de repasse ou faturamento × custo, folga por parcela, ponto mais apertado) e reservas em parceria (A4.13).
+- **Conflitos novos na etapa 5:** frase de conformidade que não confere com o item citado e exclusões de outro tipo de projeto (`experiencia.md`).
+- **Fontes que divergem:** sai "prevalece o PMBOK" do `rework.md`; não há vencedor automático, e o PMO sugere a leitura que serve ao contrato e ao porte, com o motivo.
+- Itens novos foram acrescentados no fim de cada ficha; nenhum código de item mudou.
+
 ### Documentação — métodos revisados e engenharia reversa das cinco etapas
 - **Métodos das etapas 1 a 5 substituídos** pela versão revisada pela responsável pelo projeto. Saem os detalhes que identificavam o caso real (número de páginas, meses do cronograma e da vigência, duração da jornada); também na decisão 0033 e na 0034.
 - **O que muda nos métodos:**

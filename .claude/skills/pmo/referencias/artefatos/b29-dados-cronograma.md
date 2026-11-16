@@ -6,7 +6,7 @@ etapas: [4, 5]
 gravidade: baixa
 categoria: tempo
 sinonimos: ["dados do cronograma", "premissas do cronograma", "memória do cronograma", "base de dados do cronograma", "modelo do cronograma", "histograma de recursos", "cenários do cronograma"]
-versao: 0.2.0
+versao: 0.3.0
 ---
 
 # B29 — Dados do cronograma

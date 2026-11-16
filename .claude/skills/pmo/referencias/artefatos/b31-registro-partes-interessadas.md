@@ -6,7 +6,7 @@ etapas: [3, 4, 5]
 gravidade: baixa
 categoria: partes interessadas
 sinonimos: ["registro de partes interessadas", "registro de stakeholders", "mapa de stakeholders", "mapeamento das partes interessadas", "matriz de partes interessadas", "matriz poder x interesse", "lista de partes interessadas"]
-versao: 0.2.0
+versao: 0.3.0
 ---
 
 # B31 — Registro das partes interessadas

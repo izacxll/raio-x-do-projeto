@@ -6,7 +6,7 @@ etapas: [2, 4, 5]
 gravidade: baixa
 categoria: equipe
 sinonimos: ["designações da equipe", "designação da equipe", "equipe do projeto", "composição da equipe", "matriz RACI", "matriz de responsabilidades", "diretório da equipe", "quadro de equipe", "equipe técnica"]
-versao: 0.2.0
+versao: 0.3.0
 ---
 
 # B18 — Designações da equipe do projeto

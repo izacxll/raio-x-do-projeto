@@ -6,7 +6,7 @@ etapas: [2]
 gravidade: não se aplica
 categoria: não se aplica
 sinonimos: ["escopo da proposta", "produtos", "entregáveis", "declaração de trabalho", "SOW", "premissas e exclusões", "obrigações da contratante"]
-versao: 0.2.0
+versao: 0.3.0
 ---
 
 # PROP-SOW — Especificação do trabalho da proposta

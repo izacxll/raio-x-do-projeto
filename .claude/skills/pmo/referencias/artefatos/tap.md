@@ -6,7 +6,7 @@ etapas: [3, 5]
 gravidade: não se aplica
 categoria: não se aplica
 sinonimos: ["termo de abertura", "TAP", "project charter", "charter do projeto"]
-versao: 0.2.0
+versao: 0.3.0
 ---
 
 # TAP — Termo de abertura do projeto

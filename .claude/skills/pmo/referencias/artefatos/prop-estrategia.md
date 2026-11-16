@@ -6,7 +6,7 @@ etapas: [2]
 gravidade: não se aplica
 categoria: não se aplica
 sinonimos: ["estratégia da proposta", "abordagem técnica", "alternativas de abordagem", "critérios de julgamento", "como seremos avaliados"]
-versao: 0.2.0
+versao: 0.3.0
 ---
 
 # PROP-ESTRATEGIA — Estratégia da proposta e abordagens técnicas

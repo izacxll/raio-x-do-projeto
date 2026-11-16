@@ -6,7 +6,7 @@ etapas: [4, 5]
 gravidade: média
 categoria: escopo
 sinonimos: ["declaração do escopo do projeto", "declaração do escopo", "especificação do escopo", "escopo do projeto", "descrição do escopo", "escopo detalhado", "definição do escopo"]
-versao: 0.2.0
+versao: 0.3.0
 ---
 
 # B17 — Especificação do escopo do projeto

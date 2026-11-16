@@ -6,7 +6,7 @@ etapas: [2]
 gravidade: não se aplica
 categoria: não se aplica
 sinonimos: ["equipe técnica", "equipe-chave", "composição da equipe", "perfis profissionais", "alocação de horas", "matriz RACI", "quadro de pessoal"]
-versao: 0.2.0
+versao: 0.3.0
 ---
 
 # PROP-EQUIPE — Equipe técnica, horas e responsabilidades

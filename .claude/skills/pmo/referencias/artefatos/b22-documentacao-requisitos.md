@@ -6,7 +6,7 @@ etapas: [4, 5]
 gravidade: baixa
 categoria: escopo
 sinonimos: ["requisitos do projeto", "lista de requisitos", "registro de requisitos", "especificação de requisitos", "requisitos", "quadro de requisitos"]
-versao: 0.2.0
+versao: 0.3.0
 ---
 
 # B22 — Documentação dos requisitos

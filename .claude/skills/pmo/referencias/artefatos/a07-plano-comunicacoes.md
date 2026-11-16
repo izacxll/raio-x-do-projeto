@@ -6,7 +6,7 @@ etapas: [4, 5]
 gravidade: grave
 categoria: partes interessadas
 sinonimos: ["plano de comunicação", "plano de comunicações", "plano de gerenciamento de comunicações", "plano de gestão das comunicações", "matriz de comunicação", "gestão da comunicação", "plano de reuniões", "governança e comunicação"]
-versao: 0.2.0
+versao: 0.3.0
 ---
 
 # A7 — Plano de gerenciamento das comunicações

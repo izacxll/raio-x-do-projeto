@@ -6,7 +6,7 @@ etapas: [4, 5]
 gravidade: grave
 categoria: trabalho do projeto
 sinonimos: ["plano de aquisições", "plano de contratações", "plano de compras", "gestão de aquisições", "subcontratações", "contratação de terceiros", "gestão de fornecedores"]
-versao: 0.2.0
+versao: 0.3.0
 ---
 
 # A9 — Plano de gerenciamento das aquisições

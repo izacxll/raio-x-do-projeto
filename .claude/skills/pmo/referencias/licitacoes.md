@@ -1,6 +1,6 @@
 # Contratação pública: regras que afetam a proposta e o plano
 
-Versão 0.2.0. Textos consultados no Planalto (planalto.gov.br/ccivil_03, texto compilado) em **13/11/2026**.
+Versão 0.3.0. Textos consultados no Planalto (planalto.gov.br/ccivil_03, texto compilado) em **13/11/2026**.
 
 ## Como usar este arquivo
 

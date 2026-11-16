@@ -6,7 +6,7 @@ etapas: [4, 5]
 gravidade: baixa
 categoria: trabalho do projeto
 sinonimos: ["registro de mudanças", "log de mudanças", "controle de solicitações de mudança", "histórico de mudanças", "registro de alterações", "change log"]
-versao: 0.2.0
+versao: 0.3.0
 ---
 
 # B5 — Registro das mudanças

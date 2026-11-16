@@ -6,7 +6,7 @@ etapas: [2]
 gravidade: não se aplica
 categoria: não se aplica
 sinonimos: ["proposta de preço", "proposta comercial", "planilha de preços", "composição de custos", "memória de cálculo", "orçamento", "cronograma físico-financeiro"]
-versao: 0.2.0
+versao: 0.3.0
 ---
 
 # PROP-PRECO — Proposta de preço e memória de cálculo

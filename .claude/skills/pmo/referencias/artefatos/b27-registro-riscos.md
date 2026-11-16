@@ -6,7 +6,7 @@ etapas: [4, 5]
 gravidade: baixa
 categoria: incerteza
 sinonimos: ["registro de riscos", "matriz de riscos", "mapa de riscos", "planilha de riscos", "riscos identificados", "RAID"]
-versao: 0.2.0
+versao: 0.3.0
 ---
 
 # B27 — Registro dos riscos

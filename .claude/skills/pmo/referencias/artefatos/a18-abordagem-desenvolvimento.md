@@ -6,7 +6,7 @@ etapas: [4, 5]
 gravidade: baixa
 categoria: abordagem de desenvolvimento e ciclo de vida
 sinonimos: ["abordagem de desenvolvimento", "abordagem de gerenciamento", "abordagem de gestão", "modelo de gestão do projeto", "abordagem preditiva", "abordagem híbrida", "abordagem ágil"]
-versao: 0.2.0
+versao: 0.3.0
 ---
 
 # A18 — Abordagem de desenvolvimento

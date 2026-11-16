@@ -6,7 +6,7 @@ etapas: [4, 5]
 gravidade: grave
 categoria: custo
 sinonimos: ["plano de custos", "plano de gerenciamento de custos", "gestão de custos", "gerenciamento dos custos", "gestão financeira do projeto", "plano financeiro", "metodologia de custos"]
-versao: 0.2.0
+versao: 0.3.0
 ---
 
 # A4 — Plano de gerenciamento dos custos

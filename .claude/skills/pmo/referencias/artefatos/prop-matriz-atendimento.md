@@ -6,7 +6,7 @@ etapas: [2]
 gravidade: não se aplica
 categoria: não se aplica
 sinonimos: ["matriz de atendimento", "quadro de atendimento ao edital", "matriz de conformidade", "checklist de envio", "lista de documentos", "declarações e anexos"]
-versao: 0.2.0
+versao: 0.3.0
 ---
 
 # PROP-MATRIZ — Matriz de atendimento e checklist de envio

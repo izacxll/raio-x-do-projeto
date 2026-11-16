@@ -6,7 +6,7 @@ etapas: [4, 5]
 gravidade: baixa
 categoria: trabalho do projeto
 sinonimos: ["registro de questões", "registro de problemas", "log de questões", "controle de pendências", "pontos em aberto", "issue log", "RAID"]
-versao: 0.2.0
+versao: 0.3.0
 ---
 
 # B9 — Registro das questões

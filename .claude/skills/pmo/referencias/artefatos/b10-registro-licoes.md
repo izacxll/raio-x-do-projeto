@@ -6,7 +6,7 @@ etapas: [4, 5]
 gravidade: baixa
 categoria: trabalho do projeto
 sinonimos: ["registro de lições aprendidas", "lições aprendidas", "registro das lições", "banco de lições aprendidas", "base de lições aprendidas"]
-versao: 0.2.0
+versao: 0.3.0
 ---
 
 # B10 — Registro das lições aprendidas

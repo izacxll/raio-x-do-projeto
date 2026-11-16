@@ -6,7 +6,7 @@ etapas: [4, 5]
 gravidade: baixa
 categoria: tempo
 sinonimos: ["calendário do projeto", "calendário de trabalho", "calendário", "dias úteis", "jornada de trabalho", "calendário de campo"]
-versao: 0.2.0
+versao: 0.3.0
 ---
 
 # B13 — Calendários do projeto

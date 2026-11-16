@@ -6,7 +6,7 @@ etapas: [4, 5]
 gravidade: baixa
 categoria: tempo
 sinonimos: ["previsões do cronograma", "previsão do cronograma", "previsão de término", "data prevista de término", "projeção do cronograma", "tendência do cronograma", "término previsto"]
-versao: 0.2.0
+versao: 0.3.0
 ---
 
 # B30 — Previsões do cronograma
