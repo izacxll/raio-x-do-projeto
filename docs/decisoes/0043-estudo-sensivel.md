@@ -10,8 +10,8 @@ O TR municipal de contratação direta (estudo de impacto de evento) justificava
 
 ## Decisão
 
-1. **Sinais** de estudo sensível: "CPI", "Comissão Parlamentar", "Comissão de Estudo", "denúncia", "representação", "Tribunal de Contas" junto de avaliação, impacto ou gestão de recursos. "Câmara" sozinha não é sinal, porque muitas contratantes são Câmaras Municipais.
-2. **Característica nova do projeto:** `estudo sensível` · `estudo comum`. O GP confirma na tela das características; o padrão conservador é `estudo sensível`. O código sugere só pelos sinais fortes ("CPI", "Comissão Parlamentar", "Comissão de Estudo", "denúncia") junto de impacto, avaliação ou recursos, na mesma página. "Tribunal de Contas" e "representação" ficam só para a leitura do PMO, porque aparecem em quase todo edital (certidões, cláusulas padrão).
+1. **Sinais** de estudo sensível: "CPI", "Comissão Parlamentar", "Comissão de Estudo", "denúncia" (no sentido de acusação), "representação", "Tribunal de Contas" junto de avaliação, impacto ou gestão de recursos. "Câmara" sozinha não é sinal, porque muitas contratantes são Câmaras Municipais; "denúncia" do termo (rescisão ou denúncia, a forma de encerrar a parceria ou o contrato) também não.
+2. **Característica nova do projeto:** `estudo sensível` · `estudo comum`. O GP confirma na tela das características; o padrão conservador é `estudo sensível`. O código sugere só pelos sinais fortes ("CPI", "Comissão Parlamentar", "Comissão de Estudo") junto de impacto, avaliação ou recursos, na mesma página. "Tribunal de Contas", "representação" e "denúncia" ficam só para a leitura do PMO: as duas primeiras aparecem em quase todo edital (certidões, cláusulas padrão), e "denúncia" deu falso positivo no edital da SMPED, onde é a forma de encerrar o termo.
 3. **Não vira premissa crítica** (a V29 revisada não muda). Vira itens nas fichas:
    - **PROP-METODOLOGIA.11:** como os resultados são validados e o que acontece se alguém discordar (o método aprovado é a régua);
    - **A5.13:** resultado aceito só muda por erro técnico registrado;

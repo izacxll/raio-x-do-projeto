@@ -114,7 +114,7 @@ A leitura sempre faz estes cruzamentos e registra cada um como feito (com o resu
 | X6 | Prazos de um mesmo marco em itens diferentes | código lista; PMO compara |
 
 ### 3.10 Estudo sensível (decisão 0043)
-Quando o texto cita CPI, comissão parlamentar ou de estudo, denúncia ou Tribunal de Contas junto de avaliação, impacto ou gestão de recursos, entra um ponto de atenção sem premissa: o resultado será lido por lados em disputa.
+Quando o texto cita CPI, comissão parlamentar ou de estudo, denúncia (no sentido de acusação, não o encerramento do termo) ou Tribunal de Contas junto de avaliação, impacto ou gestão de recursos, entra um ponto de atenção sem premissa: o resultado será lido por lados em disputa.
 
 ### 3.11 Autoconferência (decisão 0044)
 Antes de sair, a leitura marca cada seção e cada item deste método como presente (e onde), dispensado (com o motivo) ou Decisão do GP. Nenhum fica sem marca.

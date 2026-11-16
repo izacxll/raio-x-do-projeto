@@ -76,7 +76,7 @@ Os artigos estão em `licitacoes.md`; confira sempre o que o documento do caso d
 
 ### Estudo sensível
 
-Quando o documento cita "CPI", "Comissão Parlamentar", "Comissão de Estudo", "denúncia", "representação" ou "Tribunal de Contas" junto de avaliação, impacto ou gestão de recursos, o resultado vai ser lido por lados em disputa (decisão 0043). "Câmara" sozinha não é sinal. O código sugere a característica `estudo sensível` e o GP confirma. Não é premissa crítica nova; entra assim:
+Quando o documento cita "CPI", "Comissão Parlamentar", "Comissão de Estudo", "denúncia" (no sentido de acusação), "representação" ou "Tribunal de Contas" junto de avaliação, impacto ou gestão de recursos, o resultado vai ser lido por lados em disputa (decisão 0043). "Câmara" sozinha não é sinal, e "denúncia" do termo (a forma de encerrar a parceria ou o contrato) também não. O código sugere a característica `estudo sensível` e o GP confirma. Não é premissa crítica nova; entra assim:
 
 - etapa 1: ponto de atenção sem premissa (o resultado será contestado; quem é o interlocutor único);
 - etapa 2: a régua metodológica (PROP-METODOLOGIA.11) e a exclusão de participar de audiências e comissões como serviço não previsto;

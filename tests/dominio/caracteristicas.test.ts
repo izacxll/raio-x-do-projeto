@@ -30,8 +30,16 @@ describe("estudo sensível (decisão 0043)", () => {
   });
 
   it("não junta sinais de páginas diferentes", () => {
+    expect(pareceEstudoSensivel(["comissão de estudo da câmara", "avaliação de impacto do programa"])).toBe(
+      false,
+    );
+  });
+
+  it('"denúncia" do termo (forma de encerrar a parceria) não é sinal', () => {
     expect(
-      pareceEstudoSensivel(["denúncia anônima ao canal de ética", "avaliação de impacto do programa"]),
+      pareceEstudoSensivel([
+        "8.10 Na denúncia ou rescisão, os saldos financeiros remanescentes dos recursos aplicados serão devolvidos.",
+      ]),
     ).toBe(false);
   });
 

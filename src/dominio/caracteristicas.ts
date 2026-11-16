@@ -65,11 +65,12 @@ export function expressoes(c: Caracteristicas): Record<string, boolean> {
 
 /**
  * Sugestão de estudo sensível (decisão 0043): na mesma página, um sinal forte de disputa ("CPI", "Comissão
- * Parlamentar", "Comissão de Estudo", "denúncia") junto de impacto, avaliação ou recursos. "Tribunal de Contas" e
- * "representação" ficam só para a leitura do PMO: aparecem em quase todo edital (certidões, cláusulas padrão).
+ * Parlamentar", "Comissão de Estudo") junto de impacto, avaliação ou recursos. "Tribunal de Contas",
+ * "representação" e "denúncia" ficam só para a leitura do PMO: aparecem em quase todo edital (certidões, cláusulas
+ * padrão), e "denúncia", no termo de parceria e no contrato, é a forma de encerrá-lo ("rescisão ou denúncia").
  */
 export function pareceEstudoSensivel(paginas: string[]): boolean {
-  const disputa = /\bCPI\b|comiss[aã]o parlamentar|comiss[aã]o de estudo|den[uú]ncia/i;
+  const disputa = /\bCPI\b|comiss[aã]o parlamentar|comiss[aã]o de estudo/i;
   const assunto = /impacto|avalia[cç][aã]o|recursos aplicados|gest[aã]o dos recursos/i;
   return paginas.some((p) => disputa.test(p) && assunto.test(p));
 }
