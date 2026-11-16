@@ -140,6 +140,8 @@ Folgas para demora de decisão, rodadas de revisão e feriados.
 
 **NÃO se aplica numa licitação.** Toda a negociação entre empresas: âncora alta para dar desconto; opção-isca, níveis de pacote, preço por resultado; desconto em troca de prazo, volume ou referência; descontos em linha; validade escolhida pelo proponente. A proposta é firme, exequível e compatível com o orçamento estimado, no modelo do edital, e o critério de julgamento define o peso do preço. A única negociação é a do rito do certame, por iniciativa do órgão (`licitacoes.md`). Contas e preço final são do código e do GP.
 
+**Na parceria (Lei 13.019)** não há planilha de preços nem valor-hora: a ficha `prop-parceria` (sem artigo do Rework) traz a folha da equipe mês a mês, as despesas por natureza e o cronograma de desembolso igual ao do edital.
+
 **Artigos.** RW-076 (https://resources.rework.com/libraries/deal-closing/quote-generation); RW-073 (https://resources.rework.com/libraries/deal-closing/pricing-strategies); RW-074 (https://resources.rework.com/libraries/deal-closing/pricing-negotiation); RW-014.
 
 ### 4.4 Condições contratuais e pagamento (`prop-estrategia`, `prop-preco`, `checklist.md` CTR2 e PC3)
@@ -236,7 +238,8 @@ Fonte: coluna "Ficha" do `_indice.md`, somada às "Fontes" das fichas de `artefa
 | PROP-EQUIPE | RW-036, 049 | coberto |
 | PROP-PRECO | RW-014, 071, 073, 074, 076, 078 | coberto |
 | PROP-MATRIZ-ATENDIMENTO | RW-072, 076 | coberto |
+| PROP-PARCERIA | — | sem artigo |
 
 **Observações.** Ligados só a GERAL, CHK ou EXP no índice: RW-001, 017, 018, 019, 034, 043, 046, 101, 102, 103, 112. Os resumos de RW-102, 103, 105, 106 e 108 sugerem uso na metodologia da proposta, mas não estão na ficha `prop-metodologia`.
 
-**Resumo.** 61 artefatos: 56 cobertos e 5 sem artigo (**A9, A12, B13, B24, B29**). Nesses cinco, a ficha se apoia só no PMBOK e na experiência (`experiencia.md`).
+**Resumo.** 62 artefatos: 56 cobertos e 6 sem artigo (**A9, A12, B13, B24, B29, PROP-PARCERIA**). Nesses seis, a ficha se apoia só no PMBOK, na lei (`licitacoes.md`) e na experiência (`experiencia.md`); os artigos do Rework são de mercado privado e não tratam de parceria com repasse.
