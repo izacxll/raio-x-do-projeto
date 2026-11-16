@@ -133,7 +133,7 @@ describe.skipIf(MODO !== "importar")("importar a resposta do PMO (leitura indepe
     let dossie = r.dossie;
     const p = montarPasso(dossie);
     const bruto = readFileSync(env.RAIO_X_ARQUIVO ?? "", "utf8")
-      .replace(/^﻿/, "")
+      .replace(/^\uFEFF/, "")
       .trim();
     // aceita a resposta com a cerca de código ```json … ``` que o claude.ai costuma pôr em volta
     const json = bruto.replace(/^```(?:json)?\s*/i, "").replace(/```\s*$/, "");
