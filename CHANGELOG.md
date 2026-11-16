@@ -4,6 +4,9 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 
 ## [Não publicado]
 
+### Documentação
+- Documentação técnica do app como está no código (v0.8.1), em `docs/tecnico/`. São nove documentos com diagramas: visão geral, arquitetura, dependências (com os ciclos entre pastas), integrações, modelo de dados (o dossiê), fluxos, configuração, build e publicação, e pontos de atenção. Índice novo em `docs/README.md`; `docs/arquitetura.md` e o README passam a apontar para ela.
+
 ## [0.8.1] — 16/11/2026
 
 ### Correção — etapa 1 com chamamento público para termo de fomento (Lei 13.019/2014)
