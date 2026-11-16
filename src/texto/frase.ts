@@ -6,6 +6,25 @@ import { compactar, limparCarimbos } from "./normalizar";
 /** Marcador de item no começo da linha (traço, bolinha, "a)"). */
 export const MARCA_DE_ITEM = /^(?:[-•▪●◦■□➢➤✓✔·*]|[-–—](?=\s)|\(?[a-z]\)(?=\s))\s*/;
 
+/** Rótulo de campo de formulário ("Duração do projeto:"), com ou sem acento. */
+const RE_ROTULO_DE_CAMPO = /^[A-ZÀ-Ýa-zà-ÿ][\wÀ-ÿ ()/º.-]{0,45}:/;
+/** Marcas de campo a preencher: "(DDD)", "R$ (extenso)", "____", "…", "XXX". */
+const RE_A_PREENCHER = /^(?:\(ddd\)|r\$\s*\(extenso\)|r\$\s*$|_{2,}|\.{3,}|…|x{3,})/i;
+
+/**
+ * Campo de formulário em branco: na mesma linha, logo depois da posição, vêm dois-pontos e nada preenchido
+ * (fim da linha, outro rótulo ou marca de preenchimento). "Local de realização:  Horários de realização:" é
+ * modelo a preencher, não exigência.
+ */
+export function ehCampoEmBranco(texto: string, posicao: number): boolean {
+  const fimDaLinha = texto.indexOf("\n", posicao);
+  const resto = texto.slice(posicao, fimDaLinha < 0 ? undefined : fimDaLinha);
+  const m = /^[^:.;\n]{0,45}:/.exec(resto);
+  if (!m) return false;
+  const valor = resto.slice(m[0].length).trim();
+  return !valor || RE_ROTULO_DE_CAMPO.test(valor) || RE_A_PREENCHER.test(valor);
+}
+
 // origem: App-final-4.jsx, rpLimpa, linha 1455
 export function limparEspacos(s: string): string {
   return String(s).replace(/\s+/g, " ").trim();

@@ -306,12 +306,14 @@ export function conferirPlano(e: EntradaConferencia): ResultadoConferencia {
       ? [...descritivos, r.numero, ...(/^produto \d+$/i.test(r.rotulo.trim()) ? [r.rotulo.trim()] : [])]
       : [];
     const base = { id, alvo: r.numero, descricao: `${r.rotulo}: ${r.descricao}` };
-    // quantidade e local dependem de leitura (o plano pode escrever "doze oficinas" ou o nome do município)
-    if (r.tipo === "quantidade" || r.tipo === "local") {
+    // quantidade, local e condição dependem de leitura (o plano pode escrever "doze oficinas", o nome do
+    // município ou o público com outras palavras)
+    if (r.tipo === "quantidade" || r.tipo === "local" || r.tipo === "condicao") {
       verificacoes.push({
         ...base,
         estado: "nao-conferido",
-        detalhe: "Quantidade e local não são conferidos pelo código nesta versão: conferir no plano.",
+        detalhe:
+          "Quantidade, local e condição do objeto não são conferidos pelo código nesta versão: conferir no plano.",
       });
       continue;
     }

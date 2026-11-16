@@ -1,9 +1,10 @@
-// Requisitos numerados da RFP (etapa 1, passo 3): produtos e entregáveis, equipe mínima, quantidades e local.
+// Requisitos numerados da RFP (etapa 1, passo 3): produtos e entregáveis, equipe mínima, quantidades, local e
+// condições do objeto (público-alvo, limite por proponente, prazo e forma de execução, acessibilidade).
 // Cada um ganha um número (R01, R02…) que acompanha o projeto até a conferência (etapa 5).
 // Requisitos técnicos e funcionais em texto corrido ficam para o GP incluir: o código não os separa nesta versão.
 import { normalizarTermo } from "../../regras/busca";
-import { limparEspacos, MARCA_DE_ITEM } from "../../texto/frase";
-import { tirarAcentos } from "../../texto/normalizar";
+import { ehCampoEmBranco, limparEspacos, MARCA_DE_ITEM } from "../../texto/frase";
+import { compactar, tirarAcentos } from "../../texto/normalizar";
 import { extrairRequisitos, type Requisito } from "../requisitos";
 import type { DocumentoRfp } from "./item";
 import { localizarTodos } from "./localizar";
@@ -65,8 +66,12 @@ function equipe(docs: DocumentoRfp[]): Omit<Requisito, "numero">[] {
 }
 
 const UNIDADES =
-  "oficinas?|capacitac(?:ao|oes)|encontros?|turmas?|reunioes|reuniao|eventos?|seminarios?|workshops?|cursos?|palestras?|visitas?(?: tecnicas?)?|entrevistas?|questionarios|horas(?:-aula| aula)|participantes|municipios|relatorios|audiencias(?: publicas)?|pessoas|vagas|atendimentos|cadernos(?: tematicos)?|publicacoes|videos|diagnosticos|estudos|pesquisas|grupos focais|rodas de conversa|servidores|profissionais|familias|criancas|adolescentes|mulheres|jovens";
-const RE_QUANTIDADE = new RegExp(`\\b(\\d{1,5})\\s*(?:\\(\\s*[a-z -]{2,40}\\)\\s*)?(${UNIDADES})\\b`, "g");
+  "oficinas?|capacitac(?:ao|oes)|encontros?|turmas?|reunioes|reuniao|eventos?|seminarios?|workshops?|cursos?|palestras?|visitas?(?: tecnicas?)?|entrevistas?|questionarios|horas(?:-aula| aula)|participantes|municipios|relatorios|audiencias(?: publicas)?|pessoas|vagas|atendimentos|cadernos(?: tematicos)?|publicacoes|videos|diagnosticos|estudos|pesquisas|grupos focais|rodas de conversa|servidores|profissionais|familias|criancas|adolescentes|mulheres|jovens|projetos?|propostas?";
+// "até 15 (quinze) projetos", "01 (um) único projeto"
+const RE_QUANTIDADE = new RegExp(
+  `\\b(\\d{1,5})\\s*(?:\\(\\s*[a-z -]{2,40}\\)\\s*)?(?:unic[oa]s?\\s+)?(${UNIDADES})\\b`,
+  "g",
+);
 
 function quantidades(docs: DocumentoRfp[], mapa: MapaRfp): Omit<Requisito, "numero">[] {
   const faixas = faixasDoTema(mapa, "escopo", "objeto");
@@ -88,7 +93,8 @@ function quantidades(docs: DocumentoRfp[], mapa: MapaRfp): Omit<Requisito, "nume
     const inicioDaLinha = pagina.lastIndexOf("\n", l.posicao - 1) + 1;
     if (m[1].startsWith("0") && !pagina.slice(inicioDaLinha, l.posicao).trim()) continue;
     const chave = `${n} ${m[2]}`;
-    if (vistos.has(chave)) continue;
+    // "cada proponente… apenas 01 projeto" é limite por proponente (condição), não quantidade a entregar
+    if (vistos.has(chave) || RE_POR_PROPONENTE.test(normalizarTermo(l.frase))) continue;
     vistos.add(chave);
     out.push({
       rotulo: `Quantidade: ${chave}`,
@@ -111,8 +117,11 @@ function local(docs: DocumentoRfp[]): Omit<Requisito, "numero">[] {
   const vistas = new Set<string>();
   for (const l of localizarTodos(docs, RE_LOCAL)) {
     const chave = normalizarTermo(l.frase).slice(0, 80);
-    // a vistoria "do local de execução" não diz onde o serviço é prestado
+    const pagina = l.doc.paginas.find((p) => p.numero === l.pagina)?.texto ?? "";
+    // a vistoria "do local de execução" não diz onde o serviço é prestado; o campo do formulário em branco
+    // ("Local de realização:  Horários:") é modelo a preencher
     if (
+      ehCampoEmBranco(pagina, l.posicao) ||
       vistas.has(chave) ||
       l.frase.length < 25 ||
       /vistoria|avaliacao previa|desconhecimento|preposto/.test(normalizarTermo(l.frase))
@@ -133,7 +142,53 @@ function local(docs: DocumentoRfp[]): Omit<Requisito, "numero">[] {
   return out;
 }
 
-/** Requisitos da RFP, numerados na ordem: produtos, equipe, quantidades, local. */
+const RE_POR_PROPONENTE =
+  /\bcada (?:proponente|organizacao|osc|entidade|instituicao|licitante|participante)\b[^.;]{0,60}\b(?:apenas|somente|no maximo|ate|um unico|uma unica)\b/;
+
+/** Condições do objeto, com o rótulo: o que a proposta precisa respeitar sem ser produto, equipe ou número. */
+const CONDICOES: [string, RegExp][] = [
+  ["Público-alvo", /\bpublico[- ]alvo\b|\bbeneficiarios? (?:diretos?|finais?) (?:serao|sao)\b/],
+  ["Limite por proponente", RE_POR_PROPONENTE],
+  [
+    "Prazo de execução",
+    /\b(?:desenvolvid|executad|realizad|concluid)[oa]s?\b[^.;]{0,40}\b(?:no|pelo|em|dentro do) (?:periodo|prazo) (?:maximo )?de\s+\d/,
+  ],
+  [
+    "Forma de execução",
+    /\b(?:executad|realizad|desenvolvid|ofertad|prestad)[oa]s?\b[^.;]{0,60}\b(?:presencial|a distancia|remot[oa]|hibrid[oa]|on-?line)\b/,
+  ],
+  [
+    "Acessibilidade",
+    /\bacessibilidade\b[^.;]{0,80}\b(?:dev\w*|necessariamente|obrigatori\w*)\b|\b(?:dev\w*|necessariamente|obrigatori\w*)\b[^.;]{0,80}\bacessibilidade\b/,
+  ],
+];
+
+/** Condições do objeto, nas seções de objeto e escopo (no documento inteiro, se o mapa não as achou). */
+function condicoes(docs: DocumentoRfp[], mapa: MapaRfp): Omit<Requisito, "numero">[] {
+  const faixas = faixasDoTema(mapa, "objeto", "escopo");
+  const out: Omit<Requisito, "numero">[] = [];
+  const frases = new Set<string>();
+  for (const [rotulo, re] of CONDICOES) {
+    const l = localizarTodos(docs, re, faixas).find((x) => {
+      const pagina = x.doc.paginas.find((p) => p.numero === x.pagina)?.texto ?? "";
+      return !ehCampoEmBranco(pagina, x.posicao) && !frases.has(normalizarTermo(x.frase));
+    });
+    if (!l) continue;
+    frases.add(normalizarTermo(l.frase));
+    out.push({
+      rotulo,
+      descricao: l.frase,
+      pagina: l.pagina,
+      trecho: l.frase,
+      origem: "codigo",
+      tipo: "condicao",
+      documento: l.doc.rotulo,
+    });
+  }
+  return out;
+}
+
+/** Requisitos da RFP, numerados na ordem: produtos, equipe, quantidades, local, condições do objeto. */
 export function extrairRequisitosRfp(docs: DocumentoRfp[], mapa: MapaRfp): Requisito[] {
   const produtos = docs.flatMap((d) =>
     extrairRequisitos(d.paginas).map((r) => ({ ...r, documento: d.rotulo, tipo: "produto" as const })),
@@ -145,6 +200,19 @@ export function extrairRequisitosRfp(docs: DocumentoRfp[], mapa: MapaRfp): Requi
     vistos.add(r.rotulo);
     return true;
   });
-  const todos = [...unicos, ...equipe(docs), ...quantidades(docs, mapa), ...local(docs)];
+  const antes = [...unicos, ...equipe(docs), ...quantidades(docs, mapa), ...local(docs)];
+  // a condição com a mesma frase de um requisito já listado ("os serviços serão prestados em formato remoto"
+  // já é o Local) não entra de novo
+  // repetida: 40 letras seguidas da frase da condição aparecem num requisito da mesma página
+  const repetida = (r: Omit<Requisito, "numero">) => {
+    const c = compactar(r.descricao);
+    const pedacos: string[] = [];
+    for (let i = 0; i + 40 <= c.length; i += 10) pedacos.push(c.slice(i, i + 40));
+    return antes.some((x) => {
+      const outro = compactar(x.descricao);
+      return x.pagina === r.pagina && pedacos.some((p) => outro.includes(p));
+    });
+  };
+  const todos = [...antes, ...condicoes(docs, mapa).filter((r) => !repetida(r))];
   return todos.map((r, i) => ({ ...r, numero: `R${String(i + 1).padStart(2, "0")}` }));
 }

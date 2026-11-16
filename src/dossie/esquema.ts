@@ -106,7 +106,7 @@ export const RequisitoDossie = z.object({
   trecho: z.string(),
   origem: z.enum(["codigo", "gp"]),
   /** Sem tipo, é produto (dossiês da F5). */
-  tipo: z.enum(["produto", "equipe", "quantidade", "local", "outro"]).optional(),
+  tipo: z.enum(["produto", "equipe", "quantidade", "local", "condicao", "outro"]).optional(),
   documento: z.string().optional(),
 });
 
