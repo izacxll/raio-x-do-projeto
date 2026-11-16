@@ -42,6 +42,12 @@ Uma decisão por arquivo, numerada em ordem. Cada uma registra o contexto, o que
 | [0036](0036-etapa-1-pelo-metodo-m1.md) | Etapa 1 pelo método (M1): leitura em 8 seções, regras do esqueleto, R = entregas e obrigações específicas, leitura do PMO com travas, gabaritos e leitura gravada | aceita |
 | [0037](0037-conexao-antes-de-analisar.md) | Nenhuma etapa analisa sem a conexão com o Claude: sai o "leitura parcial por código", o esqueleto só vai no pedido, demonstração em todas as etapas (muda o item 5 da 0035) | aceita |
 | [0039](0039-skill-pmo-0-3-0.md) | Skill PMO 0.3.0: etapa 1 e etapa 5 no SKILL.md, tipos de projeto e de plano, ficha PROP-PARCERIA, PC com gatilho e reajuste, contrato, caixa; sem vencedor automático entre Rework e PMBOK | proposta |
+| [0042](0042-chave-de-modalidade.md) | Chave de modalidade (licitação, contratação direta, parceria) no começo da etapa 1; cada etapa troca o bloco | aceita |
+| [0043](0043-estudo-sensivel.md) | Estudo sensível: característica nova e itens de independência técnica | aceita |
+| [0044](0044-autoconferencia-em-todas-as-etapas.md) | Autoconferência em todas as etapas; na etapa 4, porte reduz documentos, não cobertura; geração em blocos; teste que reprova | aceita |
+| [0045](0045-prazos-e-calendario.md) | Prazos e calendário: referências de início, janela até marco fixo, campo em dias corridos, prazo sem termo inicial | aceita |
+| [0046](0046-cruzamentos-obrigatorios.md) | Cruzamentos obrigatórios X1 a X6 nas etapas 1 e 5 | aceita |
+| [0047](0047-matriz-de-compromissos.md) | Compromissos numerados (C) da proposta ao plano; exclusão nunca tira requisito | aceita |
 
 Modelo para uma nova decisão:
 
