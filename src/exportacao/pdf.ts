@@ -2,6 +2,7 @@
 import pdfMake from "pdfmake/build/pdfmake";
 import type { Content, TDocumentDefinitions } from "pdfmake/interfaces";
 import { cor } from "../interface/tokens";
+import { planejarTabelas } from "./larguras";
 import { linhaDeVersoes, TEXTO_DEMONSTRACAO, TEXTO_MINUTA, type DocumentoExportavel } from "./modelo";
 
 let fontesProntas = false;
@@ -37,28 +38,31 @@ export async function gerarPdf(doc: DocumentoExportavel, logo: ArrayBuffer): Pro
   if (doc.subtitulo)
     conteudo.push({ text: doc.subtitulo, fontSize: 10, color: hex("txt"), margin: [0, 0, 0, 12] });
 
+  // larguras pela palavra mais longa de cada coluna; paisagem quando as tabelas não cabem em retrato
+  const tabelas = doc.secoes.flatMap((s) => (s.tabela ? [s.tabela] : []));
+  const plano = planejarTabelas(tabelas);
+  let k = 0;
   for (const s of doc.secoes) {
     conteudo.push({ text: s.titulo, fontSize: 13, bold: true, color: hex("navy"), margin: [0, 14, 0, 6] });
     for (const p of s.paragrafos ?? [])
       conteudo.push({ text: p, fontSize: 10, color: hex("txt"), margin: [0, 0, 0, 3] });
     if (s.tabela) {
       const t = s.tabela;
-      const larguras = t.larguras ?? t.colunas.map(() => 1);
-      const soma = larguras.reduce((a, b) => a + b, 0);
+      const larguras = plano.larguras[k++] ?? t.colunas.map(() => 50);
       conteudo.push({
         margin: [0, 8, 0, 0],
         table: {
           headerRows: 1,
-          widths: larguras.map((l) => `${((l / soma) * 100).toFixed(1)}%`),
+          widths: larguras.map((l) => Math.floor(l * 10) / 10 - 0.5),
           body: [
             t.colunas.map((c) => ({
               text: c,
               bold: true,
               color: hex("white"),
               fillColor: hex("navy"),
-              fontSize: 9,
+              fontSize: plano.corpo,
             })),
-            ...t.linhas.map((l) => l.map((c) => ({ text: c, fontSize: 9, color: hex("txt") }))),
+            ...t.linhas.map((l) => l.map((c) => ({ text: c, fontSize: plano.corpo, color: hex("txt") }))),
           ],
         },
         layout: {
@@ -73,6 +77,7 @@ export async function gerarPdf(doc: DocumentoExportavel, logo: ArrayBuffer): Pro
 
   const definicao: TDocumentDefinitions = {
     pageSize: "A4",
+    pageOrientation: plano.paisagem ? "landscape" : "portrait",
     pageMargins: [40, 62 + (doc.minuta ? 16 : 0) + (doc.demonstracao ? 16 : 0), 40, 48],
     defaultStyle: { font: "Arimo", fontSize: 10 },
     info: { title: doc.titulo, creator: "Raio-X do Projeto" },

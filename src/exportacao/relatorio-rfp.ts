@@ -4,10 +4,12 @@ import type { Dossie, RevisaoItem } from "../dossie/esquema";
 import { NOME_SECAO, ORDEM_SECOES, type AnaliseRfp } from "../etapas/1-rfp/analisar-rfp";
 import { contarPendentes, ehRevisavel, estadoDoItem, itensFinais, textoFinal } from "../etapas/1-rfp/revisao";
 import type { ItemAnalise } from "../extracao/rfp/item";
+import { compactar } from "../texto/normalizar";
 import { camposDoDossie, type DocumentoExportavel, type Secao } from "./modelo";
 
+/** Rótulos curtos, para caber na coluna sem quebrar a palavra. */
 const NOME_ROTULO = {
-  documento: "Do documento",
+  documento: "Documento",
   sugestao: "Sugestão",
   "decisao-gp": "Decisão do GP",
 } as const;
@@ -48,22 +50,52 @@ function preparar(dossie: Dossie, analise: AnaliseRfp) {
   return { a, itens, pendentes: contarPendentes(itens, a.revisoes) };
 }
 
+/**
+ * Origem e trecho numa célula só. O trecho que repete o conteúdo da linha, ou o trecho da linha anterior, não
+ * é impresso de novo: fica a indicação de onde ele está.
+ */
+export function origemETrecho(i: ItemAnalise, conteudo: string, anterior?: ItemAnalise): string {
+  if (!i.origem) return "—";
+  const onde = origem(i);
+  const trecho = compactar(i.origem.trecho);
+  if (!trecho) return onde;
+  const texto = compactar(conteudo);
+  // o trecho é o conteúdo, ou o conteúdo com pouco mais ("(A) " na frente do critério)
+  if (
+    texto.includes(trecho) ||
+    (texto.length >= 30 && trecho.includes(texto) && trecho.length - texto.length <= 12)
+  )
+    return `${onde} (o trecho é o conteúdo)`;
+  if (
+    anterior?.origem &&
+    anterior.origem.pagina === i.origem.pagina &&
+    compactar(anterior.origem.trecho) === trecho
+  )
+    return `${onde} (mesmo trecho da linha de cima)`;
+  return `${onde}: ${i.origem.trecho}`;
+}
+
 function tabelaGeral(itens: ItemAnalise[], revisoes: Record<string, RevisaoItem>): Secao["tabela"] {
   const extras = [...new Set(itens.flatMap((i) => Object.keys(i.campos ?? {})))].filter(
     (c) => c !== "Trecho",
   );
   return {
-    colunas: ["Item", "Conteúdo", ...extras, "Rótulo", "Origem", "Trecho do documento", "Estado"],
-    larguras: [1.6, 3.2, ...extras.map(() => 1.1), 1, 1.1, 3.2, 0.9],
-    linhas: itens.map((i) => [
-      i.nome,
-      `${textoFinal(i, revisoes)}${i.nota ? `\n(${i.nota})` : ""}`,
-      ...extras.map((c) => i.campos?.[c] ?? ""),
-      NOME_ROTULO[i.rotulo],
-      origem(i),
-      i.origem?.trecho ?? "",
-      estado(i, revisoes),
-    ]),
+    colunas: ["Item", "Conteúdo", ...extras, "Rótulo", "Origem e trecho", "Estado"],
+    larguras: [1.6, 3.4, ...extras.map(() => 1.1), 0.9, 3.6, 0.9],
+    linhas: itens.map((i, k) => {
+      const anterior = itens[k - 1];
+      const texto = textoFinal(i, revisoes);
+      // a mesma observação em várias linhas seguidas (a nota da legislação citada) sai só na primeira
+      const nota = i.nota && i.nota !== anterior?.nota ? `\n(${i.nota})` : "";
+      return [
+        i.nome,
+        `${texto}${nota}`,
+        ...extras.map((c) => i.campos?.[c] ?? ""),
+        NOME_ROTULO[i.rotulo],
+        origemETrecho(i, texto, anterior),
+        estado(i, revisoes),
+      ];
+    }),
   };
 }
 
@@ -93,14 +125,22 @@ export function montarAnaliseRfp(
           "Brechas do texto (o que está contraditório, em aberto ou transfere responsabilidade), não riscos do projeto. Cada uma traz uma pergunta de esclarecimento sugerida, por modelo de texto.",
         ],
         tabela: {
-          colunas: ["Nº", "Tipo", "Brecha", "O que o código viu", "Trecho", "Pergunta sugerida", "Estado"],
+          colunas: [
+            "Nº",
+            "Tipo",
+            "Brecha",
+            "O que o código viu",
+            "Origem e trecho",
+            "Pergunta sugerida",
+            "Estado",
+          ],
           larguras: [0.5, 1.2, 2.4, 2.6, 2.8, 3.2, 0.9],
           linhas: daSecao.map((i, k) => [
             String(k + 1),
             i.campos?.Tipo ?? "",
             i.nome,
             i.texto,
-            `${origem(i)}: ${i.origem?.trecho ?? ""}`,
+            origemETrecho(i, i.texto, daSecao[k - 1]),
             textoFinal(i, a.revisoes),
             estado(i, a.revisoes),
           ]),
