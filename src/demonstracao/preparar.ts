@@ -43,8 +43,8 @@ export async function tapGravado(): Promise<TapDossie> {
   };
 }
 
-export async function prepararEtapasAnteriores(etapa: 2 | 3 | 4): Promise<void> {
-  if (etapa === 2) return;
+export async function prepararEtapasAnteriores(etapa: 1 | 2 | 3 | 4): Promise<void> {
+  if (etapa === 1 || etapa === 2) return;
   const { guardarProposta, guardarTap } = useDossie.getState();
   guardarProposta(await propostaGravada());
   if (etapa === 4) guardarTap(await tapGravado());

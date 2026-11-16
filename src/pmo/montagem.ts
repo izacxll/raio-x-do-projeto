@@ -128,6 +128,16 @@ export function dispensaDasFichas(codigos: string[]): string {
     .join("\n\n");
 }
 
+/** O que vai como instrução de sistema na leitura do PMO da etapa 1 (decisões 0032 e 0035). */
+export function referenciasEtapa1(): BlocoTexto[] {
+  return [
+    { titulo: "SKILL.md", texto: textoSkill },
+    { titulo: "referencias/licitacoes.md", texto: textoLicitacoes },
+    { titulo: "referencias/checklist.md", texto: textoChecklist },
+    { titulo: "referencias/experiencia.md", texto: textoExperiencia },
+  ];
+}
+
 /** O que vai como instrução de sistema na leitura do PMO da etapa 5 (SKILL.md, seção 5). */
 export function referenciasEtapa5(): BlocoTexto[] {
   return [
