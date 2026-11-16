@@ -23,17 +23,18 @@ Vale no código e na interface, não só nos prompts.
 
 ## 2. Código × PMO
 
-**O que não precisa da inteligência do PMO é feito por código** (previsível, gratuito, testável).
+**O PMO lê; o código monta o esqueleto e confere** (decisão 0035). O que é mecânico (páginas, números, datas, contas, citações) é sempre do código: previsível, gratuito, testável.
 
 | Camada | Faz | Onde |
 |---|---|---|
-| Código | ler PDF (texto por página, OCR, tabelas), extrair, contar, comparar, conferir, calcular, montar documentos | `src/leitura`, `src/texto`, `src/extracao`, `src/regras`, `src/exportacao` |
-| PMO (API do Claude, chave do GP) | criar ou interpretar: estratégia, abordagens, conteúdo técnico, EAP, estimativas, redação do TAP e do PGP | `src/pmo` + `.claude/skills/pmo/` |
+| Código | ler PDF (texto por página, OCR, tabelas), extrair, contar, comparar, calcular; montar o **esqueleto** que vai no pedido ao PMO; **conferir** cada citação, número e prazo que o PMO devolve; montar documentos | `src/leitura`, `src/texto`, `src/extracao`, `src/regras`, `src/exportacao` |
+| PMO (API do Claude, chave do GP) | a **leitura** de cada etapa, na estrutura do método: o que pesa e por quê, cruzamento de trechos, estratégia, abordagens, conteúdo técnico, EAP, estimativas, redação do TAP e do PGP, conferência do plano | `src/pmo` + `.claude/skills/pmo/` |
 
-- Etapas 1 (RFP) e 5 (conferência) funcionam inteiras **só com código e sem chave**; nas duas, a leitura do PMO é opcional, com custo à vista e travas em código (decisões 0030 e 0032). Etapas 2, 3 e 4 usam o PMO.
+- Em todas as etapas, o PMO faz a leitura a partir do esqueleto do código, e o código confere depois: citação procurada na página ("citação não conferida" se não acha), número e prazo relidos no trecho ("valor não conferido"), nenhum R, valor ou prazo criado pelo PMO. Tudo do PMO é Sugestão.
+- **Sem chave**, as etapas 1 e 5 mostram o esqueleto do código com o aviso **"leitura parcial por código"**; as etapas 2, 3 e 4 pedem a chave (ou o modo demonstração). Custo estimado antes de cada pedido e uso real depois.
 - Etapa 5 (decisões 0013, 0033 e 0034):
   - **Base do "ausente" pelo tipo de plano:** num plano de trabalho ou proposta para o cliente, o que a lei e o edital pedem, os requisitos e metas da RFP, as premissas críticas e o núcleo (escopo com exclusões, aceite, cronograma, equipe com substituição, riscos, mudanças, comunicação); o resto vai para "não se aplica a este tipo de plano". Num PGP interno: (a) requisitos da RFP e elementos do TAP; (b) partes do PGP que o GP não dispensou; (c) conteúdo mínimo de cada parte, que vem das fichas da skill com itens numerados (A7.1…) e diz, item a item, se o código confere ou só o PMO.
-  - **Leitura do PMO (fase F5b, depois da F2):** opcional, com custo à vista. Todo achado dela é Sugestão. A citação é conferida por código e o "ausente" só vale depois da busca do código no plano inteiro. Categoria e gravidade continuam por regra fixa.
+  - **Leitura do PMO** (F5b; principal desde a decisão 0035): todo achado dela é Sugestão. A citação é conferida por código e o "ausente" só vale depois da busca do código no plano inteiro. Categoria e gravidade continuam por regra fixa.
   - **Proporcionalidade:** o PMBOK é guia, não checklist; projeto pequeno não pode sair todo vermelho.
 - Todas as contas são feitas por código, nunca pelo modelo.
 - Textos das etapas por código (sugestões, perguntas, pontos de atenção) saem de **modelos de texto** escritos junto de cada regra, em redação condicional.

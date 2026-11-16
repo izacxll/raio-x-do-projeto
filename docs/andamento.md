@@ -1,10 +1,12 @@
 # Andamento
 
-Atualizado em 16/11/2026 (v0.8.3 publicada; métodos das etapas em vigor, decisão 0034; fase M1 em andamento).
+Atualizado em 16/11/2026 (v0.8.3 publicada; métodos das etapas em vigor, decisão 0034; o PMO lê e o código confere, decisão 0035; fase M1 em andamento).
 
 ## Onde estamos
 
 **Métodos das etapas em vigor (decisão 0034, 16/11/2026).** A responsável escreveu cinco métodos (`docs/estudos/metodo-etapa-1.md` a `metodo-etapa-5.md`), a partir da análise à mão de um caso real de parceria (fora do Git). Eles prevalecem sobre o que as etapas fazem hoje: leitura e decisão para o gerente, não inventário; a régua pelo tipo de contrato, de projeto e de plano. Aplicação em cinco fases, uma por etapa (M1 a M5, v0.9.0 a v0.13.0), cada uma com a saída refeita, os gabaritos da SMPED e da OEI, o placar antes e depois, a revisão independente e os prints. O sprint de regras da 0032 e as fases restantes da 0033 entram dentro delas. A skill PMO 0.3.0 vai num PR próprio, mostrado à responsável antes de publicar.
+
+**O PMO lê; o código monta e confere (decisão 0035, 16/11/2026).** As regras de código da etapa 1, refeitas no método, cobriram 27 e 36 dos 50 itens dos gabaritos (SMPED e OEI), sem ruído e sem número sem fonte; o que falta é leitura. Em todas as etapas, o PMO lê a partir do esqueleto do código, e o código confere cada citação e número. Sem chave, as etapas 1 e 5 mostram o esqueleto com o aviso "leitura parcial por código".
 
 **Correção v0.8.3 publicada na `main` em 16/11/2026, com o ok da responsável** (PR #43): primeira fase da decisão 0033 (falsos positivos da conferência, ordem do relatório), tipo de plano em versão simples no mapa e ajustes de tela. A 0033 foi corrigida: no caso real, 12 de 84 achados se sustentaram (não 13).
 

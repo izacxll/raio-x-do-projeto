@@ -7,6 +7,7 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 ### Documentação — métodos das etapas
 - **Métodos das etapas 1 a 5** (`docs/estudos/metodo-etapa-1.md` a `metodo-etapa-5.md`), escritos pela responsável pelo projeto a partir da análise à mão de um caso real de parceria (fora do Git). Passam a valer pela decisão 0034: teste de cada item, saída na ordem da decisão do gerente e régua pelo tipo de contrato, de projeto e de plano. Aplicação em cinco fases, uma por etapa (M1 a M5).
 - **CLAUDE.md** aponta para os métodos; a etapa 1 também tem a leitura opcional do PMO (decisão 0032); a base do "ausente" da etapa 5 depende do tipo de plano.
+- **Decisão 0035:** o PMO faz a leitura em todas as etapas; o código monta o esqueleto e confere cada citação, número e prazo. Sem chave, as etapas 1 e 5 mostram o esqueleto com o aviso "leitura parcial por código". CLAUDE.md, seção 2, ajustado.
 - **Decisão 0033 corrigida:** no caso real, 12 dos 84 achados se sustentaram, não 13 ("exclusões ausentes" era falso; a lista era de outro tipo de projeto).
 
 ## [0.8.3] — 16/11/2026
