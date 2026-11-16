@@ -65,6 +65,11 @@ Mostra quem faz o trabalho, com que perfil, quantas horas em cada atividade da E
   - sinais: "subcontratação" | "equipe local" | "vedada" | "permitida"
   - confere: só PMO
   - dispensa: sem campo
+- **PROP-EQUIPE.11** Quadro de equipe por função e faixa de meses (função, quantidade, mês inicial e final, contados do marco da vigência), com o volume previsto de cada frente e o teto de produtividade escritos com a fonte, para o código conferir volume ÷ pessoas ÷ 21 dias úteis contra o teto
+  - fonte: método da etapa 2, 2.1; método da etapa 4, 4.7; `checklist.md` PC7 (CP11); SKILL.md, etapa 2, passo 10
+  - sinais: "quadro de equipe" | "por mês" | "por trimestre" | "por dia" | "teto" | tabela função × meses
+  - confere: código
+  - dispensa: nunca
 
 ## Perguntas de qualidade
 - A equipe dá conta do volume em cada frente e em cada mês, e não só na média? (PC7; `experiencia.md` §4)
@@ -75,6 +80,7 @@ Mostra quem faz o trabalho, com que perfil, quantas horas em cada atividade da E
 
 ## Erros comuns
 - Horas iguais todo mês enquanto o trabalho se concentra em poucas fases (`experiencia.md` §4).
+- Quadro de equipe que não fecha com a produtividade que a própria proposta escreve (visitas previstas ÷ agentes ÷ dias úteis acima do teto por dia) (método da etapa 2, 2.1; PC7).
 - Coordenação com poucas horas diante de muitas frentes (PC7).
 - Profissional pontuado que não aparece na execução (`licitacoes.md` 2.2).
 - RACI sem o contratante, ou com mais de um "A" por linha (PMBOK 6, p. 317; Rework RW-049).

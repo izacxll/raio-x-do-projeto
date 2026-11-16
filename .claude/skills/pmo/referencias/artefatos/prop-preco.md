@@ -12,10 +12,10 @@ versao: 0.2.0
 # PROP-PRECO — Proposta de preço e memória de cálculo
 
 ## Para que serve
-Organiza o preço de baixo para cima, a partir das horas da EAP e das despesas, para o **código** fazer todas as contas com a tabela de valor-hora do GP (SKILL.md, princípio 6; especificação da etapa 2, passo 7). O PMO não soma nem multiplica: lista as categorias, os parâmetros e os riscos que pedem reserva. Estimativas por pacote, agregadas para cima, são as mais detalhadas (PMBOK 6, 7.2, p. 244, PDF 280). **Valor-hora, reserva e preço final são Decisão do GP.** Numa licitação, o edital manda: modelo da planilha, validade e pagamento vêm dele (Rework RW-076, adaptação).
+Organiza o preço de baixo para cima, a partir das horas da EAP e das despesas, para o **código** fazer todas as contas com a tabela de valor-hora do GP (SKILL.md, princípio 6; especificação da etapa 2, passo 7). O PMO não soma nem multiplica: lista as categorias, os parâmetros e os riscos que pedem reserva. Estimativas por pacote, agregadas para cima, são as mais detalhadas (PMBOK 6, 7.2, p. 244, PDF 280). **Valor-hora, reserva e preço final são Decisão do GP.** Numa licitação, o edital manda: modelo da planilha, validade e pagamento vêm dele (Rework RW-076, adaptação). **A estrutura do preço segue o tipo de projeto** (SKILL.md, seção 3; método da etapa 2, 3.6): horas × valor-hora na consultoria por produtos (PROP-PRECO.1 a .5); folha da equipe mês a mês e despesas por natureza na operação contínua (PROP-PRECO.12 e .13), e, na parceria da Lei 13.019, pela ficha `prop-parceria`; planilha do edital, item a item, no preço por posto ou item (PROP-PRECO.7).
 
 ## Conteúdo mínimo
-- **PROP-PRECO.1** Memória de cálculo de baixo para cima: horas por perfil e por pacote da EAP × valor-hora, com as contas feitas pelo código
+- **PROP-PRECO.1** Memória de cálculo de baixo para cima: horas por perfil e por pacote da EAP × valor-hora, com as contas feitas pelo código (consultoria por produtos; na operação contínua, PROP-PRECO.13)
   - fonte: PMBOK 6, 7.2, bottom-up, p. 244 (PDF 280); Rework RW-014; SKILL.md, princípio 6
   - sinais: "memória de cálculo" | "horas" | "valor-hora" | tabela perfil × horas × valor
   - confere: código
@@ -70,6 +70,21 @@ Organiza o preço de baixo para cima, a partir das horas da EAP e das despesas, 
   - sinais: "sugere-se" | "decisão do GP" | "preço final"
   - confere: só PMO
   - dispensa: nunca
+- **PROP-PRECO.12** Estrutura do preço pelo tipo de projeto: horas × valor-hora na consultoria por produtos; folha mês a mês e despesas por natureza, sem valor-hora, na operação contínua; planilha do edital no preço por posto ou item; as duas primeiras por frente, no híbrido
+  - fonte: método da etapa 2, 3.6; SKILL.md, seção 3 (tipo de projeto); PMBOK 6, 7.2, p. 241 (PDF 277) (estimativa pelo tipo de recurso)
+  - sinais: estrutura do preço coerente com o tipo de projeto confirmado pelo GP
+  - confere: só PMO
+  - dispensa: nunca
+- **PROP-PRECO.13** Operação contínua: quadro de pessoal por função e mês ao longo da vigência (a rampa de contratação), com salário e encargos como Decisão do GP, e as despesas que crescem com a equipe (equipamentos, deslocamento, capacitação, reposição por rotatividade) ligadas ao quadro; totais pelo código
+  - fonte: método da etapa 2, 3.6; método da etapa 4, 4.3; `experiencia.md` §4 e §5; PMBOK 6, 7.2, p. 241 (PDF 277)
+  - sinais: "folha" | "mês a mês" | "encargos" | "quadro de pessoal" | "rampa" | tabela função × mês
+  - confere: código
+  - dispensa: pagamento por produto
+- **PROP-PRECO.14** Conferências de preço feitas pelo código: tabela de pontos por preço pela regra do edital e caixa (parcelas ou medições, com percentual, prazo e condição, × custo acumulado mês a mês), com a folga em cada parcela e o ponto mais apertado
+  - fonte: método da etapa 2, 3.6; ficha `a04` (caixa); `checklist.md` PC3 (pagamento preso a aprovação)
+  - sinais: "pontos por preço" | "economicidade" | "caixa" | "folga" | "custo acumulado"
+  - confere: código
+  - dispensa: nunca
 
 ## Perguntas de qualidade
 - Toda hora do preço vem de uma atividade da EAP, e toda atividade tem horas? (PMBOK 6, p. 244)
@@ -83,6 +98,8 @@ Organiza o preço de baixo para cima, a partir das horas da EAP e das despesas, 
 - Omitir indiretos ou integração e revisões (Rework RW-014).
 - Estimativa ancorada no valor estimado do edital, sem conta de baixo para cima (Rework RW-014).
 - Deslocamento de campo fora do preço (`experiencia.md` §5).
+- Horas × valor-hora ou taxa de administração numa operação contínua paga por parcela ou posto (método da etapa 2, seção 4).
+- Caixa olhado parcela a parcela, sem o acumulado: o alerta no pico sai exagerado (método da etapa 4, 4.3).
 - Erro de conta ou de formato na planilha, que pode desclassificar (Rework RW-076, adaptação).
 
 ## Quando dispensar a parte inteira
@@ -90,7 +107,7 @@ Não se dispensa quando o edital pede preço. Em porte pequeno, a memória de c�
 Linha para a tela: "Preço em tabela única com parâmetros: porte pequeno."
 
 ## Ligações
-- **Vem de:** PROP-EQUIPE (horas); PROP-EAP; PROP-METODOLOGIA (campo); PROP-ESTRATEGIA.8 (reserva); etapa 1 (planilha, valor estimado, regra de exequibilidade, pagamento); tabela de valor-hora do GP.
+- **Vem de:** tipo de projeto (SKILL.md, seção 3); PROP-EQUIPE (horas ou quadro por função e mês); PROP-EAP; PROP-METODOLOGIA (campo); PROP-ESTRATEGIA.8 (reserva); etapa 1 (planilha, valor estimado, regra de exequibilidade, pagamento); tabela de valor-hora do GP.
 - **Vai para:** planilha XLSX; PROP-MATRIZ; TAP7; A4, A15 e B6 na etapa 4.
 
 ## Modelo de redação
@@ -101,6 +118,10 @@ Linha para a tela: "Preço em tabela única com parâmetros: porte pequeno."
 4. Reserva sugerida: | Risco (origem) | Por que pede reserva | Valor (decisão do GP) |
 5. Planilha do edital: [modelo, doc, p.]. Desembolso: [regra do edital, doc, p.].
 6. Conferências (código): valor estimado [doc, p.]; exequibilidade [regra, doc, p.].
+Operação contínua, no lugar do item 1:
+1. Pessoal: | Função | Mês 1 | Mês 2 | ... | Mês N | Salário e encargos (decisão do GP) | Subtotal (código) |
+   Despesas que crescem com a equipe: | Natureza | Base (por pessoa, por mês) | Valor (GP) |
+7. Caixa e pontos (código): folga em cada parcela; ponto mais apertado; pontos por faixa de desconto.
 Preço final: decisão do GP.
 ```
 
