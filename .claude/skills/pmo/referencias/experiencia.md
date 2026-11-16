@@ -53,6 +53,8 @@ A experiência melhora a sugestão, mas **não vira fato**: o que sai daqui entr
 ## 7. Texto e escopo
 
 - **Texto reaproveitado** de outra proposta ou fase: nome de outro órgão, termos de outro tipo de contrato, "neste Termo de Referência" dentro de um plano.
+- **Frase de conformidade que não confere:** "em conformidade com o item X do edital" ao lado de parcelas, valores, metas, equipe ou prazos diferentes dos do item X (por exemplo, as duas primeiras parcelas trocadas). A frase dá ao leitor a falsa segurança de que alguém conferiu. Na etapa 5 é **conflituoso**, e grave quando trata de valor ou parcelas; na etapa 3, é divergência à parte.
+- **Exclusões de outro tipo de projeto:** uma lista de "não incluído" com estudos de arquitetura, engenharia ou seguros num projeto social é texto de outro documento. É **conflituoso**, não "ausente": a lista existe, mas não protege a FGV, porque faltam as exclusões do próprio objeto (o que é da rede, do contratante, dos municípios). A lista pode vir com outro título: "não estão incluídos", "não fazem parte", "não contempla".
 - **Escopo sem limite com preço fixo:** "entre outras", revisões sem número, apoio sem volume nem prazo.
 - **Trecho com duas leituras** sobre entrega, prazo ou formato, adotado no plano sem confirmação do cliente.
 - **Premissa sem base:** número redondo sem memória de cálculo, método escolhido por hábito e não pelo objeto.
@@ -67,6 +69,7 @@ A experiência melhora a sugestão, mas **não vira fato**: o que sai daqui entr
 ## 9. Proporcionalidade
 
 - **O PMBOK é guia, não checklist.** Projeto pequeno, de equipe curta e escopo fechado, não precisa de todos os 18 componentes e 33 documentos com o mesmo detalhe. A adaptação (PMBOK 7) é a regra; preencher tudo por obrigação produz plano que ninguém lê.
+- **O tipo vale junto com o porte.** Uma operação contínua paga por parcela não leva EAP com horas, valor-hora, rede completa nem valor agregado; uma consultoria por produtos não precisa de rampa de equipe mês a mês nem de caixa por parcela (SKILL.md, seção 3; `pmbok7.md`, seção 3).
 - Sugerir o essencial primeiro e explicar em uma linha por que cada parte é essencial, recomendada ou dispensável para **este** projeto.
 
 ## 10. Como o PMO deve escrever a partir disso
