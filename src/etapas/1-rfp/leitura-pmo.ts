@@ -311,7 +311,7 @@ ${REGRAS}`;
 }
 
 /**
- * A leitura que vale para o dossiê: sem a leitura do PMO, o esqueleto do código ("leitura parcial por código");
+ * A leitura que vale para o dossiê: sem a leitura do PMO, o esqueleto do código (é o que vai no pedido; a tela só mostra a leitura depois do PMO, decisão 0037);
  * com ela, os itens do PMO conferidos pelo código, com os requisitos e as contas do esqueleto.
  */
 export function leituraDoDossie(

@@ -248,7 +248,7 @@ describe("7. PDF exportado", () => {
     expect(titulos).toContain("1. Em uma página");
     expect(titulos).toContain("7. Pontos de atenção");
     expect(linhas.filter((l) => l[0] === "Legislação citada")).toEqual([]);
-    expect(exportavel.secoes[0]?.paragrafos?.join(" ")).toMatch(/Leitura parcial por código/);
+    expect(exportavel.secoes[0]?.paragrafos?.join(" ")).toMatch(/Sem a leitura do PMO/);
     // a habilitação linha a linha da Tabela 04, com o CADIN (linha 5)
     const lista = exportavel.secoes.find((s) => /^Documentos \(/.test(s.titulo));
     expect(lista).toBeUndefined(); // o detalhe da habilitação vai no checklist, não repete na análise

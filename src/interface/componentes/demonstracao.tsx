@@ -32,8 +32,11 @@ export function AvisoDemonstracao() {
   );
 }
 
-/** Botão das etapas 1 a 4: abre a RFP pública da OEI com as respostas gravadas, sem chamar a API. */
-export function BotaoDemonstracao({ etapa }: { etapa: 1 | 2 | 3 | 4 }) {
+/**
+ * Botão de todas as etapas: abre a RFP pública da OEI com as respostas gravadas, sem chamar a API. Na etapa 5, junto
+ * vem um plano de trabalho inventado, com erros plantados (decisão 0037).
+ */
+export function BotaoDemonstracao({ etapa }: { etapa: 1 | 2 | 3 | 4 | 5 }) {
   const { dossie, alterado, iniciarDemonstracao } = useDossie();
   const [lendo, setLendo] = useState<string | null>(null);
   const [erro, setErro] = useState("");
@@ -66,8 +69,8 @@ export function BotaoDemonstracao({ etapa }: { etapa: 1 | 2 | 3 | 4 }) {
     <div className="cartao cartao__corpo demonstracao" data-testid="demonstracao">
       <p className="texto-apoio">
         <b>Sem a chave?</b> Veja a etapa funcionando com as respostas do PMO gravadas para uma concorrência
-        pública (OEI), sem chamar a IA. A leitura, a conferência das citações, as contas e as saídas são as de
-        verdade.
+        pública (OEI){etapa === 5 ? ", com um plano de trabalho inventado que tem erros plantados" : ""}, sem
+        chamar a IA. A leitura, a conferência das citações, as contas e as saídas são as de verdade.
       </p>
       <div className="acoes-exportar">
         <button

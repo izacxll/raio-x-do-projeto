@@ -6,7 +6,7 @@ Atualizado em 16/11/2026. Na `main`: v0.8.3. Em revisão: PRs #44 (métodos e de
 
 **Os métodos das etapas valem (decisão 0034).** A responsável escreveu um método por etapa (`docs/estudos/metodo-etapa-1.md` a `metodo-etapa-5.md`), a partir da análise à mão de um caso real de parceria (fora do Git). O rastro de cada regra está em `docs/estudos/engenharia-reversa/`. O método prevalece sobre o que a etapa faz hoje: leitura e decisão para o gerente, não inventário, com a régua pelo tipo de contrato, de projeto e de plano.
 
-**O PMO lê; o código monta e confere (decisão 0035).** Em todas as etapas, o PMO lê a partir do esqueleto do código, e o código confere cada citação, número e prazo. Sem a chave, a etapa 1 mostra o esqueleto com o aviso "leitura parcial por código"; a etapa 5 faz a conferência por código (o aviso entra nela na M5); as etapas 2, 3 e 4 pedem a chave ou a demonstração.
+**O PMO lê; o código monta e confere (decisão 0035).** Em todas as etapas, o PMO lê a partir do esqueleto do código, e o código confere cada citação, número e prazo. **Nenhuma etapa analisa sem a conexão com o Claude (decisão 0037):** sem a chave, as opções são conectar ou ver a demonstração, que existe em todas as etapas (na 5, com um plano inventado com erros plantados). O esqueleto do código vai no pedido e não aparece sozinho.
 
 **Fase M1 (etapa 1 pelo método), PR #45, aguarda o teste e o ok da responsável** (decisão 0036). Leitura em 8 seções, "Pedir ao PMO" com as travas, R = entregas e obrigações específicas. Placar (`docs/estudos/placar-m1-etapa-1.md`, a fonte dos números):
 
@@ -19,7 +19,7 @@ Atualizado em 16/11/2026. Na `main`: v0.8.3. Em revisão: PRs #44 (métodos e de
 
 Os gabaritos e as leituras gravadas foram feitos pelo Claude Code seguindo a skill: o placar mede o esqueleto do código e as travas, não a qualidade da leitura do PMO. Essa só se mede com a chave e com um gabarito da responsável (roteiro em `docs/estudos/roteiro-etapa-5-plano-real.md`).
 
-**PR #46:** métodos revisados (sem os detalhes que identificavam o caso real) e a engenharia reversa das cinco etapas; a chave dos scripts lida de um arquivo fora do repositório (`RAIO_X_ARQUIVO_CHAVE`, nunca `ANTHROPIC_API_KEY`); documentação coerente com a 0035 e a M1; o roteiro da etapa 5 com um plano real.
+**PR #46:** métodos revisados (sem os detalhes que identificavam o caso real) e a engenharia reversa das cinco etapas; a chave dos scripts lida de um arquivo fora do repositório (`RAIO_X_ARQUIVO_CHAVE`, nunca `ANTHROPIC_API_KEY`); documentação coerente com a 0035 e a M1; o roteiro da etapa 5 com um plano real; a decisão 0037 (conexão antes de analisar, demonstração da etapa 5).
 
 **Fase M2 (etapa 2 pelo método) em andamento**, encadeada em cima do #46: a minuta redigida por inteiro, preço pelo tipo de contrato, pontos por preço, caixa e quadro de equipe × produtividade.
 
@@ -34,7 +34,7 @@ Os gabaritos e as leituras gravadas foram feitos pelo Claude Code seguindo a ski
 | P | Prova de conceito com o caso real | **encerrada**: substituída pela análise à mão da responsável, que deu os métodos (decisão 0034) | — |
 | M0 | Métodos em vigor (0034) e o PMO lê, o código confere (0035) | PR #44 | — |
 | M1 | Etapa 1 pelo método | PR #45; teste da responsável pendente | v0.9.0 |
-| — | Métodos revisados, chave em arquivo, documentação, roteiro da etapa 5 | PR #46 | — |
+| — | Métodos revisados, chave em arquivo, documentação, roteiro da etapa 5, decisão 0037 | PR #46 | — |
 | M2 | Etapa 2 pelo método | em andamento | v0.10.0 |
 | M3 | Etapa 3 pelo método (contrato como entrada) | a fazer | v0.11.0 |
 | M4 | Etapa 4 pelo método (adaptação por porte e tipo) | a fazer | v0.12.0 |

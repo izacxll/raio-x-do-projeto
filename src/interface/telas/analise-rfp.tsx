@@ -1,6 +1,7 @@
-// Etapa 1 na tela, pelo método (docs/estudos/metodo-etapa-1.md, decisões 0034 e 0035): a leitura da RFP em 8
-// seções, na ordem da decisão do gerente. O PMO faz a leitura a partir do esqueleto do código e o código confere
-// cada citação e número; sem a leitura do PMO, a tela mostra o esqueleto com o aviso "leitura parcial por código".
+// Etapa 1 na tela, pelo método (docs/estudos/metodo-etapa-1.md, decisões 0034, 0035 e 0037): a leitura da RFP em 8
+// seções, na ordem da decisão do gerente. Nada é analisado sem a conexão com o Claude (decisão 0037): "Analisar a
+// RFP" monta o esqueleto do código, manda-o ao PMO com o texto da RFP e mostra a leitura conferida pelo código
+// (citação, número, R). Sem chave, as opções são conectar ou ver a demonstração; o esqueleto não aparece sozinho.
 // Cada item tem o rótulo, a página e a revisão do GP (aceitar, editar, descartar). Participar é decisão só do GP.
 import { useMemo, useState } from "react";
 import { MODELO_PADRAO, MODELOS, type IdModelo } from "../../config/modelo";
@@ -61,29 +62,118 @@ export function AnaliseDaRfp({ todos }: Props) {
   const analise = useMemo(() => analisarRfp(todos), [todos]);
   const salva = dossie.analiseRfp;
 
-  if (!salva) {
-    return (
-      <section className="bloco">
-        <RotuloSecao>Análise da RFP</RotuloSecao>
-        <div className="cartao cartao__corpo">
-          <p className="texto-apoio">
-            O código lê a RFP no navegador e monta o esqueleto da leitura: páginas, números, datas, contas, a
-            lista de documentos e os requisitos numerados (R01, R02…), que seguem até a conferência do plano.
-            Nada é enviado para fora. Depois, a leitura do PMO completa o esqueleto.
-          </p>
-          <button
-            className="botao botao--cheio"
-            type="button"
-            data-testid="analisar-rfp"
-            onClick={() => guardarAnaliseRfp(analiseInicial(analise))}
-          >
-            Analisar a RFP
-          </button>
-        </div>
-      </section>
-    );
-  }
+  // decisão 0037: sem a leitura do PMO não há análise na tela (dossiê antigo sem ela também pede a leitura)
+  if (!salva?.leituraPmo)
+    return <AnalisarComPmo analise={analise} salva={salva} todos={todos} atualizar={guardarAnaliseRfp} />;
   return <Analise analise={analise} salva={salva} todos={todos} atualizar={guardarAnaliseRfp} />;
+}
+
+/**
+ * Antes da primeira análise: a conexão com o Claude (ou a demonstração), o custo estimado e o aviso de envio. O botão
+ * monta o esqueleto do código e pede a leitura do PMO numa ação só; a análise só é guardada com a leitura.
+ */
+function AnalisarComPmo({
+  analise,
+  salva,
+  todos,
+  atualizar,
+}: {
+  analise: AnaliseRfp;
+  salva?: AnaliseRfpDossie;
+  todos: DocumentoLido[];
+  atualizar: (a: AnaliseRfpDossie) => void;
+}) {
+  const demonstracao = Boolean(useDossie((s) => s.dossie.demonstracao));
+  const chave = useChave();
+  const [modelo, setModelo] = useState(salva?.modeloPmo ?? MODELO_PADRAO);
+  const { rodando, erro, chamar, cancelar } = useChamadaPmo();
+  const sistema = useMemo(() => textoDeSistema(referenciasEtapa1()), []);
+  const docs = useMemo(() => todos.filter((d) => d.papel === "rfp" || d.papel === "anexo-rfp"), [todos]);
+  const textoDocs = useMemo(() => textoDosDocumentos(docs), [docs]);
+  // o esqueleto que vai no pedido: a análise inicial (ou a do dossiê antigo, com as revisões e os R dele)
+  const base = useMemo(() => salva ?? analiseInicial(analise), [salva, analise]);
+  const pedido = useMemo(
+    () => pedidoLeituraRfp(leituraDoDossie(analise, base, todos)),
+    [analise, base, todos],
+  );
+
+  async function analisar() {
+    const r = await chamar({
+      etapa: 1,
+      passo: "leitura-rfp",
+      gravacao: "leitura-pmo",
+      schema: RespostaLeituraRfp,
+      demonstracao,
+      chave,
+      modelo,
+      sistema,
+      documentos: textoDocs,
+      pedido,
+    });
+    if (!r) return;
+    const uso = base.usoPmo ?? [];
+    atualizar({
+      ...base,
+      modeloPmo: modelo,
+      leituraPmo: { resposta: r.resposta, modelo: r.modelo, em: r.em },
+      usoPmo: r.uso ? [...uso, r.uso] : uso,
+    });
+  }
+
+  return (
+    <>
+      {!demonstracao && (
+        <section className="bloco">
+          <RotuloSecao>Conexão com o PMO</RotuloSecao>
+          <ConectarClaude modelo={modelo as IdModelo} />
+          <div className="cartao cartao__corpo acoes-exportar" style={{ marginTop: 8 }}>
+            <label>
+              <span className="lb">Modelo</span>{" "}
+              <select
+                aria-label="Modelo"
+                value={modelo}
+                onChange={(e) => setModelo(e.target.value)}
+                disabled={Boolean(rodando)}
+              >
+                {Object.entries(MODELOS).map(([id, m]) => (
+                  <option key={id} value={id}>
+                    {m.nome}
+                    {id === "claude-opus-5-5" ? " (padrão provisório)" : ""}
+                  </option>
+                ))}
+              </select>
+            </label>
+          </div>
+        </section>
+      )}
+      <PassoPmoNaTela
+        passo="leitura-rfp"
+        titulo="Análise da RFP"
+        pedido={pedido}
+        semPedido=""
+        demonstracao={demonstracao}
+        chave={chave}
+        estimativa={estimarCusto(
+          modelo,
+          "leitura-rfp",
+          estimarTokens(sistema) + estimarTokens(textoDocs),
+          estimarTokens(pedido),
+        )}
+        rodando={rodando}
+        erro={erro}
+        aoPedir={() => void analisar()}
+        aoCancelar={cancelar}
+        rotuloBotao="Analisar a RFP"
+        testid="analisar-rfp"
+        explicacao={
+          salva
+            ? "Esta análise ainda não tem a leitura do PMO (dossiê de uma versão anterior, ou análise recomeçada). As suas revisões e os requisitos R continuam; a leitura do PMO completa a análise."
+            : "O código lê a RFP no navegador e monta o esqueleto da leitura (páginas, números, datas, contas, a lista de documentos e os requisitos R01, R02…, que seguem até a conferência do plano). O PMO lê a RFP a partir dele, e o código confere cada citação, número e requisito antes de mostrar."
+        }
+        envio="Ao clicar, o texto da RFP e dos anexos vai para a API do Claude, pela sua chave, na organização da FGV, junto com o esqueleto do código."
+      />
+    </>
+  );
 }
 
 function Analise({
@@ -157,16 +247,6 @@ function Analise({
             seções): as revisões dos requisitos numerados continuam valendo, mas{" "}
             {revisoesDeOutraVersao(salva, leitura)} revisões de itens que não existem mais ficaram de fora, e
             os itens novos estão pendentes.
-          </p>
-        </div>
-      )}
-      {leitura.fonte === "codigo" && (
-        <div className="aviso" role="note" data-testid="leitura-parcial">
-          <p>
-            <b>Leitura parcial por código.</b> O que está abaixo é o esqueleto que o código montou: páginas,
-            números, datas, contas e o que as regras acham por padrão de texto. A leitura do PMO completa o
-            esqueleto (o que pesa e por quê, trechos que se contradizem, obrigações em texto corrido) e o
-            código confere cada citação e cada número dela.
           </p>
         </div>
       )}
@@ -396,6 +476,7 @@ function LeituraDoPmoNaEtapa1({
       <PassoPmoNaTela
         passo="leitura-rfp"
         titulo="Leitura da RFP"
+        explicacao="Pedir de novo refaz a leitura a partir do esqueleto do código; as revisões dos itens do PMO se perdem."
         pedido={pedido}
         semPedido=""
         feito={salva.leituraPmo ? { modelo: salva.leituraPmo.modelo, em: salva.leituraPmo.em } : undefined}
@@ -411,7 +492,7 @@ function LeituraDoPmoNaEtapa1({
         erro={erro}
         aoPedir={() => void pedir()}
         aoCancelar={cancelar}
-        envio="O texto da RFP e dos anexos vai para a API do Claude, pela sua chave, na organização da FGV, junto com o esqueleto do código. Sem a leitura, a tela fica com o esqueleto."
+        envio="O texto da RFP e dos anexos vai para a API do Claude, pela sua chave, na organização da FGV, junto com o esqueleto do código."
       >
         {salva.leituraPmo && (
           <p className="envio__obs" data-testid="leitura-pmo-rfp">

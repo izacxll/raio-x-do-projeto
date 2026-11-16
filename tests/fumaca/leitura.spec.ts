@@ -32,7 +32,9 @@ test("etapa 5: leitura do PMO opcional, com as travas do código e a decisão do
         headers: { ...CORS, "content-type": "application/json" },
         body: corpoJson("OK"),
       });
-    chamadas.push(JSON.stringify(corpo.messages).includes("leitura do PMO (opcional)") ? "leitura" : "outro");
+    chamadas.push(
+      JSON.stringify(corpo.messages).includes("Conferência do plano · leitura do PMO") ? "leitura" : "outro",
+    );
     return route.fulfill({
       status: 200,
       headers: { ...CORS, "content-type": "text/event-stream" },
@@ -43,13 +45,15 @@ test("etapa 5: leitura do PMO opcional, com as travas do código e a decisão do
   await page.goto("./#/etapa/5");
   await page.getByTestId("enviar-pgp").setInputFiles(PGP);
   await expect(page.getByText("Mapa do plano", { exact: true })).toBeVisible({ timeout: 60_000 });
-  await page.getByRole("button", { name: "Conferir o plano" }).click();
+  // decisão 0037: sem a chave, nada é conferido; o custo aparece antes
   await expect(page.getByTestId("custo-leitura")).toContainText("US$");
-  await expect(page.getByTestId("pedir-leitura")).toBeDisabled();
+  await expect(page.getByTestId("conferir-plano")).toBeDisabled();
+  await expect(page.getByRole("table", { name: "Resumo dos achados" })).toHaveCount(0);
 
   await page.getByLabel("Chave da API").fill(CHAVE);
   await page.getByRole("button", { name: "Usar esta chave" }).click();
-  await page.getByTestId("pedir-leitura").click();
+  await page.getByTestId("conferir-plano").click();
+  await expect(page.getByRole("table", { name: "Resumo dos achados" })).toBeVisible({ timeout: 30_000 });
   await expect(page.getByTestId("leitura-pmo")).toBeVisible({ timeout: 30_000 });
   expect(chamadas).toEqual(["leitura"]);
   // as citações são de outro plano: o código não as acha neste documento

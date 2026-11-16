@@ -30,7 +30,7 @@ O código tirou o ruído e acerta o que é mecânico (páginas, números, datas,
    - as contas continuam do código (CLAUDE.md, seção 2);
    - categoria e gravidade (etapa 5) continuam por regra fixa.
 4. **Tudo o que vem do PMO é Sugestão**, com a etiqueta "leitura do PMO"; o que o código conferiu no documento continua "Do documento", com a página.
-5. **Sem chave**, as etapas 1 e 5 mostram o esqueleto do código, com o aviso **"leitura parcial por código"**. As etapas 2, 3 e 4 continuam pedindo a chave (ou o modo demonstração).
+5. **Mudado pela decisão 0037.** Antes: sem chave, as etapas 1 e 5 mostravam o esqueleto do código, com o aviso "leitura parcial por código". Agora nenhuma etapa analisa sem a conexão com o Claude; sem chave, as opções são conectar ou ver a demonstração.
 6. **Custo à vista** antes de cada pedido e uso real depois, como hoje. Estimativa da decisão 0032: cerca de US$ 0,20 a 0,45 por edital na etapa 1 (até US$ 0,75 num edital longo com anexos); a etapa 5 fica na mesma faixa.
 7. **Envio de conteúdo:** a tela avisa, em todas as etapas, que o texto dos PDFs vai para a API do Claude quando o GP pede a leitura (CLAUDE.md, seção 5).
 

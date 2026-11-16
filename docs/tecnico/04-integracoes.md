@@ -36,7 +36,7 @@ graph LR
 | Custo | Estimado antes (tokens × preços) e registrado depois, no dossiê (`UsoPmo`) | `src/pmo/custo.ts`, `src/config/precos.ts` |
 | Quem chama | A leitura do PMO em todas as etapas (decisão 0035): etapa 1 (`src/etapas/1-rfp/leitura-pmo.ts`), etapas 2, 3 e 4 (`src/etapas/*/pedidos.ts`) e etapa 5 (`src/etapas/5-conferencia/leitura-pmo.ts`). O passo "teste" só valida a chave | ver a coluna anterior |
 
-Sem chave, a etapa 1 mostra o esqueleto do código com o aviso "leitura parcial por código", e a etapa 5, a conferência por código; nada sai do navegador. O **modo demonstração** troca a chamada pelas respostas gravadas em `tests/fixtures/gerados/*-oei/` (etapas 1 a 4), validadas pelos mesmos schemas (`src/demonstracao/`, decisão 0027).
+Sem chave, nenhuma etapa analisa (decisão 0037): a tela oferece conectar ou ver a demonstração. O **modo demonstração** troca a chamada pelas respostas gravadas em `tests/fixtures/gerados/*-oei/` (todas as etapas; na 5, com um plano inventado), validadas pelos mesmos schemas (`src/demonstracao/`, decisão 0027).
 
 ## GitHub Pages e GitHub Actions
 

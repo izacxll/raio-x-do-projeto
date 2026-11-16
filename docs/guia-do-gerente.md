@@ -16,11 +16,11 @@ Enquanto houver item pendente, os documentos exportados saem com o cabeçalho **
 
 Em todas as etapas, a leitura é do PMO (o Claude, com a skill PMO da FGV Projetos). O código monta antes o esqueleto (páginas, números, datas, contas, o que as regras acharam) e confere depois tudo o que o PMO devolve: a citação é procurada na página indicada ("citação não conferida" se não for achada), o número e o prazo são relidos no trecho ("valor não conferido"), e nenhum requisito R, valor ou prazo nasce do PMO. Tudo o que vem dele é **Sugestão** até você revisar (decisão 0035).
 
-**Sem a chave da API:** a etapa 1 mostra o esqueleto do código com o aviso **"leitura parcial por código"**, e a etapa 5 faz a conferência por código. Nada sai do navegador. As etapas 2, 3 e 4 pedem a chave ou o modo demonstração.
+**Nenhuma etapa analisa sem a conexão com o Claude** (decisão 0037). Sem a chave, as opções são conectar ou ver a demonstração. Os PDFs são lidos no navegador; o texto só vai à API quando você pede a análise, e a tela mostra antes o custo estimado.
 
 ## Demonstração, sem a chave
 
-Nas etapas 1 a 4, o botão **"Ver demonstração"** abre uma concorrência pública (OEI) com as respostas do PMO gravadas. Nada é enviado à API e não há custo. Cada passo do PMO vira "Carregar a resposta gravada"; as decisões do GP, a conferência das citações, o cronograma, o preço e as saídas funcionam como no uso real.
+Em todas as etapas, o botão **"Ver demonstração"** abre uma concorrência pública (OEI) com as respostas do PMO gravadas; na etapa 5, junto vem um plano de trabalho inventado, com erros plantados. Nada é enviado à API e não há custo. Cada passo do PMO vira "Carregar a resposta gravada"; as decisões do GP, a conferência das citações, o cronograma, o preço e as saídas funcionam como no uso real.
 
 - A faixa laranja "Demonstração com respostas gravadas, sem chamada à IA" fica no alto de todas as telas enquanto o projeto for de demonstração, e o mesmo aviso vai no cabeçalho de todo documento exportado.
 - As respostas gravadas partem da abordagem B: com outra escolha, a demonstração pede para escolher a B antes do conteúdo técnico.
@@ -36,7 +36,7 @@ Nas etapas 1 a 4, o botão **"Ver demonstração"** abre uma concorrência públ
 Quando você pede a leitura do PMO, em qualquer etapa, o texto dos PDFs vai para a API do Claude, pela sua chave, na organização da FGV. O app só envia quando você clica em "Pedir ao PMO", e mostra antes quanto deve custar.
 
 ### Etapa 1 — Leitura da RFP
-1. Envie a RFP (e os anexos, se vierem em PDFs separados) e clique em **"Analisar a RFP"**. O código monta a leitura em 8 seções, na ordem da sua decisão:
+1. Envie a RFP (e os anexos, se vierem em PDFs separados). A análise sai em 8 seções, na ordem da sua decisão:
    1. **Em uma página:** o que é, regime e modalidade, quem pode participar, tamanho, prazo, valor, como se ganha, a situação das datas × hoje e os pontos que mais pesam;
    2. **O que a contratada teria de fazer e entregar:** entregas e obrigações por tema, com o número R de cada requisito, e o que é vedado;
    3. **Prazos e marcos** do certame e da execução, contados do marco;
@@ -46,7 +46,7 @@ Quando você pede a leitura do PMO, em qualquer etapa, o texto dos PDFs vai para
    7. **Pontos de atenção**, cada um com a premissa crítica (PC1 a PC8), o motivo e a pergunta de esclarecimento sugerida;
    8. **O que não se aplica** a esta modalidade.
    O que não ajuda a decidir (normas além do regime, órgãos sem papel, faixas da pontuação) fica fora, só contado em "Fora da leitura".
-2. Sem a leitura do PMO, a tela avisa **"leitura parcial por código"**. Clique em **"Pedir ao PMO"** (a tela mostra o custo antes): o PMO lê a partir do esqueleto e o código confere cada citação, número e requisito. O que o PMO achar e o código não, aparece como Sugestão; um item dele na seção 2 tem o botão **"Incluir como requisito"**, e o número R só nasce com o seu clique.
+2. Sem a conexão, o botão fica desligado: conecte a chave (ou veja a demonstração). Com ela, **"Analisar a RFP"** mostra antes o custo estimado; ao clicar, o código monta o esqueleto, o PMO lê a RFP a partir dele e o código confere cada citação, número e requisito antes de mostrar. O que o PMO achar e o código não, aparece como Sugestão; um item dele na seção 2 tem o botão **"Incluir como requisito"**, e o número R só nasce com o seu clique.
 3. Revise os itens e os requisitos (R01, R02…): os números seguem até a conferência do plano. Decida se participa.
 4. Baixe a análise (DOCX ou PDF), a lista de requisitos e prazos, o checklist de habilitação e as perguntas de esclarecimento.
 
@@ -81,11 +81,11 @@ O custo de cada chamada (tokens e valor estimado em dólar) fica na tabela "Uso 
 6. Baixe o plano (DOCX ou PDF), os registros (XLSX), a EAP e o diagrama de rede (SVG) ou o **pacote completo (.zip)**, com o índice das partes.
 
 ### Etapa 5 — Conferência do plano
-1. Envie o plano (e, se tiver, o TAP e a RFP), confirme o mapa do plano, o tipo de plano e as características do projeto e clique em **"Conferir o plano"**. Se a etapa 4 foi feita no mesmo dossiê, o que você dispensou nela já vem marcado como dispensado.
-2. Peça a **leitura do PMO**: é a leitura principal da etapa (decisão 0035). Ele aponta o que depende de interpretação (equipe pequena para o volume, critério de aceite que não dá para medir, premissa crítica mal escrita). Todo achado dele é Sugestão: o código confere cada citação, procura no plano inteiro o que ele diz estar ausente (se achar, rebaixa e mostra onde) e dá a gravidade pela parte do plano.
+1. Envie o plano (e, se tiver, o TAP e a RFP) e confirme o mapa do plano, o tipo de plano, as características do projeto, as premissas críticas e os requisitos. Se a etapa 4 foi feita no mesmo dossiê, o que você dispensou nela já vem marcado como dispensado.
+2. Com a conexão (ou na demonstração), clique em **"Conferir o plano"**: o código confere o plano e o PMO lê a partir do que o código apontou, numa ação só (decisão 0037). O PMO aponta o que depende de interpretação (equipe pequena para o volume, critério de aceite que não dá para medir, premissa crítica mal escrita). Todo achado dele é Sugestão: o código confere cada citação, procura no plano inteiro o que ele diz estar ausente (se achar, rebaixa e mostra onde) e dá a gravidade pela parte do plano.
 3. Decida se cada achado procede e baixe o relatório (DOCX ou PDF) e a lista (XLSX).
 
-Sem a chave, você vê só a conferência por código. A etapa 5 passa pelo método na fase M5 (régua pelo tipo de plano, seção "O que está em ordem" e o aviso "leitura parcial por código").
+Mudou o mapa ou as características depois? Os achados do código se refazem sozinhos; a leitura do PMO, só se você pedir de novo. A etapa 5 passa pelo método na fase M5 (régua pelo tipo de plano e a seção "O que está em ordem").
 
 ## Dossiê
 

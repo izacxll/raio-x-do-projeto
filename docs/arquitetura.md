@@ -11,7 +11,7 @@ Este é o resumo. O detalhe técnico, com diagramas (camadas, dependências e ci
 | Código | ler PDF, extrair, contar, comparar, calcular; montar o **esqueleto** que vai no pedido ao PMO; **conferir** cada citação, número e prazo que o PMO devolve; montar documentos | `src/leitura`, `src/texto`, `src/extracao`, `src/regras`, `src/exportacao` |
 | PMO (API do Claude, chave do GP) | a **leitura** de cada etapa, na estrutura do método: o que pesa e por quê, cruzamento de trechos, estratégia, conteúdo técnico, EAP, estimativas, redação do TAP e do PGP, conferência do plano | `src/pmo` + `.claude/skills/pmo/` |
 
-**O PMO lê; o código monta e confere** (decisão 0035), em todas as etapas. Sem a chave, a etapa 1 mostra o esqueleto do código com o aviso "leitura parcial por código" e a etapa 5 faz a conferência por código (o aviso entra nela na fase M5); as etapas 2, 3 e 4 pedem a chave ou o modo demonstração.
+**O PMO lê; o código monta e confere** (decisão 0035), em todas as etapas. **Nenhuma etapa analisa sem a conexão** (decisão 0037): sem a chave, as opções são conectar ou ver a demonstração, que existe em todas as etapas. O esqueleto vai no pedido e não aparece sozinho como resultado.
 
 ## Pastas de `src/`
 
@@ -49,8 +49,8 @@ Este é o resumo. O detalhe técnico, com diagramas (camadas, dependências e ci
 5. O uso de cada chamada (tokens e valor) fica no dossiê.
 6. Na etapa 3, o código compara a RFP e a proposta (PDF final do GP ou a proposta da etapa 2, que vira um documento com uma "página" por seção), traz o que vem dos documentos e confere o TAP; o PMO redige os 12 elementos e o registro de premissas. Os componentes de passo e de item do PMO são comuns (`interface/componentes/passo-pmo.tsx`, `item-pmo.tsx`).
 7. Na etapa 4, seis pedidos ao PMO na ordem da decisão 0007; as fichas vão no pedido de cada passo (o prefixo com a skill e os documentos fica no cache). O código monta as tabelas de cronograma, marcos, custos, designações e rastreabilidade, desenha a EAP e a rede em SVG e roda a autoconferência: o plano gerado, como documento "lido", passa por `conferirPlano` (etapa 5), com o que o GP dispensou marcado como dispensado.
-8. Na etapa 5, a leitura do PMO é a principal (decisão 0035; hoje vem depois da conferência por código, e a fase M5 a põe na estrutura do método): o código confere as citações, procura no plano inteiro o que o PMO diz estar ausente (e rebaixa se achar) e aplica a gravidade e a categoria pela parte.
-9. **Demonstração** (decisão 0027): com o dossiê marcado, cada passo carrega a resposta gravada em `tests/fixtures/gerados/<etapa>-oei/`, validada pelo mesmo schema, sem chamar a API.
+8. Na etapa 5, "Conferir o plano" roda a conferência por código e a leitura do PMO numa ação só (decisões 0035 e 0037; a fase M5 põe a saída na estrutura do método): o código confere as citações, procura no plano inteiro o que o PMO diz estar ausente (e rebaixa se achar) e aplica a gravidade e a categoria pela parte.
+9. **Demonstração** (decisões 0027 e 0037), em todas as etapas: com o dossiê marcado, cada passo carrega a resposta gravada em `tests/fixtures/gerados/<etapa>-oei/`, validada pelo mesmo schema, sem chamar a API; na etapa 5, com um plano de trabalho inventado com erros plantados (`leitura-oei/`).
 
 ## Dossiê
 

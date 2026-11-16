@@ -110,7 +110,7 @@ export function pedidoLeitura(opcoes: {
     .filter(([, v]) => v)
     .map(([k]) => k);
   const doCodigo = opcoes.achadosDoCodigo.map((a) => `- ${a.tipo} · ${a.parte} · ${a.titulo}`);
-  return `# Etapa 5 — Conferência do plano · leitura do PMO (opcional)
+  return `# Etapa 5 — Conferência do plano · leitura do PMO
 
 Documentos: o PGP (doc: pgp)${opcoes.temTap ? ", o TAP (doc: tap)" : ""}${opcoes.temRfp ? " e a RFP (doc: rfp)" : ""}.
 Características do projeto (confirmadas pelo GP): ${Object.entries(opcoes.caracteristicas)

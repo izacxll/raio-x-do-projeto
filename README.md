@@ -18,17 +18,17 @@ A ferramenta **prepara minutas e aponta problemas; quem decide é sempre o geren
 
 O app roda no navegador: **https://izacxll.github.io/raio-x-do-projeto/**. Os PDFs são lidos na sua própria máquina.
 
-O que cada etapa faz hoje:
+O que cada etapa faz hoje. **Nenhuma etapa analisa sem a conexão com o Claude** (decisão 0037): sem a chave, as opções são conectar ou ver a demonstração, com respostas gravadas para uma RFP pública.
 
-| Etapa | Com a chave da API | Sem a chave |
+| Etapa | O que faz (com a conexão) | Demonstração |
 |---|---|---|
-| 1 — Leitura da RFP | "Analisar a RFP" monta o esqueleto do código nas 8 seções; "Pedir ao PMO" faz a leitura a partir dele, e o código confere cada citação, número e requisito R | O esqueleto do código, com o aviso **"leitura parcial por código"**; nada sai do navegador |
-| 2 — Proposta | Estratégia e abordagens, conteúdo técnico e SOW, EAP e equipe pelo PMO; cronograma, preço e matriz de atendimento pelo código | Modo demonstração (respostas gravadas para uma RFP pública) |
-| 3 — TAP | Os 12 elementos e o registro de premissas pelo PMO; divergências RFP × proposta e conferência do TAP pelo código | Modo demonstração |
-| 4 — PGP | Adaptação decidida pelo GP e as partes do plano pelo PMO; cronograma, marcos, custos, rastreabilidade, diagramas e a autoconferência pelas regras da etapa 5 pelo código | Modo demonstração |
-| 5 — Conferência | A conferência por código e a leitura do PMO, que é a leitura principal (decisão 0035): o código confere cada citação do PMO, procura no plano o que ele diz estar ausente e dá a gravidade pela parte do plano | Só a conferência por código; nada sai do navegador |
+| 1 — Leitura da RFP | "Analisar a RFP": o código monta o esqueleto nas 8 seções, o PMO lê a RFP a partir dele e o código confere cada citação, número e requisito R antes de mostrar | Sim |
+| 2 — Proposta | Estratégia e abordagens, conteúdo técnico e SOW, EAP e equipe pelo PMO; cronograma, preço e matriz de atendimento pelo código | Sim |
+| 3 — TAP | Os 12 elementos e o registro de premissas pelo PMO; divergências RFP × proposta e conferência do TAP pelo código | Sim |
+| 4 — PGP | Adaptação decidida pelo GP e as partes do plano pelo PMO; cronograma, marcos, custos, rastreabilidade, diagramas e a autoconferência pelas regras da etapa 5 pelo código | Sim |
+| 5 — Conferência | "Conferir o plano": a conferência por código e a leitura do PMO juntas; o código confere cada citação do PMO, procura no plano o que ele diz estar ausente e dá a gravidade pela parte do plano | Sim, com um plano de trabalho inventado que tem erros plantados |
 
-- **A chave da API** é pedida ao administrador do Claude da FGV, que a cria no Claude Console; o login do claude.ai não serve. Ela fica só no seu navegador, durante a sessão. Quando você pede a leitura do PMO, o texto dos PDFs daquela etapa vai para a API do Claude pela organização da FGV, e a tela mostra antes quanto deve custar.
+- **A chave da API** é pedida ao administrador do Claude da FGV, que a cria no Claude Console; o login do claude.ai não serve. Ela fica só no seu navegador, durante a sessão. Os PDFs são lidos no navegador; o texto deles só vai para a API do Claude, pela organização da FGV, quando você pede a análise, e a tela avisa antes, com o custo estimado.
 - O trabalho é salvo num arquivo de **dossiê** (`<projeto>.dossie.json`), que você guarda e reabre quando quiser. O dossiê nunca guarda a chave.
 
 O guia completo está em [`docs/guia-do-gerente.md`](docs/guia-do-gerente.md).

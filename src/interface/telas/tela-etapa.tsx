@@ -79,15 +79,16 @@ function AvisoEnvio({ etapa }: { etapa: Etapa }) {
         <p>
           <b>Etapa com o PMO (inteligência artificial).</b> A leitura dos PDFs e as contas acontecem aqui no
           navegador. Quando você pede um passo ao PMO, o texto dos PDFs{" "}
-          {etapa.numero === 4
-            ? "da RFP, do TAP e da proposta"
-            : etapa.numero === 3
-              ? "da RFP e da proposta"
-              : "da RFP"}{" "}
+          {etapa.numero === 5
+            ? "do plano, do TAP e da RFP"
+            : etapa.numero === 4
+              ? "da RFP, do TAP e da proposta"
+              : etapa.numero === 3
+                ? "da RFP e da proposta"
+                : "da RFP"}{" "}
           é enviado à API do Claude, pela sua chave, na organização da FGV. Nada é enviado sem o seu clique, e
           o custo aparece antes.
-          {etapa.numero === 1 &&
-            " Sem a chave, a etapa funciona com o esqueleto do código (leitura parcial por código), sem enviar nada."}
+          {" Sem a conexão com o Claude, nada é analisado: conecte a chave ou veja a demonstração."}
         </p>
       </div>
     );
@@ -304,9 +305,7 @@ export function TelaEtapa() {
         <Titulo>{etapa.nome}</Titulo>
         <PassosFluxo lidos={obrigatoriosLidos} />
         <AvisoEnvio etapa={etapa} />
-        {(etapa.numero === 1 || etapa.numero === 2 || etapa.numero === 3 || etapa.numero === 4) && (
-          <BotaoDemonstracao etapa={etapa.numero} />
-        )}
+        <BotaoDemonstracao etapa={etapa.numero as 1 | 2 | 3 | 4 | 5} />
 
         <section className="bloco">
           <RotuloSecao>Documentos</RotuloSecao>

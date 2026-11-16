@@ -116,27 +116,24 @@ export function ConferenciaPgp(props: Props) {
     return guardada.pgpId ? guardada : { ...guardada, pgpId: props.pgp.id };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [guardada, proposta, props.pgp.id]);
-  const [executar, setExecutar] = useState(Boolean(dossie.conferencia?.executadaEm));
   const atualizar = (mudanca: Partial<Conferencia>) => guardarConferencia({ ...conf, ...mudanca });
 
+  // a conferência por código roda sempre (ela monta o pedido ao PMO); a tela só a mostra com a leitura (decisão 0037)
   const resultado = useMemo(
     () =>
-      executar
-        ? conferirPlano({
-            pgp: props.pgp.paginas,
-            tap: props.tap?.paginas,
-            rfp: props.rfp?.paginas,
-            partes: PARTES_PGP,
-            premissas: PREMISSAS_CRITICAS,
-            mapa: conf.mapa,
-            caracteristicas: conf.caracteristicas,
-            premissasAplicaveis: conf.premissasAplicaveis,
-            requisitos: conf.requisitos,
-            tipoPlano: conf.tipoPlano,
-          })
-        : null,
+      conferirPlano({
+        pgp: props.pgp.paginas,
+        tap: props.tap?.paginas,
+        rfp: props.rfp?.paginas,
+        partes: PARTES_PGP,
+        premissas: PREMISSAS_CRITICAS,
+        mapa: conf.mapa,
+        caracteristicas: conf.caracteristicas,
+        premissasAplicaveis: conf.premissasAplicaveis,
+        requisitos: conf.requisitos,
+        tipoPlano: conf.tipoPlano,
+      }),
     [
-      executar,
       props.pgp,
       props.tap,
       props.rfp,
@@ -166,50 +163,26 @@ export function ConferenciaPgp(props: Props) {
         <RotuloSecao>Requisitos da RFP</RotuloSecao>
         <Requisitos conf={conf} atualizar={atualizar} temRfp={Boolean(props.rfp)} />
       </section>
-      <section className="bloco">
-        <RotuloSecao>Conferência</RotuloSecao>
-        <div className="cartao cartao__corpo">
-          <p className="texto-apoio">
-            Confira o mapa, as características, as premissas e os requisitos acima e rode a conferência. Ela
-            roda no navegador, só com código, e pode ser refeita sempre que você mudar algo.
-          </p>
-          <button
-            className="botao botao--cheio"
-            type="button"
-            onClick={() => {
-              setExecutar(true);
-              atualizar({ executadaEm: new Date().toISOString() });
-            }}
-          >
-            {executar ? "Conferir de novo" : "Conferir o plano"}
-          </button>
-        </div>
-      </section>
-      {resultado && (
+      <LeituraDoPmo
+        pgp={props.pgp}
+        tap={props.tap}
+        rfp={props.rfp}
+        conf={conf}
+        atualizar={atualizar}
+        achadosDoCodigo={resultado.achados}
+      />
+      {/* decisão 0037: o resultado só aparece com a leitura do PMO (ou a resposta gravada da demonstração) */}
+      {conf.leituraPmo && (
         <Resultado
           achados={resultado.achados}
           verificacoes={resultado.verificacoes}
           conf={conf}
           atualizar={atualizar}
-          leitura={
-            conf.leituraPmo
-              ? conferirLeitura(
-                  conf.leituraPmo.resposta,
-                  { pgp: props.pgp, tap: props.tap, rfp: props.rfp },
-                  resultado.achados,
-                )
-              : []
-          }
-        />
-      )}
-      {resultado && (
-        <LeituraDoPmo
-          pgp={props.pgp}
-          tap={props.tap}
-          rfp={props.rfp}
-          conf={conf}
-          atualizar={atualizar}
-          achadosDoCodigo={resultado.achados}
+          leitura={conferirLeitura(
+            conf.leituraPmo.resposta,
+            { pgp: props.pgp, tap: props.tap, rfp: props.rfp },
+            resultado.achados,
+          )}
         />
       )}
     </>

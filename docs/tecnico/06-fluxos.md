@@ -41,19 +41,17 @@ sequenceDiagram
   participant P as etapas/1-rfp/leitura-pmo.ts
   participant API as API do Claude
   participant Store as dossie/store.ts
-  GP->>Tela: Analisar a RFP
+  GP->>Tela: Analisar a RFP (com a conexão ou na demonstração)
   Tela->>A: analisarRfp(documentos, hoje)
   A-->>Tela: itens, requisitos, obrigações, dinheiro, pontos de atenção
   Tela->>L: montarLeituraRfp (8 seções do método)
-  L-->>Tela: esqueleto ("leitura parcial por código")
-  Tela->>Store: guardarAnaliseRfp (R01… fixos, revisões)
-  opt com a chave
-    GP->>Tela: Pedir ao PMO (custo à vista)
-    Tela->>API: método da etapa 1 + esqueleto + texto da RFP
-    API-->>Tela: leitura nas 8 seções (JSON)
-    Tela->>P: conferirLeituraRfp (citação, número, R, conta do PMO)
-    P-->>Tela: itens do PMO como Sugestão, com as travas
-  end
+  L-->>Tela: esqueleto (vai no pedido; não aparece sozinho)
+  Note over Tela: sem a conexão, o botão fica desligado (decisão 0037)
+  Tela->>API: método da etapa 1 + esqueleto + texto da RFP (custo à vista antes)
+  API-->>Tela: leitura nas 8 seções (JSON)
+  Tela->>P: conferirLeituraRfp (citação, número, R, conta do PMO)
+  P-->>Tela: itens do PMO como Sugestão, com as travas
+  Tela->>Store: guardarAnaliseRfp (R01… fixos, leitura, revisões)
   GP->>Tela: aceita, edita ou descarta; inclui R a partir do PMO
   GP->>Tela: exporta (DOCX, PDF, XLSX)
 ```
@@ -93,7 +91,7 @@ As contas ficam com o código:
 - preço (`preco.ts`);
 - custos e marcos do PGP (`src/etapas/4-pgp/calculos.ts`).
 
-## 4. Etapa 5 — conferência do plano (a leitura do PMO é a principal; sem chave, só o código)
+## 4. Etapa 5 — conferência do plano (o código e o PMO numa ação só, decisão 0037)
 
 ```mermaid
 sequenceDiagram
@@ -107,15 +105,14 @@ sequenceDiagram
   Tela->>Mapa: proporMapa (51 partes pelos títulos)
   Mapa-->>Tela: partes com página e situação
   GP->>Tela: confirma o mapa, as características e as premissas
-  Tela->>Conf: conferirPlano
+  Tela->>Conf: conferirPlano (vai no pedido)
   Conf-->>Tela: achados vago, conflituoso e ausente, com gravidade e categoria
-  opt com a chave
-    GP->>Tela: pede a leitura do PMO
-    Tela->>Leit: pedidoLeitura
-    Leit->>API: plano, TAP, RFP e o que o código achou
-    API-->>Leit: achados sugeridos
-    Leit->>Conf: conferirLeitura (citação, ausente procurado no plano)
-  end
+  GP->>Tela: Conferir o plano (com a conexão ou na demonstração)
+  Tela->>Leit: pedidoLeitura
+  Leit->>API: plano, TAP, RFP e o que o código achou
+  API-->>Leit: achados sugeridos
+  Leit->>Conf: conferirLeitura (citação, ausente procurado no plano)
+  Conf-->>Tela: achados do código e do PMO, só agora na tela
   GP->>Tela: procede ou não, em cada achado
 ```
 

@@ -1,4 +1,4 @@
-// Um passo do PMO na tela (etapas 3 e 4): custo antes, botão, progresso, cancelar, erro em português e a resposta.
+// Um passo do PMO na tela (todas as etapas): custo antes, botão, progresso, cancelar, erro em português e a resposta.
 // Na demonstração (decisão 0027), o botão carrega a resposta gravada e nada é enviado à API.
 import { useRef, useState, type ReactNode } from "react";
 import type { z } from "zod";
@@ -99,6 +99,9 @@ export function PassoPmoNaTela({
   aoPedir,
   aoCancelar,
   envio = "O texto dos PDFs vai para a API do Claude, pela sua chave, na organização da FGV.",
+  rotuloBotao,
+  testid,
+  explicacao,
   children,
 }: {
   passo: string;
@@ -115,6 +118,11 @@ export function PassoPmoNaTela({
   aoPedir: () => void;
   aoCancelar: () => void;
   envio?: string;
+  /** Texto do botão no lugar de "Pedir ao PMO" (etapas 1 e 5: "Analisar a RFP", "Conferir o plano"). */
+  rotuloBotao?: string;
+  testid?: string;
+  /** O que o passo faz, antes do custo. */
+  explicacao?: string;
   children?: ReactNode;
 }) {
   const ocupado = Boolean(rodando);
@@ -126,6 +134,7 @@ export function PassoPmoNaTela({
           <p className="texto-apoio">{semPedido}</p>
         ) : (
           <>
+            {explicacao && <p className="texto-apoio">{explicacao}</p>}
             {demonstracao && bloqueioDemonstracao && (
               <p className="envio__obs" data-testid={`gravacao-${passo}`}>
                 {bloqueioDemonstracao}
@@ -146,7 +155,7 @@ export function PassoPmoNaTela({
               <button
                 className="botao botao--cheio"
                 type="button"
-                data-testid={`pedir-${passo}`}
+                data-testid={testid ?? `pedir-${passo}`}
                 disabled={demonstracao ? Boolean(bloqueioDemonstracao) || ocupado : !chave || ocupado}
                 onClick={() => {
                   if (
@@ -159,16 +168,18 @@ export function PassoPmoNaTela({
                   aoPedir();
                 }}
               >
-                {demonstracao
-                  ? feito
-                    ? "Carregar de novo a resposta gravada"
-                    : "Carregar a resposta gravada"
-                  : feito
-                    ? "Pedir de novo ao PMO"
-                    : "Pedir ao PMO"}
+                {rotuloBotao && !feito
+                  ? rotuloBotao
+                  : demonstracao
+                    ? feito
+                      ? "Carregar de novo a resposta gravada"
+                      : "Carregar a resposta gravada"
+                    : feito
+                      ? "Pedir de novo ao PMO"
+                      : "Pedir ao PMO"}
               </button>
               {!chave && !demonstracao && (
-                <span className="envio__obs">Conecte a chave acima para pedir.</span>
+                <span className="envio__obs">Conecte a chave acima para pedir, ou veja a demonstração.</span>
               )}
               {rodando?.passo === passo && (
                 <>

@@ -41,6 +41,31 @@ export async function respostaGravada<S extends z.ZodType>(
   return schema.parse(await carregar()) as z.infer<S>;
 }
 
+/**
+ * O plano de trabalho inventado da demonstração da etapa 5 (decisão 0037): fictício, sobre o edital público da OEI,
+ * com erros plantados. Vira um documento "lido" (uma página por bloco de texto), como um PDF lido no navegador.
+ */
+export async function planoDaDemonstracao(): Promise<DocumentoLido> {
+  const carregar = gravadas["../../tests/fixtures/gerados/leitura-oei/plano-demonstracao.json"];
+  if (!carregar) throw new Error("Plano da demonstração não encontrado.");
+  const plano = (await carregar()) as { nomeArquivo: string; paginas: string[] };
+  const paginas = plano.paginas.map((texto, k) => ({
+    numero: k + 1,
+    origem: "texto" as const,
+    texto,
+    caracteres: texto.length,
+  }));
+  return {
+    id: crypto.randomUUID(),
+    papel: "pgp",
+    nomeArquivo: plano.nomeArquivo,
+    tamanhoBytes: 0,
+    totalPaginas: paginas.length,
+    lidoEm: new Date().toISOString(),
+    paginas,
+  };
+}
+
 /** Lê o PDF da RFP da demonstração, servido pelo próprio site, com a leitura de verdade. */
 export async function lerRfpDaDemonstracao(
   aoProgredir?: (pagina: number, total: number) => void,

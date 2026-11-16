@@ -1,5 +1,5 @@
-// Etapa 5, F5b (decisão 0013): leitura opcional do PMO na conferência, acionada pelo GP, com o custo antes e o uso
-// depois. Cada achado do PMO aparece como sugestão, com a situação dada pelo código (citação conferida, rebaixado,
+// Etapa 5 (decisões 0013, 0035 e 0037): "Conferir o plano" faz a conferência por código e a leitura do PMO numa
+// ação só, com a conexão com o Claude (ou a resposta gravada da demonstração), o custo antes e o uso depois. Cada achado do PMO aparece como sugestão, com a situação dada pelo código (citação conferida, rebaixado,
 // citação não conferida) e a gravidade e a categoria pela regra fixa. O GP decide se procede.
 import { useMemo } from "react";
 import { MODELO_PADRAO, MODELOS, type IdModelo } from "../../config/modelo";
@@ -56,8 +56,9 @@ export function LeituraDoPmo({
     const r = await chamar({
       etapa: 5,
       passo: "leitura",
+      gravacao: "leitura",
       schema: RespostaLeitura,
-      demonstracao: false,
+      demonstracao,
       chave,
       modelo,
       sistema,
@@ -68,59 +69,52 @@ export function LeituraDoPmo({
     atualizar({
       leituraPmo: { resposta: r.resposta, modelo: r.modelo, em: r.em },
       usoPmo: r.uso ? [...uso, r.uso] : uso,
+      executadaEm: new Date().toISOString(),
     });
   }
 
   const decidir = (id: string, m: Partial<DecisaoAchado>) =>
     atualizar({ decisoes: { ...conf.decisoes, [id]: { ...conf.decisoes[id], ...m } } });
 
-  if (demonstracao)
-    return (
-      <section className="bloco">
-        <RotuloSecao>Leitura do PMO (opcional)</RotuloSecao>
-        <div className="cartao cartao__corpo">
-          <p className="texto-apoio">
-            Na demonstração, a leitura do PMO na conferência não tem resposta gravada. Com a chave, ela lê o
-            plano, o TAP e a RFP e aponta o que depende de interpretação.
-          </p>
-        </div>
-      </section>
-    );
-
   return (
     <>
-      <section className="bloco">
-        <RotuloSecao>Conexão com o PMO</RotuloSecao>
-        <ConectarClaude modelo={modelo as IdModelo} />
-        <div className="cartao cartao__corpo acoes-exportar" style={{ marginTop: 8 }}>
-          <label>
-            <span className="lb">Modelo</span>{" "}
-            <select
-              aria-label="Modelo"
-              value={modelo}
-              onChange={(e) => atualizar({ modeloPmo: e.target.value })}
-              disabled={Boolean(rodando)}
-            >
-              {Object.entries(MODELOS).map(([id, m]) => (
-                <option key={id} value={id}>
-                  {m.nome}
-                  {id === "claude-opus-5-5" ? " (padrão provisório)" : ""}
-                </option>
-              ))}
-            </select>
-          </label>
-          <span className="envio__obs">
-            Gasto da leitura até agora: {formatarDolar(uso.reduce((s, u) => s + (u.custoUsd ?? 0), 0))}.
-          </span>
-        </div>
-      </section>
+      {!demonstracao && (
+        <section className="bloco">
+          <RotuloSecao>Conexão com o PMO</RotuloSecao>
+          <ConectarClaude modelo={modelo as IdModelo} />
+          <div className="cartao cartao__corpo acoes-exportar" style={{ marginTop: 8 }}>
+            <label>
+              <span className="lb">Modelo</span>{" "}
+              <select
+                aria-label="Modelo"
+                value={modelo}
+                onChange={(e) => atualizar({ modeloPmo: e.target.value })}
+                disabled={Boolean(rodando)}
+              >
+                {Object.entries(MODELOS).map(([id, m]) => (
+                  <option key={id} value={id}>
+                    {m.nome}
+                    {id === "claude-opus-5-5" ? " (padrão provisório)" : ""}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <span className="envio__obs">
+              Gasto da leitura até agora: {formatarDolar(uso.reduce((s, u) => s + (u.custoUsd ?? 0), 0))}.
+            </span>
+          </div>
+        </section>
+      )}
       <PassoPmoNaTela
         passo="leitura"
-        titulo="Leitura do plano (opcional)"
+        titulo="Conferência do plano"
+        rotuloBotao="Conferir o plano"
+        testid="conferir-plano"
+        explicacao="Confira o mapa, as características, as premissas e os requisitos acima. O código confere o plano no navegador e monta o pedido; o PMO lê o plano a partir do que o código apontou; o código confere cada citação do PMO, procura no plano inteiro o que ele diz estar ausente e dá a gravidade pela parte. Mudou algo acima? Os achados do código se refazem sozinhos; a leitura do PMO, só se você pedir de novo."
         pedido={pedido}
         semPedido=""
         feito={conf.leituraPmo ? { modelo: conf.leituraPmo.modelo, em: conf.leituraPmo.em } : undefined}
-        demonstracao={false}
+        demonstracao={demonstracao}
         chave={chave}
         estimativa={estimarCusto(
           modelo,
@@ -132,7 +126,7 @@ export function LeituraDoPmo({
         erro={erro}
         aoPedir={() => void pedir()}
         aoCancelar={cancelar}
-        envio="O texto do PGP, do TAP e da RFP vai para a API do Claude, pela sua chave, na organização da FGV. A conferência por código continua valendo sem isto."
+        envio="Ao clicar, o texto do plano, do TAP e da RFP vai para a API do Claude, pela sua chave, na organização da FGV, junto com os achados do código."
       >
         {conferidos.length > 0 && (
           <div data-testid="leitura-pmo">
@@ -207,7 +201,7 @@ export function LeituraDoPmo({
           </div>
         )}
       </PassoPmoNaTela>
-      <UsoNaTela uso={uso} titulo="Uso da API na leitura do PMO" />
+      {!demonstracao && <UsoNaTela uso={uso} titulo="Uso da API na conferência" />}
     </>
   );
 }

@@ -4,13 +4,13 @@ Feito em 16/11/2026 pelo teste `tests/etapas/metodo-etapa-1.test.ts` (roda a cad
 
 ## O que este placar mede (e o que não mede)
 
-**Os gabaritos e a leitura gravada foram feitos pelo Claude Code, seguindo a skill PMO**, não por uma pessoa nem por uma leitura independente. Por isso o placar mede duas coisas: o **esqueleto do código** (o que a tela mostra sem a chave) contra esses gabaritos, e as **travas** (o código pegando citação falsa, número trocado, R inventado e conta do PMO). Ele **não mede a qualidade da leitura do PMO**: isso só com a chave e com um gabarito feito pela responsável (roteiro da etapa 5 em `roteiro-etapa-5-plano-real.md`; a comparação de modelos para a etapa 1 entra quando a chave chegar).
+**Os gabaritos e a leitura gravada foram feitos pelo Claude Code, seguindo a skill PMO**, não por uma pessoa nem por uma leitura independente. Por isso o placar mede duas coisas: o **esqueleto do código** (o que vai no pedido ao PMO) contra esses gabaritos, e as **travas** (o código pegando citação falsa, número trocado, R inventado e conta do PMO). Ele **não mede a qualidade da leitura do PMO**: isso só com a chave e com um gabarito feito pela responsável (roteiro da etapa 5 em `roteiro-etapa-5-plano-real.md`; a comparação de modelos para a etapa 1 entra quando a chave chegar).
 
 ## Como se mede
 
 - **Gabarito:** a leitura feita pelo PMO na estrutura do método, 50 itens nas seções 1 a 7 de cada edital (`tests/fixtures/gerados/rfp-smped/` e `rfp-oei/`, `gabarito-metodo-etapa-1.json`). Cada item tem página, trecho literal (todos achados pelo código na página) e de 1 a 3 "chaves", expressões que o item precisa ter.
 - **Antes:** a análise da v0.8.3 (inventário), com os requisitos daquela versão.
-- **Depois:** o esqueleto do código na estrutura nova, sem a leitura do PMO. É o que a tela mostra sem a chave, com o aviso "leitura parcial por código".
+- **Depois:** o esqueleto do código na estrutura nova, sem a leitura do PMO. Na M1, era o que a tela mostrava sem a chave; desde a decisão 0037, ele só vai no pedido ao PMO.
 - **Item coberto:** algum item da saída tem a maioria das chaves do item do gabarito (2 de 3, 1 de 2). "Pleno": todas as chaves.
 - **Item que passa no teste do método:** casa com algum item do gabarito. O que não casa é o que a saída mostra e o PMO não mostraria.
 - **Número sem fonte:** número do texto de um item que não está no trecho, na tabela nem na página citada (contas do código ficam de fora: são conferidas pela regra que as fez).
