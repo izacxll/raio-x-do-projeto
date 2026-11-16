@@ -111,8 +111,16 @@ export function ConferenciaPgp(props: Props) {
   const conf = useMemo(() => {
     if (!guardada)
       return { ...conferenciaInicial(props, proposta, dossie.analiseRfp, dossie.pgp), pgpId: props.pgp.id };
+    // outro plano: a leitura do PMO e as decisões eram do plano anterior e saem (decisão 0037)
     if (guardada.pgpId && guardada.pgpId !== props.pgp.id)
-      return { ...guardada, pgpId: props.pgp.id, mapa: sincronizarMapa(guardada.mapa, proposta) };
+      return {
+        ...guardada,
+        pgpId: props.pgp.id,
+        mapa: sincronizarMapa(guardada.mapa, proposta),
+        leituraPmo: undefined,
+        executadaEm: undefined,
+        decisoes: {},
+      };
     return guardada.pgpId ? guardada : { ...guardada, pgpId: props.pgp.id };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [guardada, proposta, props.pgp.id]);

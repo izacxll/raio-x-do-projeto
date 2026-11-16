@@ -37,6 +37,7 @@ import {
 } from "../../exportacao/relatorio-rfp";
 import { estimarCusto, formatarDolar } from "../../pmo/custo";
 import { estimarTokens, referenciasEtapa1, textoDeSistema, textoDosDocumentos } from "../../pmo/montagem";
+import { semRevisoesDoPmo } from "../../pmo/itens";
 import { RespostaLeituraRfp } from "../../pmo/schemas/leitura-rfp";
 import { NOME_PREMISSA } from "../../regras/premissas-rfp";
 import { EtiquetaRotulo, NOME_ESTADO, RotuloSecao } from "../componentes/basicos";
@@ -114,6 +115,7 @@ function AnalisarComPmo({
     const uso = base.usoPmo ?? [];
     atualizar({
       ...base,
+      revisoes: semRevisoesDoPmo(base.revisoes),
       modeloPmo: modelo,
       leituraPmo: { resposta: r.resposta, modelo: r.modelo, em: r.em },
       usoPmo: r.uso ? [...uso, r.uso] : uso,
@@ -437,8 +439,10 @@ function LeituraDoPmoNaEtapa1({
       pedido: base,
     });
     if (!r) return;
+    // a leitura nova não herda as revisões da anterior: os itens do PMO voltam a ficar pendentes
     atualizar({
       ...salva,
+      revisoes: semRevisoesDoPmo(salva.revisoes),
       leituraPmo: { resposta: r.resposta, modelo: r.modelo, em: r.em },
       usoPmo: r.uso ? [...uso, r.uso] : uso,
     });
@@ -476,7 +480,7 @@ function LeituraDoPmoNaEtapa1({
       <PassoPmoNaTela
         passo="leitura-rfp"
         titulo="Leitura da RFP"
-        explicacao="Pedir de novo refaz a leitura a partir do esqueleto do código; as revisões dos itens do PMO se perdem."
+        explicacao="Pedir de novo refaz a leitura a partir do esqueleto do código; os itens do PMO voltam a ficar pendentes de revisão."
         pedido={pedido}
         semPedido=""
         feito={salva.leituraPmo ? { modelo: salva.leituraPmo.modelo, em: salva.leituraPmo.em } : undefined}

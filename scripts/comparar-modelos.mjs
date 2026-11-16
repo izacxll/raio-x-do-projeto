@@ -4,7 +4,7 @@
 // o próprio uso nessa chave. Este script não lê, não imprime e não repassa essa variável.
 import { spawnSync } from "node:child_process";
 import { existsSync, realpathSync } from "node:fs";
-import { isAbsolute, relative, resolve } from "node:path";
+import { isAbsolute, relative, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const raiz = resolve(fileURLToPath(new URL("../", import.meta.url)));
@@ -25,7 +25,7 @@ if (!existsSync(arquivo)) {
   process.exit(1);
 }
 const rel = relative(realpathSync(raiz), realpathSync(arquivo));
-if (!(rel.startsWith("..") || isAbsolute(rel))) {
+if (!(rel === ".." || rel.startsWith(`..${sep}`) || isAbsolute(rel))) {
   console.error(
     "O arquivo da chave está dentro da pasta do projeto: mova-o para fora (ex.: %USERPROFILE%\.raio-x\).",
   );

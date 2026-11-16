@@ -2,14 +2,14 @@
 // repositório, indicado por RAIO_X_ARQUIVO_CHAVE. Nunca de ANTHROPIC_API_KEY: com essa variável no terminal, o
 // Claude Code passa a cobrar o próprio uso nela. A chave nunca é impressa nem gravada.
 import { existsSync, readFileSync, realpathSync } from "node:fs";
-import { isAbsolute, relative, resolve } from "node:path";
+import { isAbsolute, relative, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const RAIZ = resolve(fileURLToPath(new URL("../../", import.meta.url)));
 
 export function caminhoForaDoRepositorio(caminho: string, raiz = RAIZ): boolean {
   const rel = relative(realpathSync(raiz), realpathSync(caminho));
-  return rel.startsWith("..") || isAbsolute(rel);
+  return rel === ".." || rel.startsWith(`..${sep}`) || isAbsolute(rel);
 }
 
 /** A chave do arquivo indicado por RAIO_X_ARQUIVO_CHAVE, ou undefined se a variável não estiver definida. */

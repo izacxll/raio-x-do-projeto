@@ -45,6 +45,9 @@ export async function respostaGravada<S extends z.ZodType>(
  * O plano de trabalho inventado da demonstração da etapa 5 (decisão 0037): fictício, sobre o edital público da OEI,
  * com erros plantados. Vira um documento "lido" (uma página por bloco de texto), como um PDF lido no navegador.
  */
+/** Nome do arquivo do plano inventado: a resposta gravada só vale para ele. */
+export const PLANO_DEMONSTRACAO = "plano-de-trabalho-demonstracao.pdf";
+
 export async function planoDaDemonstracao(): Promise<DocumentoLido> {
   const carregar = gravadas["../../tests/fixtures/gerados/leitura-oei/plano-demonstracao.json"];
   if (!carregar) throw new Error("Plano da demonstração não encontrado.");

@@ -182,9 +182,12 @@ describe.skipIf(!LIGADO)("roteiro da etapa 5 com um plano real (só números)", 
           ".raio-x",
           `resumo-etapa-5-${new Date().toISOString().slice(0, 19).replace(/[:T]/g, "-")}.json`,
         );
-      mkdirSync(dirname(saida), { recursive: true });
-      if (!caminhoForaDoRepositorio(dirname(saida)))
+      // confere antes de criar a pasta: o pai mais próximo que existe não pode estar no projeto
+      let existente = dirname(saida);
+      while (!existsSync(existente) && dirname(existente) !== existente) existente = dirname(existente);
+      if (!caminhoForaDoRepositorio(existente))
         throw new Error("RAIO_X_SAIDA está dentro da pasta do projeto.");
+      mkdirSync(dirname(saida), { recursive: true });
       writeFileSync(saida, `${JSON.stringify(resumo, null, 2)}\n`);
       console.log(`Resumo numérico gravado em ${saida}`);
       console.log(JSON.stringify(resumo, null, 2));

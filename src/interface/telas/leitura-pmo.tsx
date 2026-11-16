@@ -9,7 +9,9 @@ import { conferirLeitura, NOME_SITUACAO_PMO, pedidoLeitura } from "../../etapas/
 import { NOME_ESTADO_CITACAO } from "../../pmo/citacoes";
 import { estimarCusto, formatarDolar } from "../../pmo/custo";
 import { estimarTokens, referenciasEtapa5, textoDeSistema, textoDosDocumentos } from "../../pmo/montagem";
+import { semRevisoesDoPmo } from "../../pmo/itens";
 import { RespostaLeitura } from "../../pmo/schemas/leitura";
+import { PLANO_DEMONSTRACAO } from "../../demonstracao/demonstracao";
 import type { Achado } from "../../regras/achado";
 import { EtiquetaRotulo, RotuloSecao } from "../componentes/basicos";
 import { ConectarClaude, useChave } from "../componentes/conectar-claude";
@@ -67,6 +69,8 @@ export function LeituraDoPmo({
     });
     if (!r) return;
     atualizar({
+      // a leitura nova não herda as decisões da anterior
+      decisoes: semRevisoesDoPmo(conf.decisoes),
       leituraPmo: { resposta: r.resposta, modelo: r.modelo, em: r.em },
       usoPmo: r.uso ? [...uso, r.uso] : uso,
       executadaEm: new Date().toISOString(),
@@ -115,6 +119,11 @@ export function LeituraDoPmo({
         semPedido=""
         feito={conf.leituraPmo ? { modelo: conf.leituraPmo.modelo, em: conf.leituraPmo.em } : undefined}
         demonstracao={demonstracao}
+        bloqueioDemonstracao={
+          demonstracao && pgp.nomeArquivo !== PLANO_DEMONSTRACAO
+            ? "A resposta gravada é do plano inventado da demonstração. Com outro plano na caixa, saia da demonstração e conecte a chave."
+            : undefined
+        }
         chave={chave}
         estimativa={estimarCusto(
           modelo,
