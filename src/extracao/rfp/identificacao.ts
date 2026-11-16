@@ -188,7 +188,13 @@ function objeto(docs: DocumentoRfp[], capa: CampoDaCapa[], mapa: MapaRfp): ItemA
   const doc = docs[0];
   const c = campoDaCapa(capa, /^objeto\b/);
   if (doc && c) return { ...itemDaCapa(doc, c, base.id, base.nome), nota: "Quadro da capa." };
-  const secao = mapa.secoes.find((s) => s.tema === "objeto");
+  // a seção cujo título diz "objeto" ("2. OBJETO DO TERMO DE FOMENTO") vale mais que a de propósito ou de
+  // objetivos, que o mapa também põe no tema objeto
+  const doTema = mapa.secoes.filter((s) => s.tema === "objeto");
+  const secao =
+    doTema.find((s) => !s.anexo && /\bobjeto\b/.test(normalizarTermo(s.titulo))) ??
+    doTema.find((s) => !s.anexo) ??
+    doTema[0];
   if (secao) {
     const d = docs.find((x) => x.id === secao.docId);
     const p = d?.paginas.find((x) => x.numero === secao.pagina);
