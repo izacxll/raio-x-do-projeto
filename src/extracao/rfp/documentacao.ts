@@ -51,8 +51,13 @@ export function extrairListaDeDocumentos(docs: DocumentoRfp[], mapa: MapaRfp): L
   const vistos = new Set<string>();
   let quemEntrega: ListaDeDocumentos["quemEntrega"];
   const clausulas = lerClausulas(docs, mapa);
+  // alíneas depois de um item que termina em dois-pontos ("20 Comprovantes de experiência [...], podendo ser
+  // admitidos, sem prejuízo de outros:") são exemplos daquele item, não documentos da lista
+  let alineasSaoExemplos = false;
   for (const c of clausulas) {
     if (!naSecaoDaLista(c) || c.noModelo) continue;
+    if (/^\d/.test(c.numero)) alineasSaoExemplos = /:\s*$/.test(c.texto);
+    else if (/^[a-z]\)?$/i.test(c.numero) && alineasSaoExemplos) continue;
     const corpo = normalizarTermo(textoDoDocumento(c));
     if (!quemEntrega && RE_SO_O_PRIMEIRO.test(normalizarTermo(c.texto))) {
       const trecho = trechoDaClausula(c, 260);
@@ -61,7 +66,9 @@ export function extrairListaDeDocumentos(docs: DocumentoRfp[], mapa: MapaRfp): L
     // só linha de lista (com número ou letra) que começa pelo nome de um documento
     if (!c.numero || !RE_DOCUMENTO.test(corpo)) continue;
     const texto = textoDoDocumento(c);
-    const chave = corpo.slice(0, 70);
+    // o texto inteiro: certidões que só mudam no fim ("Tribunal de Contas da União", "do Estado", "do
+    // Município") são documentos diferentes; a repetição é o mesmo documento no corpo e no anexo
+    const chave = corpo;
     if (vistos.has(chave)) continue;
     vistos.add(chave);
     const trecho = trechoDaClausula({ ...c, texto: `${c.numero} ${texto}`.trim() }, 260);

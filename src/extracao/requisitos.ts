@@ -40,8 +40,9 @@ const ROMANOS: Record<string, number> = {
   x: 10,
 };
 
+// a linha pode começar com o número do item do documento ("2.3.1 Produto 1: Metodologia…")
 const RE_PRODUTO =
-  /^\s*(produto|entreg[aá]vel)\s*(?:n[º°.o]?\s*)?(\d{1,2}|[ivx]{1,4})\b\s*[-–—:.)]\s*(.{3,})$/i;
+  /^\s*(?:\d{1,2}(?:\.\d{1,2}){1,4}\.?\s+)?(produto|entreg[aá]vel)\s*(?:n[º°.o]?\s*)?(\d{1,2}|[ivx]{1,4})\b\s*[-–—:.)]\s*(.{3,})$/i;
 
 function numeroDoRotulo(n: string): number {
   return /^\d+$/.test(n) ? Number(n) : (ROMANOS[n.toLowerCase()] ?? 0);

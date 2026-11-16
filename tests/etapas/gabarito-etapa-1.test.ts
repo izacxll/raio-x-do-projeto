@@ -118,7 +118,19 @@ const COMPARACAO: Record<
     origem: "ia",
     como: 'Separar o propósito que vincula o projeto da justificativa pede leitura; uma regra "o projeto deverá" traria ruído.',
   },
-  "RQ-02": { situacao: () => s(Boolean(req(/^1\.2 /))), esperado: "acerto" },
+  // decisão 0048: o público-alvo descreve a quem o projeto atende, não é obrigação nem entrega; deixou de ser R e
+  // continua na leitura, no cartão das obrigações da seção 2
+  "RQ-02": {
+    situacao: () =>
+      s(
+        leitura.itens.some((i) =>
+          /público-alvo as pessoas com deficiência/.test(
+            [i.texto, ...(i.tabela?.linhas.flat() ?? [])].join(" "),
+          ),
+        ) && !req(/^1\.2 /),
+      ),
+    esperado: "acerto",
+  },
   "RQ-03": {
     situacao: () => s(Boolean(req(/^1\.3 /))),
     esperado: "falta",
@@ -150,7 +162,14 @@ const COMPARACAO: Record<
       s(/^1\.9 /.test(leitura.itens.find((i) => i.id === "leitura:prazo")?.origem?.trecho ?? "")),
     esperado: "acerto",
   },
-  "RQ-09": { situacao: () => s(Boolean(req(/^1\.10 /))), esperado: "acerto" },
+  // decisão 0048: "poderá ser executado de forma presencial e/ou à distância" é faculdade, não obrigação nem
+  // entrega (apontamento da responsável no teste externo); não vira R
+  "RQ-09": {
+    situacao: () => s(Boolean(req(/^1\.10 /))),
+    esperado: "falta",
+    origem: "ia",
+    como: "Faculdade de execução remota: só a leitura diz se muda o custo ou a logística.",
+  },
   "RQ-10": {
     situacao: () => s(Boolean(req(/^2\.1 /))),
     esperado: "falta",

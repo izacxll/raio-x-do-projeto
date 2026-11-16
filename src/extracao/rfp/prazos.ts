@@ -242,6 +242,12 @@ export function prazosContados(docs: DocumentoRfp[], mapa: MapaRfp): PrazoContad
     const evento = eventoDoPrazo(l.frase);
     const m = new RegExp(RE_CONTADO.source).exec(l.termo);
     if (!evento || !m?.[1]) continue;
+    // recurso contra sanção ("aplicação das sanções", "contado da data da intimação") é da execução, não do certame
+    if (
+      evento === "recursos" &&
+      /\bsanc|penalidade|intimacao|inidoneidade|\bmulta\b/.test(tirarAcentos(l.frase))
+    )
+      continue;
     const dias = Number(m[1]);
     const contagem = m[2] === "uteis" ? "úteis" : m[2] === "corridos" ? "corridos" : "não informada";
     const chave = `${evento}:${dias}:${contagem}`;

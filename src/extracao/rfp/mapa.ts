@@ -133,8 +133,18 @@ function maiusculas(texto: string): number {
   return (texto.match(/[A-ZÀ-Ý]/g) ?? []).length / letras.length;
 }
 
+/**
+ * Título com o texto na mesma linha ("1. OBJETO: Contratação de…"): só a cabeça, até os dois-pontos, conta como
+ * título. Sem esse formato, a linha inteira.
+ */
+export function tituloDaLinha(linha: string): string {
+  const m = /^(.{3,60}?):\s+\S/.exec(linha);
+  const m2 = m?.[1] ? RE_NUMERADO.exec(m[1]) : null;
+  return m?.[1] && m2?.[3] && maiusculas(m2[3]) >= 0.75 ? m[1] : linha;
+}
+
 function ehTituloNumerado(linha: string): boolean {
-  const m = RE_NUMERADO.exec(linha);
+  const m = RE_NUMERADO.exec(tituloDaLinha(linha));
   if (!m?.[3]) return false;
   const resto = m[3];
   // linha de planilha de preço ("1 COMPOSIÇÃO PML-REL-01 UN 10 R$ 4.529,40") não é título
@@ -224,7 +234,7 @@ export function mapearRfp(docs: DocumentoRfp[]): MapaRfp {
         }
         const tipo = RE_CLAUSULA.test(linha) ? "clausula" : ehTituloNumerado(linha) ? "secao" : null;
         if (!tipo) continue;
-        const titulo = tipo === "clausula" ? linha.slice(0, 90) : linha;
+        const titulo = tipo === "clausula" ? linha.slice(0, 90) : tituloDaLinha(linha);
         doDoc.push({
           docId: doc.id,
           documento: doc.rotulo,

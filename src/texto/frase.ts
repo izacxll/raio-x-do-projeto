@@ -30,7 +30,18 @@ export function limparEspacos(s: string): string {
   return String(s).replace(/\s+/g, " ").trim();
 }
 
-// origem: App-final-4.jsx, rpFrase, linha 1507
+/** Abreviações comuns em endereços e citações: o ponto delas não é fim de frase ("Av. Dr. Silva", "art. 74"). */
+const ABREVIACOES = new Set(
+  "av sr sra srs dr dra drs prof profa eng arq min des pres art arts inc cap n nº pag pp fl fls obs tel rod lt ltda cia".split(
+    " ",
+  ),
+);
+function pontoDeAbreviacao(texto: string, indiceDoPonto: number): boolean {
+  const palavra = /([A-Za-zÀ-ÿº]+)$/.exec(texto.slice(Math.max(0, indiceDoPonto - 12), indiceDoPonto))?.[1];
+  return Boolean(palavra && ABREVIACOES.has(palavra.toLowerCase()));
+}
+
+// origem: App-final-4.jsx, rpFrase, linha 1507 (com as abreviações, que não fecham frase)
 /**
  * Frase que contém a posição i. Corta em ". " seguido de maiúscula ou número, em ";", em marcador de item e em
  * linha curta (título, célula, fim de parágrafo). Sem limite achado, começa no máximo 500 caracteres antes.
@@ -40,7 +51,11 @@ export function fraseEmVolta(t: string, i: number, maximo = 400): string {
   const antes = t.slice(base, i + 1);
   let ini = base ? base + Math.max(0, antes.search(/\s/) + 1) : 0;
   for (const re of [/\.\s+(?=[A-ZÀ-Ý0-9])/g, /;\s/g, /\n(?=[-•▪●◦■□➢➤✓✔·*-])/g, /:\s*\n/g])
-    for (const m of antes.matchAll(re)) ini = Math.max(ini, base + (m.index ?? 0) + m[0].length);
+    for (const m of antes.matchAll(re)) {
+      // o ponto de abreviação ("Av. Dr. Silva", "art. 74") não começa frase
+      if (m[0].startsWith(".") && pontoDeAbreviacao(antes, m.index ?? 0)) continue;
+      ini = Math.max(ini, base + (m.index ?? 0) + m[0].length);
+    }
   const curta = (a: number, b: number) => b - a < 70;
   for (let k = t.lastIndexOf("\n", i - 1); k >= ini && k > 0; k = t.lastIndexOf("\n", k - 1)) {
     const a0 = t.lastIndexOf("\n", k - 1) + 1;
@@ -51,6 +66,11 @@ export function fraseEmVolta(t: string, i: number, maximo = 400): string {
   }
   const depois = t.slice(i);
   let f = depois.search(/\.\s+(?=[A-ZÀ-Ý0-9])|;\s|\n(?=[-•▪●◦■□➢➤✓✔·*-])|\.\s*$/);
+  // o ponto de abreviação não fecha a frase: procura o próximo fim
+  while (f >= 0 && depois[f] === "." && pontoDeAbreviacao(depois, f)) {
+    const resto = depois.slice(f + 1).search(/\.\s+(?=[A-ZÀ-Ý0-9])|;\s|\.\s*$/);
+    f = resto < 0 ? -1 : f + 1 + resto;
+  }
   for (let k = t.indexOf("\n", i); k > 0 && (f < 0 || k < i + f); k = t.indexOf("\n", k + 1)) {
     const a0 = t.lastIndexOf("\n", k - 1) + 1;
     if (curta(a0, k) && k > i) {

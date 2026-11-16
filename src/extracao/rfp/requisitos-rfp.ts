@@ -36,6 +36,9 @@ function equipe(docs: DocumentoRfp[]): Omit<Requisito, "numero">[] {
         const junto = normalizarTermo(`${limpa} ${linhas[i + 1] ?? ""} ${linhas[i + 2] ?? ""}`);
         // "1 (um) Coordenador(a) Geral" (com a quantidade) vale sozinho; sem ela, precisa da qualificação perto
         if (!m[1] && !RE_QUALIFICACAO.test(junto)) return;
+        // definição copiada da lei ("considera-se de notória especialização o profissional ou a empresa cujo
+        // conceito…", art. 74, § 3º) não é equipe exigida
+        if (/notoria especializacao|considera-se|para os fins desta lei|cujo conceito/.test(junto)) return;
         // o nome do papel: sem a quantidade na frente e sem a qualificação que vem depois
         const papel =
           limpa
@@ -67,12 +70,35 @@ function equipe(docs: DocumentoRfp[]): Omit<Requisito, "numero">[] {
 }
 
 const UNIDADES =
-  "oficinas?|capacitac(?:ao|oes)|encontros?|turmas?|reunioes|reuniao|eventos?|seminarios?|workshops?|cursos?|palestras?|visitas?(?: tecnicas?)?|entrevistas?|questionarios|horas(?:-aula| aula)|participantes|municipios|relatorios|audiencias(?: publicas)?|pessoas|vagas|atendimentos|cadernos(?: tematicos)?|publicacoes|videos|diagnosticos|estudos|pesquisas|grupos focais|rodas de conversa|servidores|profissionais|familias|criancas|adolescentes|mulheres|jovens|projetos?|propostas?";
+  "oficinas?|capacitac(?:ao|oes)|encontros?|turmas?|reunioes|reuniao|eventos?|seminarios?|workshops?|cursos?|palestras?|visitas?(?: tecnicas?)?|entrevistas?|questi(?:o)?narios(?: validos)?|horas(?:-aula| aula)|participantes|municipios|relatorios|audiencias(?: publicas)?|pessoas|vagas|atendimentos|cadernos(?: tematicos)?|publicacoes|videos|diagnosticos|estudos|pesquisas|grupos focais|rodas de conversa|servidores|profissionais|familias|criancas|adolescentes|mulheres|jovens|projetos?|propostas?";
 // "até 15 (quinze) projetos", "01 (um) único projeto"
 const RE_QUANTIDADE = new RegExp(
   `\\b(\\d{1,5})\\s*(?:\\(\\s*[a-z -]{2,40}\\)\\s*)?(?:unic[oa]s?\\s+)?(${UNIDADES})\\b`,
   "g",
 );
+
+const ACENTOS: [RegExp, string][] = [
+  [/\bquesti(?:o)?narios\b/, "questionários"],
+  [/\bvalidos\b/, "válidos"],
+  [/\bcapacitac(?:ao|oes)\b/, "capacitações"],
+  [/\breunioes\b/, "reuniões"],
+  [/\breuniao\b/, "reunião"],
+  [/\bseminarios?\b/, "seminários"],
+  [/\btecnicas?\b/, "técnicas"],
+  [/\bmunicipios\b/, "municípios"],
+  [/\brelatorios\b/, "relatórios"],
+  [/\baudiencias\b/, "audiências"],
+  [/\bpublicas\b/, "públicas"],
+  [/\bpublicacoes\b/, "publicações"],
+  [/\bvideos\b/, "vídeos"],
+  [/\bdiagnosticos\b/, "diagnósticos"],
+  [/\bfamilias\b/, "famílias"],
+  [/\bcriancas\b/, "crianças"],
+  [/\btematicos\b/, "temáticos"],
+];
+function unidadeLegivel(u: string): string {
+  return ACENTOS.reduce((t, [re, s]) => t.replace(re, s), u);
+}
 
 function quantidades(docs: DocumentoRfp[], mapa: MapaRfp): Omit<Requisito, "numero">[] {
   const faixas = faixasDoTema(mapa, "escopo", "objeto");
@@ -100,7 +126,8 @@ function quantidades(docs: DocumentoRfp[], mapa: MapaRfp): Omit<Requisito, "nume
     if (vistos.has(chave) || RE_POR_PROPONENTE.test(normalizarTermo(l.frase))) continue;
     vistos.add(chave);
     out.push({
-      rotulo: `Quantidade: ${chave}`,
+      // o nome é do código (com acento e sem o erro de digitação do documento); o trecho fica literal
+      rotulo: `Quantidade: ${n} ${unidadeLegivel(m[2])}`,
       descricao: l.frase,
       pagina: l.pagina,
       trecho: l.frase,
@@ -153,8 +180,8 @@ export const RE_POR_PROPONENTE =
  * por proponente (quem pode participar) e o prazo de execução (prazos) não são obrigação nem entrega: no método da
  * etapa 1 (decisão 0034) eles saem dos requisitos numerados e vão para a seção 1 e para os prazos.
  */
+// o público-alvo descreve a quem o projeto atende: não é obrigação nem entrega (método da etapa 1, seção 3.2)
 const CONDICOES: [string, RegExp][] = [
-  ["Público-alvo", /\bpublico[- ]alvo\b|\bbeneficiarios? (?:diretos?|finais?) (?:serao|sao)\b/],
   [
     "Forma de execução",
     /\b(?:executad|realizad|desenvolvid|ofertad|prestad)[oa]s?\b[^.;]{0,60}\b(?:presencial|a distancia|remot[oa]|hibrid[oa]|on-?line)\b/,
@@ -173,7 +200,11 @@ function condicoes(docs: DocumentoRfp[], mapa: MapaRfp): Omit<Requisito, "numero
   for (const [rotulo, re] of CONDICOES) {
     const l = localizarTodos(docs, re, faixas).find((x) => {
       const pagina = x.doc.paginas.find((p) => p.numero === x.pagina)?.texto ?? "";
-      return !ehCampoEmBranco(pagina, x.posicao) && !frases.has(normalizarTermo(x.frase));
+      const n = normalizarTermo(x.frase);
+      // "poderá ser executado de forma presencial e/ou à distância" é faculdade, não obrigação
+      const faculdade =
+        /\bpoder(?:a|ao|ia)\b/.test(n) && !/\bdev(?:e|em|era|erao)\b|necessariamente|obrigatori/.test(n);
+      return !ehCampoEmBranco(pagina, x.posicao) && !frases.has(n) && !faculdade;
     });
     if (!l) continue;
     frases.add(normalizarTermo(l.frase));

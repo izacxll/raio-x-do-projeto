@@ -39,16 +39,15 @@ describe("1. requisitos", () => {
     }
   });
 
-  it("acha 1.2, 1.10 e 2.3 como requisitos, todos na p. 1", () => {
+  it("acha 2.3 como requisito, na p. 1; público-alvo e faculdade de execução não são R", () => {
     const porItem = (n: string) => a.requisitosDoCodigo.find((r) => r.descricao.startsWith(`${n} `));
-    expect(porItem("1.2")?.rotulo).toBe("Público-alvo");
-    expect(porItem("1.10")?.rotulo).toBe("Forma de execução");
     expect(porItem("2.3")?.rotulo).toBe("Acessibilidade");
-    for (const n of ["1.2", "1.10", "2.3"]) expect(porItem(n)?.pagina).toBe(1);
+    expect(porItem("2.3")?.pagina).toBe(1);
     // decisão 0034: cada R é obrigação ou entrega de quem executa; quantos projetos são selecionados (1.4), o
-    // limite por proponente (1.5) e o prazo (1.9) vão para a seção 1 e para os prazos da leitura
-    for (const n of ["1.4", "1.5", "1.9"]) expect(porItem(n)).toBeUndefined();
-    expect(a.requisitosDoCodigo.slice(0, 3).map((r) => r.tipo)).toEqual(["condicao", "condicao", "condicao"]);
+    // limite por proponente (1.5) e o prazo (1.9) vão para a seção 1 e para os prazos da leitura. Decisão 0048:
+    // o público-alvo (1.2) e o "poderá ser executado" (1.10) também não são obrigação nem entrega
+    for (const n of ["1.2", "1.4", "1.5", "1.9", "1.10"]) expect(porItem(n)).toBeUndefined();
+    expect(a.requisitosDoCodigo[0]?.tipo).toBe("condicao");
     // as obrigações específicas de quem executa vêm depois, numeradas (método, seção 3.2)
     const obrigacoes = a.requisitosDoCodigo.filter((r) => r.tipo === "obrigacao").map((r) => r.descricao);
     for (const re of [

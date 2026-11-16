@@ -106,7 +106,8 @@ const RE_SECAO_OBRIGACOES =
 const RE_TAREFA = /^[a-z]{3,}(?:ar|er|ir|or)(?:-se)?\b/;
 /** Periodicidade: obrigação recorrente, que também vai para os prazos. */
 const RE_RECORRENTE =
-  /\b(mensal(?:mente)?|bimestral(?:mente)?|trimestral(?:mente)?|quadrimestral(?:mente)?|semestral(?:mente)?|anual(?:mente)?|semanal(?:mente)?|quinzenal(?:mente)?|diari[oa](?:mente)?)\b/;
+  // "Diário Oficial" é o jornal, não a frequência: "diário" só sem "oficial" logo depois
+  /\b(mensal(?:mente)?|bimestral(?:mente)?|trimestral(?:mente)?|quadrimestral(?:mente)?|semestral(?:mente)?|anual(?:mente)?|semanal(?:mente)?|quinzenal(?:mente)?|diariamente|diari[oa](?!\s+oficia))\b/;
 /** Prazo em dias, horas ou meses dentro da cláusula. */
 const RE_PRAZO =
   /\b(?:no prazo|em ate|ate|dentro de|no maximo|antecedencia(?: minima)? de)\s+(?:de\s+)?(?:ate\s+)?\d{1,3}\s*(?:\([^)]{1,25}\)\s*)?(?:dias?|horas?|meses|mes)\b(?:\s+(?:uteis|corridos))?/;
