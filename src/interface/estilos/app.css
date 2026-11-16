@@ -684,6 +684,14 @@ textarea {
   white-space: nowrap;
 }
 
+/* o total de páginas não é cortado pelo nome longo do arquivo */
+.envio__arquivo .envio__paginas {
+  flex-shrink: 0;
+  overflow: visible;
+  margin-left: auto;
+  color: var(--txt);
+}
+
 .progresso {
   height: 6px;
   background: var(--cinza-prog);

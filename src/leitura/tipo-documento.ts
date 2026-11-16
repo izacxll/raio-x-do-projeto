@@ -8,24 +8,27 @@ import { tirarAcentos } from "../texto/normalizar";
 export interface TipoProvavel {
   /** A caixa onde o documento costuma entrar. */
   papel: PapelDocumento;
-  /** Como o documento se apresenta ("Termo de Referência", "Proposta técnica"). */
+  /** Como o documento se apresenta ("Termo de referência", "Proposta"). */
   nome: string;
+  /** O mesmo, para o meio da frase ("um termo de referência"). */
+  comoFrase: string;
   pagina: number;
   /** A linha do título, como está no documento. */
   linha: string;
 }
 
 /** Títulos reconhecidos, sobre a linha sem acento e em minúsculas. A primeira linha que casa decide. */
-const TITULOS: [RegExp, PapelDocumento, string][] = [
-  [/\btermo de abertura\b/, "tap", "Termo de abertura"],
-  [/\bplano de gerenciamento\b/, "pgp", "Plano de gerenciamento"],
-  [/\bplano de trabalho\b/, "pgp", "Plano de trabalho"],
-  [/\bproposta (?:tecnica|comercial|de precos?)\b/, "proposta", "Proposta"],
-  [/\btermo de referencia\b|\bprojeto basico\b/, "rfp", "Termo de referência"],
+const TITULOS: [RegExp, PapelDocumento, string, string][] = [
+  [/\btermo de abertura\b/, "tap", "Termo de abertura", "um termo de abertura"],
+  [/\bplano de gerenciamento\b/, "pgp", "Plano de gerenciamento", "um plano de gerenciamento"],
+  [/\bplano de trabalho\b/, "pgp", "Plano de trabalho", "um plano de trabalho"],
+  [/\bproposta (?:tecnica|comercial|de precos?)\b/, "proposta", "Proposta", "uma proposta"],
+  [/\btermo de referencia\b|\bprojeto basico\b/, "rfp", "Termo de referência", "um termo de referência"],
   [
     /\bedital\b|\bchamamento publico\b|\bpregao\b|\bconcorrencia\b|\baviso de (?:licitacao|contratacao|dispensa)\b|\bsolicitacao de propostas?\b|\brequest for proposal\b/,
     "rfp",
     "Edital ou RFP",
+    "um edital ou RFP",
   ],
 ];
 
@@ -54,7 +57,7 @@ export function tipoProvavel(paginas: PaginaLida[]): TipoProvavel | undefined {
       const n = tirarAcentos(linha);
       if (NAO_E_TITULO.test(n)) continue;
       const t = TITULOS.find(([re]) => re.test(n));
-      if (t) candidatos.push({ papel: t[1], nome: t[2], pagina: p.numero, linha });
+      if (t) candidatos.push({ papel: t[1], nome: t[2], comoFrase: t[3], pagina: p.numero, linha });
     }
   }
   return candidatos.find((c) => c.papel !== "rfp") ?? candidatos[0];

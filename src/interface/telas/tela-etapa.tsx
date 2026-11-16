@@ -125,8 +125,8 @@ function AvisoDeCaixa({ papel, documento }: { papel: PapelDocumento; documento: 
   if (!aviso) return null;
   return (
     <p className="envio__obs envio__obs--aviso" role="status" data-testid={`aviso-caixa-${papel}`}>
-      Este arquivo parece ser <b>{aviso.nome.toLowerCase()}</b> (p. {aviso.pagina}: "{aviso.linha}"). A caixa
-      costuma ser "{NOME_PAPEL[aviso.caixaSugerida]}". Se está certo assim, siga: quem decide é o GP.
+      Este arquivo parece ser <b>{aviso.comoFrase}</b> (p. {aviso.pagina}: "{aviso.linha}"). A caixa costuma
+      ser "{NOME_PAPEL[aviso.caixaSugerida]}". Se está certo assim, siga: quem decide é o GP.
     </p>
   );
 }
@@ -198,8 +198,9 @@ function EnvioDocumento({ pedido }: { pedido: DocumentoPedido }) {
         return (
           <div key={d.id}>
             <div className="envio__arquivo" data-testid={`lido-${pedido.papel}`}>
-              <span title={d.nomeArquivo}>
-                {d.nomeArquivo} · {d.totalPaginas} {d.totalPaginas === 1 ? "página lida" : "páginas lidas"}
+              <span title={d.nomeArquivo}>{d.nomeArquivo}</span>
+              <span className="envio__paginas">
+                {d.totalPaginas} {d.totalPaginas === 1 ? "página lida" : "páginas lidas"}
               </span>
               <button className="botao botao--discreto" type="button" onClick={() => removerDocumento(d.id)}>
                 Remover
