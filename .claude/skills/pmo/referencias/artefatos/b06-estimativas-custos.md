@@ -65,6 +65,11 @@ versao: 0.2.0
   - sinais: "alternativa" | "subcontratação" | "remoto" | "presencial"
   - confere: só PMO
   - dispensa: porte pequeno
+- **B6.11** Custo distribuído mês a mês ao longo da vigência (a curva de custo), base do caixa do A4 (A4.12); na operação contínua, pela folha de cada função mês a mês (salário e encargos como Decisão do GP) e pelas despesas que crescem com a equipe
+  - fonte: método da etapa 4, 4.3; PMBOK 6, 7.3, p. 256 (PDF 292) (requisitos de financiamento ao longo do tempo)
+  - sinais: "mês a mês" | "por mês" | "curva de custo" | "custo mensal" | tabela custo × mês
+  - confere: código
+  - dispensa: pagamento por produto
 
 ## Perguntas de qualidade
 - A coordenação tem horas proporcionais às frentes e aos interlocutores, ou foi dimensionada por um número redondo? (PC7; `experiencia.md` §4)
