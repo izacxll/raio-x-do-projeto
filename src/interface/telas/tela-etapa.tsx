@@ -86,6 +86,8 @@ function AvisoEnvio({ etapa }: { etapa: Etapa }) {
               : "da RFP"}{" "}
           é enviado à API do Claude, pela sua chave, na organização da FGV. Nada é enviado sem o seu clique, e
           o custo aparece antes.
+          {etapa.numero === 1 &&
+            " Sem a chave, a etapa funciona com o esqueleto do código (leitura parcial por código), sem enviar nada."}
         </p>
       </div>
     );
@@ -302,7 +304,7 @@ export function TelaEtapa() {
         <Titulo>{etapa.nome}</Titulo>
         <PassosFluxo lidos={obrigatoriosLidos} />
         <AvisoEnvio etapa={etapa} />
-        {(etapa.numero === 2 || etapa.numero === 3 || etapa.numero === 4) && (
+        {(etapa.numero === 1 || etapa.numero === 2 || etapa.numero === 3 || etapa.numero === 4) && (
           <BotaoDemonstracao etapa={etapa.numero} />
         )}
 

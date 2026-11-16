@@ -140,7 +140,9 @@ test("etapa 5: mapa, conferência, decisão do GP e exportação do relatório",
   expect(erros).toEqual([]);
 });
 
-test("etapa 1: análise da RFP, revisão do GP e as quatro saídas", async ({ page }) => {
+test("etapa 1: leitura parcial por código nas 8 seções, revisão do GP e as quatro saídas", async ({
+  page,
+}) => {
   const erros = vigiarErros(page);
   await page.goto("./#/etapa/1");
   await page
@@ -148,11 +150,13 @@ test("etapa 1: análise da RFP, revisão do GP e as quatro saídas", async ({ pa
     .setInputFiles(`${FIXTURES}/pregao-eletronico-politicas-mulheres-barra-bonita-2026.pdf`);
   await expect(page.locator(".envio__arquivo").first()).toContainText("barra-bonita", { timeout: 60_000 });
   await page.getByTestId("analisar-rfp").click();
-  await expect(page.getByText("Pontos de atenção para participar ou não", { exact: true })).toBeVisible();
-  await expect(page.getByText("Vagos e brechas", { exact: true })).toBeVisible();
-  await expect(page.getByTestId("item-identificacao:modalidade")).toContainText("Pregão eletrônico");
+  await expect(page.getByTestId("leitura-parcial")).toContainText("Leitura parcial por código");
+  await expect(page.getByText("1. Em uma página", { exact: true })).toBeVisible();
+  await expect(page.getByText("7. Pontos de atenção", { exact: true })).toBeVisible();
+  await expect(page.getByTestId("item-leitura:regime")).toContainText("Pregão eletrônico");
+  await expect(page.getByTestId("requisitos-numerados")).toBeVisible();
   await page.getByLabel("Participar da disputa?").selectOption("participar");
-  await page.getByTestId("item-identificacao:modalidade").getByRole("combobox").selectOption("aceito");
+  await page.getByTestId("item-leitura:regime").getByRole("combobox").selectOption("aceito");
   for (const [botao, extensao] of [
     ["Análise da RFP · DOCX", "docx"],
     ["Análise da RFP · PDF", "pdf"],
