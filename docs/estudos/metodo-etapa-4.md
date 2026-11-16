@@ -70,7 +70,7 @@ Cada linha da adaptação traz o motivo em uma frase, com a regra da ficha. O qu
 - **Matriz de riscos genérica não substitui isto.** Uma matriz que cita o assunto sem premissa, gatilho e reajuste conta como "assunto citado, sem premissa escrita".
 
 ### 4.5 Os outros planos
-Cada plano recomendado em poucas linhas, com o conteúdo mínimo das fichas da skill que importa para o tipo de projeto. Sempre: mudanças (fluxo, aditivo ou apostila, prazos de pedido); comunicações (com o cliente **e** interna); qualidade (métricas ligadas às metas ou aos critérios de aceite); recursos (substituição e retenção); dados pessoais quando houver.
+**Porte reduz documentos, não cobertura** (decisão 0044): cada plano mantido cobre todos os itens do conteúdo mínimo da sua ficha que valem para o projeto, uma linha por item basta; o item que a condição de dispensa da ficha tira sai como dispensado, com a condição. "Ausente" não é estado final: item ausente obriga a gerar o conteúdo ou a marcá-lo como dispensado ou Decisão do GP. A geração vai em quatro blocos (seções 0 a 3, 4 a 6, 7 a 9, 10 a 12), cada um com a autoconferência das suas partes; se um bloco acha item ausente, regenera-se só aquela parte. Sempre: mudanças (fluxo, aditivo ou apostila, prazos de pedido); comunicações (com o cliente **e** interna); qualidade (métricas ligadas às metas ou aos critérios de aceite); recursos (substituição e retenção); dados pessoais quando houver.
 
 ### 4.6 Acompanhamento
 - Indicadores mensais que mostram se o projeto vai bem **para o tipo**: metas × caixa × equipe numa operação contínua; valor agregado ou avanço físico × custo numa consultoria por produto.
@@ -92,7 +92,7 @@ Cada plano recomendado em poucas linhas, com o conteúdo mínimo das fichas da s
 - Documentos da execução com conteúdo inventado.
 
 ## 6. Código × PMO
-- **Código:** reconhecimento do tipo (com confirmação do GP), rampa, caixa, marcos × vigência, autoconferência.
+- **Código:** reconhecimento do tipo (com confirmação do GP), rampa, caixa, marcos × vigência, janela até marco fixo, autoconferência e o teste que reprova item sem marca.
 - **PMO:** adaptação com o motivo, critérios de saída, aceite, premissas com gatilho e resposta, conteúdo dos planos.
 
 ## 7. Critério de aceite
@@ -103,3 +103,6 @@ Cada plano recomendado em poucas linhas, com o conteúdo mínimo das fichas da s
 - O caixa mostra a folga em cada parcela e o ponto mais apertado.
 - Toda entrega com aceite; todo marco dentro da vigência.
 - A autoconferência pela etapa 5 não acusa nada que a adaptação dispensou.
+- Nenhum item de ficha de parte essencial sem marca; zero ausentes sem tratamento.
+- Todo compromisso C da proposta e do TAP tem destino numa parte do plano (B23).
+- Mais de uma referência de início: o plano diz qual conta para quê; campo em noites, fins de semana e feriados tem calendário próprio (decisão 0045).

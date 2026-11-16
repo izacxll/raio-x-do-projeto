@@ -26,3 +26,17 @@
 
 > [!NOTE] Inferido — validar com a responsável pelo projeto
 > A aproximação do custo pela rampa de pessoas vale porque pessoal e encargos são a maior parte do custo neste tipo de projeto (no caso analisado, mais de 85%). Em consultoria por produto ela não vale: o caixa é "produto × aceite".
+
+## Regras novas (decisões 0043 a 0047)
+
+Evidência dos testes externos de 16/11/2026 (leituras gravadas externas, fora do Git): o edital da SMPED e um TR municipal de contratação direta (estudo de impacto de evento). Exemplos disfarçados.
+
+| Saída | Evidência | Regra | Quem | Skill |
+|---|---|---|---|---|
+| Plano curto | Planos essenciais com 2 a 4 linhas, sem itens obrigatórios (A8.7, A8.8, B27.3, A5.7, A5.8, A7.7) | Porte reduz documentos, não cobertura; autoconferência item a item; zero ausentes sem tratamento | PMO gera; código confere | SKILL.md princípio 13; decisão 0044 |
+| Geração em blocos | Uma chamada só, plano raso | Quatro blocos na ordem da 0007; regenera só a parte com item ausente | Código (pedidos) | decisão 0044 |
+| Campo em dias úteis | Campo em noites, fins de semana e feriados contado em dias úteis | Calendário próprio, dias corridos e turnos | PMO | B13.4, B13.6 |
+| Duas referências de início | Data fixa de início × vigência contada da publicação | Dizer qual conta para quê | PMO | A3.13 |
+| Pagamento × aprovação | Nota fiscal "aprovada pelo responsável pela fiscalização" | Evento de faturamento como o texto diz: entrega e aprovação | PMO | A4.9 |
+| Substituição na inexigibilidade | Vedação do art. 74, § 4º (profissionais que justificaram a inexigibilidade) | Reservas nomeadas e anuência | PMO | A6.7 |
+| Estabilidade do resultado | Estudo sensível | Resultado aceito só muda por erro técnico registrado; quem libera o preliminar | PMO | A5.13, A7.5, A10.6 |

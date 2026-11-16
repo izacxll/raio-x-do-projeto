@@ -28,3 +28,15 @@
 
 > [!NOTE] Inferido — validar com a responsável pelo projeto
 > A estrutura de preço para parceria (folha mensal em vez de horas × valor-hora) é adaptação desta análise. A ficha `prop-preco` (PROP-PRECO.1) fala em horas × valor-hora. Sugere-se acrescentar à ficha o caso de operação contínua.
+
+## Regras novas (decisões 0042 a 0047)
+
+Evidência dos testes externos de 16/11/2026 (leituras gravadas externas, fora do Git): o edital da SMPED e um TR municipal de contratação direta (estudo de impacto de evento). Exemplos disfarçados.
+
+| Saída | Evidência | Regra | Quem | Skill |
+|---|---|---|---|---|
+| Estratégia na contratação direta | Não há critério de julgamento | Sustentar o art. 72: especialização no objeto, justificativa de preço, documentos | PMO | `prop-estrategia` .1, .11 |
+| Exclusão × requisito | Exclusão "auditoria dos recursos" × requisito do TR de levantar a origem dos recursos | Exclusão nunca tira requisito; diz o que continua dentro | PMO | PROP-SOW.12 |
+| Compromissos C | Protocolo de campo e dados pessoais na proposta, ausentes no plano | Numerar premissas, exclusões, obrigações do contratante e método | Código numera; PMO escreve | PROP-SOW.13; decisão 0047 |
+| Premissa × predecessora | Premissa que tira os gastos de um evento da pesquisa do outro; cronograma com o produto em paralelo ao campo | A predecessora muda com a premissa | PMO | PROP-EAP.12 |
+| Régua metodológica | Estudo lido numa CPI | Método aprovado como critério; resultado aceito só muda por erro registrado | PMO | PROP-METODOLOGIA.11 |

@@ -36,7 +36,8 @@ Na ordem do modelo do edital, cada seção sai **escrita**, não descrita:
 ## 3. Regras de cada seção
 
 ### 3.1 Estratégia
-- Ler a tabela de julgamento da etapa 1: peso de cada critério, o que dá a nota máxima, desempate, peso do preço.
+- **Pela modalidade** (decisão 0042): na licitação, a tabela de julgamento; na contratação direta, não há pontos, e a estratégia sustenta o que o art. 72 exige (notória especialização **no objeto**, com os estudos e a equipe que a provam; justificativa de preço; documentos); na parceria, os critérios de seleção e o plano de trabalho.
+- Ler a tabela de julgamento da etapa 1 (licitação): peso de cada critério, o que dá a nota máxima, desempate, peso do preço.
 - Separar os pontos de **texto** (critérios que o avaliador lê) dos pontos de **documento** (atestados, tempo de experiência, auditoria), que não se ganham escrevendo. Os de documento viram pergunta ao GP: "a FGV tem?".
 - 2 ou 3 abordagens que **mudam o resultado**, não só a redação. Exemplos: equipe de referência × produtividade superior; desconto pequeno × desconto pelo custo real; executar tudo × subcontratar parte. Cada uma com prós, contras e o risco principal (inclusive o de eliminação).
 
@@ -48,6 +49,10 @@ Na ordem do modelo do edital, cada seção sai **escrita**, não descrita:
 - O que a contratada faz vem das obrigações da etapa 1, agrupadas.
 - **Exclusões explícitas** (o que não está incluído): as vedações do próprio edital, o que é do contratante, o que é de outro órgão, o que está além do volume ou da vigência.
 - **O que fica com o contratante**, com prazo: dados, listas, acessos a sistemas, validações e aprovações, análise de prestação de contas ou de produtos. Prazo que o edital não dá é "a definir pelo GP", nunca um número inventado.
+- **Exclusão nunca tira requisito** (decisão 0047): cada exclusão é conferida contra os R; a que encosta num R diz o que continua dentro; a que contradiz o TR vira pergunta.
+- **Compromissos numerados:** cada premissa, exclusão, obrigação do contratante e compromisso de método (protocolo de campo, dados pessoais, revisão, independência) recebe um número C (C01…), para seguir ao TAP e ao plano.
+- **Cronograma:** as estimativas cabem na janela até cada marco externo fixo (conta do código); premissa que muda a origem de um dado muda a predecessora (decisão 0045).
+- **Estudo sensível** (decisão 0043): a metodologia diz como os resultados são validados e que o método aprovado é a régua.
 
 ### 3.4 Premissas críticas
 - Uma por ponto de atenção da etapa 1 que se aplica (PC1–PC8 do `checklist.md`).
@@ -88,7 +93,7 @@ Participar; abordagem; equipe nomeada; curva de contratação; custos; valor e d
 - Qualquer valor preenchido pelo PMO no lugar do GP.
 
 ## 5. Código × PMO
-- **Código:** tabela de pontos por preço, equipe pelas proporções, datas, caixa × custo, matriz de atendimento, checklist, conferência das citações.
+- **Código:** tabela de pontos por preço, equipe pelas proporções, datas, janela até marco fixo, caixa × custo, matriz de atendimento, checklist, conferência das citações, numeração dos compromissos C.
 - **PMO:** as abordagens, o texto de cada seção ligado ao critério, as exclusões, a redação das premissas e as perguntas.
 
 ## 6. Critério de aceite
@@ -99,3 +104,5 @@ Participar; abordagem; equipe nomeada; curva de contratação; custos; valor e d
 - Toda premissa crítica da etapa 1 que se aplica está escrita na proposta.
 - O preço usa a estrutura do tipo de contrato, com a tabela de pontos e o caixa calculados.
 - Nenhum número inventado: o que o edital não dá está "a definir pelo GP".
+- Nenhuma exclusão tira requisito; todo compromisso tem número C.
+- A autoconferência marca cada item das fichas usadas como presente, dispensado (com motivo) ou Decisão do GP (decisão 0044).

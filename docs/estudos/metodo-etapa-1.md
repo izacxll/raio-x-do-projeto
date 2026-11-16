@@ -33,7 +33,8 @@ A ordem é a da decisão do gerente. Cada item tem página. A meta é caber em *
 
 ### 3.1 Em uma página
 - Objeto: primeira frase da seção cujo título diz "objeto".
-- Regime e modalidade: licitação (Lei 14.133 e outras) ou parceria (Lei 13.019: termo de colaboração ou fomento). A modalidade muda o vocabulário de todo o resto.
+- **Chave de modalidade, antes de tudo** (decisão 0042): licitação (Lei 14.133 e outras), contratação direta (inexigibilidade ou dispensa, arts. 72 a 75 da Lei 14.133) ou parceria (Lei 13.019: termo de colaboração ou fomento). O código reconhece, o GP confirma. A modalidade muda o vocabulário de todo o resto e o que entra nas seções 5, 6 e 8.
+- Na contratação direta, se o TR diz "conforme a proposta" ou "conforme objeto da proposta", ele foi montado a partir de uma proposta da FGV: lê-se como minuta a ajustar antes da assinatura, e as perguntas viram ajustes.
 - Tamanho: quantitativos de equipe, beneficiários, municípios, produtos. **Consolidar**, não listar cada número.
 - Situação: datas do certame comparadas com hoje ("o prazo já passou", "faltam N dias").
 - Os 3 a 5 pontos que mais pesam saem da seção 7, em ordem de impacto: caixa, dependência do contratante, preço, prazo.
@@ -51,6 +52,9 @@ A ordem é a da decisão do gerente. Cada item tem página. A meta é caber em *
 - Calcular o que o texto dá por regra: "antecedência mínima de N dias da data-limite" vira data.
 - Obrigações recorrentes (mensal, trimestral, anual) numa linha cada.
 - Marcar "esclarecimentos não suspendem os prazos" quando o texto disser.
+- **Prazo sem termo inicial** ("no prazo de 30 dias" sem dizer de quando) tem duas leituras ("em até" ou "com antecedência"): vai para a seção 7 como vago, com as duas leituras e a pergunta (decisão 0045).
+- **Mais de uma referência de início** (data fixa, ordem de serviço, publicação no PNCP): dizer qual conta para quê.
+- **Marco externo fixo** (evento, safra, ano letivo): o código conta a janela entre o início e o marco; a leitura diz o que precisa acabar antes dele.
 
 ### 3.4 Dinheiro
 - Teto ou valor estimado; o que é por item, por projeto ou global.
@@ -58,14 +62,18 @@ A ordem é a da decisão do gerente. Cada item tem página. A meta é caber em *
 - **A condição de cada pagamento** é o item mais importante: "após aprovação de", "condicionada ao atingimento de", "mediante aceite". Sem prazo, vai também para a seção 7.
 - Glosas, retenções, saldo descontado, despesas vedadas, contrapartida e "a seleção não obriga a contratar".
 
-### 3.5 Julgamento e entrega
-- Tabela de critérios lida **coluna por coluna**: critério, máximo, o que dá a nota máxima. Nunca uma linha por faixa de pontuação.
-- Peso do preço (ou do desconto) destacado, com a regra.
-- Causas de eliminação e desempate.
-- Checklist do que vai na proposta: conteúdo mínimo exigido, modelos, anexos e declarações, forma e canal de envio.
+### 3.5 Como é escolhida e o que entregar
+A seção muda com a modalidade:
+- **Contratação direta:** a hipótese legal com o artigo e o que sustenta a escolha: notória especialização **no objeto** e justificativa de preço (art. 72). Justificativa de especialização que descreve outras áreas é texto de outro projeto (conflituoso) e vira pergunta.
+- **Parceria:** os critérios de seleção do chamamento.
+- **Licitação:**
+  - tabela de critérios lida **coluna por coluna**: critério, máximo, o que dá a nota máxima. Nunca uma linha por faixa de pontuação;
+  - peso do preço (ou do desconto) destacado, com a regra;
+  - causas de eliminação e desempate.
+- **Em todas:** checklist do que vai na proposta ou no plano de trabalho: conteúdo mínimo exigido, modelos, anexos e declarações, forma e canal de envio.
 
 ### 3.6 Habilitação
-- Linha a linha da lista de documentos do edital. Em parceria, a lista fica na "fase de celebração" ou na "comprovação das exigências".
+- Linha a linha da lista de documentos do edital. Em parceria, a lista fica na "fase de celebração" ou na "comprovação das exigências". Na contratação direta, os documentos do art. 72 e a comprovação de notória especialização; se o TR não os lista, vira pergunta.
 - Quem entrega (todos ou só o mais bem classificado) e em que prazo.
 - O que a FGV precisa conferir sobre si mesma (enquadramento exigido, tempo de existência, experiência).
 
@@ -93,12 +101,32 @@ Também entram, sem premissa: pressão de preço (peso do desconto, eliminação
 - **Itens de outra modalidade:** em parceria não há sessão pública, planilha de preços, garantia, reajuste nem multa. Isso fica na seção 8, recolhido.
 - **A leitura página a página.** Só um aviso se alguma página não pôde ser lida.
 
+### 3.9 Cruzamentos obrigatórios (decisão 0046)
+A leitura sempre faz estes cruzamentos e registra cada um como feito (com o resultado) ou não se aplica (com o motivo). O que diverge vai para a seção 7.
+
+| # | Cruzamento | Quem faz a conta |
+|---|---|---|
+| X1 | Forma e condição de pagamento em todos os lugares em que aparecem | PMO lê; código lista as ocorrências |
+| X2 | Data de início × vigência × marcos fixos | código (datas e janela); PMO (qual vale para quê) |
+| X3 | Quem executa × vedações (subcontratação, profissionais da inexigibilidade) | PMO |
+| X4 | Contatos e canais repetidos (e-mails, endereços, setores) | código lista; PMO diz se diverge |
+| X5 | Valor global × soma das parcelas | código |
+| X6 | Prazos de um mesmo marco em itens diferentes | código lista; PMO compara |
+
+### 3.10 Estudo sensível (decisão 0043)
+Quando o texto cita CPI, comissão parlamentar ou de estudo, denúncia ou Tribunal de Contas junto de avaliação, impacto ou gestão de recursos, entra um ponto de atenção sem premissa: o resultado será lido por lados em disputa.
+
+### 3.11 Autoconferência (decisão 0044)
+Antes de sair, a leitura marca cada seção e cada item deste método como presente (e onde), dispensado (com o motivo) ou Decisão do GP. Nenhum fica sem marca.
+
 ## 4. Código × PMO
-- **Código:** seções 1 a 6 e 8 quase inteiras, e os padrões da seção 7.
-- **PMO (leitura opcional, decisão 0032):** ordenar os pontos de atenção por impacto, cruzar trechos distantes (ex.: jornada por família tão longa quanto o período de execução; repasse em parcela única num item e proporcional em outro) e achar obrigações escritas em texto corrido.
+- **Código:** chave de modalidade (o GP confirma), seções 1 a 6 e 8 quase inteiras, os padrões da seção 7, as contas e listas dos cruzamentos (X1, X2, X4, X5, X6).
+- **PMO (leitura principal, decisões 0035 e 0037):** ordenar os pontos de atenção por impacto, cruzar trechos distantes (ex.: jornada por família tão longa quanto o período de execução; repasse em parcela única num item e proporcional em outro) e achar obrigações escritas em texto corrido.
 
 ## 5. Critério de aceite
 - O gerente lê a seção 1 e sabe o que é, quanto, quanto tempo, como se ganha e o que mais pesa.
 - Cada item passa no teste da seção 1 deste método.
 - 30 a 50 itens num edital típico; nenhum item sem página.
 - No gabarito da SMPED e num segundo edital, a nova saída cobre as 8 seções e reduz os itens que não passam no teste.
+- Os cruzamentos X1 a X6 estão registrados e a autoconferência não deixa item sem marca.
+- Numa contratação direta, as seções 5 e 6 trazem o que sustenta a escolha e os documentos, ou a pergunta.

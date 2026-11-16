@@ -27,3 +27,14 @@
 
 > [!NOTE] Inferido — validar com a responsável pelo projeto
 > A gravidade de C3 (equipe: limite × mínimo) e de C5 (orçamento × obrigação) foi atribuída por julgamento. Pela regra fixa da parte, C3 poderia ser grave (A6) e C5 média (B6). Sugere-se fixar a regra para conflitos que envolvem mais de uma parte.
+
+## Regras novas (decisões 0044, 0046 e 0047)
+
+Evidência dos testes externos de 16/11/2026 (leituras gravadas externas, fora do Git): o edital da SMPED e um TR municipal de contratação direta (estudo de impacto de evento). Exemplos disfarçados.
+
+| Saída | Evidência | Regra | Quem | Skill |
+|---|---|---|---|---|
+| Ausente que a ficha dispensa | Conferência que contou A3.10, A4.6, A8.5, A10.2, B27.11 e B31.6 a B31.9 como ausentes num projeto pequeno | Item que a condição de dispensa tira nunca é achado | Código | SKILL.md etapa 5; decisão 0044 |
+| Conflito com a RFP que passou | 18 achados de profundidade × nenhum da premissa que mudava a predecessora, da janela até o evento ou do requisito sem destino | Primeiro o que o plano deve aos documentos (R, C, cruzamentos), depois as fichas | PMO | SKILL.md etapa 5 |
+| Compromisso C sem destino | Protocolo de campo e dados pessoais na proposta, fora do plano | Ausente, com página e trecho da proposta | Código procura; PMO confirma | B23.10; decisão 0047 |
+| Cruzamentos no plano | Pagamento "contra a entrega" no plano × "aprovada pelo fiscal" no TR | X1 a X6 entre plano, contrato, TAP e RFP | Código + PMO | decisão 0046 |
