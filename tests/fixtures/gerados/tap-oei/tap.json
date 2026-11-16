@@ -1,11 +1,164 @@
 {
+  "divergenciasTexto": [
+    {
+      "item": {
+        "id": "tap-d-1",
+        "texto": "Sugere-se tratar como divergência a revisão dos produtos: a proposta assume um número limitado de rodadas de revisão, e o contrato fixa o prazo de análise da contratante, mas deixa os ajustes no prazo que ela fixar e analisa cada versão ajustada de novo, sem limite de rodadas. Recomenda-se seguir o contrato no prazo de análise e levar o limite de rodadas à reunião de abertura.",
+        "rotulo": "sugestao",
+        "motivo": "Cláusula de proteção da proposta (premissa crítica PC3) × cláusula de aprovação do contrato; o contrato prevalece (Cláusula Primeira).",
+        "fontes": [
+          {
+            "doc": "proposta",
+            "pagina": 19,
+            "trecho": "Propõe-se assumir que a contratante analisa cada produto em prazo combinado (a definir pelo GP), com um quadro único de contribuições e um número limitado de rodadas de revisão."
+          },
+          {
+            "doc": "contrato",
+            "pagina": 3,
+            "trecho": "Os ajustes pedidos serão feitos pela CONTRATADA no prazo fixado pela CONTRATANTE, e a versão ajustada será analisada no mesmo prazo do item 7.1."
+          },
+          {
+            "doc": "contrato",
+            "pagina": 3,
+            "trecho": "A CONTRATANTE analisará cada produto entregue e emitirá a aprovação ou o pedido de ajustes em até 15 (quinze) dias úteis contados da data da entrega."
+          }
+        ],
+        "alternativas": [
+          {
+            "texto": "Registrar em ata da reunião de abertura um limite de rodadas por produto.",
+            "pros": "Fecha a brecha sem aditivo e protege o cronograma.",
+            "contras": "Depende do aceite da contratante; a ata não altera o contrato."
+          },
+          {
+            "texto": "Manter o contrato como está e tratar as rodadas extras como risco, com reserva de prazo e de custo.",
+            "pros": "Não depende da contratante.",
+            "contras": "O custo das rodadas extras fica com a FGV."
+          }
+        ],
+        "requisitos": [],
+        "ficha": "TAP9.4"
+      },
+      "ponto": "proteção × cláusula (rodadas de revisão e prazo de análise)",
+      "versaoSugerida": "contrato",
+      "oQueFazer": "Levar à reunião de abertura e registrar em ata o limite de rodadas; se a contratante não aceitar, manter a PC3 no registro de riscos com reserva (decisão do GP)."
+    },
+    {
+      "item": {
+        "id": "tap-d-2",
+        "texto": "Sugere-se registrar que duas obrigações que a proposta pediu à contratante não entraram no contrato: entregar as diretrizes de identidade visual antes da diagramação e apoiar a mobilização dos profissionais da rede para as oficinas. O contrato só obriga a contratante a fornecer as informações necessárias. Recomenda-se confirmar as duas por escrito antes do plano de trabalho.",
+        "rotulo": "sugestao",
+        "motivo": "Obrigações do contratante da proposta × Cláusula Oitava do contrato; ligam-se às premissas críticas PC1 e PC6.",
+        "fontes": [
+          {
+            "doc": "proposta",
+            "pagina": 21,
+            "trecho": "Sugere-se propor como obrigação da contratante entregar as diretrizes de identidade visual dos cadernos e do guia antes da diagramação."
+          },
+          {
+            "doc": "proposta",
+            "pagina": 21,
+            "trecho": "Sugere-se propor como obrigação da contratante apoiar a mobilização dos profissionais da rede para as oficinas."
+          },
+          {
+            "doc": "contrato",
+            "pagina": 4,
+            "trecho": "Fornecer as informações necessárias para o desenvolvimento dos serviços objeto do contrato."
+          }
+        ],
+        "alternativas": [],
+        "requisitos": [],
+        "ficha": "TAP4.3"
+      },
+      "ponto": "proteção × cláusula (obrigações da contratante)",
+      "versaoSugerida": "contrato",
+      "oQueFazer": "Confirmar por escrito com a contratante, na reunião de abertura ou no plano de trabalho, quem entrega as diretrizes visuais e quem convida a rede, e quando."
+    },
+    {
+      "item": {
+        "id": "tap-d-3",
+        "texto": "Sugere-se tratar como divergência as reuniões presenciais em Brasília: a proposta as prevê no número previsto no preço, e o contrato obriga a contratada a participar sempre que a contratante solicitar, sem custos adicionais. Recomenda-se seguir o contrato e avaliar uma reserva para essas viagens.",
+        "rotulo": "sugestao",
+        "motivo": "Limite de volume da proposta × Cláusula Nona do contrato, que repete o termo de referência.",
+        "fontes": [
+          {
+            "doc": "proposta",
+            "pagina": 12,
+            "trecho": "reuniões presenciais em Brasília quando a contratante pedir, no número previsto no preço"
+          },
+          {
+            "doc": "contrato",
+            "pagina": 4,
+            "trecho": "Participar, sempre que solicitado pela CONTRATANTE, de reuniões presenciais em Brasília/DF, sem custos adicionais para a CONTRATANTE."
+          },
+          {
+            "doc": "rfp",
+            "pagina": 21,
+            "trecho": "participar de reuniões presenciais em Brasília/DF, sem custos adicionais para a CONTRATANTE"
+          }
+        ],
+        "alternativas": [
+          {
+            "texto": "Estimar com a contratante, na reunião de abertura, quantas reuniões presenciais são esperadas.",
+            "pros": "Dá base para a reserva.",
+            "contras": "A estimativa não limita o contrato."
+          },
+          {
+            "texto": "Reservar no orçamento interno um número de viagens decidido pelo GP.",
+            "pros": "Protege a margem.",
+            "contras": "Pode sobrar ou faltar."
+          }
+        ],
+        "requisitos": [],
+        "ficha": "TAP4.3"
+      },
+      "ponto": "proteção × cláusula (reuniões presenciais)",
+      "versaoSugerida": "contrato",
+      "oQueFazer": "Levar à reunião de abertura e decidir a reserva de viagens (decisão do GP)."
+    },
+    {
+      "item": {
+        "id": "tap-d-4",
+        "texto": "Sugere-se tratar como divergência a prorrogação: a cláusula de vigência do contrato pede termo aditivo, a cláusula de extinção prorroga a vigência até a conclusão do objeto quando as obrigações não forem cumpridas no prazo, e o termo de referência veda a prorrogação automática ou tácita. Recomenda-se consultar o jurídico antes de contar com a prorrogação no cronograma.",
+        "rotulo": "sugestao",
+        "motivo": "Critério de término: duas cláusulas do contrato tratam do mesmo evento com efeitos diferentes, e o edital veda uma delas.",
+        "fontes": [
+          {
+            "doc": "contrato",
+            "pagina": 1,
+            "trecho": "A vigência poderá ser prorrogada por acordo entre as partes, mediante termo aditivo"
+          },
+          {
+            "doc": "contrato",
+            "pagina": 5,
+            "trecho": "Se as obrigações não forem cumpridas no prazo estipulado, a vigência ficará prorrogada até a conclusão do objeto, caso em que a CONTRATANTE providenciará a readequação do cronograma."
+          },
+          {
+            "doc": "rfp",
+            "pagina": 23,
+            "trecho": "É vedada a prorrogação automática ou tácita do contrato"
+          }
+        ],
+        "alternativas": [],
+        "requisitos": [],
+        "ficha": "TAP10.1"
+      },
+      "ponto": "término (prorrogação por aditivo × prorrogação até a conclusão)",
+      "versaoSugerida": "",
+      "oQueFazer": "Consultar o jurídico e registrar no TAP a leitura adotada; até lá, tratar a vigência de 12 meses como limite dos marcos."
+    }
+  ],
   "finalidade": [
     {
       "id": "tap-1-1",
       "texto": "O projeto atende à necessidade de subsídios técnicos para o fortalecimento do Sistema de Garantia de Direitos na proteção integral de crianças e adolescentes em situação de rua.",
       "rotulo": "documento",
-      "motivo": "Objeto da RFP.",
+      "motivo": "Objeto do contrato assinado, igual ao da RFP.",
       "fontes": [
+        {
+          "doc": "contrato",
+          "pagina": 1,
+          "trecho": "Prestação de serviços de desenvolvimento de subsídios técnicos voltados ao fortalecimento do Sistema de Garantia de Direitos na proteção integral de crianças e adolescentes em situação de rua"
+        },
         {
           "doc": "rfp",
           "pagina": 1,
@@ -20,7 +173,7 @@
       "id": "tap-1-2",
       "texto": "Sugere-se descrever o resultado esperado como a qualificação da atuação dos profissionais do Sistema de Garantia de Direitos, por meio de cadernos temáticos, de um documento sintético de consolidação e de um guia de orientação com fluxos de atendimento intersetorial.",
       "rotulo": "sugestao",
-      "motivo": "A RFP pede que a proposta trate da contribuição dos produtos para a atuação dos profissionais; o resultado vai além da entrega dos produtos (TAP1.2).",
+      "motivo": "O benefício público vem do critério de avaliação da RFP; o contrato só descreve o objeto.",
       "fontes": [
         {
           "doc": "rfp",
@@ -29,7 +182,9 @@
         }
       ],
       "alternativas": [],
-      "requisitos": ["R05"],
+      "requisitos": [
+        "R05"
+      ],
       "ficha": "TAP1.2"
     }
   ],
@@ -39,7 +194,7 @@
         "id": "tap-2-1",
         "texto": "Sugere-se como objetivo entregar os cinco cadernos temáticos e o documento sintético de consolidação com abordagem conceitual e analítica consistente e linguagem técnica acessível.",
         "rotulo": "sugestao",
-        "motivo": "A RFP descreve a qualidade esperada dos cadernos, mas não traz indicador nem meta.",
+        "motivo": "Qualidade pedida pela RFP; o contrato não traz meta de qualidade.",
         "fontes": [
           {
             "doc": "rfp",
@@ -48,39 +203,55 @@
           }
         ],
         "alternativas": [],
-        "requisitos": ["R02", "R03", "R04"],
+        "requisitos": [
+          "R02",
+          "R03",
+          "R04"
+        ],
         "ficha": "TAP2.1"
       },
-      "criterioDeSucesso": "Uma opção é medir pelo aceite de cada caderno pela contratante, sem rodada de revisão além do limite que o GP definir (indicador e meta a definir pelo GP).",
+      "criterioDeSucesso": "Uma opção é medir pela aprovação de cada caderno pela contratante dentro do limite de rodadas que o GP combinar na reunião de abertura (indicador e meta a definir pelo GP).",
       "origemDaMetrica": "sugestao"
     },
     {
       "item": {
         "id": "tap-2-2",
-        "texto": "Sugere-se como objetivo entregar o guia de orientação com todos os itens mínimos listados no termo de referência, em versão final diagramada e pronta para publicação online.",
+        "texto": "Sugere-se como objetivo entregar o guia de orientação com todos os itens mínimos listados no termo de referência, em versão final diagramada e pronta para publicação online, com os arquivos-fonte.",
         "rotulo": "sugestao",
-        "motivo": "Os itens mínimos do guia e o formato de entrega estão na RFP; a meta de uso pelos profissionais não está.",
+        "motivo": "Produto de maior peso no desembolso; a forma de entrega vem da RFP.",
         "fontes": [
           {
             "doc": "rfp",
             "pagina": 21,
             "trecho": "deverão ser entregues em versão final diagramada, revisada e pronta para publicação online"
+          },
+          {
+            "doc": "contrato",
+            "pagina": 4,
+            "trecho": "Ceder à CONTRATANTE os direitos patrimoniais de autor de todos os produtos e entregar os arquivos-fonte correspondentes."
           }
         ],
         "alternativas": [],
-        "requisitos": ["R05"],
+        "requisitos": [
+          "R05"
+        ],
         "ficha": "TAP2.1"
       },
-      "criterioDeSucesso": "Recomenda-se avaliar como critério o aceite do guia pela contratante com todos os itens mínimos atendidos, conferidos por uma lista de verificação.",
+      "criterioDeSucesso": "Recomenda-se avaliar como critério o recebimento definitivo do guia com todos os itens mínimos atendidos, conferidos por uma lista de verificação.",
       "origemDaMetrica": "sugestao"
     },
     {
       "item": {
         "id": "tap-2-3",
-        "texto": "Sugere-se como objetivo entregar cada produto dentro do prazo máximo do cronograma de entrega da RFP.",
+        "texto": "Sugere-se como objetivo entregar cada produto dentro do prazo máximo do cronograma do contrato, que repete os prazos da RFP.",
         "rotulo": "sugestao",
-        "motivo": "Os prazos máximos por produto estão na tabela do termo de referência.",
+        "motivo": "Métrica do documento: o contrato fixa o prazo máximo de cada produto.",
         "fontes": [
+          {
+            "doc": "contrato",
+            "pagina": 2,
+            "trecho": "As datas da tabela se referem ao prazo máximo para entrega dos produtos."
+          },
           {
             "doc": "rfp",
             "pagina": 21,
@@ -88,10 +259,16 @@
           }
         ],
         "alternativas": [],
-        "requisitos": ["R01", "R02", "R03", "R04", "R05"],
+        "requisitos": [
+          "R01",
+          "R02",
+          "R03",
+          "R04",
+          "R05"
+        ],
         "ficha": "TAP2.2"
       },
-      "criterioDeSucesso": "Produto entregue até o prazo máximo da tabela da RFP (métrica do documento).",
+      "criterioDeSucesso": "Produto entregue até o prazo máximo da Cláusula Quinta do contrato (métrica do documento).",
       "origemDaMetrica": "documento"
     }
   ],
@@ -100,16 +277,23 @@
       "id": "tap-3-1",
       "texto": "Plano de trabalho da consultoria, com metodologia, cronograma executivo e estrutura preliminar dos cadernos e do guia.",
       "rotulo": "documento",
-      "motivo": "Produto 1 do termo de referência.",
+      "motivo": "Produto 1 do termo de referência, mantido no contrato.",
       "fontes": [
         {
           "doc": "rfp",
           "pagina": 19,
           "trecho": "Este produto consiste na elaboração de plano de trabalho detalhado"
+        },
+        {
+          "doc": "contrato",
+          "pagina": 2,
+          "trecho": "Produto 1 – Plano de trabalho da consultoria 30 5%"
         }
       ],
       "alternativas": [],
-      "requisitos": ["R01"],
+      "requisitos": [
+        "R01"
+      ],
       "ficha": "TAP3.1"
     },
     {
@@ -125,7 +309,11 @@
         }
       ],
       "alternativas": [],
-      "requisitos": ["R02", "R03", "R04"],
+      "requisitos": [
+        "R02",
+        "R03",
+        "R04"
+      ],
       "ficha": "TAP3.1"
     },
     {
@@ -141,53 +329,77 @@
         }
       ],
       "alternativas": [],
-      "requisitos": ["R05"],
+      "requisitos": [
+        "R05"
+      ],
       "ficha": "TAP3.1"
     },
     {
       "id": "tap-3-4",
-      "texto": "Equipe-chave com coordenação geral e três especialistas, nos perfis do termo de referência.",
+      "texto": "Equipe-chave com coordenação geral e três especialistas, nos perfis do termo de referência, executando o trabalho pelos profissionais indicados na proposta.",
       "rotulo": "documento",
-      "motivo": "Equipe-chave indicada para a avaliação técnica.",
+      "motivo": "Equipe-chave indicada para a avaliação técnica; o contrato obriga a executar com ela.",
       "fontes": [
         {
           "doc": "rfp",
           "pagina": 27,
           "trecho": "Relação nominal da equipe-chave indicada para fins de avaliação técnica"
+        },
+        {
+          "doc": "contrato",
+          "pagina": 4,
+          "trecho": "Executar os serviços conforme o Termo de Referência e a sua proposta, pelos profissionais indicados na equipe técnica da proposta."
         }
       ],
       "alternativas": [],
-      "requisitos": ["R06", "R07", "R08", "R09"],
+      "requisitos": [
+        "R06",
+        "R07",
+        "R08",
+        "R09"
+      ],
       "ficha": "TAP3.1"
     },
     {
       "id": "tap-3-5",
-      "texto": "Serviços prestados, como regra, em formato remoto, com reuniões presenciais em Brasília quando a contratante solicitar.",
+      "texto": "Serviços prestados, como regra, em formato remoto, com reuniões presenciais em Brasília sempre que a contratante solicitar.",
       "rotulo": "documento",
-      "motivo": "Local de realização.",
+      "motivo": "Local de realização (RFP) e Cláusula Nona do contrato.",
       "fontes": [
         {
           "doc": "rfp",
           "pagina": 21,
           "trecho": "Os serviços serão prestados, como regra, em formato remoto."
+        },
+        {
+          "doc": "contrato",
+          "pagina": 4,
+          "trecho": "Participar, sempre que solicitado pela CONTRATANTE, de reuniões presenciais em Brasília/DF, sem custos adicionais para a CONTRATANTE."
         }
       ],
       "alternativas": [],
-      "requisitos": ["R10"],
+      "requisitos": [
+        "R10"
+      ],
       "ficha": "TAP3.1"
     }
   ],
   "descricao": [
     {
       "id": "tap-4-1",
-      "texto": "Sugere-se descrever o projeto como pesquisa bibliográfica, documental e normativa com escuta de profissionais da rede, que resulta em cadernos temáticos, em um documento sintético e em um guia de orientação, conforme a abordagem escolhida na proposta.",
+      "texto": "Sugere-se descrever o projeto como pesquisa bibliográfica, documental e normativa com escuta de profissionais da rede, que resulta em cadernos temáticos, em um documento sintético e em um guia de orientação, conforme a abordagem da proposta, que é parte integrante do contrato.",
       "rotulo": "sugestao",
-      "motivo": "Abordagem B, escolhida pelo GP na proposta.",
+      "motivo": "Abordagem escolhida na proposta; o contrato a torna compromisso.",
       "fontes": [
         {
           "doc": "proposta",
           "pagina": 1,
           "trecho": "Pesquisa documental com escuta de profissionais da rede"
+        },
+        {
+          "doc": "contrato",
+          "pagina": 1,
+          "trecho": "A proposta da CONTRATADA é parte integrante deste contrato, independentemente de transcrição"
         }
       ],
       "alternativas": [],
@@ -198,27 +410,38 @@
   "entregas": [
     {
       "id": "tap-4-2",
-      "texto": "Entregas-chave: plano de trabalho (P1); dois cadernos temáticos (P2); dois cadernos temáticos (P3); caderno final e documento sintético de consolidação (P4); guia de orientação (P5).",
+      "texto": "Entregas-chave: plano de trabalho (P1); dois cadernos temáticos (P2); dois cadernos temáticos (P3); caderno final e documento sintético de consolidação (P4); guia de orientação (P5), cada uma com o critério de aceite do escopo da proposta e o recebimento definitivo do contrato.",
       "rotulo": "documento",
-      "motivo": "Produtos do SOW da proposta, ligados aos requisitos da RFP.",
+      "motivo": "Escopo da proposta (parte integrante do contrato) e cronograma do contrato; a proposta não acrescenta produto à RFP.",
       "fontes": [
         {
           "doc": "proposta",
           "pagina": 17,
           "trecho": "P4 — Caderno final e documento sintético de consolidação"
+        },
+        {
+          "doc": "contrato",
+          "pagina": 2,
+          "trecho": "Produto 5 – Guia de orientação sobre direitos 300 30%"
         }
       ],
       "alternativas": [],
-      "requisitos": ["R01", "R02", "R03", "R04", "R05"],
+      "requisitos": [
+        "R01",
+        "R02",
+        "R03",
+        "R04",
+        "R05"
+      ],
       "ficha": "TAP4.2"
     }
   ],
   "limites": [
     {
       "id": "tap-4-3",
-      "texto": "Sugere-se registrar como fora do escopo a impressão gráfica dos cadernos e do guia, como na exclusão sugerida na proposta.",
+      "texto": "Sugere-se registrar como fora do escopo a impressão gráfica e a distribuição física dos cadernos e do guia, como na exclusão da proposta.",
       "rotulo": "sugestao",
-      "motivo": "Exclusão da proposta; a RFP pede versão pronta para publicação online.",
+      "motivo": "Exclusão da proposta; o contrato pede versão pronta para publicação online pela RFP.",
       "fontes": [
         {
           "doc": "proposta",
@@ -227,19 +450,52 @@
         }
       ],
       "alternativas": [],
-      "requisitos": ["R05"],
+      "requisitos": [
+        "R05"
+      ],
       "ficha": "TAP4.3"
     },
     {
       "id": "tap-4-4",
-      "texto": "Sugere-se registrar que a escuta direta de crianças e adolescentes só entra no projeto se a contratante aprovar antes um plano metodológico específico; sem essa aprovação, ela fica fora do escopo.",
+      "texto": "Sugere-se registrar que a escuta direta de crianças e adolescentes só entra no projeto se a contratante aprovar antes um plano metodológico específico e houver aditivo; sem isso, ela fica fora do escopo.",
       "rotulo": "sugestao",
-      "motivo": "Condição da RFP para a escuta direta; a abordagem escolhida faz escuta com profissionais da rede.",
+      "motivo": "Exclusão da proposta e condição da RFP.",
       "fontes": [
+        {
+          "doc": "proposta",
+          "pagina": 18,
+          "trecho": "Sugere-se excluir a escuta direta de crianças e adolescentes da abordagem de base; se a contratante a pedir, ela entra por plano metodológico específico e aditivo."
+        },
         {
           "doc": "rfp",
           "pagina": 19,
           "trecho": "A realização de escuta direta de crianças e adolescentes somente poderá ocorrer mediante aprova- ção prévia de plano metodológico específico pela contratante"
+        }
+      ],
+      "alternativas": [],
+      "requisitos": [],
+      "ficha": "TAP4.3"
+    },
+    {
+      "id": "tap-4-5",
+      "texto": "Os deslocamentos da equipe para fora de Brasília/DF, quando autorizados, são custeados pela contratante e ficam fora do preço.",
+      "rotulo": "documento",
+      "motivo": "Obrigação do contratante no contrato e na RFP, que a proposta já excluía do preço.",
+      "fontes": [
+        {
+          "doc": "contrato",
+          "pagina": 4,
+          "trecho": "Custear os deslocamentos da equipe técnica para fora de Brasília/DF, quando previamente autorizados pela CONTRATANTE."
+        },
+        {
+          "doc": "rfp",
+          "pagina": 22,
+          "trecho": "As despesas decorrentes dos deslocamentos previstos no subitem anterior, quando cabíveis, serão custeados pela CONTRATANTE"
+        },
+        {
+          "doc": "proposta",
+          "pagina": 18,
+          "trecho": "Sugere-se excluir do preço os deslocamentos para fora de Brasília, que o termo de referência coloca a cargo da contratante quando autorizados."
         }
       ],
       "alternativas": [],
@@ -250,18 +506,26 @@
   "riscoGeral": [
     {
       "id": "tap-5-1",
-      "texto": "Sugere-se resumir o risco geral em três fontes de incerteza: o tempo de análise e as rodadas de revisão de cada produto pela contratante (premissa crítica PC3); a mobilização dos profissionais da rede para as oficinas de escuta (premissa crítica PC6); e o prazo do segundo produto, que no cronograma da proposta passa do prazo máximo da RFP (conta do código).",
+      "texto": "Sugere-se resumir o risco geral em quatro fontes de incerteza: o tempo de análise e as rodadas de ajuste de cada produto (premissa crítica PC3), que o contrato limita no prazo, mas não no número de rodadas; a mobilização da rede para as oficinas (premissa crítica PC6), que não virou obrigação da contratante; o prazo do segundo produto, que no cronograma da proposta passa do prazo máximo (conta do código); e o cronograma de desembolso do contrato, diferente do edital nos produtos 2 e 4 (conta do código), que muda o caixa.",
       "rotulo": "sugestao",
-      "motivo": "Premissas críticas confirmadas na proposta e a conferência de prazos do código; nenhuma delas é brecha do texto da RFP.",
+      "motivo": "Premissas críticas da proposta, divergências de texto acima e contas do código; nenhuma brecha da etapa 1 entra como risco.",
       "fontes": [
         {
           "doc": "proposta",
           "pagina": 19,
-          "trecho": "Propõe-se assumir que a contratante apoia a mobilização dos profissionais da rede para as oficinas remotas"
+          "trecho": "Propõe-se assumir que a contratante apoia a mobilização dos profissionais da rede para as oficinas remotas e que a participação ocorre nas datas do plano de trabalho."
+        },
+        {
+          "doc": "contrato",
+          "pagina": 3,
+          "trecho": "Os ajustes pedidos serão feitos pela CONTRATADA no prazo fixado pela CONTRATANTE, e a versão ajustada será analisada no mesmo prazo do item 7.1."
         }
       ],
       "alternativas": [],
-      "requisitos": ["R02"],
+      "requisitos": [
+        "R02",
+        "R04"
+      ],
       "ficha": "TAP5.2"
     }
   ],
@@ -271,8 +535,13 @@
         "id": "tap-6-1",
         "texto": "Plano de trabalho da consultoria entregue.",
         "rotulo": "documento",
-        "motivo": "Tabela de entregas do termo de referência.",
+        "motivo": "Cronograma de entrega do contrato (Cláusula Quinta), igual ao da RFP.",
         "fontes": [
+          {
+            "doc": "contrato",
+            "pagina": 2,
+            "trecho": "Produto 1 – Plano de trabalho da consultoria 30 5%"
+          },
           {
             "doc": "rfp",
             "pagina": 21,
@@ -280,7 +549,9 @@
           }
         ],
         "alternativas": [],
-        "requisitos": ["R01"],
+        "requisitos": [
+          "R01"
+        ],
         "ficha": "TAP6.1"
       },
       "produto": "P1",
@@ -291,8 +562,13 @@
         "id": "tap-6-2",
         "texto": "Dois primeiros cadernos temáticos entregues.",
         "rotulo": "documento",
-        "motivo": "Tabela de entregas do termo de referência.",
+        "motivo": "Cronograma de entrega do contrato.",
         "fontes": [
+          {
+            "doc": "contrato",
+            "pagina": 2,
+            "trecho": "Produto 2 – Dois cadernos temáticos sobre direitos 75 25%"
+          },
           {
             "doc": "rfp",
             "pagina": 21,
@@ -300,7 +576,9 @@
           }
         ],
         "alternativas": [],
-        "requisitos": ["R02"],
+        "requisitos": [
+          "R02"
+        ],
         "ficha": "TAP6.1"
       },
       "produto": "P2",
@@ -311,8 +589,13 @@
         "id": "tap-6-3",
         "texto": "Terceiro e quarto cadernos temáticos entregues.",
         "rotulo": "documento",
-        "motivo": "Tabela de entregas do termo de referência.",
+        "motivo": "Cronograma de entrega do contrato.",
         "fontes": [
+          {
+            "doc": "contrato",
+            "pagina": 2,
+            "trecho": "Produto 3 – Dois cadernos temáticos sobre direitos 135 20%"
+          },
           {
             "doc": "rfp",
             "pagina": 21,
@@ -320,7 +603,9 @@
           }
         ],
         "alternativas": [],
-        "requisitos": ["R03"],
+        "requisitos": [
+          "R03"
+        ],
         "ficha": "TAP6.1"
       },
       "produto": "P3",
@@ -331,8 +616,13 @@
         "id": "tap-6-4",
         "texto": "Caderno final e documento sintético de consolidação entregues.",
         "rotulo": "documento",
-        "motivo": "Tabela de entregas do termo de referência.",
+        "motivo": "Cronograma de entrega do contrato.",
         "fontes": [
+          {
+            "doc": "contrato",
+            "pagina": 2,
+            "trecho": "Produto 4 – Caderno temático final e documento 210 20%"
+          },
           {
             "doc": "rfp",
             "pagina": 21,
@@ -340,7 +630,9 @@
           }
         ],
         "alternativas": [],
-        "requisitos": ["R04"],
+        "requisitos": [
+          "R04"
+        ],
         "ficha": "TAP6.1"
       },
       "produto": "P4",
@@ -351,8 +643,13 @@
         "id": "tap-6-5",
         "texto": "Guia de orientação entregue.",
         "rotulo": "documento",
-        "motivo": "Tabela de entregas do termo de referência.",
+        "motivo": "Cronograma de entrega do contrato.",
         "fontes": [
+          {
+            "doc": "contrato",
+            "pagina": 2,
+            "trecho": "Produto 5 – Guia de orientação sobre direitos 300 30%"
+          },
           {
             "doc": "rfp",
             "pagina": 21,
@@ -360,7 +657,9 @@
           }
         ],
         "alternativas": [],
-        "requisitos": ["R05"],
+        "requisitos": [
+          "R05"
+        ],
         "ficha": "TAP6.1"
       },
       "produto": "P5",
@@ -369,14 +668,39 @@
     {
       "item": {
         "id": "tap-6-6",
-        "texto": "Sugere-se incluir como marco a aprovação de cada produto pela contratante, que é condição do pagamento, com o prazo de análise a definir pelo GP.",
-        "rotulo": "sugestao",
-        "motivo": "O pagamento só ocorre após o ateste e a aprovação; o marco depende do contratante (TAP6.3).",
+        "texto": "Cada produto aprovado pela contratante, ou com pedido de ajustes, em até 15 (quinze) dias úteis contados da entrega; a aprovação é condição do pagamento.",
+        "rotulo": "documento",
+        "motivo": "Marco que depende da contratante (Cláusula Sétima do contrato).",
         "fontes": [
+          {
+            "doc": "contrato",
+            "pagina": 3,
+            "trecho": "A CONTRATANTE analisará cada produto entregue e emitirá a aprovação ou o pedido de ajustes em até 15 (quinze) dias úteis contados da data da entrega."
+          },
           {
             "doc": "rfp",
             "pagina": 21,
             "trecho": "O pagamento é realizado somente após ateste de conformidade e aprovação pela Contratante."
+          }
+        ],
+        "alternativas": [],
+        "requisitos": [],
+        "ficha": "TAP6.3"
+      },
+      "produto": "",
+      "prazo": "até 15 dias úteis contados da entrega de cada produto"
+    },
+    {
+      "item": {
+        "id": "tap-6-7",
+        "texto": "Sugere-se incluir como marco a reunião de abertura com a contratante, em que o contrato prevê que sejam informados os nomes do gestor e do fiscal do contrato; a data é decisão do GP.",
+        "rotulo": "sugestao",
+        "motivo": "Marco que depende da contratante e abre a contagem das decisões dela.",
+        "fontes": [
+          {
+            "doc": "contrato",
+            "pagina": 3,
+            "trecho": "A execução do contrato será acompanhada pelo gestor do contrato e pelo fiscal do contrato, designados pela CONTRATANTE em ato próprio, cujos nomes serão informados à CONTRATADA na reunião de abertura."
           }
         ],
         "alternativas": [],
@@ -390,23 +714,34 @@
   "recursosFinanceiros": [
     {
       "id": "tap-7-1",
-      "texto": "Redação sugerida: \"Recursos financeiros pré-aprovados: o valor global do contrato, igual ao da proposta vencedora.\" O valor é decisão do GP.",
+      "texto": "Redação sugerida: \"Recursos financeiros pré-aprovados: R$ 480.000,00, o valor total do contrato (Cláusula Quarta), em cinco parcelas vinculadas aos produtos (Cláusula Quinta).\" O valor é decisão do GP.",
       "rotulo": "decisao_gp",
-      "motivo": "TAP.7 é decisão do GP; o preço final da proposta ainda não foi preenchido.",
-      "fontes": [],
+      "motivo": "TAP.7 é decisão do GP; o valor sugerido é o do contrato assinado, que prevalece.",
+      "fontes": [
+        {
+          "doc": "contrato",
+          "pagina": 2,
+          "trecho": "O valor total do contrato é de R$ 480.000,00 (quatrocentos e oitenta mil reais)."
+        }
+      ],
       "alternativas": [],
       "requisitos": [],
-      "ficha": "TAP7.1"
+      "ficha": "TAP7.2"
     }
   ],
   "partesInteressadas": [
     {
       "item": {
         "id": "tap-8-1",
-        "texto": "Coordenação-Geral de Políticas para a Convivência Familiar e Comunitária e Primeira Infância (CGCFC), com quem a contratada faz as reuniões de alinhamento e de validação dos produtos.",
+        "texto": "Coordenação-Geral de Políticas para a Convivência Familiar e Comunitária e Primeira Infância (CGCFC), com quem é feita a validação técnica das etapas e dos produtos.",
         "rotulo": "documento",
-        "motivo": "Área técnica citada no objeto da contratação.",
+        "motivo": "Contrato (Cláusula Sexta) e RFP.",
         "fontes": [
+          {
+            "doc": "contrato",
+            "pagina": 3,
+            "trecho": "A validação técnica das etapas e dos produtos será feita com a equipe da Coordenação-Geral de Políticas para a Convivência Familiar e Comunitária e Primeira Infância – CGCFC"
+          },
           {
             "doc": "rfp",
             "pagina": 18,
@@ -423,9 +758,9 @@
     {
       "item": {
         "id": "tap-8-2",
-        "texto": "OEI, que firma o contrato com a empresa vencedora.",
+        "texto": "OEI, contratante que firma o contrato.",
         "rotulo": "documento",
-        "motivo": "Contratante formal.",
+        "motivo": "Contrato e RFP.",
         "fontes": [
           {
             "doc": "rfp",
@@ -438,35 +773,41 @@
         "ficha": "TAP8.1"
       },
       "papel": "contratante",
-      "decide": "assinatura, aditivos e extinção do contrato"
+      "decide": "aprovação dos produtos, aditivos, prorrogação e extinção do contrato"
     },
     {
       "item": {
         "id": "tap-8-3",
-        "texto": "Supervisor técnico, gestor e fiscal do contrato do lado da contratante: nomes não informados no documento — a definir pelo GP.",
+        "texto": "Gestor do contrato e fiscal do contrato, designados pela contratante em ato próprio: nomes não informados no documento — a definir pelo GP (o contrato prevê que sejam informados na reunião de abertura).",
         "rotulo": "decisao_gp",
-        "motivo": "A RFP cita o supervisor técnico e o fiscal, sem os nomes (TAP8.2).",
+        "motivo": "Quem decide do lado do contratante; o nome não vem do documento.",
         "fontes": [
           {
-            "doc": "rfp",
-            "pagina": 21,
-            "trecho": "É facultado ao Supervisor Técnico da Contratante solicitar a entrega de uma versão prévia"
+            "doc": "contrato",
+            "pagina": 3,
+            "trecho": "A execução do contrato será acompanhada pelo gestor do contrato e pelo fiscal do contrato, designados pela CONTRATANTE em ato próprio, cujos nomes serão informados à CONTRATADA na reunião de abertura."
           }
         ],
         "alternativas": [],
         "requisitos": [],
         "ficha": "TAP8.2"
       },
-      "papel": "quem acompanha e fiscaliza a execução",
-      "decide": "recebimento e ateste dos produtos"
+      "papel": "acompanham e fiscalizam a execução",
+      "decide": "recebimento definitivo e ateste de cada produto; registro de ocorrências"
     },
     {
       "item": {
         "id": "tap-8-4",
         "texto": "Sugere-se incluir entre as partes-chave os profissionais da rede que participam das oficinas de escuta, de quem depende a premissa crítica PC6.",
         "rotulo": "sugestao",
-        "motivo": "Terceiros de quem o projeto depende entram como parte-chave (PC6).",
-        "fontes": [],
+        "motivo": "A mobilização deles não ficou no contrato (divergência acima).",
+        "fontes": [
+          {
+            "doc": "proposta",
+            "pagina": 19,
+            "trecho": "Propõe-se assumir que a contratante apoia a mobilização dos profissionais da rede para as oficinas remotas e que a participação ocorre nas datas do plano de trabalho."
+          }
+        ],
         "alternativas": [],
         "requisitos": [],
         "ficha": "TAP8.1"
@@ -478,10 +819,20 @@
   "aprovacao": [
     {
       "id": "tap-9-1",
-      "texto": "O aceite de cada produto é o recebimento definitivo pela contratante, que concretiza o ateste da execução dos serviços.",
+      "texto": "A contratante analisa cada produto e emite a aprovação ou o pedido de ajustes em até 15 (quinze) dias úteis contados da entrega; o recebimento definitivo, que concretiza o ateste, é atestado pelo gestor do contrato depois da aprovação.",
       "rotulo": "documento",
-      "motivo": "Cláusula de recebimento e aceitação do objeto.",
+      "motivo": "Cláusula Sétima do contrato; a RFP só trazia o recebimento definitivo, sem prazo.",
       "fontes": [
+        {
+          "doc": "contrato",
+          "pagina": 3,
+          "trecho": "A CONTRATANTE analisará cada produto entregue e emitirá a aprovação ou o pedido de ajustes em até 15 (quinze) dias úteis contados da data da entrega."
+        },
+        {
+          "doc": "contrato",
+          "pagina": 3,
+          "trecho": "O recebimento definitivo, ato que concretiza o ateste da execução dos serviços, será atestado pelo gestor do contrato depois da aprovação do produto."
+        },
         {
           "doc": "rfp",
           "pagina": 24,
@@ -494,32 +845,102 @@
     },
     {
       "id": "tap-9-2",
-      "texto": "O prazo de análise de cada produto pela contratante não é informado no documento — a definir pelo GP.",
+      "texto": "O limite de rodadas de ajuste por produto não é informado no documento — a definir pelo GP.",
       "rotulo": "decisao_gp",
-      "motivo": "A RFP não fixa prazo de análise; ele afeta os marcos (PC3).",
-      "fontes": [],
+      "motivo": "O contrato deixa os ajustes no prazo que a contratante fixar.",
+      "fontes": [
+        {
+          "doc": "contrato",
+          "pagina": 3,
+          "trecho": "Os ajustes pedidos serão feitos pela CONTRATADA no prazo fixado pela CONTRATANTE, e a versão ajustada será analisada no mesmo prazo do item 7.1."
+        }
+      ],
       "alternativas": [],
       "requisitos": [],
       "ficha": "TAP9.4"
     },
     {
       "id": "tap-9-3",
-      "texto": "Sugere-se considerar o projeto bem-sucedido quando os cinco produtos forem recebidos em definitivo dentro dos prazos máximos da RFP e os objetivos do TAP.2 forem atingidos.",
+      "texto": "Sugere-se considerar o projeto bem-sucedido quando os cinco produtos forem recebidos em definitivo dentro dos prazos máximos do contrato e os objetivos do TAP.2 forem atingidos.",
       "rotulo": "sugestao",
-      "motivo": "TAP9.1 remete ao TAP.2.",
-      "fontes": [],
+      "motivo": "Remete ao TAP.2 e à Cláusula Quinta.",
+      "fontes": [
+        {
+          "doc": "contrato",
+          "pagina": 2,
+          "trecho": "As datas da tabela se referem ao prazo máximo para entrega dos produtos."
+        }
+      ],
       "alternativas": [],
-      "requisitos": ["R01", "R02", "R03", "R04", "R05"],
+      "requisitos": [
+        "R01",
+        "R02",
+        "R03",
+        "R04",
+        "R05"
+      ],
       "ficha": "TAP9.1"
+    },
+    {
+      "id": "tap-9-4",
+      "texto": "Sugere-se registrar que o encerramento é autorizado depois do recebimento definitivo do guia de orientação pelo gestor do contrato e do pagamento da última parcela; quem assina o encerramento pela FGV é decisão do GP.",
+      "rotulo": "sugestao",
+      "motivo": "O contrato liga o recebimento ao gestor e o pagamento à aprovação.",
+      "fontes": [
+        {
+          "doc": "contrato",
+          "pagina": 3,
+          "trecho": "O recebimento definitivo, ato que concretiza o ateste da execução dos serviços, será atestado pelo gestor do contrato depois da aprovação do produto."
+        },
+        {
+          "doc": "contrato",
+          "pagina": 2,
+          "trecho": "O pagamento de cada parcela é realizado somente após o ateste de conformidade e a aprovação do produto pela CONTRATANTE"
+        }
+      ],
+      "alternativas": [],
+      "requisitos": [],
+      "ficha": "TAP9.3"
     }
   ],
   "termino": [
     {
       "id": "tap-10-1",
+      "texto": "O contrato vigora por 12 meses contados da assinatura e pode ser prorrogado por acordo entre as partes, mediante termo aditivo.",
+      "rotulo": "documento",
+      "motivo": "Cláusula Segunda do contrato.",
+      "fontes": [
+        {
+          "doc": "contrato",
+          "pagina": 1,
+          "trecho": "O prazo de vigência deste contrato é de 12 (doze) meses, contados da data de sua assinatura."
+        },
+        {
+          "doc": "contrato",
+          "pagina": 1,
+          "trecho": "A vigência poderá ser prorrogada por acordo entre as partes, mediante termo aditivo"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 23,
+          "trecho": "terá vigência total de 12 (doze) meses, contados a partir da data de sua assinatura"
+        }
+      ],
+      "alternativas": [],
+      "requisitos": [],
+      "ficha": "TAP10.1"
+    },
+    {
+      "id": "tap-10-2",
       "texto": "O contrato se extingue quando cumpridas as obrigações de ambas as partes, ainda que antes do prazo.",
       "rotulo": "documento",
-      "motivo": "Cláusula de extinção contratual.",
+      "motivo": "Cláusula Décima do contrato, igual à minuta da RFP.",
       "fontes": [
+        {
+          "doc": "contrato",
+          "pagina": 5,
+          "trecho": "O contrato se extingue quando cumpridas as obrigações de ambas as partes, ainda que isso ocorra antes do prazo estipulado para tanto."
+        },
         {
           "doc": "rfp",
           "pagina": 53,
@@ -531,11 +952,16 @@
       "ficha": "TAP10.1"
     },
     {
-      "id": "tap-10-2",
+      "id": "tap-10-3",
       "texto": "O cancelamento antecipado segue os motivos do artigo 137 da Lei 14.133/2021 ou o acordo entre as partes, assegurados o contraditório e a ampla defesa.",
       "rotulo": "documento",
-      "motivo": "Cláusula de extinção antecipada; conferir a lei citada.",
+      "motivo": "Cláusula Décima do contrato.",
       "fontes": [
+        {
+          "doc": "contrato",
+          "pagina": 5,
+          "trecho": "O contrato pode ser extinto antes de cumpridas as obrigações nele estipuladas, ou antes do prazo nele fixado, por algum dos motivos previstos no artigo 137 da Lei nº 14.133/2021"
+        },
         {
           "doc": "rfp",
           "pagina": 53,
@@ -547,11 +973,37 @@
       "ficha": "TAP10.2"
     },
     {
-      "id": "tap-10-3",
-      "texto": "Sugere-se registrar que, se as obrigações não forem cumpridas no prazo, a vigência fica prorrogada até a conclusão do objeto, com a readequação do cronograma, e que o GP avalie com a contratante como isso afeta os marcos.",
-      "rotulo": "sugestao",
-      "motivo": "Subcláusula do contrato sobre prorrogação até a conclusão.",
+      "id": "tap-10-4",
+      "texto": "Ao final, a contratada entrega os arquivos-fonte e cede à contratante os direitos patrimoniais de autor de todos os produtos.",
+      "rotulo": "documento",
+      "motivo": "Devolução dos dados e dos produtos (Cláusula Nona do contrato e RFP).",
       "fontes": [
+        {
+          "doc": "contrato",
+          "pagina": 4,
+          "trecho": "Ceder à CONTRATANTE os direitos patrimoniais de autor de todos os produtos e entregar os arquivos-fonte correspondentes."
+        },
+        {
+          "doc": "rfp",
+          "pagina": 21,
+          "trecho": "As entregas deverão compreender, além do conteúdo técnico, todos os arquivos-fonte correspondentes"
+        }
+      ],
+      "alternativas": [],
+      "requisitos": [],
+      "ficha": "TAP10.1"
+    },
+    {
+      "id": "tap-10-5",
+      "texto": "Sugere-se registrar que, se as obrigações não forem cumpridas no prazo, o contrato prevê a prorrogação até a conclusão do objeto com a readequação do cronograma, e tratar esse ponto como pendente do GP até a leitura do jurídico (ver divergência de término).",
+      "rotulo": "sugestao",
+      "motivo": "A cláusula de extinção e a de vigência tratam da prorrogação de formas diferentes.",
+      "fontes": [
+        {
+          "doc": "contrato",
+          "pagina": 5,
+          "trecho": "Se as obrigações não forem cumpridas no prazo estipulado, a vigência ficará prorrogada até a conclusão do objeto, caso em que a CONTRATANTE providenciará a readequação do cronograma."
+        },
         {
           "doc": "rfp",
           "pagina": 53,
@@ -566,7 +1018,7 @@
   "gerente": [
     {
       "id": "tap-11-1",
-      "texto": "Redação sugerida: \"O GP [nome a definir] decide sobre a organização da equipe, o cronograma interno e as mudanças que não alteram escopo, prazo contratual ou valor; escala ao patrocinador as demais.\" Nome e alçada são decisão do GP.",
+      "texto": "Redação sugerida: \"O GP [nome a definir] decide sobre a organização da equipe, o cronograma interno e as mudanças que não alteram escopo, prazo contratual ou valor; escala ao patrocinador as demais, inclusive a leitura da prorrogação e o limite de rodadas de ajuste.\" Nome e alçada são decisão do GP.",
       "rotulo": "decisao_gp",
       "motivo": "TAP.11 é decisão do GP; o PMO só sugere a redação.",
       "fontes": [],
@@ -601,35 +1053,47 @@
   "observacoes": [
     {
       "id": "tap-obs-1",
-      "texto": "Recomenda-se avaliar a diferença entre o prazo máximo do segundo produto na RFP e a entrega no cronograma da proposta, apontada pelo código, antes de assinar o TAP.",
+      "texto": "Recomenda-se considerar a cláusula de precedência do contrato: a proposta é parte integrante, mas, nas divergências desta lista, a versão do contrato tende a prevalecer, o que o GP confirma. Uma opção é o código procurar também essa cláusula, além da de parte integrante.",
       "rotulo": "sugestao",
-      "motivo": "A conferência de prazos do código marca o P2 como fora do prazo.",
+      "motivo": "O código acha a cláusula de parte integrante, mas não a de precedência.",
       "fontes": [
         {
-          "doc": "proposta",
-          "pagina": 17,
-          "trecho": "P2 — Dois cadernos temáticos (relações raciais; convivência familiar e comunitária)"
-        }
-      ],
-      "alternativas": [],
-      "requisitos": ["R02"],
-      "ficha": ""
-    },
-    {
-      "id": "tap-obs-2",
-      "texto": "O edital estima os recursos do contrato no item do orçamento.",
-      "rotulo": "documento",
-      "motivo": "Valor do orçamento do edital.",
-      "fontes": [
+          "doc": "contrato",
+          "pagina": 1,
+          "trecho": "Em caso de divergência entre os documentos, prevalece o disposto neste contrato."
+        },
         {
-          "doc": "rfp",
-          "pagina": 11,
-          "trecho": "Os recursos necessários para fazer frente às despesas com o objeto deste Edital, estimados em R$ 500.000,00"
+          "doc": "contrato",
+          "pagina": 1,
+          "trecho": "A proposta da CONTRATADA é parte integrante deste contrato, independentemente de transcrição"
         }
       ],
       "alternativas": [],
       "requisitos": [],
       "ficha": "TAP7.2"
+    },
+    {
+      "id": "tap-obs-2",
+      "texto": "Recomenda-se avaliar a diferença entre o prazo máximo do segundo produto e a entrega no cronograma da proposta, apontada pelo código, junto com o prazo de análise do contrato, antes de assinar o TAP.",
+      "rotulo": "sugestao",
+      "motivo": "O prazo de análise do contrato soma-se ao cronograma da proposta.",
+      "fontes": [
+        {
+          "doc": "proposta",
+          "pagina": 17,
+          "trecho": "P2 — Dois cadernos temáticos (relações raciais; convivência familiar e comunitária)"
+        },
+        {
+          "doc": "contrato",
+          "pagina": 3,
+          "trecho": "A CONTRATANTE analisará cada produto entregue e emitirá a aprovação ou o pedido de ajustes em até 15 (quinze) dias úteis contados da data da entrega."
+        }
+      ],
+      "alternativas": [],
+      "requisitos": [
+        "R02"
+      ],
+      "ficha": "TAP6.2"
     }
   ]
 }
