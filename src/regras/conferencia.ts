@@ -38,7 +38,11 @@ export interface EntradaConferencia {
   premissasAplicaveis: Record<string, boolean>;
   /** Requisitos da RFP (extraídos pelo código e editados pelo GP). */
   requisitos: Requisito[];
+  /** PGP completo (interno) ou plano de trabalho / proposta para o cliente, escolhido pelo GP no mapa. */
+  tipoPlano?: TipoPlano;
 }
+
+export type TipoPlano = "pgp" | "plano-trabalho";
 
 export interface ResultadoConferencia {
   achados: Achado[];
@@ -57,6 +61,67 @@ const TEXTO_DE_OUTRO_DOCUMENTO =
 
 /** Parte usada quando o trecho fica fora de todas as partes do mapa (capa, introdução). */
 const SEM_PARTE = "—";
+
+/**
+ * Convenções da própria ferramenta ("R01", "ID", "duração 0", "código EAP", "a definir pelo GP"): só aparecem nos
+ * planos que ela gera. Num plano de outra pessoa, não são procuradas (decisão 0033, item 5).
+ */
+const CONVENCAO_DO_APP =
+  /^(?:r\d{1,3}|id|n[oº°]|duracao 0|0 dias|codigo (?:da )?eap|a definir pelo gp|m\d|sm-\d+|cr-)$/;
+
+/**
+ * Sinônimos que valem como o sinal do item (decisão 0033, item 5): o plano de trabalho escreve de outro jeito o
+ * que o PGP chama de lista de relatórios, lista da equipe, métricas ou estimativa de custos.
+ */
+const SINONIMOS_DO_ITEM: [RegExp, string[]][] = [
+  [
+    /relat[oó]rio/i,
+    ["relatórios trimestrais", "relatórios mensais", "relatórios semestrais", "relatório final"],
+  ],
+  [/equipe/i, ["equipe responsável", "equipe técnica", "equipe do projeto"]],
+  [/m[eé]tric|indicador/i, ["quadro de metas e indicadores", "metas e indicadores", "meios de aferição"]],
+  [/estimativa|custo/i, ["composição do custo", "composição dos custos", "memória de cálculo"]],
+];
+
+/** Texto padrão de proteção de dados e sigilo: cláusula de modelo, não compromisso vago do plano. */
+const TEXTO_PADRAO = /\blgpd\b|\b13\.709\b|\bdados pessoais\b|\bconfidencialidade\b|\bsigilo\b/;
+/** Referência a item ou cláusula do edital ou do termo: o prazo está lá. */
+const REFERENCIA_A_ITEM =
+  /\b(?:item|subitem|cl[aá]usula|art\.?|artigo)\s*\d|\b(?:conforme|previsto|nos termos d)[oa]?\s+(?:o |a )?(?:edital|termo)\b/;
+/** Compromisso do plano: obrigação, prazo, entrega ou rotina de gestão (revisão, atualização, reunião, relatório). */
+const OBRIGACAO_PRAZO_OU_ENTREGA =
+  /\b(?:deve|devem|devera|deverao|obrigad[ao]s?|compete|cabera)\b|\bprazos?\b|\bentreg\w*|\bapresent\w*|\b(?:revist|revis[aã]o|revisad|atualiz|reuni|relat[oó]rio|cronograma|premissa|registro|monitora)\w*/;
+
+/**
+ * Vago que não pesa no plano (decisão 0033, item 5): texto padrão de LGPD e sigilo; "oportunamente" com
+ * referência a item do edital; descrição de atividade sem obrigação, prazo nem entrega ("acesso a microcrédito,
+ * quando necessário").
+ */
+export function vagoQueNaoPesa(padrao: string, o: { trecho: string }): boolean {
+  const t = normalizarTermo(o.trecho);
+  if (TEXTO_PADRAO.test(t)) return true;
+  if (padrao === "oportunamente" && REFERENCIA_A_ITEM.test(t)) return true;
+  // descrição de atividade para o público ("acesso a microcrédito, quando necessário"): sem compromisso do plano
+  if (padrao === "quando-necessario" || padrao === "se-for-o-caso")
+    return !OBRIGACAO_PRAZO_OU_ENTREGA.test(t);
+  return false;
+}
+
+export function sinaisParaOutroPlano(item: { texto: string; termos: string[]; compostos: string[][] }): {
+  termos: string[];
+  compostos: string[][];
+} {
+  const valeNoOutroPlano = (t: string) => !CONVENCAO_DO_APP.test(normalizarTermo(t));
+  const termos = item.termos.filter(valeNoOutroPlano);
+  // só ganha sinônimo o item que já tinha sinal de verdade: o sinônimo amplia, não cria a busca
+  const extras = termos.length
+    ? SINONIMOS_DO_ITEM.filter(([re]) => re.test(item.texto)).flatMap(([, s]) => s)
+    : [];
+  return {
+    termos: [...new Set([...termos, ...extras])],
+    compostos: item.compostos.filter((c) => c.every(valeNoOutroPlano)),
+  };
+}
 
 export function conferirPlano(e: EntradaConferencia): ResultadoConferencia {
   const achados: Achado[] = [];
@@ -197,20 +262,32 @@ export function conferirPlano(e: EntradaConferencia): ResultadoConferencia {
         });
         continue;
       }
-      if (!item.termos.length && !item.compostos.length) {
+      // "a comparação é do código": item conferido por comparação (prazos, marcos), nunca por busca de palavra
+      if (/a compara[cç][aã]o [eé] do c[oó]digo/i.test(item.texto)) {
         verificacoes.push({
           ...base,
           estado: "nao-conferido",
-          detalhe: `Não conferido pelo código: o sinal é uma estrutura (${item.estruturas.join("; ")}).`,
+          detalhe: "Conferido por comparação (prazos e marcos), não por busca de palavra.",
         });
         continue;
       }
-      const naParte = procurarSinais(e.pgp, item, faixa);
+      const sinais = sinaisParaOutroPlano(item);
+      if (!sinais.termos.length && !sinais.compostos.length) {
+        verificacoes.push({
+          ...base,
+          estado: "nao-conferido",
+          detalhe: item.estruturas.length
+            ? `Não conferido pelo código: o sinal é uma estrutura (${item.estruturas.join("; ")}).`
+            : "Não conferido pelo código: os sinais são convenções da própria ferramenta.",
+        });
+        continue;
+      }
+      const naParte = procurarSinais(e.pgp, sinais, faixa);
       if (naParte) {
         verificacoes.push({ ...base, estado: "ok", detalhe: `Localizado na p. ${naParte.pagina}.` });
         continue;
       }
-      const noPlano = faixa && !ITENS_ESTRITOS.has(item.codigo) ? procurarSinais(e.pgp, item) : undefined;
+      const noPlano = faixa && !ITENS_ESTRITOS.has(item.codigo) ? procurarSinais(e.pgp, sinais) : undefined;
       if (noPlano) {
         verificacoes.push({
           ...base,
@@ -226,7 +303,7 @@ export function conferirPlano(e: EntradaConferencia): ResultadoConferencia {
           partes: [ficha.codigo],
           chave: item.codigo,
           titulo: `${item.codigo} ${NAO_LOCALIZADO}`,
-          descricao: `${ficha.nome}: o conteúdo mínimo "${item.texto}" não foi localizado no plano (termos procurados: ${item.termos.join(", ")}).`,
+          descricao: `${ficha.nome}: o conteúdo mínimo "${item.texto}" não foi localizado no plano (termos procurados: ${sinais.termos.join(", ")}).`,
           evidencias: [evidenciaFicha(item.codigo, `${item.texto}. Fonte: ${item.fonte}.`)],
           sugestao: `Sugere-se incluir em "${ficha.nome}": ${item.texto.charAt(0).toLowerCase()}${item.texto.slice(1)}. Se o projeto não precisa disso, recomenda-se registrar o motivo.`,
         }),
@@ -391,6 +468,7 @@ export function conferirPlano(e: EntradaConferencia): ResultadoConferencia {
   // ---------- vago ----------
   for (const padrao of PADROES_VAGO) {
     for (const o of procurarPadrao(e.pgp, padrao.re)) {
+      if (vagoQueNaoPesa(padrao.id, o)) continue;
       const parte = parteDaPosicao(o.pagina, o.posicao, e.mapa) ?? SEM_PARTE;
       registrar({
         tipo: "vago",
@@ -406,7 +484,10 @@ export function conferirPlano(e: EntradaConferencia): ResultadoConferencia {
   }
 
   // ---------- conflituoso: texto de outro documento (CP8) ----------
+  // "deste edital" num plano de trabalho que responde ao edital é citação, não texto copiado de outro documento
+  const respondeAoEdital = e.tipoPlano === "plano-trabalho" || Boolean(e.rfp);
   for (const o of procurarPadrao(e.pgp, TEXTO_DE_OUTRO_DOCUMENTO)) {
+    if (respondeAoEdital && /edital/.test(o.termo)) continue;
     const parte = parteDaPosicao(o.pagina, o.posicao, e.mapa) ?? SEM_PARTE;
     registrar({
       tipo: "conflituoso",
@@ -456,12 +537,20 @@ export function conferirPlano(e: EntradaConferencia): ResultadoConferencia {
   return { achados: ordenarAchados(achados), verificacoes };
 }
 
+/**
+ * Ordem de importância (decisão 0033, item 8): premissas críticas, conflitos, ausentes e, por último, vagos. Dentro
+ * de cada grupo, do mais grave para o mais leve e pela ordem das partes.
+ */
+export function grupoDoAchado(a: Pick<Achado, "regra" | "tipo">): number {
+  if (a.regra.startsWith("premissa-critica")) return 0;
+  return { conflituoso: 1, ausente: 2, vago: 3 }[a.tipo];
+}
+
 export function ordenarAchados(achados: Achado[]): Achado[] {
-  const tipo = { ausente: 0, conflituoso: 1, vago: 2 };
   return [...achados].sort(
     (a, b) =>
+      grupoDoAchado(a) - grupoDoAchado(b) ||
       ORDEM_GRAVIDADE[b.gravidade] - ORDEM_GRAVIDADE[a.gravidade] ||
-      tipo[a.tipo] - tipo[b.tipo] ||
       a.parte.localeCompare(b.parte, "pt-BR", { numeric: true }),
   );
 }
