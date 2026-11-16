@@ -128,6 +128,15 @@ describe("regras de brecha da RFP", () => {
       "1. DO OBJETO\nO projeto deverá promover a cidadania, de modo que possam ser eventualmente incorporados aos serviços ofertados pela rede pública municipal.",
     ]);
     expect(daRegra(daAdministracao, "vago")).toEqual([]);
+    // a Secretaria como destinatária não tira a brecha; o fiscal como sujeito, sim
+    const destinataria = rodar([
+      "1. DO OBJETO\nOs materiais produzidos deverão ser disponibilizados à Secretaria em formato editável, quando aplicável.",
+    ]);
+    expect(daRegra(destinataria, "vago")).toHaveLength(1);
+    const doFiscal = rodar([
+      "1. DO OBJETO\nO fiscal técnico do contrato informará ao gestor, em tempo hábil, a situação que demandar decisão.",
+    ]);
+    expect(daRegra(doFiscal, "vago")).toEqual([]);
     const semObrigacao = rodar([
       "1. DO OBJETO\nO tema foi eventualmente discutido em conferências anteriores.",
     ]);
