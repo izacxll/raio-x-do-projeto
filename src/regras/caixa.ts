@@ -64,6 +64,8 @@ export interface Caixa {
 }
 
 const r1 = (n: number) => Math.round(n * 10) / 10;
+/** Pontos percentuais em português (vírgula decimal). */
+export const fmtPp = (n: number) => n.toLocaleString("pt-BR", { maximumFractionDigits: 1 });
 
 /**
  * @param custoMensal custo de cada mês de execução (R$ ou pesos: pessoas no mês, horas no mês); só a proporção
@@ -107,9 +109,9 @@ export function calcularCaixa(parcelas: ParcelaCaixa[], custoMensal: number[]): 
   const parcelaDoPico = maior ? [...comMes].reverse().find((p) => p.mes <= maior.mes) : undefined;
   const pico = maior ? { mes: maior.mes, custoNoMes: r1(maior.c), parcela: parcelaDoPico } : undefined;
   const partes = [
-    `Pelo acumulado, a menor folga é de ${maisApertado?.folga ?? 0} pontos percentuais no mês ${maisApertado?.mes ?? "—"}`,
+    `Pelo acumulado, a menor folga é de ${fmtPp(maisApertado?.folga ?? 0)} pontos percentuais no mês ${maisApertado?.mes ?? "—"}`,
     primeiroNegativo
-      ? `o custo passa do recebido a partir do mês ${primeiroNegativo.mes} (folga de ${primeiroNegativo.folga} p.p.)`
+      ? `o custo passa do recebido a partir do mês ${primeiroNegativo.mes} (folga de ${fmtPp(primeiroNegativo.folga)} p.p.)`
       : "o recebido fica sempre à frente do custo",
   ];
   if (semMes.length) partes.push(`${semMes.length} parcela(s) sem mês ficaram fora da conta`);

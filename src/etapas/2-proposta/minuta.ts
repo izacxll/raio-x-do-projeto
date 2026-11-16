@@ -14,7 +14,7 @@ import { conferirItem, type ConferenciaItem } from "../../pmo/redacao";
 import type { ItemPmo } from "../../pmo/schemas/comum";
 import type { SecaoProposta } from "../../pmo/schemas/proposta";
 import { normalizarTermo } from "../../regras/busca";
-import { calcularCaixa, mesDoPrazo, type Caixa, type ParcelaCaixa } from "../../regras/caixa";
+import { calcularCaixa, fmtPp, mesDoPrazo, type Caixa, type ParcelaCaixa } from "../../regras/caixa";
 import { NOME_PREMISSA, type CodigoPremissa } from "../../regras/premissas-rfp";
 import {
   conferirProdutividade,
@@ -762,9 +762,9 @@ export function montarMinuta(
             linhas: caixa.parcelas.map((f) => [
               f.parcela.rotulo,
               String(f.parcela.mes ?? "—"),
-              `${f.recebidoAte}%`,
-              `${f.custoAte}% (mês ${f.ateMes})`,
-              String(f.folga),
+              `${fmtPp(f.recebidoAte)}%`,
+              `${fmtPp(f.custoAte)}% (mês ${f.ateMes})`,
+              fmtPp(f.folga),
             ]),
           }
         : undefined,
@@ -859,21 +859,27 @@ export function montarMinuta(
       secao: "capa",
       rotulo: "decisao-gp",
       nome: "Preço",
-      texto: `${p.parametros.precoFinal !== undefined ? fmtR(p.parametros.precoFinal) : `Valor final ${A_DEFINIR}`}${estimado ? `; teto ou estimado do edital: ${fmtR(estimado)}` : ""}${folha?.total !== undefined ? `; custo calculado: ${fmtR(folha.total)}` : ""}${caixa?.maisApertado ? `; caixa mais apertado no mês ${caixa.maisApertado.mes} (${caixa.maisApertado.folga} p.p.)` : ""}.`,
+      texto: `${p.parametros.precoFinal !== undefined ? fmtR(p.parametros.precoFinal) : `Valor final ${A_DEFINIR}`}${estimado ? `; teto ou estimado do edital: ${fmtR(estimado)}` : ""}${folha?.total !== undefined ? `; custo calculado: ${fmtR(folha.total)}` : ""}${caixa?.maisApertado ? `; caixa mais apertado no mês ${caixa.maisApertado.mes} (${fmtPp(caixa.maisApertado.folga)} p.p.)` : ""}.`,
     },
     {
       id: "minuta:capa:riscos",
       secao: "capa",
       rotulo: "sugestao",
       nome: "Riscos que mais pesam",
-      texto: alertas.length
-        ? alertas
-            .slice(0, 5)
-            .map((a) => a.nome)
-            .join("; ")
-        : aplicaveis.size
-          ? `Premissas críticas que se aplicam: ${[...aplicaveis].sort().join(", ")}.`
-          : "Nenhum alerta das conferências do código.",
+      texto:
+        [
+          ...alertas
+            .slice(0, 4)
+            .map(
+              (x) =>
+                `${x.nome.replace(/ \(conta do código\)$/, "")}: ${x.texto.replace(/\s+/g, " ").slice(0, 160)}`,
+            ),
+          aplicaveis.size
+            ? `Premissas críticas que se aplicam: ${[...aplicaveis].sort().join(", ")} (seção 4).`
+            : "",
+        ]
+          .filter(Boolean)
+          .join(" · ") || "Nenhum alerta das conferências do código.",
     },
   );
   return {
