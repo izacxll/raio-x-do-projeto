@@ -25,6 +25,7 @@ import {
 } from "./busca";
 import { paginasDaParte, parteDaPosicao, type ParteConfirmada } from "./mapa-pgp";
 import { PADROES_VAGO } from "./vago";
+import { fraseEmVolta } from "../texto/frase";
 
 export interface EntradaConferencia {
   pgp: PaginaLida[];
@@ -40,6 +41,8 @@ export interface EntradaConferencia {
   requisitos: Requisito[];
   /** PGP completo (interno) ou plano de trabalho / proposta para o cliente, escolhido pelo GP no mapa. */
   tipoPlano?: TipoPlano;
+  /** O plano foi gerado pela própria ferramenta (autoconferência da etapa 4): as convenções dela valem. */
+  planoDaFerramenta?: boolean;
 }
 
 export type TipoPlano = "pgp" | "plano-trabalho";
@@ -70,53 +73,53 @@ const CONVENCAO_DO_APP =
   /^(?:r\d{1,3}|id|n[oº°]|duracao 0|0 dias|codigo (?:da )?eap|a definir pelo gp|m\d|sm-\d+|cr-)$/;
 
 /**
- * Sinônimos que valem como o sinal do item (decisão 0033, item 5): o plano de trabalho escreve de outro jeito o
- * que o PGP chama de lista de relatórios, lista da equipe, métricas ou estimativa de custos.
+ * Sinônimos que valem como o sinal de itens certos (decisão 0033, item 5): o plano de trabalho escreve de outro
+ * jeito a lista de relatórios, a lista da equipe, as métricas e a estimativa de custos. Tabela por código do item,
+ * para não valer em item que só cita a mesma palavra (revisão independente da fase).
  */
-const SINONIMOS_DO_ITEM: [RegExp, string[]][] = [
-  [
-    /relat[oó]rio/i,
-    ["relatórios trimestrais", "relatórios mensais", "relatórios semestrais", "relatório final"],
-  ],
-  [/equipe/i, ["equipe responsável", "equipe técnica", "equipe do projeto"]],
-  [/m[eé]tric|indicador/i, ["quadro de metas e indicadores", "metas e indicadores", "meios de aferição"]],
-  [/estimativa|custo/i, ["composição do custo", "composição dos custos", "memória de cálculo"]],
-];
+const SINONIMOS_DO_ITEM: Record<string, string[]> = {
+  "A7.10": ["relatórios trimestrais", "relatórios mensais", "relatórios semestrais", "relatório final"],
+  "B18.1": ["equipe responsável", "equipe técnica", "equipe do projeto"],
+  "B20.1": ["quadro de metas e indicadores", "metas e indicadores", "meios de aferição"],
+  "B6.1": ["composição do custo", "composição dos custos", "memória de cálculo"],
+  "B6.2": ["composição do custo", "composição dos custos", "memória de cálculo"],
+};
 
 /** Texto padrão de proteção de dados e sigilo: cláusula de modelo, não compromisso vago do plano. */
 const TEXTO_PADRAO = /\blgpd\b|\b13\.709\b|\bdados pessoais\b|\bconfidencialidade\b|\bsigilo\b/;
-/** Referência a item ou cláusula do edital ou do termo: o prazo está lá. */
+/** O plano adia o prazo para o item do edital ou do termo ("conforme o item 7.2"); citação de fonte entre parênteses não conta. */
 const REFERENCIA_A_ITEM =
-  /\b(?:item|subitem|cl[aá]usula|art\.?|artigo)\s*\d|\b(?:conforme|previsto|nos termos d)[oa]?\s+(?:o |a )?(?:edital|termo)\b/;
-/** Compromisso do plano: obrigação, prazo, entrega ou rotina de gestão (revisão, atualização, reunião, relatório). */
+  /\b(?:conforme|nos termos d[oa]|previsto n[oa]|de acordo com|segundo)\s+(?:o |a )?(?:item|subitem|cl[aá]usula|art\.?|artigo)\s*\d|\b(?:conforme|previsto|nos termos d)[oa]?\s+(?:o |a )?(?:edital|termo)\b/;
+/** Compromisso do plano: obrigação, prazo, entrega, rotina de gestão, equipe ou metas. */
 const OBRIGACAO_PRAZO_OU_ENTREGA =
-  /\b(?:deve|devem|devera|deverao|obrigad[ao]s?|compete|cabera)\b|\bprazos?\b|\bentreg\w*|\bapresent\w*|\b(?:revist|revis[aã]o|revisad|atualiz|reuni|relat[oó]rio|cronograma|premissa|registro|monitora)\w*/;
+  /\b(?:deve|devem|devera|deverao|obrigad[ao]s?|compete|cabera)\b|\bprazos?\b|\bentreg\w*|\bapresent\w*|\b(?:revist|revis[aã]o|revisad|atualiz|reuni|relat[oó]rio|cronograma|premissa|registro|monitora|substitu|ajust|metas?|equipe|profissiona)\w*/;
+/** Descrição de atividade oferecida ao público: o que o projeto faz para os participantes. */
+const ATIVIDADE_PARA_O_PUBLICO =
+  /\b(?:acesso a|orientac[aã]o|atendimento|encaminhamento|oficinas?|benefici\w*|participantes|familias|usuarios|publico)\b/;
 
 /**
- * Vago que não pesa no plano (decisão 0033, item 5): texto padrão de LGPD e sigilo; "oportunamente" com
- * referência a item do edital; descrição de atividade sem obrigação, prazo nem entrega ("acesso a microcrédito,
- * quando necessário").
+ * Vago que não pesa no plano (decisão 0033, item 5), olhando só a frase da ocorrência: texto padrão de LGPD e
+ * sigilo; "oportunamente" com referência a item do edital; descrição de atividade para o público, sem compromisso
+ * de quem executa ("acesso a microcrédito, quando necessário").
  */
-export function vagoQueNaoPesa(padrao: string, o: { trecho: string }): boolean {
-  const t = normalizarTermo(o.trecho);
+export function vagoQueNaoPesa(padrao: string, o: { frase: string }): boolean {
+  const t = normalizarTermo(o.frase);
   if (TEXTO_PADRAO.test(t)) return true;
   if (padrao === "oportunamente" && REFERENCIA_A_ITEM.test(t)) return true;
-  // descrição de atividade para o público ("acesso a microcrédito, quando necessário"): sem compromisso do plano
   if (padrao === "quando-necessario" || padrao === "se-for-o-caso")
-    return !OBRIGACAO_PRAZO_OU_ENTREGA.test(t);
+    return ATIVIDADE_PARA_O_PUBLICO.test(t) && !OBRIGACAO_PRAZO_OU_ENTREGA.test(t);
   return false;
 }
 
-export function sinaisParaOutroPlano(item: { texto: string; termos: string[]; compostos: string[][] }): {
-  termos: string[];
-  compostos: string[][];
-} {
-  const valeNoOutroPlano = (t: string) => !CONVENCAO_DO_APP.test(normalizarTermo(t));
+export function sinaisParaOutroPlano(
+  item: { codigo: string; termos: string[]; compostos: string[][] },
+  planoDaFerramenta = false,
+): { termos: string[]; compostos: string[][] } {
+  // no plano que a própria ferramenta gerou (autoconferência da etapa 4), as convenções dela valem
+  const valeNoOutroPlano = (t: string) => planoDaFerramenta || !CONVENCAO_DO_APP.test(normalizarTermo(t));
   const termos = item.termos.filter(valeNoOutroPlano);
   // só ganha sinônimo o item que já tinha sinal de verdade: o sinônimo amplia, não cria a busca
-  const extras = termos.length
-    ? SINONIMOS_DO_ITEM.filter(([re]) => re.test(item.texto)).flatMap(([, s]) => s)
-    : [];
+  const extras = termos.length ? (SINONIMOS_DO_ITEM[item.codigo] ?? []) : [];
   return {
     termos: [...new Set([...termos, ...extras])],
     compostos: item.compostos.filter((c) => c.every(valeNoOutroPlano)),
@@ -267,11 +270,12 @@ export function conferirPlano(e: EntradaConferencia): ResultadoConferencia {
         verificacoes.push({
           ...base,
           estado: "nao-conferido",
-          detalhe: "Conferido por comparação (prazos e marcos), não por busca de palavra.",
+          detalhe:
+            "Item de comparação (prazos e marcos): não é conferido por busca de palavra, e a comparação ainda não está no código.",
         });
         continue;
       }
-      const sinais = sinaisParaOutroPlano(item);
+      const sinais = sinaisParaOutroPlano(item, e.planoDaFerramenta);
       if (!sinais.termos.length && !sinais.compostos.length) {
         verificacoes.push({
           ...base,
@@ -468,7 +472,8 @@ export function conferirPlano(e: EntradaConferencia): ResultadoConferencia {
   // ---------- vago ----------
   for (const padrao of PADROES_VAGO) {
     for (const o of procurarPadrao(e.pgp, padrao.re)) {
-      if (vagoQueNaoPesa(padrao.id, o)) continue;
+      const texto = e.pgp.find((p) => p.numero === o.pagina)?.texto ?? "";
+      if (vagoQueNaoPesa(padrao.id, { frase: fraseEmVolta(texto, o.posicao) })) continue;
       const parte = parteDaPosicao(o.pagina, o.posicao, e.mapa) ?? SEM_PARTE;
       registrar({
         tipo: "vago",
@@ -485,7 +490,7 @@ export function conferirPlano(e: EntradaConferencia): ResultadoConferencia {
 
   // ---------- conflituoso: texto de outro documento (CP8) ----------
   // "deste edital" num plano de trabalho que responde ao edital é citação, não texto copiado de outro documento
-  const respondeAoEdital = e.tipoPlano === "plano-trabalho" || Boolean(e.rfp);
+  const respondeAoEdital = e.tipoPlano === "plano-trabalho";
   for (const o of procurarPadrao(e.pgp, TEXTO_DE_OUTRO_DOCUMENTO)) {
     if (respondeAoEdital && /edital/.test(o.termo)) continue;
     const parte = parteDaPosicao(o.pagina, o.posicao, e.mapa) ?? SEM_PARTE;

@@ -109,7 +109,7 @@ export function encontrarTitulos(paginas: PaginaLida[], partes: Ficha[]): Titulo
  * aquisições (A9), que trata de comprar bens e serviços de terceiros (decisão 0033, item 5).
  */
 const CONTEXTO_QUE_NAO_CONTA: Record<string, RegExp> = {
-  A9: /\bclt\b|celetist|carteira assinada|\bselec[aã]o d[eoa]s? (?:agentes|pessoal|profissionais|equipe|bolsistas)|\bcontrata[cç][aã]o d[eoa]s? (?:pessoal|equipe|profissionais|agentes|bolsistas|recursos humanos)|recursos humanos|\bfolha de pagamento/i,
+  A9: /\bclt\b|celetist|carteira assinada|\bsele[cç][aã]o d[eoa]s? (?:agentes|pessoal|profissionais|equipe|bolsistas)|\bcontrata[cç][aã]o d[eoa]s? (?:pessoal|equipe|profissionais|agentes|bolsistas|recursos humanos)|recursos humanos|\bfolha de pagamento/i,
 };
 
 function achadoQueConta(paginas: PaginaLida[], parte: Ficha, item: Ficha["itens"][number]): boolean {
@@ -219,8 +219,9 @@ export const PARTES_SO_DO_PGP = [
 export const JUSTIFICATIVA_PLANO_DE_TRABALHO = "não se aplica a plano de trabalho";
 
 /**
- * Troca o tipo do plano. No plano de trabalho, as partes só do PGP ficam dispensadas com a justificativa padrão;
- * de volta ao PGP completo, as que tinham essa justificativa voltam à proposta do código.
+ * Troca o tipo do plano. No plano de trabalho, as partes só do PGP ficam dispensadas com a justificativa padrão; de
+ * volta ao PGP completo, só as que têm essa justificativa voltam à proposta do código. Parte que o GP confirmou ou
+ * dispensou com justificativa própria (inclusive a dispensa da etapa 4) não muda.
  */
 export function aplicarTipoPlano(
   mapa: ParteConfirmada[],
@@ -231,19 +232,20 @@ export function aplicarTipoPlano(
   const inicial = new Map(confirmacaoInicial(proposta).map((p) => [p.codigo, p]));
   return mapa.map((p) => {
     if (!so.has(p.codigo)) return p;
-    if (tipo === "plano-trabalho")
-      return { codigo: p.codigo, situacao: "dispensada", justificativa: JUSTIFICATIVA_PLANO_DE_TRABALHO };
-    return p.justificativa === JUSTIFICATIVA_PLANO_DE_TRABALHO ? (inicial.get(p.codigo) ?? p) : p;
+    const nossa = p.situacao === "dispensada" && p.justificativa === JUSTIFICATIVA_PLANO_DE_TRABALHO;
+    if (tipo === "pgp") return nossa ? (inicial.get(p.codigo) ?? p) : p;
+    if (p.confirmadaPeloGp || (p.situacao === "dispensada" && !nossa)) return p;
+    return { codigo: p.codigo, situacao: "dispensada", justificativa: JUSTIFICATIVA_PLANO_DE_TRABALHO };
   });
 }
 
 /**
- * Mapa guardado × proposta atual do código: a parte que o GP não confirmou acompanha a proposta (o plano pode ter
- * sido trocado, ou o dossiê vir de outra versão). Parte confirmada pelo GP ou dispensada fica como está.
+ * O plano foi trocado (outro documento na caixa): o mapa guardado era de outro arquivo. Volta tudo à proposta do
+ * código, menos as partes dispensadas (pelo GP, pela etapa 4 ou pelo tipo de plano), que valem para o projeto e
+ * não para o arquivo. Num dossiê sem o id do plano (salvo antes desta versão), o mapa não é mexido: as decisões
+ * do GP ficam (revisão independente da fase).
  */
 export function sincronizarMapa(mapa: ParteConfirmada[], proposta: ParteNoMapa[]): ParteConfirmada[] {
   const inicial = new Map(confirmacaoInicial(proposta).map((p) => [p.codigo, p]));
-  return mapa.map((p) =>
-    p.confirmadaPeloGp || p.situacao === "dispensada" ? p : (inicial.get(p.codigo) ?? p),
-  );
+  return mapa.map((p) => (p.situacao === "dispensada" ? p : (inicial.get(p.codigo) ?? p)));
 }
