@@ -86,3 +86,4 @@ Confirmadas pelo GP na tela do mapa do PGP (etapa 5) ou na adaptação (etapa 4)
 | frentes | `uma frente` · `várias frentes` |
 | contratante | `contratante público` · `contratante privado` |
 | pagamento | `pagamento por produto` · `pagamento por medição` · `pagamento de outra forma` |
+| exposição (decisão 0043) | `estudo sensível` · `estudo comum` |

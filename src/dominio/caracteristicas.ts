@@ -12,6 +12,8 @@ export interface Caracteristicas {
   frentes: "uma" | "várias";
   contratante: "público" | "privado";
   pagamento: "por produto" | "por medição" | "de outra forma";
+  /** Estudo sensível: resultado lido por lados em disputa (CPI, comissão, órgão de controle; decisão 0043). */
+  exposicao: "sensível" | "comum";
 }
 
 /** Valores conservadores: com eles, quase nada é dispensado, e o GP ajusta na tela. */
@@ -26,6 +28,7 @@ export const CARACTERISTICAS_PADRAO: Caracteristicas = {
   frentes: "várias",
   contratante: "público",
   pagamento: "por produto",
+  exposicao: "sensível",
 };
 
 /** As expressões permitidas em "dispensa" e se cada uma vale para o projeto. */
@@ -55,7 +58,20 @@ export function expressoes(c: Caracteristicas): Record<string, boolean> {
     "pagamento por produto": c.pagamento === "por produto",
     "pagamento por medição": c.pagamento === "por medição",
     "pagamento de outra forma": c.pagamento === "de outra forma",
+    "estudo sensível": c.exposicao === "sensível",
+    "estudo comum": c.exposicao === "comum",
   };
+}
+
+/**
+ * Sugestão de estudo sensível (decisão 0043): na mesma página, um sinal forte de disputa ("CPI", "Comissão
+ * Parlamentar", "Comissão de Estudo", "denúncia") junto de impacto, avaliação ou recursos. "Tribunal de Contas" e
+ * "representação" ficam só para a leitura do PMO: aparecem em quase todo edital (certidões, cláusulas padrão).
+ */
+export function pareceEstudoSensivel(paginas: string[]): boolean {
+  const disputa = /\bCPI\b|comiss[aã]o parlamentar|comiss[aã]o de estudo|den[uú]ncia/i;
+  const assunto = /impacto|avalia[cç][aã]o|recursos aplicados|gest[aã]o dos recursos/i;
+  return paginas.some((p) => disputa.test(p) && assunto.test(p));
 }
 
 export type ResultadoDispensa = { dispensavel: boolean; motivo: string } | { erro: string };
