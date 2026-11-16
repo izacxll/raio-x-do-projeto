@@ -52,7 +52,7 @@ test("etapa 2 em demonstração: respostas gravadas, decisões do GP, contas e s
   expect(cabecalho).toContain(AVISO);
 
   const salvar = page.waitForEvent("download");
-  await page.getByRole("button", { name: /Salvar projeto/ }).click();
+  await page.getByRole("button", { name: /Salvar para continuar depois/ }).click();
   const dossie = JSON.parse(readFileSync(await (await salvar).path(), "utf-8"));
   expect(dossie.demonstracao).toBe(true);
 

@@ -22,7 +22,13 @@ import {
 } from "../../exportacao/relatorio-conformidade";
 import { procurarSinais } from "../../regras/busca";
 import { conferirPlano, resumirAchados } from "../../regras/conferencia";
-import { confirmacaoInicial, proporMapa, type ParteNoMapa } from "../../regras/mapa-pgp";
+import {
+  aplicarTipoPlano,
+  confirmacaoInicial,
+  proporMapa,
+  sincronizarMapa,
+  type ParteNoMapa,
+} from "../../regras/mapa-pgp";
 import { LeituraDoPmo } from "./leitura-pmo";
 import { conferirLeitura, type AchadoPmoConferido } from "../../etapas/5-conferencia/leitura-pmo";
 import { EtiquetaRotulo, RotuloSecao } from "../componentes/basicos";
@@ -99,7 +105,17 @@ function conferenciaInicial(
 export function ConferenciaPgp(props: Props) {
   const { dossie, guardarConferencia } = useDossie();
   const proposta = useMemo(() => proporMapa(props.pgp.paginas, PARTES_PGP), [props.pgp]);
-  const conf = dossie.conferencia ?? conferenciaInicial(props, proposta, dossie.analiseRfp, dossie.pgp);
+  // trocado o plano (outro documento na caixa), o mapa guardado era de outro arquivo e volta à proposta do código;
+  // num dossiê sem o id do plano, o mapa fica como o GP deixou
+  const guardada = dossie.conferencia;
+  const conf = useMemo(() => {
+    if (!guardada)
+      return { ...conferenciaInicial(props, proposta, dossie.analiseRfp, dossie.pgp), pgpId: props.pgp.id };
+    if (guardada.pgpId && guardada.pgpId !== props.pgp.id)
+      return { ...guardada, pgpId: props.pgp.id, mapa: sincronizarMapa(guardada.mapa, proposta) };
+    return guardada.pgpId ? guardada : { ...guardada, pgpId: props.pgp.id };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [guardada, proposta, props.pgp.id]);
   const [executar, setExecutar] = useState(Boolean(dossie.conferencia?.executadaEm));
   const atualizar = (mudanca: Partial<Conferencia>) => guardarConferencia({ ...conf, ...mudanca });
 
@@ -116,6 +132,7 @@ export function ConferenciaPgp(props: Props) {
             caracteristicas: conf.caracteristicas,
             premissasAplicaveis: conf.premissasAplicaveis,
             requisitos: conf.requisitos,
+            tipoPlano: conf.tipoPlano,
           })
         : null,
     [
@@ -127,6 +144,7 @@ export function ConferenciaPgp(props: Props) {
       conf.caracteristicas,
       conf.premissasAplicaveis,
       conf.requisitos,
+      conf.tipoPlano,
     ],
   );
 
@@ -209,7 +227,10 @@ function MapaDoPlano({
 }) {
   const [mostrarTodas, setMostrarTodas] = useState(false);
   const mudar = (codigo: string, campos: Partial<Conferencia["mapa"][number]>) =>
-    atualizar({ mapa: conf.mapa.map((p) => (p.codigo === codigo ? { ...p, ...campos } : p)) });
+    atualizar({
+      mapa: conf.mapa.map((p) => (p.codigo === codigo ? { ...p, ...campos, confirmadaPeloGp: true } : p)),
+    });
+  const tipo = conf.tipoPlano ?? "pgp";
   const contagem = {
     presentes: conf.mapa.filter((p) => p.situacao === "presente").length,
     dispensadas: conf.mapa.filter((p) => p.situacao === "dispensada").length,
@@ -226,6 +247,28 @@ function MapaDoPlano({
         de cada achado depende deste mapa. Parte que não faz sentido para o projeto: marque <b>dispensada</b>,
         com a justificativa; ela não vira ausente.
       </p>
+      <div className="decisao" style={{ margin: "8px 0 12px" }}>
+        <EtiquetaRotulo rotulo="decisao-gp" />
+        <label>
+          <span className="lb">Tipo de plano</span>{" "}
+          <select
+            aria-label="Tipo de plano"
+            value={tipo}
+            onChange={(e) => {
+              const novo = e.target.value as "pgp" | "plano-trabalho";
+              atualizar({ tipoPlano: novo, mapa: aplicarTipoPlano(conf.mapa, novo, proposta) });
+            }}
+          >
+            <option value="pgp">PGP completo</option>
+            <option value="plano-trabalho">Plano de trabalho / proposta</option>
+          </select>
+        </label>
+        <span className="texto-apoio">
+          {tipo === "plano-trabalho"
+            ? 'Configuração, linhas de base, calendários, previsões, lições aprendidas, documentos de teste, dados do cronograma e termo de nomeação vêm dispensados ("não se aplica a plano de trabalho"). Dá para reverter parte a parte.'
+            : "Todas as 51 partes do PGP contam."}
+        </span>
+      </div>
       <p className="resumo-leitura">
         <span>{contagem.presentes} presentes</span>·<span>{contagem.dispensadas} dispensadas</span>·
         <span>{contagem.naoExistem} não localizadas</span>

@@ -1,15 +1,20 @@
 // Tela de uma etapa, no fluxo comum da seção 5.0: documentos → leitura → resultado → revisão → exportar → salvar.
-// Na F0, o resultado é o mapa da leitura (o que o código leu de cada página). As regras e o PMO chegam nas fases
-// seguintes, cada etapa na sua.
-import { useRef, useState } from "react";
+// A leitura aparece só como uma linha por arquivo (páginas lidas), com aviso quando alguma página falha ou quando o
+// arquivo parece ser de outra caixa. O resultado de cada etapa vem das regras e do PMO.
+import { useMemo, useRef, useState } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
 import type { DocumentoLido } from "../../dossie/esquema";
 import { documentosDoPapel, useDossie } from "../../dossie/store";
-import { buscarEtapa, NOME_PAPEL, type DocumentoPedido, type Etapa } from "../../etapas/etapas";
-import { exportar, type FormatoExportacao } from "../../exportacao/exportar";
-import { montarRelatorioLeitura, NOME_ORIGEM } from "../../exportacao/relatorio-leitura";
+import {
+  buscarEtapa,
+  NOME_PAPEL,
+  type DocumentoPedido,
+  type Etapa,
+  type PapelDocumento,
+} from "../../etapas/etapas";
 import { resumirLeitura, type Progresso } from "../../leitura/ler-documento";
-import { EtiquetaRotulo, LegendaRotulos, RotuloSecao, Titulo } from "../componentes/basicos";
+import { caixaParece } from "../../leitura/tipo-documento";
+import { LegendaRotulos, RotuloSecao, Titulo } from "../componentes/basicos";
 import { BotaoDemonstracao } from "../componentes/demonstracao";
 import { AnaliseDaRfp } from "./analise-rfp";
 import { ConferenciaPgp } from "./conferencia";
@@ -23,8 +28,8 @@ const PASSOS = [
   "Leitura",
   "Resultado",
   "Revisão do GP",
-  "Exportar",
-  "Salvar o dossiê",
+  "Exportar os relatórios",
+  "Salvar para continuar depois",
 ];
 
 function Trilho({ etapa }: { etapa: Etapa }) {
@@ -114,6 +119,18 @@ interface EstadoLeitura {
   progresso: Progresso | null;
 }
 
+/** Aviso quando o arquivo parece ser de outra caixa (proposta na do PGP, termo de referência na do TAP). */
+function AvisoDeCaixa({ papel, documento }: { papel: PapelDocumento; documento: DocumentoLido }) {
+  const aviso = useMemo(() => caixaParece(papel, documento.paginas), [papel, documento.paginas]);
+  if (!aviso) return null;
+  return (
+    <p className="envio__obs envio__obs--aviso" role="status" data-testid={`aviso-caixa-${papel}`}>
+      Este arquivo parece ser <b>{aviso.comoFrase}</b> (p. {aviso.pagina}: "{aviso.linha}"). A caixa costuma
+      ser "{NOME_PAPEL[aviso.caixaSugerida]}". Se está certo assim, siga: quem decide é o GP.
+    </p>
+  );
+}
+
 function EnvioDocumento({ pedido }: { pedido: DocumentoPedido }) {
   const { dossie, guardarDocumento, removerDocumento } = useDossie();
   const [lendo, setLendo] = useState<EstadoLeitura | null>(null);
@@ -179,14 +196,24 @@ function EnvioDocumento({ pedido }: { pedido: DocumentoPedido }) {
       {lidos.map((d) => {
         const r = resumirLeitura(d.paginas);
         return (
-          <div key={d.id} className="envio__arquivo">
-            <span title={d.nomeArquivo}>
-              {d.nomeArquivo} · {d.totalPaginas} p.
-              {r.naoVerificaveis.length ? ` · ${r.naoVerificaveis.length} não verificáveis` : ""}
-            </span>
-            <button className="botao botao--discreto" type="button" onClick={() => removerDocumento(d.id)}>
-              Remover
-            </button>
+          <div key={d.id}>
+            <div className="envio__arquivo" data-testid={`lido-${pedido.papel}`}>
+              <span title={d.nomeArquivo}>{d.nomeArquivo}</span>
+              <span className="envio__paginas">
+                {d.totalPaginas} {d.totalPaginas === 1 ? "página lida" : "páginas lidas"}
+              </span>
+              <button className="botao botao--discreto" type="button" onClick={() => removerDocumento(d.id)}>
+                Remover
+              </button>
+            </div>
+            {r.naoVerificaveis.length > 0 && (
+              <p className="envio__obs envio__obs--aviso" role="status">
+                {r.naoVerificaveis.length === 1 ? "A página" : "As páginas"} {r.naoVerificaveis.join(", ")}{" "}
+                {r.naoVerificaveis.length === 1 ? "não pôde ser lida" : "não puderam ser lidas"}: o que
+                estiver nelas não é tratado como ausente. Conferir no documento.
+              </p>
+            )}
+            <AvisoDeCaixa papel={pedido.papel} documento={d} />
           </div>
         );
       })}
@@ -248,127 +275,12 @@ function EnvioDocumento({ pedido }: { pedido: DocumentoPedido }) {
   );
 }
 
-function MapaLeitura({ documento }: { documento: DocumentoLido }) {
-  const r = resumirLeitura(documento.paginas);
-  return (
-    <div className="cartao cartao--borda bloco">
-      <div className="cartao__corpo">
-        <span className="lb">{NOME_PAPEL[documento.papel]}</span>
-        <h3 style={{ margin: "4px 0 8px", color: "var(--navy950)" }}>{documento.nomeArquivo}</h3>
-        <div className="resumo-leitura" style={{ marginBottom: 12 }}>
-          <span>{documento.totalPaginas} páginas:</span>
-          <span>{r.texto} com texto do PDF</span>·<span>{r.ocr} por OCR</span>·
-          <span>{r.naoVerificaveis.length} não verificáveis</span>
-          {r.comImagem.length > 0 && (
-            <>
-              ·<span>{r.comImagem.length} com figura ou tabela em imagem</span>
-            </>
-          )}
-        </div>
-        {r.naoVerificaveis.length > 0 && (
-          <div className="aviso aviso--pmo">
-            <p>
-              <b>Páginas não verificáveis: {r.naoVerificaveis.join(", ")}.</b> O código não conseguiu ler o
-              texto delas. O que estiver nessas páginas não é tratado como ausente: conferir no documento.
-            </p>
-          </div>
-        )}
-        <div className="mapa">
-          <table className="tabela">
-            <thead>
-              <tr>
-                <th>Página</th>
-                <th>Como foi lida</th>
-                <th>Caracteres</th>
-                <th>Texto lido pelo código</th>
-              </tr>
-            </thead>
-            <tbody>
-              {documento.paginas.map((p) => (
-                <tr key={p.numero} data-origem={p.origem}>
-                  <td>{p.numero}</td>
-                  <td>
-                    <span className={`origem origem--${p.origem}`}>{NOME_ORIGEM[p.origem]}</span>
-                    {p.origem === "ocr" && <div>confiança {p.confiancaOcr}%</div>}
-                    {p.temImagem && p.origem === "texto" && <div>tem imagem</div>}
-                  </td>
-                  <td>{p.caracteres}</td>
-                  <td>
-                    {p.motivo && <div>{p.motivo}. Conferir no documento.</div>}
-                    {p.texto.trim() && (
-                      <details>
-                        <summary>
-                          <EtiquetaRotulo rotulo="documento" pagina={p.numero} /> ver o texto
-                        </summary>
-                        <pre className="texto-pagina">{p.texto}</pre>
-                      </details>
-                    )}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function Exportar({ documentos }: { documentos: DocumentoLido[] }) {
-  const dossie = useDossie((s) => s.dossie);
-  const [mensagem, setMensagem] = useState("");
-  const [ocupado, setOcupado] = useState(false);
-
-  async function baixar(formato: FormatoExportacao) {
-    setOcupado(true);
-    setMensagem("");
-    try {
-      const doc = montarRelatorioLeitura({ ...dossie, documentos });
-      const nome = await exportar(doc, formato, "relatorio-de-leitura");
-      setMensagem(`Arquivo gerado: ${nome}`);
-    } catch (e) {
-      setMensagem(`Não foi possível gerar o arquivo: ${e instanceof Error ? e.message : String(e)}`);
-    } finally {
-      setOcupado(false);
-    }
-  }
-
-  return (
-    <div className="cartao cartao__corpo">
-      <p className="texto-apoio">
-        <b>Relatório de leitura</b>: o que o código leu de cada PDF desta etapa, página a página. Sai com o
-        cabeçalho de minuta enquanto houver item pendente de revisão.
-      </p>
-      <div className="acoes-exportar">
-        {(["docx", "pdf", "xlsx"] as const).map((f) => (
-          <button
-            key={f}
-            className="botao"
-            type="button"
-            disabled={ocupado || !documentos.length}
-            onClick={() => void baixar(f)}
-          >
-            Baixar {f.toUpperCase()}
-          </button>
-        ))}
-        {mensagem && (
-          <span aria-live="polite" className="envio__obs">
-            {mensagem}
-          </span>
-        )}
-      </div>
-    </div>
-  );
-}
-
 export function TelaEtapa() {
   const { numero } = useParams();
   const dossie = useDossie((s) => s.dossie);
   const etapa = buscarEtapa(Number(numero));
   if (!etapa) return <Navigate to="/" replace />;
 
-  const papeis = new Set(etapa.documentos.map((d) => d.papel));
-  const documentos = dossie.documentos.filter((d) => papeis.has(d.papel));
   const primeiro = (papel: string) => dossie.documentos.find((d) => d.papel === papel);
   const pgp = primeiro("pgp");
   const tap = primeiro("tap");
@@ -405,15 +317,6 @@ export function TelaEtapa() {
               <EnvioDocumento key={d.papel} pedido={d} />
             ))}
           </div>
-        </section>
-
-        <section className="bloco">
-          <RotuloSecao>Resultado da leitura</RotuloSecao>
-          {documentos.length ? (
-            documentos.map((d) => <MapaLeitura key={d.id} documento={d} />)
-          ) : (
-            <p className="texto-apoio">Nenhum documento lido ainda.</p>
-          )}
         </section>
 
         {etapa.numero === 1 &&
@@ -471,11 +374,6 @@ export function TelaEtapa() {
               <p className="texto-apoio">Envie o PGP para conferir.</p>
             </section>
           ))}
-
-        <section className="bloco">
-          <RotuloSecao>Relatório de leitura</RotuloSecao>
-          <Exportar documentos={documentos} />
-        </section>
 
         <LegendaRotulos />
       </main>

@@ -66,7 +66,7 @@ export function montarRelatorioConformidade(
       },
     },
     {
-      titulo: "Achados, do mais grave ao menos grave",
+      titulo: "Achados: premissas críticas, conflitos, ausentes e vagos",
       tabela: {
         colunas: [
           "Nº",

@@ -1,8 +1,8 @@
-# 0032 — Leitura opcional do PMO na etapa 1 (proposta)
+# 0032 — Leitura opcional do PMO na etapa 1
 
 - **Data:** 16/11/2026
-- **Status:** proposta (aguarda o ok da responsável pelo projeto: muda o princípio "etapa 1 só com código")
-- **Quem decidiu:** a decidir pela responsável pelo projeto; proposta do Claude Code
+- **Status:** aceita em 16/11/2026, com os ajustes abaixo (muda o princípio "etapa 1 só com código")
+- **Quem decidiu:** responsável pelo projeto, sobre a proposta do Claude Code
 
 ## Contexto
 
@@ -67,3 +67,24 @@ Como na F2 a F5b:
 - Muda o princípio "etapa 1 só com código" para "etapa 1 com código, e leitura do PMO opcional". O CLAUDE.md (seção 2) e a decisão 0013 precisam dizer isso.
 - A etapa 1 continua funcionando sem chave, inteira.
 - Ordem sugerida: primeiro o sprint de regras (v0.8.x, sem mudança de princípio), depois esta fase (F1b), com a comparação do gabarito antes e depois.
+
+## Ajustes da responsável (16/11/2026)
+
+- **Catálogo antes do sprint:** o catálogo das regras das etapas 1 e 5 em `docs/regras-etapas-1-e-5.md`. Para cada regra:
+  - o que confere;
+  - os termos procurados;
+  - em que parte;
+  - se é busca de palavra ou comparação;
+  - o que gera, e com que gravidade;
+  - o arquivo e a linha.
+
+  Fica marcada "a revisar" a regra que cai nos padrões do teste da responsável: convenções do app, sinal em qualquer lugar, termos genéricos, ou sem distinguir licitação de parceria nem PGP de plano de trabalho. O PR do catálogo não muda nenhuma regra: a responsável revisa antes, com a skill PMO.
+- **Sprint de regras:**
+  - começa pelas três de maior ganho: documentação linha a linha, obrigações da parceira e prazos da minuta;
+  - cada regra nova roda nos 9 editais, sem piorar nenhum;
+  - um segundo gabarito, com a RFP da OEI;
+  - nada de implementar as 59 de uma vez.
+- **Leitura do PMO:** estudar o google/langextract e usar a ideia, não a biblioteca:
+  - exemplos no pedido, a partir dos gabaritos;
+  - citação ligada ao trecho;
+  - leitura em várias passadas para editais longos.

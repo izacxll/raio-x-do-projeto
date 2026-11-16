@@ -38,7 +38,9 @@ test("tela inicial mostra as cinco etapas, o logo e a legenda dos rótulos", asy
   expect(erros).toEqual([]);
 });
 
-test("etapa 1: lê PDF com texto, exporta DOCX, PDF e XLSX e salva o dossiê", async ({ page }) => {
+test("etapa 1: lê PDF com texto, mostra as páginas lidas numa linha e salva para continuar depois", async ({
+  page,
+}) => {
   const erros = vigiarErros(page);
   await page.goto("./#/etapa/1");
   await expect(page.getByRole("heading", { name: "Leitura da RFP" })).toBeVisible();
@@ -46,19 +48,16 @@ test("etapa 1: lê PDF com texto, exporta DOCX, PDF e XLSX e salva o dossiê", a
 
   await page.getByTestId("enviar-rfp").setInputFiles(TEXTO);
   await expect(page.locator(".envio__arquivo").first()).toContainText("credenciamento", { timeout: 60_000 });
-  await expect(page.locator(".tabela tbody tr").first()).toBeVisible();
-
-  for (const formato of ["DOCX", "PDF", "XLSX"]) {
-    const download = page.waitForEvent("download");
-    await page.getByRole("button", { name: `Baixar ${formato}` }).click();
-    const arquivo = await download;
-    expect(arquivo.suggestedFilename()).toBe(`teste-de-fumaca-relatorio-de-leitura.${formato.toLowerCase()}`);
-    const caminho = await arquivo.path();
-    expect(readFileSync(caminho).length).toBeGreaterThan(2000);
-  }
+  // a leitura é uma linha com as páginas lidas; sem tabela de leitura e sem relatório de leitura
+  await expect(page.getByTestId("lido-rfp")).toContainText("páginas lidas");
+  await expect(page.getByText("Resultado da leitura", { exact: true })).toHaveCount(0);
+  await expect(page.getByRole("button", { name: "Baixar DOCX" })).toHaveCount(0);
+  await expect(
+    page.getByText("Arquivo do app, para reabrir aqui. Para ler, use os relatórios."),
+  ).toBeVisible();
 
   const salvar = page.waitForEvent("download");
-  await page.getByRole("button", { name: /Salvar projeto/ }).click();
+  await page.getByRole("button", { name: /Salvar para continuar depois/ }).click();
   const dossie = await salvar;
   expect(dossie.suggestedFilename()).toBe("teste-de-fumaca.dossie.json");
   const conteudo = readFileSync(await dossie.path(), "utf8");
@@ -90,8 +89,14 @@ test("PDF escaneado passa pelo OCR, servido pelo próprio site", async ({ page }
   });
   await page.goto("./#/etapa/5");
   await page.getByTestId("enviar-pgp").setInputFiles(ESCANEADO);
-  await expect(page.locator(".origem--ocr").first()).toBeVisible({ timeout: 200_000 });
-  await expect(page.locator(".envio__arquivo")).toHaveCount(1, { timeout: 200_000 });
+  await expect(page.getByTestId("lido-pgp")).toContainText("páginas lidas", { timeout: 200_000 });
+  // sem tabela de leitura na tela: o OCR é conferido no dossiê salvo
+  const salvar = page.waitForEvent("download");
+  await page.getByRole("button", { name: /Salvar para continuar depois/ }).click();
+  const dossie = JSON.parse(readFileSync(await (await salvar).path(), "utf8")) as {
+    documentos: { paginas: { origem: string }[] }[];
+  };
+  expect(dossie.documentos[0]?.paginas.some((p) => p.origem === "ocr")).toBe(true);
   expect(deFora).toEqual([]);
   expect(erros).toEqual([]);
 });

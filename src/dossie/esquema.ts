@@ -96,6 +96,7 @@ export const ParteDoMapa = z.object({
   paginaFinal: z.number().int().positive().optional(),
   posicaoTitulo: z.number().int().nonnegative().optional(),
   justificativa: z.string().optional(),
+  confirmadaPeloGp: z.boolean().optional(),
 });
 
 export const RequisitoDossie = z.object({
@@ -147,6 +148,10 @@ export const DecisaoAchado = z.object({
 export type DecisaoAchado = z.infer<typeof DecisaoAchado>;
 
 export const Conferencia = z.object({
+  /** PGP completo (interno) ou plano de trabalho / proposta para o cliente (decisão 0033). */
+  tipoPlano: z.enum(["pgp", "plano-trabalho"]).optional(),
+  /** Id do documento do plano a que o mapa se refere: trocado o plano, o mapa volta à proposta do código. */
+  pgpId: z.string().optional(),
   caracteristicas: CaracteristicasProjeto,
   mapa: z.array(ParteDoMapa),
   premissasAplicaveis: z.record(z.string(), z.boolean()),

@@ -68,9 +68,19 @@ export function Cabecalho() {
             <button className="botao" type="button" onClick={() => entrada.current?.click()}>
               Abrir projeto
             </button>
-            <button className="botao botao--cheio" type="button" onClick={salvar}>
-              Salvar projeto{alterado ? " •" : ""}
-            </button>
+            <span>
+              <button
+                className="botao botao--cheio"
+                type="button"
+                onClick={salvar}
+                aria-describedby="dica-salvar"
+              >
+                Salvar para continuar depois{alterado ? " •" : ""}
+              </button>
+              <span id="dica-salvar" className="cabecalho__dica">
+                Arquivo do app, para reabrir aqui. Para ler, use os relatórios.
+              </span>
+            </span>
             <input
               ref={entrada}
               type="file"
