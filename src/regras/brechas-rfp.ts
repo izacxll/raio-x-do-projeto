@@ -79,6 +79,26 @@ const ELEICOES = [
   { nivel: "geral", nome: "eleições gerais", data: "2030-10-06" },
 ] as const;
 
+/** Quem a frase põe como sujeito: a própria administração (gestor, fiscal, comissão, órgão). */
+const RE_SUJEITO_ADMINISTRACAO =
+  /^(?:\d+(?:\.\d+)*\.?\s*|[a-z]\)\s*)?(?:compete (?:a|ao)\s+|cabe (?:a|ao)\s+)?(?:o|a|os|as)?\s*(?:gestor|gestora|fiscal|fiscais|administracao|contratante|comissao|secretaria|orgao|poder publico|municipio|prefeitura|concedente|parceira publica)\b/;
+
+/**
+ * Vago que não pede esclarecimento da proponente: o foro ("controvérsias eventualmente resultantes da
+ * execução") e a lista aberta de atribuições da própria administração ("o gestor terá, entre outras
+ * atribuições…"). Nos dois casos, a expressão não abre o escopo nem o prazo de quem executa.
+ */
+function vagoSemEfeito(padrao: string, o: Localizado): boolean {
+  const frase = tirarAcentos(o.frase);
+  if (padrao === "eventualmente" && /\bforo\b|\bdirimir\b|\bcontroversias\b/.test(frase)) return true;
+  if (padrao !== "entre-outros") return false;
+  const pagina = o.doc.paginas.find((p) => p.numero === o.pagina)?.texto ?? "";
+  const depois = tirarAcentos(pagina.slice(o.posicao, o.posicao + 60));
+  if (/^entre outr[oa]s\s+(?:atribuicoes|competencias|funcoes|prerrogativas|poderes)\b/.test(depois))
+    return true;
+  return RE_SUJEITO_ADMINISTRACAO.test(frase.trim());
+}
+
 function trecho(l: Localizado): ItemAnalise["origem"] {
   return { documento: l.doc.rotulo, pagina: l.pagina, trecho: l.frase };
 }
@@ -352,7 +372,11 @@ export function aplicarRegrasRfp(docs: DocumentoRfp[], mapa: MapaRfp): Resultado
     estado(
       "CE17",
       achou,
-      prazo ? "período de execução que cruza data de eleição" : "prazo de execução em número",
+      !prazo
+        ? "prazo de execução em número"
+        : !sessao
+          ? `data fixa do certame para contar o início da execução (o prazo foi localizado: ${prazo.valor}, ${prazo.loc.doc.rotulo}, p. ${prazo.loc.pagina}; sem a data, o cruzamento com a eleição não é feito)`
+          : "período de execução que cruza data de eleição",
     );
   }
 
@@ -437,7 +461,7 @@ export function aplicarRegrasRfp(docs: DocumentoRfp[], mapa: MapaRfp): Resultado
     );
     let achou = 0;
     for (const padrao of PADROES_VAGO) {
-      const ocorrencias = localizarTodos(docs, padrao.re, faixas);
+      const ocorrencias = localizarTodos(docs, padrao.re, faixas).filter((o) => !vagoSemEfeito(padrao.id, o));
       const porPagina = new Map<string, Localizado>();
       for (const o of ocorrencias) {
         const chave = `${o.doc.id}:${o.pagina}`;
