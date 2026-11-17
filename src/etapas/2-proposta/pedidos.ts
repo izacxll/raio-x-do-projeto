@@ -126,7 +126,7 @@ export function pedidoEap(
 2. volumes: o volume previsto (visitas, atendimentos, turmas) por faixa de meses, a unidade, a função que o executa e a fonte; com eles o código confere o quadro contra o teto de produtividade escrito no edital.
 3. atividades, horas: ${tipoProjeto === "hibrido" ? "só para os produtos" : "deixe vazias ([])"}; raci com o contratante como "A" nas validações (um só A por linha).`
     : `Consultoria por produtos:
-1. atividades: a EAP por produto (campo "produto" = id do produto do SOW), com predecessoras (ids) e duração em três pontos em dias úteis, cada uma com a base. Marque aprovacaoCliente nas atividades que terminam num produto que o contratante aprova. Não calcule datas, médias, caminho crítico nem totais.
+1. atividades: a EAP por produto (campo "produto" = id do produto do SOW), com predecessoras (ids) e duração em três pontos em dias úteis, cada uma com a base. Marque aprovacaoCliente nas atividades que terminam num produto que o contratante aprova (o código soma o tempo de aprovação depois); se a análise do contratante for uma atividade própria, marque analiseDoContratante nela e não aprovacaoCliente na entrega (o código troca a duração pelo tempo de aprovação do GP). Não calcule datas, médias, caminho crítico nem totais.
 2. perfis: os exigidos pela RFP (exigido: true, com fonte e número R) e os sugeridos. Nomes de pessoas nunca: são decisão do GP.
 3. horas: horas de cada perfil por atividade, em três pontos, com a base.
 4. raci: quem é R, A, C e I em cada atividade (um só A por linha). quadroEquipe e volumes ficam vazios ([]).`;

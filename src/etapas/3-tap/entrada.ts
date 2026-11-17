@@ -96,6 +96,7 @@ export function dadosDaProposta(
         inicio,
         inicioDoDocumento: fixo ? `${fixo.origem.documento}, p. ${fixo.origem.pagina}` : undefined,
         prazoRfp: ponto?.prazoExecucao,
+        feriados: p.parametros.feriados,
       })
     : undefined;
   const marcos = cronograma

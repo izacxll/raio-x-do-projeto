@@ -138,6 +138,7 @@ export function montarPropostaTecnica(
       aprovacaoDias: p.parametros.aprovacaoDias,
       inicio: p.parametros.inicio ? new Date(`${p.parametros.inicio}T00:00:00`) : undefined,
       prazoRfp: ponto.prazoExecucao,
+      feriados: p.parametros.feriados,
     });
     secoes.push({
       titulo: "Cronograma executivo (calculado pelo código)",

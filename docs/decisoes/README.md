@@ -46,6 +46,7 @@ Uma decisão por arquivo, numerada em ordem. Cada uma registra o contexto, o que
 | [0041](0041-etapa-3-pelo-metodo-m3.md) | Etapa 3 pelo método (M3): contrato assinado como entrada, divergências RFP × proposta × contrato primeiro (valor, parcelas, conformidade, duração, equipe, produtividade), divergências de texto do PMO, conferência pelo método | aceita |
 | [0048](0048-esqueleto-da-etapa-1-e-autoconferencia-no-codigo.md) | Esqueleto da etapa 1 corrigido (SMPED e TR de contratação direta), contratação direta no código, cruzamentos X1 a X6, citação fraca, autoconferência nos esquemas e o teste que reprova | aceita |
 | [0049](0049-leituras-gravadas-externas.md) | Leituras gravadas externas: evidência, nunca gabarito; fora do Git; o caso sem o nome da cidade | aceita |
+| [0051](0051-feriados-pacote-e-analise-do-contratante.md) | Feriados nacionais e municipais no cronograma, pacote da EAP obrigatório em cada atividade e a atividade de análise do contratante | aceita |
 
 Modelo para uma nova decisão:
 

@@ -77,22 +77,29 @@ export function soData(d: Date): Date {
   return new Date(d.getFullYear(), d.getMonth(), d.getDate());
 }
 
-export function ehDiaUtil(d: Date): boolean {
+/** Feriados que as contas de dias úteis descontam (o cronograma usa os nacionais e os municipais do GP). */
+export interface Calendario {
+  ehFeriado: (d: Date) => boolean;
+  /** "com os feriados nacionais…", para o texto da conta. */
+  descricao: string;
+}
+
+export function ehDiaUtil(d: Date, cal?: Calendario): boolean {
   const s = d.getDay();
-  return s !== 0 && s !== 6;
+  return s !== 0 && s !== 6 && !cal?.ehFeriado(d);
 }
 
 /**
- * Soma (ou subtrai, com n negativo) dias úteis. Conta só sábados e domingos como não úteis: feriados não
- * entram, e a tela pede ao GP para conferi-los.
+ * Soma (ou subtrai, com n negativo) dias úteis. Sem calendário, conta só sábados e domingos como não úteis (a tela
+ * pede ao GP para conferir os feriados); com ele, desconta também os feriados.
  */
-export function somarDiasUteis(d: Date, n: number): Date {
+export function somarDiasUteis(d: Date, n: number, cal?: Calendario): Date {
   const r = soData(d);
   const passo = n < 0 ? -1 : 1;
   let faltam = Math.abs(n);
   while (faltam > 0) {
     r.setDate(r.getDate() + passo);
-    if (ehDiaUtil(r)) faltam--;
+    if (ehDiaUtil(r, cal)) faltam--;
   }
   return r;
 }
@@ -104,9 +111,9 @@ export function somarDiasCorridos(d: Date, n: number): Date {
 }
 
 /** Dias úteis de `de` até `ate`, os dois incluídos (só sábados e domingos descontados: conferir feriados). */
-export function contarDiasUteis(de: Date, ate: Date): number {
+export function contarDiasUteis(de: Date, ate: Date, cal?: Calendario): number {
   let n = 0;
-  for (const d = soData(de); d <= soData(ate); d.setDate(d.getDate() + 1)) if (ehDiaUtil(d)) n++;
+  for (const d = soData(de); d <= soData(ate); d.setDate(d.getDate() + 1)) if (ehDiaUtil(d, cal)) n++;
   return n;
 }
 

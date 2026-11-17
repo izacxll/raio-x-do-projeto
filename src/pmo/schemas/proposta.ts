@@ -201,8 +201,13 @@ export const AtividadeEap = z.object({
    * a duração é conta do código (dias úteis da janela) e os três pontos não valem; sem ela, null.
    */
   restricaoData: z.object({ inicio: z.string(), fim: z.string(), fonte: FontePmo }).nullable().default(null),
-  /** Termina num produto que o contratante aprova: o código soma o tempo de aprovação. */
+  /** Termina num produto que o contratante aprova: o código soma o tempo de aprovação depois dela. */
   aprovacaoCliente: z.boolean(),
+  /**
+   * A atividade é a própria análise e aceite do contratante: com o tempo de aprovação do GP, o código troca a duração
+   * por ele (não soma por cima). Quem marca isto não marca aprovacaoCliente na entrega anterior.
+   */
+  analiseDoContratante: z.boolean().default(false),
   requisitos: z.array(z.string()),
 });
 export type AtividadeEap = z.infer<typeof AtividadeEap>;
