@@ -18,7 +18,7 @@ import {
   propostaInicial,
   requisitosCitadosForaDosItens,
 } from "../../src/etapas/2-proposta/proposta";
-import { RespostaConteudo, RespostaEap, RespostaEstrategia } from "../../src/pmo/schemas/proposta";
+import { LinhaRaci, RespostaConteudo, RespostaEap, RespostaEstrategia } from "../../src/pmo/schemas/proposta";
 import type { AtividadeEap, HorasPerfil, PerfilEquipe } from "../../src/pmo/schemas/proposta";
 import { lerRfpPublica } from "../ajudantes/rfp-publica";
 
@@ -34,8 +34,44 @@ const atv = (id: string, pred: string[], d: [number, number, number], aprov = fa
   nome: `Atividade ${id}`,
   predecessoras: pred,
   duracao: est(...d),
+  restricaoData: null,
   aprovacaoCliente: aprov,
   requisitos: [],
+});
+
+describe("EAP com data fixa, horas a definir e o contratante na RACI (issue da M2)", () => {
+  it("restrição de data: a duração é a janela em dias úteis, contada pelo código", () => {
+    const campo: AtividadeEap = {
+      ...atv("2", ["1"], [0, 0, 0]),
+      restricaoData: {
+        inicio: "08/11/2025",
+        fim: "07/01/2026",
+        fonte: { doc: "rfp", pagina: 1, trecho: "realizado no período de 08/11/2025 a 07/01/2026" },
+      },
+    };
+    const c = calcularCronograma([atv("1", [], [5, 5, 5]), campo]);
+    // 08/11/2025 (sábado) a 07/01/2026 (quarta): 15 em novembro, 23 em dezembro, 5 em janeiro = 43 dias úteis, sem feriados
+    expect(c.atividades.find((a) => a.id === "2")?.duracao).toBe(43);
+    expect(c.problemas.join(" ")).toMatch(/data fixa.*43 dias úteis/);
+  });
+
+  it("horas null não somam zero: viram pendência do GP", () => {
+    const perfis = [
+      { id: "ap", nome: "Aplicadores", exigido: false, qualificacao: "", requisito: "", fontes: [] },
+    ];
+    const p = calcularPreco(perfis, [{ atividade: "2", perfil: "ap", horas: null }], {
+      valoresHora: {},
+      despesas: [],
+    });
+    expect(p.faltando.join(" ")).toMatch(/horas de Aplicadores na atividade 2 \(decisão do GP\)/);
+  });
+
+  it("o contratante entra na RACI como parte, não como perfil da equipe", () => {
+    expect(
+      LinhaRaci.parse({ atividade: "1", perfil: "fiscal", papel: "C", parte: "contratante" }).parte,
+    ).toBe("contratante");
+    expect(LinhaRaci.parse({ atividade: "1", perfil: "economista", papel: "R" }).parte).toBe("equipe");
+  });
 });
 
 describe("cronograma (código)", () => {

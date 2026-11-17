@@ -103,6 +103,21 @@ export function somarDiasCorridos(d: Date, n: number): Date {
   return r;
 }
 
+/** Dias úteis de `de` até `ate`, os dois incluídos (só sábados e domingos descontados: conferir feriados). */
+export function contarDiasUteis(de: Date, ate: Date): number {
+  let n = 0;
+  for (const d = soData(de); d <= soData(ate); d.setDate(d.getDate() + 1)) if (ehDiaUtil(d)) n++;
+  return n;
+}
+
+/** Data escrita como dd/mm/aaaa ou aaaa-mm-dd (a restrição de data de uma atividade). */
+export function lerDataSimples(t: string): Date | undefined {
+  const br = /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/.exec(t.trim());
+  if (br) return new Date(Number(br[3]), Number(br[2]) - 1, Number(br[1]));
+  const iso = /^(\d{4})-(\d{2})-(\d{2})$/.exec(t.trim());
+  return iso ? new Date(Number(iso[1]), Number(iso[2]) - 1, Number(iso[3])) : undefined;
+}
+
 /** Dias corridos de `de` até `ate` (negativo se `ate` já passou). */
 export function diasEntre(de: Date, ate: Date): number {
   return Math.round((soData(ate).getTime() - soData(de).getTime()) / 864e5);

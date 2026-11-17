@@ -196,6 +196,11 @@ export const AtividadeEap = z.object({
   predecessoras: z.array(z.string()),
   /** Em dias úteis. */
   duracao: EstimativaTresPontos,
+  /**
+   * Restrição de data (evento, safra, ano letivo): início e fim fixos, como o documento traz (dd/mm/aaaa). Com ela,
+   * a duração é conta do código (dias úteis da janela) e os três pontos não valem; sem ela, null.
+   */
+  restricaoData: z.object({ inicio: z.string(), fim: z.string(), fonte: FontePmo }).nullable().default(null),
   /** Termina num produto que o contratante aprova: o código soma o tempo de aprovação. */
   aprovacaoCliente: z.boolean(),
   requisitos: z.array(z.string()),
@@ -216,14 +221,18 @@ export type PerfilEquipe = z.infer<typeof PerfilEquipe>;
 export const HorasPerfil = z.object({
   atividade: z.string(),
   perfil: z.string(),
-  horas: EstimativaTresPontos,
+  /** null quando as horas dependem de decisão do GP (produtividade, por exemplo): pendência, não zero. */
+  horas: EstimativaTresPontos.nullable(),
 });
 export type HorasPerfil = z.infer<typeof HorasPerfil>;
 
 export const LinhaRaci = z.object({
   atividade: z.string(),
+  /** Id do perfil da equipe; ou, com parte "contratante", o papel do contratante (fiscal, gestor, secretaria). */
   perfil: z.string(),
   papel: z.enum(["R", "A", "C", "I"]),
+  /** Quem é: a equipe da FGV ou o contratante (PROP-EQUIPE.7 pede o contratante na RACI). */
+  parte: z.enum(["equipe", "contratante"]).default("equipe"),
 });
 
 /** Quadro de equipe por função e faixa de meses (operação contínua): a base da folha e da produtividade. */

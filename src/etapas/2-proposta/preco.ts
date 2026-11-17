@@ -42,13 +42,19 @@ export interface Preco {
 
 const arred2 = (v: number) => Math.round(v * 100) / 100;
 
-/** Horas de um perfil numa atividade: PERT, com uma casa decimal. */
+/** Horas de um perfil numa atividade: PERT, com uma casa decimal; horas a definir pelo GP (null) não somam. */
 export function horasEsperadas(h: HorasPerfil): number {
+  if (!h.horas) return 0;
   return Math.round(duracaoEsperada(h.horas.otimista, h.horas.mais_provavel, h.horas.pessimista) * 10) / 10;
 }
 
 export function calcularPreco(perfis: PerfilEquipe[], horas: HorasPerfil[], par: ParametrosPreco): Preco {
   const faltando: string[] = [];
+  // horas que dependem de decisão do GP (produtividade): pendência, nunca zero na conta
+  for (const x of horas.filter((h) => !h.horas)) {
+    const nome = perfis.find((p) => p.id === x.perfil)?.nome ?? x.perfil;
+    faltando.push(`horas de ${nome} na atividade ${x.atividade} (decisão do GP)`);
+  }
   const linhas: LinhaPerfil[] = perfis.map((perfil) => {
     const h = horas.filter((x) => x.perfil === perfil.id).reduce((s, x) => s + horasEsperadas(x), 0);
     const total = Math.round(h * 10) / 10;

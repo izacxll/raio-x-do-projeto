@@ -5,7 +5,14 @@
 import type { DocumentoLido } from "../../dossie/esquema";
 import { citacaoValeComoFato, conferirCitacao } from "../../pmo/citacoes";
 import type { AtividadeEap, PrazoProduto, ProdutoSow } from "../../pmo/schemas/proposta";
-import { diasEntre, somarDiasUteis, soData, ehDiaUtil } from "../../texto/datas";
+import {
+  contarDiasUteis,
+  diasEntre,
+  ehDiaUtil,
+  lerDataSimples,
+  somarDiasUteis,
+  soData,
+} from "../../texto/datas";
 import type { PrazoEmDias } from "./ponto-de-partida";
 
 export interface AtividadeCalculada {
@@ -44,6 +51,14 @@ export interface Cronograma {
 
 export function duracaoEsperada(o: number, m: number, p: number): number {
   return (o + 4 * m + p) / 6;
+}
+
+/** Dias úteis da restrição de data da atividade (janela fixa, os dois dias incluídos), quando ela existe. */
+export function duracaoDaRestricao(a: AtividadeEap): number | undefined {
+  if (!a.restricaoData) return undefined;
+  const ini = lerDataSimples(a.restricaoData.inicio);
+  const fim = lerDataSimples(a.restricaoData.fim);
+  return ini && fim && fim >= ini ? contarDiasUteis(ini, fim) : undefined;
 }
 
 function validar(atividades: AtividadeEap[]): string[] {
@@ -120,7 +135,18 @@ export function calcularCronograma(atividades: AtividadeEap[], par: ParametrosCr
 
   const calc = new Map<string, AtividadeCalculada>();
   for (const a of ordem) {
-    const { otimista: o, mais_provavel: m, pessimista: p } = a.duracao;
+    const { otimista: o0, mais_provavel: m0, pessimista: p0 } = a.duracao;
+    // restrição de data (evento): a duração é conta do código, os dias úteis da janela fixa; os três pontos não valem
+    const fixa = duracaoDaRestricao(a);
+    if (a.restricaoData && fixa === undefined)
+      problemas.push(
+        `Atividade ${a.id}: restrição de data ilegível (${a.restricaoData.inicio} a ${a.restricaoData.fim}); use dd/mm/aaaa.`,
+      );
+    if (fixa !== undefined)
+      problemas.push(
+        `Atividade ${a.id} tem data fixa (${a.restricaoData?.inicio} a ${a.restricaoData?.fim}): ${fixa} dias úteis pela conta do código, sem feriados. Com o início do projeto informado, ela não começa antes da data fixa.`,
+      );
+    const [o, m, p] = fixa !== undefined ? [fixa, fixa, fixa] : [o0, m0, p0];
     const duracao = Math.ceil(duracaoEsperada(o, m, p) - 1e-9);
     const aprovacao = a.aprovacaoCliente ? (par.aprovacaoDias ?? 0) : 0;
     const inicio = Math.max(0, ...a.predecessoras.map((pr) => calc.get(pr)?.fimMaisCedo ?? 0));
