@@ -111,6 +111,36 @@ describe("brechas do ponto de partida: junção, proteções, destino e requisit
     expect(a10?.perguntaFinal).toMatch(/informar o prazo/);
   });
 
+  it("junta também com o número do item na frente do trecho, e pela página citada com o mesmo assunto", async () => {
+    const { juntarBrechas, idsDaBrecha } = await import("../../src/etapas/2-proposta/ponto-de-partida");
+    const trecho = "O não cumprimento em tempo hábil da Ordem de Serviço acarretará notificação";
+    const prazo = ponto("brechas:vago:rfp:5", trecho);
+    const campo = {
+      ...ponto("brechas:CTR2-campo:19", "Não será permitida subcontratação do objeto"),
+      origem: { documento: "RFP", pagina: 19, trecho: "Não será permitida subcontratação do objeto" },
+      nome: "O documento veda a subcontratação e prevê atividade de campo",
+      texto: "O documento veda a subcontratação e prevê atividade de campo pela equipe.",
+    };
+    const a10 = ponto("etapa-1:a10", `3.6. ${trecho}`, "Ordem de serviço em tempo hábil");
+    const a4 = {
+      ...ponto("etapa-1:a4", "a equipe aplica a pesquisa", "Pesquisa de campo × quem pode atuar"),
+      texto: "A vedação de subcontratação pode alcançar a atividade de campo.",
+      nota: "Também nas p. 19.",
+    };
+    const outroComA19 = {
+      ...a4,
+      id: "etapa-1:a9",
+      nome: "Outro ponto",
+      texto: "Subcontratação e campo, de novo.",
+    };
+    const r = juntarBrechas([prazo, campo], [a10, a4, outroComA19]);
+    expect(r.map((b) => b.id)).toEqual(["etapa-1:a10", "etapa-1:a4", "etapa-1:a9"]);
+    expect(idsDaBrecha(r[0]!)).toEqual(["etapa-1:a10", "brechas:vago:rfp:5"]);
+    expect(idsDaBrecha(r[1]!)).toEqual(["etapa-1:a4", "brechas:CTR2-campo:19"]);
+    // a brecha do código entra num ponto só
+    expect(r[2]?.junta).toBeUndefined();
+  });
+
   it("só o pedido da estratégia pede destino para cada brecha", async () => {
     const docs = [documentoLido(PAGINAS)];
     const p = montarPontoDePartida(docs, undefined, HOJE);

@@ -16,7 +16,8 @@ export interface QuestaoDoCodigo {
 export function questoesDoCodigo(e: EntradaPgp): QuestaoDoCodigo[] {
   const daEtapa1 = e.ponto.brechas
     .filter((b) => b.perguntaFinal.trim())
-    .map((b) => ({ origem: b.id, texto: b.perguntaFinal.trim() }));
+    // o ponto que juntou a brecha do código do mesmo assunto leva as duas origens ("etapa-1:a4 + brechas:…")
+    .map((b) => ({ origem: [b.id, ...(b.junta ?? [])].join(" + "), texto: b.perguntaFinal.trim() }));
   const doTap = (e.divergenciasTapPendentes ?? []).map((d) => ({ origem: d.id, texto: d.texto }));
   return [...daEtapa1, ...doTap].map((x, k) => ({ ...x, numero: `QU-${String(k + 1).padStart(2, "0")}` }));
 }
