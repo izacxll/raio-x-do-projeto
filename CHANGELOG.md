@@ -36,6 +36,10 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 - **Vago:** "a definir pelo GP" e item de decisão do GP não são vago (viram a verificação de decisões pendentes); expressão do documento citada entre aspas não é vago.
 - **Autoconferência da etapa 4:** item marcado pelo PMO vale quando o código confere o id (existe, está na parte e não foi descartado).
 - **Pedido externo da etapa 5 com `--plano dossie`:** o PGP da etapa 4 montado pelo app, gravado também em DOCX.
+- **Etapa 5 com o TAP do dossiê:** sem TAP em PDF, a conferência usa o TAP da etapa 3 (como a etapa 4).
+- **Busca dos sinais com singular e plural** ("feriados municipais" acha "feriado municipal").
+- **Autoconferência:** item presente só pela marca do PMO sai como verificação própria ("presente pela marca do PMO, redação a conferir"), com a lista.
+- **Brechas do código juntadas ao ponto da leitura** também com o número do item na frente do trecho e pela página citada com o mesmo assunto; cada brecha entra num ponto só, e a questão do B9 leva as duas origens.
 
 ### Fase M3 — etapa 3 pelo método (decisão 0041)
 - **Testar sem a chave:** `npm run exportar-pedido` grava, fora do Git, o pedido de um passo do PMO exatamente como iria à API (sistema, mensagem com os PDFs e o esqueleto, schema), para o Claude do claude.ai responder; `npm run importar-resposta` valida a resposta, grava no dossiê, roda as travas e mede contra o gabarito numa seção "leitura independente". Por ora, a etapa 1.

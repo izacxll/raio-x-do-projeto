@@ -24,7 +24,7 @@ import {
   rastrear,
 } from "../../src/etapas/4-pgp/calculos";
 import { alertasDeDataFixa } from "../../src/exportacao/relatorio-pgp";
-import { montarEntradaPgp, type EntradaPgp } from "../../src/etapas/4-pgp/entrada";
+import { montarEntradaPgp, tapDoDossieComoDocumento, type EntradaPgp } from "../../src/etapas/4-pgp/entrada";
 import { PEDIDOS_PGP } from "../../src/etapas/4-pgp/pedidos";
 import { PASSOS_PGP } from "../../src/etapas/4-pgp/passos";
 import {
@@ -529,5 +529,15 @@ describe("registro das questões (B9) montado pelo código", () => {
     expect(c.linhas[0]?.itens).toEqual(["b9-2"]);
     expect(c.semItem).toEqual(["QU-02"]);
     expect(c.semOrigem).toEqual(["QU-09"]);
+  });
+});
+
+describe("TAP do dossiê como documento (etapas 4 e 5)", () => {
+  it("sem TAP em PDF, vira documento; com o PDF, vale o PDF", () => {
+    const doc = tapDoDossieComoDocumento(dossie);
+    expect(doc?.papel).toBe("tap");
+    expect(doc?.paginas.length).toBeGreaterThan(3);
+    const comPdf: Dossie = { ...dossie, documentos: [...dossie.documentos, { ...doc!, id: "tap-pdf" }] };
+    expect(tapDoDossieComoDocumento(comPdf)).toBeUndefined();
   });
 });

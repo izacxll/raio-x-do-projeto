@@ -12,6 +12,20 @@ export type FonteDocumento = "pdf" | "dossie" | "nenhuma";
 
 export const NOME_TAP_DO_DOSSIE = "TAP da etapa 3 (dossiê)";
 
+/**
+ * O TAP da etapa 3 como documento "lido" (uma página por seção), quando não há TAP em PDF no dossiê. É o que as
+ * etapas 4 e 5 citam e conferem.
+ */
+export function tapDoDossieComoDocumento(dossie: Dossie): DocumentoLido | undefined {
+  if (dossie.documentos.some((d) => d.papel === "tap") || !dossie.tap?.tap) return undefined;
+  return documentoDeExportavel(montarTap(dossie, new Date(dossie.criadoEm)), {
+    id: "tap-do-dossie",
+    papel: "tap",
+    nomeArquivo: NOME_TAP_DO_DOSSIE,
+    lidoEm: dossie.tap.tap.em,
+  });
+}
+
 export interface EntradaPgp {
   ponto: PontoDePartida;
   rfp: DocumentoLido[];
@@ -41,15 +55,7 @@ export function montarEntradaPgp(dossie: Dossie, hoje = new Date()): EntradaPgp 
   const rfp = dossie.documentos.filter((d) => d.papel === "rfp" || d.papel === "anexo-rfp");
   const ponto = montarPontoDePartida(rfp, dossie.analiseRfp, hoje);
   const tapPdf = dossie.documentos.find((d) => d.papel === "tap");
-  const tapDoDossie =
-    !tapPdf && dossie.tap?.tap
-      ? documentoDeExportavel(montarTap(dossie, new Date(dossie.criadoEm)), {
-          id: "tap-do-dossie",
-          papel: "tap",
-          nomeArquivo: NOME_TAP_DO_DOSSIE,
-          lidoEm: dossie.tap.tap.em,
-        })
-      : undefined;
+  const tapDoDossie = tapDoDossieComoDocumento(dossie);
   const propostaPdf = dossie.documentos.find((d) => d.papel === "proposta");
   const propostaDoDossie = propostaPdf ? undefined : propostaComoDocumento(dossie, ponto, rfp);
   const tap = tapPdf ?? tapDoDossie;

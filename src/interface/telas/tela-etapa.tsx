@@ -1,6 +1,7 @@
 // Tela de uma etapa, no fluxo comum da seção 5.0: documentos → leitura → resultado → revisão → exportar → salvar.
 // A leitura aparece só como uma linha por arquivo (páginas lidas), com aviso quando alguma página falha ou quando o
 // arquivo parece ser de outra caixa. O resultado de cada etapa vem das regras e do PMO.
+import { tapDoDossieComoDocumento } from "../../etapas/4-pgp/entrada";
 import { useMemo, useRef, useState } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
 import type { DocumentoLido } from "../../dossie/esquema";
@@ -274,7 +275,8 @@ export function TelaEtapa() {
 
   const primeiro = (papel: string) => dossie.documentos.find((d) => d.papel === papel);
   const pgp = primeiro("pgp");
-  const tap = primeiro("tap");
+  // sem TAP em PDF, a etapa 5 confere contra o TAP da etapa 3 no dossiê (como a etapa 4)
+  const tap = primeiro("tap") ?? (etapa.numero === 5 ? tapDoDossieComoDocumento(dossie) : undefined);
   const rfp = primeiro("rfp");
   const obrigatoriosLidos = etapa.documentos
     .filter((d) => d.obrigatorio)

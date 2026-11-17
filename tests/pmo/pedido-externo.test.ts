@@ -4,6 +4,7 @@
 // - importar: valida a resposta no schema, grava no dossiê como resposta do PMO, roda as travas do código e mede
 //   contra o gabarito do Claude Code, numa seção "leitura independente". O gabarito nunca vai no pedido.
 // Só roda pelos scripts npm run exportar-pedido / importar-resposta (RAIO_X_MODO=exportar|importar).
+import { tapDoDossieComoDocumento } from "../../src/etapas/4-pgp/entrada";
 import { conferirQuestoes, questoesDoCodigo } from "../../src/etapas/4-pgp/questoes";
 import { montarPgp } from "../../src/exportacao/relatorio-pgp";
 import { pgpComoDocumento } from "../../src/etapas/4-pgp/autoconferencia";
@@ -117,7 +118,8 @@ function precisa(cond: unknown, oQue: string): asserts cond {
 function entradaDaConferencia(d: Dossie) {
   const pgp = d.documentos.find((x) => x.papel === "pgp");
   precisa(pgp, "exporte com --plano <arquivo.pdf> (o plano a conferir)");
-  const tap = d.documentos.find((x) => x.papel === "tap");
+  // sem TAP em PDF, o TAP da etapa 3 no dossiê (o mesmo que a tela da etapa 5 usa)
+  const tap = d.documentos.find((x) => x.papel === "tap") ?? tapDoDossieComoDocumento(d);
   const rfp = d.documentos.find((x) => x.papel === "rfp");
   const mapa = confirmacaoInicial(proporMapa(pgp.paginas, PARTES_PGP));
   const caracteristicas = d.pgp?.caracteristicas ?? CARACTERISTICAS_PADRAO;
