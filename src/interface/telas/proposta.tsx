@@ -84,6 +84,8 @@ export function PropostaDoFornecedor({ todos }: { todos: DocumentoLido[] }) {
   const tokensSistema = estimarTokens(sistema);
   const tokensDocs = estimarTokens(textoDocs);
   const grandeDemais = tokensDocs > LIMITE_DOCUMENTO_TOKENS;
+  // sem modalidade no documento, a proposta não segue sem a escolha do GP na etapa 1 (ou o tipo confirmado aqui)
+  const semModalidade = Boolean(minuta.tipo.sugerido.modalidadeNaoIdentificada) && !p.tipo;
 
   const atualizar = (np: PropostaDossie) => guardarProposta(np);
 
@@ -210,6 +212,13 @@ export function PropostaDoFornecedor({ todos }: { todos: DocumentoLido[] }) {
                 </p>
               ) : (
                 <>
+                  {semModalidade && passo === "estrategia" && (
+                    <p className="aviso aviso--erro" role="alert" data-testid="sem-modalidade">
+                      O documento não diz a modalidade. Escolha-a na etapa 1 (decisão do GP) ou confirme o
+                      tipo de contrato em &quot;Tipo de contrato e de projeto&quot; antes de pedir a
+                      estratégia.
+                    </p>
+                  )}
                   {est && (
                     <p className="envio__obs" data-testid={`custo-${passo}`}>
                       Estimativa antes de chamar: cerca de {formatarTokens(est.tokensEntrada)} tokens de
@@ -229,7 +238,12 @@ export function PropostaDoFornecedor({ todos }: { todos: DocumentoLido[] }) {
                       className="botao botao--cheio"
                       type="button"
                       data-testid={`pedir-${passo}`}
-                      disabled={!chave || Boolean(rodando) || grandeDemais}
+                      disabled={
+                        !chave ||
+                        Boolean(rodando) ||
+                        grandeDemais ||
+                        (semModalidade && passo === "estrategia")
+                      }
                       onClick={() => {
                         if (
                           feito &&

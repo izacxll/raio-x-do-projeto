@@ -238,6 +238,9 @@ function naListaDeDocumentos(mapa: MapaRfp, l: Localizado): boolean {
   return Boolean(s?.tema && TEMAS_DA_LISTA.includes(s.tema));
 }
 
+const RE_EXIGENCIA_DE_PERFIL =
+  /formacao academica|\bgraduacao em\b|\bgraduado em\b|\bperfil\b|anos de experiencia|experiencia (?:pratica|profissional)|pos-graduacao/;
+
 export function extrairHabilitacao(docs: DocumentoRfp[], mapa: MapaRfp): ItemAnalise[] {
   const faixas = faixasDoTema(mapa, ...TEMAS_DA_LISTA);
   const itens: ItemAnalise[] = [];
@@ -245,7 +248,12 @@ export function extrairHabilitacao(docs: DocumentoRfp[], mapa: MapaRfp): ItemAna
     // com seção de habilitação no mapa, só vale o trecho dentro dela: a cláusula da minuta que fala da
     // "Fazenda Municipal" ou a justificativa que fala de "pessoa com deficiência" não são a lista de documentos.
     // Sem seção no mapa, procura no documento inteiro e avisa.
-    const todas = localizarTodos(docs, d.re);
+    // o registro em conselho pedido a um perfil da equipe ("formação acadêmica em contabilidade, com inscrição no
+    // conselho") é exigência do perfil, não documento de habilitação da empresa
+    const todas = localizarTodos(docs, d.re).filter(
+      (x) =>
+        d.id !== "registro-conselho" || !RE_EXIGENCIA_DE_PERFIL.test(tirarAcentos(x.frase.toLowerCase())),
+    );
     const l = faixas ? todas.find((x) => naListaDeDocumentos(mapa, x)) : todas[0];
     if (!l) continue;
     const vezes = todas.length;

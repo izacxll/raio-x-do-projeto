@@ -24,19 +24,40 @@ export interface TipoSugerido {
   contrato: TipoContrato;
   projeto: TipoProjeto;
   motivos: string[];
+  /**
+   * O documento não diz a modalidade e o GP ainda não a escolheu na etapa 1 (decisão 0054): o contrato sugerido é
+   * provisório e a proposta não segue sem a escolha.
+   */
+  modalidadeNaoIdentificada?: boolean;
 }
 
 /** Sinais de operação contínua: equipe que trabalha mês a mês com público ou território. */
 const RE_OPERACAO =
   /\b(?:atendimentos? (?:mensa|continu)\w*|equipe de campo|agentes? (?:de campo|comunitari\w+)|visitas? domiciliar\w*|turmas?|grade horaria|oficinas? (?:semanais|mensais)|postos? de trabalho|acompanhamento (?:das|de) familias|beneficiarios? (?:diretos|atendidos)|valor mensal|parcelas? mensa\w+)\b/g;
 
-export function sugerirTipo(analise: AnaliseRfp, requisitos: Requisito[]): TipoSugerido {
+export function sugerirTipo(
+  analise: AnaliseRfp,
+  requisitos: Requisito[],
+  /** A modalidade que o GP escolheu na etapa 1, quando o documento não a diz (decisão 0054). */
+  modalidadeDoGp?: TipoContrato,
+): TipoSugerido {
   const parceria = analise.itens.some(
     (i) => i.id === "identificacao:parceria" && (i.situacao === "localizado" || i.situacao === "calculado"),
   );
   const modalidade = analise.itens.find(
     (i) => i.id === "identificacao:modalidade" && (i.situacao === "localizado" || i.situacao === "calculado"),
   );
+  // sem modalidade no documento, vale a escolha do GP na etapa 1; sem ela, a modalidade fica não identificada
+  const semModalidade = !parceria && !modalidade;
+  const doGp = semModalidade ? modalidadeDoGp : undefined;
+  if (doGp === "parceria" || doGp === "contratacao-direta") {
+    const base = sugerirTipo(analise, requisitos);
+    return {
+      ...base,
+      contrato: doGp,
+      motivos: [`modalidade escolhida pelo GP na etapa 1 (o documento não diz)`, ...base.motivos.slice(1)],
+    };
+  }
   const direta = !parceria && /^(?:Inexigibilidade|Dispensa de licitação)$/.test(modalidade?.texto ?? "");
   const motivos: string[] = [];
   motivos.push(
@@ -61,5 +82,14 @@ export function sugerirTipo(analise: AnaliseRfp, requisitos: Requisito[]): TipoS
   else if (parceria && !produtos)
     motivos.push("parceria sem produtos: a equipe trabalha ao longo da vigência");
   const projeto: TipoProjeto = produtos ? (operacao ? "hibrido" : "produtos") : "operacao";
-  return { contrato: parceria ? "parceria" : direta ? "contratacao-direta" : "licitacao", projeto, motivos };
+  if (semModalidade)
+    motivos[0] = doGp
+      ? "modalidade escolhida pelo GP na etapa 1 (o documento não diz)"
+      : "modalidade não identificada no documento — escolher na etapa 1 antes de seguir";
+  return {
+    contrato: parceria ? "parceria" : direta ? "contratacao-direta" : "licitacao",
+    projeto,
+    motivos,
+    ...(semModalidade && !doGp ? { modalidadeNaoIdentificada: true } : {}),
+  };
 }

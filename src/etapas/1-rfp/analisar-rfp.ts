@@ -1,7 +1,7 @@
 // Etapa 1 — Leitura e análise da RFP, só com código. Junta os passos 1 a 11 da especificação numa análise,
 // recalculada a partir do texto: as decisões do GP ficam no dossiê, ligadas ao id estável de cada item.
 import type { DocumentoLido } from "../../dossie/esquema";
-import type { Requisito } from "../../extracao/requisitos";
+import { perfisDoRequisito, type Requisito } from "../../extracao/requisitos";
 import { extrairHabilitacao } from "../../extracao/rfp/habilitacao";
 import { extrairIdentificacao } from "../../extracao/rfp/identificacao";
 import {
@@ -139,13 +139,15 @@ function atencao(itens: ItemAnalise[], requisitos: Requisito[], docs: DocumentoR
   copia("criterio", "Critério de julgamento", porId("julgamento:criterio"));
 
   const equipe = requisitos.filter((r) => r.tipo === "equipe");
+  // a equipe-chave é um requisito só, com a lista dos perfis (decisão 0054)
+  const perfis = equipe.flatMap(perfisDoRequisito);
   if (equipe.length)
     out.push({
       id: "atencao:equipe",
       secao: "atencao",
       rotulo: "documento",
       nome: "Equipe exigida",
-      texto: `${equipe.length} ${equipe.length === 1 ? "perfil citado" : "perfis citados"}: ${equipe.map((r) => r.rotulo.replace(/^Equipe: /, "")).join("; ")}`,
+      texto: `${perfis.length} ${perfis.length === 1 ? "perfil citado" : "perfis citados"}: ${perfis.join("; ")}`,
       origem: {
         documento: equipe[0]?.documento ?? "RFP",
         pagina: equipe[0]?.pagina ?? 1,

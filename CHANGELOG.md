@@ -4,6 +4,13 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 
 ## [Não publicado]
 
+### Requisitos como entregas e modalidade não identificada (decisão 0054)
+- **Cada R é uma entrega ou obrigação de quem executa.** A equipe-chave vira um requisito só, com a lista dos perfis, lida até o título da seção seguinte, mesmo passando de página. Sem produtos numerados, entram os itens do objeto em algarismos romanos, o levantamento (com a análise comparativa) e os produtos que uma seção "Dos produtos" nomeia. A entrega em meio digital e o sigilo com a cessão dos produtos entram no fim da lista. Tipo novo de requisito: atividade exigida.
+- **Modalidade não identificada:** sem edital, critério, sessão nem artigo de inexigibilidade ou dispensa, o código não supõe licitação. A tela da etapa 1 pede a escolha do GP, a etapa 2 não pede a estratégia sem ela e o PMO escreve as seções 5, 6 e 8 com as alternativas.
+- **Etapa 1:** a data da portaria do signatário não é prazo de recurso; o tamanho conta os perfis da equipe-chave; o registro em conselho de um perfil não é habilitação da empresa; o "entre outros" em texto padrão de sigilo não é vago.
+- **Etapa 5:** cada perfil da equipe-chave é procurado no plano.
+- As respostas gravadas da OEI foram renumeradas para a equipe-chave num R só.
+
 ### Sem modo de demonstração (decisão 0053)
 - **A apresentação do app é feita com a skill PMO na conversa; o site não tem modo de demonstração.** Saem o botão "Ver demonstração", a faixa do topo, os textos sobre a demonstração na tela e nos relatórios, o aviso no cabeçalho dos exportados, o campo `demonstracao` do dossiê (um dossiê antigo abre sem ele) e a cópia do PDF da OEI para o build.
 - **As respostas gravadas da OEI ficam só como material dos testes**, fora do build: os de unidade as leem do disco (`tests/ajudantes/gravadas.ts`); os de fumaça as servem pela rota do Playwright, com uma chave falsa (`tests/fumaca/pmo-simulado.ts`). A fumaça da etapa 4 passa pelas etapas 2 e 3 no mesmo dossiê; a da etapa 5 confirma os achados do código pelo veredito simulado. Os 77 vereditos da leitura gravada da etapa 5 continuam marcados como escritos pelo Claude Code, a revisar pelo PMO.

@@ -416,7 +416,7 @@
           ],
           "alternativas": [],
           "requisitos": [
-            "R11"
+            "R08"
           ],
           "ficha": "PROP-METODOLOGIA"
         },
@@ -444,9 +444,9 @@
           ],
           "alternativas": [],
           "requisitos": [
+            "R08",
             "R11",
-            "R14",
-            "R15"
+            "R12"
           ],
           "ficha": "PROP-SOW"
         }
@@ -536,7 +536,7 @@
           ],
           "alternativas": [],
           "requisitos": [
-            "R12"
+            "R09"
           ],
           "ficha": "PROP-METODOLOGIA"
         },
@@ -626,10 +626,7 @@
           ],
           "alternativas": [],
           "requisitos": [
-            "R06",
-            "R07",
-            "R08",
-            "R09"
+            "R06"
           ],
           "ficha": "PROP-EQUIPE"
         },
@@ -641,10 +638,7 @@
           "fontes": [],
           "alternativas": [],
           "requisitos": [
-            "R06",
-            "R07",
-            "R08",
-            "R09"
+            "R06"
           ],
           "ficha": "PROP-EQUIPE"
         },
@@ -728,10 +722,7 @@
           ],
           "alternativas": [],
           "requisitos": [
-            "R06",
-            "R07",
-            "R08",
-            "R09"
+            "R06"
           ],
           "ficha": "PROP-EQUIPE"
         }
@@ -1247,7 +1238,7 @@
       ],
       "alternativas": [],
       "requisitos": [
-        "R12"
+        "R09"
       ],
       "ficha": "PROP-SOW"
     },
@@ -1552,7 +1543,7 @@
       ],
       "alternativas": [],
       "requisitos": [
-        "R10"
+        "R07"
       ],
       "ficha": "PROP-SOW"
     },
@@ -1591,8 +1582,8 @@
       ],
       "alternativas": [],
       "requisitos": [
-        "R14",
-        "R15"
+        "R11",
+        "R12"
       ],
       "ficha": "PROP-SOW"
     },
@@ -1610,10 +1601,7 @@
       ],
       "alternativas": [],
       "requisitos": [
-        "R06",
-        "R07",
-        "R08",
-        "R09"
+        "R06"
       ],
       "ficha": "PROP-EQUIPE"
     },
@@ -1647,7 +1635,7 @@
       ],
       "alternativas": [],
       "requisitos": [
-        "R16"
+        "R13"
       ],
       "ficha": "PROP-SOW"
     }

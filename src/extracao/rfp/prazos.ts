@@ -34,7 +34,11 @@ export const NOME_EVENTO: Record<EventoCertame, string> = {
 /** Ordem importa: o primeiro evento que casa com o contexto da data fica. Sobre texto sem acento. */
 const EVENTOS: [EventoCertame, RegExp][] = [
   ["esclarecimento", /esclarecimento|impugna/],
-  ["recursos", /recurso|contrarraz/],
+  // "Captação de Recursos" (nome de departamento) e "recursos financeiros" não são o prazo de recurso do certame
+  [
+    "recursos",
+    /(?<!captacao de )(?<!captacao )\brecurso(?!s? (?:financeir|orcamentari|human|public|materia))|contrarraz/,
+  ],
   ["resultado", /resultado|homologa|classificacao final|adjudica/],
   [
     "entrega",
@@ -50,7 +54,7 @@ const EVENTOS: [EventoCertame, RegExp][] = [
 
 /** Data dentro de citação de norma ("Lei nº 13.019, de 31 de julho de 2014") não é prazo. */
 const RE_NORMA_ANTES =
-  /(?:lei|decreto|portaria|instrucao normativa|resolucao|n[o°º.]*\s*[\d./-]+,?)\s*(?:de\s*)?$/;
+  /(?:(?:lei|decreto|portaria|instrucao normativa|resolucao)(?:\s*n[o°º.]*)?|n[o°º.]*\s*[\d./-]+,?)\s*(?:de\s*)?$/i;
 /** Data de assinatura eletrônica, de atualização do sistema ou de rodapé não é prazo. */
 const RE_CARIMBO =
   /assinad[oa]|assinou|assinatura eletronica|editado por|atualizado em|horario oficial|sei\/|documento gerado/;

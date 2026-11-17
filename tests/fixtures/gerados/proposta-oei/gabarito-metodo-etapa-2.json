@@ -573,7 +573,7 @@
       {
         "id": "MEQ-02",
         "nome": "Equipe-chave exigida",
-        "valor": "Coordenador(a) Geral (mestrado e 5 anos de coordenação) e três especialistas (pós-graduação e 4 anos): políticas públicas e direitos da criança; assistência social e situação de rua; conteúdos técnicos e metodologias participativas (R06 a R09). Equipe de apoio dimensionada pela contratada.",
+        "valor": "Coordenador(a) Geral (mestrado e 5 anos de coordenação) e três especialistas (pós-graduação e 4 anos): políticas públicas e direitos da criança; assistência social e situação de rua; conteúdos técnicos e metodologias participativas (R06 a R06). Equipe de apoio dimensionada pela contratada.",
         "rotulo": "documento",
         "quem": "codigo",
         "fontes": [
@@ -766,7 +766,7 @@
       {
         "id": "MAT-01",
         "nome": "Requisitos ligados",
-        "valor": "R01 a R05 → produtos P1 a P5; R06 a R09 → perfis da equipe-chave e seção l); R10 → restrição de trabalho remoto. Nenhum requisito sem seção.",
+        "valor": "R01 a R05 → produtos P1 a P5; R06 a R06 → perfis da equipe-chave e seção l); R07 → restrição de trabalho remoto. Nenhum requisito sem seção.",
         "rotulo": "documento",
         "quem": "codigo",
         "fontes": [

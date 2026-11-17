@@ -327,7 +327,7 @@ export function montarMinuta(
   hoje = new Date(),
 ): MinutaProposta {
   const analise = ponto.analise;
-  const sugerido = sugerirTipo(analise, ponto.requisitos);
+  const sugerido = sugerirTipo(analise, ponto.requisitos, etapa1?.modalidade);
   const tipo = {
     contrato: p.tipo?.contrato ?? sugerido.contrato,
     projeto: p.tipo?.projeto ?? sugerido.projeto,

@@ -8,7 +8,8 @@ import type { AnaliseRfp } from "./analisar-rfp";
 
 export const NOME_TIPO_REQUISITO: Record<TipoRequisito, string> = {
   produto: "Produto ou entregável",
-  equipe: "Equipe mínima",
+  atividade: "Atividade exigida",
+  equipe: "Equipe-chave",
   quantidade: "Quantidade",
   local: "Local",
   condicao: "Condição do objeto",
