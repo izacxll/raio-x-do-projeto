@@ -399,3 +399,35 @@ describe("números C no texto do plano", () => {
     ]);
   });
 });
+
+describe("pedidos da etapa 4 só com as partes marcadas", () => {
+  it("execução sem a A16: não pede o texto dela nem indicador de valor agregado", () => {
+    const p = { ...dossie.pgp!, gerar: { ...dossie.pgp!.gerar, A16: false } };
+    const pedido = PEDIDOS_PGP.execucao(entrada, p);
+    expect(pedido).not.toMatch(/1\. textos: A16/);
+    expect(pedido).toMatch(/sem valor agregado, porque o GP dispensou a linha de base da medição \(A16\)/);
+    const comA16 = PEDIDOS_PGP.execucao(entrada, {
+      ...dossie.pgp!,
+      gerar: { ...dossie.pgp!.gerar, A16: true },
+    });
+    expect(comA16).toMatch(/1\. textos: A16/);
+  });
+
+  it("planos e riscos não citam parte dispensada nos exemplos", () => {
+    const p = { ...dossie.pgp!, gerar: { ...dossie.pgp!.gerar, A12: false, A4: false } };
+    expect(PEDIDOS_PGP.planos(entrada, p)).not.toContain("configuração com as versões dos produtos");
+    expect(PEDIDOS_PGP.riscos(entrada, p)).not.toMatch(/e A4 \(como os custos/);
+  });
+
+  it("o escopo leva as exclusões e os limites de volume (C) para a B17", () => {
+    const pedido = PEDIDOS_PGP.escopo(entrada, {
+      ...dossie.pgp!,
+      gerar: { ...dossie.pgp!.gerar, B17: true },
+    });
+    const cs = (entrada.dadosProposta?.compromissos ?? []).filter((c) => c.tipo === "exclusao");
+    if (cs.length) expect(pedido).toContain(`- ${cs[0]!.numero} (exclusão → B17.5)`);
+    expect(
+      PEDIDOS_PGP.escopo(entrada, { ...dossie.pgp!, gerar: { ...dossie.pgp!.gerar, B17: false } }),
+    ).not.toContain("exclusão → B17.5");
+  });
+});
