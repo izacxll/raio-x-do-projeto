@@ -25,6 +25,19 @@ export const NOME_GRAVIDADE_SEGUNDA: Record<GravidadeSegunda, string> = {
   baixa: "baixa",
 };
 
+/**
+ * Rodada da próxima conferência do passo (decisão 0059): a mesma, se a resposta conferida é a mesma; a seguinte, se a
+ * resposta do passo mudou desde a última conferência.
+ */
+export function proximaRodada(
+  anterior: { deResposta: string; rodada?: number } | undefined,
+  respostaEm: string,
+): number {
+  if (!anterior) return 1;
+  const r = anterior.rodada ?? 1;
+  return anterior.deResposta === respostaEm ? r : r + 1;
+}
+
 /** Chave da conferência no dossiê: "2:conteudo", "4:cronograma". */
 export function chaveDaSegundaInstancia(etapa: number, passo: string): string {
   return `${etapa}:${passo}`;
@@ -35,10 +48,22 @@ export function sistemaDaSegundaInstancia(): string {
   return textoDeSistema([{ titulo: "SKILL.md", texto: textoSkill }]);
 }
 
-export function pedidoSegundaInstancia(etapa: number, passo: string, resposta: unknown): string {
+/**
+ * Pedido da segunda instância (decisões 0057 e 0059). Leva o pedido do passo conferido, como foi ao PMO: o esqueleto do
+ * código (números R e C, contas e datas) e a lista do que o passo exige. A rubrica é essa lista, nem mais nem menos.
+ */
+export function pedidoSegundaInstancia(
+  etapa: number,
+  passo: string,
+  resposta: unknown,
+  pedidoDoPasso = "",
+): string {
   return `# Segunda instância — conferência da resposta da etapa ${etapa}, passo ${passo}
 
-Você é a segunda instância (SKILL.md, seção 3, "Conferência por uma segunda instância"). Outra chamada, com o mesmo método, produziu a resposta abaixo. Confira-a contra os documentos acima e contra a skill, **antes** de o GP aprovar e de a próxima etapa começar. Você não reescreve a resposta: aponta o que precisa mudar.
+Você é a segunda instância (SKILL.md, seção 3, "Conferência por uma segunda instância"). Outra chamada produziu a resposta abaixo a partir do pedido do passo, que também vai abaixo, com o esqueleto do código. Confira a resposta contra os documentos acima, contra o esqueleto e contra o que o pedido do passo exige, **antes** de o GP aprovar e de a próxima etapa começar. Você não reescreve a resposta: aponta o que precisa mudar.
+
+## Pedido do passo conferido (como foi ao PMO, com o esqueleto do código)
+${pedidoDoPasso.trim() ? `<pedido-do-passo>\n${pedidoDoPasso.trim()}\n</pedido-do-passo>` : "(o pedido do passo não veio: confira só contra os documentos e a skill, e diga isso em conferido)"}
 
 ## Resposta a conferir (JSON)
 \`\`\`json
@@ -46,15 +71,16 @@ ${JSON.stringify(resposta, null, 2)}
 \`\`\`
 
 # O que procurar
-1. erro_de_fato: o que a resposta afirma e o documento não diz, ou diz diferente (número, prazo, data, quem faz, o que se entrega); citação que não prova a frase.
-2. faltou: o que o método e as fichas pedem para este passo e a resposta não trouxe (requisito R sem destino, compromisso C sem destino, premissa crítica que se aplica e não está escrita, linha do tempo sem conferência dos marcos, aceite sem ajuste e nova análise, campo sem quantidade antes do preço).
-3. incoerencia_entre_etapas: a resposta contradiz o que veio das etapas anteriores e está nos documentos (proposta, TAP), ou contradiz a si mesma (marco que não cabe tratado como se coubesse, abordagem que reduz um R apresentada como equivalente).
+A régua é o pedido do passo: o que ele exige, nem mais nem menos. Item do método ou das fichas que o pedido não pediu não é falta.
+1. erro_de_fato: o que a resposta afirma e o documento não diz, ou diz diferente (número, prazo, data, quem faz, o que se entrega); número, R, C, conta ou data que não bate com o esqueleto do código; citação que não prova a frase.
+2. faltou: o que o pedido do passo exige (as seções, os campos e a autoconferência da lista "O que fazer" e das regras dele) e a resposta não trouxe.
+3. incoerencia_entre_etapas: a resposta contradiz o esqueleto do código ou o que veio das etapas anteriores e está nos documentos (proposta, TAP), ou contradiz a si mesma.
 4. rotulo_errado: "documento" sem trecho que prove a frase; sugestão escrita como fato; decisão do GP preenchida como fato.
 
 # Como responder
 - achados: um por problema, com tipo, gravidade (alta: muda preço, prazo, escopo ou quem executa, ou afirma como fato o que o documento não diz; media: o GP precisa corrigir antes de aprovar; baixa: redação ou rastreabilidade), onde (o id do item, a parte ou a seção), texto, evidencias (doc, página do arquivo e trecho literal; [] quando o problema é a falta) e sugestao em redação condicional.
-- conferido: o que você conferiu e passou, em frases curtas. Aparece sempre.
-- Precisão antes de cobertura: só aponte o que muda uma decisão do GP ou o que a FGV terá de fazer, entregar, cumprir ou pagar. Não repita o que o código já confere (citação na página, contas, datas).
+- conferido: o que você conferiu e passou, em frases curtas (inclusive os números R e C e as contas do esqueleto). Aparece sempre.
+- Precisão antes de cobertura: só aponte o que muda uma decisão do GP ou o que a FGV terá de fazer, entregar, cumprir ou pagar. Não refaça as contas do código: use as do esqueleto.
 - Responda só com o objeto JSON, no schema enviado. Listas sem conteúdo ficam com [].`;
 }
 
@@ -89,9 +115,10 @@ export function segundaInstanciaEmTexto(
   etapa: number,
   passo: string,
   res: ResultadoSegundaInstancia,
+  rodada = 1,
 ): string {
   return [
-    `# Segunda instância — etapa ${etapa}, passo ${passo}`,
+    `# Segunda instância — etapa ${etapa}, passo ${passo}, rodada ${rodada}`,
     "",
     `Achados: ${res.achados.length} (alta: ${res.altas}). Todo achado é Sugestão: quem decide é o GP.`,
     "",

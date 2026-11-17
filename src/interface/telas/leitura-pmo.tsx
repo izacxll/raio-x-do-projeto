@@ -141,6 +141,7 @@ export function LeituraDoPmo({
             respostaEm={conf.leituraPmo.em}
             documentos={documentos}
             modelo={modelo}
+            pedidoDoPasso={pedido ?? ""}
           />
         )}
         {conferidos.length > 0 && (

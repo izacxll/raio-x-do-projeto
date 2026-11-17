@@ -383,6 +383,8 @@ export const Dossie = z.object({
         modelo: z.string(),
         em: z.string(),
         deResposta: z.string(),
+        /** Rodada da conferência deste passo: sobe a cada resposta nova do passo conferida (decisão 0059). */
+        rodada: z.number().int().positive().optional(),
       }),
     )
     .optional(),

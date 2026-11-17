@@ -13,6 +13,7 @@ import {
   NOME_GRAVIDADE_SEGUNDA,
   NOME_TIPO_SEGUNDA,
   pedidoSegundaInstancia,
+  proximaRodada,
   sistemaDaSegundaInstancia,
 } from "../../pmo/segunda-instancia";
 import { useChave } from "./conectar-claude";
@@ -24,6 +25,7 @@ export function SegundaInstancia({
   respostaEm,
   documentos,
   modelo,
+  pedidoDoPasso,
 }: {
   etapa: number;
   passo: string;
@@ -32,6 +34,8 @@ export function SegundaInstancia({
   respostaEm: string;
   documentos: DocumentoLido[];
   modelo: string;
+  /** O pedido do passo conferido, como foi ao PMO: o esqueleto e o que o passo exige (decisão 0059). */
+  pedidoDoPasso: string;
 }) {
   const { dossie, guardarSegundaInstancia } = useDossie();
   const chave = useChave();
@@ -43,7 +47,10 @@ export function SegundaInstancia({
   const cancelar = useRef<AbortController | null>(null);
   const sistema = useMemo(() => sistemaDaSegundaInstancia(), []);
   const textoDocs = useMemo(() => textoDosDocumentos(documentos), [documentos]);
-  const pedido = useMemo(() => pedidoSegundaInstancia(etapa, passo, resposta), [etapa, passo, resposta]);
+  const pedido = useMemo(
+    () => pedidoSegundaInstancia(etapa, passo, resposta, pedidoDoPasso),
+    [etapa, passo, resposta, pedidoDoPasso],
+  );
   const est = estimarCusto(
     modelo,
     "segunda-instancia",
@@ -78,6 +85,7 @@ export function SegundaInstancia({
         modelo: r.modelo,
         em: r.em,
         deResposta: respostaEm,
+        rodada: proximaRodada(guardada, respostaEm),
       });
     } catch (e) {
       setErro(e as ErroPmo);
@@ -138,8 +146,8 @@ export function SegundaInstancia({
       {resultado && (
         <>
           <p className={`aviso${resultado.altas ? " aviso--erro" : ""}`} role="status">
-            {resultado.achados.length} achado(s), {resultado.altas} de gravidade alta. Todo achado é Sugestão:
-            quem decide é o GP.
+            Rodada {atual?.rodada ?? 1}: {resultado.achados.length} achado(s), {resultado.altas} de gravidade
+            alta. Todo achado é Sugestão: quem decide é o GP.
           </p>
           {resultado.achados.length > 0 && (
             <table className="tabela tabela--texto">

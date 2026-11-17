@@ -508,6 +508,7 @@ function LeituraDoPmoNaEtapa1({
             respostaEm={salva.leituraPmo.em}
             documentos={docs}
             modelo={modelo}
+            pedidoDoPasso={pedido ?? ""}
           />
         )}
       </PassoPmoNaTela>

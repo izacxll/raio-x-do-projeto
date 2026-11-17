@@ -65,6 +65,7 @@ export function conteudoDoPedido(opcoes: {
     confere("só a SKILL.md no texto de sistema", nomes.length === 1 && nomes[0] === "SKILL.md");
     confere("documentos do passo", /^=== Página /m.test(documentos));
     confere("resposta a conferir no pedido", /## Resposta a conferir/.test(pedido));
+    confere("pedido do passo conferido, com o esqueleto do código", /<pedido-do-passo>/.test(pedido));
     const texto = [
       `# O que foi no pedido — etapa ${etapa}, passo ${passo} (segunda instância)`,
       "",

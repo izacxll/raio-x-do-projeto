@@ -322,6 +322,7 @@ export function PropostaDoFornecedor({ todos }: { todos: DocumentoLido[] }) {
                 respostaEm={p[passo]!.em}
                 documentos={docs}
                 modelo={p.modelo}
+                pedidoDoPasso={pedido ?? ""}
               />
             )}
           </section>
