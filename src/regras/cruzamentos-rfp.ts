@@ -110,7 +110,7 @@ interface Periodo {
   origem: OrigemItem;
 }
 
-/** Períodos com data fixa ("no período de 08/11/2025 a 07/01/2026"): eventos, safras, ano letivo. */
+/** Períodos com data fixa ("no período de 07/11/2026 a 06/01/2027"): eventos, safras, ano letivo. */
 function periodosFixos(docs: DocumentoRfp[]): Periodo[] {
   const out: Periodo[] = [];
   for (const doc of docs)

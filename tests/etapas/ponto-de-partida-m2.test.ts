@@ -10,9 +10,9 @@ import { documentoLido } from "./rfp-ajudantes";
 
 const HOJE = new Date(2026, 10, 16);
 const PAGINAS = [
-  "1. OBJETO: Contratação de serviços para estudo de impacto de evento.\nO evento será realizado no período de 08/11/2025 a 07/01/2026.",
+  "1. OBJETO: Contratação de serviços para estudo de impacto de evento.\nO evento será previsto para o período de 07/11/2026 a 06/01/2027.",
   "Vantajosidade não se confunde com menor preço, mas com a obtenção do serviço que melhor satisfaça a Administração.\nPortanto, a modalidade a ser adotada para esta prestação de serviço, será INEXIGIBILIDADE de Licitação com base no Art. 74, III.",
-  "3.3. O prazo de vigência da contratação será de 06 (seis) meses contado da data de assinatura do contrato.\n18.8. O reajuste será realizado por apostilamento.\nCidade do Interior, 08 de setembro de 2025.",
+  "3.3. O prazo de vigência da contratação será de 06 (seis) meses contado da data de assinatura do contrato.\n18.8. O reajuste será realizado por apostilamento.\nCidade do Interior, 04 de setembro de 2026.",
 ];
 
 describe("ponto de partida da etapa 2 (correções do teste externo)", () => {
@@ -29,8 +29,8 @@ describe("ponto de partida da etapa 2 (correções do teste externo)", () => {
     expect(d && ehDataDoFecho(fecho, d)).toBe(true);
     const a = analisarRfp([documentoLido(PAGINAS)], HOJE);
     const ce15 = a.itens.filter((i) => i.id.startsWith("brechas:CE15"));
-    expect(ce15.some((i) => /08\/09\/2025/.test(i.nome))).toBe(false);
-    expect(ce15.some((i) => /08\/11\/2025/.test(i.nome))).toBe(true);
+    expect(ce15.some((i) => /04\/09\/2026/.test(i.nome))).toBe(false);
+    expect(ce15.some((i) => /07\/11\/2026/.test(i.nome))).toBe(true);
   });
 
   it("os pontos de atenção da leitura do PMO entram nas brechas, com o id etapa-1:<id>", () => {
@@ -49,7 +49,7 @@ describe("ponto de partida da etapa 2 (correções do teste externo)", () => {
             {
               doc: "rfp",
               pagina: 1,
-              trecho: "O evento será realizado no período de 08/11/2025 a 07/01/2026.",
+              trecho: "O evento será previsto para o período de 07/11/2026 a 06/01/2027.",
             },
           ],
           requisitos: [],

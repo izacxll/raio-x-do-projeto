@@ -105,7 +105,7 @@ export function conferirTap(
       texto: "Prazo de execução da RFP não localizado pelo código — conferir os marcos no documento.",
     });
   } else {
-    // marco com data ("22/09/2025, data fixa do TR") é data, não prazo em dias: o número da data não é duração.
+    // marco com data ("21/09/2026, data fixa do TR") é data, não prazo em dias: o número da data não é duração.
     // Ele só é conferido contra a vigência quando o início é conhecido (decisão do GP).
     const comData = marcos.filter((m) => encontrarDatas(m.prazo).length > 0);
     const emDias = marcos.filter((m) => !comData.includes(m));

@@ -332,7 +332,7 @@ export function aplicarRegrasRfp(docs: DocumentoRfp[], mapa: MapaRfp): Resultado
       for (const doc of docs) {
         for (const p of doc.paginas) {
           for (const d of encontrarDatas(p.texto)) {
-            // a data do fecho do documento ("Cidade, 08 de setembro de 2025.") é a da assinatura, não um marco
+            // a data do fecho do documento ("Cidade, 04 de setembro de 2026.") é a da assinatura, não um marco
             if (ehDataDoFecho(p.texto, d)) continue;
             const frase = tirarAcentos(p.texto.slice(Math.max(0, d.posicao - 150), d.posicao + 60));
             if (!FUTURO.test(frase) || certame.includes(`${p.numero}:${formatarData(d.data)}`)) continue;

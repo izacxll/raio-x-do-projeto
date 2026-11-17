@@ -179,8 +179,8 @@ describe("conferência dos números do PMO com as contas dos cruzamentos (decis�
   it('número que só está num cruzamento vale; conta nova com "conta do código" continua barrada', async () => {
     const { conferirLeituraRfp } = await import("../../src/etapas/1-rfp/leitura-pmo");
     const paginas = [
-      "1. OBJETO: Estudo de impacto de evento.\nO evento será realizado no período de 08/11/2025 a 07/01/2026, na praça central.",
-      "8.1 Iniciar-se-á em 22 de setembro de 2025;\n3.3. O prazo de vigência da contratação será de 06 (seis) meses contado do primeiro dia útil subsequente à data de divulgação no Portal.",
+      "1. OBJETO: Estudo de impacto de evento.\nO evento será previsto para o período de 07/11/2026 a 06/01/2027, na praça central.",
+      "8.1 O início da execução será em 21 de setembro de 2026;\n3.3. O prazo de vigência da contratação será de 06 (seis) meses contado da divulgação no portal.",
     ];
     const a = analisarRfp([documentoLido(paginas)], HOJE);
     const dossie = analiseInicial(a, HOJE);
@@ -189,7 +189,11 @@ describe("conferência dos números do PMO com as contas dos cruzamentos (decis�
       l.cruzamentos.find((c) => c.codigo === "X2")?.resultado ?? "",
     )?.[1];
     expect(janela).toBeDefined();
-    const fonte = { doc: "rfp" as const, pagina: 2, trecho: "8.1 Iniciar-se-á em 22 de setembro de 2025" };
+    const fonte = {
+      doc: "rfp" as const,
+      pagina: 2,
+      trecho: "8.1 O início da execução será em 21 de setembro de 2026",
+    };
     const base = {
       secao: "prazos" as const,
       nome: "Marco fixo",
