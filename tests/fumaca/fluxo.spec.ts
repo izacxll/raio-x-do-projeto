@@ -2,10 +2,12 @@
 // Roda sobre o build (npm run build) com a Content-Security-Policy ativa: qualquer bloqueio dela falha o teste.
 import { readFileSync } from "node:fs";
 import { expect, test, type Page } from "@playwright/test";
+import { CHAVE, conectarChave, gravada, simularPmo } from "./pmo-simulado";
 
 const FIXTURES = "tests/fixtures/rfps-publicas";
 const TEXTO = `${FIXTURES}/credenciamento-osc-educacao-empreendedora-memp-2026.pdf`;
 const ESCANEADO = `${FIXTURES}/dispensa-escaneada-pesquisa-opiniao-nova-lima-2026.pdf`;
+const RFP_OEI = `${FIXTURES}/concorrencia-tecnica-preco-oei-mdhc-criancas-situacao-rua-2026.pdf`;
 
 function vigiarErros(page: Page) {
   const erros: string[] = [];
@@ -115,25 +117,29 @@ test("nenhum termo interno de construção (fases do plano) aparece para o GP", 
   }
 });
 
-test("etapa 5: sem a chave, nada é conferido; na demonstração, conferência, decisão do GP e relatório", async ({
+test("etapa 5: sem a chave, nada é conferido; com o PMO, os achados confirmados, a decisão do GP e o relatório", async ({
   page,
 }) => {
   const erros = vigiarErros(page);
+  // o PMO simulado devolve a leitura gravada e confirma ("sustenta") cada achado do código listado no pedido
+  const passos = await simularPmo(page, (pedido) => {
+    const ids = [...pedido.matchAll(/- id `([^`]+)`/g)].map((m) => m[1]);
+    const leitura = JSON.parse(gravada("conferencia/politicas-mulheres", "leitura-pmo")) as object;
+    const vereditos = ids.map((achado) => ({ achado, veredito: "sustenta", evidencias: [], motivo: "" }));
+    return { passo: "leitura", texto: JSON.stringify({ ...leitura, vereditos, dispensas: [] }) };
+  });
   await page.goto("./#/etapa/5");
   // um edital público faz as vezes de plano: sem a conexão, o botão fica desligado e nada aparece (decisão 0037)
   await page.getByTestId("enviar-pgp").setInputFiles(TEXTO);
   await expect(page.getByText("Mapa do plano", { exact: true })).toBeVisible({ timeout: 60_000 });
   await expect(page.getByTestId("conferir-plano")).toBeDisabled();
   await expect(page.getByRole("table", { name: "Resumo dos achados" })).toHaveCount(0);
-  // a demonstração: o plano inventado, com erros plantados, e a resposta gravada do PMO
-  page.on("dialog", (d) => void d.accept());
-  await page.getByTestId("ver-demonstracao").click();
-  await expect(page.getByTestId("aviso-demonstracao")).toBeVisible({ timeout: 60_000 });
-  await expect(page.getByText("Premissas críticas", { exact: true })).toBeVisible({ timeout: 60_000 });
+  await conectarChave(page);
   await page.getByTestId("conferir-plano").click();
-  await expect(page.getByRole("table", { name: "Resumo dos achados" })).toBeVisible();
-  await expect(page.getByTestId("achado-pmo-pmo-1")).toContainText("leitura do PMO");
-  // o primeiro achado do código (os do PMO têm a decisão própria, "O achado pmo-N procede?")
+  await expect(page.getByRole("table", { name: "Resumo dos achados" })).toBeVisible({ timeout: 60_000 });
+  await expect(page.getByTestId("achado-pmo-pmo-1")).toBeVisible();
+  expect(passos).toEqual(["leitura"]);
+  // o primeiro achado do código confirmado pelo PMO (os do PMO têm a decisão própria, "O achado pmo-N procede?")
   const primeiro = page.locator("article.achado:not([data-testid^='achado-pmo'])").first();
   await expect(primeiro).toBeVisible();
   await primeiro.getByLabel("O achado procede?").selectOption("nao");
@@ -145,29 +151,32 @@ test("etapa 5: sem a chave, nada é conferido; na demonstração, conferência, 
   ]) {
     const download = page.waitForEvent("download");
     await page.getByRole("button", { name: botao }).click();
-    expect((await download).suggestedFilename().endsWith(`.${extensao}`)).toBe(true);
+    const arquivo = await download;
+    expect(arquivo.suggestedFilename().endsWith(`.${extensao}`)).toBe(true);
+    expect(readFileSync(await arquivo.path()).includes(Buffer.from(CHAVE))).toBe(false);
   }
   expect(erros).toEqual([]);
 });
 
-test("etapa 1: sem a chave, nada é analisado; na demonstração, as 8 seções, a revisão do GP e as saídas", async ({
+test("etapa 1: sem a chave, nada é analisado; com o PMO, as 8 seções, a revisão do GP e as saídas", async ({
   page,
 }) => {
   const erros = vigiarErros(page);
+  const passos = await simularPmo(page, () => ({
+    passo: "leitura-rfp",
+    texto: gravada("rfp-oei", "leitura-pmo"),
+  }));
   await page.goto("./#/etapa/1");
-  await page
-    .getByTestId("enviar-rfp")
-    .setInputFiles(`${FIXTURES}/pregao-eletronico-politicas-mulheres-barra-bonita-2026.pdf`);
-  await expect(page.locator(".envio__arquivo").first()).toContainText("barra-bonita", { timeout: 60_000 });
+  await page.getByTestId("enviar-rfp").setInputFiles(RFP_OEI);
+  await expect(page.locator(".envio__arquivo").first()).toContainText("oei", { timeout: 90_000 });
   // decisão 0037: sem a conexão, o botão fica desligado e o esqueleto não aparece sozinho
   await expect(page.getByTestId("analisar-rfp")).toBeDisabled();
   await expect(page.getByTestId("custo-leitura-rfp")).toContainText("US$");
   await expect(page.getByText("1. Em uma página", { exact: true })).toHaveCount(0);
-  page.on("dialog", (d) => void d.accept());
-  await page.getByTestId("ver-demonstracao").click();
-  await expect(page.getByTestId("aviso-demonstracao")).toBeVisible({ timeout: 60_000 });
+  await conectarChave(page);
   await page.getByTestId("analisar-rfp").click();
-  await expect(page.getByText("1. Em uma página", { exact: true })).toBeVisible();
+  await expect(page.getByText("1. Em uma página", { exact: true })).toBeVisible({ timeout: 60_000 });
+  expect(passos).toEqual(["leitura-rfp"]);
   await expect(page.getByText("7. Pontos de atenção", { exact: true })).toBeVisible();
   await expect(page.locator('[data-secao="uma-pagina"]')).toContainText("Concorrência");
   await expect(page.getByTestId("requisitos-numerados")).toBeVisible();

@@ -179,7 +179,7 @@ export function ConferenciaPgp(props: Props) {
         dispensasCandidatas={comCandidatos.dispensas}
         condicionais={comCandidatos.condicionais}
       />
-      {/* decisão 0037: o resultado só aparece com a leitura do PMO (ou a resposta gravada da demonstração) */}
+      {/* decisão 0037: o resultado só aparece com a leitura do PMO */}
       {conf.leituraPmo && (
         <Resultado
           achados={resultado.achados}

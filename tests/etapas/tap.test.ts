@@ -2,7 +2,7 @@
 // RFP pública da OEI (tests/fixtures/gerados/tap-oei/) e a conferência do TAP pelo código.
 import { readFileSync } from "node:fs";
 import { beforeAll, describe, expect, it } from "vitest";
-import { propostaGravada } from "../../src/demonstracao/preparar";
+import { propostaGravada } from "../ajudantes/gravadas";
 import { criarDossieVazio } from "../../src/dossie/arquivo";
 import type { DocumentoLido, Dossie, TapDossie } from "../../src/dossie/esquema";
 import { conferirTap } from "../../src/etapas/3-tap/conferencia-tap";

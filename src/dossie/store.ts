@@ -27,8 +27,6 @@ interface EstadoDossie {
   guardarTap: (tap: TapDossie) => void;
   guardarPgp: (pgp: PgpDossie) => void;
   novoProjeto: () => void;
-  /** Começa um projeto de demonstração (decisão 0027) com a RFP já lida. */
-  iniciarDemonstracao: (rfp: DocumentoLido, nome: string) => void;
   marcarSalvo: () => void;
 }
 
@@ -56,11 +54,6 @@ export const useDossie = create<EstadoDossie>((set) => ({
   guardarTap: (tap) => set((s) => ({ dossie: { ...s.dossie, tap }, alterado: true })),
   guardarPgp: (pgp) => set((s) => ({ dossie: { ...s.dossie, pgp }, alterado: true })),
   novoProjeto: () => set({ dossie: criarDossieVazio(), alterado: false }),
-  iniciarDemonstracao: (rfp, nome) =>
-    set({
-      dossie: { ...criarDossieVazio(), projeto: { nome }, demonstracao: true, documentos: [rfp] },
-      alterado: false,
-    }),
   marcarSalvo: () => set({ alterado: false }),
 }));
 

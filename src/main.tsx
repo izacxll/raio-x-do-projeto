@@ -3,7 +3,6 @@ import { createRoot } from "react-dom/client";
 import { HashRouter, Navigate, Route, Routes } from "react-router-dom";
 import { useDossie } from "./dossie/store";
 import { Cabecalho } from "./interface/componentes/cabecalho";
-import { AvisoDemonstracao } from "./interface/componentes/demonstracao";
 import "./interface/estilos/app.css";
 import { TelaEtapa } from "./interface/telas/tela-etapa";
 import { TelaInicial } from "./interface/telas/tela-inicial";
@@ -22,7 +21,6 @@ function App() {
   return (
     <HashRouter>
       <Cabecalho />
-      <AvisoDemonstracao />
       <Routes>
         <Route path="/" element={<TelaInicial />} />
         <Route path="/etapa/:numero" element={<TelaEtapa />} />

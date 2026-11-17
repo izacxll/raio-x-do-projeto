@@ -21,10 +21,6 @@ Onde fica cada configuração do app. Não há segredos no repositório: a chave
 | `raio-x-do-projeto:chave-api` | `sessionStorage` (só a aba atual). "Lembrar neste navegador" está desativado de propósito | `src/pmo/chave.ts` (decisão 0003) |
 | O dossiê | Memória da aba (zustand). Aviso ao fechar com mudanças não salvas | `src/dossie/store.ts`, `src/main.tsx` |
 
-## Modo demonstração
-
-Não é uma *feature flag* de ambiente: é uma marca no próprio dossiê (`demonstracao: true`). Com ela, as etapas 2 a 4 usam as respostas gravadas do PMO em vez da API. Os documentos saem com o aviso de demonstração (`src/demonstracao/`, decisão 0027).
-
 ## Variáveis de ambiente
 
 O app publicado não lê nenhuma. Elas só existem para ferramentas locais e para o CI:
@@ -117,5 +113,5 @@ Pedido de edital público pode ir depois para `tests/fixtures/gerados/`. Pedido 
 - `src/config/modelo.ts`, `src/config/precos.ts`
 - `vite.config.ts`, `playwright.config.ts`, `.gitignore`
 - `src/pmo/chave.ts`, `src/dossie/store.ts`, `src/main.tsx`
-- `src/leitura/ler-documento.ts`, `src/demonstracao/demonstracao.ts`
+- `src/leitura/ler-documento.ts`
 - `scripts/comparar-modelos.mjs`, `tests/pmo/comparacao-modelos.test.ts`

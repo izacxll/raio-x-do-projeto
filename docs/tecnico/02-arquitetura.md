@@ -20,7 +20,6 @@ graph TB
   end
   subgraph Etapas["Orquestração das etapas"]
     ET["etapas/: 1-rfp … 5-conferencia"]
-    DEMO["demonstracao/"]
   end
   subgraph Nucleo["Núcleo de código: esqueleto e conferência"]
     LEI["leitura/: pdf.js e OCR"]
@@ -56,7 +55,7 @@ graph TB
 | Camada | Pastas | Responsabilidade |
 |---|---|---|
 | Interface | `interface/` | Telas por etapa (`telas/`), componentes reaproveitados (`componentes/`), tokens de cor e o logo (`ativos/`) |
-| Orquestração | `etapas/`, `demonstracao/` | Junta leitura, extração, regras e PMO em cada etapa; guarda a decisão do GP no dossiê |
+| Orquestração | `etapas/` | Junta leitura, extração, regras e PMO em cada etapa; guarda a decisão do GP no dossiê |
 | Núcleo de código | `leitura/`, `texto/`, `extracao/`, `regras/`, `dominio/` | Funções puras sobre o texto lido: mapa, extração, busca com página e trecho, brechas, o esqueleto que vai no pedido ao PMO e a conferência do que ele devolve (decisão 0035) |
 | PMO | `pmo/`, `config/` | A leitura de cada etapa: pedido à API com a skill, o esqueleto e o texto (cache), resposta em JSON validada, conferência de citações e redação, custo |
 | Saída | `exportacao/` | Modelo neutro de documento (`DocumentoExportavel`) e um montador por formato |

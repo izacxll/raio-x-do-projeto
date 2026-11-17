@@ -1,7 +1,7 @@
 # 0027 — Modo demonstração, com as respostas gravadas do PMO
 
 - **Data:** 13/11/2026
-- **Status:** aceita
+- **Status:** substituída pela decisão 0053 (o site não tem modo de demonstração)
 - **Quem decidiu:** responsável pelo projeto (pedido); detalhes pelo Claude Code, em nome dela
 
 ## Contexto

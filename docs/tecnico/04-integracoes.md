@@ -36,7 +36,7 @@ graph LR
 | Custo | Estimado antes (tokens × preços) e registrado depois, no dossiê (`UsoPmo`) | `src/pmo/custo.ts`, `src/config/precos.ts` |
 | Quem chama | A leitura do PMO em todas as etapas (decisão 0035): etapa 1 (`src/etapas/1-rfp/leitura-pmo.ts`), etapas 2, 3 e 4 (`src/etapas/*/pedidos.ts`) e etapa 5 (`src/etapas/5-conferencia/leitura-pmo.ts`). O passo "teste" só valida a chave | ver a coluna anterior |
 
-Sem chave, nenhuma etapa analisa (decisão 0037): a tela oferece conectar ou ver a demonstração. O **modo demonstração** troca a chamada pelas respostas gravadas em `tests/fixtures/gerados/*-oei/` (todas as etapas; na 5, com um plano inventado), validadas pelos mesmos schemas (`src/demonstracao/`, decisão 0027).
+Sem chave, nenhuma etapa analisa (decisão 0037): a única opção é conectar. O site não tem modo de demonstração (decisão 0053). Nos testes de fumaça, a API é simulada pela rota do Playwright com as respostas gravadas em `tests/fixtures/gerados/*-oei/` (`tests/fumaca/pmo-simulado.ts`).
 
 ## GitHub Pages e GitHub Actions
 
@@ -61,6 +61,5 @@ Sem chave, nenhuma etapa analisa (decisão 0037): a tela oferece conectar ou ver
 
 - `src/pmo/cliente.ts`, `src/pmo/chave.ts`, `src/pmo/montagem.ts`, `src/pmo/custo.ts`
 - `src/config/modelo.ts`, `src/config/precos.ts`
-- `src/demonstracao/demonstracao.ts`
 - `src/dossie/arquivo.ts`, `src/exportacao/exportar.ts`
 - `vite.config.ts`, `.github/workflows/ci.yml`, `.github/workflows/publicar.yml`

@@ -1,17 +1,15 @@
 // Etapa 5 (decisões 0013, 0035 e 0037): "Conferir o plano" faz a conferência por código e a leitura do PMO numa
-// ação só, com a conexão com o Claude (ou a resposta gravada da demonstração), o custo antes e o uso depois. Cada achado do PMO aparece como sugestão, com a situação dada pelo código (citação conferida, rebaixado,
+// ação só, com a conexão com o Claude, o custo antes e o uso depois. Cada achado do PMO aparece como sugestão, com a situação dada pelo código (citação conferida, rebaixado,
 // citação não conferida) e a gravidade e a categoria pela regra fixa. O GP decide se procede.
 import { useMemo } from "react";
 import { MODELO_PADRAO, MODELOS, type IdModelo } from "../../config/modelo";
 import type { Conferencia, DecisaoAchado, DocumentoLido } from "../../dossie/esquema";
-import { useDossie } from "../../dossie/store";
 import { conferirLeitura, NOME_SITUACAO_PMO, pedidoLeitura } from "../../etapas/5-conferencia/leitura-pmo";
 import { NOME_ESTADO_CITACAO } from "../../pmo/citacoes";
 import { estimarCusto, formatarDolar } from "../../pmo/custo";
 import { estimarTokens, referenciasEtapa5, textoDeSistema, textoDosDocumentos } from "../../pmo/montagem";
 import { semRevisoesDoPmo } from "../../pmo/itens";
 import { RespostaLeitura } from "../../pmo/schemas/leitura";
-import { PLANO_DEMONSTRACAO } from "../../demonstracao/demonstracao";
 import type { Achado } from "../../regras/achado";
 import { EtiquetaRotulo, RotuloSecao } from "../componentes/basicos";
 import { ConectarClaude, useChave } from "../componentes/conectar-claude";
@@ -38,7 +36,6 @@ export function LeituraDoPmo({
   dispensasCandidatas: { parte: string; justificativa: string }[];
   condicionais: Map<string, Achado[]>;
 }) {
-  const demonstracao = Boolean(useDossie((s) => s.dossie.demonstracao));
   const chave = useChave();
   const modelo = conf.modeloPmo ?? MODELO_PADRAO;
   const { rodando, erro, chamar, cancelar } = useChamadaPmo();
@@ -64,9 +61,7 @@ export function LeituraDoPmo({
     const r = await chamar({
       etapa: 5,
       passo: "leitura",
-      gravacao: "leitura",
       schema: RespostaLeitura,
-      demonstracao,
       chave,
       modelo,
       sistema,
@@ -88,33 +83,32 @@ export function LeituraDoPmo({
 
   return (
     <>
-      {!demonstracao && (
-        <section className="bloco">
-          <RotuloSecao>Conexão com o PMO</RotuloSecao>
-          <ConectarClaude modelo={modelo as IdModelo} />
-          <div className="cartao cartao__corpo acoes-exportar" style={{ marginTop: 8 }}>
-            <label>
-              <span className="lb">Modelo</span>{" "}
-              <select
-                aria-label="Modelo"
-                value={modelo}
-                onChange={(e) => atualizar({ modeloPmo: e.target.value })}
-                disabled={Boolean(rodando)}
-              >
-                {Object.entries(MODELOS).map(([id, m]) => (
-                  <option key={id} value={id}>
-                    {m.nome}
-                    {id === "claude-opus-5-5" ? " (padrão provisório)" : ""}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <span className="envio__obs">
-              Gasto da leitura até agora: {formatarDolar(uso.reduce((s, u) => s + (u.custoUsd ?? 0), 0))}.
-            </span>
-          </div>
-        </section>
-      )}
+      <section className="bloco">
+        <RotuloSecao>Conexão com o PMO</RotuloSecao>
+        <ConectarClaude modelo={modelo as IdModelo} />
+        <div className="cartao cartao__corpo acoes-exportar" style={{ marginTop: 8 }}>
+          <label>
+            <span className="lb">Modelo</span>{" "}
+            <select
+              aria-label="Modelo"
+              value={modelo}
+              onChange={(e) => atualizar({ modeloPmo: e.target.value })}
+              disabled={Boolean(rodando)}
+            >
+              {Object.entries(MODELOS).map(([id, m]) => (
+                <option key={id} value={id}>
+                  {m.nome}
+                  {id === "claude-opus-5-5" ? " (padrão provisório)" : ""}
+                </option>
+              ))}
+            </select>
+          </label>
+          <span className="envio__obs">
+            Gasto da leitura até agora: {formatarDolar(uso.reduce((s, u) => s + (u.custoUsd ?? 0), 0))}.
+          </span>
+        </div>
+      </section>
+
       <PassoPmoNaTela
         passo="leitura"
         titulo="Conferência do plano"
@@ -124,12 +118,7 @@ export function LeituraDoPmo({
         pedido={pedido}
         semPedido=""
         feito={conf.leituraPmo ? { modelo: conf.leituraPmo.modelo, em: conf.leituraPmo.em } : undefined}
-        demonstracao={demonstracao}
-        bloqueioDemonstracao={
-          demonstracao && pgp.nomeArquivo !== PLANO_DEMONSTRACAO
-            ? "A resposta gravada é do plano inventado da demonstração. Com outro plano na caixa, saia da demonstração e conecte a chave."
-            : undefined
-        }
+
         chave={chave}
         estimativa={estimarCusto(
           modelo,
@@ -220,7 +209,7 @@ export function LeituraDoPmo({
           </div>
         )}
       </PassoPmoNaTela>
-      {!demonstracao && <UsoNaTela uso={uso} titulo="Uso da API na conferência" />}
+      {<UsoNaTela uso={uso} titulo="Uso da API na conferência" />}
     </>
   );
 }

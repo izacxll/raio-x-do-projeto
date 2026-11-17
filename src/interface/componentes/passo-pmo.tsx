@@ -1,9 +1,7 @@
 // Um passo do PMO na tela (todas as etapas): custo antes, botão, progresso, cancelar, erro em português e a resposta.
-// Na demonstração (decisão 0027), o botão carrega a resposta gravada e nada é enviado à API.
 import { useRef, useState, type ReactNode } from "react";
 import type { z } from "zod";
 import type { PassoPmo } from "../../config/modelo";
-import { MODELO_GRAVADO, respostaGravada } from "../../demonstracao/demonstracao";
 import type { UsoPmo } from "../../dossie/esquema";
 import type { ErroPmo } from "../../pmo/cliente";
 import { formatarDolar, formatarTokens, type EstimativaCusto } from "../../pmo/custo";
@@ -16,17 +14,13 @@ export interface RespostaDoPasso<T> {
   resposta: T;
   modelo: string;
   em: string;
-  /** Sem uso na demonstração: não houve chamada. */
   uso?: UsoPmo;
 }
 
 export interface PedidoDoPasso<S extends z.ZodType> {
   etapa: 1 | 3 | 4 | 5;
   passo: PassoComPmo;
-  /** Nome do arquivo da resposta gravada (tests/fixtures/gerados/<etapa>-oei/<gravacao>.json). */
-  gravacao?: string;
   schema: S;
-  demonstracao: boolean;
   chave: string | null;
   modelo: string;
   sistema: string;
@@ -34,7 +28,7 @@ export interface PedidoDoPasso<S extends z.ZodType> {
   pedido: string;
 }
 
-/** Chama o PMO (ou carrega a resposta gravada) com o estado da tela: rodando, recebidos, erro, cancelar. */
+/** Chama o PMO com o estado da tela: rodando, recebidos, erro, cancelar. */
 export function useChamadaPmo() {
   const [rodando, setRodando] = useState<{ passo: string; recebidos: number } | null>(null);
   const [erro, setErro] = useState<{ passo: string; erro: ErroPmo } | null>(null);
@@ -45,10 +39,6 @@ export function useChamadaPmo() {
   ): Promise<RespostaDoPasso<z.infer<S>> | null> {
     setErro(null);
     try {
-      if (p.demonstracao) {
-        const resposta = await respostaGravada(p.etapa, p.gravacao ?? p.passo, p.schema);
-        return { resposta, modelo: MODELO_GRAVADO, em: new Date().toISOString() };
-      }
       if (!p.chave) return null;
       controle.current = new AbortController();
       setRodando({ passo: p.passo, recebidos: 0 });
@@ -90,8 +80,6 @@ export function PassoPmoNaTela({
   pedido,
   semPedido,
   feito,
-  demonstracao,
-  bloqueioDemonstracao,
   chave,
   estimativa,
   rodando,
@@ -109,8 +97,6 @@ export function PassoPmoNaTela({
   pedido: string | null;
   semPedido: string;
   feito?: { modelo: string; em: string };
-  demonstracao: boolean;
-  bloqueioDemonstracao?: string;
   chave: string | null;
   estimativa?: EstimativaCusto;
   rodando: { passo: string; recebidos: number } | null;
@@ -135,12 +121,8 @@ export function PassoPmoNaTela({
         ) : (
           <>
             {explicacao && <p className="texto-apoio">{explicacao}</p>}
-            {demonstracao && bloqueioDemonstracao && (
-              <p className="envio__obs" data-testid={`gravacao-${passo}`}>
-                {bloqueioDemonstracao}
-              </p>
-            )}
-            {estimativa && !demonstracao && (
+
+            {estimativa && (
               <p className="envio__obs" data-testid={`custo-${passo}`}>
                 Estimativa antes de chamar: cerca de {formatarTokens(estimativa.tokensEntrada)} tokens de
                 entrada e {formatarTokens(estimativa.saidaMin)} a {formatarTokens(estimativa.saidaMax)} de
@@ -150,13 +132,13 @@ export function PassoPmoNaTela({
                 documentos lidos do cache).
               </p>
             )}
-            {!demonstracao && <p className="envio__obs">{envio}</p>}
+            <p className="envio__obs">{envio}</p>
             <div className="acoes-exportar">
               <button
                 className="botao botao--cheio"
                 type="button"
                 data-testid={testid ?? `pedir-${passo}`}
-                disabled={demonstracao ? Boolean(bloqueioDemonstracao) || ocupado : !chave || ocupado}
+                disabled={!chave || ocupado}
                 onClick={() => {
                   if (
                     feito &&
@@ -168,19 +150,9 @@ export function PassoPmoNaTela({
                   aoPedir();
                 }}
               >
-                {rotuloBotao && !feito
-                  ? rotuloBotao
-                  : demonstracao
-                    ? feito
-                      ? "Carregar de novo a resposta gravada"
-                      : "Carregar a resposta gravada"
-                    : feito
-                      ? "Pedir de novo ao PMO"
-                      : "Pedir ao PMO"}
+                {rotuloBotao && !feito ? rotuloBotao : feito ? "Pedir de novo ao PMO" : "Pedir ao PMO"}
               </button>
-              {!chave && !demonstracao && (
-                <span className="envio__obs">Conecte a chave acima para pedir, ou veja a demonstração.</span>
-              )}
+              {!chave && <span className="envio__obs">Conecte a chave acima para pedir.</span>}
               {rodando?.passo === passo && (
                 <>
                   <span className="envio__obs" aria-live="polite">
@@ -204,9 +176,7 @@ export function PassoPmoNaTela({
         )}
         {feito && (
           <p className="envio__obs">
-            {feito.modelo === MODELO_GRAVADO
-              ? "Resposta gravada (demonstração), sem chamada à IA."
-              : `Resposta de ${feito.modelo} em ${new Date(feito.em).toLocaleString("pt-BR")}.`}
+            {`Resposta de ${feito.modelo} em ${new Date(feito.em).toLocaleString("pt-BR")}.`}
           </p>
         )}
       </div>

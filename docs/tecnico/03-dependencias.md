@@ -6,7 +6,7 @@ Quem depende de quem dentro de `src/` e quais pacotes externos o app usa.
 
 O grafo foi calculado pelos imports relativos entre as pastas de `src/`, contando também os `import()` dinâmicos (16/11/2026). O número na aresta é a quantidade de imports.
 
-Imports só de tipo (`import type`) somem no build e ficam de fora. Ficaram de fora também as arestas de `leitura`, `texto`, `extracao`, `demonstracao` e `config` para `dossie` que só trazem tipos.
+Imports só de tipo (`import type`) somem no build e ficam de fora. Ficaram de fora também as arestas de `leitura`, `texto`, `extracao` e `config` para `dossie` que só trazem tipos.
 
 As arestas vermelhas fecham um ciclo.
 

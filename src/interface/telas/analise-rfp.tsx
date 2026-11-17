@@ -1,7 +1,7 @@
 // Etapa 1 na tela, pelo método (docs/estudos/metodo-etapa-1.md, decisões 0034, 0035 e 0037): a leitura da RFP em 8
 // seções, na ordem da decisão do gerente. Nada é analisado sem a conexão com o Claude (decisão 0037): "Analisar a
 // RFP" monta o esqueleto do código, manda-o ao PMO com o texto da RFP e mostra a leitura conferida pelo código
-// (citação, número, R). Sem chave, as opções são conectar ou ver a demonstração; o esqueleto não aparece sozinho.
+// (citação, número, R). Sem chave, nada é analisado; o esqueleto não aparece sozinho.
 // Cada item tem o rótulo, a página e a revisão do GP (aceitar, editar, descartar). Participar é decisão só do GP.
 import { useMemo, useState } from "react";
 import { MODELO_PADRAO, MODELOS, type IdModelo } from "../../config/modelo";
@@ -70,7 +70,7 @@ export function AnaliseDaRfp({ todos }: Props) {
 }
 
 /**
- * Antes da primeira análise: a conexão com o Claude (ou a demonstração), o custo estimado e o aviso de envio. O botão
+ * Antes da primeira análise: a conexão com o Claude, o custo estimado e o aviso de envio. O botão
  * monta o esqueleto do código e pede a leitura do PMO numa ação só; a análise só é guardada com a leitura.
  */
 function AnalisarComPmo({
@@ -84,7 +84,6 @@ function AnalisarComPmo({
   todos: DocumentoLido[];
   atualizar: (a: AnaliseRfpDossie) => void;
 }) {
-  const demonstracao = Boolean(useDossie((s) => s.dossie.demonstracao));
   const chave = useChave();
   const [modelo, setModelo] = useState(salva?.modeloPmo ?? MODELO_PADRAO);
   const { rodando, erro, chamar, cancelar } = useChamadaPmo();
@@ -102,9 +101,7 @@ function AnalisarComPmo({
     const r = await chamar({
       etapa: 1,
       passo: "leitura-rfp",
-      gravacao: "leitura-pmo",
       schema: RespostaLeituraRfp,
-      demonstracao,
       chave,
       modelo,
       sistema,
@@ -124,36 +121,34 @@ function AnalisarComPmo({
 
   return (
     <>
-      {!demonstracao && (
-        <section className="bloco">
-          <RotuloSecao>Conexão com o PMO</RotuloSecao>
-          <ConectarClaude modelo={modelo as IdModelo} />
-          <div className="cartao cartao__corpo acoes-exportar" style={{ marginTop: 8 }}>
-            <label>
-              <span className="lb">Modelo</span>{" "}
-              <select
-                aria-label="Modelo"
-                value={modelo}
-                onChange={(e) => setModelo(e.target.value)}
-                disabled={Boolean(rodando)}
-              >
-                {Object.entries(MODELOS).map(([id, m]) => (
-                  <option key={id} value={id}>
-                    {m.nome}
-                    {id === "claude-opus-5-5" ? " (padrão provisório)" : ""}
-                  </option>
-                ))}
-              </select>
-            </label>
-          </div>
-        </section>
-      )}
+      <section className="bloco">
+        <RotuloSecao>Conexão com o PMO</RotuloSecao>
+        <ConectarClaude modelo={modelo as IdModelo} />
+        <div className="cartao cartao__corpo acoes-exportar" style={{ marginTop: 8 }}>
+          <label>
+            <span className="lb">Modelo</span>{" "}
+            <select
+              aria-label="Modelo"
+              value={modelo}
+              onChange={(e) => setModelo(e.target.value)}
+              disabled={Boolean(rodando)}
+            >
+              {Object.entries(MODELOS).map(([id, m]) => (
+                <option key={id} value={id}>
+                  {m.nome}
+                  {id === "claude-opus-5-5" ? " (padrão provisório)" : ""}
+                </option>
+              ))}
+            </select>
+          </label>
+        </div>
+      </section>
+
       <PassoPmoNaTela
         passo="leitura-rfp"
         titulo="Análise da RFP"
         pedido={pedido}
         semPedido=""
-        demonstracao={demonstracao}
         chave={chave}
         estimativa={estimarCusto(
           modelo,
@@ -395,7 +390,7 @@ function Analise({
   );
 }
 
-/** A leitura do PMO (decisão 0035): custo antes, aviso de envio, uso depois; na demonstração, a resposta gravada. */
+/** A leitura do PMO (decisão 0035): custo antes, aviso de envio, uso depois. */
 function LeituraDoPmoNaEtapa1({
   salva,
   todos,
@@ -408,7 +403,6 @@ function LeituraDoPmoNaEtapa1({
   atualizar: (a: AnaliseRfpDossie) => void;
   leitura: LeituraRfp;
 }) {
-  const demonstracao = Boolean(useDossie((s) => s.dossie.demonstracao));
   const chave = useChave();
   const modelo = salva.modeloPmo ?? MODELO_PADRAO;
   const { rodando, erro, chamar, cancelar } = useChamadaPmo();
@@ -429,9 +423,7 @@ function LeituraDoPmoNaEtapa1({
     const r = await chamar({
       etapa: 1,
       passo: "leitura-rfp",
-      gravacao: "leitura-pmo",
       schema: RespostaLeituraRfp,
-      demonstracao,
       chave,
       modelo,
       sistema,
@@ -450,33 +442,32 @@ function LeituraDoPmoNaEtapa1({
 
   return (
     <>
-      {!demonstracao && (
-        <section className="bloco">
-          <RotuloSecao>Conexão com o PMO</RotuloSecao>
-          <ConectarClaude modelo={modelo as IdModelo} />
-          <div className="cartao cartao__corpo acoes-exportar" style={{ marginTop: 8 }}>
-            <label>
-              <span className="lb">Modelo</span>{" "}
-              <select
-                aria-label="Modelo"
-                value={modelo}
-                onChange={(e) => atualizar({ ...salva, modeloPmo: e.target.value })}
-                disabled={Boolean(rodando)}
-              >
-                {Object.entries(MODELOS).map(([id, m]) => (
-                  <option key={id} value={id}>
-                    {m.nome}
-                    {id === "claude-opus-5-5" ? " (padrão provisório)" : ""}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <span className="envio__obs">
-              Gasto da leitura até agora: {formatarDolar(uso.reduce((s, u) => s + (u.custoUsd ?? 0), 0))}.
-            </span>
-          </div>
-        </section>
-      )}
+      <section className="bloco">
+        <RotuloSecao>Conexão com o PMO</RotuloSecao>
+        <ConectarClaude modelo={modelo as IdModelo} />
+        <div className="cartao cartao__corpo acoes-exportar" style={{ marginTop: 8 }}>
+          <label>
+            <span className="lb">Modelo</span>{" "}
+            <select
+              aria-label="Modelo"
+              value={modelo}
+              onChange={(e) => atualizar({ ...salva, modeloPmo: e.target.value })}
+              disabled={Boolean(rodando)}
+            >
+              {Object.entries(MODELOS).map(([id, m]) => (
+                <option key={id} value={id}>
+                  {m.nome}
+                  {id === "claude-opus-5-5" ? " (padrão provisório)" : ""}
+                </option>
+              ))}
+            </select>
+          </label>
+          <span className="envio__obs">
+            Gasto da leitura até agora: {formatarDolar(uso.reduce((s, u) => s + (u.custoUsd ?? 0), 0))}.
+          </span>
+        </div>
+      </section>
+
       <PassoPmoNaTela
         passo="leitura-rfp"
         titulo="Leitura da RFP"
@@ -484,7 +475,6 @@ function LeituraDoPmoNaEtapa1({
         pedido={pedido}
         semPedido=""
         feito={salva.leituraPmo ? { modelo: salva.leituraPmo.modelo, em: salva.leituraPmo.em } : undefined}
-        demonstracao={demonstracao}
         chave={chave}
         estimativa={estimarCusto(
           modelo,
@@ -508,7 +498,7 @@ function LeituraDoPmoNaEtapa1({
           </p>
         )}
       </PassoPmoNaTela>
-      {!demonstracao && <UsoNaTela uso={uso} titulo="Uso da API na leitura da RFP" />}
+      {<UsoNaTela uso={uso} titulo="Uso da API na leitura da RFP" />}
     </>
   );
 }
