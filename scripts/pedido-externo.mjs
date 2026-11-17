@@ -59,6 +59,7 @@ const env = {
   RAIO_X_PLANO: args.plano === "dossie" ? "dossie" : args.plano ? resolve(args.plano) : "",
   RAIO_X_PORTE: args.porte ?? "",
   RAIO_X_PCS: args.pcs ?? "",
+  RAIO_X_MODALIDADE: args.modalidade ?? "",
 };
 delete env.ANTHROPIC_API_KEY;
 const r = spawnSync("npx", ["vitest", "run", "tests/pmo/pedido-externo.test.ts", "--silent=false"], {

@@ -9,6 +9,7 @@ import { conferirQuestoes, questoesDoCodigo, referenciasDoPlano } from "../../sr
 import { montarPgp } from "../../src/exportacao/relatorio-pgp";
 import { pgpComoDocumento } from "../../src/etapas/4-pgp/autoconferencia";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { conteudoDoPedido } from "./conteudo-do-pedido";
 import { basename, dirname, join, resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 import { zodOutputFormat } from "@anthropic-ai/sdk/helpers/zod";
@@ -290,6 +291,14 @@ describe.skipIf(MODO !== "exportar")("exportar o pedido de um passo do PMO", () 
       dossie = { ...criarDossieVazio(HOJE), documentos: [rfp] };
       if (etapa === 1) dossie = { ...dossie, analiseRfp: analiseInicial(analisarRfp([rfp], HOJE), HOJE) };
     }
+    // decisão do GP: a modalidade, quando o documento não a diz (--modalidade; decisão 0054), guardada no dossiê
+    if (env.RAIO_X_MODALIDADE && dossie.analiseRfp) {
+      const m = env.RAIO_X_MODALIDADE as "licitacao" | "contratacao-direta" | "parceria";
+      if (!["licitacao", "contratacao-direta", "parceria"].includes(m))
+        throw new Error("--modalidade deve ser licitacao, contratacao-direta ou parceria.");
+      dossie = { ...dossie, analiseRfp: { ...dossie.analiseRfp, modalidade: m } };
+      if (env.RAIO_X_DOSSIE) writeFileSync(env.RAIO_X_DOSSIE, serializarDossie(dossie, HOJE));
+    }
     // decisões do GP para as etapas 4 e 5: --porte e --pcs ("PC1,PC3,PC4"), guardadas no dossiê para a importação
     // usar as mesmas; sem elas, valem as do dossiê
     if (env.RAIO_X_PORTE || env.RAIO_X_PCS) {
@@ -392,6 +401,21 @@ ${p.pedido}
 ${JSON.stringify(schema, null, 2)}
 \`\`\`\`
 `;
+    // o que foi dentro do pedido, contra a tabela da seção 5 da SKILL.md: com FALTA, o pedido não sai
+    const conteudo = conteudoDoPedido({
+      etapa,
+      passo,
+      sistema: p.sistema,
+      documentos: p.documentos,
+      pedido: p.pedido,
+      schema: JSON.stringify(schema),
+      skill: readFileSync(".claude/skills/pmo/SKILL.md", "utf8"),
+    });
+    writeFileSync(join(saida, `${nome}.conteudo.md`), conteudo.texto);
+    if (conteudo.faltas.length)
+      throw new Error(
+        `FALTA no pedido (${conteudo.faltas.join("; ")}): veja ${join(saida, `${nome}.conteudo.md`)}. O pedido não foi exportado.`,
+      );
     writeFileSync(join(saida, `${nome}.md`), md);
     writeFileSync(join(saida, `${nome}.dossie.json`), serializarDossie(dossie, HOJE));
     console.log(
