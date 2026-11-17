@@ -43,6 +43,7 @@ function base(dossie: Dossie, titulo: string, subtitulo: string, minuta: boolean
 export function rotuloDoItem(i: ItemProposta): string {
   if (i.item.rotulo === "documento") {
     if (i.conferencia.citacaoNaoConferida) return "[Do documento — citação não conferida]";
+    if (i.conferencia.citacaoNaoProva) return "[Do documento — citação não prova]";
     const k = i.conferencia.citacoes.findIndex(
       (c) => c.estado !== "nao-conferida" && c.estado !== "nao-verificavel",
     );
@@ -150,6 +151,7 @@ export function montarPropostaTecnica(
       inicio: p.parametros.inicio ? new Date(`${p.parametros.inicio}T00:00:00`) : undefined,
       prazoRfp: ponto.prazoExecucao,
       feriados: p.parametros.feriados,
+      horas: eap.horas,
     });
     secoes.push({
       titulo: "Cronograma executivo (calculado pelo código)",
@@ -239,6 +241,7 @@ function linhaDaMinuta(i: ItemMinuta): string {
         : "[Sugestão]";
   const avisos = [
     i.conferencia?.citacaoNaoConferida ? "citação não conferida" : "",
+    i.conferencia?.citacaoNaoProva ? "citação não prova" : "",
     i.conferencia?.numerosSemFonte.length
       ? `valor não conferido: ${i.conferencia.numerosSemFonte.join(", ")}`
       : "",

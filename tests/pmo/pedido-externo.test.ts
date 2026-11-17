@@ -16,6 +16,14 @@ import { zodOutputFormat } from "@anthropic-ai/sdk/helpers/zod";
 import type { z } from "zod";
 import { criarDossieVazio, lerDossie, serializarDossie } from "../../src/dossie/arquivo";
 import type { Dossie, DocumentoLido } from "../../src/dossie/esquema";
+import { RespostaSegundaInstancia } from "../../src/pmo/schemas/segunda-instancia";
+import {
+  chaveDaSegundaInstancia,
+  conferirSegundaInstancia,
+  pedidoSegundaInstancia,
+  segundaInstanciaEmTexto,
+  sistemaDaSegundaInstancia,
+} from "../../src/pmo/segunda-instancia";
 import { analisarRfp } from "../../src/etapas/1-rfp/analisar-rfp";
 import { leituraDoDossie, NOME_TRAVA, pedidoLeituraRfp } from "../../src/etapas/1-rfp/leitura-pmo";
 import { analiseInicial } from "../../src/etapas/1-rfp/revisao";
@@ -38,7 +46,7 @@ import { calcularCronograma } from "../../src/etapas/2-proposta/cronograma";
 import { esqueletoEmTexto, montarMinuta } from "../../src/etapas/2-proposta/minuta";
 import { pedidoConteudo, pedidoEap, pedidoEstrategia } from "../../src/etapas/2-proposta/pedidos";
 import { montarPontoDePartida } from "../../src/etapas/2-proposta/ponto-de-partida";
-import { propostaInicial } from "../../src/etapas/2-proposta/proposta";
+import { propostaAntesDoPasso, propostaInicial } from "../../src/etapas/2-proposta/proposta";
 import { compararRfpEProposta } from "../../src/etapas/3-tap/divergencias";
 import { dadosDosDocumentos } from "../../src/etapas/3-tap/do-documento";
 import { montarEntradaTap } from "../../src/etapas/3-tap/entrada";
@@ -61,7 +69,8 @@ import {
 import { autoconferir } from "../../src/etapas/4-pgp/autoconferencia";
 import { textoDasHoras, textoDasHorasTotais } from "../../src/etapas/2-proposta/preco";
 import { PASSOS_PGP } from "../../src/etapas/4-pgp/passos";
-import { PEDIDOS_PGP } from "../../src/etapas/4-pgp/pedidos";
+import { PEDIDOS_PGP, pgpAntesDoPasso } from "../../src/etapas/4-pgp/pedidos";
+import { linhaDaProposta } from "../../src/etapas/linha-do-tempo";
 import { itensDoPgp, passoAnterior, pgpInicial, repeteORegistroInicial } from "../../src/etapas/4-pgp/pgp";
 import { conferirLeitura, pedidoLeitura } from "../../src/etapas/5-conferencia/leitura-pmo";
 import { conferirAutoconferencia, partesARegenerar } from "../../src/pmo/autoconferencia";
@@ -105,6 +114,49 @@ interface Passo {
   documentos: string;
   pedido: string;
   schema: z.ZodType;
+}
+
+/** O passo que a segunda instância confere ("segunda-conteudo" → "conteudo"). */
+const alvoDaSegunda = (x: string) => x.replace(/^segunda-/, "");
+
+/** A resposta guardada do passo, com o "em" (a segunda instância confere esta). */
+function respostaDoPasso(d: Dossie, alvo: string): { resposta: unknown; em: string } | undefined {
+  const g =
+    etapa === 1
+      ? d.analiseRfp?.leituraPmo
+      : etapa === 2
+        ? d.proposta?.[alvo as "estrategia" | "conteudo" | "eap"]
+        : etapa === 3
+          ? d.tap?.[alvo as "tap" | "premissas"]
+          : etapa === 4
+            ? d.pgp?.[alvo as PassoPgp]
+            : d.conferencia?.leituraPmo;
+  return g ? { resposta: g.resposta, em: g.em } : undefined;
+}
+
+/** Os documentos que foram no pedido do passo: a segunda instância confere contra os mesmos. */
+function documentosDoPasso(d: Dossie): DocumentoLido[] {
+  if (etapa === 3) return montarEntradaTap(d, HOJE).documentos;
+  if (etapa === 4) return montarEntradaPgp(d, HOJE).documentos;
+  if (etapa === 5) {
+    const c = entradaDaConferencia(d);
+    return [c.pgp, ...(c.tap ? [c.tap] : []), ...(c.rfp ? [c.rfp] : [])];
+  }
+  return d.documentos.filter((x) => x.papel === "rfp" || x.papel === "anexo-rfp");
+}
+
+/** Segunda instância (decisão 0057): só a skill, os documentos e a resposta do passo. */
+function montarSegunda(d: Dossie): Passo {
+  const alvo = alvoDaSegunda(passo);
+  precisa(PASSOS[etapa]?.includes(alvo), `o passo "${alvo}" não existe na etapa ${etapa}`);
+  const r = respostaDoPasso(d, alvo);
+  precisa(r, `importe a resposta do passo "${alvo}" antes de conferir`);
+  return {
+    sistema: sistemaDaSegundaInstancia(),
+    documentos: textoDosDocumentos(documentosDoPasso(d)),
+    pedido: pedidoSegundaInstancia(etapa, alvo, r.resposta),
+    schema: RespostaSegundaInstancia,
+  };
 }
 
 /** Passos de cada etapa, na ordem: o seguinte só sai depois de importar a resposta do anterior. */
@@ -162,6 +214,7 @@ function entradaDaConferencia(d: Dossie) {
 }
 
 function montarPasso(d: Dossie): Passo {
+  if (passo.startsWith("segunda-")) return montarSegunda(d);
   const docs = d.documentos.filter((x) => x.papel === "rfp" || x.papel === "anexo-rfp");
   if (!PASSOS[etapa]?.includes(passo))
     throw new Error(
@@ -169,7 +222,11 @@ function montarPasso(d: Dossie): Passo {
     );
   if (etapa === 2) {
     const ponto = montarPontoDePartida(docs, d.analiseRfp, HOJE);
-    const p = d.proposta ?? propostaInicial();
+    // o passo refeito parte só dos passos anteriores, como na tela (decisão 0057)
+    const p = propostaAntesDoPasso(
+      d.proposta ?? propostaInicial(),
+      passo as "estrategia" | "conteudo" | "eap",
+    );
     const minuta = montarMinuta(ponto, p, docs, d.analiseRfp);
     const esqueleto = esqueletoEmTexto(minuta);
     const base = { sistema: textoDeSistema(referenciasEtapa2()), documentos: textoDosDocumentos(docs) };
@@ -194,7 +251,15 @@ function montarPasso(d: Dossie): Passo {
     precisa(c, "importe o conteúdo");
     return {
       ...base,
-      pedido: pedidoEap(ponto, e, p.abordagem.id, c, esqueleto, minuta.tipo.projeto),
+      pedido: pedidoEap(
+        ponto,
+        e,
+        p.abordagem.id,
+        c,
+        esqueleto,
+        minuta.tipo.projeto,
+        linhaDaProposta(ponto, p, docs),
+      ),
       schema: SCHEMAS.eap,
     };
   }
@@ -459,6 +524,35 @@ describe.skipIf(MODO !== "importar")("importar a resposta do PMO (leitura indepe
       console.log(`A resposta não segue o schema do passo:\n${erros.join("\n")}`);
       throw new Error("resposta fora do schema");
     }
+    if (passo.startsWith("segunda-")) {
+      // segunda instância (decisão 0057): guarda no dossiê e grava conferencia-*.md ao lado da resposta
+      const alvo = alvoDaSegunda(passo);
+      const r = respostaDoPasso(dossie, alvo)!;
+      const resposta = v.data as z.infer<typeof RespostaSegundaInstancia>;
+      dossie = {
+        ...dossie,
+        segundaInstancia: {
+          ...dossie.segundaInstancia,
+          [chaveDaSegundaInstancia(etapa, alvo)]: {
+            resposta,
+            modelo: "claude.ai (segunda instância)",
+            em: HOJE.toISOString(),
+            deResposta: r.em,
+          },
+        },
+      };
+      writeFileSync(arqDossie, serializarDossie(dossie, HOJE));
+      const res = conferirSegundaInstancia(resposta, documentosDoPasso(dossie));
+      const base = basename(dossie.documentos.find((x) => x.papel === "rfp")?.nomeArquivo ?? "rfp", ".pdf");
+      const arq = join(
+        dirname(resolve(env.RAIO_X_ARQUIVO ?? "")),
+        `conferencia-etapa-${etapa}-${alvo}-${base}.md`,
+      );
+      writeFileSync(arq, `${segundaInstanciaEmTexto(etapa, alvo, res)}\n`);
+      console.log(`Conferência: ${arq}\nAchados: ${res.achados.length}; de gravidade alta: ${res.altas}`);
+      expect(res.achados.length).toBeGreaterThanOrEqual(0);
+      return;
+    }
     const linhas: string[] = [];
     if (etapa === 1) {
       const docs = dossie.documentos.filter((x) => x.papel === "rfp" || x.papel === "anexo-rfp");
@@ -563,7 +657,11 @@ describe.skipIf(MODO !== "importar")("importar a resposta do PMO (leitura indepe
       };
       if (etapa === 2) {
         const atual = dossie.proposta ?? propostaInicial();
-        let proposta = { ...atual, [passo]: guardada } as typeof atual;
+        // o passo refeito descarta as respostas dos passos seguintes, que dependiam dele (decisão 0057)
+        let proposta = {
+          ...propostaAntesDoPasso(atual, passo as "estrategia" | "conteudo" | "eap"),
+          [passo]: guardada,
+        } as typeof atual;
         if (passo === "estrategia") {
           // decisões do GP com o padrão do teste: --abordagem, ou a primeira sugerida; --pcs, ou só as PC que o PMO
           // marcou "sim" (a "a confirmar" é decisão do GP: sem --pcs, não vira confirmada)
@@ -584,9 +682,20 @@ describe.skipIf(MODO !== "importar")("importar a resposta do PMO (leitura indepe
         }
         dossie = { ...dossie, proposta };
       }
-      if (etapa === 3) dossie = { ...dossie, tap: { ...(dossie.tap ?? tapInicial()), [passo]: guardada } };
+      if (etapa === 3)
+        dossie = {
+          ...dossie,
+          tap: {
+            ...(dossie.tap ?? tapInicial()),
+            ...(passo === "tap" ? { premissas: undefined } : {}),
+            [passo]: guardada,
+          },
+        };
       if (etapa === 4) {
-        let pgp = { ...(dossie.pgp ?? pgpInicial()), [passo]: guardada } as PgpDossie;
+        let pgp = {
+          ...pgpAntesDoPasso(dossie.pgp ?? pgpInicial(), passo as PassoPgp),
+          [passo]: guardada,
+        } as PgpDossie;
         if (passo === "adaptacao") {
           // decisão do GP com o padrão do teste: --gerar "A1,A3,…", ou tudo o que o PMO não marcou como dispensável
           const a = v.data as z.infer<typeof SCHEMAS_PGP.adaptacao>;

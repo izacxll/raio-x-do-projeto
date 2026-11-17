@@ -42,6 +42,7 @@ const ROTULO = { documento: "Do documento", sugestao: "Sugestão", decisao_gp: "
 export function rotuloDoItem(i: ItemConferido): string {
   if (i.item.rotulo === "documento") {
     if (i.conferencia.citacaoNaoConferida) return "[Do documento — citação não conferida]";
+    if (i.conferencia.citacaoNaoProva) return "[Do documento — citação não prova]";
     const k = i.conferencia.citacoes.findIndex(
       (c) => c.estado !== "nao-conferida" && c.estado !== "nao-verificavel",
     );

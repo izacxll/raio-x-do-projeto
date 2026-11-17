@@ -7,6 +7,7 @@ import { NOME_SITUACAO_DIVERGENCIA, type Divergencia } from "./divergencias";
 import { dadosEmTexto, type DadoDoDocumento } from "./do-documento";
 import type { EntradaTap } from "./entrada";
 import { itensDoPassoEmTexto, type PassoEtapa3 } from "./autoconferencia";
+import { INSTRUCAO_MARCOS, linhaDoTempoEmTexto, linhaDosDados } from "../linha-do-tempo";
 
 const regras = (passo: PassoEtapa3) => `Regras deste pedido (além da skill):
 - Responda só com o objeto JSON do passo, no schema enviado.
@@ -83,6 +84,9 @@ ${dadosEmTexto(dados)}
 ## Divergências RFP × proposta × contrato (código) e a decisão do GP
 ${divergenciasEmTexto(divs, decisoes)}
 ${compromissosDoPedido(e, "tap")}
+## Linha do tempo do código (cronograma da proposta; decisão 0057)
+${e.dados?.cronograma ? linhaDoTempoEmTexto(linhaDosDados(e.dados, e.ponto.prazoExecucao)) : "- sem o cronograma da etapa 2 no dossiê: confira os marcos pelos prazos dos documentos"}
+
 Premissas críticas que se aplicam (decisão do GP): ${premissasEmTexto(premissas)}
 
 # O que fazer
@@ -99,6 +103,7 @@ Depois, redija os 12 elementos do TAP, em alto nível (o detalhe é do plano), a
 9. aprovacao (TAP.9): quem avalia (gestor, comissão, fiscal), quem dá o aceite e quem autoriza o encerramento, ligados às cláusulas do contrato (ou da RFP), com a fonte; prazo que o documento não dá é "a definir pelo GP". termino (TAP.10): vigência, prorrogação (pedida e de ofício), prestação de contas final, devolução de saldo e de dados, denúncia e rescisão.
 10. Em cada divergência com decisão do GP, siga a decisão; sem decisão, siga o contrato quando houver e escreva a diferença como pendente do GP. Itens da RFP que o contrato mudou não entram.
 11. observacoes: o que você achou e o código não, sempre com fonte.
+12. ${INSTRUCAO_MARCOS} Marco do TAP que promete data ("antes de …") ou caber na vigência e que a conta não confirma é divergência obrigatória, em divergenciasTexto.
 
 ${regras("tap")}`;
 }

@@ -12,6 +12,7 @@ import { semRevisoesDoPmo } from "../../pmo/itens";
 import { RespostaLeitura } from "../../pmo/schemas/leitura";
 import type { Achado } from "../../regras/achado";
 import { EtiquetaRotulo, RotuloSecao } from "../componentes/basicos";
+import { SegundaInstancia } from "../componentes/segunda-instancia";
 import { ConectarClaude, useChave } from "../componentes/conectar-claude";
 import { PassoPmoNaTela, UsoNaTela, useChamadaPmo } from "../componentes/passo-pmo";
 
@@ -132,6 +133,16 @@ export function LeituraDoPmo({
         aoCancelar={cancelar}
         envio="Ao clicar, o texto do plano, do TAP e da RFP vai para a API do Claude, pela sua chave, na organização da FGV, junto com os achados do código."
       >
+        {conf.leituraPmo && (
+          <SegundaInstancia
+            etapa={5}
+            passo="leitura"
+            resposta={conf.leituraPmo.resposta}
+            respostaEm={conf.leituraPmo.em}
+            documentos={documentos}
+            modelo={modelo}
+          />
+        )}
         {conferidos.length > 0 && (
           <div data-testid="leitura-pmo">
             <p className="envio__obs" style={{ margin: "8px 0" }}>

@@ -5,7 +5,14 @@
 import type { Desembolso } from "../extracao/rfp/dinheiro";
 import type { DocumentoRfp, ItemAnalise, OrigemItem } from "../extracao/rfp/item";
 import { localizarTodos, type Localizado } from "../extracao/rfp/localizar";
-import { diasEntre, ehDiaUtil, encontrarDatas, formatarData, soData } from "../texto/datas";
+import {
+  diasEntre,
+  ehDataDeAtoOuAssinatura,
+  ehDiaUtil,
+  encontrarDatas,
+  formatarData,
+  soData,
+} from "../texto/datas";
 import { limparEspacos } from "../texto/frase";
 import { tirarAcentos } from "../texto/normalizar";
 import { normalizarTermo } from "./busca";
@@ -124,6 +131,7 @@ function periodosFixos(docs: DocumentoRfp[]): Periodo[] {
           .toLowerCase();
         const antes = tirarAcentos(p.texto.slice(Math.max(0, d.posicao - 20), d.posicao)).toLowerCase();
         if (!/^(?:a|ate)$/.test(entre) || !RE_MARCO_FIXO.test(antes) || prox.data <= d.data) return;
+        if (ehDataDeAtoOuAssinatura(p.texto, d)) return;
         out.push({
           ini: d.data,
           fim: prox.data,
@@ -141,8 +149,9 @@ function periodosFixos(docs: DocumentoRfp[]): Periodo[] {
 export function inicioFixo(docs: DocumentoRfp[]): { data: Date; origem: OrigemItem } | undefined {
   for (const l of localizarTodos(docs, RE_INICIO_FIXO)) {
     const pagina = l.doc.paginas.find((p) => p.numero === l.pagina)?.texto ?? "";
-    const d = encontrarDatas(pagina.slice(l.posicao, l.posicao + 80))[0];
-    if (d) return { data: d.data, origem: origem(l) };
+    const trecho = pagina.slice(l.posicao, l.posicao + 80);
+    const d = encontrarDatas(trecho)[0];
+    if (d && !ehDataDeAtoOuAssinatura(trecho, d)) return { data: d.data, origem: origem(l) };
   }
   return undefined;
 }

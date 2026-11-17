@@ -3,8 +3,12 @@
 // (modelo do edital, pontos, preço, contas): o PMO parte dele e não refaz o que é conta. A regra de saída é a da skill
 // (SKILL.md, seção 4): só o JSON do passo.
 import type { RespostaConteudo, RespostaEstrategia } from "../../pmo/schemas/proposta";
+import { perfisDoRequisito } from "../../extracao/requisitos";
+import { normalizarTermo } from "../../regras/busca";
+import { criteriosPontuados, perfisSemPontuacao } from "./conferencia-final";
 import { pontoDePartidaEmTexto, type PontoDePartida } from "./ponto-de-partida";
 import type { TipoProjeto } from "./tipo";
+import { INSTRUCAO_MARCOS, linhaDoTempoEmTexto, type MarcoDaLinha } from "../linha-do-tempo";
 
 const REGRAS = `Regras deste pedido (além da skill):
 - Responda só com o objeto JSON do passo, no schema enviado.
@@ -30,7 +34,7 @@ ${pontoDePartidaEmTexto(p, { pedirDestino: true })}${blocoEsqueleto(esqueleto)}
 
 # O que fazer
 ${TESTE}
-1. Como o contratante vai avaliar (comoSeraAvaliada), cada critério de pontuação com a evidência exigida e a seção da proposta que responde a ele (criterios), e onde estão os pontos (ondeEstaoOsPontos). O código já separou os pontos de texto dos de documento: concentre o texto nos de texto.
+1. Como o contratante vai avaliar (comoSeraAvaliada), cada critério de pontuação com a evidência exigida e a seção da proposta que responde a ele (criterios), e onde estão os pontos (ondeEstaoOsPontos). O código já separou os pontos de texto dos de documento: concentre o texto nos de texto. Só é critério pontuado o que o TR diz que pontua: cada critério com o trecho que diz "pontuação" ou "pontos"; perfil exigido sem pontuação é perfil mínimo, não critério (PROP-ESTRATEGIA.13). Pergunta que muda o preço vai no esclarecimento, antes da proposta (PROP-ESTRATEGIA.14).
 2. De 2 a 3 abordagens que **mudam o resultado**, não só a redação (equipe de referência × produtividade superior; desconto pequeno × desconto pelo custo real; executar tudo × subcontratar parte; alcance). Em cada uma: prós, contras, requisitos atendidos (números R), riscos, mudaOResultado (o que muda) e riscoPrincipal (inclusive o de eliminação). Não escolha: a escolha é do GP.
 3. Um destino para cada brecha listada no ponto de partida (pelo id): premissa, exclusao, obrigacao-contratante, folga, reserva ou pergunta.
 4. Para cada premissa crítica PC1 a PC8 do checklist: se parece aplicar-se (sim, nao, a-confirmar), com o motivo. Quem confirma é o GP.
@@ -50,8 +54,22 @@ Requisitos atendidos: ${a.requisitos.join(", ")}
 ${justificativa ? `Justificativa do GP: ${justificativa}` : ""}`;
 }
 
-function resumoEstrategia(e: RespostaEstrategia, premissasConfirmadas: Record<string, boolean>): string {
-  const criterios = e.criterios.map(
+/** Perfis da equipe-chave da RFP, normalizados como na matriz. */
+function perfisDaEquipe(p: PontoDePartida): string[] {
+  return p.requisitos
+    .filter((r) => r.tipo === "equipe")
+    .flatMap(perfisDoRequisito)
+    .map((x) => normalizarTermo(x));
+}
+
+function resumoEstrategia(
+  e: RespostaEstrategia,
+  premissasConfirmadas: Record<string, boolean>,
+  p: PontoDePartida,
+): string {
+  const perfis = perfisDaEquipe(p);
+  const minimos = perfisSemPontuacao(e.criterios, perfis);
+  const criterios = criteriosPontuados(e.criterios, perfis).map(
     (c) =>
       `- ${c.criterio} (${c.pontuacaoMaxima || "pontuação não informada"}) → seção "${c.secaoDaProposta}"`,
   );
@@ -61,7 +79,7 @@ function resumoEstrategia(e: RespostaEstrategia, premissasConfirmadas: Record<st
     .map(([k]) => k);
   return `Critérios de pontuação e a seção que responde a cada um:
 ${criterios.join("\n") || "- o edital não pontua técnica, ou o código e o PMO não localizaram critérios"}
-
+${minimos.length ? `\nPerfis que a estratégia listou como critério, mas cujo trecho não diz que pontuam (perfil mínimo, sem seção de pontos; decisão 0057): ${minimos.map((c) => c.criterio).join("; ")}\n` : ""}
 Destinos das brechas (estratégia):
 ${destinos.join("\n") || "- nenhum"}
 
@@ -87,7 +105,7 @@ ${pontoDePartidaEmTexto(p)}
 
 ${resumoAbordagem(e, abordagem, justificativa)}
 
-${resumoEstrategia(e, premissasConfirmadas)}${blocoEsqueleto(esqueleto)}
+${resumoEstrategia(e, premissasConfirmadas, p)}${blocoEsqueleto(esqueleto)}
 
 # O que fazer
 A saída é a **minuta redigida por inteiro**, no texto que vai ao cliente; o gerente revisa e completa os campos de decisão, não escreve do zero. ${TESTE}
@@ -110,6 +128,7 @@ export function pedidoEap(
   c: RespostaConteudo,
   esqueleto?: string,
   tipoProjeto: TipoProjeto = "produtos",
+  linha: MarcoDaLinha[] = [],
 ): string {
   const produtos = c.produtos.map((x) => `- ${x.id}: ${x.nome} (${x.requisitos.join(", ")})`).join("\n");
   const equipe = p.requisitos
@@ -140,11 +159,15 @@ ${produtos || "- nenhum produto no SOW"}
 Equipe que a RFP fixa (código):
 ${equipe || "- o código não localizou equipe mínima"}
 
-${prazo}${blocoEsqueleto(esqueleto)}
+${prazo}
+
+Linha do tempo do código, antes da EAP (decisão 0057; a conta de cada entrega sai depois que você devolver as atividades):
+${linhaDoTempoEmTexto(linha) || "- (sem dados de início, prazo ou produtos)"}${blocoEsqueleto(esqueleto)}
 
 # O que fazer
 ${comoEstimar}
 5. despesas a considerar, por natureza (pessoal, viagens, campo, equipamentos, comunicação, por território), sem valor; reservas: os riscos que pedem reserva, sem valor; estrategiasPreco: como sugestão, partindo do custo para o desconto.
+6. ${INSTRUCAO_MARCOS} A análise do cliente é uma atividade e o ajuste outra, seguida de nova análise (PROP-EAP.15). Horas e prazos de terceiros são estimativa sua: sugestão, com a base (PROP-EAP.18).
 
 ${REGRAS}`;
 }

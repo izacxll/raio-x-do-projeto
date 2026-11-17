@@ -238,7 +238,10 @@ describe("respostas gravadas do PMO na etapa 3 (OEI)", () => {
     const de = (id: string) => v.find((x) => x.id === id)!;
     expect(v.filter((x) => x.id.startsWith("elemento:")).every((x) => x.situacao === "ok")).toBe(true);
     expect(de("requisitos").situacao).toBe("ok");
-    expect(de("citacoes").situacao).toBe("ok");
+    // sem o contrato entre os documentos, a única citação conferida do premissas:7 (a da RFP) não traz o valor:
+    // "citação não prova" (decisão 0057); com o contrato, ela prova (teste anterior)
+    expect(de("citacoes").situacao).toBe("atencao");
+    expect(de("citacoes").texto).toMatch(/não prova a frase.*premissas:7/);
     expect(de("premissas-criticas").situacao).toBe("ok");
     expect(de("marcos").situacao).toBe("atencao");
     expect(de("marcos").texto).toMatch(/P2/);

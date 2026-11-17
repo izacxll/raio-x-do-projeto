@@ -8,6 +8,29 @@ import { normalizarTermo } from "../../regras/busca";
 import { perfisDoRequisito } from "../../extracao/requisitos";
 import type { PontoDePartida } from "./ponto-de-partida";
 
+type Criterio = RespostaEstrategia["criterios"][number];
+
+/** O trecho diz que pontua ("pontuação", "pontos", "pontuado")? */
+const RE_PONTUA = /pontua|\bpontos?\b/i;
+
+/**
+ * Só é critério pontuado o perfil cujo trecho diz que pontua (decisão 0057; PROP-ESTRATEGIA.13): o perfil que a
+ * estratégia listou como critério, sem "pontuação" no trecho, é perfil mínimo. Critério que não é perfil fica como está.
+ */
+export function criteriosPontuados(criterios: Criterio[], perfisDaEquipe: string[]): Criterio[] {
+  return criterios.filter((cr) => {
+    const alvo = normalizarTermo(cr.criterio);
+    const ehPerfil = perfisDaEquipe.some((x) => x.includes(alvo) || alvo.includes(x));
+    return !ehPerfil || cr.fontes.some((f) => RE_PONTUA.test(normalizarTermo(f.trecho)));
+  });
+}
+
+/** Perfis que a estratégia tratou como critério pontuado sem o trecho dizer que pontuam: são perfil mínimo. */
+export function perfisSemPontuacao(criterios: Criterio[], perfisDaEquipe: string[]): Criterio[] {
+  const pontuados = new Set(criteriosPontuados(criterios, perfisDaEquipe));
+  return criterios.filter((cr) => !pontuados.has(cr));
+}
+
 export interface LinhaMatriz {
   /** R01… ou o nome do critério de pontuação. */
   chave: string;
@@ -93,7 +116,7 @@ export function conferirMinuta(
     .filter((r) => r.tipo === "equipe")
     .flatMap(perfisDoRequisito)
     .map((x) => normalizarTermo(x));
-  for (const cr of e?.criterios ?? []) {
+  for (const cr of criteriosPontuados(e?.criterios ?? [], perfisDaEquipe)) {
     const alvo = normalizarTermo(cr.criterio);
     const ehPerfil = perfisDaEquipe.some((x) => x.includes(alvo) || alvo.includes(x));
     const atendidoEm = (c?.estrutura ?? [])

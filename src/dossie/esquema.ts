@@ -7,6 +7,7 @@ import { comCamposNovos, RespostaConteudo, RespostaEap, RespostaEstrategia } fro
 import { RespostaPremissas, RespostaTap, comCamposNovosTap } from "../pmo/schemas/tap";
 import { RespostaLeitura } from "../pmo/schemas/leitura";
 import { RespostaLeituraRfp } from "../pmo/schemas/leitura-rfp";
+import { RespostaSegundaInstancia } from "../pmo/schemas/segunda-instancia";
 import {
   RespostaAdaptacao,
   RespostaCronogramaGuardada,
@@ -370,5 +371,21 @@ export const Dossie = z.object({
   proposta: PropostaDossie.optional(),
   tap: TapDossie.optional(),
   pgp: PgpDossie.optional(),
+  /**
+   * Segunda instância (decisão 0057): a conferência de cada resposta, pela chave "etapa:passo". deResposta é o "em" da
+   * resposta conferida: se a resposta mudar, a conferência fica velha e a tela pede outra.
+   */
+  segundaInstancia: z
+    .record(
+      z.string(),
+      z.object({
+        resposta: RespostaSegundaInstancia,
+        modelo: z.string(),
+        em: z.string(),
+        deResposta: z.string(),
+      }),
+    )
+    .optional(),
 });
 export type Dossie = z.infer<typeof Dossie>;
+export type SegundaInstanciaDossie = NonNullable<Dossie["segundaInstancia"]>[string];

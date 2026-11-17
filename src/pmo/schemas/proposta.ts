@@ -3,7 +3,14 @@
 // 2. conteúdo técnico da abordagem escolhida: entendimento, objetivos, metodologia, SOW, obrigações do contratante;
 // 3. EAP, estimativas em três pontos, equipe, horas, RACI, despesas e reservas a considerar.
 import { z } from "zod";
-import { EstimativaTresPontos, FontePmo, ItemPmo, RotuloPmo, ItemAutoconferencia } from "./comum";
+import {
+  ConferenciaMarco,
+  EstimativaTresPontos,
+  FontePmo,
+  ItemPmo,
+  RotuloPmo,
+  ItemAutoconferencia,
+} from "./comum";
 
 // ---------- passo 1: estratégia ----------
 
@@ -266,6 +273,8 @@ export type VolumePrevisto = z.infer<typeof VolumePrevisto>;
 export const RespostaEap = z.object({
   /** Autoconferência (decisão 0044): cada item do método ou das fichas usado, com o estado. */
   autoconferencia: z.array(ItemAutoconferencia).default([]),
+  /** Linha do tempo antes de fechar a EAP (decisão 0057): cada marco, cabe ou não cabe, com o motivo. */
+  conferenciaDosMarcos: z.array(ConferenciaMarco).default([]),
   atividades: z.array(AtividadeEap),
   perfis: z.array(PerfilEquipe),
   horas: z.array(HorasPerfil),

@@ -54,6 +54,31 @@ export function conteudoDoPedido(opcoes: {
   const { etapa, passo, sistema, documentos, pedido, schema, skill } = opcoes;
   const arquivos = arquivosDoSistema(sistema);
   const nomes = arquivos.map((a) => a.nome);
+  // segunda instância (decisão 0057): só a skill, os documentos e a resposta a conferir; a tabela da seção 5 não vale
+  if (passo.startsWith("segunda-")) {
+    const faltas: string[] = [];
+    const conferencias: string[] = [];
+    const confere = (oQue: string, ok: boolean) => {
+      conferencias.push(`- ${ok ? "ok" : "**FALTA**"} · ${oQue}`);
+      if (!ok) faltas.push(oQue);
+    };
+    confere("só a SKILL.md no texto de sistema", nomes.length === 1 && nomes[0] === "SKILL.md");
+    confere("documentos do passo", /^=== Página /m.test(documentos));
+    confere("resposta a conferir no pedido", /## Resposta a conferir/.test(pedido));
+    const texto = [
+      `# O que foi no pedido — etapa ${etapa}, passo ${passo} (segunda instância)`,
+      "",
+      `- Texto de sistema: ${tam(sistema)} (${nomes.join(", ") || "nenhum arquivo"})`,
+      `- Documentos: ${tam(documentos)}`,
+      `- Pedido (com a resposta a conferir): ${tam(pedido)}`,
+      `- Schema JSON da resposta: ${tam(schema)}`,
+      "",
+      ...conferencias,
+      "",
+      faltas.length ? `**FALTA: ${faltas.join("; ")}.**` : "Nada faltando.",
+    ].join("\n");
+    return { texto: `${texto}\n`, faltas };
+  }
   const fichasInteiras = [...pedido.matchAll(/<ficha parte="([^"]+)">/g)].map((m) => m[1] ?? "");
   // "### A7 — nome" seguido de "## Conteúdo mínimo" (etapa 5) ou só do "Quando dispensar" (adaptação da etapa 4)
   const cabecalhos = [...pedido.matchAll(/^### ([AB]\d{1,2}) — .+$/gm)].map((m) => ({

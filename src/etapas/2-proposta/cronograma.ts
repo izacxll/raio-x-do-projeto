@@ -4,7 +4,8 @@
 // da RFP. Dias úteis descontam sábados, domingos, os feriados nacionais e os municipais que o GP informa (decisão 0051).
 import type { DocumentoLido } from "../../dossie/esquema";
 import { citacaoValeComoFato, conferirCitacao } from "../../pmo/citacoes";
-import type { AtividadeEap, PrazoProduto, ProdutoSow } from "../../pmo/schemas/proposta";
+import type { AtividadeEap, HorasPerfil, PrazoProduto, ProdutoSow } from "../../pmo/schemas/proposta";
+import { tirarAcentos } from "../../texto/normalizar";
 import {
   contarDiasUteis,
   formatarData as formatarDataCurta,
@@ -38,6 +39,8 @@ export interface AtividadeCalculada {
   dataFim?: Date;
   /** Atividade de data fixa: dias corridos da janela (as datas valem pela janela, não pela rede em dias úteis). */
   diasCorridos?: number;
+  /** A atividade é a análise do contratante (para a linha do tempo: entrega sem e com a análise). */
+  analise?: boolean;
 }
 
 export type SituacaoPrazo = "cabe" | "nao-cabe" | "nao-conferido";
@@ -68,6 +71,8 @@ export interface DataFixa {
   /** Dias corridos entre o fim das predecessoras e o início da janela; negativo quando não cabe. */
   folgaCorrida?: number;
   cabe: boolean;
+  /** Há aprovação do cliente antes do marco, mas o tempo dela não foi informado: a conta está sem ele. */
+  semAprovacao?: boolean;
 }
 
 export function duracaoEsperada(o: number, m: number, p: number): number {
@@ -138,6 +143,88 @@ export interface ParametrosCronograma {
   prazoRfp?: PrazoEmDias;
   /** Feriados municipais (aaaa-mm-dd ou dd/mm/aaaa) que o GP informa; os nacionais o código já desconta. */
   feriados?: string[];
+  /** Horas por perfil e atividade (consultoria): para avisar a atividade de campo ou de produto sem esforço. */
+  horas?: HorasPerfil[];
+}
+
+/** Todas as atividades de que cada uma depende, direta ou indiretamente. */
+function ancestraisDe(atividades: AtividadeEap[]): Map<string, Set<string>> {
+  const porId = new Map(atividades.map((a) => [a.id, a]));
+  const memo = new Map<string, Set<string>>();
+  const visitar = (id: string, caminho: Set<string>): Set<string> => {
+    const pronto = memo.get(id);
+    if (pronto) return pronto;
+    const out = new Set<string>();
+    if (caminho.has(id)) return out; // ciclo: a validação já avisa
+    caminho.add(id);
+    for (const p of porId.get(id)?.predecessoras ?? []) {
+      if (!porId.has(p)) continue;
+      out.add(p);
+      for (const x of visitar(p, caminho)) out.add(x);
+    }
+    caminho.delete(id);
+    memo.set(id, out);
+    return out;
+  };
+  for (const a of atividades) visitar(a.id, new Set());
+  return memo;
+}
+
+const normal = (t: string) => tirarAcentos(t).toLowerCase();
+const RE_AJUSTE = /\b(?:ajust|reentreg|reenvi|revis|corre[cç]|reapresent)/;
+const RE_ANTES_DA_ASSINATURA = /\b(?:antes da assinatura|pre-?assinatura|anterior a assinatura)\b/;
+const RE_CAMPO = /\b(?:campo|coleta|entrevist|questionari|aplicac|visita|levantamento|grupo focal|oficina)/;
+const RE_PRODUTO =
+  /\b(?:relatori|produto|elabora|redac|redig|consolid|diagnostic|estudo|minuta|plano de trabalho|nota tecnica)/;
+
+/**
+ * Travas da EAP (decisão 0057), sobre a estrutura da rede: reentrega sem nova análise do contratante, atividade
+ * "antes da assinatura" que depende de outra posterior e atividade de campo ou de produto sem esforço estimado.
+ */
+export function travasDaEap(atividades: AtividadeEap[], horas?: HorasPerfil[]): string[] {
+  const out: string[] = [];
+  const ancestrais = ancestraisDe(atividades);
+  const descendentes = (id: string) => atividades.filter((x) => ancestrais.get(x.id)?.has(id));
+  // b) ajustar e reentregar depois da análise do contratante, sem nova análise depois
+  for (const a of atividades.filter((x) => x.analiseDoContratante)) {
+    const ajustes = descendentes(a.id).filter(
+      (x) => x.predecessoras.includes(a.id) && RE_AJUSTE.test(normal(x.nome)) && !x.analiseDoContratante,
+    );
+    for (const aj of ajustes) {
+      const novaAnalise = aj.aprovacaoCliente || descendentes(aj.id).some((x) => x.analiseDoContratante);
+      if (!novaAnalise)
+        out.push(
+          `Reentrega sem nova conferência: a atividade ${aj.id} (${aj.nome}) ajusta o produto depois da análise do contratante (${a.id}), mas não há nova análise depois dela. Sugere-se acrescentar a nova análise e o termo definitivo (análise → ajuste → nova análise → termo).`,
+        );
+    }
+  }
+  // d) "antes da assinatura" com predecessora que não é anterior à assinatura
+  const antes = new Set(
+    atividades.filter((x) => RE_ANTES_DA_ASSINATURA.test(normal(x.nome))).map((x) => x.id),
+  );
+  for (const id of antes) {
+    const a = atividades.find((x) => x.id === id);
+    const depois = (a?.predecessoras ?? []).filter((p) => !antes.has(p));
+    if (a && depois.length)
+      out.push(
+        `Atividade ${a.id} (${a.nome}) é antes da assinatura, mas depende de ${depois.join(", ")}, que a rede conta depois do início (assinatura). Sugere-se tirar a predecessora ou tratar a atividade como parte da proposta.`,
+      );
+  }
+  // c) atividade de campo ou de produto sem horas de nenhum perfil (horas null são decisão do GP, não zero)
+  if (horas?.length) {
+    for (const a of atividades) {
+      const nome = normal(a.nome);
+      if (a.analiseDoContratante || a.duracao.mais_provavel <= 0) continue;
+      if (!(RE_CAMPO.test(nome) || RE_PRODUTO.test(nome) || a.aprovacaoCliente)) continue;
+      const linhas = horas.filter((h) => h.atividade === a.id);
+      if (linhas.some((h) => h.horas === null)) continue;
+      if (linhas.every((h) => (h.horas?.mais_provavel ?? 0) <= 0))
+        out.push(
+          `Esforço não estimado: a atividade ${a.id} (${a.nome}) é de ${RE_CAMPO.test(nome) ? "campo" : "produto"} e está com 0 hora para todos os perfis. Sugere-se estimar as horas, com a base, ou marcá-las como decisão do GP antes do preço.`,
+        );
+    }
+  }
+  return out;
 }
 
 export function calcularCronograma(atividades: AtividadeEap[], par: ParametrosCronograma = {}): Cronograma {
@@ -163,7 +250,10 @@ export function calcularCronograma(atividades: AtividadeEap[], par: ParametrosCr
       "Tempo de aprovação do cliente não informado: o cronograma está sem ele. É decisão do GP (ou prazo do documento).",
     );
 
+  problemas.push(...travasDaEap(atividades, par.horas));
   const calc = new Map<string, AtividadeCalculada>();
+  const ancestrais = ancestraisDe(atividades);
+  const porIdEap = new Map(atividades.map((x) => [x.id, x]));
   const inicioProjeto = par.inicio ? primeiroDiaUtil(par.inicio, cal) : undefined;
   /** Dias úteis entre o início do projeto e a data fixa (o deslocamento da atividade presa a ela). */
   const fixas = new Map<string, { ini: Date; fim: Date; corridos: number }>();
@@ -215,6 +305,11 @@ export function calcularCronograma(atividades: AtividadeEap[], par: ParametrosCr
           : undefined;
       const folgaCorrida = fimPred ? diasEntre(fimPred, iniFixo) - 1 : undefined;
       const cabe = depoisDasPredecessoras <= deslocamento;
+      // a conta só tem a aprovação do cliente quando o GP informa o tempo dela (decisão 0057)
+      const porAncestral = [...(ancestrais.get(a.id) ?? [])].map((id) => porIdEap.get(id));
+      const semAprovacao =
+        par.aprovacaoDias === undefined &&
+        porAncestral.some((x) => x?.aprovacaoCliente || x?.analiseDoContratante);
       datasFixas.push({
         atividade: a.id,
         inicio: iniFixo,
@@ -223,14 +318,15 @@ export function calcularCronograma(atividades: AtividadeEap[], par: ParametrosCr
         fimPredecessoras: fimPred,
         folgaCorrida,
         cabe,
+        semAprovacao,
       });
       const janela = `${formatarDataCurta(iniFixo)} a ${formatarDataCurta(fimFixo ?? iniFixo)}`;
       problemas.push(
         !cabe && fimPred
-          ? `Atividade ${a.id} tem data fixa (${janela}, ${corridos} dias corridos), mas as predecessoras só terminam em ${formatarDataCurta(fimPred)}, ${-(folgaCorrida ?? 0)} dia(s) corrido(s) depois do início da janela: o cronograma não cabe antes do evento (conta do código, ${cal.descricao}).`
+          ? `Não cabe antes do marco: a atividade ${a.id} tem data fixa (${janela}, ${corridos} dias corridos), mas as predecessoras${par.aprovacaoDias !== undefined ? ", com a aprovação do cliente," : ""} só terminam em ${formatarDataCurta(fimPred)}, ${-(folgaCorrida ?? 0)} dia(s) corrido(s) depois do início da janela (conta do código, ${cal.descricao}). Sugere-se levar ao TAP como divergência.`
           : `Atividade ${a.id} presa à data fixa: de ${janela}, ${corridos} dias corridos (campo em dias corridos).${
               fimPred && folgaCorrida !== undefined
-                ? ` As predecessoras terminam em ${formatarDataCurta(fimPred)}: folga de ${folgaCorrida} dia(s) corrido(s) (${deslocamento - depoisDasPredecessoras} útil(eis)) até ${formatarDataCurta(iniFixo)} (conta do código, ${cal.descricao}).`
+                ? ` As predecessoras terminam em ${formatarDataCurta(fimPred)}: folga de ${folgaCorrida} dia(s) corrido(s) (${deslocamento - depoisDasPredecessoras} útil(eis)) até ${formatarDataCurta(iniFixo)} (conta do código, ${cal.descricao}).${semAprovacao ? " A conta está sem o tempo de aprovação do cliente, ainda não informado pelo GP: com ele, a folga diminui." : ""}`
                 : ""
             }`,
       );
@@ -251,6 +347,7 @@ export function calcularCronograma(atividades: AtividadeEap[], par: ParametrosCr
       fimMaisTarde: 0,
       folga: 0,
       critica: false,
+      ...(a.analiseDoContratante ? { analise: true } : {}),
     });
   }
   const total = Math.max(...[...calc.values()].map((a) => a.fimMaisCedo));

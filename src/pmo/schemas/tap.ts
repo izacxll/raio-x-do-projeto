@@ -1,7 +1,7 @@
 // Schemas da etapa 3 (TAP): os 12 elementos (ficha TAP) e o registro de premissas inicial (ficha B3, bloco TAP-PR).
 // O PMO redige; o código traz o que vem dos documentos, as divergências e confere o TAP.
 import { z } from "zod";
-import { ItemPmo, ItemAutoconferencia } from "./comum";
+import { ConferenciaMarco, ItemPmo, ItemAutoconferencia } from "./comum";
 
 /** TAP.2: objetivo com o critério de sucesso (indicador e meta). Métrica que a RFP não traz é sugestão. */
 export const ObjetivoTap = z.object({
@@ -46,6 +46,8 @@ export type DivergenciaTexto = z.infer<typeof DivergenciaTexto>;
 export const RespostaTap = z.object({
   /** Autoconferência (decisão 0044): cada item do método ou das fichas usado, com o estado. */
   autoconferencia: z.array(ItemAutoconferencia).default([]),
+  /** Linha do tempo antes de fechar os marcos (decisão 0057): cada marco, cabe ou não cabe, com o motivo. */
+  conferenciaDosMarcos: z.array(ConferenciaMarco).default([]),
   /** Divergências de texto entre RFP, proposta e contrato (vêm primeiro no TAP). */
   divergenciasTexto: z.array(DivergenciaTexto),
   /** TAP.1 */

@@ -13,6 +13,7 @@ import { PASSOS_PGP } from "./passos";
 import { nomeDaParte, partesAGerar } from "./pgp";
 import { cronogramaDoPgp, custosDoPgp } from "./calculos";
 import { textoDasHorasTotais } from "../2-proposta/preco";
+import { INSTRUCAO_MARCOS, linhaDoTempoEmTexto, linhaDosDados } from "../linha-do-tempo";
 
 const REGRAS = `Regras deste pedido (além da skill):
 - Responda só com o objeto JSON do passo, no schema enviado.
@@ -177,6 +178,9 @@ ${resumoDoEscopo(p)}
 Marcos do TAP:
 ${marcos.join("\n") || "- (sem marcos do TAP no dossiê)"}
 
+Linha do tempo do código (cronograma da proposta; decisão 0057):
+${e.dadosProposta?.cronograma ? linhaDoTempoEmTexto(linhaDosDados(e.dadosProposta, e.ponto.prazoExecucao)) : "- sem o cronograma da etapa 2 no dossiê: confira os marcos pelos prazos do TAP e da RFP"}
+
 ${e.ponto.prazoExecucao ? `Prazo de execução na RFP: ${e.ponto.prazoExecucao.texto}. O código confere o cronograma contra ele e contra os marcos do TAP.` : "O código não localizou o prazo de execução na RFP."}
 
 Partes a escrever neste passo (o GP marcou):
@@ -189,6 +193,7 @@ ${fichasDasPartes(partes)}
 2. perfis (os exigidos pela RFP com fonte e número R, e os sugeridos), horas de cada perfil por atividade em três pontos com a base, e raci. Nunca nomes de pessoas.
 3. textos: cada parte acima. O código monta a lista de atividades (B2), as durações (B8), o diagrama de rede (B16), o cronograma (B15), os marcos (B11), a linha de base do cronograma (A14) e as designações (B18).
 4. observacoes: o que você achou e o código não, com fonte.
+5. ${INSTRUCAO_MARCOS} Marco que não cabe vira risco no B27, com o caminho de reajuste no A11 (A11.13).
 
 ${REGRAS}`;
 }
@@ -308,11 +313,26 @@ ${fichasDasPartes(partes)}
 ${REGRAS}`;
 }
 
+/**
+ * O PGP como estava antes do passo (decisão 0057): sem a resposta anterior do mesmo passo nem as dos passos seguintes.
+ * As decisões do GP (partes a gerar, abordagem, parâmetros, revisões) ficam.
+ */
+export function pgpAntesDoPasso(p: PgpDossie, passo: PassoPgp): PgpDossie {
+  const k = PASSOS_PGP.findIndex((x) => x.passo === passo);
+  const sem = Object.fromEntries(PASSOS_PGP.slice(k).map((x) => [x.passo, undefined]));
+  return { ...p, ...sem } as PgpDossie;
+}
+
+const antesDoPasso =
+  (passo: PassoPgp, f: (e: EntradaPgp, p: PgpDossie) => string) =>
+  (e: EntradaPgp, p: PgpDossie): string =>
+    f(e, pgpAntesDoPasso(p, passo));
+
 export const PEDIDOS_PGP: Record<PassoPgp, (e: EntradaPgp, p: PgpDossie) => string> = {
-  adaptacao: pedidoAdaptacao,
-  escopo: pedidoEscopo,
-  cronograma: pedidoCronograma,
-  riscos: pedidoRiscos,
-  planos: pedidoPlanos,
-  execucao: pedidoExecucao,
+  adaptacao: antesDoPasso("adaptacao", pedidoAdaptacao),
+  escopo: antesDoPasso("escopo", pedidoEscopo),
+  cronograma: antesDoPasso("cronograma", pedidoCronograma),
+  riscos: antesDoPasso("riscos", pedidoRiscos),
+  planos: antesDoPasso("planos", pedidoPlanos),
+  execucao: antesDoPasso("execucao", pedidoExecucao),
 };

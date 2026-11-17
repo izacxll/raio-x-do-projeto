@@ -2,7 +2,7 @@
 // (ParteGerada) e as estruturas que o código usa nas contas (atividades, horas, riscos, indicadores). Contas, datas,
 // caminho crítico, marcos, custos e rastreabilidade são do código.
 import { z } from "zod";
-import { ItemPmo, ItemAutoconferencia } from "./comum";
+import { ConferenciaMarco, ItemPmo, ItemAutoconferencia } from "./comum";
 import { AtividadeEap, HorasPerfil, LinhaRaci, PerfilEquipe } from "./proposta";
 import { PremissaRegistro } from "./tap";
 
@@ -76,6 +76,8 @@ export type AtividadePgp = z.infer<typeof AtividadePgp>;
 export const RespostaCronograma = z.object({
   /** Autoconferência (decisão 0044): cada item do método ou das fichas usado, com o estado. */
   autoconferencia: z.array(ItemAutoconferencia).default([]),
+  /** Linha do tempo antes de fechar o cronograma (decisão 0057): cada marco, cabe ou não cabe, com o motivo. */
+  conferenciaDosMarcos: z.array(ConferenciaMarco).default([]),
   /** A3, A6, B1, B4, B12, B13, B24, B25, B26, B32 (as que o GP marcou). */
   textos: z.array(ParteGerada),
   /** Atividades com o produto (P1…) e o pacote da EAP, com durações em três pontos. */

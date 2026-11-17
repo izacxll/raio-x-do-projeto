@@ -2,7 +2,14 @@
 // sessão) e da execução (vigência, prazo de execução, validade da proposta, assinatura), com a forma de
 // contagem que o documento usa e o alerta para o que está perto. As contas de data são feitas por código.
 import { normalizarTermo } from "../../regras/busca";
-import { diasEntre, encontrarDatas, formatarData, lerNumero, somarDiasUteis } from "../../texto/datas";
+import {
+  diasEntre,
+  ehDataDeAtoOuAssinatura,
+  encontrarDatas,
+  formatarData,
+  lerNumero,
+  somarDiasUteis,
+} from "../../texto/datas";
 import { fraseEmVolta, limparEspacos } from "../../texto/frase";
 import { tirarAcentos } from "../../texto/normalizar";
 import { itemSemAchado, type DocumentoRfp, type ItemAnalise } from "./item";
@@ -97,7 +104,7 @@ export function datasDoCertame(docs: DocumentoRfp[]): DataDoCertame[] {
         const linha = linhas[i] ?? "";
         const semAcento = (t: string) => tirarAcentos(t);
         const antes = semAcento(p.texto.slice(Math.max(0, d.posicao - 50), d.posicao));
-        if (RE_NORMA_ANTES.test(antes)) continue;
+        if (RE_NORMA_ANTES.test(antes) || ehDataDeAtoOuAssinatura(p.texto, d)) continue;
         const contextoLinha = semAcento(linha);
         if (RE_CARIMBO.test(contextoLinha) || RE_LOCAL_E_DATA.test(linha.trim())) continue;
         // o rótulo pode estar na linha de cima ("DATA DA SESSÃO PÚBLICA:" / "Dia 23/10/2026") ou, numa tabela

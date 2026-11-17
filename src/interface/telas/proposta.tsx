@@ -8,6 +8,7 @@ import type { DocumentoLido, PropostaDossie } from "../../dossie/esquema";
 import { useDossie } from "../../dossie/store";
 import { conferirMinuta } from "../../etapas/2-proposta/conferencia-final";
 import { calcularCronograma, conferirPrazosDosProdutos } from "../../etapas/2-proposta/cronograma";
+import { conferirMarcosDoPmo, linhaDaProposta } from "../../etapas/linha-do-tempo";
 import { pedidoConteudo, pedidoEap, pedidoEstrategia } from "../../etapas/2-proposta/pedidos";
 import { esqueletoEmTexto, montarMinuta } from "../../etapas/2-proposta/minuta";
 import { MinutaPeloMetodo, TipoDoProjeto } from "./minuta-proposta";
@@ -16,6 +17,7 @@ import { montarPontoDePartida, type PontoDePartida } from "../../etapas/2-propos
 import {
   contarPendentesProposta,
   itensDaProposta,
+  propostaAntesDoPasso,
   propostaInicial,
   registrarUso,
   type ItemProposta,
@@ -37,6 +39,7 @@ import { PREMISSAS_CRITICAS } from "../../dominio/skill";
 import { EtiquetaRotulo, RotuloSecao } from "../componentes/basicos";
 import { ConectarClaude, useChave } from "../componentes/conectar-claude";
 import { ItensPmo } from "../componentes/item-pmo";
+import { SegundaInstancia } from "../componentes/segunda-instancia";
 import { CampoFeriados } from "../componentes/campo-feriados";
 
 const NOME_PASSO: Record<PassoProposta, string> = {
@@ -71,12 +74,12 @@ export function PropostaDoFornecedor({ todos }: { todos: DocumentoLido[] }) {
   const sistema = useMemo(() => textoDeSistema(referenciasEtapa2()), []);
   const textoDocs = useMemo(() => textoDosDocumentos(docs), [docs]);
   const itens = useMemo(() => itensDaProposta(p, docs), [p, docs]);
-  // a minuta pelo método (decisão 0038): o esqueleto do código vai em cada pedido ao PMO
+  // a minuta pelo método (decisão 0038): o esqueleto do código vai em cada pedido ao PMO, montado no pedido de cada
+  // passo só com os passos anteriores (decisão 0057)
   const minuta = useMemo(
     () => montarMinuta(ponto, p, docs, dossie.analiseRfp),
     [ponto, p, docs, dossie.analiseRfp],
   );
-  const esqueleto = useMemo(() => esqueletoEmTexto(minuta), [minuta]);
   const [rodando, setRodando] = useState<{ passo: PassoProposta; recebidos: number } | null>(null);
   const [erro, setErro] = useState<ErroPmo | null>(null);
   const cancelar = useRef<AbortController | null>(null);
@@ -89,7 +92,10 @@ export function PropostaDoFornecedor({ todos }: { todos: DocumentoLido[] }) {
 
   const atualizar = (np: PropostaDossie) => guardarProposta(np);
 
-  function pedidoDo(passo: PassoProposta, prop: PropostaDossie): string | null {
+  function pedidoDo(passo: PassoProposta, atual: PropostaDossie): string | null {
+    // o passo refeito vai sem a resposta anterior dele e dos passos seguintes, inclusive no esqueleto (decisão 0057)
+    const prop = propostaAntesDoPasso(atual, passo);
+    const esqueleto = esqueletoEmTexto(montarMinuta(ponto, prop, docs, dossie.analiseRfp));
     const e = prop.estrategia?.resposta;
     if (passo === "estrategia") return pedidoEstrategia(ponto, esqueleto);
     if (!e || !prop.abordagem) return null;
@@ -103,7 +109,17 @@ export function PropostaDoFornecedor({ todos }: { todos: DocumentoLido[] }) {
         esqueleto,
       );
     const c = prop.conteudo?.resposta;
-    return c ? pedidoEap(ponto, e, prop.abordagem.id, c, esqueleto, minuta.tipo.projeto) : null;
+    return c
+      ? pedidoEap(
+          ponto,
+          e,
+          prop.abordagem.id,
+          c,
+          esqueleto,
+          minuta.tipo.projeto,
+          linhaDaProposta(ponto, prop, docs),
+        )
+      : null;
   }
 
   async function executar(passo: PassoProposta) {
@@ -297,6 +313,16 @@ export function PropostaDoFornecedor({ todos }: { todos: DocumentoLido[] }) {
             )}
             {passo === "eap" && p.eap && (
               <Eap p={p} ponto={ponto} atualizar={atualizar} itens={itens} docs={docs} />
+            )}
+            {p[passo] && (
+              <SegundaInstancia
+                etapa={2}
+                passo={passo}
+                resposta={p[passo]!.resposta}
+                respostaEm={p[passo]!.em}
+                documentos={docs}
+                modelo={p.modelo}
+              />
             )}
           </section>
         );
@@ -649,6 +675,7 @@ function Eap({
     inicio: par.inicio ? new Date(`${par.inicio}T00:00:00`) : undefined,
     prazoRfp: ponto.prazoExecucao,
     feriados: par.feriados,
+    horas: eap.horas,
   });
   const prazos = conferirPrazosDosProdutos(
     crono,
@@ -656,6 +683,8 @@ function Eap({
     docs,
     par.inicio ? new Date(`${par.inicio}T00:00:00`) : undefined,
   );
+  // conferência dos marcos do PMO contra a conta do código (decisão 0057)
+  const marcos = conferirMarcosDoPmo(eap.conferenciaDosMarcos, linhaDaProposta(ponto, p, docs));
   const preco = calcularPreco(eap.perfis, eap.horas, par);
   const estimado = ponto.valorEstimado ? lerValorEmReais(ponto.valorEstimado.texto) : undefined;
   const conf = conferirValor(par.precoFinal ?? preco.precoCalculado, estimado);
@@ -697,6 +726,16 @@ function Eap({
             <p key={x}>{x}</p>
           ))}
         </div>
+        {marcos.length > 0 && (
+          <div className="aviso aviso--coluna" data-testid="conferencia-dos-marcos">
+            <p>
+              <b>Linha do tempo: o PMO × a conta do código</b>
+            </p>
+            {marcos.map((x) => (
+              <p key={x}>{x}</p>
+            ))}
+          </div>
+        )}
         <table className="tabela" data-testid="cronograma">
           <thead>
             <tr>

@@ -35,7 +35,9 @@ export type PassoPmo =
   | "execucao"
   | "leitura"
   /** Etapa 1: a leitura da RFP pelo PMO (decisão 0035). */
-  | "leitura-rfp";
+  | "leitura-rfp"
+  /** Segunda instância: a conferência de cada resposta, numa chamada separada (decisão 0057). */
+  | "segunda-instancia";
 
 /**
  * Esforço explícito por passo: no Opus 5.5 o padrão da API é "medium", e o pensamento não pode ser desligado
@@ -56,6 +58,7 @@ export const ESFORCO: Record<PassoPmo, Esforco> = {
   execucao: "high",
   leitura: "high",
   "leitura-rfp": "high",
+  "segunda-instancia": "high",
 };
 
 /** Limite de saída de cada passo (tokens), já com a folga do raciocínio. A chamada é por streaming. */
@@ -74,6 +77,7 @@ export const LIMITE_SAIDA: Record<PassoPmo, number> = {
   execucao: 48000,
   leitura: 32000,
   "leitura-rfp": 48000,
+  "segunda-instancia": 32000,
 };
 
 /** Saída que se espera de cada passo (tokens), só para a estimativa de custo antes da chamada. */
@@ -92,6 +96,7 @@ export const SAIDA_ESPERADA: Record<PassoPmo, { min: number; max: number }> = {
   execucao: { min: 5000, max: 18000 },
   leitura: { min: 3000, max: 12000 },
   "leitura-rfp": { min: 8000, max: 16000 },
+  "segunda-instancia": { min: 2000, max: 8000 },
 };
 
 /**
