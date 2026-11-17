@@ -1,4 +1,5 @@
 {
+  "_origem": "Os achados e as observações vêm da leitura gravada da demonstração. Os 77 vereditos sobre os achados do código (decisão 0052) foram escritos pelo Claude Code, a revisar pelo PMO, como os gabaritos feitos pelo próprio código.",
   "achados": [
     {
       "id": "pmo-1",

@@ -44,5 +44,5 @@ A busca do ausente do PMO tinha o problema inverso. O código procurava os termo
 - No teste, os dois ausentes do PMO que o código tinha rebaixado (despesas fora da linha de base; informação ao respondente) passam a ser aceitos. Os achados do código caem de 18 para 9, porque saem os das partes dispensadas.
 - O schema da leitura (`RespostaLeitura`) ganha `vereditos` e `dispensas`, os dois com padrão vazio.
 - Uma resposta antiga, sem vereditos, deixa todos os achados do código como candidatos sem veredito, fora do total.
-- A resposta gravada da demonstração traz um veredito para cada achado do código do plano inventado.
+- A resposta gravada da demonstração traz um veredito para cada achado do código do plano inventado, escrito pelo Claude Code, a revisar pelo PMO.
 - O app e o script de teste montam o mapa, os candidatos e os condicionais pelas mesmas funções (`mapaInicialDaConferencia` e `conferirComCandidatos`).
