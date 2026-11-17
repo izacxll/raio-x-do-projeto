@@ -40,6 +40,7 @@ Na ordem do modelo do edital, cada seção sai **escrita**, não descrita:
 - Ler a tabela de julgamento da etapa 1 (licitação): peso de cada critério, o que dá a nota máxima, desempate, peso do preço.
 - Separar os pontos de **texto** (critérios que o avaliador lê) dos pontos de **documento** (atestados, tempo de experiência, auditoria), que não se ganham escrevendo. Os de documento viram pergunta ao GP: "a FGV tem?".
 - 2 ou 3 abordagens que **mudam o resultado**, não só a redação. Exemplos: equipe de referência × produtividade superior; desconto pequeno × desconto pelo custo real; executar tudo × subcontratar parte. Cada uma com prós, contras e o risco principal (inclusive o de eliminação).
+- **Abordagem que contraria a RFP** sai marcada como tal, com o trecho, e vira pergunta de esclarecimento (na contratação direta, ajuste da minuta); nunca é opção equivalente às outras (decisão 0050).
 
 ### 3.2 Estrutura
 - Edital com modelo obrigatório: seguir à risca, na ordem do modelo.

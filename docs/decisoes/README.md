@@ -48,6 +48,7 @@ Uma decisão por arquivo, numerada em ordem. Cada uma registra o contexto, o que
 | [0045](0045-prazos-e-calendario.md) | Prazos e calendário: referências de início, janela até marco fixo, campo em dias corridos, prazo sem termo inicial | aceita |
 | [0046](0046-cruzamentos-obrigatorios.md) | Cruzamentos obrigatórios X1 a X6 nas etapas 1 e 5 | aceita |
 | [0047](0047-matriz-de-compromissos.md) | Compromissos numerados (C) da proposta ao plano; exclusão nunca tira requisito | aceita |
+| [0050](0050-abordagem-que-contraria-a-rfp.md) | Abordagem que contraria a RFP sai marcada, com o trecho, e vira pergunta de esclarecimento (ou ajuste da minuta, na contratação direta) | aceita |
 
 Modelo para uma nova decisão:
 

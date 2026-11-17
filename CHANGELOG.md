@@ -23,6 +23,7 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
   - **prazos e calendário:** qual referência de início vale para quê (A3.13), marco externo fixo e janela até ele (PROP-EAP.11), premissa que muda a predecessora (PROP-EAP.12), prazo sem termo inicial como vago, turnos do campo mesmo em porte pequeno (B13.6), evento de faturamento como o texto diz (A4.9), substituição na inexigibilidade (A6.7), exemplo da janela na PC4;
   - **cruzamentos obrigatórios** X1 a X6 nas etapas 1 e 5 (pagamento, início × vigência × marcos, quem executa × vedações, contatos repetidos, valor × parcelas, prazos de um mesmo marco);
   - **compromissos numerados** (C01…) da proposta até o plano: exclusão nunca tira requisito (PROP-SOW.12 e .13), divergência que muda escopo ou custo fica pendente com a versão que mais obriga a FGV (TAP-DV.7), destino no TAP (TAP-PR.4) e no plano (B23.10); C sem destino é ausente na etapa 5;
+  - **abordagem que contraria a RFP** sai marcada, com o trecho, e vira pergunta de esclarecimento ou ajuste da minuta na contratação direta (PROP-ESTRATEGIA.12, decisão 0050);
   - métodos das etapas 1 a 5 atualizados (os das etapas 1 e 5 deixam de chamar a leitura do PMO de "opcional"; o da 4 deixa de pedir "poucas linhas" por plano) e o rastro das regras novas na engenharia reversa.
 
 ### Documentação — métodos revisados e engenharia reversa das cinco etapas

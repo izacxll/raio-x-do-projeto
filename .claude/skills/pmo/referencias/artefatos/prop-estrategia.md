@@ -70,6 +70,11 @@ Documento interno de decisão, que não vai ao contratante. Lê o edital do lado
   - sinais: "notória especialização" | "justificativa de preço" | "art. 72" | "experiência no objeto" | "plano de trabalho"
   - confere: só PMO
   - dispensa: nunca
+- **PROP-ESTRATEGIA.12** Abordagem que contraria a RFP (quem executa, escopo, formato do produto, prazo, local) sai marcada como tal, com o trecho da RFP que ela contraria, e vira pergunta de esclarecimento (na contratação direta, ajuste da minuta do contrato antes da assinatura); nunca é apresentada como opção equivalente às outras
+  - fonte: decisão 0050; SKILL.md, etapa 2, passo 2; `licitacoes.md`, "Como usar" (o edital manda)
+  - sinais: "contraria a RFP" | "contraria o TR" | "depende de ajuste" | "pergunta de esclarecimento" junto de "abordagem"
+  - confere: só PMO
+  - dispensa: nunca
 
 ## Perguntas de qualidade
 - Na contratação direta, a justificativa de notória especialização do TR descreve o objeto, ou outras áreas? Texto de outro projeto é conflituoso (CP8) e vira pergunta (decisão 0042).
