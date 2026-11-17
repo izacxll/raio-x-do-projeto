@@ -189,11 +189,25 @@ export interface ItemDoPlano {
 export function destinosNoPlano(cs: Compromisso[], itens: ItemDoPlano[]): Map<string, string[]> {
   const out = new Map<string, string[]>();
   for (const c of cs) {
-    const re = new RegExp(`(?<![A-Za-z0-9])${c.numero}(?![0-9])`);
     const onde = itens
-      .filter((x) => x.item.requisitos.some((n) => n.trim() === c.numero) || re.test(x.item.texto))
+      .filter(
+        (x) =>
+          x.item.requisitos.some((n) => n.trim() === c.numero) || numerosCitados(x.item.texto).has(c.numero),
+      )
       .map((x) => `${x.parte}, item ${x.item.id}`);
     out.set(c.numero, [...new Set(onde)]);
+  }
+  return out;
+}
+
+/** Números C citados num texto: "C10", "(C11)" e intervalos "C08 a C15" (todos os do meio). */
+export function numerosCitados(texto: string): Set<string> {
+  const out = new Set<string>();
+  const num = (n: number) => `C${String(n).padStart(2, "0")}`;
+  for (const m of texto.matchAll(/(?<![A-Za-z0-9])C(\d{2,})(?:\s*(?:a|até|-|–)\s*C(\d{2,}))?(?![0-9])/g)) {
+    const ini = Number(m[1]);
+    const fim = m[2] ? Number(m[2]) : ini;
+    for (let n = ini; n <= Math.min(fim, ini + 99); n++) out.add(num(n));
   }
   return out;
 }

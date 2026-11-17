@@ -287,9 +287,22 @@ export function rastrearCompromissos(e: EntradaPgp, itens: ItemConferido[]): Lin
   const cs = e.dadosProposta?.compromissos ?? [];
   if (!cs.length) return [];
   const tap = destinosNoTap(cs, e.respostaTap, e.premissasTap);
+  // observação do PMO não é conteúdo do plano: não conta como destino
   const plano = destinosNoPlano(
     cs,
-    itens.map((i) => ({ parte: i.grupo.split(" — ")[0] ?? i.grupo, item: i.item })),
+    itens
+      .filter((i) => i.grupo !== "Observações do PMO")
+      .map((i) => ({ parte: i.grupo.split(" — ")[0] ?? i.grupo, item: i.item })),
   );
-  return cs.map((c, k) => ({ compromisso: c, tap: tap[k]!, plano: plano.get(c.numero) ?? [] }));
+  return cs.map((c, k) => {
+    const t = tap[k]!;
+    // o B3 do plano parte do registro inicial: o C que está no registro também está no B3, com a mesma certeza
+    const noRegistro =
+      t.situacao !== "sem-destino" && t.onde?.startsWith("registro de premissas")
+        ? [
+            `B3 (registro inicial, ${t.onde.replace("registro de premissas, ", "")}${t.situacao === "provavel" ? ", provável" : ""})`,
+          ]
+        : [];
+    return { compromisso: c, tap: t, plano: [...noRegistro, ...(plano.get(c.numero) ?? [])] };
+  });
 }

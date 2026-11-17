@@ -39,7 +39,7 @@ import {
   conferirAutoconferenciaDaEtapa3,
   itensEsperadosDaEtapa3,
 } from "../../src/etapas/3-tap/autoconferencia";
-import { destinosNoPlano, type Compromisso } from "../../src/etapas/2-proposta/compromissos";
+import { destinosNoPlano, numerosCitados, type Compromisso } from "../../src/etapas/2-proposta/compromissos";
 import { lerRfpPublica } from "../ajudantes/rfp-publica";
 
 const ler = (n: string) =>
@@ -384,5 +384,18 @@ describe("compromissos no plano e partes dispensadas no pedido", () => {
     const p = { ...dossie.pgp!, gerar: { ...dossie.pgp!.gerar, A12: false } };
     const pedido = PEDIDOS_PGP.planos(entrada, p);
     expect(pedido).toMatch(/Dispensadas pelo GP neste passo[\s\S]*- A12 — /);
+  });
+});
+
+describe("números C no texto do plano", () => {
+  it("lê C soltos e intervalos (C08 a C15); C100 é outro número e C1 não é número C", () => {
+    expect([...numerosCitados("dados (C08), C10; pendências C12 a C14; outro C100 e C1")].sort()).toEqual([
+      "C08",
+      "C10",
+      "C100",
+      "C12",
+      "C13",
+      "C14",
+    ]);
   });
 });
