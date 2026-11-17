@@ -2,7 +2,7 @@
 // equipe; e o prazo e o valor. Cada divergência vai para o GP decidir qual vale. O que o código não acha na proposta
 // fica "não localizado na proposta pelo código — conferir", nunca "ausente".
 import type { DocumentoLido } from "../../dossie/esquema";
-import { termosDoRequisito, type Requisito } from "../../extracao/requisitos";
+import { termosDoRequisito, type Requisito, perfisDoRequisito } from "../../extracao/requisitos";
 import { prazosDeExecucao } from "../../extracao/rfp/prazos";
 import { prepararDocumento } from "../../extracao/rfp/item";
 import { normalizarTermo, procurar } from "../../regras/busca";
@@ -68,8 +68,10 @@ function requisitoNaProposta(r: Requisito, e: EntradaTap): LadoDivergencia | und
   // proposta do dossiê: a ligação pelo número R é explícita (produto do SOW ou perfil da equipe)
   if (e.dados) {
     if (r.tipo === "equipe") {
-      const perfil = e.dados.perfis.find((x) => x.requisito === r.numero);
-      if (perfil) return { texto: perfil.nome, onde: `${nomeProposta(e)}, equipe` };
+      // a equipe-chave é um R só, com a lista dos perfis (decisão 0054): vale a lista da proposta ligada ao R
+      const ligados = e.dados.perfis.filter((x) => x.requisito === r.numero);
+      if (ligados.length)
+        return { texto: ligados.map((x) => x.nome).join("; "), onde: `${nomeProposta(e)}, equipe` };
     } else {
       const produto = e.dados.produtos.find((x) => x.requisitos.includes(r.numero));
       if (produto) return { texto: `${produto.id} — ${produto.nome}`, onde: `${nomeProposta(e)}, SOW` };
@@ -88,10 +90,41 @@ function requisitoNaProposta(r: Requisito, e: EntradaTap): LadoDivergencia | und
     : undefined;
 }
 
+/** Palavras de um perfil, pelo radical (6 letras): "Coordenador Geral" e "Coordenação geral" são o mesmo perfil. */
+const radicais = (t: string) =>
+  new Set(
+    normalizarTermo(t)
+      .split(/[^a-z]+/)
+      .filter((w) => w.length > 3)
+      .map((w) => w.slice(0, 6)),
+  );
+function mesmoPerfil(a: string, b: string): boolean {
+  const ra = radicais(a);
+  const rb = radicais(b);
+  const comuns = [...ra].filter((w) => rb.has(w)).length;
+  return comuns >= Math.min(2, ra.size, rb.size) && comuns > 0;
+}
+
 function divergenciaDoRequisito(r: Requisito, e: EntradaTap): Divergencia {
   const tema: TemaDivergencia = r.tipo === "equipe" ? "equipe" : "produto";
   const rfp = { texto: `${r.rotulo}: ${r.descricao}`, onde: ondeRfp(r) };
   const naProposta = requisitoNaProposta(r, e);
+  // equipe-chave com vários perfis: a proposta tem de ter cada um (pelo nome), não só o primeiro
+  if (naProposta && r.tipo === "equipe" && e.dados) {
+    const exigidos = perfisDoRequisito(r);
+    const daProposta = e.dados.perfis.filter((x) => x.requisito === r.numero).map((x) => x.nome);
+    const faltam = exigidos.filter((p) => !daProposta.some((x) => mesmoPerfil(p, x)));
+    if (exigidos.length > 1 && faltam.length)
+      return {
+        id: `${tema}:${r.numero}`,
+        tema,
+        requisito: r.numero,
+        rfp,
+        proposta: naProposta,
+        situacao: "diferente",
+        observacao: `A RFP pede ${exigidos.length} perfis no ${r.numero}; a proposta liga ${daProposta.length} a ele e não traz: ${faltam.join("; ")}. Sugere-se conferir se a equipe da proposta cobre esses perfis.`,
+      };
+  }
   if (naProposta)
     return {
       id: `${tema}:${r.numero}`,

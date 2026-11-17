@@ -215,6 +215,27 @@ function contratante(docs: DocumentoRfp[], capa: CampoDaCapa[]): ItemAnalise {
       nota: `Achado no corpo do documento (p. ${orgao.pagina}${sec && nomeSec && sec.pagina !== orgao.pagina ? ` e ${sec.pagina}` : ""}): conferir se é o contratante.`,
     };
   }
+  // a sigla do órgão com a UF no corpo ("A SEPLAG-RJ terá o direito…", "a SEDUC-SP fornecerá…"): provável
+  // contratante, a conferir
+  for (const d of docs)
+    for (const p of d.paginas) {
+      const m = RE_SIGLA_COM_UF.exec(p.texto);
+      if (!m?.[0]) continue;
+      const inicio = p.texto.lastIndexOf("\n", m.index) + 1;
+      const fim = p.texto.indexOf("\n", m.index);
+      return {
+        ...base,
+        rotulo: "documento",
+        texto: m[0],
+        origem: {
+          documento: d.rotulo,
+          pagina: p.numero,
+          trecho: limparEspacos(p.texto.slice(inicio, fim < 0 ? undefined : fim)),
+        },
+        situacao: "localizado",
+        nota: `Sigla de órgão com a UF achada no corpo do documento (p. ${p.numero}): conferir se é o contratante.`,
+      };
+    }
   const tornaPublico = localizarPrimeiro(docs, /\btorna(?:-se)? publico\b/);
   if (tornaPublico)
     return {
@@ -227,6 +248,10 @@ function contratante(docs: DocumentoRfp[], capa: CampoDaCapa[]): ItemAnalise {
     };
   return itemSemAchado(docs, base);
 }
+
+/** Sigla de órgão com a UF ("SEPLAG-RJ", "SEDUC-SP", "SESA-PR"), em caixa alta no texto original. */
+const RE_SIGLA_COM_UF =
+  /\b[A-Z]{3,10}-(?:AC|AL|AP|AM|BA|CE|DF|ES|GO|MA|MT|MS|MG|PA|PB|PR|PE|PI|RJ|RN|RS|RO|RR|SC|SP|SE|TO)\b/;
 
 function objeto(docs: DocumentoRfp[], capa: CampoDaCapa[], mapa: MapaRfp): ItemAnalise {
   const base = { id: "identificacao:objeto", secao: "identificacao" as const, nome: "Objeto" };
@@ -347,6 +372,15 @@ export function normasCitadas(docs: DocumentoRfp[]): NormaCitada[] {
     if (!m?.[1] || !m[2]) continue;
     // número curto demais (Lei 1, Portaria 7) quase sempre é item de lista, não norma
     if (m[2].replace(/\./g, "").length < 2) continue;
+    // a portaria de nomeação de quem assina ("Chefe do Departamento…", "Portaria nº 24 de janeiro…", "Matrícula")
+    // não é legislação do objeto
+    if (
+      /^portaria/.test(m[1]) &&
+      /\bmatricula\b|\bchefe d[aoe]\b|\bdiretor[a]?\b|\bcoordenador[a]?\b|\bnomead[oa]\b|\bdesignad[oa]\b|\bcargo\b/.test(
+        normalizarTermo(l.frase),
+      )
+    )
+      continue;
     const chave = `${NOME_NORMA[m[1]] ?? m[1]} ${m[2]}`;
     const anoBruto = m[3] ?? m[4];
     const ano = anoBruto

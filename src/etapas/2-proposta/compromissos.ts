@@ -1,5 +1,7 @@
-// Compromissos da proposta numerados (decisão 0047): premissas, obrigações do contratante, exclusões e limites de
-// volume recebem um número C (C01, C02…), fixo pela ordem da resposta do PMO, como os R. Cada C tem destino no TAP:
+// Compromissos da proposta numerados (decisão 0047): premissas, obrigações do contratante, exclusões, compromissos de
+// método (sigilo, revisão interna, régua metodológica: os itens da minuta com ficha PROP-METODOLOGIA.9 a .11) e limites
+// de volume recebem um número C (C01, C02…), como os R. O número que o PMO escreveu no começo do item ("C20 — Sigilo:")
+// vale; os outros recebem os números livres, na ordem da resposta, para não colidir com os do texto da minuta. Cada C tem destino no TAP:
 // premissa e obrigação do contratante vão para o registro de premissas; exclusão e limite de volume, para os limites
 // (TAP.4). O PMO cita o número no item que o leva ("requisitos": ["C03"]); sem a citação, o código procura pela
 // premissa crítica ou pelo texto parecido e marca como provável.
@@ -8,7 +10,7 @@ import type { ItemPmo } from "../../pmo/schemas/comum";
 import type { RespostaConteudo } from "../../pmo/schemas/proposta";
 import type { PremissaRegistro, RespostaTap } from "../../pmo/schemas/tap";
 
-export type TipoCompromisso = "premissa" | "obrigacao" | "exclusao" | "limite";
+export type TipoCompromisso = "premissa" | "obrigacao" | "exclusao" | "metodo" | "limite";
 
 export interface Compromisso {
   numero: string;
@@ -23,6 +25,7 @@ export const NOME_TIPO_COMPROMISSO: Record<TipoCompromisso, string> = {
   premissa: "premissa",
   obrigacao: "obrigação do contratante",
   exclusao: "exclusão",
+  metodo: "compromisso de método",
   limite: "limite de volume",
 };
 
@@ -31,6 +34,7 @@ export const DESTINO_NO_TAP: Record<TipoCompromisso, string> = {
   premissa: "registro de premissas",
   obrigacao: "registro de premissas (depende do contratante)",
   exclusao: "limites (TAP.4)",
+  metodo: "descrição, entregas ou critérios de aceite (TAP.3 e TAP.5)",
   limite: "limites (TAP.4)",
 };
 
@@ -41,8 +45,26 @@ export function ehNumeroDeCompromisso(n: string): boolean {
   return RE_NUMERO_C.test(n.trim());
 }
 
+/** Item da minuta que é compromisso de método: a ficha PROP-METODOLOGIA.9 a .11, ou o número C que o PMO lhe deu. */
+const RE_FICHA_METODO = /^PROP-METODOLOGIA\.(?:9|10|11)$/;
+const RE_C_NO_INICIO = /^\s*(C\d{2,})\s*[—–:-]\s*/;
+
 export function numerarCompromissos(c: RespostaConteudo): Compromisso[] {
-  const lista: Omit<Compromisso, "numero">[] = [
+  const metodo = c.estrutura.flatMap((secao, si) =>
+    secao.itens.flatMap((item, ii) =>
+      RE_FICHA_METODO.test((item.ficha ?? "").trim()) || RE_C_NO_INICIO.test(item.texto)
+        ? [
+            {
+              tipo: "metodo" as const,
+              idItem: `conteudo:estrutura:${si}:${ii}`,
+              texto: item.texto.replace(RE_C_NO_INICIO, ""),
+              doPmo: RE_C_NO_INICIO.exec(item.texto)?.[1],
+            },
+          ]
+        : [],
+    ),
+  );
+  const lista: (Omit<Compromisso, "numero"> & { doPmo?: string })[] = [
     ...c.premissas.map((p, k) => ({
       tipo: "premissa" as const,
       idItem: `conteudo:premissas:${k}`,
@@ -59,13 +81,41 @@ export function numerarCompromissos(c: RespostaConteudo): Compromisso[] {
       idItem: `conteudo:exclusoes:${k}`,
       texto: x.texto,
     })),
+    ...metodo,
     ...c.limitesVolume.map((x, k) => ({
       tipo: "limite" as const,
       idItem: `conteudo:limitesVolume:${k}`,
       texto: x.texto,
     })),
   ];
-  return lista.map((x, k) => ({ ...x, numero: `C${String(k + 1).padStart(2, "0")}` }));
+  // o número que o PMO deu vale (sem repetição); os outros recebem os números livres, na ordem da lista
+  const usados = new Set<string>();
+  const doPmo = lista.map((x) => {
+    if (!x.doPmo || usados.has(x.doPmo)) return undefined;
+    usados.add(x.doPmo);
+    return x.doPmo;
+  });
+  let proximo = 1;
+  const livre = () => {
+    for (;;) {
+      const n = `C${String(proximo++).padStart(2, "0")}`;
+      if (!usados.has(n)) {
+        usados.add(n);
+        return n;
+      }
+    }
+  };
+  return lista
+    .map((x, k) => {
+      const semDoPmo: Omit<Compromisso, "numero"> = {
+        tipo: x.tipo,
+        idItem: x.idItem,
+        texto: x.texto,
+        ...(x.premissaCritica ? { premissaCritica: x.premissaCritica } : {}),
+      };
+      return { ...semDoPmo, numero: doPmo[k] ?? livre() };
+    })
+    .sort((a, b) => Number(a.numero.slice(1)) - Number(b.numero.slice(1)));
 }
 
 export function compromissosEmTexto(cs: Compromisso[]): string {
@@ -157,8 +207,13 @@ export function destinosNoTap(
         .map((l) => ({ l, c: cobertura(compromisso.texto, l.item.texto) }))
         .filter((x) => x.c >= 0.4)
         .sort((a, b) => b.c - a.c)[0]?.l;
+    // o compromisso de método não tem lugar fixo no TAP: vale o texto parecido em qualquer parte
     const esperado =
-      compromisso.tipo === "exclusao" || compromisso.tipo === "limite" ? "limites" : "registro";
+      compromisso.tipo === "exclusao" || compromisso.tipo === "limite"
+        ? "limites"
+        : compromisso.tipo === "metodo"
+          ? ""
+          : "registro";
     const pelaRedacao = melhor(lugares.filter((l) => l.onde.startsWith(esperado))) ?? melhor(lugares);
     const provavel = pelaPc ?? pelaRedacao;
     if (provavel)

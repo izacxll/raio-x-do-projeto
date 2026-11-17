@@ -58,8 +58,13 @@ export function numerosQuePedemFonte(texto: string): string[] {
     .replace(/\bp\. ?\d+(?:\s*(?:,|e|a)\s*\d+)*/g, " ")
     .replace(/\br\d{2}\b/g, " ")
     .replace(/\bpc\d\b/g, " ")
-    // ids de itens e de meses citados pelo PMO ("AT-01", "UP-08", "M01"): referência, não valor
-    .replace(/\b[a-z]{1,2}-?\d{2}\b/g, " ")
+    // ids de itens e de meses citados pelo PMO ("AT-01", "UP-08", "M01", "(a1)", "a2, a3", "f14"): referência, não valor
+    .replace(/\b[a-z]{1,2}-?\d{1,2}\b/g, " ")
+    // número de norma ("Lei 14.133", "Lei nº 14.133/2021", "Decreto 10.024"): referência, não valor
+    .replace(
+      /\b(?:lei(?: complementar)?|lc|decreto(?:-lei)?|portaria|instrucao normativa|in|resolucao)(?: federal| estadual| municipal)? (?:n[º°o.]\s*)?\d[\d.]*(?:\/\d{2,4})?/gi,
+      " ",
+    )
     .replace(
       /\b(?:itens?|subitens?|clausulas?|art\.?|artigos?|anexos?|quadros?|tabelas?|incisos?|secao|secoes|etapas?) (?:n[º°o.]\s*)?[\d.]+[a-z]?(?:\s*(?:,|e)\s*[\d.]+)*/gi,
       " ",

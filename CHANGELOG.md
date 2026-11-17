@@ -4,6 +4,15 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 
 ## [Não publicado]
 
+### Correções do teste externo pelas etapas 1 a 4 (decisão 0055)
+- **Rework nos pedidos:** cada etapa que leva fichas leva os temas do `rework.md` dos artigos citados nelas (etapa 2: a seção 4 e os temas que faltavam; etapa 3; etapa 4, no texto de sistema). A conferência do pedido (`.conteudo.md`) marca FALTA quando algum artigo citado vai sem resumo e explica por que o método só vai no pedido da etapa 1.
+- **Compromissos de método também são C** (fichas PROP-METODOLOGIA.9 a .11), com o número que o PMO deu quando ele o escreveu; os outros nos números livres, sem colidir com a minuta.
+- **Trava "valor não conferido":** ids de itens do PMO ("(a1)", "a2, a3") e números de norma ("Lei 14.133") não contam como valor.
+- **Ponto de partida:** "capacidade de pagamento" (CAPAG) não é cláusula de pagamento; sigla de órgão com a UF ("SEPLAG-RJ") vira o contratante provável; a portaria de nomeação de quem assina não é legislação.
+- **TAP:** a divergência da equipe-chave compara a lista inteira de perfis da proposta com a da RFP e aponta o que falta.
+- **Matriz de atendimento:** uma seção responde a vários critérios (lista com ponto e vírgula, ou a seção de equipe para os perfis); o pedido do conteúdo avisa o PMO.
+- **Pedidos externos:** `--modalidade` (decisão 0054); "medio" sem acento vale no `--porte`; na estratégia, só as premissas críticas "sim" (ou as de `--pcs`) ficam confirmadas; `.conteudo.md` ao lado de cada pedido, com o que foi dentro e a comparação com a tabela da seção 5.
+
 ### Requisitos como entregas e modalidade não identificada (decisão 0054)
 - **Cada R é uma entrega ou obrigação de quem executa.** A equipe-chave vira um requisito só, com a lista dos perfis, lida até o título da seção seguinte, mesmo passando de página. Sem produtos numerados, entram os itens do objeto em algarismos romanos, o levantamento (com a análise comparativa) e os produtos que uma seção "Dos produtos" nomeia. A entrega em meio digital e o sigilo com a cessão dos produtos entram no fim da lista. Tipo novo de requisito: atividade exigida.
 - **Modalidade não identificada:** sem edital, critério, sessão nem artigo de inexigibilidade ou dispensa, o código não supõe licitação. A tela da etapa 1 pede a escolha do GP, a etapa 2 não pede a estratégia sem ela e o PMO escreve as seções 5, 6 e 8 com as alternativas.

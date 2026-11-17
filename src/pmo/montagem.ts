@@ -21,6 +21,55 @@ function ficha(nomeArquivoSemExtensao: string): string {
   return achada[1];
 }
 
+/**
+ * Os temas do rework.md (seções 1 a 5; o quadro de cobertura fica fora), cada um com o resumo e a lista dos artigos
+ * que ele cobre ("**Artigos.** RW-071 (…); RW-072 (…)"). Seção com subseções vira um tema por subseção.
+ */
+export function temasDoRework(texto = textoRework): { titulo: string; texto: string }[] {
+  const linhas = texto.split("\n");
+  const temas: { titulo: string; texto: string[] }[] = [];
+  let secao = "";
+  let dentro = false;
+  for (const l of linhas) {
+    const s = /^## (\d+)\. /.exec(l);
+    if (s) {
+      dentro = Number(s[1]) >= 1 && Number(s[1]) <= 5;
+      secao = l.replace(/^## /, "");
+      if (dentro) temas.push({ titulo: secao, texto: [l] });
+      continue;
+    }
+    if (/^## /.test(l)) {
+      dentro = false;
+      continue;
+    }
+    if (!dentro) continue;
+    if (/^### /.test(l)) {
+      temas.push({ titulo: `${secao} › ${l.replace(/^### /, "")}`, texto: [`## ${secao}`, l] });
+      continue;
+    }
+    temas.at(-1)?.texto.push(l);
+  }
+  return temas
+    .map((t) => ({ titulo: t.titulo, texto: t.texto.join("\n").trim() }))
+    .filter((t) => t.texto.split("\n").length > 1);
+}
+
+/** Os artigos do Rework citados num texto (as fichas citam "RW-022"). */
+export const artigosCitados = (texto: string): string[] => [
+  ...new Set([...texto.matchAll(/\bRW-\d{3}\b/g)].map((m) => m[0])),
+];
+
+/**
+ * Os temas do rework.md que resumem os artigos citados (SKILL.md, seção 5: "os artigos do rework.md citados nelas").
+ * Tema que já vai noutro bloco (a seção 4, na etapa 2) não se repete.
+ */
+export function reworkDosArtigos(ids: string[], jaIncluido = ""): string {
+  const temas = temasDoRework().filter(
+    (t) => ids.some((id) => new RegExp(`\\b${id}\\b`).test(t.texto)) && !jaIncluido.includes(t.texto),
+  );
+  return temas.map((t) => t.texto).join("\n\n");
+}
+
 /** Só a seção da proposta do rework.md (SKILL.md, seção 5). */
 export function secaoPropostaDoRework(texto = textoRework): string {
   const ini = texto.indexOf("## 4. Proposta");
@@ -52,13 +101,23 @@ export interface BlocoTexto {
 
 /** O que vai como instrução de sistema na etapa 2: o SKILL.md e as referências da etapa. */
 export function referenciasEtapa2(): BlocoTexto[] {
+  const fichasDaEtapa = FICHAS_ETAPA_2.map((f) => ({
+    titulo: `referencias/artefatos/${f}.md`,
+    texto: ficha(f),
+  }));
+  const secao4 = secaoPropostaDoRework();
+  // os artigos que as fichas citam e a seção 4 não resume vão com o tema deles (SKILL.md, seção 5)
+  const outros = reworkDosArtigos(artigosCitados(fichasDaEtapa.map((f) => f.texto).join("\n")), secao4);
   return [
     { titulo: "SKILL.md", texto: textoSkill },
     { titulo: "referencias/licitacoes.md", texto: textoLicitacoes },
     { titulo: "referencias/checklist.md", texto: textoChecklist },
     { titulo: "referencias/experiencia.md", texto: textoExperiencia },
-    { titulo: "referencias/rework.md (seção 4, proposta)", texto: secaoPropostaDoRework() },
-    ...FICHAS_ETAPA_2.map((f) => ({ titulo: `referencias/artefatos/${f}.md`, texto: ficha(f) })),
+    { titulo: "referencias/rework.md (seção 4, proposta)", texto: secao4 },
+    ...(outros
+      ? [{ titulo: "referencias/rework.md (temas dos artigos citados nas fichas)", texto: outros }]
+      : []),
+    ...fichasDaEtapa,
   ];
 }
 
@@ -67,11 +126,20 @@ export const FICHAS_ETAPA_3 = ["tap", "b03-registro-premissas", "b31-registro-pa
 
 /** O que vai como instrução de sistema na etapa 3. */
 export function referenciasEtapa3(): BlocoTexto[] {
+  const fichasDaEtapa = FICHAS_ETAPA_3.map((f) => ({
+    titulo: `referencias/artefatos/${f}.md`,
+    texto: ficha(f),
+  }));
+  // os temas do rework.md que resumem os artigos citados nas fichas (SKILL.md, seção 5)
+  const rework = reworkDosArtigos(artigosCitados(fichasDaEtapa.map((f) => f.texto).join("\n")));
   return [
     { titulo: "SKILL.md", texto: textoSkill },
     { titulo: "referencias/checklist.md", texto: textoChecklist },
     { titulo: "referencias/experiencia.md", texto: textoExperiencia },
-    ...FICHAS_ETAPA_3.map((f) => ({ titulo: `referencias/artefatos/${f}.md`, texto: ficha(f) })),
+    ...(rework
+      ? [{ titulo: "referencias/rework.md (temas dos artigos citados nas fichas)", texto: rework }]
+      : []),
+    ...fichasDaEtapa,
   ];
 }
 
@@ -80,12 +148,22 @@ export function referenciasEtapa3(): BlocoTexto[] {
  * passo, e não aqui: assim o prefixo (skill + documentos) é o mesmo nos seis passos e fica no cache.
  */
 export function referenciasEtapa4(): BlocoTexto[] {
+  // os temas do rework.md citados nas fichas do PGP (A1…B33), todos de uma vez: assim o prefixo é o mesmo nos seis
+  // passos e fica no cache (SKILL.md, seção 5)
+  const doPgp = Object.entries(fichas)
+    .filter(([c]) => /\/[ab]\d{2}-/.test(c))
+    .map(([, t]) => t)
+    .join("\n");
+  const rework = reworkDosArtigos(artigosCitados(doPgp));
   return [
     { titulo: "SKILL.md", texto: textoSkill },
     { titulo: "referencias/pmbok7.md", texto: textoPmbok7 },
     { titulo: "referencias/checklist.md", texto: textoChecklist },
     { titulo: "referencias/experiencia.md", texto: textoExperiencia },
     { titulo: "referencias/licitacoes.md", texto: textoLicitacoes },
+    ...(rework
+      ? [{ titulo: "referencias/rework.md (temas dos artigos citados nas fichas do PGP)", texto: rework }]
+      : []),
   ];
 }
 
