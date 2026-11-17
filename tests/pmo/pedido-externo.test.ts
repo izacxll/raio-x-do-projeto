@@ -42,6 +42,14 @@ import { itensDaEtapa3, tapInicial } from "../../src/etapas/3-tap/tap";
 import { conferirTap } from "../../src/etapas/3-tap/conferencia-tap";
 import { inicioFixo } from "../../src/regras/cruzamentos-rfp";
 import { montarEntradaPgp } from "../../src/etapas/4-pgp/entrada";
+import {
+  conferirRaci,
+  contratanteNaRaci,
+  cronogramaDoPgp,
+  custosDoPgp,
+  inicioDoPgp,
+} from "../../src/etapas/4-pgp/calculos";
+import { textoDasHoras, textoDasHorasTotais } from "../../src/etapas/2-proposta/preco";
 import { PASSOS_PGP } from "../../src/etapas/4-pgp/passos";
 import { PEDIDOS_PGP } from "../../src/etapas/4-pgp/pedidos";
 import { passoAnterior, pgpInicial } from "../../src/etapas/4-pgp/pgp";
@@ -624,6 +632,54 @@ describe.skipIf(MODO !== "importar")("importar a resposta do PMO (leitura indepe
               ...cron.problemas.map((x) => `- ${x}`),
             );
         }
+      }
+      if (etapa === 4 && passo === "cronograma" && dossie.pgp?.cronograma) {
+        // as contas do código do passo: início, rede com a data fixa, RACI, horas e o pacote de cada atividade
+        const ep = montarEntradaPgp(dossie, HOJE);
+        const cr = dossie.pgp.cronograma.resposta;
+        const crono = cronogramaDoPgp(dossie.pgp, ep)!;
+        const { inicio, doDocumento } = inicioDoPgp(dossie.pgp, ep);
+        const custos = custosDoPgp(dossie.pgp, ep)!;
+        const pacotes = dossie.pgp.escopo?.resposta.eap ?? [];
+        const dataBr = (d?: Date) => d?.toLocaleDateString("pt-BR") ?? "—";
+        linhas.push(
+          "",
+          "## Cronograma pelo código",
+          `- início: ${inicio ? `${dataBr(inicio)}${doDocumento ? ` (data do documento, ${doDocumento}, a confirmar pelo GP)` : " (do GP)"}` : "a definir pelo GP"}`,
+          `- total: ${crono.total} dias úteis, fim em ${dataBr(crono.dataFim)}; caminho crítico: ${crono.caminhoCritico.join(" → ")}`,
+          `- ${crono.conferenciaPrazo.texto}`,
+          ...crono.problemas.map((x) => `- ${x}`),
+          ...crono.datasFixas.map(
+            (f) =>
+              `- data fixa ${f.atividade}: ${dataBr(f.inicio)} a ${dataBr(f.fim)} (${f.diasCorridos} dias corridos); predecessoras até ${dataBr(f.fimPredecessoras)}; folga ${f.folgaCorrida ?? "—"} dia(s) corrido(s); ${f.cabe ? "cabe" : "NÃO CABE"}`,
+          ),
+          "",
+          "| Atividade | Pacote (pelo nome) | Duração | Início | Fim | Folga | Crítica |",
+          "|---|---|---|---|---|---|---|",
+          ...crono.atividades.map((a) => {
+            const ref = /\(EAP ([\d.]+)\)/.exec(a.nome)?.[1];
+            const pac = ref ? pacotes.find((x) => x.id === ref) : undefined;
+            const pacote = !ref
+              ? "sem referência"
+              : !pac
+                ? `${ref}: não existe na EAP`
+                : pac.produto === a.produto
+                  ? `${ref} (${pac.produto})`
+                  : `${ref}: pacote de ${pac.produto}, atividade em ${a.produto}`;
+            return `| ${a.id} ${a.nome.slice(0, 50)} | ${pacote} | ${a.duracao} | ${dataBr(a.dataInicio)} | ${dataBr(a.dataFim)} | ${a.folga} | ${a.critica ? "sim" : ""} |`;
+          }),
+          "",
+          "## RACI pelo código",
+          ...(conferirRaci(cr).length
+            ? conferirRaci(cr).map((x) => `- ${x}`)
+            : ["- um só A por atividade; toda atividade com A; perfis da equipe na lista"]),
+          ...contratanteNaRaci(cr).map((x) => `- contratante (fora da equipe) — ${x}`),
+          "",
+          "## Horas e custos pelo código",
+          ...custos.preco.linhas.map((l) => `- ${l.perfil.id} ${l.perfil.nome}: ${textoDasHoras(l)} h`),
+          `- total: ${textoDasHorasTotais(custos.preco)} h; pessoal: ${custos.preco.pessoal ?? "a definir pelo GP"}`,
+          `- falta: ${custos.faltando.join("; ")}`,
+        );
       }
       if (etapa === 3 && passo === "tap" && dossie.tap) {
         // a conferência do TAP pelo código (método da etapa 3): elementos, marcos × vigência, valor, divergências
