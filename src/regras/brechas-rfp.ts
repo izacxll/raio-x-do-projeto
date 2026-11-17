@@ -80,6 +80,10 @@ const ELEICOES = [
   { nivel: "geral", nome: "eleições gerais", data: "2030-10-06" },
 ] as const;
 
+/** Texto padrão de confidencialidade e de proteção de dados. */
+const RE_TEXTO_PADRAO =
+  /\blgpd\b|\b13\.709\b|\bdados pessoais\b|\bconfidencia\w*|\bsigilo\b|\bsegredos? comercia\w*/;
+
 /** Quem a frase põe como sujeito: a própria administração (gestor, fiscal, comissão, órgão). */
 const RE_SUJEITO_ADMINISTRACAO =
   /^(?:\d+(?:\.\d+)*\.?\s*|[a-z]\)\s*)?(?:compete (?:a|ao)\s+|cabe (?:a|ao)\s+)?(?:o|a|os|as)?\s*(?:gestor|gestora|fiscal|fiscais|administracao|contratante|comissao|secretaria|orgao|poder publico|municipio|prefeitura|concedente|parceira publica)\b/;
@@ -92,6 +96,9 @@ const RE_SUJEITO_ADMINISTRACAO =
 function vagoSemEfeito(padrao: string, o: Localizado): boolean {
   const frase = tirarAcentos(o.frase);
   if (padrao === "eventualmente" && /\bforo\b|\bdirimir\b|\bcontroversias\b/.test(frase)) return true;
+  // texto padrão de confidencialidade e LGPD ("segredos comerciais e confidenciais … entre outros"): a skill manda
+  // não marcar
+  if (RE_TEXTO_PADRAO.test(frase.toLowerCase())) return true;
   // regra geral: a palavra vaga só pesa quando o trecho fala de obrigação, prazo ou entrega de quem executa
   // (ou é item de lista de tarefas, que começa por verbo no infinitivo: "apoiar agendas…, quando necessário")
   if (!RE_OBRIGACAO_DE_QUEM_EXECUTA.test(frase) && !RE_TAREFA.test(frase.trim())) return true;

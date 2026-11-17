@@ -33,7 +33,7 @@ A ordem é a da decisão do gerente. Cada item tem página. A meta é caber em *
 
 ### 3.1 Em uma página
 - Objeto: primeira frase da seção cujo título diz "objeto".
-- Regime e modalidade: licitação (Lei 14.133 e outras) ou parceria (Lei 13.019: termo de colaboração ou fomento). A modalidade muda o vocabulário de todo o resto.
+- Regime e modalidade: licitação (Lei 14.133 e outras), contratação direta ou parceria (Lei 13.019: termo de colaboração ou fomento). A modalidade muda o vocabulário de todo o resto. **Quando o documento não a diz** (sem edital, critério de julgamento, sessão nem artigo de inexigibilidade ou dispensa), ela fica "não identificada — confirmar com o GP": o código não supõe licitação, a tela pede a escolha do GP antes de seguir e as seções 5, 6 e 8 trazem as alternativas (decisão 0054).
 - Tamanho: quantitativos de equipe, beneficiários, municípios, produtos. **Consolidar**, não listar cada número.
 - Situação: datas do certame comparadas com hoje ("o prazo já passou", "faltam N dias").
 - Os 3 a 5 pontos que mais pesam saem da seção 7, em ordem de impacto: caixa, dependência do contratante, preço, prazo.
@@ -44,7 +44,7 @@ A ordem é a da decisão do gerente. Cada item tem página. A meta é caber em *
 - Números do mesmo tema viram **uma linha** com faixa ("4 percursos de 20 a 37 visitas"), não um requisito por número.
 - Metas e indicadores: ler o quadro de metas coluna por coluna (meta, indicador, fórmula, fonte). Em chamamento sem "produtos", as metas **são** os requisitos.
 - Vedações ("é vedado", "não poderá") numa linha própria.
-- Os números R continuam, mas cada R é uma obrigação ou entrega, não um número solto do texto.
+- Os números R continuam, mas cada R é uma obrigação ou entrega de quem executa (produto, relatório, atividade exigida, obrigação como a entrega digital ou o sigilo), não um perfil da equipe nem um número solto do texto. **A equipe-chave é um R só**, com a lista dos perfis. Sem produtos numerados, os itens do objeto (I, II…), o levantamento e os produtos que uma seção "Dos produtos" nomeia viram R (decisão 0054).
 
 ### 3.3 Prazos
 - Duas linhas do tempo: **certame** (datas fixas) e **execução** (meses ou dias contados de um marco).

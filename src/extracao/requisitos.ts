@@ -6,11 +6,12 @@ import type { PaginaLida } from "../dossie/esquema";
 import { normalizarTermo, trechoEmVolta } from "../regras/busca";
 
 /**
- * Produto ou entregável, equipe mínima, quantidade, local, condição do objeto (público-alvo, limite por
- * proponente, prazo ou forma de execução, acessibilidade) ou outro (incluído pelo GP).
+ * Produto ou entregável, atividade exigida (item do objeto, levantamento), equipe-chave (um requisito com a lista
+ * dos perfis), quantidade, local, condição do objeto (público-alvo, limite por proponente, prazo ou forma de
+ * execução, acessibilidade), obrigação de quem executa ou outro (incluído pelo GP).
  */
 export type TipoRequisito =
-  "produto" | "equipe" | "quantidade" | "local" | "condicao" | "obrigacao" | "outro";
+  "produto" | "atividade" | "equipe" | "quantidade" | "local" | "condicao" | "obrigacao" | "outro";
 
 export interface Requisito {
   /** R01, R02… O número não muda se o GP editar a lista; requisito novo ganha o próximo. */
@@ -25,6 +26,17 @@ export interface Requisito {
   tipo?: TipoRequisito;
   /** "RFP" ou "Anexo: <arquivo>", quando veio do código. */
   documento?: string;
+  /** Na equipe-chave: os perfis exigidos (um requisito só, com a lista). */
+  perfis?: string[];
+}
+
+/**
+ * Os perfis de um requisito de equipe: a lista do requisito único da equipe-chave ou, nos dossiês de antes dele
+ * (um perfil por requisito), o rótulo "Equipe: Coordenador".
+ */
+export function perfisDoRequisito(r: Pick<Requisito, "rotulo" | "perfis">): string[] {
+  if (r.perfis?.length) return r.perfis;
+  return [r.rotulo.replace(/^Equipe:\s*/, "")];
 }
 
 const ROMANOS: Record<string, number> = {

@@ -1,6 +1,7 @@
-// Requisitos numerados da RFP (etapa 1, passo 3): produtos e entregáveis, equipe mínima, quantidades, local e
-// condições do objeto (público-alvo, limite por proponente, prazo e forma de execução, acessibilidade).
-// Cada um ganha um número (R01, R02…) que acompanha o projeto até a conferência (etapa 5).
+// Requisitos numerados da RFP (etapa 1, passo 3): cada R é uma entrega ou obrigação de quem executa (decisão 0054)
+// — produtos e entregáveis, os itens do objeto e o levantamento exigido, a equipe-chave (um R só, com a lista dos
+// perfis), quantidades, local, condições do objeto, obrigações, a forma de entrega e o sigilo com a cessão dos
+// produtos. Cada um ganha um número (R01, R02…) que acompanha o projeto até a conferência (etapa 5).
 // Requisitos técnicos e funcionais em texto corrido ficam para o GP incluir: o código não os separa nesta versão.
 import { normalizarTermo } from "../../regras/busca";
 import { ehCampoEmBranco, limparEspacos, MARCA_DE_ITEM } from "../../texto/frase";
@@ -15,30 +16,59 @@ const PAPEIS =
   "coordenador(?:\\(?a\\)?)?(?: geral| tecnico| de campo| executivo)?|gestor(?:a)? (?:de projeto|do projeto|tecnico)|gerente(?: de projeto| do projeto)?|consultor(?:a)?(?: senior| pleno| junior)?|especialista|analista|pesquisador(?:a)?|assistente social|assistente|tecnico(?:a)?|supervisor(?:a)?|facilitador(?:a)?|assessor(?:a)?|engenheir[oa]|arquitet[oa]|advogad[oa]|economista|estatistic[oa]|psicolog[oa]|sociolog[oa]|pedagog[oa]|antropolog[oa]|cientista de dados|desenvolvedor(?:a)?|designer|jornalista|profissional de nivel superior|profissional";
 const RE_PAPEL = new RegExp(`^(?:(\\d{1,2})\\s*(?:\\([a-z ]+\\)\\s*)?)?(${PAPEIS})\\b`);
 const RE_QUALIFICACAO =
-  /graduac|formacao|nivel superior|superior completo|experiencia|pos-graduac|especializac|mestrad|doutorad|registro no|anos de atuacao|curso superior|bacharel|licenciatura/;
+  /\bperfil\b|graduac|formacao|nivel superior|superior completo|experiencia|pos-graduac|especializac|mestrad|doutorad|registro no|anos de atuacao|curso superior|bacharel|licenciatura/;
 const RE_PAGINA_DE_EQUIPE =
   /equipe[ -](?:tecnica|minima|chave|de trabalho|profissional|executora)|qualificacao (?:tecnica|profissional)|perfil profissional|perfis profissionais|profissionais (?:exigidos|minimos)/;
 
-function equipe(docs: DocumentoRfp[]): Omit<Requisito, "numero">[] {
-  const out: Omit<Requisito, "numero">[] = [];
+/** Título de seção em caixa alta ("SIGILO E DIREITOS DE PROPRIEDADE"): a lista da equipe acaba antes dele. */
+const RE_TITULO_DE_SECAO = /^[A-ZÀ-Ý0-9][A-ZÀ-Ý0-9 ,.ºª/()–-]{6,}$/;
+
+interface PerfilAchado {
+  papel: string;
+  descricao: string;
+  pagina: number;
+  documento: string;
+}
+
+/** Os perfis da equipe exigida: da página que abre a seção de equipe até o título da seção seguinte. */
+function perfisDaEquipe(docs: DocumentoRfp[]): PerfilAchado[] {
+  const out: PerfilAchado[] = [];
   const vistos = new Set<string>();
   for (const doc of docs) {
-    for (const p of doc.paginas) {
-      if (p.origem === "nao-verificavel" || !RE_PAGINA_DE_EQUIPE.test(normalizarTermo(p.texto))) continue;
-      const linhas = p.texto.split("\n");
-      linhas.forEach((original, i) => {
+    // as linhas do documento inteiro: o perfil no fim de uma página tem a qualificação na seguinte
+    const linhas = linhasDoDocumento(doc);
+    const paginasQueAbrem = new Set(
+      doc.paginas.filter((p) => RE_PAGINA_DE_EQUIPE.test(normalizarTermo(p.texto))).map((p) => p.numero),
+    );
+    let naSecao = false;
+    for (let i = 0; i < linhas.length; i++) {
+      {
+        const pagina = linhas[i]!.pagina;
+        if (!naSecao && !paginasQueAbrem.has(pagina)) continue;
+        naSecao = true;
+        const original = linhas[i]!.texto;
+        const titulo = original.trim();
+        // a seção de equipe acaba no título seguinte em caixa alta que não é da equipe (só depois de achar perfil)
+        if (
+          out.length &&
+          RE_TITULO_DE_SECAO.test(titulo) &&
+          !RE_PAGINA_DE_EQUIPE.test(normalizarTermo(titulo)) &&
+          !RE_PAPEL.test(normalizarTermo(titulo))
+        ) {
+          break;
+        }
         const limpa = limparEspacos(original.replace(/\t+/g, " "))
           .replace(/^(?:\d{1,2}(?:\.\d{1,2})*\.?|[a-z]\)|[IVX]{1,4}\s*[-–.)])\s*/, "")
           .replace(MARCA_DE_ITEM, "");
         const n = normalizarTermo(limpa);
         const m = RE_PAPEL.exec(n);
-        if (!m?.[2] || limpa.length > 400) return;
-        const junto = normalizarTermo(`${limpa} ${linhas[i + 1] ?? ""} ${linhas[i + 2] ?? ""}`);
+        if (!m?.[2] || limpa.length > 400) continue;
+        const junto = normalizarTermo(`${limpa} ${linhas[i + 1]?.texto ?? ""} ${linhas[i + 2]?.texto ?? ""}`);
         // "1 (um) Coordenador(a) Geral" (com a quantidade) vale sozinho; sem ela, precisa da qualificação perto
-        if (!m[1] && !RE_QUALIFICACAO.test(junto)) return;
+        if (!m[1] && !RE_QUALIFICACAO.test(junto)) continue;
         // definição copiada da lei ("considera-se de notória especialização o profissional ou a empresa cujo
         // conceito…", art. 74, § 3º) não é equipe exigida
-        if (/notoria especializacao|considera-se|para os fins desta lei|cujo conceito/.test(junto)) return;
+        if (/notoria especializacao|considera-se|para os fins desta lei|cujo conceito/.test(junto)) continue;
         // o nome do papel: sem a quantidade na frente e sem a qualificação que vem depois
         const papel =
           limpa
@@ -46,27 +76,235 @@ function equipe(docs: DocumentoRfp[]): Omit<Requisito, "numero">[] {
             .split(/[:;,–—]|\s-\s|\s(?=formação|Formação|FORMAÇÃO|experiência|Experiência|com\s|que\s)/)[0]
             ?.trim()
             // até 80 caracteres, sem cortar palavra
-            .replace(/^(.{0,80})(?:\s.*)?$/, "$1") || m[2];
+            .replace(/^(.{0,80})(?:\s.*)?$/, "$1")
+            .replace(/[.;:]$/, "") || m[2];
+        // "Do profissional indicado…" (a frase que apresenta o perfil) não é nome de perfil
+        if (/^(?:do|da|de|o|a|os|as)\s/i.test(papel)) continue;
         const chave = normalizarTermo(papel).replace(/[^a-z]/g, "");
         // o mesmo papel em outra tabela ("Coordenador(a) Geral trado", com a coluna vizinha colada) é repetição
-        if ([...vistos].some((v) => v.startsWith(chave) || chave.startsWith(v))) return;
+        if ([...vistos].some((v) => v.startsWith(chave) || chave.startsWith(v))) continue;
         vistos.add(chave);
-        const seguinte = linhas[i + 1]?.trim() ?? "";
+        const seguinte = linhas[i + 1]?.texto.trim() ?? "";
         const continua = /\w$|,$/.test(limpa) && seguinte && !RE_PAPEL.test(normalizarTermo(seguinte));
         const descricao = limparEspacos(`${limpa}${continua ? ` ${seguinte}` : ""}`).slice(0, 300);
         out.push({
-          rotulo: `Equipe: ${papel.charAt(0).toUpperCase()}${papel.slice(1)}`,
+          papel: `${papel.charAt(0).toUpperCase()}${papel.slice(1)}`,
           descricao,
-          pagina: p.numero,
-          trecho: descricao,
-          origem: "codigo",
-          tipo: "equipe",
+          pagina,
           documento: doc.rotulo,
         });
-      });
+      }
     }
   }
   return out.slice(0, 20);
+}
+
+/** A equipe-chave como um requisito só (decisão 0054), com a lista dos perfis; o trecho é o do primeiro perfil. */
+function equipe(docs: DocumentoRfp[]): Omit<Requisito, "numero">[] {
+  const perfis = perfisDaEquipe(docs);
+  const primeiro = perfis[0];
+  if (!primeiro) return [];
+  const n = perfis.length;
+  return [
+    {
+      rotulo: `Equipe-chave (${n} ${n === 1 ? "perfil" : "perfis"})`,
+      descricao: perfis.map((x) => x.papel).join("; "),
+      pagina: primeiro.pagina,
+      trecho: primeiro.descricao,
+      origem: "codigo",
+      tipo: "equipe",
+      documento: primeiro.documento,
+      perfis: perfis.map((x) => x.papel),
+    },
+  ];
+}
+
+// ---------- itens do objeto, levantamento e produtos nomeados (decisão 0054) ----------
+
+interface LinhaDoDocumento {
+  texto: string;
+  pagina: number;
+}
+
+const linhasDoDocumento = (doc: DocumentoRfp): LinhaDoDocumento[] =>
+  doc.paginas
+    .filter((p) => p.origem !== "nao-verificavel")
+    .flatMap((p) => p.texto.split("\n").map((texto) => ({ texto: texto.trim(), pagina: p.numero })));
+
+const RE_ROMANO_NO_INICIO = /^([IVX]{1,5})\s*[.)–-]\s+(.+)$/;
+const ROMANO: Record<string, number> = {
+  I: 1,
+  II: 2,
+  III: 3,
+  IV: 4,
+  V: 5,
+  VI: 6,
+  VII: 7,
+  VIII: 8,
+  IX: 9,
+  X: 10,
+};
+/** Frase que abre a lista do que a contratada deve fazer ("devendo, para tanto:", "compreenderão:"). */
+const RE_ABRE_LISTA = /\b(?:devendo|devera|deverao|compreend\w*|consist\w*|abrang\w*|contempl\w*)\b[^.]*:$/;
+
+/**
+ * Os itens do objeto em algarismos romanos, logo depois da frase que abre a lista ("devendo, para tanto:"), que
+ * pode passar para a página seguinte. Só a primeira lista do documento: as repetições mais adiante (o detalhamento
+ * de cada item, os produtos que repetem os itens) não viram R de novo.
+ */
+function itensDoObjeto(doc: DocumentoRfp): Omit<Requisito, "numero">[] {
+  const linhas = linhasDoDocumento(doc);
+  // a primeira frase que abre lista e é seguida pelos itens I, II…; as que abrem outra coisa ("compreenderão:"
+  // seguido de texto corrido) passam
+  for (let abre = 0; abre < linhas.length; abre++) {
+    if (!RE_ABRE_LISTA.test(tirarAcentos(linhas[abre]!.texto.toLowerCase()))) continue;
+    const itens = itensDepoisDe(linhas, abre);
+    if (itens.length >= 2)
+      return itens.map((x) => ({
+        rotulo: `Item ${x.romano} do objeto`,
+        descricao: limparEspacos(x.texto).replace(/[;.]$/, ""),
+        pagina: x.pagina,
+        trecho: x.trecho,
+        origem: "codigo" as const,
+        tipo: "atividade" as const,
+        documento: doc.rotulo,
+      }));
+  }
+  return [];
+}
+
+function itensDepoisDe(
+  linhas: LinhaDoDocumento[],
+  abre: number,
+): { romano: string; texto: string; pagina: number; trecho: string }[] {
+  const itens: { romano: string; texto: string; pagina: number; trecho: string }[] = [];
+  for (let i = abre + 1; i < linhas.length; i++) {
+    const l = linhas[i]!;
+    if (!l.texto) continue;
+    const m = RE_ROMANO_NO_INICIO.exec(l.texto);
+    if (m?.[1] && ROMANO[m[1]] === itens.length + 1) {
+      itens.push({ romano: m[1], texto: m[2] ?? "", pagina: l.pagina, trecho: l.texto });
+      continue;
+    }
+    // a lista acaba no primeiro título em caixa alta ou na primeira linha que não continua o item
+    if (!itens.length || RE_TITULO_DE_SECAO.test(l.texto)) break;
+    const ultimo = itens.at(-1)!;
+    if (/[;.]$/.test(ultimo.texto)) break;
+    ultimo.texto = `${ultimo.texto} ${l.texto}`;
+  }
+  return itens;
+}
+
+/**
+ * O levantamento exigido ("Levantamento, análise e compilação de documentos…"), com a análise comparativa quando o
+ * documento a pede ("análise comparativa com outras experiências").
+ */
+function levantamento(doc: DocumentoRfp): Omit<Requisito, "numero">[] {
+  const linhas = linhasDoDocumento(doc);
+  const k = linhas.findIndex((l) => /^levantamento\b/.test(normalizarTermo(l.texto)));
+  if (k < 0) return [];
+  let texto = linhas[k]!.texto;
+  for (let i = k + 1; i < linhas.length && !/:\s*$/.test(texto) && texto.length < 300; i++)
+    texto = `${texto} ${linhas[i]!.texto}`;
+  texto = limparEspacos(texto.replace(/\s*como:?\s*$/, "").replace(/:\s*$/, ""));
+  const comparativa = linhas.find((l) => /analise comparativa/.test(normalizarTermo(l.texto)));
+  const extra = comparativa
+    ? `; ${comparativa.texto.replace(/^.*?(an[aá]lise comparativa)/i, (_, a: string) => a.charAt(0).toUpperCase() + a.slice(1))}`
+    : "";
+  return [
+    {
+      rotulo: comparativa ? "Levantamento e análise comparativa" : "Levantamento",
+      descricao: `${texto}${extra}`.replace(/[;.]$/, ""),
+      pagina: linhas[k]!.pagina,
+      trecho: linhas[k]!.texto,
+      origem: "codigo",
+      tipo: "atividade",
+      documento: doc.rotulo,
+    },
+  ];
+}
+
+const RE_TITULO_PRODUTOS = /^(?:d[oa]s\s+)?(?:produtos|entregas|entregaveis)(?:\s+esperados)?\s*:?$/;
+const RE_NOME_DE_PRODUTO =
+  /^(?:relatorio|plano|documento|caderno|guia|estudo|mapa|painel|nota tecnica|manual|base de dados|modelo|sumario)\b/;
+
+/**
+ * Produtos nomeados numa seção "Dos produtos" ("Relatório de Diagnóstico Fiscal:", "• Relatório de …:"), quando o
+ * documento não os numera ("Produto 1"). O nome é o que vem antes dos dois-pontos.
+ */
+function produtosNomeados(doc: DocumentoRfp): Omit<Requisito, "numero">[] {
+  const linhas = linhasDoDocumento(doc);
+  const ini = linhas.findIndex((l) => RE_TITULO_PRODUTOS.test(normalizarTermo(l.texto)));
+  if (ini < 0) return [];
+  const out: Omit<Requisito, "numero">[] = [];
+  for (let i = ini + 1; i < linhas.length; i++) {
+    const l = linhas[i]!;
+    if (RE_TITULO_DE_SECAO.test(l.texto)) break;
+    const sem = l.texto
+      .replace(MARCA_DE_ITEM, "")
+      .replace(/^[•·-]\s*/, "")
+      .trim();
+    const m = /^([^:]{8,120}):\s*(.*)$/.exec(sem);
+    if (!m?.[1] || !RE_NOME_DE_PRODUTO.test(normalizarTermo(m[1]))) continue;
+    const nome = limparEspacos(m[1]);
+    const resto = limparEspacos(`${m[2] ?? ""} ${m[2] ? "" : (linhas[i + 1]?.texto ?? "")}`);
+    out.push({
+      rotulo: nome,
+      descricao: resto ? `${nome}: ${resto}` : nome,
+      pagina: l.pagina,
+      trecho: l.texto,
+      origem: "codigo",
+      tipo: "produto",
+      documento: doc.rotulo,
+    });
+  }
+  return out;
+}
+
+// ---------- forma de entrega e sigilo (decisão 0054), no fim da lista ----------
+
+const RE_ENTREGA_DIGITAL =
+  /\b(?:entrega d[oa]s? (?:produtos|relatorios|documentos)|produtos)\b[^.;]{0,40}\b(?:por|em) (?:meio|formato|midia) digital\b/;
+const RE_SIGILO =
+  /segredos? comercia\w* e confidencia\w*|\bsigilo (?:e|das|sobre)\b|tratar como confidencia\w*/;
+const RE_CESSAO =
+  /\bpropriedade\b[^.;]{0,25}\bsobre\b[^.;]{0,15}\bprodutos\b|direitos? patrimonia\w* (?:de|sobre) todos|cessao (?:total )?dos direitos (?:patrimoniais|autorais) (?:sobre|dos) (?:os )?produtos/;
+
+/** A frase a partir de "A entrega dos produtos…" (sem o título da seção que a frase pegou antes). */
+const daEntrega = (frase: string) => {
+  const i = frase.search(/(?:\bA\s+)?\bentrega\s+d[oa]s?\s+(?:produtos|relat|document)/i);
+  const desde = (i > 0 ? frase.slice(i) : frase).trim();
+  // só a frase da entrega, até o primeiro ponto e vírgula
+  return desde.split(";")[0]!.trim();
+};
+
+function entregaESigilo(docs: DocumentoRfp[]): Omit<Requisito, "numero">[] {
+  const out: Omit<Requisito, "numero">[] = [];
+  const digital = localizarTodos(docs, RE_ENTREGA_DIGITAL)[0];
+  if (digital)
+    out.push({
+      rotulo: "Entrega em meio digital",
+      descricao: daEntrega(digital.frase),
+      pagina: digital.pagina,
+      trecho: daEntrega(digital.frase),
+      origem: "codigo",
+      tipo: "obrigacao",
+      documento: digital.doc.rotulo,
+    });
+  const sigilo = localizarTodos(docs, RE_SIGILO)[0];
+  const cessao = localizarTodos(docs, RE_CESSAO)[0];
+  const primeiro = cessao ?? sigilo;
+  if (primeiro)
+    out.push({
+      rotulo: sigilo && cessao ? "Sigilo e cessão dos produtos" : sigilo ? "Sigilo" : "Cessão dos produtos",
+      descricao: [cessao?.frase, sigilo?.frase].filter(Boolean).join(" "),
+      pagina: primeiro.pagina,
+      trecho: primeiro.frase,
+      origem: "codigo",
+      tipo: "obrigacao",
+      documento: primeiro.doc.rotulo,
+    });
+  return out;
 }
 
 const UNIDADES =
@@ -221,11 +459,21 @@ function condicoes(docs: DocumentoRfp[], mapa: MapaRfp): Omit<Requisito, "numero
   return out;
 }
 
-/** Requisitos da RFP, numerados na ordem: produtos, equipe, quantidades, local, condições do objeto. */
+/**
+ * Requisitos da RFP, numerados na ordem: produtos; quando o documento não numera os produtos, os itens do objeto, o
+ * levantamento e os produtos nomeados; a equipe-chave; quantidades, local, condições do objeto, obrigações; e, no
+ * fim, a forma de entrega e o sigilo com a cessão (o que já existia não muda de número).
+ */
 export function extrairRequisitosRfp(docs: DocumentoRfp[], mapa: MapaRfp): Requisito[] {
-  const produtos = docs.flatMap((d) =>
-    extrairRequisitos(d.paginas).map((r) => ({ ...r, documento: d.rotulo, tipo: "produto" as const })),
-  );
+  const produtos = docs.flatMap((d) => {
+    const numerados = extrairRequisitos(d.paginas).map((r) => ({
+      ...r,
+      documento: d.rotulo,
+      tipo: "produto" as const,
+    }));
+    // sem "Produto 1": os itens do objeto, o levantamento e os produtos que o documento nomeia
+    return numerados.length ? numerados : [...itensDoObjeto(d), ...levantamento(d), ...produtosNomeados(d)];
+  });
   // o mesmo produto num anexo e no corpo vira um só
   const vistos = new Set<string>();
   const unicos = produtos.filter((r) => {
@@ -265,6 +513,11 @@ export function extrairRequisitosRfp(docs: DocumentoRfp[], mapa: MapaRfp): Requi
       documento: o.origem.documento,
     }))
     .filter((r) => !jaListadas(r));
-  const todos = [...comCondicoes, ...obrigacoes];
+  const ate = [...comCondicoes, ...obrigacoes];
+  const jaNaLista = (r: Omit<Requisito, "numero">) => {
+    const c = compactar(r.trecho).slice(0, 50);
+    return ate.some((x) => x.pagina === r.pagina && compactar(`${x.descricao} ${x.trecho}`).includes(c));
+  };
+  const todos = [...ate, ...entregaESigilo(docs).filter((r) => !jaNaLista(r))];
   return todos.map((r, i) => ({ ...r, numero: `R${String(i + 1).padStart(2, "0")}` }));
 }

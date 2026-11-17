@@ -87,7 +87,10 @@ describe("análise da RFP sobre um edital de teste", () => {
     const r = analise.requisitosDoCodigo;
     expect(r.map((x) => x.numero)).toEqual(r.map((_, i) => `R${String(i + 1).padStart(2, "0")}`));
     expect(r.filter((x) => x.tipo === "produto").map((x) => x.rotulo)).toEqual(["Produto 1", "Produto 2"]);
-    expect(r.some((x) => x.tipo === "equipe" && /Coordenador geral/.test(x.rotulo))).toBe(true);
+    // a equipe-chave é um requisito só, com a lista dos perfis (decisão 0054)
+    const equipe = r.filter((x) => x.tipo === "equipe");
+    expect(equipe).toHaveLength(1);
+    expect(equipe[0]?.perfis?.some((p) => /Coordenador geral/i.test(p))).toBe(true);
     expect(r.some((x) => x.tipo === "quantidade" && /6 oficinas/.test(x.rotulo))).toBe(true);
     for (const x of r) expect(x.pagina).toBeGreaterThan(0);
   });

@@ -78,9 +78,12 @@ describe("concorrência técnica e preço (OEI/MDHC)", () => {
     expect(comPrefixo(a, "julgamento:pontuacao").length).toBeGreaterThan(10);
   });
 
-  it("cinco produtos e a equipe-chave de quatro perfis", () => {
+  it("cinco produtos e a equipe-chave de quatro perfis, num requisito só (decisão 0054)", () => {
     expect(a.requisitosDoCodigo.filter((r) => r.tipo === "produto")).toHaveLength(5);
-    expect(a.requisitosDoCodigo.filter((r) => r.tipo === "equipe").length).toBeGreaterThanOrEqual(4);
+    const equipe = a.requisitosDoCodigo.filter((r) => r.tipo === "equipe");
+    expect(equipe).toHaveLength(1);
+    expect(equipe[0]?.perfis?.length).toBeGreaterThanOrEqual(4);
+    expect(equipe[0]?.rotulo).toMatch(/^Equipe-chave \(\d+ perfis\)$/);
   });
 
   it("subcontratação vedada e multa achadas, com página", () => {

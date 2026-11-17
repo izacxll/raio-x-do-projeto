@@ -215,7 +215,7 @@
       "aprovacaoCliente": true,
       "requisitos": [
         "R05",
-        "R11"
+        "R08"
       ]
     }
   ],
@@ -244,7 +244,7 @@
       "nome": "Especialista em Políticas Públicas e Direitos da Criança e do Adolescente",
       "exigido": true,
       "qualificacao": "Nível superior com pós-graduação em área compatível e experiência mínima de 4 anos em políticas de infância e adolescência.",
-      "requisito": "R07",
+      "requisito": "R06",
       "fontes": [
         {
           "doc": "rfp",
@@ -258,7 +258,7 @@
       "nome": "Especialista em Assistência Social, Convivência Familiar e Comunitária e Situação de Rua",
       "exigido": true,
       "qualificacao": "Nível superior com pós-graduação em área compatível e experiência mínima de 4 anos em assistência social e situação de rua.",
-      "requisito": "R08",
+      "requisito": "R06",
       "fontes": [
         {
           "doc": "rfp",
@@ -272,7 +272,7 @@
       "nome": "Especialista em Produção de Conteúdos Técnicos e Metodologias Participativas",
       "exigido": true,
       "qualificacao": "Nível superior com pós-graduação em área compatível e experiência mínima de 4 anos em produção de conteúdos e metodologias participativas.",
-      "requisito": "R09",
+      "requisito": "R06",
       "fontes": [
         {
           "doc": "rfp",
@@ -697,7 +697,7 @@
       ],
       "alternativas": [],
       "requisitos": [
-        "R12"
+        "R09"
       ],
       "ficha": "PROP-PRECO.3"
     },
@@ -715,7 +715,7 @@
       ],
       "alternativas": [],
       "requisitos": [
-        "R14"
+        "R11"
       ],
       "ficha": "PROP-PRECO.3"
     },

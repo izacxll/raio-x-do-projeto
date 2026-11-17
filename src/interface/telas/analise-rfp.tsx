@@ -218,6 +218,7 @@ function Analise({
             )}
           </p>
           <NomeDoProjeto analise={analise} />
+          <ModalidadeDoGp leitura={leitura} salva={salva} atualizar={atualizar} />
           <Participacao salva={salva} atualizar={atualizar} />
           <Exportar analise={analise} />
           <button
@@ -550,6 +551,51 @@ function NomeDoProjeto({ analise }: { analise: AnaliseRfp }) {
           ? `Nome atual: ${atual}.`
           : 'Sem nome dado pelo GP: os documentos saem com esta sugestão e o aviso "a confirmar pelo GP".'}
       </span>
+    </div>
+  );
+}
+
+/**
+ * Sem modalidade no documento (decisão 0054), a tela pede a escolha do GP antes de seguir: o código não supõe
+ * licitação.
+ */
+function ModalidadeDoGp({
+  leitura,
+  salva,
+  atualizar,
+}: {
+  leitura: { modalidade: string };
+  salva: AnaliseRfpDossie;
+  atualizar: (a: AnaliseRfpDossie) => void;
+}) {
+  if (leitura.modalidade !== "nao-identificada" && !salva.modalidade) return null;
+  return (
+    <div className="decisao" style={{ margin: "12px 0" }} data-testid="modalidade-do-gp">
+      <EtiquetaRotulo rotulo="decisao-gp" />
+      <label>
+        <span className="lb">Modalidade (o documento não diz)</span>{" "}
+        <select
+          aria-label="Modalidade (decisão do GP)"
+          value={salva.modalidade ?? ""}
+          onChange={(e) =>
+            atualizar({
+              ...salva,
+              modalidade: (e.target.value || undefined) as AnaliseRfpDossie["modalidade"],
+            })
+          }
+        >
+          <option value="">não identificada — escolher</option>
+          <option value="licitacao">licitação</option>
+          <option value="contratacao-direta">contratação direta (inexigibilidade ou dispensa)</option>
+          <option value="parceria">parceria (Lei 13.019)</option>
+        </select>
+      </label>
+      {!salva.modalidade && (
+        <p className="envio__obs" role="alert">
+          O documento não diz a modalidade (sem edital, critério de julgamento, sessão nem artigo de
+          inexigibilidade ou dispensa). Escolha antes de seguir para a proposta.
+        </p>
+      )}
     </div>
   );
 }

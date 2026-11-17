@@ -68,10 +68,7 @@
           "fontes": [],
           "alternativas": [],
           "requisitos": [
-            "R06",
-            "R07",
-            "R08",
-            "R09"
+            "R06"
           ],
           "ficha": "A6.3"
         },
@@ -508,10 +505,7 @@
       "aprovacaoCliente": false,
       "requisitos": [
         "R06",
-        "R07",
-        "R08",
-        "R09",
-        "R10"
+        "R07"
       ]
     }
   ],
@@ -535,7 +529,7 @@
       "nome": "Especialista em Políticas Públicas e Direitos da Criança e do Adolescente",
       "exigido": true,
       "qualificacao": "Conforme o termo de referência.",
-      "requisito": "R07",
+      "requisito": "R06",
       "fontes": [
         {
           "doc": "rfp",
@@ -549,7 +543,7 @@
       "nome": "Especialista em Assistência Social, Convivência Familiar e Comunitária e Situação de Rua",
       "exigido": true,
       "qualificacao": "Conforme o termo de referência.",
-      "requisito": "R08",
+      "requisito": "R06",
       "fontes": [
         {
           "doc": "rfp",
@@ -563,7 +557,7 @@
       "nome": "Especialista em Produção de Conteúdos Técnicos e Metodologias Participativas",
       "exigido": true,
       "qualificacao": "Conforme o termo de referência.",
-      "requisito": "R09",
+      "requisito": "R06",
       "fontes": [
         {
           "doc": "rfp",

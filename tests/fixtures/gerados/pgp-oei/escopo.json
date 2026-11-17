@@ -56,7 +56,7 @@
       "itens": [
         {
           "id": "b22-1",
-          "texto": "Sugere-se documentar cada requisito com o número da RFP (R01 a R10), a origem com a página, o tipo e a forma de verificação; a lista numerada da etapa 1 é a base.",
+          "texto": "Sugere-se documentar cada requisito com o número da RFP (R01 a R07), a origem com a página, o tipo e a forma de verificação; a lista numerada da etapa 1 é a base.",
           "rotulo": "sugestao",
           "motivo": "",
           "fontes": [],
@@ -68,10 +68,7 @@
             "R04",
             "R05",
             "R06",
-            "R07",
-            "R08",
-            "R09",
-            "R10"
+            "R07"
           ],
           "ficha": "B22.1"
         },
@@ -279,10 +276,7 @@
       "produto": "G",
       "requisitos": [
         "R06",
-        "R07",
-        "R08",
-        "R09",
-        "R10"
+        "R07"
       ],
       "descricao": "Coordenação da equipe-chave, reuniões com a contratante, controle de prazos e versões, trabalho remoto.",
       "criterioDeAceite": "Reuniões registradas e equipe-chave mantida durante a vigência."

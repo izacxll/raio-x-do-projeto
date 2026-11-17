@@ -11,6 +11,7 @@ import { localizarTodos } from "../../extracao/rfp/localizar";
 import { ehPaginaDeModelo } from "../../extracao/rfp/clausulas";
 import { ehObrigacaoEspecifica, NOME_TEMA_OBRIGACAO, ORDEM_TEMAS } from "../../extracao/rfp/obrigacoes";
 import { RE_POR_PROPONENTE } from "../../extracao/rfp/requisitos-rfp";
+import { perfisDoRequisito } from "../../extracao/requisitos";
 import { NOME_PREMISSA, type CodigoPremissa, type Impacto } from "../../regras/premissas-rfp";
 import { encontrarDatas, formatarData, diasEntre, soData } from "../../texto/datas";
 import { normalizarTermo } from "../../regras/busca";
@@ -118,8 +119,11 @@ export interface ItemLeitura {
 }
 
 export interface LeituraRfp {
-  /** Chave de modalidade (decisão 0042): o código reconhece, o GP confirma. */
-  modalidade: "parceria" | "licitacao" | "contratacao-direta";
+  /**
+   * Chave de modalidade (decisão 0042): o código reconhece, o GP confirma. Sem modalidade no documento, fica "não
+   * identificada" até o GP escolher (decisão 0054); o código não supõe licitação.
+   */
+  modalidade: "parceria" | "licitacao" | "contratacao-direta" | "nao-identificada";
   itens: ItemLeitura[];
   /** O que o código procurou e não achou, por seção: "não localizado pelo código — conferir no documento". */
   naoLocalizados: Partial<Record<SecaoLeitura, string[]>>;
@@ -178,18 +182,27 @@ export function montarLeituraRfp(
   const itens = analise.itens;
   const porId = (id: string) => itens.find((i) => i.id === id);
   const comPrefixo = (p: string) => itens.filter((i) => i.id.startsWith(p));
-  const parceria = util(porId("identificacao:parceria"));
+  const parceriaNoDocumento = util(porId("identificacao:parceria"));
   const modalidadeAchada = porId("identificacao:modalidade");
+  // sem modalidade no documento (sem edital, critério, sessão nem artigo de inexigibilidade ou dispensa): o código
+  // não supõe licitação; fica "não identificada" até o GP escolher (decisão 0054)
+  const semModalidade = !parceriaNoDocumento && !util(modalidadeAchada);
+  const doGp = semModalidade ? dossie.modalidade : undefined;
+  const parceria = parceriaNoDocumento || doGp === "parceria";
   // contratação direta (decisão 0042): inexigibilidade ou dispensa declarada; não há julgamento nem pontuação
   const direta =
-    !parceria &&
-    util(modalidadeAchada) &&
-    /^(?:Inexigibilidade|Dispensa de licitação)$/.test(modalidadeAchada.texto);
+    (!parceria &&
+      util(modalidadeAchada) &&
+      /^(?:Inexigibilidade|Dispensa de licitação)$/.test(modalidadeAchada.texto)) ||
+    doGp === "contratacao-direta";
   const modalidade: LeituraRfp["modalidade"] = parceria
     ? "parceria"
     : direta
       ? "contratacao-direta"
-      : "licitacao";
+      : semModalidade && !doGp
+        ? "nao-identificada"
+        : "licitacao";
+  const naoIdentificada = modalidade === "nao-identificada";
   const out: ItemLeitura[] = [];
   const naoLocalizados: LeituraRfp["naoLocalizados"] = {};
   // na contratação direta, o que é de julgamento não se procura (vai para "não se aplica")
@@ -286,9 +299,14 @@ export function montarLeituraRfp(
   out.push({
     id: "leitura:regime",
     secao: "uma-pagina",
-    rotulo: "documento",
+    rotulo: regime ? "documento" : "decisao-gp",
     nome: "Regime e modalidade",
-    texto: `${regime || "modalidade não localizada pelo código — conferir no documento"}${
+    texto: `${
+      regime ||
+      (doGp
+        ? `modalidade não identificada no documento; decisão do GP: ${NOME_MODALIDADE[doGp]}`
+        : "modalidade não identificada no documento (sem edital, critério de julgamento, sessão nem artigo de inexigibilidade ou dispensa) — confirmar com o GP")
+    }${
       parceria ? " (parceria, não licitação)" : ""
     }${doRegime.length ? `. Regido por: ${doRegime.map((n) => n.texto.replace(/\s*\(.*\)$/, "")).join("; ")}` : ""}${
       normas.length > doRegime.length ? `. Outras ${normas.length - doRegime.length} normas citadas.` : "."
@@ -375,10 +393,14 @@ export function montarLeituraRfp(
     out.push(...sustentaContratacaoDireta(modalidadeAchada));
     // o checklist do que vai na proposta continua valendo; critérios, desempate e eliminação não
     out.push(...julgamento(analise, naoAchado).filter((i) => i.id === "leitura:julgamento:proposta"));
+  } else if (naoIdentificada) {
+    // sem modalidade, o que é de julgamento não se cobra: o PMO escreve as alternativas (decisão 0054)
+    out.push(alternativasDaModalidade());
+    out.push(...julgamento(analise, () => undefined));
   } else out.push(...julgamento(analise, naoAchado));
 
   // ---------- 6. Habilitação ----------
-  const daHabilitacao = habilitacao(analise, direta ? () => undefined : naoAchado);
+  const daHabilitacao = habilitacao(analise, direta || naoIdentificada ? () => undefined : naoAchado);
   out.push(...daHabilitacao);
   if (direta && !daHabilitacao.some((i) => i.id === "leitura:habilitacao:lista"))
     out.push(documentosDaContratacaoDireta());
@@ -388,7 +410,17 @@ export function montarLeituraRfp(
 
   // ---------- 8. Não se aplica ----------
   const naoSeAplica = itens.filter((i) => i.situacao === "nao-se-aplica");
-  if (direta)
+  if (naoIdentificada)
+    out.push({
+      id: "leitura:nao-se-aplica",
+      secao: "nao-se-aplica",
+      rotulo: "decisao-gp",
+      nome: "Depende da modalidade, não identificada",
+      texto:
+        "O que não se aplica depende da modalidade, que o documento não diz — confirmar com o GP antes de seguir.",
+      situacao: "nao-localizado",
+    });
+  else if (direta)
     out.push({
       id: "leitura:nao-se-aplica",
       secao: "nao-se-aplica",
@@ -499,9 +531,11 @@ function tamanho(analise: AnaliseRfp, dossie: AnaliseRfpDossie): ItemLeitura {
     partes.push(
       `${produtos.length} produto${produtos.length > 1 ? "s" : ""} (${produtos.map((r) => r.numero).join(", ")})`,
     );
+  // a equipe-chave é um requisito só, com a lista dos perfis (decisão 0054)
+  const nPerfis = equipe.flatMap(perfisDoRequisito).length;
   if (equipe.length)
     partes.push(
-      `equipe de ${equipe.length} perfi${equipe.length > 1 ? "s" : "l"} citado${equipe.length > 1 ? "s" : ""} (${equipe.map((r) => r.numero).join(", ")})`,
+      `equipe de ${nPerfis} perfi${nPerfis > 1 ? "s" : "l"} citado${nPerfis > 1 ? "s" : ""} (${equipe.map((r) => r.numero).join(", ")})`,
     );
   if (quantidades.length)
     partes.push(
@@ -528,6 +562,27 @@ function tamanho(analise: AnaliseRfp, dossie: AnaliseRfpDossie): ItemLeitura {
       produtos.length || equipe.length || quantidades.length
         ? "Consolidado pelo código a partir dos requisitos numerados (seção 2)."
         : undefined,
+  };
+}
+
+// ---------- Modalidade não identificada (decisão 0054) ----------
+
+export const NOME_MODALIDADE: Record<"licitacao" | "contratacao-direta" | "parceria", string> = {
+  licitacao: "licitação",
+  "contratacao-direta": "contratação direta (inexigibilidade ou dispensa)",
+  parceria: "parceria (Lei 13.019/2014)",
+};
+
+/** Seção 5: sem modalidade no documento, o que muda em cada alternativa, como sugestão, até o GP escolher. */
+function alternativasDaModalidade(): ItemLeitura {
+  return {
+    id: "leitura:modalidade:alternativas",
+    secao: "julgamento",
+    rotulo: "sugestao",
+    nome: "Modalidade não identificada: as alternativas",
+    texto:
+      "O documento não diz a modalidade. Sugere-se confirmar com o GP antes de seguir: na licitação, o julgamento, a pontuação e a habilitação vêm do edital; na contratação direta, a hipótese legal (art. 74 ou 75 da Lei 14.133), a justificativa de preço e os documentos do art. 72; na parceria, o chamamento e o plano de trabalho da Lei 13.019.",
+    situacao: "nao-localizado",
   };
 }
 

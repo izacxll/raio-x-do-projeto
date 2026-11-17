@@ -353,10 +353,7 @@
       ],
       "alternativas": [],
       "requisitos": [
-        "R06",
-        "R07",
-        "R08",
-        "R09"
+        "R06"
       ],
       "ficha": "TAP3.1"
     },
@@ -379,7 +376,7 @@
       ],
       "alternativas": [],
       "requisitos": [
-        "R10"
+        "R07"
       ],
       "ficha": "TAP3.1"
     }

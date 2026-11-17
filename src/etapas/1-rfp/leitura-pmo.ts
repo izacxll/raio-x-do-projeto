@@ -346,7 +346,11 @@ export function pedidoLeituraRfp(esqueleto: LeituraRfp, hoje = new Date()): stri
   });
   return `# Etapa 1 — Leitura da RFP pelo PMO
 
-Hoje: ${hoje.toLocaleDateString("pt-BR")}. Modalidade reconhecida pelo código: ${esqueleto.modalidade}.
+Hoje: ${hoje.toLocaleDateString("pt-BR")}. ${
+    esqueleto.modalidade === "nao-identificada"
+      ? "Modalidade: não identificada no documento — confirmar com o GP. O código não supõe licitação. Escreva as seções 5 (como é escolhida e o que entregar), 6 (habilitação) e 8 (o que não se aplica) com as alternativas — licitação, contratação direta (inexigibilidade ou dispensa) e parceria —, dizendo o que muda em cada uma, como sugestão."
+      : `Modalidade reconhecida pelo código: ${esqueleto.modalidade}.`
+  }
 
 ## Método da etapa 1 (a regra desta leitura)
 <metodo>

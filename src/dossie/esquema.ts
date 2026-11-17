@@ -108,8 +108,12 @@ export const RequisitoDossie = z.object({
   trecho: z.string(),
   origem: z.enum(["codigo", "gp"]),
   /** Sem tipo, é produto (dossiês da F5). */
-  tipo: z.enum(["produto", "equipe", "quantidade", "local", "condicao", "obrigacao", "outro"]).optional(),
+  tipo: z
+    .enum(["produto", "atividade", "equipe", "quantidade", "local", "condicao", "obrigacao", "outro"])
+    .optional(),
   documento: z.string().optional(),
+  /** Na equipe-chave: os perfis exigidos (um requisito só, com a lista). */
+  perfis: z.array(z.string()).optional(),
 });
 
 // ---------- etapa 1: análise da RFP ----------
@@ -130,6 +134,11 @@ export const AnaliseRfpDossie = z.object({
   proximoRequisito: z.number().int().positive(),
   /** Revisão de cada item, pelo id (requisitos: "requisito:R01"). */
   revisoes: z.record(z.string(), RevisaoItem),
+  /**
+   * Decisão do GP: a modalidade, quando o documento não a diz (sem edital, critério de julgamento, sessão nem artigo
+   * de inexigibilidade ou dispensa; decisão 0054). Nunca é preenchida pela ferramenta.
+   */
+  modalidade: z.enum(["licitacao", "contratacao-direta", "parceria"]).optional(),
   /** Decisão do GP: participar ou não. Nunca é preenchida pela ferramenta. */
   participacao: z.object({
     decisao: DecisaoParticipacao,

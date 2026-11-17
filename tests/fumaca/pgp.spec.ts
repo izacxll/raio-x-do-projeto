@@ -66,7 +66,7 @@ test("etapa 4 com o PMO simulado: adaptação, seis passos, contas, autoconferê
     }
   }
   expect(passos).toEqual(FILA.map(([, n]) => n));
-  await expect(page.getByTestId("rastreabilidade")).toContainText("R10");
+  await expect(page.getByTestId("rastreabilidade")).toContainText("R06");
   await expect(page.getByTestId("marcos")).toContainText("não cabe");
   await page.getByLabel("Aprovação de cada produto (dias úteis, decisão do GP)").fill("5");
   await page.getByLabel("Reserva de contingência (R$, decisão do GP)").fill("10000");

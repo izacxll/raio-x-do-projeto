@@ -83,20 +83,11 @@ describe("entrada da etapa 3", () => {
 });
 
 describe("divergências RFP × proposta (código)", () => {
-  it("os nove requisitos de produto e equipe da OEI estão ligados na proposta gravada", () => {
+  it("os cinco produtos e a equipe-chave da OEI estão ligados na proposta gravada", () => {
     const d = compararRfpEProposta(entrada);
     const req = d.filter((x) => x.requisito);
-    expect(req.map((x) => x.requisito)).toEqual([
-      "R01",
-      "R02",
-      "R03",
-      "R04",
-      "R05",
-      "R06",
-      "R07",
-      "R08",
-      "R09",
-    ]);
+    // a equipe-chave é um requisito só, com a lista dos perfis (decisão 0054)
+    expect(req.map((x) => x.requisito)).toEqual(["R01", "R02", "R03", "R04", "R05", "R06"]);
     expect(req.every((x) => x.situacao === "igual")).toBe(true);
     expect(d.find((x) => x.id === "prazo")?.situacao).toBe("igual");
   });

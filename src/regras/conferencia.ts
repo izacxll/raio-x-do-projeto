@@ -6,7 +6,7 @@ import type { Ficha, Gravidade } from "../dominio/fichas";
 import type { PremissaCritica } from "../dominio/premissas";
 import type { PaginaLida } from "../dossie/esquema";
 import { prazoPrincipal, extrairPrazosTotais, type PrazoTotal } from "../extracao/prazos";
-import { termosDoRequisito, type Requisito } from "../extracao/requisitos";
+import { termosDoRequisito, type Requisito, perfisDoRequisito } from "../extracao/requisitos";
 import {
   NAO_LOCALIZADO,
   ORDEM_GRAVIDADE,
@@ -430,15 +430,26 @@ export function conferirPlano(e: EntradaConferencia): ResultadoConferencia {
       continue;
     }
     if (r.tipo === "equipe") {
-      const papel = r.rotulo.replace(/^Equipe:\s*/, "");
+      // a equipe-chave é um requisito só, com a lista dos perfis (decisão 0054); cada perfil é procurado
       // as 5 primeiras palavras bastam: o plano costuma citar o perfil de forma resumida
-      const termo = papel.split(/\s+/).slice(0, 5).join(" ");
-      const noPlano = normalizarTermo(termo).length >= 6 ? procurar(e.pgp, [termo], { primeira: true }) : [];
-      if (noPlano.length) {
+      const achar = (perfil: string) => {
+        const termo = perfil.split(/\s+/).slice(0, 5).join(" ");
+        return normalizarTermo(termo).length >= 6
+          ? procurar(e.pgp, [termo], { primeira: true })[0]
+          : undefined;
+      };
+      const perfis = perfisDoRequisito(r);
+      const faltam = perfis.filter((x) => !achar(x));
+      const papel = faltam.join("; ");
+      if (!faltam.length) {
+        const primeiro = achar(perfis[0] ?? "");
         verificacoes.push({
           ...base,
           estado: "ok",
-          detalhe: `Perfil localizado na p. ${noPlano[0]?.pagina}.`,
+          detalhe:
+            perfis.length > 1
+              ? `Os ${perfis.length} perfis localizados no plano.`
+              : `Perfil localizado na p. ${primeiro?.pagina}.`,
         });
         continue;
       }
