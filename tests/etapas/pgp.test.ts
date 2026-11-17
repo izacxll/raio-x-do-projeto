@@ -120,9 +120,10 @@ describe("respostas gravadas do PMO na etapa 4 (OEI)", () => {
     expect(naoAchadas).toEqual([]);
     const av = avaliarItens(itens as ItemProposta[], []);
     expect(av.numerosSemFonte).toBe(0);
-    // decisão 0057: o trecho do B31 fala das reuniões, não de quem valida os produtos — "citação não prova"
+    // o trecho do B31 fala das reuniões, não de quem valida os produtos: "citação a conferir", que é aviso e não
+    // conta entre os fatos sem citação (decisões 0057 e 0058)
     expect(itens.filter((i) => i.conferencia.citacaoNaoProva).map((i) => i.id)).toEqual(["planos:B31:0"]);
-    expect(av.fatosSemCitacao).toBe(1);
+    expect(av.fatosSemCitacao).toBe(0);
     expect(av.aderencia).toBe(1);
   });
 });

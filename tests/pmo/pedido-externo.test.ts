@@ -25,7 +25,12 @@ import {
   sistemaDaSegundaInstancia,
 } from "../../src/pmo/segunda-instancia";
 import { analisarRfp } from "../../src/etapas/1-rfp/analisar-rfp";
-import { leituraDoDossie, NOME_TRAVA, pedidoLeituraRfp } from "../../src/etapas/1-rfp/leitura-pmo";
+import {
+  leituraDoDossie,
+  NOME_AVISO,
+  NOME_TRAVA,
+  pedidoLeituraRfp,
+} from "../../src/etapas/1-rfp/leitura-pmo";
 import { analiseInicial } from "../../src/etapas/1-rfp/revisao";
 import {
   estimarTokens,
@@ -581,6 +586,16 @@ describe.skipIf(MODO !== "importar")("importar a resposta do PMO (leitura indepe
               (i) =>
                 `- ${NOME_TRAVA[i.trava!]} · ${i.secao} · ${i.nome}: ${i.texto.slice(0, 200)}${i.origem ? ` (p. ${i.origem.pagina})` : ""}`,
             )
+          : ["- nenhum"]),
+        "",
+        "## Avisos que não contam como erro (citação a conferir, decisão 0058)",
+        ...(doPmo.some((i) => i.aviso)
+          ? doPmo
+              .filter((i) => i.aviso)
+              .map(
+                (i) =>
+                  `- ${NOME_AVISO[i.aviso!]} · ${i.secao} · ${i.nome}: ${i.texto.slice(0, 200)}${i.origem ? ` (p. ${i.origem.pagina})` : ""}`,
+              )
           : ["- nenhum"]),
       );
       // cruzamentos X1 a X6 e autoconferência das 8 seções (decisões 0044 e 0046)

@@ -43,7 +43,6 @@ function base(dossie: Dossie, titulo: string, subtitulo: string, minuta: boolean
 export function rotuloDoItem(i: ItemProposta): string {
   if (i.item.rotulo === "documento") {
     if (i.conferencia.citacaoNaoConferida) return "[Do documento — citação não conferida]";
-    if (i.conferencia.citacaoNaoProva) return "[Do documento — citação não prova]";
     const k = i.conferencia.citacoes.findIndex(
       (c) => c.estado !== "nao-conferida" && c.estado !== "nao-verificavel",
     );
@@ -241,7 +240,7 @@ function linhaDaMinuta(i: ItemMinuta): string {
         : "[Sugestão]";
   const avisos = [
     i.conferencia?.citacaoNaoConferida ? "citação não conferida" : "",
-    i.conferencia?.citacaoNaoProva ? "citação não prova" : "",
+    i.conferencia?.citacaoNaoProva ? "citação a conferir: o trecho pode não provar a frase" : "",
     i.conferencia?.numerosSemFonte.length
       ? `valor não conferido: ${i.conferencia.numerosSemFonte.join(", ")}`
       : "",

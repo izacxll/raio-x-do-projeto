@@ -3,6 +3,7 @@
 // - valor, prazo, percentual ou quantidade que não está nos documentos → "número sem fonte — conferir";
 // - item "do documento" sem citação conferida → vira "citação não conferida" e nunca aparece como fato.
 import type { DocumentoLido } from "../dossie/esquema";
+import { encontrarDatas, formatarData } from "../texto/datas";
 import { tirarAcentos } from "../texto/normalizar";
 import { citacaoValeComoFato, conferirCitacao, type ResultadoCitacao } from "./citacoes";
 import type { ItemPmo } from "./schemas/comum";
@@ -76,36 +77,70 @@ const PALAVRAS_VAZIAS = new Set(
 );
 const semAcentoMinusculo = (t: string) => tirarAcentos(t).toLowerCase();
 
+/** Número com unidade, como chave para comparar ("34 dias úteis" → "34dias"). */
+const chaveDoNumero = (a: string) =>
+  `${soDigitos(a)}${semAcentoMinusculo(a)
+    .replace(/[\d.,\s]/g, "")
+    .slice(0, 4)}`;
+/** Datas de um texto, numéricas ou por extenso ("3 de março de 2027"), em dd/mm/aaaa. */
+const datasDoTexto = (t: string) => encontrarDatas(t).map((d) => formatarData(d.data));
+/** O que o item diz que é conta do código ("… (conta do código)"): esses números não precisam estar no trecho. */
+const frasesDaConta = (texto: string) =>
+  texto.split(/(?<=[.;,])\s+/).filter((f) => /conta do c[oó]digo/i.test(f));
+
 /**
- * Termos-chave de um item (SKILL.md, princípio 15; decisão 0057): os números com unidade, as datas, a periodicidade
- * ("trimestral") e o que está entre aspas. Sem nenhum deles, as palavras longas do item.
+ * Termos-chave de um item (SKILL.md, princípio 15; decisões 0057 e 0058): os números com unidade, as datas
+ * (numéricas ou por extenso) e a periodicidade ("trimestral"). Os números e datas que vêm do esqueleto do código
+ * (`ignorar`) ou de uma frase "conta do código" saem. Sem nenhum termo, valem as palavras longas do item.
  */
-export function termosChaveDoItem(texto: string): { termos: string[]; palavras: string[] } {
+export function termosChaveDoItem(texto: string, ignorar = ""): { termos: string[]; palavras: string[] } {
   const t = semAcentoMinusculo(texto);
+  const daConta = frasesDaConta(texto).join(" ");
+  const numerosIgnorados = new Set(
+    [...(ignorar.match(NUMEROS_SENSIVEIS) ?? []), ...(daConta.match(NUMEROS_SENSIVEIS) ?? [])].map(
+      chaveDoNumero,
+    ),
+  );
+  const datasIgnoradas = new Set([...datasDoTexto(ignorar), ...datasDoTexto(daConta)]);
   const termos = [
-    ...(texto.match(NUMEROS_SENSIVEIS) ?? []).map(soDigitos).filter(Boolean),
-    ...(texto.match(/\b\d{1,2}\/\d{1,2}\/\d{2,4}\b/g) ?? []).map(soDigitos),
+    ...(texto.match(NUMEROS_SENSIVEIS) ?? [])
+      .filter((a) => !numerosIgnorados.has(chaveDoNumero(a)))
+      .map(soDigitos)
+      .filter(Boolean),
+    ...datasDoTexto(texto)
+      .filter((d) => !datasIgnoradas.has(d))
+      .map((d) => `data:${d}`),
     ...[...t.matchAll(new RegExp(PERIODICIDADE.source, "g"))].map((m) => (m[1] ? `per:${m[1]}` : "")),
-    ...[...texto.matchAll(/["“]([^"”]{3,60})["”]/g)].map((m) => semAcentoMinusculo(m[1] ?? "").trim()),
   ].filter(Boolean);
   const palavras = [...new Set(t.match(/[a-z]{7,}/g) ?? [])].filter((p) => !PALAVRAS_VAZIAS.has(p));
   return { termos: [...new Set(termos)], palavras };
 }
 
-/** O trecho citado prova o item? Cada termo-chave tem de estar num dos trechos; sem termo-chave, ao menos uma palavra longa. */
-export function citacaoProvaOItem(texto: string, trechos: string[]): boolean {
+/**
+ * O trecho citado prova o item? Procura em todos os trechos do item: cada termo-chave tem de estar em algum deles;
+ * sem termo-chave, basta uma palavra longa do item (pelo radical) ou, quando o item fala de e-mail ou telefone, o
+ * endereço ou o número no trecho. É aviso, não erro (decisão 0058).
+ */
+export function citacaoProvaOItem(texto: string, trechos: string[], ignorar = ""): boolean {
   if (!trechos.length) return true;
-  const base = semAcentoMinusculo(trechos.join(" "));
+  const juntos = trechos.join(" ");
+  const base = semAcentoMinusculo(juntos);
   const digitos = base.replace(/(\d)[.,\s](?=\d)/g, "$1");
-  const { termos, palavras } = termosChaveDoItem(texto);
+  const datas = new Set(datasDoTexto(juntos));
+  const { termos, palavras } = termosChaveDoItem(texto, ignorar);
   if (termos.length)
     return termos.every((x) =>
       /^\d+$/.test(x)
         ? digitos.includes(x)
-        : x.startsWith("per:")
-          ? periodicidadeNoTexto(x.slice(4), base)
-          : base.includes(x),
+        : x.startsWith("data:")
+          ? datas.has(x.slice(5))
+          : periodicidadeNoTexto(x.slice(4), base),
     );
+  // todos os números e datas do item vêm do esqueleto ou de uma conta do código: não há o que o trecho prove
+  if (termosChaveDoItem(texto).termos.length) return true;
+  const t = semAcentoMinusculo(texto);
+  if (/\be-?mails?\b/.test(t) && /[\w.-]+@[\w.-]+\.[a-z]{2,}/.test(base)) return true;
+  if (/\btelefone/.test(t) && /\(?\d{2}\)?\s?\d[\d.\s-]{6,}/.test(base)) return true;
   return !palavras.length || palavras.some((p) => base.includes(p.slice(0, Math.max(6, p.length - 3))));
 }
 
@@ -114,7 +149,10 @@ export interface ConferenciaItem {
   citacoes: ResultadoCitacao[];
   /** "Do documento" só vale como fato se ao menos uma citação foi achada pelo código. */
   citacaoNaoConferida: boolean;
-  /** "Do documento" cujo trecho achado não traz o termo-chave do item: "citação não prova" (decisão 0057). */
+  /**
+   * "Do documento" cujos trechos não trazem o termo-chave do item: "citação a conferir". É aviso, não erro: não
+   * conta entre os fatos sem citação (decisões 0057 e 0058).
+   */
   citacaoNaoProva?: boolean;
   redacaoAConferir: boolean;
   numerosSemFonte: string[];
@@ -123,9 +161,8 @@ export interface ConferenciaItem {
 export function conferirItem(item: ItemPmo, documentos: DocumentoLido[]): ConferenciaItem {
   const citacoes = item.fontes.map((f) => conferirCitacao(f, documentos));
   const algumaVale = citacoes.some(citacaoValeComoFato);
-  const trechos = item.fontes
-    .filter((_, k) => citacaoValeComoFato(citacoes[k] as ResultadoCitacao))
-    .map((f) => f.trecho);
+  // o termo-chave é procurado em todos os trechos do item (decisão 0058)
+  const trechos = item.fontes.map((f) => f.trecho);
   return {
     citacoes,
     citacaoNaoConferida: item.rotulo === "documento" && !algumaVale,

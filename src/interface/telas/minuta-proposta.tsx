@@ -105,7 +105,7 @@ function ItemDaMinuta({ i }: { i: ItemMinuta }) {
           {i.doPmo && <span className="lb">leitura do PMO</span>}
           {i.alerta && <span className="lb aviso-item">alerta da conferência do código</span>}
           {i.conferencia?.citacaoNaoConferida && <span className="lb aviso-item">citação não conferida</span>}
-          {i.conferencia?.citacaoNaoProva && <span className="lb aviso-item">citação não prova</span>}
+          {i.conferencia?.citacaoNaoProva && <span className="lb">citação a conferir (aviso)</span>}
           {i.conferencia?.numerosSemFonte.length ? (
             <span className="lb aviso-item">
               valor não conferido: {i.conferencia.numerosSemFonte.join(", ")}
@@ -241,7 +241,7 @@ function SecaoDoDocumento({ s }: { s: SecaoRedigida }) {
             {x.conferencia.citacaoNaoConferida && (
               <span className="lb aviso-item"> citação não conferida</span>
             )}
-            {x.conferencia.citacaoNaoProva && <span className="lb aviso-item"> citação não prova</span>}
+            {x.conferencia.citacaoNaoProva && <span className="lb"> citação a conferir (aviso)</span>}
             {x.conferencia.numerosSemFonte.length > 0 && (
               <span className="lb aviso-item">
                 {" "}

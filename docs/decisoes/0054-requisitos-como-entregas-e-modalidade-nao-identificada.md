@@ -25,7 +25,7 @@ O mesmo TR não diz a modalidade: não tem edital, critério de julgamento, sess
    - A tela da etapa 1 pede a escolha do GP, uma decisão que a ferramenta nunca preenche. A etapa 2 não pede a estratégia sem essa escolha ou sem o tipo de contrato confirmado.
    - O PMO recebe a modalidade como não identificada e escreve as seções 5, 6 e 8 com as alternativas: licitação, contratação direta e parceria.
 3. **Quatro correções da etapa 1 no mesmo teste:**
-   - a data da portaria do signatário ("Captação de Recursos") não é prazo de recurso;
+   - a data da portaria do signatário (um departamento com "Recursos" no nome) não é prazo de recurso;
    - o tamanho conta os perfis da equipe-chave;
    - o registro em conselho exigido de um perfil não é documento de habilitação da empresa;
    - o "entre outros" em texto padrão de sigilo ou de confidencialidade não é vago.

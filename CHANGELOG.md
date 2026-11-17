@@ -4,6 +4,13 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 
 ## [Não publicado]
 
+### "Citação a conferir" como aviso e segunda instância da etapa 1 (decisão 0058)
+- **Menos alarme falso:** a data vale também por extenso e o termo-chave é procurado em todos os trechos do item. Números e datas do esqueleto (ou de "conta do código") ficam de fora, e o e-mail ou o telefone contam quando o item fala deles.
+- **Aviso, não erro:** a "citação não prova" vira o aviso "citação a conferir". Não conta entre os fatos sem citação nem muda a situação da conferência.
+- **Citação fraca:** toda palavra conta, inclusive a de uma letra.
+- **Segunda instância da etapa 1:** o script exige `--dossie`.
+- **Dados do caso:** o nome do departamento do caso foi trocado por um inventado no comentário, no teste e na decisão 0054.
+
 ### Travas do teste externo, linha do tempo e segunda instância (decisão 0057)
 - **Travas novas:**
   - **EAP:** "não cabe antes do marco", que vira divergência do TAP; "reentrega sem nova conferência"; "esforço não estimado"; atividade "antes da assinatura" com predecessora posterior.

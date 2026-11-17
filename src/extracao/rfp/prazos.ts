@@ -41,7 +41,8 @@ export const NOME_EVENTO: Record<EventoCertame, string> = {
 /** Ordem importa: o primeiro evento que casa com o contexto da data fica. Sobre texto sem acento. */
 const EVENTOS: [EventoCertame, RegExp][] = [
   ["esclarecimento", /esclarecimento|impugna/],
-  // "Captação de Recursos" (nome de departamento) e "recursos financeiros" não são o prazo de recurso do certame
+  // "recursos" num nome de departamento ("Departamento de Projetos e Recursos Externos") e "recursos financeiros" não são o
+  // prazo de recurso do certame
   [
     "recursos",
     /(?<!captacao de )(?<!captacao )\brecurso(?!s? (?:financeir|orcamentari|human|public|materia))|contrarraz/,

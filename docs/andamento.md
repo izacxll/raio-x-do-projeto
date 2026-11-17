@@ -31,7 +31,7 @@ Os gabaritos e as leituras gravadas foram feitos pelo Claude Code seguindo a ski
 
 **Skill PMO 0.3.2 na main (#61, decisão 0056):** as mudanças da 0.3.0 e da 0.3.1 (o #52 foi fechado como substituído) e as 19 regras do teste externo, só acréscimo, cada uma com o "erro que evita". Os itens novos das fichas são "só PMO".
 
-**Travas, linha do tempo e segunda instância (decisão 0057), branch `correcao/travas-e-segunda-instancia`:**
+**Travas, linha do tempo e segunda instância (decisão 0057, na main pelo #62; ajustes da decisão 0058: "citação a conferir" como aviso e segunda instância da etapa 1):**
 - as travas que o teste mostrou (EAP, TAP, critério pontuado, citação que não prova, data de ato);
 - o passo refeito sem a resposta anterior;
 - a linha do tempo nos pedidos da EAP, do TAP e do cronograma, com `conferenciaDosMarcos` conferida pela conta do código;
