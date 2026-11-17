@@ -202,6 +202,14 @@ const RE_GENERICA =
 const RE_CLAUSULA_PADRAO =
   /\b(?:sigilo|confidencialidade|reserva de cargos|assedio|discriminacao|exploracao sexual|trabalho infantil|trabalho escravo|suboperador\w*|lei geral de protecao de dados|lgpd)\b/;
 
+/**
+ * Cláusula padrão de responsabilidade (decisão 0048, regra da M1): responder por erro da proposta ou por danos,
+ * arcar com todas as despesas, permitir a fiscalização, prestar esclarecimentos, não ceder, manter a habilitação.
+ * Vale para qualquer contrato: não é obrigação específica de quem executa este trabalho.
+ */
+const RE_RESPONSABILIDADE_PADRAO =
+  /^(?:ficar |ser )?responsav\w+ (?:por qualquer erro|civil|pel[oa]s? danos|por todos os danos|por quaisquer danos)|\bqualquer erro na proposta\b|^arcar com (?:todas as|quaisquer) despesas|^responder (?:civil|por todos)|^permitir (?:ao contratante )?(?:a )?fiscaliza|^prestar (?:todos os |todas as )?(?:esclarecimentos|informacoes) (?:que forem )?solicitad|^nao ceder|^manter,? (?:durante|as condicoes de habilitacao)/;
+
 /** Verbo de entrega concreta: o que dá para procurar no plano e cobrar na execução. */
 const RE_ENTREGA_CONCRETA =
   /\b(?:entregar|entregues|apresentar|disponibilizar|divulgar|garantir|guardar sigilo|manter arquivad\w*|recolher|participar de reunioes|oferecer|elaborar|enviar|encaminhar|publicar|comprovar|prestar contas|realizar a prestacao de contas|ser original|complementar|contemplar|prever recursos|intermediacao|facilitacao)\b/;
@@ -222,6 +230,7 @@ export function ehObrigacaoEspecifica(o: Obrigacao): boolean {
   if (
     RE_GENERICA.test(t) ||
     RE_CLAUSULA_PADRAO.test(t.slice(0, 160)) ||
+    RE_RESPONSABILIDADE_PADRAO.test(t.slice(0, 120)) ||
     /\b(?:legislacao|lei federal|normas vigentes|codigo de defesa)\b/.test(t.slice(0, 120))
   )
     return false;

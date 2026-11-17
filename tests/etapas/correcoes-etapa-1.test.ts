@@ -151,6 +151,15 @@ describe.skipIf(!existsSync(TR))("TR municipal de contratação direta (só na m
     expect(x("X2")?.resultado).toMatch(/Janela entre o início e o marco: \d+ dias úteis/);
   });
 
+  it("contratante achado no corpo (prefeitura e secretaria); a cláusula de responsabilidade não é R", () => {
+    expect(ler(l, "identificacao:objeto")).toBeDefined();
+    const textoDoContratante = ler(l, "identificacao:objeto")?.texto ?? "";
+    expect(textoDoContratante).toMatch(
+      /Contratante: (?:Prefeitura Municipal|Município) de [^.]+ — Secretaria de /,
+    );
+    expect(l.itens.filter((i) => i.numero && /qualquer erro na Proposta/.test(i.texto))).toEqual([]);
+  });
+
   it("estudo sensível e prazo sem termo inicial; sem prazo de recurso de sanção no certame", () => {
     expect(ler(l, "leitura:atencao:estudo-sensivel")).toBeDefined();
     expect(ler(l, "leitura:atencao:sem-termo-inicial")).toBeDefined();
@@ -209,5 +218,25 @@ describe("números que pedem fonte: referências não são valores", () => {
     const { numerosQuePedemFonte } = await import("../../src/etapas/1-rfp/leitura-pmo");
     expect(numerosQuePedemFonte("1) dados sem prazo; 2) pagamento; ver seção 7")).toEqual([]);
     expect(numerosQuePedemFonte("Repassar no prazo de 30 dias (ver seção 7).")).toEqual(["30"]);
+  });
+});
+
+describe("contratante no corpo e cláusula padrão de responsabilidade (pedido da responsável)", () => {
+  it("acha o contratante no corpo do documento, com a secretaria", () => {
+    const { a } = leitura([
+      "TERMO DE REFERÊNCIA\n1. OBJETO: Contratação de serviços para estudo técnico.",
+      "3.2. Fica designado como local para assinatura do contrato a sede da Prefeitura Municipal de Vila Exemplo – MG, situada na Rua Um, nº 1.",
+      "Considerando que a Secretaria de Turismo e Cultura é responsável por desenvolver atividades turísticas na municipalidade.",
+    ]);
+    const c = a.itens.find((i) => i.id === "identificacao:contratante");
+    expect(c?.texto).toBe("Prefeitura Municipal de Vila Exemplo — Secretaria de Turismo e Cultura");
+  });
+
+  it('"ficar responsável por qualquer erro na proposta" não é requisito', () => {
+    const { l } = leitura([
+      "1. OBJETO: Estudo técnico.\n2.3.1 Produto 1: Metodologia",
+      "5. DAS OBRIGAÇÕES DA CONTRATADA:\n5.2. Ficar responsável por qualquer erro na Proposta apresentada, obrigando-se a entregar os objetos conforme exigido neste Termo de Referência;",
+    ]);
+    expect(l.itens.filter((i) => i.numero && /qualquer erro na Proposta/.test(i.texto))).toEqual([]);
   });
 });

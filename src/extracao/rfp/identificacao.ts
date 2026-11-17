@@ -191,6 +191,30 @@ function contratante(docs: DocumentoRfp[], capa: CampoDaCapa[]): ItemAnalise {
       }
     }
   }
+  // no corpo (fora dos cabeçalhos repetidos): "Prefeitura Municipal de X" ou "Município de X", e a secretaria que
+  // conduz ("a Secretaria de Comunicação Social, Lazer e Turismo é responsável…")
+  const orgao = localizarPrimeiro(docs, /\bprefeitura municipal de [a-z]|\bmunicipio de [a-z]/);
+  const nomeOrgao = orgao
+    ? /(?:Prefeitura Municipal|Munic[ií]pio) de [A-ZÀ-Ý][^\s,.;:–-]*(?:\s+(?:d[aeo]s?\s+)?[A-ZÀ-Ý][^\s,.;:–-]*)*/.exec(
+        orgao.frase,
+      )?.[0]
+    : undefined;
+  if (orgao && nomeOrgao) {
+    const sec = localizarPrimeiro(docs, /\bsecretaria (?:municipal )?de [a-z]/);
+    const nomeSec = sec
+      ? /Secretaria (?:Municipal )?de [A-ZÀ-Ý][\wÀ-ÿ]*(?:,?\s+(?:e\s+|d[aeo]s?\s+)?[A-ZÀ-Ý][\wÀ-ÿ]*)*/.exec(
+          sec.frase,
+        )?.[0]
+      : undefined;
+    return {
+      ...base,
+      rotulo: "documento",
+      texto: nomeSec ? `${nomeOrgao} — ${nomeSec}` : nomeOrgao,
+      origem: origemDe(orgao),
+      situacao: "localizado",
+      nota: `Achado no corpo do documento (p. ${orgao.pagina}${sec && nomeSec && sec.pagina !== orgao.pagina ? ` e ${sec.pagina}` : ""}): conferir se é o contratante.`,
+    };
+  }
   const tornaPublico = localizarPrimeiro(docs, /\btorna(?:-se)? publico\b/);
   if (tornaPublico)
     return {
