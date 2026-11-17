@@ -30,6 +30,8 @@ export interface EntradaPgp {
   recursosTap?: string;
   /** O TAP da etapa 3 como o PMO devolveu (para o destino dos compromissos), quando ele está no dossiê. */
   respostaTap?: RespostaTap;
+  /** Divergências de texto do TAP (dv1…) sem decisão do GP: viram questões do B9. */
+  divergenciasTapPendentes?: { id: string; texto: string }[];
   dadosProposta?: DadosProposta;
   /** Premissas críticas confirmadas nas etapas anteriores. */
   premissasAnteriores: Record<string, boolean>;
@@ -73,6 +75,14 @@ export function montarEntradaPgp(dossie: Dossie, hoje = new Date()): EntradaPgp 
           .map((i) => ({ texto: i.texto, requisitos: i.requisitos })) ?? []),
     recursosTap: tapPdf ? undefined : t?.decisoes.recursos,
     respostaTap: tapPdf ? undefined : t?.tap?.resposta,
+    divergenciasTapPendentes: tapPdf
+      ? []
+      : (t?.tap?.resposta.divergenciasTexto ?? [])
+          .filter((d) => !t?.divergencias[d.item.id])
+          .map((d) => ({
+            id: d.item.id,
+            texto: `${d.item.texto}${d.oQueFazer ? ` O que fazer: ${d.oQueFazer}` : ""}`,
+          })),
     dadosProposta: propostaPdf ? undefined : dadosDaProposta(dossie, rfp, ponto),
     premissasAnteriores: t?.premissasAplicaveis ?? dossie.proposta?.premissasAplicaveis ?? {},
   };

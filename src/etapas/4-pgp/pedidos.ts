@@ -1,5 +1,6 @@
 // Pedido de cada passo do PMO na etapa 4 (ordem da decisão 0007). Vai depois da skill e dos documentos (RFP, TAP e
 // proposta, com cache). As fichas das partes do passo vão aqui, só as que o GP marcou para gerar.
+import { questoesDoCodigo, questoesEmTexto } from "./questoes";
 import { ehNumeroDeCompromisso } from "../2-proposta/compromissos";
 import type { PgpDossie } from "../../dossie/esquema";
 import { PARTES_PGP } from "../../dominio/skill";
@@ -275,6 +276,18 @@ function exemplosDoQueNaoFalta(partes: string[]): string {
   return ex.length ? ` Exemplos do que não pode faltar: ${ex.join("; ")}.` : "";
 }
 
+/** B9 montado pelo código: as questões com a origem; o PMO completa cada uma (não renumera nem cria sem fonte). */
+function questoesDoPedido(e: EntradaPgp, partes: string[]): string {
+  if (!partes.includes("B9")) return "";
+  const qs = questoesDoCodigo(e);
+  if (!qs.length) return "";
+  return `Registro das questões (B9) que o código já montou, com a origem (ponto da etapa 1 ou divergência do TAP):
+${questoesEmTexto(qs)}
+No B9, escreva um item para cada QU, começando por "QU-nn —", com tipo, prioridade, responsável e data-alvo (o que o documento não dá é "a definir pelo GP"). Não renumere. Questão que já foi resolvida em outro lugar fica com status e a referência. Questão nova só com fonte, numerada depois da última.
+
+`;
+}
+
 export function pedidoExecucao(e: EntradaPgp, p: PgpDossie): string {
   const partes = partesDoPasso("execucao", p);
   return `${cabecalho(e, p, "passos 11 e 12: linha de base da medição e documentos de execução (as partes marcadas abaixo)")}
@@ -282,7 +295,7 @@ export function pedidoExecucao(e: EntradaPgp, p: PgpDossie): string {
 Atividades (cronograma):
 ${resumoDoCronograma(p)}
 
-Partes a escrever neste passo (o GP marcou):
+${questoesDoPedido(e, partes)}Partes a escrever neste passo (o GP marcou):
 ${listaDePartes(partes, "execucao", p)}
 
 ${fichasDasPartes(partes)}

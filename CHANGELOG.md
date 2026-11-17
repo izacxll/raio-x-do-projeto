@@ -32,6 +32,10 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 - **Compromissos no plano:** a matriz (B23) mostra cada C com o destino no TAP e no plano (o item que cita o número, no campo ou no texto).
 - **Pedidos da etapa 4:** as partes do passo que o GP dispensou aparecem com o motivo, e nenhum pedido pede texto, exemplo ou indicador de parte dispensada (A16 e valor agregado, A12, A4).
 - **Escopo da etapa 4:** o pedido leva as exclusões e os limites de volume (C) para a B17 (B17.5 e B17.7), com o C no item.
+- **Registro das questões (B9) montado pelo código:** uma QU por ponto da etapa 1 com pergunta e por divergência do TAP sem decisão do GP, com a origem; o PMO completa; a conferência aponta questão sem origem e origem sem questão.
+- **Vago:** "a definir pelo GP" e item de decisão do GP não são vago (viram a verificação de decisões pendentes); expressão do documento citada entre aspas não é vago.
+- **Autoconferência da etapa 4:** item marcado pelo PMO vale quando o código confere o id (existe, está na parte e não foi descartado).
+- **Pedido externo da etapa 5 com `--plano dossie`:** o PGP da etapa 4 montado pelo app, gravado também em DOCX.
 
 ### Fase M3 — etapa 3 pelo método (decisão 0041)
 - **Testar sem a chave:** `npm run exportar-pedido` grava, fora do Git, o pedido de um passo do PMO exatamente como iria à API (sistema, mensagem com os PDFs e o esqueleto, schema), para o Claude do claude.ai responder; `npm run importar-resposta` valida a resposta, grava no dossiê, roda as travas e mede contra o gabarito numa seção "leitura independente". Por ora, a etapa 1.

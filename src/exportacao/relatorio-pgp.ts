@@ -1,6 +1,7 @@
 // Saídas da etapa 4: o plano (DOCX e PDF), os registros, o cronograma e as matrizes (XLSX). O mesmo plano, como
 // documento "lido", passa pelas regras da etapa 5 (autoconferência). Cada parte que o GP marcou sai com um título
 // próprio ("N. Nome da parte"), que o mapa do PGP reconhece; as tabelas das contas são do código.
+import { conferirQuestoes, questoesDoCodigo } from "../etapas/4-pgp/questoes";
 import { NOME_TIPO_COMPROMISSO } from "../etapas/2-proposta/compromissos";
 import type { Dossie, PgpDossie } from "../dossie/esquema";
 import {
@@ -134,6 +135,31 @@ function tabelasDoCodigo(codigo: string, c: Contexto): { paragrafos?: string[]; 
         ]),
       },
     });
+  const questoes = codigo === "B9" ? questoesDoCodigo(e) : [];
+  if (questoes.length) {
+    const conf = conferirQuestoes(questoes, c.itens);
+    out.push({
+      paragrafos: [
+        "Questões montadas pelo código a partir dos pontos da etapa 1 com pergunta e das divergências do TAP sem decisão do GP; o PMO completa tipo, prioridade, responsável e data-alvo.",
+        ...(conf.semItem.length
+          ? [`Conferência do código: origem sem questão no registro (${conf.semItem.join(", ")}).`]
+          : []),
+        ...(conf.semOrigem.length
+          ? [`Conferência do código: questão sem origem nem fonte (${conf.semOrigem.join(", ")}).`]
+          : []),
+      ],
+      tabela: {
+        colunas: ["Questão", "Origem", "Pergunta (código)", "No registro"],
+        larguras: [1, 2, 5, 2],
+        linhas: conf.linhas.map((l) => [
+          l.questao.numero,
+          l.questao.origem,
+          l.questao.texto,
+          l.itens.join(", ") || "sem item do PMO",
+        ]),
+      },
+    });
+  }
   const compromissos = codigo === "B23" ? rastrearCompromissos(e, c.itens) : [];
   if (compromissos.length)
     out.push({

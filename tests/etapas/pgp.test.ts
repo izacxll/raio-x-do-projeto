@@ -41,6 +41,7 @@ import {
   itensEsperadosDaEtapa3,
 } from "../../src/etapas/3-tap/autoconferencia";
 import { destinosNoPlano, numerosCitados, type Compromisso } from "../../src/etapas/2-proposta/compromissos";
+import { conferirQuestoes, questoesDoCodigo } from "../../src/etapas/4-pgp/questoes";
 import { lerRfpPublica } from "../ajudantes/rfp-publica";
 
 const ler = (n: string) =>
@@ -478,5 +479,52 @@ describe("autoconferência: item marcado pelo PMO com o id", () => {
     expect(ligado.verificacoes[0]?.estado).toBe("ok");
     expect(ligado.verificacoes[0]?.detalhe).toMatch(/id conferido pelo código/);
     expect(ligarPeloId(base, comMarca("id-que-nao-existe"), entrada).achados).toHaveLength(1);
+  });
+});
+
+describe("registro das questões (B9) montado pelo código", () => {
+  const comQuestoes = () =>
+    ({
+      ...entrada,
+      ponto: {
+        ...entrada.ponto,
+        brechas: [
+          { ...entrada.ponto.brechas[0]!, id: "etapa-1:a6", perguntaFinal: "Qual das duas datas vale?" },
+          { ...entrada.ponto.brechas[0]!, id: "etapa-1:a7", perguntaFinal: "" },
+        ],
+      },
+      divergenciasTapPendentes: [{ id: "dv2", texto: "Quem faz o campo." }],
+    }) as EntradaPgp;
+
+  it("uma QU para cada ponto com pergunta e cada divergência sem decisão, com a origem", () => {
+    const e = comQuestoes();
+    expect(questoesDoCodigo(e)).toEqual([
+      { numero: "QU-01", origem: "etapa-1:a6", texto: "Qual das duas datas vale?" },
+      { numero: "QU-02", origem: "dv2", texto: "Quem faz o campo." },
+    ]);
+    const pedido = PEDIDOS_PGP.execucao(e, { ...dossie.pgp!, gerar: { ...dossie.pgp!.gerar, B9: true } });
+    expect(pedido).toContain("- QU-01 (origem etapa-1:a6): Qual das duas datas vale?");
+    expect(pedido).toContain('começando por "QU-nn —"');
+  });
+
+  it("a conferência aponta origem sem questão e questão sem origem nem fonte", () => {
+    const e = comQuestoes();
+    const base = itensDoPgp(dossie.pgp!, entrada.documentos)[0]!;
+    const itens = [
+      {
+        ...base,
+        grupo: "B9 — Registro das questões",
+        item: { ...base.item, id: "b9-2", texto: "QU-01 — Datas.", fontes: [] },
+      },
+      {
+        ...base,
+        grupo: "B9 — Registro das questões",
+        item: { ...base.item, id: "b9-9", texto: "QU-09 — Nova.", fontes: [] },
+      },
+    ];
+    const c = conferirQuestoes(questoesDoCodigo(e), itens);
+    expect(c.linhas[0]?.itens).toEqual(["b9-2"]);
+    expect(c.semItem).toEqual(["QU-02"]);
+    expect(c.semOrigem).toEqual(["QU-09"]);
   });
 });
