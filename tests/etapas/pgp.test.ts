@@ -435,7 +435,7 @@ describe("pedidos da etapa 4 só com as partes marcadas", () => {
 });
 
 describe("autoconferência: item marcado pelo PMO com o id", () => {
-  it("ausente da busca de termos vira 'ok' quando o PMO aponta um item que existe na parte", () => {
+  it("ausente da busca de termos vira 'pela marca do PMO' quando ele aponta um item que existe na parte", () => {
     const item = itensDoPgp(dossie.pgp!, entrada.documentos).find((i) => /^[AB]\d+ — /.test(i.grupo))!;
     const parte = item.grupo.split(" — ")[0]!;
     const codigo = `${parte}.99`;
@@ -476,7 +476,10 @@ describe("autoconferência: item marcado pelo PMO com o id", () => {
     };
     const ligado = ligarPeloId(base, comMarca(item.item.id), entrada);
     expect(ligado.achados).toEqual([]);
-    expect(ligado.verificacoes[0]?.estado).toBe("ok");
+    expect(ligado.verificacoes[0]?.estado).toBe("pela-marca-do-pmo");
+    expect(ligado.verificacoes.find((v) => v.id === "presentes-pela-marca-do-pmo")?.detalhe).toMatch(
+      /^1 item\(ns\): /,
+    );
     expect(ligado.verificacoes[0]?.detalhe).toMatch(/id conferido pelo código/);
     expect(ligarPeloId(base, comMarca("id-que-nao-existe"), entrada).achados).toHaveLength(1);
   });

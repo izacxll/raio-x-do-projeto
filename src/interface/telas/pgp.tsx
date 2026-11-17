@@ -693,9 +693,18 @@ function Autoconferencia({
               </tbody>
             </table>
             <p className="envio__obs">
-              Além disso, {separados.decisoes.length} trechos com decisão do GP ainda vazia ("a definir pelo
-              GP"): no plano final, eles precisam do valor, do nome ou da cadência que só você define.
+              Além disso,{" "}
+              {resultado.verificacoes.find((v) => v.id === "decisoes-do-gp-pendentes")?.detalhe ??
+                `${separados.decisoes.length} trechos com decisão do GP ainda vazia ("a definir pelo GP").`}{" "}
+              No plano final, eles precisam do valor, do nome ou da cadência que só você define.
             </p>
+            {resultado.verificacoes
+              .filter((v) => v.id === "presentes-pela-marca-do-pmo")
+              .map((v) => (
+                <p key={v.id} className="envio__obs" data-testid="pela-marca-do-pmo">
+                  {v.descricao}: {v.detalhe}
+                </p>
+              ))}
             {separados.demais.map((a) => (
               <article key={a.id} className="cartao cartao--borda bloco">
                 <div className="cartao__corpo">

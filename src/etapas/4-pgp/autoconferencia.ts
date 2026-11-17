@@ -160,17 +160,26 @@ export function ligarPeloId(r: ResultadoConferencia, p: PgpDossie, e: EntradaPgp
       const c = /:([AB]\d+\.\d+)$/.exec(a.id)?.[1];
       return !(a.regra === "conteudo-minimo" && c && ligados.has(c));
     }),
-    verificacoes: r.verificacoes.map((v) => {
-      const c = /^item:([AB]\d+\.\d+)$/.exec(v.id)?.[1];
-      const ids = c ? ligados.get(c) : undefined;
-      return ids && v.estado === "achado"
-        ? {
-            ...v,
-            estado: "ok" as const,
-            detalhe: `Marcado pelo PMO no item ${ids.join(", ")}, que existe na parte e não foi descartado (id conferido pelo código); os termos da ficha não aparecem na redação — conferir.`,
-          }
-        : v;
-    }),
+    verificacoes: [
+      ...r.verificacoes.map((v) => {
+        const c = /^item:([AB]\d+\.\d+)$/.exec(v.id)?.[1];
+        const ids = c ? ligados.get(c) : undefined;
+        return ids && v.estado === "achado"
+          ? {
+              ...v,
+              estado: "pela-marca-do-pmo" as const,
+              detalhe: `Presente pela marca do PMO (item ${ids.join(", ")}, id conferido pelo código), redação a conferir: os termos da ficha não aparecem.`,
+            }
+          : v;
+      }),
+      {
+        id: "presentes-pela-marca-do-pmo",
+        alvo: "conteúdo mínimo",
+        descricao: "Itens presentes pela marca do PMO, redação a conferir",
+        estado: "pela-marca-do-pmo" as const,
+        detalhe: `${ligados.size} item(ns): ${[...ligados.entries()].map(([c, ids]) => `${c} (${ids.join(", ")})`).join("; ")}.`,
+      },
+    ],
   };
 }
 
