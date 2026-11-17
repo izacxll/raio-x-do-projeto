@@ -118,9 +118,10 @@ describe("SMPED: os erros do teste externo", () => {
 
 describe.skipIf(!existsSync(TR))("TR municipal de contratação direta (só na máquina da responsável)", () => {
   let l: LeituraRfp;
+  let a: ReturnType<typeof analisarRfp>;
   beforeAll(async () => {
     const doc = await lerPdf(TR, "tr.pdf");
-    const a = analisarRfp([doc], HOJE);
+    a = analisarRfp([doc], HOJE);
     l = montarLeituraRfp(a, analiseInicial(a, HOJE), HOJE);
   });
 
@@ -158,6 +159,13 @@ describe.skipIf(!existsSync(TR))("TR municipal de contratação direta (só na m
       /Contratante: (?:Prefeitura Municipal|Município) de [^.]+ — Secretaria de /,
     );
     expect(l.itens.filter((i) => i.numero && /qualquer erro na Proposta/.test(i.texto))).toEqual([]);
+  });
+
+  it("aceite pela nota fiscal (p. 10) e a FGV fora dos órgãos citados", () => {
+    const r = a.itens.find((i) => i.id === "condicoes:recebimento");
+    expect(r?.texto).toMatch(/^Sem cláusula própria de recebimento/);
+    expect(r?.origem?.pagina).toBe(10);
+    expect(a.itens.filter((i) => i.id.startsWith("partes:unidade:fundacao-getulio"))).toEqual([]);
   });
 
   it("estudo sensível e prazo sem termo inicial; sem prazo de recurso de sanção no certame", () => {
@@ -238,5 +246,38 @@ describe("contratante no corpo e cláusula padrão de responsabilidade (pedido d
       "5. DAS OBRIGAÇÕES DA CONTRATADA:\n5.2. Ficar responsável por qualquer erro na Proposta apresentada, obrigando-se a entregar os objetos conforme exigido neste Termo de Referência;",
     ]);
     expect(l.itens.filter((i) => i.numero && /qualquer erro na Proposta/.test(i.texto))).toEqual([]);
+  });
+});
+
+describe("aceite pela nota fiscal e a contratada fora das partes (pedido da responsável)", () => {
+  it("sem cláusula de recebimento, o aceite é a aprovação da nota fiscal por quem fiscaliza", () => {
+    const { a } = leitura([
+      "1. OBJETO: Contratação da Fundação Getúlio Vargas – FGV para estudo técnico.\n2.3.1 Produto 1: Metodologia",
+      "11. DA FORMA DE PAGAMENTO\n11.1 O pagamento será efetuado em três parcelas, mediante apresentação da respectiva nota fiscal/fatura devidamente quitada e aprovada pelo responsável pela fiscalização dos serviços, da seguinte forma:",
+    ]);
+    const r = a.itens.find((i) => i.id === "condicoes:recebimento");
+    expect(r?.situacao).toBe("localizado");
+    expect(r?.texto).toBe(
+      "Sem cláusula própria de recebimento no documento: o aceite é a aprovação da nota fiscal pelo responsável pela fiscalização, sem prazo para a análise e sem recebimento provisório e definitivo.",
+    );
+    expect(r?.origem?.pagina).toBe(2);
+  });
+
+  it("com recebimento provisório e definitivo, vale a cláusula, não a nota fiscal", () => {
+    const { a } = leitura([
+      "1. OBJETO: Estudo técnico.",
+      "O recebimento provisório se dará em até 5 dias. O pagamento mediante nota fiscal aprovada pelo fiscal do contrato.",
+    ]);
+    expect(a.itens.find((i) => i.id === "condicoes:recebimento")?.texto).toMatch(/recebimento provisório/);
+  });
+
+  it("a contratada (FGV) não entra nos órgãos citados", () => {
+    const { a } = leitura([
+      "1. OBJETO: Contratação da Fundação Getúlio Vargas – FGV para Estudo de Impacto.\nA Fundação Getúlio Vargas para Estudo de Impacto apresentará os produtos.",
+      "A Secretaria de Comunicação Social acompanha a execução. A Secretaria de Comunicação Social aprova.",
+    ]);
+    const orgaos = a.itens.filter((i) => i.id.startsWith("partes:unidade:")).map((i) => i.texto);
+    expect(orgaos.some((o) => /Getúlio Vargas/.test(o))).toBe(false);
+    expect(orgaos).toContain("Secretaria de Comunicação Social");
   });
 });

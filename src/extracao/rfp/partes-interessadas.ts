@@ -51,6 +51,8 @@ function unidadesCitadas(docs: DocumentoRfp[]): ItemAnalise[] {
         )
           continue;
         const chave = normalizarTermo(nome);
+        // a contratada (a própria FGV, citada pelo nome numa contratação direta) não é parte interessada do contratante
+        if (/^fundacao getulio vargas\b/.test(chave)) continue;
         const atual = contagem.get(chave);
         if (atual) atual.n++;
         else
