@@ -716,7 +716,7 @@ describe.skipIf(MODO !== "importar")("importar a resposta do PMO (leitura indepe
           ...auto.verificacoes
             .filter((v) => /^item:(B3\.9|B27\.13|A8\.12)$/.test(v.id) || /^premissa:PC\d/.test(v.id))
             .map((v) => `- conferência ${v.id}: ${v.estado} (${v.detalhe.slice(0, 120)})`),
-          `- premissas do PMO que repetem o registro inicial (saem do B3): ${repetidas.length ? repetidas.map((x) => x.premissaCritica).join(", ") : "nenhuma"}`,
+          `- premissas do PMO que repetem o registro inicial e saem do B3: ${repetidas.length ? repetidas.map((x) => `${x.item.id} (${x.tipo === "restricao" ? "restrição" : "premissa"}, ${x.origem}${x.premissaCritica ? `, ${x.premissaCritica}` : ""})`).join("; ") : "nenhuma"}`,
           "",
           "## Contingência pelo código",
           `- riscos que pedem reserva: ${custos?.riscosComReserva.map((x) => x.id).join(", ") || "nenhum"}`,
