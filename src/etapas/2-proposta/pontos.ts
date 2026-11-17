@@ -103,6 +103,8 @@ export type RegraPreco =
     }
   | { tipo: "desconto"; pontos: number; aCada: number; origem: OrigemItem }
   | { tipo: "menor-preco"; origem?: OrigemItem }
+  /** Contratação direta (decisão 0042): o preço não é pontuado; precisa de justificativa (art. 72). */
+  | { tipo: "contratacao-direta"; origem?: OrigemItem }
   | { tipo: "sem-preco"; criteriosDeCusto: CriterioPontos[] };
 
 const RE_PESOS =
@@ -120,6 +122,10 @@ const origem = (l: { doc: { rotulo: string }; pagina: number; frase: string }): 
 
 export function regraDoPreco(analise: AnaliseRfp, criterios: CriterioPontos[]): RegraPreco {
   const docs = analise.documentos;
+  const hipotese = analise.itens.find(
+    (i) => i.id === "julgamento:criterio" && i.nome.startsWith("Hipótese legal"),
+  );
+  if (hipotese) return { tipo: "contratacao-direta", origem: hipotese.origem };
   const pesos = localizarTodos(docs, RE_PESOS)[0];
   const inv = pesos ? undefined : localizarTodos(docs, RE_PESOS_INV)[0];
   const indice = localizarTodos(docs, RE_INDICE)[0];
@@ -244,6 +250,8 @@ export function textoDaRegraPreco(regra: RegraPreco, estimado?: number): string 
       return tabelaPontosPorPreco(regra, estimado)?.texto ?? "";
     case "menor-preco":
       return `Menor preço: o preço decide sozinho${regra.origem ? ` (${regra.origem.documento}, p. ${regra.origem.pagina})` : ""}.`;
+    case "contratacao-direta":
+      return `Contratação direta: o preço não é pontuado nem disputado; a proposta precisa sustentar a justificativa de preço (art. 72 da Lei 14.133; conferir)${regra.origem ? ` (${regra.origem.documento}, p. ${regra.origem.pagina})` : ""}.`;
     case "sem-preco":
       return regra.criteriosDeCusto.length
         ? `O edital não pontua preço nem desconto. O custo pesa nos critérios ${regra.criteriosDeCusto

@@ -72,3 +72,14 @@ describe("ponto de partida da etapa 2 (correções do teste externo)", () => {
     expect(pontoDePartidaEmTexto(ponto)).toMatch(/id etapa-1:a7/);
   });
 });
+
+describe("regra do preço na contratação direta", () => {
+  it("não procura pontuação do preço: pede a justificativa de preço", async () => {
+    const { criteriosDaRfp, regraDoPreco, textoDaRegraPreco } =
+      await import("../../src/etapas/2-proposta/pontos");
+    const a = analisarRfp([documentoLido(PAGINAS)], HOJE);
+    const regra = regraDoPreco(a, criteriosDaRfp(a));
+    expect(regra.tipo).toBe("contratacao-direta");
+    expect(textoDaRegraPreco(regra)).toMatch(/justificativa de preço/);
+  });
+});
