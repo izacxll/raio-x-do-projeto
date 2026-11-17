@@ -7,7 +7,15 @@ import { criarDossieVazio } from "../../src/dossie/arquivo";
 import type { Dossie, PgpDossie } from "../../src/dossie/esquema";
 import { avaliarItens, type ItemProposta } from "../../src/etapas/2-proposta/proposta";
 import { autoconferir, mapaDoPgpGerado, pgpComoDocumento } from "../../src/etapas/4-pgp/autoconferencia";
-import { cronogramaDoPgp, custosDoPgp, marcosDoPgp, rastrear } from "../../src/etapas/4-pgp/calculos";
+import {
+  conferirRaci,
+  contratanteNaRaci,
+  cronogramaDoPgp,
+  custosDoPgp,
+  marcosDoPgp,
+  rastrear,
+} from "../../src/etapas/4-pgp/calculos";
+import { alertasDeDataFixa } from "../../src/exportacao/relatorio-pgp";
 import { montarEntradaPgp, type EntradaPgp } from "../../src/etapas/4-pgp/entrada";
 import { PEDIDOS_PGP } from "../../src/etapas/4-pgp/pedidos";
 import { PASSOS_PGP } from "../../src/etapas/4-pgp/passos";
@@ -186,5 +194,53 @@ describe("autoconferência pelas regras da etapa 5", () => {
     const premissas = r.achados.filter((a) => a.tipo === "ausente" && /PC[1368]\b/.test(a.descricao));
     expect(premissas.map((a) => a.descricao)).toEqual([]);
     expect(r.verificacoes.length).toBeGreaterThan(0);
+  });
+});
+
+describe("RACI e data fixa no plano (teste externo do TR)", () => {
+  const cr = () => SCHEMAS_PGP.cronograma.parse(ler("cronograma"));
+
+  it("linha do contratante passa sem perfil na lista; perfil da equipe fora da lista e dois A são apontados", () => {
+    const c = cr();
+    const a1 = c.atividades[0]!.id;
+    const raciLimpa = c.raci.filter((r) => r.atividade !== a1);
+    const okContratante = {
+      ...c,
+      raci: [
+        ...raciLimpa,
+        { atividade: a1, perfil: c.perfis[0]!.id, papel: "R" as const, parte: "equipe" as const },
+        { atividade: a1, perfil: "fiscalizacao", papel: "A" as const, parte: "contratante" as const },
+      ],
+    };
+    expect(conferirRaci(okContratante).join(" ")).not.toMatch(/fiscalizacao|"A"/);
+    expect(contratanteNaRaci(okContratante)).toContain(`fiscalizacao: A em ${a1}`);
+    const errado = {
+      ...okContratante,
+      raci: [
+        ...okContratante.raci,
+        { atividade: a1, perfil: "inventado", papel: "A" as const, parte: "equipe" as const },
+      ],
+    };
+    const p = conferirRaci(errado).join(" ");
+    expect(p).toContain(`Atividade ${a1} com 2 "A"`);
+    expect(p).toMatch(/Perfil da equipe na RACI sem estar na lista de perfis: inventado/);
+  });
+
+  it("B3: sem folga até a data fixa, o alerta cita PC3 e PC6; com folga, mostra quantos dias", () => {
+    const base = {
+      atividade: "c4",
+      inicio: new Date(2025, 10, 8),
+      fim: new Date(2026, 0, 7),
+      diasCorridos: 61,
+      fimPredecessoras: new Date(2025, 10, 12),
+    };
+    const crono = (f: object) =>
+      ({ datasFixas: [{ ...base, ...f }] }) as unknown as Parameters<typeof alertasDeDataFixa>[0];
+    const [nao] = alertasDeDataFixa(crono({ folgaCorrida: -5, cabe: false }));
+    expect(nao).toMatch(
+      /^Alerta \(conta do código\): a atividade c4 começa na data fixa de 08\/11\/2025.*5 dia\(s\) corrido\(s\) depois.*PC3.*PC6/,
+    );
+    const [sim] = alertasDeDataFixa(crono({ folgaCorrida: 3, cabe: true }));
+    expect(sim).toMatch(/folga de 3 dia\(s\) corrido\(s\)/);
   });
 });

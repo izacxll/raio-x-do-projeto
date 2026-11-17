@@ -17,6 +17,9 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 - **Aceite pela nota fiscal:** sem cláusula de recebimento, o código mostra que o aceite é a aprovação da nota fiscal por quem fiscaliza (sem prazo e sem recebimento provisório e definitivo); a contratada (FGV) sai dos órgãos citados.
 - **R fora da lista:** requisito de alto nível do TAP com um R descartado na etapa 1 é apontado na conferência e vai marcado no pedido do escopo da etapa 4.
 - **Pedidos externos:** o porte e as premissas críticas passados na primeira exportação ficam no dossiê de origem.
+- **Plano (etapa 4):** cronograma com o início do documento quando o GP não informou (a confirmar pelo GP); datas da janela fixa em dd/mm/aaaa; sem folga até a data fixa, o alerta vai também no registro de premissas (B3, PC3 e PC6).
+- **RACI:** o código confere um só A por atividade e perfil da equipe na lista; o contratante aparece com os seus papéis, fora da equipe.
+- **Horas a definir pelo GP:** aparecem como tal na tabela de custos e no total, e o custo não fecha com zero no lugar delas.
 
 ### Fase M3 — etapa 3 pelo método (decisão 0041)
 - **Testar sem a chave:** `npm run exportar-pedido` grava, fora do Git, o pedido de um passo do PMO exatamente como iria à API (sistema, mensagem com os PDFs e o esqueleto, schema), para o Claude do claude.ai responder; `npm run importar-resposta` valida a resposta, grava no dossiê, roda as travas e mede contra o gabarito numa seção "leitura independente". Por ora, a etapa 1.

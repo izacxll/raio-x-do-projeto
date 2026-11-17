@@ -2,15 +2,46 @@
 // documento "lido", passa pelas regras da etapa 5 (autoconferência). Cada parte que o GP marcou sai com um título
 // próprio ("N. Nome da parte"), que o mapa do PGP reconhece; as tabelas das contas são do código.
 import type { Dossie, PgpDossie } from "../dossie/esquema";
-import { cronogramaDoPgp, custosDoPgp, marcosDoPgp, rastrear, textoDaData } from "../etapas/4-pgp/calculos";
+import {
+  conferirRaci,
+  contratanteNaRaci,
+  cronogramaDoPgp,
+  custosDoPgp,
+  inicioDoPgp,
+  marcosDoPgp,
+  rastrear,
+  textoDaData,
+} from "../etapas/4-pgp/calculos";
 import { montarEntradaPgp, type EntradaPgp } from "../etapas/4-pgp/entrada";
 import { NOME_PASSO_PGP, ordemDaParte, passoDaParte } from "../etapas/4-pgp/passos";
 import { contarPendentesPgp, itensDoPgp, nomeDaParte, partesAGerar, pgpInicial } from "../etapas/4-pgp/pgp";
-import { duracaoEsperada } from "../etapas/2-proposta/cronograma";
+import { duracaoEsperada, type Cronograma } from "../etapas/2-proposta/cronograma";
+import { textoDasHoras, textoDasHorasTotais } from "../etapas/2-proposta/preco";
 import { itensValidos, paragrafoDoItem, type ItemConferido } from "../pmo/itens";
 import { camposDoDossie, type DocumentoExportavel, type Secao, type Tabela } from "./modelo";
 
 const A_DEFINIR = "a definir pelo GP";
+/** Início do cronograma para o texto: o do GP, ou a data do documento marcada "a confirmar pelo GP". */
+function textoDoInicio(p: PgpDossie, e: EntradaPgp): string {
+  const { inicio, doDocumento } = inicioDoPgp(p, e);
+  if (!inicio) return "—";
+  return doDocumento
+    ? `${textoDaData(inicio)} (data do documento, ${doDocumento}, a confirmar pelo GP)`
+    : textoDaData(inicio);
+}
+
+/**
+ * Atividade presa a data fixa (evento): a folga das predecessoras até ela pesa nas premissas de prazo de aprovação
+ * (PC3) e de quem tem de fazer a sua parte antes do evento (PC6). Sem folga, o alerta vai no registro de premissas.
+ */
+export function alertasDeDataFixa(crono?: Cronograma): string[] {
+  return (crono?.datasFixas ?? []).map((f) =>
+    !f.cabe
+      ? `Alerta (conta do código): a atividade ${f.atividade} começa na data fixa de ${textoDaData(f.inicio)}, mas as predecessoras só terminam em ${textoDaData(f.fimPredecessoras)}, ${-(f.folgaCorrida ?? 0)} dia(s) corrido(s) depois. As premissas de aprovação no prazo (PC3) e de quem faz a sua parte antes do evento (PC6) não se sustentam com este cronograma: sugere-se rever durações, paralelismo ou o prazo de análise combinado com o contratante.`
+      : `Data fixa (conta do código): a atividade ${f.atividade} começa em ${textoDaData(f.inicio)}; as predecessoras terminam em ${textoDaData(f.fimPredecessoras)}, com folga de ${f.folgaCorrida ?? 0} dia(s) corrido(s). Atraso maior que isso na aprovação (PC3) ou em quem faz a sua parte (PC6) empurra a atividade para depois do evento.`,
+  );
+}
+
 const reais = (v?: number) =>
   v === undefined ? A_DEFINIR : v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 const NOME_PROB = { baixa: "baixa", media: "média", alta: "alta" } as const;
@@ -158,14 +189,18 @@ function tabelasDoCodigo(codigo: string, c: Contexto): { paragrafos?: string[]; 
     if (codigo === "A14" || codigo === "B29")
       out.push({
         paragrafos: [
-          `${conta} Linha de base do cronograma: ${crono.total} dias úteis${crono.dataFim ? `, de ${p.parametros.inicio ? textoDaData(new Date(`${p.parametros.inicio}T00:00:00`)) : "—"} a ${textoDaData(crono.dataFim)}` : " (data de início a definir pelo GP)"}; caminho crítico: ${crono.caminhoCritico.join(" → ")}; desvio-padrão do caminho crítico: ${crono.desvioTotal.toFixed(1)} dias.`,
+          `${conta} Linha de base do cronograma: ${crono.total} dias úteis${crono.dataFim ? `, de ${textoDoInicio(p, e)} a ${textoDaData(crono.dataFim)}` : " (data de início a definir pelo GP)"}; caminho crítico: ${crono.caminhoCritico.join(" → ")}; desvio-padrão do caminho crítico: ${crono.desvioTotal.toFixed(1)} dias.`,
           `Tempo de aprovação de cada produto: ${p.parametros.aprovacaoDias === undefined ? A_DEFINIR : `${p.parametros.aprovacaoDias} dias úteis (decisão do GP)`}. ${crono.conferenciaPrazo.texto}`,
           "Data de referência: as datas contam a partir da data de assinatura do contrato; o prazo contratual é o da RFP e o do TAP.",
         ],
       });
     if (codigo === "B18")
       out.push({
-        paragrafos: ["Nomes: decisão do GP. Papéis RACI por atividade (sugestão do PMO, revisada pelo GP)."],
+        paragrafos: [
+          "Nomes: decisão do GP. Papéis RACI por atividade (sugestão do PMO, revisada pelo GP).",
+          ...contratanteNaRaci(cr).map((x) => `Contratante na RACI (não entra na equipe) — ${x}.`),
+          ...conferirRaci(cr).map((x) => `Conferência do código: ${x}`),
+        ],
         tabela: {
           colunas: ["Perfil", "Exigido pela RFP", "Nome (decisão do GP)", "Responsável (R)", "Aprova (A)"],
           larguras: [3, 1, 2, 3, 2],
@@ -196,12 +231,15 @@ function tabelasDoCodigo(codigo: string, c: Contexto): { paragrafos?: string[]; 
         tabela: {
           colunas: ["Perfil", "Horas", "Valor-hora (GP)", "Custo"],
           larguras: [4, 1, 2, 2],
-          linhas: custos.preco.linhas.map((l) => [
-            l.perfil.nome,
-            String(l.horas),
-            reais(l.valorHora),
-            reais(l.custo),
-          ]),
+          linhas: [
+            ...custos.preco.linhas.map((l) => [
+              l.perfil.nome,
+              textoDasHoras(l),
+              reais(l.valorHora),
+              reais(l.custo),
+            ]),
+            ["Total", textoDasHorasTotais(custos.preco), "", reais(custos.preco.pessoal)],
+          ],
         },
       });
     else
@@ -261,6 +299,7 @@ function tabelasDoCodigo(codigo: string, c: Contexto): { paragrafos?: string[]; 
     out.push({
       paragrafos: [
         "Parte do registro inicial da etapa 3 e acrescenta as premissas novas das estimativas e dos riscos.",
+        ...alertasDeDataFixa(crono),
       ],
       tabela: {
         colunas: ["Premissa ou restrição", "Origem", "Premissa crítica", "Se não se confirmar", "Depende de"],

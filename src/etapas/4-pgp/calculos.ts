@@ -7,18 +7,77 @@ import { calcularCronograma, primeiroDiaUtil, type Cronograma } from "../2-propo
 import { calcularPreco, lerValorEmReais, type Preco } from "../2-proposta/preco";
 import { diasDoTexto } from "../3-tap/divergencias";
 import type { EntradaPgp } from "./entrada";
+import { inicioFixo } from "../../regras/cruzamentos-rfp";
+import type { RespostaCronograma } from "../../pmo/schemas/pgp";
 
 export function inicioDe(par: ParametrosPgp): Date | undefined {
   return par.inicio ? new Date(`${par.inicio}T00:00:00`) : undefined;
 }
 
+/**
+ * Início do cronograma do plano: o do GP; sem ele, a data fixa de início do documento, a confirmar pelo GP
+ * (a mesma regra da etapa 3).
+ */
+export function inicioDoPgp(p: PgpDossie, e: EntradaPgp): { inicio?: Date; doDocumento?: string } {
+  const doGp = inicioDe(p.parametros);
+  if (doGp) return { inicio: doGp };
+  const fixo = inicioFixo(e.ponto.analise.documentos);
+  return fixo ? { inicio: fixo.data, doDocumento: `${fixo.origem.documento}, p. ${fixo.origem.pagina}` } : {};
+}
+
 export function cronogramaDoPgp(p: PgpDossie, e: EntradaPgp): Cronograma | undefined {
   const c = p.cronograma?.resposta;
   if (!c) return undefined;
+  const { inicio, doDocumento } = inicioDoPgp(p, e);
   return calcularCronograma(c.atividades, {
     aprovacaoDias: p.parametros.aprovacaoDias,
-    inicio: inicioDe(p.parametros),
+    inicio,
+    inicioDoDocumento: doDocumento,
     prazoRfp: e.ponto.prazoExecucao,
+  });
+}
+
+/**
+ * RACI (B18): um só A por atividade; toda atividade com A; perfil da equipe tem de estar na lista de perfis. Linha do
+ * contratante (parte "contratante") não entra na lista de equipe: é o papel dele na atividade.
+ */
+export function conferirRaci(c: RespostaCronograma): string[] {
+  const problemas: string[] = [];
+  const perfis = new Set(c.perfis.map((x) => x.id));
+  const atividades = new Set(c.atividades.map((a) => a.id));
+  for (const a of c.atividades) {
+    const as = c.raci.filter((r) => r.atividade === a.id && r.papel === "A");
+    if (as.length > 1)
+      problemas.push(
+        `Atividade ${a.id} com ${as.length} "A" na RACI (${as.map((r) => r.perfil).join(", ")}): deve ter um só.`,
+      );
+    else if (!as.length && c.raci.some((r) => r.atividade === a.id))
+      problemas.push(`Atividade ${a.id} sem "A" na RACI.`);
+  }
+  const semLinha = c.atividades.filter((a) => !c.raci.some((r) => r.atividade === a.id)).map((a) => a.id);
+  if (semLinha.length) problemas.push(`Atividades sem linha na RACI: ${semLinha.join(", ")}.`);
+  const fora = [...new Set(c.raci.filter((r) => !atividades.has(r.atividade)).map((r) => r.atividade))];
+  if (fora.length) problemas.push(`RACI com atividade que não existe no cronograma: ${fora.join(", ")}.`);
+  const semPerfil = [
+    ...new Set(c.raci.filter((r) => r.parte !== "contratante" && !perfis.has(r.perfil)).map((r) => r.perfil)),
+  ];
+  if (semPerfil.length)
+    problemas.push(`Perfil da equipe na RACI sem estar na lista de perfis: ${semPerfil.join(", ")}.`);
+  return problemas;
+}
+
+/** Papéis do contratante na RACI, por perfil ("fiscalizacao: A em m5, p5, s5"). */
+export function contratanteNaRaci(c: RespostaCronograma): string[] {
+  const linhas = c.raci.filter((r) => r.parte === "contratante");
+  return [...new Set(linhas.map((r) => r.perfil))].map((perfil) => {
+    const papeis = ["R", "A", "C", "I"]
+      .map((papel) => {
+        const ats = linhas.filter((r) => r.perfil === perfil && r.papel === papel).map((r) => r.atividade);
+        return ats.length ? `${papel} em ${ats.join(", ")}` : "";
+      })
+      .filter(Boolean)
+      .join("; ");
+    return `${perfil}: ${papeis}`;
   });
 }
 
@@ -40,7 +99,7 @@ export interface MarcoCalculado {
  * prazo do marco no TAP (contado em dias corridos da assinatura, a leitura mais apertada quando a contagem não é dita).
  */
 export function marcosDoPgp(p: PgpDossie, e: EntradaPgp, crono: Cronograma): MarcoCalculado[] {
-  const inicio = inicioDe(p.parametros);
+  const { inicio } = inicioDoPgp(p, e);
   const produtos = [...new Set(crono.atividades.map((a) => a.produto))];
   return produtos.map((produto) => {
     const doProduto = crono.atividades.filter((a) => a.produto === produto);

@@ -50,6 +50,20 @@ export interface Cronograma {
   dataFim?: Date;
   problemas: string[];
   conferenciaPrazo: { situacao: SituacaoPrazo; texto: string };
+  /** Atividades presas a data fixa (com o início do projeto): a janela e a folga das predecessoras até ela. */
+  datasFixas: DataFixa[];
+}
+
+export interface DataFixa {
+  atividade: string;
+  inicio: Date;
+  fim: Date;
+  diasCorridos: number;
+  /** Fim das predecessoras (pela rede em dias úteis). */
+  fimPredecessoras?: Date;
+  /** Dias corridos entre o fim das predecessoras e o início da janela; negativo quando não cabe. */
+  folgaCorrida?: number;
+  cabe: boolean;
 }
 
 export function duracaoEsperada(o: number, m: number, p: number): number {
@@ -129,6 +143,7 @@ export function calcularCronograma(atividades: AtividadeEap[], par: ParametrosCr
     caminhoCritico: [],
     problemas: [...problemas, texto],
     conferenciaPrazo: { situacao: "nao-conferido", texto: "Cronograma não calculado: corrigir a EAP." },
+    datasFixas: [],
   });
   if (!atividades.length) return vazio("A EAP não tem atividades.");
   const ordem = ordenar(atividades);
@@ -142,6 +157,7 @@ export function calcularCronograma(atividades: AtividadeEap[], par: ParametrosCr
   const inicioProjeto = par.inicio ? primeiroDiaUtil(par.inicio) : undefined;
   /** Dias úteis entre o início do projeto e a data fixa (o deslocamento da atividade presa a ela). */
   const fixas = new Map<string, { ini: Date; fim: Date; corridos: number }>();
+  const datasFixas: DataFixa[] = [];
   for (const a of ordem) {
     const { otimista: o0, mais_provavel: m0, pessimista: p0 } = a.duracao;
     // restrição de data (evento): a duração é conta do código, os dias úteis da janela fixa; os três pontos não valem
@@ -172,18 +188,29 @@ export function calcularCronograma(atividades: AtividadeEap[], par: ParametrosCr
       const fimPred =
         depoisDasPredecessoras > 0 ? somarDiasUteis(inicioProjeto, depoisDasPredecessoras - 1) : undefined;
       const folgaCorrida = fimPred ? diasEntre(fimPred, iniFixo) - 1 : undefined;
+      const cabe = depoisDasPredecessoras <= deslocamento;
+      datasFixas.push({
+        atividade: a.id,
+        inicio: iniFixo,
+        fim: fimFixo ?? iniFixo,
+        diasCorridos: corridos ?? fixa,
+        fimPredecessoras: fimPred,
+        folgaCorrida,
+        cabe,
+      });
+      const janela = `${formatarDataCurta(iniFixo)} a ${formatarDataCurta(fimFixo ?? iniFixo)}`;
       problemas.push(
-        depoisDasPredecessoras > deslocamento && fimPred
-          ? `Atividade ${a.id} tem data fixa (${a.restricaoData?.inicio} a ${a.restricaoData?.fim}, ${corridos} dias corridos), mas as predecessoras só terminam em ${formatarDataCurta(fimPred)}, depois do início da janela: o cronograma não cabe antes do evento (conta do código, sem feriados).`
-          : `Atividade ${a.id} presa à data fixa: de ${a.restricaoData?.inicio} a ${a.restricaoData?.fim}, ${corridos} dias corridos (campo em dias corridos).${
+        !cabe && fimPred
+          ? `Atividade ${a.id} tem data fixa (${janela}, ${corridos} dias corridos), mas as predecessoras só terminam em ${formatarDataCurta(fimPred)}, ${-(folgaCorrida ?? 0)} dia(s) corrido(s) depois do início da janela: o cronograma não cabe antes do evento (conta do código, sem feriados).`
+          : `Atividade ${a.id} presa à data fixa: de ${janela}, ${corridos} dias corridos (campo em dias corridos).${
               fimPred && folgaCorrida !== undefined
-                ? ` As predecessoras terminam em ${formatarDataCurta(fimPred)}: folga de ${folgaCorrida} dia(s) corrido(s) (${deslocamento - depoisDasPredecessoras} útil(eis)) até ${a.restricaoData?.inicio} (conta do código, sem feriados).`
+                ? ` As predecessoras terminam em ${formatarDataCurta(fimPred)}: folga de ${folgaCorrida} dia(s) corrido(s) (${deslocamento - depoisDasPredecessoras} útil(eis)) até ${formatarDataCurta(iniFixo)} (conta do código, sem feriados).`
                 : ""
             }`,
       );
     } else if (fixa !== undefined)
       problemas.push(
-        `Atividade ${a.id} tem data fixa (${a.restricaoData?.inicio} a ${a.restricaoData?.fim}): ${corridos} dias corridos (${fixa} úteis na rede), pela conta do código. Sem o início do projeto (decisão do GP), o cronograma não a prende à data: informe o início.`,
+        `Atividade ${a.id} tem data fixa (${iniFixo ? formatarDataCurta(iniFixo) : a.restricaoData?.inicio} a ${fimFixo ? formatarDataCurta(fimFixo) : a.restricaoData?.fim}): ${corridos} dias corridos (${fixa} úteis na rede), pela conta do código. Sem o início do projeto (decisão do GP), o cronograma não a prende à data: informe o início.`,
       );
     calc.set(a.id, {
       id: a.id,
@@ -238,6 +265,7 @@ export function calcularCronograma(atividades: AtividadeEap[], par: ParametrosCr
     dataFim,
     problemas,
     conferenciaPrazo: conferirPrazo(total, par, dataFim),
+    datasFixas,
   };
 }
 

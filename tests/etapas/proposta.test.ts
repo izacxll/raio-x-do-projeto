@@ -10,7 +10,13 @@ import {
   duracaoEsperada,
 } from "../../src/etapas/2-proposta/cronograma";
 import { pedidoConteudo, pedidoEap, pedidoEstrategia } from "../../src/etapas/2-proposta/pedidos";
-import { calcularPreco, conferirValor, lerValorEmReais } from "../../src/etapas/2-proposta/preco";
+import {
+  calcularPreco,
+  conferirValor,
+  lerValorEmReais,
+  textoDasHoras,
+  textoDasHorasTotais,
+} from "../../src/etapas/2-proposta/preco";
 import { montarPontoDePartida, type PontoDePartida } from "../../src/etapas/2-proposta/ponto-de-partida";
 import {
   avaliarItens,
@@ -64,6 +70,29 @@ describe("EAP com data fixa, horas a definir e o contratante na RACI (issue da M
       despesas: [],
     });
     expect(p.faltando.join(" ")).toMatch(/horas de Aplicadores na atividade 2 \(decisão do GP\)/);
+  });
+
+  it("com valor-hora, horas a definir deixam o custo e o total em aberto e aparecem como tal, nunca como zero", () => {
+    const perfis = [
+      { id: "cc", nome: "Coordenação de campo", exigido: false, qualificacao: "", requisito: "", fontes: [] },
+      { id: "ap", nome: "Aplicadores", exigido: false, qualificacao: "", requisito: "", fontes: [] },
+    ];
+    const p = calcularPreco(
+      perfis,
+      [
+        { atividade: "c3", perfil: "cc", horas: est(10, 10, 10) },
+        { atividade: "c4", perfil: "cc", horas: null },
+        { atividade: "c3", perfil: "ap", horas: null },
+        { atividade: "c4", perfil: "ap", horas: null },
+      ],
+      { valoresHora: { cc: 100, ap: 50 }, despesas: [] },
+    );
+    const [cc, ap] = p.linhas;
+    expect(textoDasHoras(cc!)).toBe("10 + a definir pelo GP (c4)");
+    expect(textoDasHoras(ap!)).toBe("a definir pelo GP (c3, c4)");
+    expect(cc!.custo).toBeUndefined();
+    expect(p.pessoal).toBeUndefined();
+    expect(textoDasHorasTotais(p)).toBe("10 + a definir pelo GP (c4, c3, c4)");
   });
 
   it("o contratante entra na RACI como parte, não como perfil da equipe", () => {
@@ -357,5 +386,19 @@ describe("data fixa com o início do projeto: o cronograma respeita o evento", (
       inicio: new Date(2025, 8, 22),
     });
     expect(c.problemas.join(" ")).toMatch(/não cabe antes do evento/);
+    expect(c.datasFixas[0]).toMatchObject({ atividade: "c4", cabe: false });
+    expect(c.datasFixas[0]!.folgaCorrida).toBeLessThan(0);
+  });
+
+  it("data em aaaa-mm-dd é aceita e sai em dd/mm/aaaa; a folga fica registrada para o B3", () => {
+    const iso: AtividadeEap = {
+      ...campo(["m1"]),
+      restricaoData: { ...campo(["m1"]).restricaoData!, inicio: "2025-11-08", fim: "2026-01-07" },
+    };
+    const c = calcularCronograma([atv("m1", [], [30, 30, 30]), iso], { inicio: new Date(2025, 8, 22) });
+    expect(c.problemas.join(" ")).toMatch(/de 08\/11\/2025 a 07\/01\/2026, 61 dias corridos/);
+    expect(c.problemas.join(" ")).not.toMatch(/2025-11-08/);
+    // m1: 30 dias úteis a partir de 22/09 → termina em 31/10/2025 (sexta); de 01/11 a 07/11 = 7 dias corridos de folga
+    expect(c.datasFixas[0]).toMatchObject({ atividade: "c4", cabe: true, diasCorridos: 61, folgaCorrida: 7 });
   });
 });
