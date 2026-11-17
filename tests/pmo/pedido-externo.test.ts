@@ -71,7 +71,8 @@ import { SCHEMAS_PGP, type PassoPgp } from "../../src/pmo/schemas/pgp";
 import { SCHEMAS } from "../../src/pmo/schemas/proposta";
 import { SCHEMAS_TAP } from "../../src/pmo/schemas/tap";
 import { conferirPlano } from "../../src/regras/conferencia";
-import { confirmacaoInicial, proporMapa } from "../../src/regras/mapa-pgp";
+import { proporMapa } from "../../src/regras/mapa-pgp";
+import { mapaInicialDaConferencia } from "../../src/etapas/5-conferencia/dispensas";
 import { tirarAcentos } from "../../src/texto/normalizar";
 import { lerPdf } from "../ajudantes/ler-pdf";
 import { lerRfpPublica, PASTA_RFPS } from "../ajudantes/rfp-publica";
@@ -121,7 +122,8 @@ function entradaDaConferencia(d: Dossie) {
   // sem TAP em PDF, o TAP da etapa 3 no dossiê (o mesmo que a tela da etapa 5 usa)
   const tap = d.documentos.find((x) => x.papel === "tap") ?? tapDoDossieComoDocumento(d);
   const rfp = d.documentos.find((x) => x.papel === "rfp");
-  const mapa = confirmacaoInicial(proporMapa(pgp.paginas, PARTES_PGP));
+  // como na tela: as partes dispensadas pelo GP na etapa 4 (e as que o plano declara) entram como dispensadas
+  const mapa = mapaInicialDaConferencia(proporMapa(pgp.paginas, PARTES_PGP), pgp.paginas, PARTES_PGP, d.pgp);
   const caracteristicas = d.pgp?.caracteristicas ?? CARACTERISTICAS_PADRAO;
   const premissasAplicaveis =
     d.pgp?.premissasAplicaveis ?? d.tap?.premissasAplicaveis ?? d.proposta?.premissasAplicaveis ?? {};
@@ -861,7 +863,7 @@ describe.skipIf(MODO !== "importar")("importar a resposta do PMO (leitura indepe
       }
       if (etapa === 5) {
         const c = entradaDaConferencia(dossie);
-        const conferidos = conferirLeitura(v.data as z.infer<typeof RespostaLeitura>, c, c.achados);
+        const conferidos = conferirLeitura(v.data as z.infer<typeof RespostaLeitura>, c, c.achados, c.mapa);
         const porSituacao = (s: string) => conferidos.filter((x) => x.situacao === s).length;
         linhas.push(
           "",
@@ -879,7 +881,11 @@ describe.skipIf(MODO !== "importar")("importar a resposta do PMO (leitura indepe
           ...conferidos.map(
             (a) =>
               `- **${a.situacao}** · ${a.tipo} · ${a.gravidade} · ${a.parte}${a.item ? ` (${a.item})` : ""} · ${a.titulo}${
-                a.localizadoEm ? ` — o código achou o item na p. ${a.localizadoEm.pagina}` : ""
+                a.localizadoEm
+                  ? ` — o código achou o item na p. ${a.localizadoEm.pagina}: "${a.localizadoEm.trecho.slice(0, 140)}"`
+                  : ""
+              }${
+                a.procuradoEm ? ` — procurado em: ${a.procuradoEm}` : ""
               }${a.jaApontadoPeloCodigo ? " — o código já tinha apontado" : ""}`,
           ),
         );
