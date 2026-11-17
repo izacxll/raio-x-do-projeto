@@ -60,7 +60,10 @@ export function textoDasHoras(l: Pick<LinhaPerfil, "horas" | "horasADefinir">): 
 
 /** Total de horas para exibir, com as atividades a definir pelo GP. */
 export function textoDasHorasTotais(p: Preco): string {
-  return textoDasHoras({ horas: p.horasTotais, horasADefinir: p.linhas.flatMap((l) => l.horasADefinir) });
+  const abertas = p.linhas.filter((l) => l.horasADefinir.length);
+  if (!abertas.length) return String(p.horasTotais);
+  const quais = abertas.map((l) => `${l.perfil.nome}: ${l.horasADefinir.join(", ")}`).join("; ");
+  return `${p.horasTotais ? `${p.horasTotais} + ` : ""}a definir pelo GP (${quais})`;
 }
 
 export function calcularPreco(perfis: PerfilEquipe[], horas: HorasPerfil[], par: ParametrosPreco): Preco {

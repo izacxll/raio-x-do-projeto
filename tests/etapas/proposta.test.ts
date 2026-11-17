@@ -92,7 +92,9 @@ describe("EAP com data fixa, horas a definir e o contratante na RACI (issue da M
     expect(textoDasHoras(ap!)).toBe("a definir pelo GP (c3, c4)");
     expect(cc!.custo).toBeUndefined();
     expect(p.pessoal).toBeUndefined();
-    expect(textoDasHorasTotais(p)).toBe("10 + a definir pelo GP (c4, c3, c4)");
+    expect(textoDasHorasTotais(p)).toBe(
+      "10 + a definir pelo GP (Coordenação de campo: c4; Aplicadores: c3, c4)",
+    );
   });
 
   it("o contratante entra na RACI como parte, não como perfil da equipe", () => {
