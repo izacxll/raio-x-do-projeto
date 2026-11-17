@@ -67,6 +67,26 @@ export function ehDataDoFecho(texto: string, d: DataNoTexto): boolean {
   return /^\s*[A-ZÀ-Ý][^\d,;:]{1,60},\s*(?:em\s+)?$/.test(antes) && /^\s*\.?\s*$/.test(depois);
 }
 
+/** Data dentro da citação de um ato ("Portaria nº 12 de março de 2026", "Lei nº 13.019, de 31 de julho de 2014"). */
+const RE_ATO_ANTES =
+  /(?:\b(?:lei(?: complementar)?|decreto(?:-lei)?|portaria|instrucao normativa|resolucao|deliberacao|ato|despacho|oficio)(?: federal| estadual| municipal| conjunta)?(?:\s*n[o°º.]*)?(?:\s*[\d./-]+)?,?|\bn[o°º.]*\s*[\d./-]+,?|\bdatad[oa])\s*(?:de\s*)?$/i;
+/** Carimbo de assinatura eletrônica, de atualização do sistema ou de rodapé, na mesma linha. */
+const RE_CARIMBO_DATA =
+  /assinad[oa]|assinou|assinatura eletronica|editado por|atualizado em|horario oficial|sei\/|documento gerado/i;
+
+/**
+ * Data de um ato (portaria, decreto, lei), de assinatura ou do fecho do documento: não é situação do certame, prazo
+ * nem marco do projeto (decisão 0057).
+ */
+export function ehDataDeAtoOuAssinatura(texto: string, d: DataNoTexto): boolean {
+  const antes = tirarAcentos(texto.slice(Math.max(0, d.posicao - 60), d.posicao));
+  if (RE_ATO_ANTES.test(antes)) return true;
+  const ini = texto.lastIndexOf("\n", d.posicao - 1) + 1;
+  const fimLinha = texto.indexOf("\n", d.posicao + d.tamanho);
+  const linha = tirarAcentos(texto.slice(ini, fimLinha < 0 ? undefined : fimLinha));
+  return RE_CARIMBO_DATA.test(linha) || ehDataDoFecho(texto, d);
+}
+
 // origem: App-final-4.jsx, rrFmt, linha 1681
 export function formatarData(d: Date): string {
   return `${String(d.getDate()).padStart(2, "0")}/${String(d.getMonth() + 1).padStart(2, "0")}/${d.getFullYear()}`;

@@ -6,7 +6,7 @@ import { termosDoRequisito, type Requisito, perfisDoRequisito } from "../../extr
 import { prazosDeExecucao } from "../../extracao/rfp/prazos";
 import { prepararDocumento } from "../../extracao/rfp/item";
 import { normalizarTermo, procurar } from "../../regras/busca";
-import { lerNumero } from "../../texto/datas";
+import { formatarData, lerNumero } from "../../texto/datas";
 import { lerValorEmReais } from "../2-proposta/preco";
 import { prazoEmDias, type PrazoEmDias } from "../2-proposta/ponto-de-partida";
 import { valorNaProposta, type EntradaTap } from "./entrada";
@@ -287,6 +287,30 @@ function divergenciaDeValor(e: EntradaTap): Divergencia {
   };
 }
 
+/**
+ * Marco fixo que a conta do cronograma da proposta não alcança (decisão 0057): "não cabe antes do marco" vira
+ * divergência do TAP, com a conta do código, contando a aprovação do cliente quando o GP informou o tempo dela.
+ */
+function divergenciasDeMarcoFixo(e: EntradaTap): Divergencia[] {
+  const c = e.dados?.cronograma;
+  if (!c) return [];
+  return c.datasFixas
+    .filter((f) => !f.cabe && f.fimPredecessoras)
+    .map((f) => ({
+      id: `marco-fixo:${f.atividade}`,
+      tema: "prazo" as const,
+      rfp: { texto: `data fixa de ${formatarData(f.inicio)} a ${formatarData(f.fim)}` },
+      proposta: {
+        texto: `as atividades anteriores terminam em ${formatarData(f.fimPredecessoras as Date)}, ${-(f.folgaCorrida ?? 0)} dia(s) corrido(s) depois do início do marco (conta do código${e.dados?.aprovacaoDias !== undefined ? `, com ${e.dados.aprovacaoDias} dias úteis de aprovação do cliente` : ", sem o tempo de aprovação do cliente, não informado pelo GP"})`,
+        onde: `${nomeProposta(e)}, EAP, atividade ${f.atividade}`,
+      },
+      situacao: "diferente" as const,
+      observacao:
+        "Não cabe antes do marco: o cronograma da proposta não termina o que precisa estar pronto antes da data fixa. Sugere-se registrar no TAP como divergência e decidir com o contratante (reduzir o que vem antes, mudar a data ou prorrogar).",
+      oQueFazer: "Levar à reunião de abertura e confirmar por escrito com o contratante.",
+    }));
+}
+
 export function compararRfpEProposta(e: EntradaTap): Divergencia[] {
   if (e.fonte === "nenhuma") return divergenciasDoMetodo(e);
   const requisitos = e.ponto.requisitos.filter((r) => r.tipo === "produto" || r.tipo === "equipe" || !r.tipo);
@@ -295,6 +319,7 @@ export function compararRfpEProposta(e: EntradaTap): Divergencia[] {
     ...produtosSoNaProposta(e),
     divergenciaDePrazo(e),
     divergenciaDeValor(e),
+    ...divergenciasDeMarcoFixo(e),
     // método da etapa 3 (decisão 0041): contrato, parcelas, conformidade, duração, regra da equipe, produtividade
     ...divergenciasDoMetodo(e),
   ];

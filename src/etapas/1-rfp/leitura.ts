@@ -115,7 +115,8 @@ export interface ItemLeitura {
   /** O código achou na página a citação do item do PMO. */
   citacaoConferida?: boolean;
   /** Trava do código sobre o item do PMO: citação, valor ou conta não conferidos. */
-  trava?: "citacao-nao-conferida" | "citacao-fraca" | "valor-nao-conferido" | "conta-do-pmo";
+  trava?:
+    "citacao-nao-conferida" | "citacao-fraca" | "citacao-nao-prova" | "valor-nao-conferido" | "conta-do-pmo";
 }
 
 export interface LeituraRfp {

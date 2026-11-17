@@ -22,6 +22,7 @@ import { estimarCusto, formatarDolar } from "../../pmo/custo";
 import { estimarTokens, referenciasEtapa3, textoDeSistema, textoDosDocumentos } from "../../pmo/montagem";
 import { SCHEMAS_TAP } from "../../pmo/schemas/tap";
 import { EtiquetaRotulo, RotuloSecao } from "../componentes/basicos";
+import { SegundaInstancia } from "../componentes/segunda-instancia";
 import { ConectarClaude, useChave } from "../componentes/conectar-claude";
 import { ItensPmo } from "../componentes/item-pmo";
 import { PassoPmoNaTela, UsoNaTela, useChamadaPmo } from "../componentes/passo-pmo";
@@ -319,6 +320,16 @@ export function TermoDeAbertura() {
             aoCancelar={cancelar}
             envio="O texto dos PDFs da RFP, da proposta e do contrato (quando enviado) vai para a API do Claude, pela sua chave, na organização da FGV."
           >
+            {t[passo] && (
+              <SegundaInstancia
+                etapa={3}
+                passo={passo}
+                resposta={t[passo]!.resposta}
+                respostaEm={t[passo]!.em}
+                documentos={entrada.documentos}
+                modelo={t.modelo}
+              />
+            )}
             {t[passo] && (
               <ItensPmo
                 itens={itens.filter((i) => i.passo === passo)}

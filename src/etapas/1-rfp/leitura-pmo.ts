@@ -16,6 +16,7 @@ import {
 import { citacaoValeComoFato, conferirCitacao, type ResultadoCitacao } from "../../pmo/citacoes";
 import type { ItemLeituraRfpPmo, RespostaLeituraRfp } from "../../pmo/schemas/leitura-rfp";
 import type { CodigoPremissa, Impacto } from "../../regras/premissas-rfp";
+import { citacaoProvaOItem } from "../../pmo/redacao";
 import { tirarAcentos } from "../../texto/normalizar";
 import type { AnaliseRfp } from "./analisar-rfp";
 import {
@@ -27,12 +28,15 @@ import {
 } from "./leitura";
 import { estadoDoItem } from "./revisao";
 
-export type TravaPmo = "citacao-nao-conferida" | "citacao-fraca" | "valor-nao-conferido" | "conta-do-pmo";
+export type TravaPmo =
+  "citacao-nao-conferida" | "citacao-fraca" | "citacao-nao-prova" | "valor-nao-conferido" | "conta-do-pmo";
 
 export const NOME_TRAVA: Record<TravaPmo, string> = {
   "citacao-nao-conferida": "citação não conferida — não vale como fato",
   "citacao-fraca":
     "citação fraca — o trecho é curto demais para provar o que o item diz; conferir no documento",
+  "citacao-nao-prova":
+    "citação não prova — o trecho achado não traz o termo-chave do item; conferir no documento",
   "valor-nao-conferido": "valor não conferido — o número não está no trecho citado",
   "conta-do-pmo": "conta feita pelo PMO — conferir; as contas são do código",
 };
@@ -214,7 +218,16 @@ export function conferirLeituraRfp(
               ? "conta-do-pmo"
               : numerosSemFonte.length
                 ? "valor-nao-conferido"
-                : undefined;
+                : // o número trocado já é "valor não conferido"; sem número, o trecho tem de trazer o termo-chave
+                  item.rotulo === "documento" &&
+                    !citacaoProvaOItem(
+                      item.texto,
+                      item.fontes
+                        .filter((_, k) => citacoes[k] && citacaoValeComoFato(citacoes[k]))
+                        .map((f) => f.trecho),
+                    )
+                  ? "citacao-nao-prova"
+                  : undefined;
     return {
       item: { ...item, requisitos: item.requisitos.filter((x) => numeros.has(x)) },
       citacoes,

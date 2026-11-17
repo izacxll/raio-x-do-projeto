@@ -42,6 +42,7 @@ export function cronogramaDoPgp(p: PgpDossie, e: EntradaPgp): Cronograma | undef
     inicioDoDocumento: doDocumento,
     prazoRfp: e.ponto.prazoExecucao,
     feriados: p.parametros.feriados,
+    horas: c.horas,
   });
 }
 

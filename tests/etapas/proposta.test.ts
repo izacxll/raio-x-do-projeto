@@ -390,7 +390,7 @@ describe("data fixa com o início do projeto: o cronograma respeita o evento", (
     const c = calcularCronograma([atv("m1", [], [60, 60, 60]), campo(["m1"])], {
       inicio: new Date(2026, 8, 21),
     });
-    expect(c.problemas.join(" ")).toMatch(/não cabe antes do evento/);
+    expect(c.problemas.join(" ")).toMatch(/Não cabe antes do marco/);
     expect(c.datasFixas[0]).toMatchObject({ atividade: "c4", cabe: false });
     expect(c.datasFixas[0]!.folgaCorrida).toBeLessThan(0);
   });

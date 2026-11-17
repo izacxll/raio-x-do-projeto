@@ -29,9 +29,15 @@ Os gabaritos e as leituras gravadas foram feitos pelo Claude Code seguindo a ski
 
 **Sem modo de demonstração (decisão 0053), PR próprio sobre a main:** a apresentação do app é feita com a skill PMO na conversa; as respostas gravadas da OEI ficam só como material dos testes (fumaça com o PMO simulado pela rota do Playwright).
 
-**Skill PMO 0.3.2 (branch `skill/pmo-0-3-2`, sobre a main):** as mudanças da 0.3.0 e da 0.3.1 (#52, que fica substituído) e as 19 regras do teste externo, só acréscimo, cada uma com o "erro que evita" num exemplo disfarçado. Os itens novos das fichas são "só PMO": a conferência por código da etapa 5 não muda. Merge autorizado pela responsável com CI verde e varredura limpa; depois, o teste externo é refeito com a skill nova.
+**Skill PMO 0.3.2 na main (#61, decisão 0056):** as mudanças da 0.3.0 e da 0.3.1 (o #52 foi fechado como substituído) e as 19 regras do teste externo, só acréscimo, cada uma com o "erro que evita". Os itens novos das fichas são "só PMO".
 
-**Teste externo novo:** TR de um diagnóstico fiscal estadual, com a skill 0.3.1 até a etapa 4 e refeito com a 0.3.2 a partir da etapa 2 (minuta, abordagem B), fora do Git em `referencias/estudos-externos/` (decisão 0049); um pedido de cada vez, na ordem do app.
+**Travas, linha do tempo e segunda instância (decisão 0057), branch `correcao/travas-e-segunda-instancia`:**
+- as travas que o teste mostrou (EAP, TAP, critério pontuado, citação que não prova, data de ato);
+- o passo refeito sem a resposta anterior;
+- a linha do tempo nos pedidos da EAP, do TAP e do cronograma, com `conferenciaDosMarcos` conferida pela conta do código;
+- a segunda instância depois de cada resposta (a ligação da regra 19 da skill).
+
+**Teste externo novo:** TR de um diagnóstico fiscal estadual e, como controle, um TR de contratação direta, fora do Git em `referencias/estudos-externos/` (decisão 0049). Ele recomeça do zero com a skill 0.3.2 e a decisão 0057; as respostas antigas das etapas 1 a 3 ficam em `rodada-2/`. O vigia exporta um passo de cada vez, na ordem do app, com a segunda instância depois de cada resposta.
 
 **Fase M2 (etapa 2 pelo método), PR aberto em cima do #46, aguarda o teste e o ok da responsável** (decisão 0038): a minuta redigida por inteiro na ordem do modelo do edital, preço pelo tipo de contrato, pontos por preço, caixa, quadro de equipe × produtividade e duração × vigência por código. Placar em `docs/estudos/placar-m2-etapa-2.md`: o esqueleto do código cobre todos os itens do gabarito que são do código (28 de 28 na SMPED, 31 de 31 na OEI); com a leitura gravada, 40 de 40 e a minuta redigida por inteiro (17 e 14 seções). **Skill 0.3.0 no PR #51 (rascunho), sem publicar antes do ok.**
 
@@ -64,8 +70,8 @@ O que cada fase M ainda precisa cobrir está nas issues de cada uma (rótulos `e
 
 ## Próximo passo
 
-1. **Claude Code:** merge da skill 0.3.2 (autorizado, com CI verde e varredura limpa) e o teste externo refeito com ela: TR fiscal a partir da etapa 2 (minuta, abordagem B); TR de contratação direta a partir da etapa 4 (adaptação).
-2. **Responsável pelo projeto:** baixar a skill 0.3.2 da main e responder os pedidos do teste externo refeito.
+1. **Claude Code:** merge da decisão 0057 (autorizado, com CI verde e varredura limpa); religar o vigia e reexportar a etapa 1 dos dois TRs, do zero.
+2. **Responsável pelo projeto:** conduzir o teste externo a partir da etapa 1 (pedidos do PMO e da segunda instância).
 3. **Histórico do Git:** a responsável decidiu não reescrever a `main` (16/11/2026). Os arquivos atuais e o site estão sem os detalhes do caso real.
 
 **Com a chave da API** (pedir ao administrador do Claude da FGV, no Claude Console). A chave fica num arquivo fora do projeto; passo a passo no PowerShell em [`tecnico/07-configuracao.md`](tecnico/07-configuracao.md#chave-da-api-nos-scripts-locais-powershell). Nunca defina `ANTHROPIC_API_KEY` no terminal: com ela, o Claude Code passa a cobrar o uso dele nessa chave.

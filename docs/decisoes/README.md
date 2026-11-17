@@ -60,6 +60,7 @@ Uma decisão por arquivo, numerada em ordem. Cada uma registra o contexto, o que
 | [0054](0054-requisitos-como-entregas-e-modalidade-nao-identificada.md) | Cada R é uma entrega ou obrigação de quem executa, com a equipe-chave num R só; sem modalidade no documento, ela fica não identificada até o GP escolher | aceita |
 | [0055](0055-rework-nos-pedidos-e-compromissos-de-metodo.md) | Os temas do Rework citados nas fichas vão no pedido de cada etapa (FALTA quando não vão); compromissos de método também são C, com o número do PMO quando ele o deu | aceita |
 | [0056](0056-skill-pmo-0-3-2.md) | Skill PMO 0.3.2: 19 regras do teste externo, só acréscimo, cada uma com o erro que evita; itens novos "só PMO"; entra com a 0.3.0 e a 0.3.1 e substitui o #52 | aceita |
+| [0057](0057-travas-linha-do-tempo-e-segunda-instancia.md) | Travas do teste externo (EAP, TAP, critério pontuado, citação que não prova, data de ato), passo refeito sem a resposta anterior, linha do tempo com a conferência dos marcos e segunda instância depois de cada resposta | aceita |
 
 Modelo para uma nova decisão:
 

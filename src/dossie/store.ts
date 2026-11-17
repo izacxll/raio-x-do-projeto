@@ -10,6 +10,7 @@ import type {
   DocumentoLido,
   PropostaDossie,
   PgpDossie,
+  SegundaInstanciaDossie,
   TapDossie,
 } from "./esquema";
 
@@ -26,6 +27,7 @@ interface EstadoDossie {
   guardarProposta: (proposta: PropostaDossie) => void;
   guardarTap: (tap: TapDossie) => void;
   guardarPgp: (pgp: PgpDossie) => void;
+  guardarSegundaInstancia: (chave: string, conferencia: SegundaInstanciaDossie) => void;
   novoProjeto: () => void;
   marcarSalvo: () => void;
 }
@@ -53,6 +55,11 @@ export const useDossie = create<EstadoDossie>((set) => ({
   guardarProposta: (proposta) => set((s) => ({ dossie: { ...s.dossie, proposta }, alterado: true })),
   guardarTap: (tap) => set((s) => ({ dossie: { ...s.dossie, tap }, alterado: true })),
   guardarPgp: (pgp) => set((s) => ({ dossie: { ...s.dossie, pgp }, alterado: true })),
+  guardarSegundaInstancia: (chave, conferencia) =>
+    set((s) => ({
+      dossie: { ...s.dossie, segundaInstancia: { ...s.dossie.segundaInstancia, [chave]: conferencia } },
+      alterado: true,
+    })),
   novoProjeto: () => set({ dossie: criarDossieVazio(), alterado: false }),
   marcarSalvo: () => set({ alterado: false }),
 }));

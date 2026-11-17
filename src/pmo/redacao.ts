@@ -64,11 +64,58 @@ export function numerosSemFonte(
   return [...new Set(out)];
 }
 
+const PERIODICIDADE =
+  /\b(diari|seman|quinzen|mens|bimestr|trimestr|quadrimestr|semestr|anu|bien|pluriannu)(?:al|ais|almente|e|es|o|a|os|as)\b/;
+/** Periodicidade pelo radical ("trimestral", "trimestrais", "trimestre"): o termo-chave guarda "per:<radical>". */
+const periodicidadeNoTexto = (radical: string, texto: string) =>
+  new RegExp(`\\b${radical}(?:al|ais|almente|e|es|o|a|os|as)\\b`).test(texto);
+const PALAVRAS_VAZIAS = new Set(
+  "conforme segundo previsto prevista prever preve documento termo referencia edital contratada contratante deverao devera sobre entre durante ainda quando sempre mesmo todos todas cada outro outra outros outras partir proposta projeto servicos servico".split(
+    " ",
+  ),
+);
+const semAcentoMinusculo = (t: string) => tirarAcentos(t).toLowerCase();
+
+/**
+ * Termos-chave de um item (SKILL.md, princípio 15; decisão 0057): os números com unidade, as datas, a periodicidade
+ * ("trimestral") e o que está entre aspas. Sem nenhum deles, as palavras longas do item.
+ */
+export function termosChaveDoItem(texto: string): { termos: string[]; palavras: string[] } {
+  const t = semAcentoMinusculo(texto);
+  const termos = [
+    ...(texto.match(NUMEROS_SENSIVEIS) ?? []).map(soDigitos).filter(Boolean),
+    ...(texto.match(/\b\d{1,2}\/\d{1,2}\/\d{2,4}\b/g) ?? []).map(soDigitos),
+    ...[...t.matchAll(new RegExp(PERIODICIDADE.source, "g"))].map((m) => (m[1] ? `per:${m[1]}` : "")),
+    ...[...texto.matchAll(/["“]([^"”]{3,60})["”]/g)].map((m) => semAcentoMinusculo(m[1] ?? "").trim()),
+  ].filter(Boolean);
+  const palavras = [...new Set(t.match(/[a-z]{7,}/g) ?? [])].filter((p) => !PALAVRAS_VAZIAS.has(p));
+  return { termos: [...new Set(termos)], palavras };
+}
+
+/** O trecho citado prova o item? Cada termo-chave tem de estar num dos trechos; sem termo-chave, ao menos uma palavra longa. */
+export function citacaoProvaOItem(texto: string, trechos: string[]): boolean {
+  if (!trechos.length) return true;
+  const base = semAcentoMinusculo(trechos.join(" "));
+  const digitos = base.replace(/(\d)[.,\s](?=\d)/g, "$1");
+  const { termos, palavras } = termosChaveDoItem(texto);
+  if (termos.length)
+    return termos.every((x) =>
+      /^\d+$/.test(x)
+        ? digitos.includes(x)
+        : x.startsWith("per:")
+          ? periodicidadeNoTexto(x.slice(4), base)
+          : base.includes(x),
+    );
+  return !palavras.length || palavras.some((p) => base.includes(p.slice(0, Math.max(6, p.length - 3))));
+}
+
 export interface ConferenciaItem {
   /** Uma por fonte, na mesma ordem. */
   citacoes: ResultadoCitacao[];
   /** "Do documento" só vale como fato se ao menos uma citação foi achada pelo código. */
   citacaoNaoConferida: boolean;
+  /** "Do documento" cujo trecho achado não traz o termo-chave do item: "citação não prova" (decisão 0057). */
+  citacaoNaoProva?: boolean;
   redacaoAConferir: boolean;
   numerosSemFonte: string[];
 }
@@ -76,9 +123,13 @@ export interface ConferenciaItem {
 export function conferirItem(item: ItemPmo, documentos: DocumentoLido[]): ConferenciaItem {
   const citacoes = item.fontes.map((f) => conferirCitacao(f, documentos));
   const algumaVale = citacoes.some(citacaoValeComoFato);
+  const trechos = item.fontes
+    .filter((_, k) => citacaoValeComoFato(citacoes[k] as ResultadoCitacao))
+    .map((f) => f.trecho);
   return {
     citacoes,
     citacaoNaoConferida: item.rotulo === "documento" && !algumaVale,
+    citacaoNaoProva: item.rotulo === "documento" && algumaVale && !citacaoProvaOItem(item.texto, trechos),
     redacaoAConferir: item.rotulo === "sugestao" && sugestaoSemCondicional(item.texto),
     numerosSemFonte: item.rotulo === "documento" ? [] : numerosSemFonte(item.texto, item, documentos),
   };

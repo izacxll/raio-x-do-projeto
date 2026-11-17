@@ -41,6 +41,7 @@ import { semRevisoesDoPmo } from "../../pmo/itens";
 import { RespostaLeituraRfp } from "../../pmo/schemas/leitura-rfp";
 import { NOME_PREMISSA } from "../../regras/premissas-rfp";
 import { EtiquetaRotulo, NOME_ESTADO, RotuloSecao } from "../componentes/basicos";
+import { SegundaInstancia } from "../componentes/segunda-instancia";
 import { ConectarClaude, useChave } from "../componentes/conectar-claude";
 import { PassoPmoNaTela, UsoNaTela, useChamadaPmo } from "../componentes/passo-pmo";
 
@@ -497,6 +498,16 @@ function LeituraDoPmoNaEtapa1({
               ? `: ${travados} ${travados === 1 ? "item ficou" : "itens ficaram"} com aviso.`
               : "; nenhum aviso."}
           </p>
+        )}
+        {salva.leituraPmo && (
+          <SegundaInstancia
+            etapa={1}
+            passo="leitura-rfp"
+            resposta={salva.leituraPmo.resposta}
+            respostaEm={salva.leituraPmo.em}
+            documentos={docs}
+            modelo={modelo}
+          />
         )}
       </PassoPmoNaTela>
       {<UsoNaTela uso={uso} titulo="Uso da API na leitura da RFP" />}

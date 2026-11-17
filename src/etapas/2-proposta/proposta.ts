@@ -230,10 +230,26 @@ export function avaliarItens(
     numerosSemFonte: itens.reduce((s, i) => s + i.conferencia.numerosSemFonte.length, 0),
     citacoes: citacoes.length,
     citacoesConferidas: citacoes.filter(citacaoValeComoFato).length,
-    fatosSemCitacao: itens.filter((i) => i.conferencia.citacaoNaoConferida).length,
+    fatosSemCitacao: itens.filter((i) => i.conferencia.citacaoNaoConferida || i.conferencia.citacaoNaoProva)
+      .length,
     cobertura: requisitos.length ? (requisitos.length - naoCobertos.length) / requisitos.length : 1,
     requisitosNaoCobertos: naoCobertos,
   };
+}
+
+const ORDEM_PROPOSTA = ["estrategia", "conteudo", "eap"] as const;
+
+/**
+ * A proposta como estava antes do passo (decisão 0057): sem a resposta anterior do mesmo passo nem as dos passos
+ * seguintes, que dependiam dela. O pedido refeito e o esqueleto partem disto. As decisões do GP ficam.
+ */
+export function propostaAntesDoPasso(
+  p: PropostaDossie,
+  passo: (typeof ORDEM_PROPOSTA)[number],
+): PropostaDossie {
+  const k = ORDEM_PROPOSTA.indexOf(passo);
+  const sem = Object.fromEntries(ORDEM_PROPOSTA.slice(k).map((x) => [x, undefined]));
+  return { ...p, ...sem } as PropostaDossie;
 }
 
 /** Requisitos citados fora dos itens rotulados (abordagens, produtos, atividades, perfis). */

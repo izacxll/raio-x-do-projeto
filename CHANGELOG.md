@@ -4,6 +4,20 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 
 ## [Não publicado]
 
+### Travas do teste externo, linha do tempo e segunda instância (decisão 0057)
+- **Travas novas:**
+  - **EAP:** "não cabe antes do marco", que vira divergência do TAP; "reentrega sem nova conferência"; "esforço não estimado"; atividade "antes da assinatura" com predecessora posterior.
+  - **TAP:** marco "antes de [data]" ou "dentro da vigência" sem confirmação da conta vira divergência obrigatória.
+  - **Estratégia:** só é critério pontuado o perfil cujo trecho diz "pontuação".
+  - **Etapas 1 a 4:** "citação não prova" quando o trecho não traz o termo-chave do item.
+- **Passo refeito sem a resposta anterior:** o pedido e o esqueleto partem só dos passos anteriores (proposta e PGP); no teste externo, importar um passo descarta os seguintes.
+- **Linha do tempo:** os pedidos da EAP, do TAP e do cronograma levam a linha do tempo do código, e a resposta traz `conferenciaDosMarcos`, conferida contra a conta do código.
+- **Segunda instância:**
+  - em cada passo das etapas 1 a 5, uma chamada separada, com só a skill, os documentos e a resposta, devolve erro de fato, o que faltou, incoerência entre etapas e rótulo errado, com gravidade;
+  - o GP vê o resultado antes de aprovar;
+  - no teste externo, o passo é `segunda-<passo>` e a importação grava `conferencia-*.md`.
+- **Datas:** data de portaria, decreto, lei, assinatura ou fecho do documento não é situação, prazo nem marco.
+
 ### Skill PMO 0.3.2 (com a 0.3.0 e a 0.3.1, que entram na main junto)
 - **19 regras do teste externo,** só acréscimo, cada uma com o "erro que evita" num exemplo disfarçado:
   - **SKILL.md:** cada etapa do zero, sem reaproveitar a resposta anterior do mesmo passo (princípio 14); "documento" só quando o trecho prova a frase (princípio 15); compromissos de método também são C, com destino no TAP; linha do tempo antes de fechar EAP, TAP e cronograma; conferência por uma segunda instância antes da próxima etapa; texto de outro projeto copiado no TR é conflito.

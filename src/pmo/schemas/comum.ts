@@ -53,6 +53,18 @@ export type EstimativaTresPontos = z.infer<typeof EstimativaTresPontos>;
  * Autoconferência (decisão 0044): cada item do método ou das fichas que o PMO usou, com o estado. Não há
  * "ausente": item que faltaria é gerado, ou marcado como dispensado (com o motivo) ou como decisão do GP.
  */
+/**
+ * Conferência de um marco da linha do tempo do código (decisão 0057): o PMO diz se cabe, com o motivo; o código confere
+ * contra a conta dele, que é a que vale.
+ */
+export const ConferenciaMarco = z.object({
+  /** Id do marco na linha do tempo do código: "P1", "fixa:2.3", "vigencia". */
+  marco: z.string(),
+  situacao: z.enum(["cabe", "nao_cabe"]),
+  motivo: z.string(),
+});
+export type ConferenciaMarco = z.infer<typeof ConferenciaMarco>;
+
 export const ItemAutoconferencia = z.object({
   /** Código do item: "A8.7", "PROP-SOW.4", "TAP6.1" ou a seção do método ("etapa-1:secao-5"). */
   item: z.string(),

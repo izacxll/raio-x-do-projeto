@@ -6,6 +6,7 @@ import { MODELOS, type IdModelo } from "../../config/modelo";
 import type { Caracteristicas } from "../../dominio/caracteristicas";
 import { PARTES_PGP, PREMISSAS_CRITICAS } from "../../dominio/skill";
 import { CampoFeriados } from "../componentes/campo-feriados";
+import { SegundaInstancia } from "../componentes/segunda-instancia";
 import type { ParametrosPgp, PgpDossie } from "../../dossie/esquema";
 import { useDossie } from "../../dossie/store";
 import {
@@ -21,6 +22,7 @@ import {
   textoDaData,
 } from "../../etapas/4-pgp/calculos";
 import { montarEntradaPgp, NOME_TAP_DO_DOSSIE, type EntradaPgp } from "../../etapas/4-pgp/entrada";
+import { conferirMarcosDoPmo, linhaDosDados } from "../../etapas/linha-do-tempo";
 import { PEDIDOS_PGP } from "../../etapas/4-pgp/pedidos";
 import { PASSOS_PGP } from "../../etapas/4-pgp/passos";
 import {
@@ -232,6 +234,16 @@ export function PlanoDeGerenciamento() {
             aoCancelar={cancelar}
             envio="O texto dos PDFs da RFP, do TAP e da proposta vai para a API do Claude, pela sua chave, na organização da FGV."
           >
+            {p[passo] && (
+              <SegundaInstancia
+                etapa={4}
+                passo={passo}
+                resposta={p[passo]!.resposta}
+                respostaEm={p[passo]!.em}
+                documentos={entrada.documentos}
+                modelo={p.modelo}
+              />
+            )}
             {passo === "adaptacao" && p.adaptacao && <Adaptacao p={p} atualizar={atualizar} />}
             {p[passo] && (
               <ItensPmo
@@ -416,6 +428,11 @@ function Cronograma({
   const crono = cronogramaDoPgp(p, e)!;
   const marcos = marcosDoPgp(p, e, crono);
   const c = p.cronograma!.resposta;
+  // conferência dos marcos do PMO contra a conta do código (decisão 0057)
+  const doPmo = conferirMarcosDoPmo(
+    c.conferenciaDosMarcos,
+    linhaDosDados(e.dadosProposta, e.ponto.prazoExecucao, crono),
+  );
   return (
     <div className="cartao cartao__corpo bloco">
       <h3 className="subtitulo-grupo">Cronograma, marcos e equipe (código, com as decisões do GP)</h3>
@@ -448,6 +465,16 @@ function Cronograma({
           <p key={x}>{x}</p>
         ))}
       </div>
+      {doPmo.length > 0 && (
+        <div className="aviso aviso--coluna" data-testid="conferencia-dos-marcos">
+          <p>
+            <b>Linha do tempo: o PMO × a conta do código</b>
+          </p>
+          {doPmo.map((x) => (
+            <p key={x}>{x}</p>
+          ))}
+        </div>
+      )}
       <table className="tabela tabela--texto" data-testid="marcos">
         <thead>
           <tr>

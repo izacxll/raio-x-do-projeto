@@ -372,7 +372,7 @@ export function normasCitadas(docs: DocumentoRfp[]): NormaCitada[] {
     if (!m?.[1] || !m[2]) continue;
     // número curto demais (Lei 1, Portaria 7) quase sempre é item de lista, não norma
     if (m[2].replace(/\./g, "").length < 2) continue;
-    // a portaria de nomeação de quem assina ("Chefe do Departamento…", "Portaria nº 24 de janeiro…", "Matrícula")
+    // a portaria de nomeação de quem assina ("Chefe do Departamento…", "Portaria nº 12 de março…", "Matrícula")
     // não é legislação do objeto
     if (
       /^portaria/.test(m[1]) &&

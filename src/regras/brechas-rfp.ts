@@ -8,7 +8,7 @@ import { type DocumentoRfp, type ItemAnalise } from "../extracao/rfp/item";
 import { localizarTodos, type Localizado } from "../extracao/rfp/localizar";
 import { faixasDoTema, type MapaRfp } from "../extracao/rfp/mapa";
 import { NOME_PRAZO_EXECUCAO, prazosDeExecucao, datasDoCertame, NOME_EVENTO } from "../extracao/rfp/prazos";
-import { ehDataDoFecho, encontrarDatas, formatarData } from "../texto/datas";
+import { ehDataDeAtoOuAssinatura, encontrarDatas, formatarData } from "../texto/datas";
 import { limparEspacos } from "../texto/frase";
 import { tirarAcentos } from "../texto/normalizar";
 import { normalizarTermo } from "./busca";
@@ -339,8 +339,9 @@ export function aplicarRegrasRfp(docs: DocumentoRfp[], mapa: MapaRfp): Resultado
       for (const doc of docs) {
         for (const p of doc.paginas) {
           for (const d of encontrarDatas(p.texto)) {
-            // a data do fecho do documento ("Cidade, 04 de setembro de 2026.") é a da assinatura, não um marco
-            if (ehDataDoFecho(p.texto, d)) continue;
+            // a data do fecho do documento ("Cidade, 04 de setembro de 2026.") é a da assinatura, e a de uma portaria
+            // ou decreto é a do ato: nenhuma é marco (decisão 0057)
+            if (ehDataDeAtoOuAssinatura(p.texto, d)) continue;
             const frase = tirarAcentos(p.texto.slice(Math.max(0, d.posicao - 150), d.posicao + 60));
             if (!FUTURO.test(frase) || certame.includes(`${p.numero}:${formatarData(d.data)}`)) continue;
             if (desde && d.data < desde) continue;

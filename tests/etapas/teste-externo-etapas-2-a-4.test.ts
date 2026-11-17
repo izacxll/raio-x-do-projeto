@@ -137,11 +137,16 @@ describe("matriz: uma seção para vários critérios", () => {
     apresentacao: [],
     habilitacao: [],
   } as unknown as PontoDePartida;
-  const criterio = (nome: string) => ({ criterio: nome, oQuePontua: "", pontuacaoMaxima: "", fontes: [] });
+  const criterio = (nome: string, trecho = "") => ({
+    criterio: nome,
+    oQuePontua: "",
+    pontuacaoMaxima: "",
+    fontes: trecho ? [{ doc: "rfp", pagina: 6, trecho }] : [],
+  });
   const e = {
     criterios: [
-      criterio("Coordenador Geral"),
-      criterio("Analista Contábil"),
+      criterio("Coordenador Geral", "Pontuação da equipe: Coordenador Geral, até 10 pontos"),
+      criterio("Analista Contábil", "Pontuação da equipe: Analista Contábil, até 5 pontos"),
       criterio("Metodologia"),
       criterio("Cronograma"),
     ],
@@ -168,5 +173,24 @@ describe("matriz: uma seção para vários critérios", () => {
       "Metodologia:atendido",
       "Cronograma:atendido",
     ]);
+  });
+
+  it("perfil sem 'pontuação' no trecho é perfil mínimo, não critério pontuado (decisão 0057)", () => {
+    const so = {
+      criterios: [
+        criterio("Coordenador Geral", "Coordenador Geral com experiência mínima de cinco anos"),
+        criterio("Analista Contábil", "Pontuação da equipe: Analista Contábil, até 5 pontos"),
+      ],
+    } as unknown as RespostaEstrategia;
+    const c = {
+      estrutura: [secao("Equipe técnica", "Equipe-chave")],
+      produtos: [],
+      exclusoes: [],
+      premissas: [],
+      restricoes: [],
+      obrigacoesContratante: [],
+    } as unknown as RespostaConteudo;
+    const m = conferirMinuta(ponto, so, c, undefined);
+    expect(m.matriz.filter((x) => x.tipo === "criterio").map((x) => x.chave)).toEqual(["Analista Contábil"]);
   });
 });

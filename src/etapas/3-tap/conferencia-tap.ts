@@ -5,7 +5,10 @@ import { conferirAutoconferenciaDaEtapa3, itensEsperadosDaEtapa3 } from "./autoc
 import { destinosNoTap, ehNumeroDeCompromisso } from "../2-proposta/compromissos";
 import type { TapDossie } from "../../dossie/esquema";
 import { estadoDe, type ItemConferido } from "../../pmo/itens";
-import { encontrarDatas, somarDiasCorridos } from "../../texto/datas";
+import { encontrarDatas, formatarData, somarDiasCorridos } from "../../texto/datas";
+import { tirarAcentos } from "../../texto/normalizar";
+import type { RespostaTap } from "../../pmo/schemas/tap";
+import { conferirMarcosDoPmo, linhaDosDados } from "../linha-do-tempo";
 import { lerValorEmReais } from "../2-proposta/preco";
 import { diasDoTexto, pedeDecisao, type Divergencia } from "./divergencias";
 import { valorNaProposta, type EntradaTap } from "./entrada";
@@ -31,6 +34,70 @@ const CAMPO_DECISAO: Record<string, (keyof TapDossie["decisoes"])[]> = {
   "TAP.11": ["gerente", "autoridade"],
   "TAP.12": ["patrocinador"],
 };
+
+const RE_ANTES_DE = /\bantes d[aeo]s?\b/i;
+const RE_DENTRO_DA_VIGENCIA = /dentro d[ao] (?:vigencia|prazo)/i;
+
+/**
+ * Marcos do TAP que prometem uma data ("antes de 21/09/2026", "antes do evento") ou caber na vigência: o código
+ * confere pela conta do cronograma da proposta (a entrega com a aprovação do cliente). O que a conta não confirma é
+ * divergência obrigatória; se o TAP já a registrou (TAP-DV), fica registrado.
+ */
+export function conferirMarcosPelaConta(
+  e: EntradaTap,
+  marcos: RespostaTap["marcos"],
+  divergencias: RespostaTap["divergenciasTexto"],
+  diasDaVigencia?: number,
+): VerificacaoTap {
+  const crono = e.dados?.cronograma;
+  const fimVigencia =
+    e.dados?.inicio && diasDaVigencia ? somarDiasCorridos(e.dados.inicio, diasDaVigencia) : undefined;
+  const promessas = marcos.filter((m) => {
+    const t = tirarAcentos(`${m.prazo} ${m.item.texto}`);
+    return RE_ANTES_DE.test(t) || RE_DENTRO_DA_VIGENCIA.test(t);
+  });
+  const naoConfirmados: string[] = [];
+  const registrados: string[] = [];
+  for (const m of promessas) {
+    const t = tirarAcentos(`${m.prazo} ${m.item.texto}`);
+    const doProduto = (crono?.atividades ?? []).filter((a) => a.produto === m.produto && a.dataFim);
+    const fim = doProduto.length
+      ? new Date(Math.max(...doProduto.map((a) => (a.dataFim as Date).getTime())))
+      : undefined;
+    const limite = RE_ANTES_DE.test(t) ? encontrarDatas(`${m.prazo} ${m.item.texto}`)[0]?.data : undefined;
+    const confirmado = limite
+      ? Boolean(fim && fim < limite)
+      : RE_DENTRO_DA_VIGENCIA.test(t)
+        ? fim && fimVigencia
+          ? fim <= fimVigencia
+          : crono?.conferenciaPrazo.situacao === "cabe"
+        : false;
+    if (confirmado) continue;
+    const nome = `${m.produto || "marco"} ("${m.prazo || m.item.texto}")`;
+    const conta = fim
+      ? `a conta dá ${formatarData(fim)}`
+      : "a conta do cronograma não tem a data deste marco";
+    const chaves = [m.produto, limite ? formatarData(limite) : ""].filter((x) => x && x.length > 1);
+    const jaNoTap = divergencias.some((d) => chaves.some((k) => `${d.ponto} ${d.item.texto}`.includes(k)));
+    (jaNoTap ? registrados : naoConfirmados).push(`${nome}: ${conta}`);
+  }
+  return {
+    id: "marcos-pela-conta",
+    nome: "Marcos com data ou vigência confirmados pela conta do cronograma",
+    situacao: naoConfirmados.length ? "atencao" : promessas.length ? "ok" : "nao-conferido",
+    texto: !promessas.length
+      ? 'Nenhum marco promete data ("antes de …") ou caber na vigência.'
+      : [
+          naoConfirmados.length
+            ? `Divergência obrigatória — a conta do cronograma não confirma: ${naoConfirmados.join("; ")}. Sugere-se registrar cada um no TAP como divergência (TAP-DV), com a conta do código.`
+            : "",
+          registrados.length ? `Já registrados como divergência no TAP: ${registrados.join("; ")}.` : "",
+          !naoConfirmados.length && !registrados.length ? "A conta do cronograma confirma os marcos." : "",
+        ]
+          .filter(Boolean)
+          .join(" "),
+  };
+}
 
 export function conferirTap(
   e: EntradaTap,
@@ -148,6 +215,23 @@ export function conferirTap(
     });
   }
 
+  // 3b. marco "antes de [data]" ou "dentro da vigência" que a conta do cronograma não confirma: divergência
+  // obrigatória (decisão 0057)
+  out.push(conferirMarcosPelaConta(e, marcos, resposta.divergenciasTexto, prazo?.dias));
+  // 3c. a conferência dos marcos do PMO contra a conta do código (decisão 0057)
+  if (e.dados?.cronograma) {
+    const avisos = conferirMarcosDoPmo(
+      resposta.conferenciaDosMarcos,
+      linhaDosDados(e.dados, e.ponto.prazoExecucao),
+    );
+    out.push({
+      id: "conferencia-dos-marcos",
+      nome: "Linha do tempo: a conferência do PMO bate com a conta do código",
+      situacao: avisos.length ? "atencao" : "ok",
+      texto: avisos.length ? avisos.join(" ") : "O PMO conferiu cada marco e a conta do código confirma.",
+    });
+  }
+
   // 4. recursos financeiros (decisão do GP) iguais ao valor da proposta
   const vProposta =
     e.dados?.valor ?? (e.proposta && e.fonte === "pdf" ? valorNaProposta(e.proposta)?.valor : undefined);
@@ -231,13 +315,22 @@ export function conferirTap(
 
   // 5. citações
   const naoConferidas = itens.filter((i) => valido(i) && i.conferencia.citacaoNaoConferida);
+  const naoProvam = itens.filter((i) => valido(i) && i.conferencia.citacaoNaoProva);
   out.push({
     id: "citacoes",
     nome: "Citações conferidas na página",
-    situacao: naoConferidas.length ? "atencao" : "ok",
-    texto: naoConferidas.length
-      ? `${naoConferidas.length} item(ns) "do documento" com citação não conferida: não valem como fato.`
-      : "Toda citação foi achada pelo código no documento.",
+    situacao: naoConferidas.length || naoProvam.length ? "atencao" : "ok",
+    texto:
+      [
+        naoConferidas.length
+          ? `${naoConferidas.length} item(ns) "do documento" com citação não conferida: não valem como fato.`
+          : "",
+        naoProvam.length
+          ? `${naoProvam.length} item(ns) "do documento" com citação que não prova a frase (o trecho não traz o termo-chave): ${naoProvam.map((i) => i.id).join(", ")}.`
+          : "",
+      ]
+        .filter(Boolean)
+        .join(" ") || "Toda citação foi achada pelo código no documento.",
   });
 
   // 6. premissas críticas confirmadas, no registro com a consequência (TAP-PR.2)
