@@ -124,6 +124,11 @@ export function conferirLeituraRfp(
           .join(" "),
       ),
     );
+  // as contas do código que não estão numa seção (os cruzamentos X1 a X6: janela, folga, soma das parcelas) valem
+  // para qualquer seção: são números do código, não do PMO (decisão 0046)
+  const contasDosCruzamentos = normal(esqueleto.cruzamentos.map((c) => c.resultado).join(" "));
+  // o esqueleto inteiro, só para reconhecer o item que repete uma conta do código ("(conta do código)")
+  const esqueletoInteiro = [...esqueletoDaSecao.values(), contasDosCruzamentos].join(" ");
   const numeros = new Set(dossie.requisitos.map((x) => x.numero));
   // o texto de cada página, sem acento e com os espaços colapsados, para achar a vizinhança do trecho citado
   const paginas = new Map<number, string>();
@@ -160,6 +165,7 @@ export function conferirLeituraRfp(
         .filter(({ c }) => c && citacaoValeComoFato(c))
         .map(({ f, c }) => vizinhanca(f, c?.pagina)),
       esqueletoDaSecao.get(item.secao) ?? "",
+      contasDosCruzamentos,
       dataDeHoje,
     ].join(" ");
     // ano ("2025") e número de norma ou de edital ("13046/2026") valem se estão na página citada (são do
@@ -169,6 +175,10 @@ export function conferirLeituraRfp(
     const numerosSemFonte = numerosQuePedemFonte(item.texto).filter(
       (n) => !temFonte(normal(n), base) && !(ehReferencia(n) && temFonte(normal(n), paginasCitadas)),
     );
+    // o item que diz "conta do código" e só usa números que o esqueleto já tem repete a conta, não a faz
+    const repeteContaDoCodigo =
+      /conta do codigo/.test(normal(item.texto).toLowerCase()) &&
+      numerosQuePedemFonte(item.texto).every((n) => temFonte(normal(n), esqueletoInteiro));
     // citação fraca (SKILL.md, princípio 3): todas as citações achadas são curtas demais para provar o que o item
     // afirma ("14.133/2021.", "conforme anexos")
     const fraca =
@@ -183,7 +193,7 @@ export function conferirLeituraRfp(
           ? "citacao-nao-conferida"
           : fraca
             ? "citacao-fraca"
-            : RE_CONTA.test(normal(item.texto).toLowerCase())
+            : RE_CONTA.test(normal(item.texto).toLowerCase()) && !repeteContaDoCodigo
               ? "conta-do-pmo"
               : numerosSemFonte.length
                 ? "valor-nao-conferido"

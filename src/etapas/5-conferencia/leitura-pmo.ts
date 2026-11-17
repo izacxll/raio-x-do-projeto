@@ -125,7 +125,7 @@ ${doCodigo.join("\n") || "- nada"}
 ${conteudoMinimoDasFichas(opcoes.partesPresentes)}
 
 # O que fazer
-1. Leia o PGP, o TAP e a RFP e aponte o que depende de interpretação. Exemplos: equipe pequena demais para o volume; critério de aceite que não dá para medir; plano de riscos que não conversa com o cronograma; premissa crítica escrita de forma que não dá para verificar.
+1. Leia ${["o PGP", ...(opcoes.temTap ? ["o TAP"] : []), ...(opcoes.temRfp ? ["a RFP"] : [])].join(", ").replace(/, ([^,]*)$/, " e $1")} (só os documentos anexados) e aponte o que depende de interpretação. Exemplos: equipe pequena demais para o volume; critério de aceite que não dá para medir; plano de riscos que não conversa com o cronograma; premissa crítica escrita de forma que não dá para verificar.
 2. Confira os itens "só PMO" do conteúdo mínimo e a qualidade das premissas críticas escritas (PC1 a PC8). A premissa crítica que se aplica e não está no plano é ausente.
 3. observacoes: o que mais você achou, com fonte, que não é vago, conflituoso nem ausente.
 

@@ -28,7 +28,7 @@ import { RespostaLeituraRfp } from "../../src/pmo/schemas/leitura-rfp";
 import { CARACTERISTICAS_PADRAO } from "../../src/dominio/caracteristicas";
 import { PARTES_PGP, PREMISSAS_CRITICAS } from "../../src/dominio/skill";
 import type { PgpDossie } from "../../src/dossie/esquema";
-import { citacaoEhFraca } from "../../src/etapas/1-rfp/leitura-pmo";
+import { autoconferenciaDaLeitura, citacaoEhFraca } from "../../src/etapas/1-rfp/leitura-pmo";
 import { esqueletoEmTexto, montarMinuta } from "../../src/etapas/2-proposta/minuta";
 import { pedidoConteudo, pedidoEap, pedidoEstrategia } from "../../src/etapas/2-proposta/pedidos";
 import { montarPontoDePartida } from "../../src/etapas/2-proposta/ponto-de-partida";
@@ -102,7 +102,8 @@ function entradaDaConferencia(d: Dossie) {
   const rfp = d.documentos.find((x) => x.papel === "rfp");
   const mapa = confirmacaoInicial(proporMapa(pgp.paginas, PARTES_PGP));
   const caracteristicas = d.pgp?.caracteristicas ?? CARACTERISTICAS_PADRAO;
-  const premissasAplicaveis = d.tap?.premissasAplicaveis ?? d.proposta?.premissasAplicaveis ?? {};
+  const premissasAplicaveis =
+    d.pgp?.premissasAplicaveis ?? d.tap?.premissasAplicaveis ?? d.proposta?.premissasAplicaveis ?? {};
   const resultado = conferirPlano({
     pgp: pgp.paginas,
     tap: tap?.paginas,
@@ -245,6 +246,27 @@ describe.skipIf(MODO !== "exportar")("exportar o pedido de um passo do PMO", () 
       dossie = { ...criarDossieVazio(HOJE), documentos: [rfp] };
       if (etapa === 1) dossie = { ...dossie, analiseRfp: analiseInicial(analisarRfp([rfp], HOJE), HOJE) };
     }
+    // decisões do GP para as etapas 4 e 5: --porte e --pcs ("PC1,PC3,PC4"), guardadas no dossiê para a importação
+    // usar as mesmas; sem elas, valem as do dossiê
+    if (env.RAIO_X_PORTE || env.RAIO_X_PCS) {
+      const atual = dossie.pgp ?? pgpInicial();
+      const porte = env.RAIO_X_PORTE as "pequeno" | "médio" | "grande" | undefined;
+      if (porte && !["pequeno", "médio", "grande"].includes(porte))
+        throw new Error("--porte deve ser pequeno, médio ou grande.");
+      dossie = {
+        ...dossie,
+        pgp: {
+          ...atual,
+          caracteristicas: {
+            ...(atual.caracteristicas ?? CARACTERISTICAS_PADRAO),
+            ...(porte ? { porte } : {}),
+          },
+          premissasAplicaveis: env.RAIO_X_PCS
+            ? Object.fromEntries(env.RAIO_X_PCS.split(",").map((x) => [x.trim().toUpperCase(), true]))
+            : atual.premissasAplicaveis,
+        },
+      };
+    }
     // etapa 5: o plano a conferir (o PGP da etapa 4 exportado em PDF, ou outro) entra no dossiê como "pgp"
     if (etapa === 5 && env.RAIO_X_PLANO) {
       const plano = await lerPdf(resolve(env.RAIO_X_PLANO), "pgp", HOJE);
@@ -257,7 +279,27 @@ describe.skipIf(MODO !== "exportar")("exportar o pedido de um passo do PMO", () 
     const nome = `etapa-${etapa}-${passo}-${base}`;
     const md = `# Pedido ao PMO — etapa ${etapa}, passo ${passo}
 
-- RFP: ${base}.pdf
+- RFP: ${base}.pdf${
+      etapa >= 4
+        ? `
+- **Características do projeto usadas:** ${Object.entries(
+            dossie.pgp?.caracteristicas ?? CARACTERISTICAS_PADRAO,
+          )
+            .map(([k, x]) => `${k} ${String(x)}`)
+            .join("; ")}${dossie.pgp?.caracteristicas ? "" : " (padrão conservador: passe --porte)"}
+- **Premissas críticas que se aplicam:** ${
+            Object.entries(
+              dossie.pgp?.premissasAplicaveis ??
+                dossie.tap?.premissasAplicaveis ??
+                dossie.proposta?.premissasAplicaveis ??
+                {},
+            )
+              .filter(([, x]) => x)
+              .map(([k]) => k)
+              .join(", ") || "nenhuma (passe --pcs)"
+          }`
+        : ""
+    }
 - Gerado em ${HOJE.toLocaleString("pt-BR")} pelo app (npm run exportar-pedido), com exatamente o que iria à API.
 - **Estimativa: cerca de ${tokens.toLocaleString("pt-BR")} tokens de entrada** (4 caracteres por token; sistema ${estimarTokens(p.sistema).toLocaleString("pt-BR")}, documentos ${estimarTokens(p.documentos).toLocaleString("pt-BR")}, pedido ${estimarTokens(p.pedido).toLocaleString("pt-BR")}).
 
@@ -356,6 +398,21 @@ describe.skipIf(MODO !== "importar")("importar a resposta do PMO (leitura indepe
                 `- ${NOME_TRAVA[i.trava!]} · ${i.secao} · ${i.nome}: ${i.texto.slice(0, 200)}${i.origem ? ` (p. ${i.origem.pagina})` : ""}`,
             )
           : ["- nenhum"]),
+      );
+      // cruzamentos X1 a X6 e autoconferência das 8 seções (decisões 0044 e 0046)
+      const resposta = v.data as z.infer<typeof RespostaLeituraRfp>;
+      const auto = autoconferenciaDaLeitura(resposta);
+      linhas.push(
+        "",
+        `## Cruzamentos (decisão 0046): ${resposta.cruzamentos.length} de 6 registrados${auto.cruzamentosSemRegistro.length ? `; sem registro: ${auto.cruzamentosSemRegistro.join(", ")}` : ""}`,
+        ...resposta.cruzamentos.map(
+          (c) =>
+            `- ${c.codigo} · ${c.estado}: ${c.resultado.slice(0, 220)}${c.itens.length ? ` (itens: ${c.itens.join(", ")})` : ""}`,
+        ),
+        "",
+        `## Autoconferência das 8 seções (decisão 0044): ${auto.ok ? "completa" : "com falha"}`,
+        `- sem marca: ${auto.semMarca.join(", ") || "nenhuma"}`,
+        `- marca incompleta: ${auto.incompletas.join(", ") || "nenhuma"}`,
       );
       const pasta = GABARITOS[basename(docs[0]?.nomeArquivo ?? "")];
       if (pasta) {
@@ -501,7 +558,23 @@ describe.skipIf(MODO !== "importar")("importar a resposta do PMO (leitura indepe
         const porSituacao = (s: string) => conferidos.filter((x) => x.situacao === s).length;
         linhas.push(
           "",
-          `Achados do código: ${c.achados.length}. Achados do PMO: ${conferidos.length} (válidos ${porSituacao("valido")}, rebaixados ${porSituacao("rebaixado")}, citação não conferida ${porSituacao("citacao-nao-conferida")}).`,
+          `Características usadas: ${Object.entries(c.caracteristicas)
+            .map(([k, x]) => `${k} ${String(x)}`)
+            .join("; ")}. Premissas críticas: ${
+            Object.entries(c.premissasAplicaveis)
+              .filter(([, x]) => x)
+              .map(([k]) => k)
+              .join(", ") || "nenhuma"
+          }.`,
+          `Achados do código: ${c.achados.length} (${["ausente", "conflituoso", "vago"].map((t) => `${t} ${c.achados.filter((a) => a.tipo === t).length}`).join(", ")}). Achados do PMO: ${conferidos.length} (válidos ${porSituacao("valido")}, rebaixados ${porSituacao("rebaixado")}, citação não conferida ${porSituacao("citacao-nao-conferida")}).`,
+          "",
+          "## Achados do PMO, um por um",
+          ...conferidos.map(
+            (a) =>
+              `- **${a.situacao}** · ${a.tipo} · ${a.gravidade} · ${a.parte}${a.item ? ` (${a.item})` : ""} · ${a.titulo}${
+                a.localizadoEm ? ` — o código achou o item na p. ${a.localizadoEm.pagina}` : ""
+              }${a.jaApontadoPeloCodigo ? " — o código já tinha apontado" : ""}`,
+          ),
         );
       }
     }

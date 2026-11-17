@@ -157,3 +157,49 @@ describe.skipIf(!existsSync(TR))("TR municipal de contratação direta (só na m
     expect(textoDe(l, "leitura:prazos:certame")).not.toMatch(/Recursos/);
   });
 });
+
+describe("conferência dos números do PMO com as contas dos cruzamentos (decisão 0046)", () => {
+  it('número que só está num cruzamento vale; conta nova com "conta do código" continua barrada', async () => {
+    const { conferirLeituraRfp } = await import("../../src/etapas/1-rfp/leitura-pmo");
+    const paginas = [
+      "1. OBJETO: Estudo de impacto de evento.\nO evento será realizado no período de 08/11/2025 a 07/01/2026, na praça central.",
+      "8.1 Iniciar-se-á em 22 de setembro de 2025;\n3.3. O prazo de vigência da contratação será de 06 (seis) meses contado do primeiro dia útil subsequente à data de divulgação no Portal.",
+    ];
+    const a = analisarRfp([documentoLido(paginas)], HOJE);
+    const dossie = analiseInicial(a, HOJE);
+    const l = montarLeituraRfp(a, dossie, HOJE);
+    const janela = /(\d+) dias úteis/.exec(
+      l.cruzamentos.find((c) => c.codigo === "X2")?.resultado ?? "",
+    )?.[1];
+    expect(janela).toBeDefined();
+    const fonte = { doc: "rfp" as const, pagina: 2, trecho: "8.1 Iniciar-se-á em 22 de setembro de 2025" };
+    const base = {
+      secao: "prazos" as const,
+      nome: "Marco fixo",
+      rotulo: "sugestao" as const,
+      fontes: [fonte],
+      requisitos: [],
+      tema: "",
+      premissa: "" as const,
+      porquePesa: "",
+      pergunta: "",
+      impacto: 0,
+    };
+    const c = conferirLeituraRfp(
+      {
+        cruzamentos: [],
+        autoconferencia: [],
+        itens: [
+          { ...base, id: "j", texto: `Entre o início e o evento há ${janela} dias úteis (conta do código).` },
+          { ...base, id: "k", texto: "As duas últimas parcelas somam 77,77% (conta do código)." },
+        ],
+      },
+      [documentoLido(paginas)],
+      l,
+      dossie,
+      HOJE,
+    );
+    expect(c.find((x) => x.item.id === "j")?.trava).toBeUndefined();
+    expect(c.find((x) => x.item.id === "k")?.trava).toBe("conta-do-pmo");
+  });
+});

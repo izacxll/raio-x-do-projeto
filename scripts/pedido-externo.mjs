@@ -7,6 +7,7 @@
 //   npm run importar-resposta -- --etapa 2 --passo estrategia --arquivo <r.json> --dossie <arquivo> [--abordagem B]
 //   etapa 3: tap, premissas; etapa 4: adaptacao, escopo, cronograma, riscos, planos, execucao [--gerar "A1,A3,…"]
 //   etapa 5: leitura, com --plano <plano.pdf> na exportação
+//   etapas 4 e 5: --porte pequeno|médio|grande e --pcs "PC1,PC3,…" na exportação (ficam no dossiê)
 // Decisões do GP simuladas: a abordagem (padrão: a primeira sugerida) e as partes do PGP (padrão: as não dispensáveis).
 // A pasta de saída padrão é ../pedidos-raio-x/, fora do repositório. Pedido de plano real nunca vai para o Git.
 import { spawnSync } from "node:child_process";
@@ -55,6 +56,8 @@ const env = {
   RAIO_X_ABORDAGEM: args.abordagem ?? "",
   RAIO_X_GERAR: args.gerar ?? "",
   RAIO_X_PLANO: args.plano ? resolve(args.plano) : "",
+  RAIO_X_PORTE: args.porte ?? "",
+  RAIO_X_PCS: args.pcs ?? "",
 };
 delete env.ANTHROPIC_API_KEY;
 const r = spawnSync("npx", ["vitest", "run", "tests/pmo/pedido-externo.test.ts", "--silent=false"], {
