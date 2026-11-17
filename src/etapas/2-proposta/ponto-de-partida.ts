@@ -8,6 +8,7 @@ import { lerNumero } from "../../texto/datas";
 import { tirarAcentos } from "../../texto/normalizar";
 import { analisarRfp, type AnaliseRfp } from "../1-rfp/analisar-rfp";
 import { analiseInicial, estadoDoItem, itensFinais, requisitosValidos, textoFinal } from "../1-rfp/revisao";
+import { leituraDoDossie } from "../1-rfp/leitura-pmo";
 
 export interface PrazoEmDias {
   dias: number;
@@ -91,7 +92,10 @@ export function montarPontoDePartida(
     apresentacao,
     habilitacao: daSecao("habilitacao"),
     prazos: daSecao("prazos"),
-    brechas: daSecao("brechas").map((b) => ({ ...b, perguntaFinal: textoFinal(b, salva.revisoes) })),
+    brechas: [
+      ...daSecao("brechas").map((b) => ({ ...b, perguntaFinal: textoFinal(b, salva.revisoes) })),
+      ...pontosDaLeitura(analise, salva, documentos, hoje),
+    ],
     condicoes: daSecao("condicoes"),
     modeloObrigatorio: localizado(porId("apresentacao:modelo-proposta")),
     planilhaDoEdital: localizado(porId("apresentacao:planilha")),
@@ -102,6 +106,36 @@ export function montarPontoDePartida(
     limiteEsclarecimento: comPrefixo("prazos:esclarecimento:")[0],
     prazoExecucao: vigencia ? prazoEmDias(vigencia) : undefined,
   };
+}
+
+/**
+ * Os pontos de atenção da leitura da etapa 1 (seção 7): os do PMO, quando a leitura dele está no dossiê, com o id
+ * "etapa-1:<id do PMO>"; senão, os do código. Ficam de fora os que o GP descartou e os de citação não conferida.
+ */
+function pontosDaLeitura(
+  analise: AnaliseRfp,
+  salva: AnaliseRfpDossie,
+  documentos: DocumentoLido[],
+  hoje: Date,
+): (ItemAnalise & { perguntaFinal: string })[] {
+  const docs = documentos.filter((d) => d.papel === "rfp" || d.papel === "anexo-rfp");
+  return leituraDoDossie(analise, salva, docs, hoje)
+    .itens.filter(
+      (i) =>
+        i.secao === "atencao" &&
+        estadoDoItem(salva.revisoes, i.id) !== "descartado" &&
+        i.trava !== "citacao-nao-conferida",
+    )
+    .map((i) => ({
+      id: i.doPmo ? `etapa-1:${i.id.replace(/^pmo:/, "")}` : i.id,
+      secao: "brechas" as const,
+      rotulo: i.rotulo,
+      nome: `${i.premissa ? `${i.premissa} · ` : ""}${i.nome}`,
+      texto: `${i.texto}${i.porquePesa ? ` Por que pesa: ${i.porquePesa}` : ""}`,
+      origem: i.origem,
+      situacao: i.situacao,
+      perguntaFinal: i.pergunta ?? "",
+    }));
 }
 
 function linhaItem(i: ItemAnalise): string {
@@ -131,7 +165,7 @@ export function pontoDePartidaEmTexto(p: PontoDePartida): string {
     bloco("Prazos", p.prazos.map(linhaItem)),
     bloco("Condições contratuais", p.condicoes.map(linhaItem)),
     bloco(
-      "Brechas e vagos da etapa 1 (dê um destino a cada uma pelo id)",
+      "Brechas, vagos e pontos de atenção da etapa 1, inclusive os da leitura do PMO (dê um destino a cada um pelo id)",
       p.brechas.map(
         (b) =>
           `- id ${b.id} · ${b.nome}: ${b.texto} → pergunta sugerida: ${b.perguntaFinal}${b.origem ? ` [${b.origem.documento}, p. ${b.origem.pagina}]` : ""}`,

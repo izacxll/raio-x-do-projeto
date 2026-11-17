@@ -55,6 +55,18 @@ export function encontrarDatas(texto: string): DataNoTexto[] {
   return out.sort((a, b) => a.posicao - b.posicao);
 }
 
+/**
+ * Data do fecho do documento: sozinha na linha, depois do nome do lugar e de uma vírgula ("Cidade, 08 de setembro
+ * de 2025.", "Cidade/UF, em 10/03/2026"). É a data de assinatura, não um marco do projeto.
+ */
+export function ehDataDoFecho(texto: string, d: DataNoTexto): boolean {
+  const ini = texto.lastIndexOf("\n", d.posicao - 1) + 1;
+  const fimLinha = texto.indexOf("\n", d.posicao + d.tamanho);
+  const antes = texto.slice(ini, d.posicao);
+  const depois = texto.slice(d.posicao + d.tamanho, fimLinha < 0 ? undefined : fimLinha);
+  return /^\s*[A-ZÀ-Ý][^\d,;:]{1,60},\s*(?:em\s+)?$/.test(antes) && /^\s*\.?\s*$/.test(depois);
+}
+
 // origem: App-final-4.jsx, rrFmt, linha 1681
 export function formatarData(d: Date): string {
   return `${String(d.getDate()).padStart(2, "0")}/${String(d.getMonth() + 1).padStart(2, "0")}/${d.getFullYear()}`;
