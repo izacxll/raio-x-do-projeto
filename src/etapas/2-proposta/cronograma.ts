@@ -115,6 +115,8 @@ export interface ParametrosCronograma {
   aprovacaoDias?: number;
   /** Início previsto (decisão do GP). Sem ele, o cronograma sai em dias, sem datas. */
   inicio?: Date;
+  /** Onde o código leu o início, quando ele veio da data fixa do documento ("RFP, p. 1"), e não do GP. */
+  inicioDoDocumento?: string;
   prazoRfp?: PrazoEmDias;
 }
 
@@ -268,7 +270,7 @@ function conferirPrazo(
     const cabe = corridos <= prazo.dias;
     return {
       situacao: cabe ? "cabe" : "nao-cabe",
-      texto: `Cronograma: ${total} dias úteis, ${corridos} dias corridos a partir do início informado pelo GP; prazo da RFP: ${prazo.texto}${onde}, ${prazo.dias} dias${convertido}. ${cabe ? `Sobram ${prazo.dias - corridos} dias corridos.` : `Passa ${corridos - prazo.dias} dias corridos.`}`,
+      texto: `Cronograma: ${total} dias úteis, ${corridos} dias corridos a partir do ${par.inicioDoDocumento ? `início em ${formatarDataCurta(par.inicio)} (data do documento, ${par.inicioDoDocumento}, a confirmar pelo GP)` : "início informado pelo GP"}; prazo da RFP: ${prazo.texto}${onde}, ${prazo.dias} dias${convertido}. ${cabe ? `Sobram ${prazo.dias - corridos} dias corridos.` : `Passa ${corridos - prazo.dias} dias corridos.`}`,
     };
   }
   const aproximado = Math.ceil((total * 7) / 5);

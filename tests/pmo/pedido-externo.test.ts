@@ -641,8 +641,13 @@ describe.skipIf(MODO !== "importar")("importar a resposta do PMO (leitura indepe
               `- ${d.id} · ${d.situacao}: RFP ${d.rfp.texto.slice(0, 90)} × proposta ${d.proposta.texto.slice(0, 90)}`,
           ),
           "",
+          "## O que veio dos documentos (código)",
+          ...dadosDosDocumentos(entrada).map(
+            (d) => `- [${d.elemento}] ${d.nome}: ${d.texto.slice(0, 260)}${d.onde ? ` [${d.onde}]` : ""}`,
+          ),
+          "",
           "## Conferência do TAP pelo código",
-          ...conf.map((x) => `- ${x.situacao} · ${x.nome}: ${x.texto.slice(0, 260)}`),
+          ...conf.map((x) => `- ${x.situacao} · ${x.nome}: ${x.texto.slice(0, 400)}`),
         );
       }
       if (etapa === 2 && passo === "estrategia") {

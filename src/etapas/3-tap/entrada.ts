@@ -94,6 +94,7 @@ export function dadosDaProposta(
     ? calcularCronograma(eap.atividades, {
         aprovacaoDias: p.parametros.aprovacaoDias,
         inicio,
+        inicioDoDocumento: fixo ? `${fixo.origem.documento}, p. ${fixo.origem.pagina}` : undefined,
         prazoRfp: ponto?.prazoExecucao,
       })
     : undefined;
