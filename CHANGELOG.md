@@ -20,6 +20,11 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 - **Plano (etapa 4):** cronograma com o início do documento quando o GP não informou (a confirmar pelo GP); datas da janela fixa em dd/mm/aaaa; sem folga até a data fixa, o alerta vai também no registro de premissas (B3, PC3 e PC6).
 - **RACI:** o código confere um só A por atividade e perfil da equipe na lista; o contratante aparece com os seus papéis, fora da equipe.
 - **Horas a definir pelo GP:** aparecem como tal na tabela de custos e no total, e o custo não fecha com zero no lugar delas.
+- **Feriados no cronograma (decisão 0051):** nacionais pela lei e municipais informados pelo GP, nas etapas 2, 3 e 4.
+- **Pacote da EAP em cada atividade (decisão 0051):** obrigatório no cronograma da etapa 4; atividade sem pacote, pacote inexistente, de outro produto e pacote sem atividade são apontados.
+- **Análise do contratante (decisão 0051):** a atividade que é a própria análise dura o tempo de aprovação do GP, sem somar por cima.
+- **Etapa 4:** contingência dos riscos que pedem reserva no B6 e no A15 como "a definir pelo GP"; premissa do PMO que repete o registro inicial sai do B3; parte ainda não gerada não é cobrada na autoconferência.
+- **Testes sem as datas do caso:** os testes e comentários do cronograma usam datas neutras (decisão 0049).
 
 ### Fase M3 — etapa 3 pelo método (decisão 0041)
 - **Testar sem a chave:** `npm run exportar-pedido` grava, fora do Git, o pedido de um passo do PMO exatamente como iria à API (sistema, mensagem com os PDFs e o esqueleto, schema), para o Claude do claude.ai responder; `npm run importar-resposta` valida a resposta, grava no dossiê, roda as travas e mede contra o gabarito numa seção "leitura independente". Por ora, a etapa 1.

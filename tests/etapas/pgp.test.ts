@@ -6,8 +6,14 @@ import { propostaGravada, tapGravado } from "../../src/demonstracao/preparar";
 import { criarDossieVazio } from "../../src/dossie/arquivo";
 import type { Dossie, PgpDossie } from "../../src/dossie/esquema";
 import { avaliarItens, type ItemProposta } from "../../src/etapas/2-proposta/proposta";
-import { autoconferir, mapaDoPgpGerado, pgpComoDocumento } from "../../src/etapas/4-pgp/autoconferencia";
 import {
+  autoconferir,
+  mapaDoPgpGerado,
+  partesNaoGeradas,
+  pgpComoDocumento,
+} from "../../src/etapas/4-pgp/autoconferencia";
+import {
+  conferirPacotes,
   conferirRaci,
   contratanteNaRaci,
   cronogramaDoPgp,
@@ -19,9 +25,15 @@ import { alertasDeDataFixa } from "../../src/exportacao/relatorio-pgp";
 import { montarEntradaPgp, type EntradaPgp } from "../../src/etapas/4-pgp/entrada";
 import { PEDIDOS_PGP } from "../../src/etapas/4-pgp/pedidos";
 import { PASSOS_PGP } from "../../src/etapas/4-pgp/passos";
-import { gerarSugerido, itensDoPgp, partesAGerar, pgpInicial } from "../../src/etapas/4-pgp/pgp";
+import {
+  gerarSugerido,
+  itensDoPgp,
+  partesAGerar,
+  pgpInicial,
+  repeteORegistroInicial,
+} from "../../src/etapas/4-pgp/pgp";
 import { PARTES_PGP } from "../../src/dominio/skill";
-import { SCHEMAS_PGP, type PassoPgp } from "../../src/pmo/schemas/pgp";
+import { RespostaCronogramaGuardada, SCHEMAS_PGP, type PassoPgp } from "../../src/pmo/schemas/pgp";
 import { lerRfpPublica } from "../ajudantes/rfp-publica";
 
 const ler = (n: string) =>
@@ -229,16 +241,16 @@ describe("RACI e data fixa no plano (teste externo do TR)", () => {
   it("B3: sem folga até a data fixa, o alerta cita PC3 e PC6; com folga, mostra quantos dias", () => {
     const base = {
       atividade: "c4",
-      inicio: new Date(2025, 10, 8),
-      fim: new Date(2026, 0, 7),
+      inicio: new Date(2026, 10, 7),
+      fim: new Date(2027, 0, 6),
       diasCorridos: 61,
-      fimPredecessoras: new Date(2025, 10, 12),
+      fimPredecessoras: new Date(2026, 10, 11),
     };
     const crono = (f: object) =>
       ({ datasFixas: [{ ...base, ...f }] }) as unknown as Parameters<typeof alertasDeDataFixa>[0];
     const [nao] = alertasDeDataFixa(crono({ folgaCorrida: -5, cabe: false }));
     expect(nao).toMatch(
-      /^Alerta \(conta do código\): a atividade c4 começa na data fixa de 08\/11\/2025.*5 dia\(s\) corrido\(s\) depois.*PC3.*PC6/,
+      /^Alerta \(conta do código\): a atividade c4 começa na data fixa de 07\/11\/2026.*5 dia\(s\) corrido\(s\) depois.*PC3.*PC6/,
     );
     const [sim] = alertasDeDataFixa(crono({ folgaCorrida: 3, cabe: true }));
     expect(sim).toMatch(/folga de 3 dia\(s\) corrido\(s\)/);
@@ -250,5 +262,68 @@ describe("pedido de riscos com as contas do cronograma", () => {
     const pedido = PEDIDOS_PGP.riscos(entrada, dossie.pgp!);
     expect(pedido).toContain("Contas do código sobre o cronograma (use; não refaça as contas):");
     expect(pedido).toContain(cronogramaDoPgp(dossie.pgp!, entrada)!.conferenciaPrazo.texto);
+  });
+});
+
+describe("pacote, parte não gerada, contingência e registro inicial (teste externo do TR)", () => {
+  it("todo pacote da OEI tem atividade; sem pacote, pacote inexistente, de outro produto e vazio são apontados", () => {
+    expect(conferirPacotes(dossie.pgp!)).toEqual([]);
+    const cr = dossie.pgp!.cronograma!;
+    const atividades = cr.resposta.atividades.map((a) =>
+      a.id === "1.1"
+        ? { ...a, pacote: "" }
+        : a.id === "1.2"
+          ? { ...a, pacote: "9.9" }
+          : a.id.startsWith("5.")
+            ? { ...a, pacote: "P1.1" }
+            : a,
+    );
+    const p = conferirPacotes({
+      ...dossie.pgp!,
+      cronograma: { ...cr, resposta: { ...cr.resposta, atividades } },
+    });
+    const t = p.join(" ");
+    expect(t).toMatch(/Atividades sem pacote da EAP: 1\.1\./);
+    expect(t).toMatch(/pacote que não existe na EAP: 1\.2 \(9\.9\)/);
+    expect(t).toMatch(/num pacote de outro produto: 5\.1 \(P5, pacote P1\.1 de P1\)/);
+    expect(t).toMatch(/Pacotes da EAP sem atividade no cronograma: P5\.1 Guia de orientação/);
+  });
+
+  it("o pacote é obrigatório na resposta do PMO, mas o dossiê antigo abre com ele vazio", () => {
+    const semPacote = { ...(ler("cronograma") as Record<string, unknown>) };
+    semPacote.atividades = (semPacote.atividades as Record<string, unknown>[]).map((a) =>
+      Object.fromEntries(Object.entries(a).filter(([k]) => k !== "pacote")),
+    );
+    expect(SCHEMAS_PGP.cronograma.safeParse(semPacote).success).toBe(false);
+    expect(RespostaCronogramaGuardada.parse(semPacote).atividades[0]?.pacote).toBe("");
+  });
+
+  it("parte cujo passo não foi pedido fica 'não conferido', sem achado", () => {
+    const semPlanos: Dossie = { ...dossie, pgp: { ...dossie.pgp!, planos: undefined } };
+    const r = autoconferir(semPlanos, montarEntradaPgp(semPlanos, HOJE), HOJE);
+    expect(partesNaoGeradas(semPlanos.pgp!).has("A11")).toBe(true);
+    expect(r.achados.filter((a) => a.partes.every((x) => x === "A11"))).toEqual([]);
+    expect(r.verificacoes.filter((v) => /:A11(\.\d+)?$/.test(v.id)).every((v) => v.estado !== "achado")).toBe(
+      true,
+    );
+  });
+
+  it("risco que pede reserva entra no custo como 'a definir pelo GP', nunca zero", () => {
+    const c = custosDoPgp(dossie.pgp!, entrada)!;
+    const comReserva = dossie.pgp!.riscos!.resposta.riscos.filter((r) => r.pedeReserva).map((r) => r.id);
+    expect(c.riscosComReserva.map((r) => r.id)).toEqual(comReserva);
+    if (comReserva.length) expect(c.faltando.join(" ")).toMatch(/pedida pelos riscos/);
+    expect(c.linhaDeBase).toBeUndefined();
+  });
+
+  it("premissa do PMO com a mesma premissa crítica do registro inicial sai do B3; a de estimativa fica", () => {
+    const registro = entrada.premissasTap;
+    const pc = registro.find((x) => x.premissaCritica)?.premissaCritica;
+    expect(pc).toBeTruthy();
+    const base = registro.find((x) => x.premissaCritica === pc)!;
+    expect(repeteORegistroInicial({ ...base, origem: "proposta" }, registro)).toBe(true);
+    expect(repeteORegistroInicial({ ...base, origem: "estimativa" }, registro)).toBe(false);
+    expect(repeteORegistroInicial({ ...base, tipo: "restricao" }, registro)).toBe(false);
+    expect(repeteORegistroInicial({ ...base, origem: "proposta" }, [])).toBe(false);
   });
 });

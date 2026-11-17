@@ -156,7 +156,7 @@ ${listaDePartes(partes)}
 ${fichasDasPartes(partes)}
 
 # O que fazer
-1. atividades: por pacote da EAP, com o campo "produto" = produto (P1…), predecessoras e duração em três pontos em dias úteis, cada uma com a base. Marque aprovacaoCliente nas atividades que terminam num produto que o contratante aprova. Não calcule datas nem o caminho crítico.
+1. atividades: por pacote da EAP, com o campo "produto" = produto (P1…) e o campo "pacote" = código do pacote da lista acima ("2.1"), obrigatório; todo pacote tem ao menos uma atividade. Predecessoras e duração em três pontos em dias úteis, cada uma com a base. Atividade com data fixa (evento): restricaoData com início, fim e fonte. Se a análise e o aceite do contratante forem uma atividade própria, marque analiseDoContratante nela (o código troca a duração pelo tempo de aprovação do GP, quando houver) e não marque aprovacaoCliente na entrega anterior; sem essa atividade, marque aprovacaoCliente na entrega que o contratante aprova (o código soma o tempo depois). Não calcule datas nem o caminho crítico.
 2. perfis (os exigidos pela RFP com fonte e número R, e os sugeridos), horas de cada perfil por atividade em três pontos com a base, e raci. Nunca nomes de pessoas.
 3. textos: cada parte acima. O código monta a lista de atividades (B2), as durações (B8), o diagrama de rede (B16), o cronograma (B15), os marcos (B11), a linha de base do cronograma (A14) e as designações (B18).
 4. observacoes: o que você achou e o código não, com fonte.

@@ -34,6 +34,7 @@ export function cronogramaDoPgp(p: PgpDossie, e: EntradaPgp): Cronograma | undef
     inicio,
     inicioDoDocumento: doDocumento,
     prazoRfp: e.ponto.prazoExecucao,
+    feriados: p.parametros.feriados,
   });
 }
 
@@ -63,6 +64,37 @@ export function conferirRaci(c: RespostaCronograma): string[] {
   ];
   if (semPerfil.length)
     problemas.push(`Perfil da equipe na RACI sem estar na lista de perfis: ${semPerfil.join(", ")}.`);
+  return problemas;
+}
+
+/**
+ * Atividades × pacotes da EAP do passo de escopo: atividade sem pacote, pacote que não existe, pacote sem atividade e
+ * atividade num pacote de outro produto.
+ */
+export function conferirPacotes(p: PgpDossie): string[] {
+  const atividades = p.cronograma?.resposta.atividades ?? [];
+  const pacotes = p.escopo?.resposta.eap ?? [];
+  if (!atividades.length || !pacotes.length) return [];
+  const problemas: string[] = [];
+  const porId = new Map(pacotes.map((x) => [x.id, x]));
+  const semPacote = atividades.filter((a) => !a.pacote.trim()).map((a) => a.id);
+  if (semPacote.length) problemas.push(`Atividades sem pacote da EAP: ${semPacote.join(", ")}.`);
+  const inexistente = atividades.filter((a) => a.pacote.trim() && !porId.has(a.pacote.trim()));
+  if (inexistente.length)
+    problemas.push(
+      `Atividades com pacote que não existe na EAP: ${inexistente.map((a) => `${a.id} (${a.pacote})`).join(", ")}.`,
+    );
+  const outroProduto = atividades.filter((a) => {
+    const x = porId.get(a.pacote.trim());
+    return x && x.produto !== a.produto;
+  });
+  if (outroProduto.length)
+    problemas.push(
+      `Atividades num pacote de outro produto: ${outroProduto.map((a) => `${a.id} (${a.produto}, pacote ${a.pacote} de ${porId.get(a.pacote.trim())!.produto})`).join(", ")}.`,
+    );
+  const usados = new Set(atividades.map((a) => a.pacote.trim()));
+  const vazios = pacotes.filter((x) => !usados.has(x.id)).map((x) => `${x.id} ${x.nome}`);
+  if (vazios.length) problemas.push(`Pacotes da EAP sem atividade no cronograma: ${vazios.join("; ")}.`);
   return problemas;
 }
 
@@ -106,7 +138,9 @@ export function marcosDoPgp(p: PgpDossie, e: EntradaPgp, crono: Cronograma): Mar
     const entrega = Math.max(...doProduto.map((a) => a.fimMaisCedo - a.aprovacao));
     const aprovacao = Math.max(...doProduto.map((a) => a.fimMaisCedo));
     const data = (d: number) =>
-      inicio && d > 0 ? somarDiasUteis(primeiroDiaUtil(inicio), d - 1) : undefined;
+      inicio && d > 0
+        ? somarDiasUteis(primeiroDiaUtil(inicio, crono.calendario), d - 1, crono.calendario)
+        : undefined;
     const marcoTap = e.marcosTap.find((m) => m.produto === produto);
     const dias = marcoTap ? diasDoTexto(marcoTap.prazo) : undefined;
     const base = {
@@ -129,7 +163,9 @@ export function marcosDoPgp(p: PgpDossie, e: EntradaPgp, crono: Cronograma): Mar
     const dataEntrega = base.dataEntrega;
     const corridos =
       inicio && dataEntrega
-        ? Math.round((dataEntrega.getTime() - primeiroDiaUtil(inicio).getTime()) / 86_400_000) + 1
+        ? Math.round(
+            (dataEntrega.getTime() - primeiroDiaUtil(inicio, crono.calendario).getTime()) / 86_400_000,
+          ) + 1
         : Math.ceil((entrega * 7) / 5);
     const conta = inicio ? `${corridos} dias corridos` : `cerca de ${corridos} dias corridos (aproximação)`;
     return {
@@ -149,6 +185,8 @@ export interface CustosPgp {
   faltando: string[];
   /** Conferência do orçamento com os recursos do TAP ou o preço da proposta. */
   conferencia: string;
+  /** Riscos que pedem reserva de contingência (B27): o valor de cada um é do GP, dentro da linha de base. */
+  riscosComReserva: { id: string; texto: string }[];
 }
 
 const reais = (v: number) => v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
@@ -166,7 +204,13 @@ export function custosDoPgp(p: PgpDossie, e: EntradaPgp): CustosPgp | undefined 
     reserva: 0,
   });
   const faltando = [...preco.faltando];
-  if (par.contingencia === undefined) faltando.push("reserva de contingência (decisão do GP)");
+  const riscosComReserva = (p.riscos?.resposta.riscos ?? [])
+    .filter((r) => r.pedeReserva)
+    .map((r) => ({ id: r.id, texto: r.item.texto }));
+  if (par.contingencia === undefined)
+    faltando.push(
+      `reserva de contingência (decisão do GP${riscosComReserva.length ? `; pedida pelos riscos ${riscosComReserva.map((r) => r.id).join(", ")}` : ""})`,
+    );
   if (par.gerencial === undefined) faltando.push("reserva gerencial (decisão do GP)");
   const linhaDeBase =
     preco.pessoal !== undefined && par.contingencia !== undefined
@@ -185,7 +229,7 @@ export function custosDoPgp(p: PgpDossie, e: EntradaPgp): CustosPgp | undefined 
         : orcamento > referencia
           ? `O orçamento (${reais(orcamento)}) passa do ${deOnde} (${reais(referencia)}): conferir. Tributos e custos indiretos não entram nesta conta.`
           : `O orçamento (${reais(orcamento)}) cabe no ${deOnde} (${reais(referencia)}). Tributos e custos indiretos não entram nesta conta.`;
-  return { preco, linhaDeBase, orcamento, faltando, conferencia };
+  return { preco, linhaDeBase, orcamento, faltando, conferencia, riscosComReserva };
 }
 
 export interface LinhaRastreabilidade {

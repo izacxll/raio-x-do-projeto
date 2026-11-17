@@ -8,6 +8,7 @@ import { conferirItem } from "../../pmo/redacao";
 import type { ItemPmo } from "../../pmo/schemas/comum";
 import type { ParteGerada, PassoPgp, RespostaAdaptacao } from "../../pmo/schemas/pgp";
 import { PASSOS_PGP } from "./passos";
+import type { PremissaRegistro } from "../../pmo/schemas/tap";
 
 export function pgpInicial(modelo: string = MODELO_PADRAO): PgpDossie {
   return { modelo, gerar: {}, revisoes: {}, parametros: { valoresHora: {}, nomes: {} }, uso: [] };
@@ -66,7 +67,24 @@ function itensDasObservacoes(passo: PassoPgp, obs: ItemPmo[], docs: DocumentoLid
 const NOME_PROB = { baixa: "baixa", media: "média", alta: "alta" } as const;
 const NOME_IMPACTO = { baixo: "baixo", medio: "médio", alto: "alto" } as const;
 
-export function itensDoPgp(p: PgpDossie, docs: DocumentoLido[]): ItemConferido[] {
+/**
+ * Premissa nova do PMO que repete o registro inicial (etapa 3): a mesma premissa crítica, como premissa e vinda da
+ * RFP, da proposta ou do TAP. Sai do B3, que já a tem pelo registro inicial. Ficam as de estimativa e as restrições.
+ */
+export function repeteORegistroInicial(x: PremissaRegistro, registroInicial: PremissaRegistro[]): boolean {
+  return (
+    !!x.premissaCritica &&
+    x.tipo === "premissa" &&
+    x.origem !== "estimativa" &&
+    registroInicial.some((r) => r.premissaCritica === x.premissaCritica)
+  );
+}
+
+export function itensDoPgp(
+  p: PgpDossie,
+  docs: DocumentoLido[],
+  registroInicial: PremissaRegistro[] = [],
+): ItemConferido[] {
   const out: ItemConferido[] = [];
   for (const { passo } of PASSOS_PGP) {
     const r = p[passo]?.resposta;
@@ -92,7 +110,8 @@ export function itensDoPgp(p: PgpDossie, docs: DocumentoLido[]): ItemConferido[]
           conferencia: conferirItem(x.item, docs),
         }),
       );
-      p.riscos.resposta.premissas.forEach((x, k) =>
+      p.riscos.resposta.premissas.forEach((x, k) => {
+        if (repeteORegistroInicial(x, registroInicial)) return;
         out.push({
           id: `riscos:B3:${k}`,
           passo,
@@ -107,8 +126,8 @@ export function itensDoPgp(p: PgpDossie, docs: DocumentoLido[]): ItemConferido[]
             .filter(Boolean)
             .join(" "),
           conferencia: conferirItem(x.item, docs),
-        }),
-      );
+        });
+      });
     }
     itensDasObservacoes(passo, r.observacoes, docs, out);
   }

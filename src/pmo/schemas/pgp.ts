@@ -69,19 +69,31 @@ export type RespostaEscopo = z.infer<typeof RespostaEscopo>;
 
 // ---------- passos 4 a 6: atividades, recursos, durações ----------
 
+/** Atividade do plano: a da EAP com o pacote do passo de escopo (código da EAP, "2.1"), obrigatório. */
+export const AtividadePgp = AtividadeEap.extend({ pacote: z.string() });
+export type AtividadePgp = z.infer<typeof AtividadePgp>;
+
 export const RespostaCronograma = z.object({
   /** Autoconferência (decisão 0044): cada item do método ou das fichas usado, com o estado. */
   autoconferencia: z.array(ItemAutoconferencia).default([]),
   /** A3, A6, B1, B4, B12, B13, B24, B25, B26, B32 (as que o GP marcou). */
   textos: z.array(ParteGerada),
-  /** Atividades por pacote da EAP (campo "produto" = id do pacote), com durações em três pontos. */
-  atividades: z.array(AtividadeEap),
+  /** Atividades com o produto (P1…) e o pacote da EAP, com durações em três pontos. */
+  atividades: z.array(AtividadePgp),
   perfis: z.array(PerfilEquipe),
   horas: z.array(HorasPerfil),
   raci: z.array(LinhaRaci),
   observacoes: z.array(ItemPmo),
 });
 export type RespostaCronograma = z.infer<typeof RespostaCronograma>;
+
+/**
+ * O mesmo, para ler o dossiê: cronograma guardado antes do campo "pacote" abre com o pacote vazio, que a conferência
+ * aponta como atividade sem pacote. No pedido ao PMO e na importação, o pacote é obrigatório.
+ */
+export const RespostaCronogramaGuardada = RespostaCronograma.extend({
+  atividades: z.array(AtividadeEap.extend({ pacote: z.string().default("") })),
+});
 
 // ---------- passos 7 a 9: riscos, custos e atualização das premissas ----------
 

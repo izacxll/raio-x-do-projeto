@@ -17,6 +17,7 @@ import { confirmacaoInicial, proporMapa, type ParteConfirmada } from "../../regr
 import { documentoDeExportavel } from "../documento-virtual";
 import type { EntradaPgp } from "./entrada";
 import { pgpInicial } from "./pgp";
+import { NOME_PASSO_PGP, passoDaParte } from "./passos";
 
 export const NOME_PGP_GERADO = "Plano gerado na etapa 4";
 
@@ -79,7 +80,42 @@ export function mapaDoPgpGerado(dossie: Dossie, pgp: DocumentoLido): ParteConfir
   );
 }
 
+/** Partes cujo passo ainda não foi pedido ao PMO: na página só há o título e "A gerar". */
+export function partesNaoGeradas(p: PgpDossie): Set<string> {
+  return new Set(
+    PARTES_PGP.map((x) => x.codigo).filter((c) => {
+      const passo = passoDaParte(c);
+      return passo !== undefined && !p[passo.passo];
+    }),
+  );
+}
+
+/**
+ * Conferência do plano gerado pelas regras da etapa 5. Parte cujo passo ainda não foi pedido não é cobrada: a
+ * verificação dela fica "não conferido" e os achados só dela saem (voltam quando o passo for respondido).
+ */
 export function autoconferir(dossie: Dossie, e: EntradaPgp, agora = new Date()): ResultadoConferencia {
+  const p = dossie.pgp ?? pgpInicial();
+  const r = conferirTodoOPlano(dossie, e, agora);
+  const naoGeradas = partesNaoGeradas(p);
+  if (!naoGeradas.size) return r;
+  const daParte = (id: string) => /[:]([AB]\d+)(?:\.\d+)?$/.exec(id)?.[1];
+  return {
+    achados: r.achados.filter((a) => !a.partes.every((x) => naoGeradas.has(x))),
+    verificacoes: r.verificacoes.map((v) => {
+      const parte = daParte(v.id);
+      return parte && naoGeradas.has(parte) && v.estado === "achado"
+        ? {
+            ...v,
+            estado: "nao-conferido" as const,
+            detalhe: `Parte ${parte} ainda não gerada (passo "${NOME_PASSO_PGP[passoDaParte(parte)!.passo]}" não pedido ao PMO).`,
+          }
+        : v;
+    }),
+  };
+}
+
+function conferirTodoOPlano(dossie: Dossie, e: EntradaPgp, agora: Date): ResultadoConferencia {
   const pgp = pgpComoDocumento(dossie, agora);
   const p = dossie.pgp ?? pgpInicial();
   return conferirPlano({

@@ -3,6 +3,7 @@
 // próprio ("N. Nome da parte"), que o mapa do PGP reconhece; as tabelas das contas são do código.
 import type { Dossie, PgpDossie } from "../dossie/esquema";
 import {
+  conferirPacotes,
   conferirRaci,
   contratanteNaRaci,
   cronogramaDoPgp,
@@ -14,13 +15,32 @@ import {
 } from "../etapas/4-pgp/calculos";
 import { montarEntradaPgp, type EntradaPgp } from "../etapas/4-pgp/entrada";
 import { NOME_PASSO_PGP, ordemDaParte, passoDaParte } from "../etapas/4-pgp/passos";
-import { contarPendentesPgp, itensDoPgp, nomeDaParte, partesAGerar, pgpInicial } from "../etapas/4-pgp/pgp";
+import {
+  contarPendentesPgp,
+  itensDoPgp,
+  repeteORegistroInicial,
+  nomeDaParte,
+  partesAGerar,
+  pgpInicial,
+} from "../etapas/4-pgp/pgp";
 import { duracaoEsperada, type Cronograma } from "../etapas/2-proposta/cronograma";
 import { textoDasHoras, textoDasHorasTotais } from "../etapas/2-proposta/preco";
 import { itensValidos, paragrafoDoItem, type ItemConferido } from "../pmo/itens";
 import { camposDoDossie, type DocumentoExportavel, type Secao, type Tabela } from "./modelo";
 
 const A_DEFINIR = "a definir pelo GP";
+/** Premissas do PMO que repetiam o registro inicial (mesma premissa crítica) e saíram do B3. */
+function repetidasNoRegistro(p: PgpDossie, e: EntradaPgp): string[] {
+  const repetidas = (p.riscos?.resposta.premissas ?? []).filter((x) =>
+    repeteORegistroInicial(x, e.premissasTap),
+  );
+  return repetidas.length
+    ? [
+        `Conferência do código: ${repetidas.length} premissa(s) do passo de riscos repetiam o registro inicial (${[...new Set(repetidas.map((x) => x.premissaCritica))].join(", ")}) e ficaram só uma vez.`,
+      ]
+    : [];
+}
+
 /** Início do cronograma para o texto: o do GP, ou a data do documento marcada "a confirmar pelo GP". */
 function textoDoInicio(p: PgpDossie, e: EntradaPgp): string {
   const { inicio, doDocumento } = inicioDoPgp(p, e);
@@ -58,7 +78,7 @@ interface Contexto {
 function preparar(dossie: Dossie, hoje: Date): Contexto {
   const p = dossie.pgp ?? pgpInicial();
   const e = montarEntradaPgp(dossie, hoje);
-  const todos = itensDoPgp(p, e.documentos);
+  const todos = itensDoPgp(p, e.documentos, e.premissasTap);
   return { p, e, todos, itens: itensValidos(p.revisoes, todos), pendentes: contarPendentesPgp(p, todos) };
 }
 
@@ -115,13 +135,14 @@ function tabelasDoCodigo(codigo: string, c: Contexto): { paragrafos?: string[]; 
   if (cr && crono) {
     if (codigo === "B2")
       out.push({
-        paragrafos: [conta],
+        paragrafos: [conta, ...conferirPacotes(p).map((x) => `Conferência do código: ${x}`)],
         tabela: {
-          colunas: ["ID e atividade", "Produto", "Predecessoras", "Requisitos"],
-          larguras: [4, 1, 2, 2],
+          colunas: ["ID e atividade", "Produto", "Pacote", "Predecessoras", "Requisitos"],
+          larguras: [4, 1, 1, 2, 2],
           linhas: cr.atividades.map((a) => [
             `${a.id} ${a.nome}`,
             a.produto,
+            a.pacote || "—",
             a.predecessoras.join(", ") || "—",
             a.requisitos.join(", "),
           ]),
@@ -150,6 +171,7 @@ function tabelasDoCodigo(codigo: string, c: Contexto): { paragrafos?: string[]; 
         paragrafos: [
           `${conta} Total: ${crono.total} dias úteis${crono.dataFim ? `, até ${textoDaData(crono.dataFim)}` : ""}. ${crono.conferenciaPrazo.texto}`,
           ...crono.problemas,
+          ...conferirPacotes(p).map((x) => `Conferência do código: ${x}`),
           "A aprovação de cada produto é dependência externa, a cargo do contratante: o tempo dela é decisão do GP.",
           ...(codigo === "B16" ? ["O diagrama de rede vai em imagem (SVG) no pacote do plano."] : []),
         ],
@@ -227,6 +249,11 @@ function tabelasDoCodigo(codigo: string, c: Contexto): { paragrafos?: string[]; 
         paragrafos: [
           `${conta} Horas esperadas (PERT) × valor-hora do GP.`,
           "Despesas (viagens, passagens, diárias): decisão do GP, fora desta conta de horas.",
+          ...(custos.riscosComReserva.length
+            ? [
+                `Contingência pedida pelos riscos ${custos.riscosComReserva.map((r) => r.id).join(", ")}: ${A_DEFINIR}, dentro da linha de base dos custos (A15).`,
+              ]
+            : []),
         ],
         tabela: {
           colunas: ["Perfil", "Horas", "Valor-hora (GP)", "Custo"],
@@ -260,6 +287,10 @@ function tabelasDoCodigo(codigo: string, c: Contexto): { paragrafos?: string[]; 
               "Reserva de contingência (decisão do GP, dentro da linha de base)",
               reais(p.parametros.contingencia),
             ],
+            ...custos.riscosComReserva.map((r) => [
+              `  Contingência do risco ${r.id} (${r.texto.slice(0, 80)}${r.texto.length > 80 ? "…" : ""})`,
+              p.parametros.contingencia === undefined ? A_DEFINIR : `parte da reserva acima (${A_DEFINIR})`,
+            ]),
             ["Linha de base dos custos", reais(custos.linhaDeBase)],
             ["Reserva gerencial (decisão do GP, fora da linha de base)", reais(p.parametros.gerencial)],
             ["Orçamento do projeto", reais(custos.orcamento)],
@@ -299,6 +330,7 @@ function tabelasDoCodigo(codigo: string, c: Contexto): { paragrafos?: string[]; 
     out.push({
       paragrafos: [
         "Parte do registro inicial da etapa 3 e acrescenta as premissas novas das estimativas e dos riscos.",
+        ...repetidasNoRegistro(p, e),
         ...alertasDeDataFixa(crono),
       ],
       tabela: {

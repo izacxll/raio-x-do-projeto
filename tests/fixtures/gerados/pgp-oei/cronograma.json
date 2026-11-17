@@ -267,6 +267,7 @@
     {
       "id": "1.1",
       "produto": "P1",
+      "pacote": "P1.1",
       "nome": "Reunião de alinhamento com a contratante",
       "predecessoras": [],
       "duracao": {
@@ -283,6 +284,7 @@
     {
       "id": "1.2",
       "produto": "P1",
+      "pacote": "P1.1",
       "nome": "Elaboração do plano de trabalho",
       "predecessoras": [
         "1.1"
@@ -301,6 +303,7 @@
     {
       "id": "2.1",
       "produto": "P2",
+      "pacote": "P2.1",
       "nome": "Levantamento bibliográfico, documental e normativo",
       "predecessoras": [
         "1.2"
@@ -320,6 +323,7 @@
     {
       "id": "2.2",
       "produto": "P2",
+      "pacote": "P2.1",
       "nome": "Oficinas remotas de escuta com a rede (cadernos 1 e 2)",
       "predecessoras": [
         "1.2"
@@ -338,6 +342,7 @@
     {
       "id": "2.3",
       "produto": "P2",
+      "pacote": "P2.2",
       "nome": "Redação dos cadernos 1 e 2",
       "predecessoras": [
         "2.1",
@@ -357,6 +362,7 @@
     {
       "id": "3.1",
       "produto": "P3",
+      "pacote": "P3.1",
       "nome": "Levantamento para os cadernos 3 e 4",
       "predecessoras": [
         "2.1"
@@ -375,6 +381,7 @@
     {
       "id": "3.2",
       "produto": "P3",
+      "pacote": "P3.1",
       "nome": "Redação dos cadernos 3 e 4",
       "predecessoras": [
         "3.1",
@@ -394,6 +401,7 @@
     {
       "id": "4.1",
       "produto": "P4",
+      "pacote": "P4.1",
       "nome": "Redação do caderno 5",
       "predecessoras": [
         "3.2"
@@ -412,6 +420,7 @@
     {
       "id": "4.2",
       "produto": "P4",
+      "pacote": "P4.1",
       "nome": "Documento sintético de consolidação",
       "predecessoras": [
         "4.1"
@@ -430,6 +439,7 @@
     {
       "id": "5.1",
       "produto": "P5",
+      "pacote": "P5.1",
       "nome": "Oficinas remotas de teste do guia",
       "predecessoras": [
         "4.2"
@@ -448,6 +458,7 @@
     {
       "id": "5.2",
       "produto": "P5",
+      "pacote": "P5.1",
       "nome": "Redação do guia de orientação",
       "predecessoras": [
         "5.1"
@@ -466,6 +477,7 @@
     {
       "id": "5.3",
       "produto": "P5",
+      "pacote": "P5.1",
       "nome": "Revisão, diagramação e arquivos-fonte",
       "predecessoras": [
         "5.2"
@@ -484,6 +496,7 @@
     {
       "id": "G.1",
       "produto": "G",
+      "pacote": "G.1",
       "nome": "Gestão do projeto e reuniões de acompanhamento",
       "predecessoras": [],
       "duracao": {
