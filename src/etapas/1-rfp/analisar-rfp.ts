@@ -221,7 +221,7 @@ function analisarRfpSemGuardar(documentos: DocumentoLido[], hoje: Date): Analise
   const requisitosDoCodigo = extrairRequisitosRfp(docs, mapa);
   const brechas = aplicarRegrasRfp(docs, mapa);
   // contratação direta (decisão 0042): não há critério de julgamento; "menor preço" achado no texto é da explicação
-  // jurídica ("vantajosidade não se confunde com menor preço"). O item vira a hipótese legal.
+  // jurídica de por que não se escolhe pelo preço. O item vira a hipótese legal.
   const modalidade = identificacao.find((i) => i.id === "identificacao:modalidade");
   const direta =
     modalidade?.situacao === "localizado" &&

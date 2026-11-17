@@ -11,8 +11,8 @@ import { documentoLido } from "./rfp-ajudantes";
 const HOJE = new Date(2026, 10, 16);
 const PAGINAS = [
   "1. OBJETO: Contratação de serviços para estudo de impacto de evento.\nO evento será previsto para o período de 07/11/2026 a 06/01/2027.",
-  "Vantajosidade não se confunde com menor preço, mas com a obtenção do serviço que melhor satisfaça a Administração.\nPortanto, a modalidade a ser adotada para esta prestação de serviço, será INEXIGIBILIDADE de Licitação com base no Art. 74, III.",
-  "3.3. O prazo de vigência da contratação será de 06 (seis) meses contado da data de assinatura do contrato.\n18.8. O reajuste será realizado por apostilamento.\nCidade do Interior, 04 de setembro de 2026.",
+  "A escolha não segue o menor preço, e sim o serviço que melhor atende à Administração.\nAssim, esta contratação será INEXIGIBILIDADE de licitação, com base no Art. 74, III.",
+  "3.3. A vigência será de 06 (seis) meses, contados da assinatura do contrato.\n18.8. O reajuste se faz por apostilamento.\nCidade do Interior, 04 de setembro de 2026.",
 ];
 
 describe("ponto de partida da etapa 2 (correções do teste externo)", () => {
@@ -98,7 +98,7 @@ describe("brechas do ponto de partida: junção, proteções, destino e requisit
 
   it("ponto da leitura e brecha do código do mesmo trecho viram um item, com os ids juntados", async () => {
     const { juntarBrechas, idsDaBrecha } = await import("../../src/etapas/2-proposta/ponto-de-partida");
-    const trecho = "O não cumprimento em tempo hábil da Ordem de Serviço acarretará notificação";
+    const trecho = "Se a ordem de serviço não for atendida em tempo hábil, a contratada será notificada";
     const codigo = { ...ponto("brechas:vago:rfp:5", trecho), perguntaFinal: "Solicita-se informar o prazo." };
     const outra = ponto("brechas:outra", "Texto que não tem nada a ver com o anterior, outra cláusula");
     const r = juntarBrechas(
@@ -113,7 +113,7 @@ describe("brechas do ponto de partida: junção, proteções, destino e requisit
 
   it("junta também com o número do item na frente do trecho, e pela página citada com o mesmo assunto", async () => {
     const { juntarBrechas, idsDaBrecha } = await import("../../src/etapas/2-proposta/ponto-de-partida");
-    const trecho = "O não cumprimento em tempo hábil da Ordem de Serviço acarretará notificação";
+    const trecho = "Se a ordem de serviço não for atendida em tempo hábil, a contratada será notificada";
     const prazo = ponto("brechas:vago:rfp:5", trecho);
     const campo = {
       ...ponto("brechas:CTR2-campo:19", "Não será permitida subcontratação do objeto"),
@@ -152,7 +152,7 @@ describe("brechas do ponto de partida: junção, proteções, destino e requisit
     const docs = [
       documentoLido([
         ...PAGINAS,
-        "5. DAS OBRIGAÇÕES DA CONTRATADA:\n5.1. Comunicar ao Contratante, no prazo máximo de 72 (setenta e duas) horas, os motivos que impossibilitem o cumprimento do prazo previsto, com a devida comprovação;",
+        "5. DAS OBRIGAÇÕES DA CONTRATADA:\n5.1. Avisar o Contratante, em até 72 (setenta e duas) horas, do motivo que impeça cumprir o prazo, com comprovação;",
       ]),
     ];
     const p = montarPontoDePartida(docs, undefined, HOJE);

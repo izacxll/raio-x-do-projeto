@@ -266,7 +266,7 @@ describe("vago dentro de trecho citado", () => {
     const r = conferirPlano(
       entrada({
         pgp: paginas([
-          'QU-02: informar o prazo do trecho "O não cumprimento em tempo hábil da ordem de serviço sujeita a multa".\nA equipe responde em tempo hábil.',
+          'QU-02: informar o prazo do trecho "se a ordem de serviço não for atendida em tempo hábil, cabe multa".\nA equipe responde em tempo hábil.',
         ]),
       }),
     );

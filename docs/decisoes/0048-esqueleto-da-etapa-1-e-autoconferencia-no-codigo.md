@@ -19,7 +19,7 @@ Os testes externos da skill (decisão 0049) mostraram erros do esqueleto do cód
 2. **Correções do esqueleto (TR de contratação direta):**
    - título com texto na mesma linha ("1. OBJETO: Contratação de…") passa a ser título: o objeto sai da p. 1, não do texto jurídico;
    - modalidade declarada fora das três primeiras páginas ("será INEXIGIBILIDADE de licitação"); a explicação da lei ("os casos de inexigibilidade e dispensa") não conta;
-   - parcelas escritas em valor no texto ("1ª parcela, no valor de R$ 80.000,00 […] contra a entrega do Produto 1"), com o percentual calculado pelo código;
+   - parcelas escritas em valor no texto ("1ª parcela, no valor de R$ 50.000,00, paga na entrega do Produto 1"), com o percentual calculado pelo código;
    - produto com o número do item na frente ("2.3.1 Produto 1: …"); quantidade com erro de digitação ("questinários"), com o nome do item corrigido e o trecho literal;
    - definição de notória especialização copiada da lei não é equipe exigida;
    - o ponto de abreviação ("Av. Dr. Silva", "art. 74") não fecha a frase;

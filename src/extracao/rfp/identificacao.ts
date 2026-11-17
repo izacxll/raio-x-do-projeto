@@ -125,8 +125,8 @@ function modalidade(docs: DocumentoRfp[], doInstrumento: ItemAnalise): ItemAnali
     const l = localizarPrimeiro(docs, re, faixas);
     if (l) return { ...base, rotulo: "documento", texto: n, origem: origemDe(l), situacao: "localizado" };
   }
-  // 4º: contratação direta declarada em qualquer página ("a modalidade a ser adotada [...] será INEXIGIBILIDADE de
-  // Licitação com base no Art. 74, III"; decisão 0042). Só a declaração: a palavra solta aparece em cláusula padrão.
+  // 4º: contratação direta declarada em qualquer página ("esta contratação será INEXIGIBILIDADE de licitação, com
+  // base no art. 74"; decisão 0042). Só a declaração: a palavra solta aparece em cláusula padrão.
   // em ordem de força: "será INEXIGIBILIDADE de licitação"; "modalidade a ser adotada [...] inexigibilidade";
   // "contratação direta [...] art. 74". "Os casos de inexigibilidade e dispensa" (explicação da lei) não conta.
   const direta = [
@@ -192,7 +192,7 @@ function contratante(docs: DocumentoRfp[], capa: CampoDaCapa[]): ItemAnalise {
     }
   }
   // no corpo (fora dos cabeçalhos repetidos): "Prefeitura Municipal de X" ou "Município de X", e a secretaria que
-  // conduz ("a Secretaria de Comunicação Social, Lazer e Turismo é responsável…")
+  // conduz ("a Secretaria de Turismo e Cultura é responsável…")
   const orgao = localizarPrimeiro(docs, /\bprefeitura municipal de [a-z]|\bmunicipio de [a-z]/);
   const nomeOrgao = orgao
     ? /(?:Prefeitura Municipal|Munic[ií]pio) de [A-ZÀ-Ý][^\s,.;:–-]*(?:\s+(?:d[aeo]s?\s+)?[A-ZÀ-Ý][^\s,.;:–-]*)*/.exec(
