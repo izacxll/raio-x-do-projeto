@@ -233,3 +233,30 @@ describe("relatório em ordem de importância", () => {
     expect(ordem).toEqual(["premissa-critica", "prazo-total", "conteudo-minimo", "vago:oportunamente"]);
   });
 });
+
+describe("vago: convenção do app e expressão citada entre aspas (teste externo do TR)", () => {
+  it('"a definir pelo GP" e item [Decisão do GP] não são vago: vão para a verificação de decisões pendentes', () => {
+    const r = conferirPlano(
+      entrada({
+        pgp: paginas([
+          "Plano. A cadência das reuniões fica a definir pelo GP.\n[Decisão do GP] Número de vias: a definir.\nO prazo de análise: não informado no documento — a definir pelo GP.",
+        ]),
+      }),
+    );
+    expect(r.achados.filter((a) => a.regra === "vago:a-definir")).toEqual([]);
+    const v = r.verificacoes.find((x) => x.id === "decisoes-do-gp-pendentes");
+    expect(v?.detalhe).toMatch(/^3 decisão\(ões\) do GP pendente\(s\)/);
+  });
+
+  it('"a definir" solto continua vago; a expressão do documento entre aspas não', () => {
+    const r = conferirPlano(
+      entrada({
+        pgp: paginas([
+          "A faixa aceita fica a definir. Questão: prazo de cada ordem de serviço ('em tempo hábil'). O relatório sai em tempo hábil.",
+        ]),
+      }),
+    );
+    expect(r.achados.filter((a) => a.regra === "vago:a-definir")).toHaveLength(1);
+    expect(r.achados.filter((a) => a.regra === "vago:em-tempo-habil")).toHaveLength(1);
+  });
+});

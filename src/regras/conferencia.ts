@@ -102,6 +102,25 @@ const ATIVIDADE_PARA_O_PUBLICO =
  * sigilo; "oportunamente" com referência a item do edital; descrição de atividade para o público, sem compromisso
  * de quem executa ("acesso a microcrédito, quando necessário").
  */
+const ASPAS = /['"\u201c\u201d\u2018\u2019\u00ab\u00bb]/;
+
+/** A expressão está entre aspas no texto ("prazo de cada ordem de serviço ('em tempo hábil')"). */
+export function entreAspas(texto: string, posicao: number, tamanho: number): boolean {
+  const antes = texto.slice(Math.max(0, posicao - 2), posicao);
+  const depois = texto.slice(posicao + tamanho, posicao + tamanho + 2);
+  return ASPAS.test(antes) && ASPAS.test(depois);
+}
+
+/** "a definir pelo GP", "a ser definido pelo GP", "a definir: decisão do GP": pendência do GP, convenção do app. */
+export function ehDecisaoDoGp(texto: string, posicao: number): boolean {
+  // o item inteiro é decisão do GP (rótulo da ferramenta no começo da linha)
+  const linha = texto.slice(texto.lastIndexOf("\n", posicao) + 1, posicao);
+  if (/^\s*\[Decis[aã]o do GP\]/.test(linha)) return true;
+  return /^a (?:ser )?definid?[oa]?s?r?\s*(?:pelo gp|[:;,—–-]?\s*decis[aã]o do gp)/i.test(
+    normalizarTermo(texto.slice(posicao, posicao + 40)),
+  );
+}
+
 export function vagoQueNaoPesa(padrao: string, o: { frase: string }): boolean {
   const t = normalizarTermo(o.frase);
   if (TEXTO_PADRAO.test(t)) return true;
@@ -471,11 +490,19 @@ export function conferirPlano(e: EntradaConferencia): ResultadoConferencia {
   }
 
   // ---------- vago ----------
+  // "a definir pelo GP" é a convenção do app para decisão pendente do GP: não é vago; vai para a verificação própria
+  const decisoesPendentes = new Map<string, number>();
   for (const padrao of PADROES_VAGO) {
     for (const o of procurarPadrao(e.pgp, padrao.re)) {
       const texto = e.pgp.find((p) => p.numero === o.pagina)?.texto ?? "";
       if (vagoQueNaoPesa(padrao.id, { frase: fraseEmVolta(texto, o.posicao) })) continue;
+      // a expressão entre aspas é citação do documento (o plano a questiona), não vago do plano
+      if (entreAspas(texto, o.posicao, o.termo.length)) continue;
       const parte = parteDaPosicao(o.pagina, o.posicao, e.mapa) ?? SEM_PARTE;
+      if (padrao.id === "a-definir" && ehDecisaoDoGp(texto, o.posicao)) {
+        decisoesPendentes.set(parte, (decisoesPendentes.get(parte) ?? 0) + 1);
+        continue;
+      }
       registrar({
         tipo: "vago",
         regra: `vago:${padrao.id}`,
@@ -487,6 +514,20 @@ export function conferirPlano(e: EntradaConferencia): ResultadoConferencia {
         sugestao: padrao.sugestao,
       });
     }
+  }
+
+  if (decisoesPendentes.size) {
+    const total = [...decisoesPendentes.values()].reduce((a, b) => a + b, 0);
+    verificacoes.push({
+      id: "decisoes-do-gp-pendentes",
+      alvo: "decisões do GP",
+      descricao: 'Decisões do GP ainda pendentes no plano ("a definir pelo GP")',
+      estado: "nao-conferido",
+      detalhe: `${total} decisão(ões) do GP pendente(s), por parte: ${[...decisoesPendentes.entries()]
+        .sort((a, b) => b[1] - a[1])
+        .map(([p, n]) => `${p} (${n})`)
+        .join(", ")}. Não é vago: é a convenção da ferramenta para o que só o GP decide.`,
+    });
   }
 
   // ---------- conflituoso: texto de outro documento (CP8) ----------
