@@ -73,10 +73,14 @@ export function mapaDoPgpGerado(dossie: Dossie, pgp: DocumentoLido): ParteConfir
   const justificativas = new Map(
     (p.adaptacao?.resposta.partes ?? []).map((s) => [s.codigo, s.justificativa]),
   );
+  // parte cujo passo não foi pedido tem só o título e "A gerar": não existe ainda, e a faixa dela não é procurada
+  const naoGeradas = partesNaoGeradas(p);
   return confirmacaoInicial(proporMapa(pgp.paginas, PARTES_PGP)).map((m) =>
     p.gerar[m.codigo] === false
       ? { codigo: m.codigo, situacao: "dispensada", justificativa: justificativas.get(m.codigo) }
-      : m,
+      : naoGeradas.has(m.codigo)
+        ? { codigo: m.codigo, situacao: "nao-existe" }
+        : m,
   );
 }
 
