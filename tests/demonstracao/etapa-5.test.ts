@@ -5,6 +5,7 @@ import { planoDaDemonstracao, respostaGravada } from "../../src/demonstracao/dem
 import { CARACTERISTICAS_PADRAO } from "../../src/dominio/caracteristicas";
 import { PARTES_PGP, PREMISSAS_CRITICAS } from "../../src/dominio/skill";
 import { conferirLeitura } from "../../src/etapas/5-conferencia/leitura-pmo";
+import { conferirVereditos } from "../../src/etapas/5-conferencia/candidatos";
 import { RespostaLeitura } from "../../src/pmo/schemas/leitura";
 import { conferirPlano } from "../../src/regras/conferencia";
 import { aplicarTipoPlano, confirmacaoInicial, proporMapa } from "../../src/regras/mapa-pgp";
@@ -60,6 +61,17 @@ describe("demonstração da etapa 5", () => {
     });
     const conferidos = conferirLeitura(leitura, { pgp: plano, rfp }, codigo.achados);
     expect(conferidos.every((a) => a.situacao === "valido")).toBe(true);
+    // decisão 0052: cada achado do código tem veredito; o "falso" traz o trecho, achado na página
+    const v = conferirVereditos(leitura, codigo.achados, new Map(), confirmacaoInicial(proposta), [
+      plano,
+      rfp,
+    ]);
+    expect(v.candidatos.filter((c) => c.situacao === "sem-veredito").map((c) => c.achado.id)).toEqual([]);
+    expect(
+      v.candidatos.filter((c) => c.avisos.length).map((c) => `${c.achado.id}: ${c.avisos.join("; ")}`),
+    ).toEqual([]);
+    expect(v.contam.length).toBeGreaterThan(0);
+    expect(v.desconhecidos.length).toBeGreaterThan(0); // os ids que só existem no modo plano de trabalho
   }, 60_000);
 
   it("uma leitura nova não herda as revisões nem as decisões da anterior", () => {

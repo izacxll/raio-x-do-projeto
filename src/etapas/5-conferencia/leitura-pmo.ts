@@ -215,12 +215,38 @@ export function conferirLeitura(
 
 const REGRAS = `Regras deste pedido (além da skill):
 - Responda só com o objeto JSON, no schema enviado.
-- Aponte só o que depende de interpretação e as regras de código não pegam (a lista delas vai abaixo). Não repita o que o código já apontou.
+- Aponte só o que depende de interpretação e as regras de código não pegam. Os achados do código vão abaixo, como candidatos: não os repita entre os seus achados; dê um veredito para cada um (decisão 0052).
+- vereditos: um por achado do código, pelo id, com veredito "sustenta" (o achado vale), "falso" (o plano tem o conteúdo: ponha em evidencias o doc "pgp", a página e o trecho literal onde ele está), "nao_se_aplica" (o item não vale para este projeto: diga por quê em motivo) ou "regra_errada" (a regra do código errou: diga a causa em motivo). Só os que você confirmar como "sustenta" contam no total.
+- dispensas: um veredito por dispensa declarada só no plano, "cabe" ou "nao_cabe" pelas condições da ficha (no "nao_cabe", a condição que ela não cumpre em motivo). Se não couber, a parte volta a ser conferida: dê veredito também aos achados do código listados para ela.
 - Cada achado é vago, conflituoso ou ausente, com a parte do PGP (A1…B33), o item do conteúdo mínimo quando houver e a evidência dos dois lados: doc "pgp", "tap" ou "rfp", página do arquivo e trecho literal. O app confere cada trecho; o que não for achado vira "citação não conferida".
 - "Ausente" só depois de procurar no plano inteiro, inclusive nas seções gerais. Em termosProcurados, ponha os termos que o código deve procurar antes de aceitar o achado: ele procura só esses, na parte apontada (e, se ela foi dispensada, nas partes que absorvem o conteúdo), sem os trechos que você cita como evidência; se achar, rebaixa.
 - Você não dá categoria nem gravidade: o código aplica pela parte do plano.
 - Sugestão de ajuste em redação condicional. Não invente valores, prazos nem quantidades.
 - Proporcionalidade: o PMBOK é guia, não checklist; projeto pequeno não pode sair todo vermelho.`;
+
+/** Um achado do código na lista do pedido: id, tipo, parte, título e a primeira evidência. */
+function candidatoEmTexto(a: Achado): string {
+  const e = a.evidencias[0];
+  const evidencia = e ? ` — ${e.rotulo}: "${e.trecho.replace(/\s+/g, " ").slice(0, 160)}"` : "";
+  return `- id \`${a.id}\` · ${a.tipo} · ${a.parte} · ${a.titulo}${evidencia}`;
+}
+
+/** Dispensa declarada só no plano: a justificativa, o que a ficha não deixa dispensar e os achados se não couber. */
+function dispensaEmTexto(d: { parte: string; justificativa: string }, condicionais: Achado[]): string {
+  const ficha = buscarParte(d.parte);
+  const nunca = (ficha?.itens ?? []).filter((i) => /^nunca$/i.test(i.dispensa.trim())).map((i) => i.codigo);
+  const condicoes = (ficha?.itens ?? [])
+    .filter((i) => !/^nunca$/i.test(i.dispensa.trim()))
+    .map((i) => `${i.codigo} (${i.dispensa})`);
+  return [
+    `### ${d.parte} — ${ficha?.nome ?? d.parte}`,
+    `Justificativa no plano: ${d.justificativa.replace(/^Declarada dispensada pelo GP no próprio plano:\s*/, "")}`,
+    `Itens que a ficha não deixa dispensar (precisam estar na parte que absorve): ${nunca.join(", ") || "nenhum"}.`,
+    `Itens dispensáveis e a condição: ${condicoes.join("; ") || "nenhum"}.`,
+    "Se a dispensa não couber, o código aponta (dê veredito também):",
+    ...(condicionais.length ? condicionais.map(candidatoEmTexto) : ["- nada"]),
+  ].join("\n");
+}
 
 export function pedidoLeitura(opcoes: {
   partesPresentes: string[];
@@ -229,11 +255,17 @@ export function pedidoLeitura(opcoes: {
   achadosDoCodigo: Achado[];
   temTap: boolean;
   temRfp: boolean;
+  /** Dispensas declaradas só no plano (decisão 0052), com os achados do código se não couberem. */
+  dispensasCandidatas?: { parte: string; justificativa: string }[];
+  condicionais?: Map<string, Achado[]>;
 }): string {
   const pcs = Object.entries(opcoes.premissasAplicaveis)
     .filter(([, v]) => v)
     .map(([k]) => k);
-  const doCodigo = opcoes.achadosDoCodigo.map((a) => `- ${a.tipo} · ${a.parte} · ${a.titulo}`);
+  const doCodigo = opcoes.achadosDoCodigo.map(candidatoEmTexto);
+  const dispensas = (opcoes.dispensasCandidatas ?? []).map((d) =>
+    dispensaEmTexto(d, opcoes.condicionais?.get(d.parte) ?? []),
+  );
   return `# Etapa 5 — Conferência do plano · leitura do PMO
 
 Documentos: o PGP (doc: pgp)${opcoes.temTap ? ", o TAP (doc: tap)" : ""}${opcoes.temRfp ? " e a RFP (doc: rfp)" : ""}.
@@ -242,16 +274,26 @@ Características do projeto (confirmadas pelo GP): ${Object.entries(opcoes.carac
     .join("; ")}.
 Premissas críticas que se aplicam (decisão do GP): ${pcs.length ? pcs.join(", ") : "nenhuma"}.
 
-## O que o código já apontou (não repita)
+## Achados do código: candidatos (dê um veredito para cada um, pelo id; não repita)
 ${doCodigo.join("\n") || "- nada"}
+${
+  dispensas.length
+    ? `
+## Dispensas declaradas só no plano: candidatas (dê um veredito para cada uma)
+O plano declara estas partes como dispensadas pelo GP, mas o dossiê não traz a dispensa da etapa 4. Diga se cada uma cabe pelas condições da ficha.
 
+${dispensas.join("\n\n")}
+`
+    : ""
+}
 ## Conteúdo mínimo e perguntas de qualidade das partes presentes no plano
 ${conteudoMinimoDasFichas(opcoes.partesPresentes)}
 
 # O que fazer
 1. Leia ${["o PGP", ...(opcoes.temTap ? ["o TAP"] : []), ...(opcoes.temRfp ? ["a RFP"] : [])].join(", ").replace(/, ([^,]*)$/, " e $1")} (só os documentos anexados) e aponte o que depende de interpretação. Exemplos: equipe pequena demais para o volume; critério de aceite que não dá para medir; plano de riscos que não conversa com o cronograma; premissa crítica escrita de forma que não dá para verificar.
 2. Confira os itens "só PMO" do conteúdo mínimo e a qualidade das premissas críticas escritas (PC1 a PC8). A premissa crítica que se aplica e não está no plano é ausente.
-3. observacoes: o que mais você achou, com fonte, que não é vago, conflituoso nem ausente.
+3. vereditos: um para cada achado do código da lista acima (e para os das dispensas, se alguma não couber).${dispensas.length ? "\n4. dispensas: um veredito para cada dispensa declarada só no plano." : ""}
+${dispensas.length ? "5" : "4"}. observacoes: o que mais você achou, com fonte, que não é vago, conflituoso nem ausente.
 
 ${REGRAS}`;
 }

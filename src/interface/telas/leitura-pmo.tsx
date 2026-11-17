@@ -26,6 +26,8 @@ export function LeituraDoPmo({
   conf,
   atualizar,
   achadosDoCodigo,
+  dispensasCandidatas,
+  condicionais,
 }: {
   pgp: DocumentoLido;
   tap?: DocumentoLido;
@@ -33,6 +35,8 @@ export function LeituraDoPmo({
   conf: Conferencia;
   atualizar: (m: Partial<Conferencia>) => void;
   achadosDoCodigo: Achado[];
+  dispensasCandidatas: { parte: string; justificativa: string }[];
+  condicionais: Map<string, Achado[]>;
 }) {
   const demonstracao = Boolean(useDossie((s) => s.dossie.demonstracao));
   const chave = useChave();
@@ -48,6 +52,8 @@ export function LeituraDoPmo({
     achadosDoCodigo,
     temTap: Boolean(tap),
     temRfp: Boolean(rfp),
+    dispensasCandidatas,
+    condicionais,
   });
   const conferidos = conf.leituraPmo
     ? conferirLeitura(conf.leituraPmo.resposta, { pgp, tap, rfp }, achadosDoCodigo, conf.mapa)
