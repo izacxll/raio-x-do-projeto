@@ -1,16 +1,70 @@
 // Saídas da etapa 4: o plano (DOCX e PDF), os registros, o cronograma e as matrizes (XLSX). O mesmo plano, como
 // documento "lido", passa pelas regras da etapa 5 (autoconferência). Cada parte que o GP marcou sai com um título
 // próprio ("N. Nome da parte"), que o mapa do PGP reconhece; as tabelas das contas são do código.
+import { conferirQuestoes, questoesDoCodigo, referenciasDoPlano } from "../etapas/4-pgp/questoes";
+import { NOME_TIPO_COMPROMISSO } from "../etapas/2-proposta/compromissos";
 import type { Dossie, PgpDossie } from "../dossie/esquema";
-import { cronogramaDoPgp, custosDoPgp, marcosDoPgp, rastrear, textoDaData } from "../etapas/4-pgp/calculos";
+import {
+  rastrearCompromissos,
+  conferirPacotes,
+  conferirRaci,
+  contratanteNaRaci,
+  cronogramaDoPgp,
+  custosDoPgp,
+  inicioDoPgp,
+  marcosDoPgp,
+  rastrear,
+  textoDaData,
+} from "../etapas/4-pgp/calculos";
 import { montarEntradaPgp, type EntradaPgp } from "../etapas/4-pgp/entrada";
 import { NOME_PASSO_PGP, ordemDaParte, passoDaParte } from "../etapas/4-pgp/passos";
-import { contarPendentesPgp, itensDoPgp, nomeDaParte, partesAGerar, pgpInicial } from "../etapas/4-pgp/pgp";
-import { duracaoEsperada } from "../etapas/2-proposta/cronograma";
+import {
+  contarPendentesPgp,
+  itensDoPgp,
+  repeteORegistroInicial,
+  nomeDaParte,
+  partesAGerar,
+  pgpInicial,
+} from "../etapas/4-pgp/pgp";
+import { duracaoEsperada, type Cronograma } from "../etapas/2-proposta/cronograma";
+import { textoDasHoras, textoDasHorasTotais } from "../etapas/2-proposta/preco";
 import { itensValidos, paragrafoDoItem, type ItemConferido } from "../pmo/itens";
 import { camposDoDossie, type DocumentoExportavel, type Secao, type Tabela } from "./modelo";
 
 const A_DEFINIR = "a definir pelo GP";
+/** Premissas do PMO que repetiam o registro inicial (mesma premissa crítica) e saíram do B3. */
+function repetidasNoRegistro(p: PgpDossie, e: EntradaPgp): string[] {
+  const repetidas = (p.riscos?.resposta.premissas ?? []).filter((x) =>
+    repeteORegistroInicial(x, e.premissasTap),
+  );
+  return repetidas.length
+    ? [
+        `Conferência do código: ${repetidas.length} linha(s) do passo de riscos repetiam o registro inicial (${[...new Set(repetidas.map((x) => x.premissaCritica || (x.tipo === "restricao" ? "restrição" : "premissa")))].join(", ")}) e ficaram só uma vez.`,
+      ]
+    : [];
+}
+
+/** Início do cronograma para o texto: o do GP, ou a data do documento marcada "a confirmar pelo GP". */
+function textoDoInicio(p: PgpDossie, e: EntradaPgp): string {
+  const { inicio, doDocumento } = inicioDoPgp(p, e);
+  if (!inicio) return "—";
+  return doDocumento
+    ? `${textoDaData(inicio)} (data do documento, ${doDocumento}, a confirmar pelo GP)`
+    : textoDaData(inicio);
+}
+
+/**
+ * Atividade presa a data fixa (evento): a folga das predecessoras até ela pesa nas premissas de prazo de aprovação
+ * (PC3) e de quem tem de fazer a sua parte antes do evento (PC6). Sem folga, o alerta vai no registro de premissas.
+ */
+export function alertasDeDataFixa(crono?: Cronograma): string[] {
+  return (crono?.datasFixas ?? []).map((f) =>
+    !f.cabe
+      ? `Alerta (conta do código): a atividade ${f.atividade} começa na data fixa de ${textoDaData(f.inicio)}, mas as predecessoras só terminam em ${textoDaData(f.fimPredecessoras)}, ${-(f.folgaCorrida ?? 0)} dia(s) corrido(s) depois. As premissas de aprovação no prazo (PC3) e de quem faz a sua parte antes do evento (PC6) não se sustentam com este cronograma: sugere-se rever durações, paralelismo ou o prazo de análise combinado com o contratante.`
+      : `Data fixa (conta do código): a atividade ${f.atividade} começa em ${textoDaData(f.inicio)}; as predecessoras terminam em ${textoDaData(f.fimPredecessoras)}, com folga de ${f.folgaCorrida ?? 0} dia(s) corrido(s). Atraso maior que isso na aprovação (PC3) ou em quem faz a sua parte (PC6) empurra a atividade para depois do evento.`,
+  );
+}
+
 const reais = (v?: number) =>
   v === undefined ? A_DEFINIR : v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 const NOME_PROB = { baixa: "baixa", media: "média", alta: "alta" } as const;
@@ -27,7 +81,7 @@ interface Contexto {
 function preparar(dossie: Dossie, hoje: Date): Contexto {
   const p = dossie.pgp ?? pgpInicial();
   const e = montarEntradaPgp(dossie, hoje);
-  const todos = itensDoPgp(p, e.documentos);
+  const todos = itensDoPgp(p, e.documentos, e.premissasTap);
   return { p, e, todos, itens: itensValidos(p.revisoes, todos), pendentes: contarPendentesPgp(p, todos) };
 }
 
@@ -81,16 +135,71 @@ function tabelasDoCodigo(codigo: string, c: Contexto): { paragrafos?: string[]; 
         ]),
       },
     });
+  const questoes = codigo === "B9" ? questoesDoCodigo(e) : [];
+  if (questoes.length) {
+    const conf = conferirQuestoes(questoes, c.itens, referenciasDoPlano(e, p, c.itens, questoes));
+    const avisos = conf.linhas.flatMap((l) =>
+      (l.status?.avisos ?? []).map((a) => `${l.questao.numero}: ${a}`),
+    );
+    out.push({
+      paragrafos: [
+        "Questões montadas pelo código a partir dos pontos da etapa 1 com pergunta e das divergências do TAP sem decisão do GP; o PMO completa tipo, prioridade, responsável e data-alvo.",
+        ...(conf.semItem.length
+          ? [`Conferência do código: origem sem questão no registro (${conf.semItem.join(", ")}).`]
+          : []),
+        ...(conf.semOrigem.length
+          ? [`Conferência do código: questão sem origem nem fonte (${conf.semOrigem.join(", ")}).`]
+          : []),
+        ...conf.novas.map(
+          (n) =>
+            `Questão nova do PMO: ${n.numero} (item ${n.item}), fonte ${n.fontes}${n.citacaoConferida ? "" : ", citação não conferida"}.`,
+        ),
+        ...(avisos.length ? [`Conferência do status: ${avisos.join("; ")}.`] : []),
+      ],
+      tabela: {
+        colunas: ["Questão", "Origem", "Pergunta (código)", "No registro", "Status"],
+        larguras: [1, 2, 5, 2, 2],
+        linhas: conf.linhas.map((l) => [
+          l.questao.numero,
+          l.questao.origem,
+          l.questao.texto,
+          l.item
+            ? [l.item, ...(l.citadaEm.length ? [`citada em ${l.citadaEm.join(", ")}`] : [])].join("; ")
+            : "sem item do PMO",
+          l.status ? [l.status.estado, ...l.status.referencias].join(" · ") : "—",
+        ]),
+      },
+    });
+  }
+  const compromissos = codigo === "B23" ? rastrearCompromissos(e, c.itens) : [];
+  if (compromissos.length)
+    out.push({
+      paragrafos: [
+        "Compromissos da proposta (C, decisão 0047): o destino no TAP e no plano. No plano, vale o item que cita o número; C sem destino no plano é cobrado na conferência (etapa 5).",
+      ],
+      tabela: {
+        colunas: ["C", "Tipo", "Compromisso", "TAP", "Plano"],
+        larguras: [1, 2, 4, 3, 3],
+        linhas: compromissos.map((x) => [
+          x.compromisso.numero,
+          NOME_TIPO_COMPROMISSO[x.compromisso.tipo],
+          x.compromisso.texto,
+          x.tap.situacao === "citado" ? (x.tap.onde ?? "") : x.tap.texto,
+          x.plano.join("; ") || "sem destino no plano",
+        ]),
+      },
+    });
   if (cr && crono) {
     if (codigo === "B2")
       out.push({
-        paragrafos: [conta],
+        paragrafos: [conta, ...conferirPacotes(p).map((x) => `Conferência do código: ${x}`)],
         tabela: {
-          colunas: ["ID e atividade", "Produto", "Predecessoras", "Requisitos"],
-          larguras: [4, 1, 2, 2],
+          colunas: ["ID e atividade", "Produto", "Pacote", "Predecessoras", "Requisitos"],
+          larguras: [4, 1, 1, 2, 2],
           linhas: cr.atividades.map((a) => [
             `${a.id} ${a.nome}`,
             a.produto,
+            a.pacote || "—",
             a.predecessoras.join(", ") || "—",
             a.requisitos.join(", "),
           ]),
@@ -119,6 +228,7 @@ function tabelasDoCodigo(codigo: string, c: Contexto): { paragrafos?: string[]; 
         paragrafos: [
           `${conta} Total: ${crono.total} dias úteis${crono.dataFim ? `, até ${textoDaData(crono.dataFim)}` : ""}. ${crono.conferenciaPrazo.texto}`,
           ...crono.problemas,
+          ...conferirPacotes(p).map((x) => `Conferência do código: ${x}`),
           "A aprovação de cada produto é dependência externa, a cargo do contratante: o tempo dela é decisão do GP.",
           ...(codigo === "B16" ? ["O diagrama de rede vai em imagem (SVG) no pacote do plano."] : []),
         ],
@@ -158,14 +268,18 @@ function tabelasDoCodigo(codigo: string, c: Contexto): { paragrafos?: string[]; 
     if (codigo === "A14" || codigo === "B29")
       out.push({
         paragrafos: [
-          `${conta} Linha de base do cronograma: ${crono.total} dias úteis${crono.dataFim ? `, de ${p.parametros.inicio ? textoDaData(new Date(`${p.parametros.inicio}T00:00:00`)) : "—"} a ${textoDaData(crono.dataFim)}` : " (data de início a definir pelo GP)"}; caminho crítico: ${crono.caminhoCritico.join(" → ")}; desvio-padrão do caminho crítico: ${crono.desvioTotal.toFixed(1)} dias.`,
+          `${conta} Linha de base do cronograma: ${crono.total} dias úteis${crono.dataFim ? `, de ${textoDoInicio(p, e)} a ${textoDaData(crono.dataFim)}` : " (data de início a definir pelo GP)"}; caminho crítico: ${crono.caminhoCritico.join(" → ")}; desvio-padrão do caminho crítico: ${crono.desvioTotal.toFixed(1)} dias.`,
           `Tempo de aprovação de cada produto: ${p.parametros.aprovacaoDias === undefined ? A_DEFINIR : `${p.parametros.aprovacaoDias} dias úteis (decisão do GP)`}. ${crono.conferenciaPrazo.texto}`,
           "Data de referência: as datas contam a partir da data de assinatura do contrato; o prazo contratual é o da RFP e o do TAP.",
         ],
       });
     if (codigo === "B18")
       out.push({
-        paragrafos: ["Nomes: decisão do GP. Papéis RACI por atividade (sugestão do PMO, revisada pelo GP)."],
+        paragrafos: [
+          "Nomes: decisão do GP. Papéis RACI por atividade (sugestão do PMO, revisada pelo GP).",
+          ...contratanteNaRaci(cr).map((x) => `Contratante na RACI (não entra na equipe) — ${x}.`),
+          ...conferirRaci(cr).map((x) => `Conferência do código: ${x}`),
+        ],
         tabela: {
           colunas: ["Perfil", "Exigido pela RFP", "Nome (decisão do GP)", "Responsável (R)", "Aprova (A)"],
           larguras: [3, 1, 2, 3, 2],
@@ -192,16 +306,24 @@ function tabelasDoCodigo(codigo: string, c: Contexto): { paragrafos?: string[]; 
         paragrafos: [
           `${conta} Horas esperadas (PERT) × valor-hora do GP.`,
           "Despesas (viagens, passagens, diárias): decisão do GP, fora desta conta de horas.",
+          ...(custos.riscosComReserva.length
+            ? [
+                `Contingência pedida pelos riscos ${custos.riscosComReserva.map((r) => r.id).join(", ")}: ${A_DEFINIR}, dentro da linha de base dos custos (A15).`,
+              ]
+            : []),
         ],
         tabela: {
           colunas: ["Perfil", "Horas", "Valor-hora (GP)", "Custo"],
           larguras: [4, 1, 2, 2],
-          linhas: custos.preco.linhas.map((l) => [
-            l.perfil.nome,
-            String(l.horas),
-            reais(l.valorHora),
-            reais(l.custo),
-          ]),
+          linhas: [
+            ...custos.preco.linhas.map((l) => [
+              l.perfil.nome,
+              textoDasHoras(l),
+              reais(l.valorHora),
+              reais(l.custo),
+            ]),
+            ["Total", textoDasHorasTotais(custos.preco), "", reais(custos.preco.pessoal)],
+          ],
         },
       });
     else
@@ -222,6 +344,10 @@ function tabelasDoCodigo(codigo: string, c: Contexto): { paragrafos?: string[]; 
               "Reserva de contingência (decisão do GP, dentro da linha de base)",
               reais(p.parametros.contingencia),
             ],
+            ...custos.riscosComReserva.map((r) => [
+              `  Contingência do risco ${r.id} (${r.texto.slice(0, 80)}${r.texto.length > 80 ? "…" : ""})`,
+              p.parametros.contingencia === undefined ? A_DEFINIR : `parte da reserva acima (${A_DEFINIR})`,
+            ]),
             ["Linha de base dos custos", reais(custos.linhaDeBase)],
             ["Reserva gerencial (decisão do GP, fora da linha de base)", reais(p.parametros.gerencial)],
             ["Orçamento do projeto", reais(custos.orcamento)],
@@ -261,6 +387,8 @@ function tabelasDoCodigo(codigo: string, c: Contexto): { paragrafos?: string[]; 
     out.push({
       paragrafos: [
         "Parte do registro inicial da etapa 3 e acrescenta as premissas novas das estimativas e dos riscos.",
+        ...repetidasNoRegistro(p, e),
+        ...alertasDeDataFixa(crono),
       ],
       tabela: {
         colunas: ["Premissa ou restrição", "Origem", "Premissa crítica", "Se não se confirmar", "Depende de"],

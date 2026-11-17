@@ -37,6 +37,7 @@ import { PREMISSAS_CRITICAS } from "../../dominio/skill";
 import { EtiquetaRotulo, RotuloSecao } from "../componentes/basicos";
 import { ConectarClaude, useChave } from "../componentes/conectar-claude";
 import { ItensPmo } from "../componentes/item-pmo";
+import { CampoFeriados } from "../componentes/campo-feriados";
 import { ABORDAGEM_GRAVADA, MODELO_GRAVADO, respostaGravada } from "../../demonstracao/demonstracao";
 
 const NOME_PASSO: Record<PassoProposta, string> = {
@@ -685,6 +686,7 @@ function Eap({
     aprovacaoDias: par.aprovacaoDias,
     inicio: par.inicio ? new Date(`${par.inicio}T00:00:00`) : undefined,
     prazoRfp: ponto.prazoExecucao,
+    feriados: par.feriados,
   });
   const prazos = conferirPrazosDosProdutos(
     crono,
@@ -714,10 +716,12 @@ function Eap({
             valor={par.aprovacaoDias}
             aoMudar={(v) => mudarPar({ aprovacaoDias: v })}
           />
+          <CampoFeriados valor={par.feriados} aoMudar={(v) => mudarPar({ feriados: v })} />
         </div>
         <p className="texto-apoio">
           Duração esperada de cada atividade: (otimista + 4 × mais provável + pessimista) ÷ 6, arredondada
-          para cima. Dias úteis descontam só sábados e domingos: conferir feriados.
+          para cima. Dias úteis descontam sábados, domingos e os feriados nacionais; os municipais, o GP
+          informa.
         </p>
         <div
           className={`aviso aviso--coluna${crono.conferenciaPrazo.situacao === "nao-cabe" ? " aviso--erro" : ""}`}

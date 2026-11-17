@@ -21,6 +21,8 @@ Os gabaritos e as leituras gravadas foram feitos pelo Claude Code seguindo a ski
 
 **PR #46:** métodos revisados (sem os detalhes que identificavam o caso real) e a engenharia reversa das cinco etapas; a chave dos scripts lida de um arquivo fora do repositório (`RAIO_X_ARQUIVO_CHAVE`, nunca `ANTHROPIC_API_KEY`); documentação coerente com a 0035 e a M1; o roteiro da etapa 5 com um plano real; a decisão 0037 (conexão antes de analisar, demonstração da etapa 5).
 
+**Correções da etapa 1 e autoconferência (decisões 0048 e 0049), branch `correcao/etapa-1-esqueleto` em cima da M3:** os erros do esqueleto que os testes externos da skill acharam na SMPED e num TR municipal de contratação direta; a contratação direta no código; os cruzamentos X1 a X6; a citação fraca; a autoconferência nos esquemas das etapas 1 a 4 e o teste que reprova. As leituras externas ficam fora do Git (`referencias/estudos-externos/`). Junto, na skill 0.3.0 (PR #52): decisões 0042 a 0047. **Atenção:** o PR #54 (M3) falha no CI por dois arquivos da própria M3 (respostas gravadas do TAP da OEI, que estão num stash local, e um espaço irregular em `tests/pmo/pedido-externo.test.ts`).
+
 **Fase M2 (etapa 2 pelo método), PR aberto em cima do #46, aguarda o teste e o ok da responsável** (decisão 0038): a minuta redigida por inteiro na ordem do modelo do edital, preço pelo tipo de contrato, pontos por preço, caixa, quadro de equipe × produtividade e duração × vigência por código. Placar em `docs/estudos/placar-m2-etapa-2.md`: o esqueleto do código cobre todos os itens do gabarito que são do código (28 de 28 na SMPED, 31 de 31 na OEI); com a leitura gravada, 40 de 40 e a minuta redigida por inteiro (17 e 14 seções). **Skill 0.3.0 no PR #51 (rascunho), sem publicar antes do ok.**
 
 ## Fases

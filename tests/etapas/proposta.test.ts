@@ -3,6 +3,7 @@
 import { readFileSync } from "node:fs";
 import { beforeAll, describe, expect, it } from "vitest";
 import type { DocumentoLido } from "../../src/dossie/esquema";
+import { feriadosNacionais, pascoa } from "../../src/texto/feriados";
 import { conferirMinuta } from "../../src/etapas/2-proposta/conferencia-final";
 import {
   calcularCronograma,
@@ -10,7 +11,13 @@ import {
   duracaoEsperada,
 } from "../../src/etapas/2-proposta/cronograma";
 import { pedidoConteudo, pedidoEap, pedidoEstrategia } from "../../src/etapas/2-proposta/pedidos";
-import { calcularPreco, conferirValor, lerValorEmReais } from "../../src/etapas/2-proposta/preco";
+import {
+  calcularPreco,
+  conferirValor,
+  lerValorEmReais,
+  textoDasHoras,
+  textoDasHorasTotais,
+} from "../../src/etapas/2-proposta/preco";
 import { montarPontoDePartida, type PontoDePartida } from "../../src/etapas/2-proposta/ponto-de-partida";
 import {
   avaliarItens,
@@ -18,7 +25,7 @@ import {
   propostaInicial,
   requisitosCitadosForaDosItens,
 } from "../../src/etapas/2-proposta/proposta";
-import { RespostaConteudo, RespostaEap, RespostaEstrategia } from "../../src/pmo/schemas/proposta";
+import { LinhaRaci, RespostaConteudo, RespostaEap, RespostaEstrategia } from "../../src/pmo/schemas/proposta";
 import type { AtividadeEap, HorasPerfil, PerfilEquipe } from "../../src/pmo/schemas/proposta";
 import { lerRfpPublica } from "../ajudantes/rfp-publica";
 
@@ -34,8 +41,71 @@ const atv = (id: string, pred: string[], d: [number, number, number], aprov = fa
   nome: `Atividade ${id}`,
   predecessoras: pred,
   duracao: est(...d),
+  restricaoData: null,
   aprovacaoCliente: aprov,
+  analiseDoContratante: false,
   requisitos: [],
+});
+
+describe("EAP com data fixa, horas a definir e o contratante na RACI (issue da M2)", () => {
+  it("restrição de data: a duração é a janela em dias úteis, contada pelo código", () => {
+    const campo: AtividadeEap = {
+      ...atv("2", ["1"], [0, 0, 0]),
+      restricaoData: {
+        inicio: "07/11/2026",
+        fim: "06/01/2027",
+        fonte: { doc: "rfp", pagina: 1, trecho: "previsto para o período de 07/11/2026 a 06/01/2027" },
+      },
+    };
+    const c = calcularCronograma([atv("1", [], [5, 5, 5]), campo]);
+    // 07/11/2026 (sábado) a 06/01/2027 (quarta): 15 em novembro, 23 em dezembro, 5 em janeiro = 43 dias de semana,
+    // menos os feriados nacionais em dia de semana (20/11, 25/12 e 01/01) = 40 dias úteis
+    expect(c.atividades.find((a) => a.id === "2")?.duracao).toBe(40);
+    expect(c.problemas.join(" ")).toMatch(/data fixa.*61 dias corridos \(40 úteis na rede\)/);
+  });
+
+  it("horas null não somam zero: viram pendência do GP", () => {
+    const perfis = [
+      { id: "ap", nome: "Aplicadores", exigido: false, qualificacao: "", requisito: "", fontes: [] },
+    ];
+    const p = calcularPreco(perfis, [{ atividade: "2", perfil: "ap", horas: null }], {
+      valoresHora: {},
+      despesas: [],
+    });
+    expect(p.faltando.join(" ")).toMatch(/horas de Aplicadores na atividade 2 \(decisão do GP\)/);
+  });
+
+  it("com valor-hora, horas a definir deixam o custo e o total em aberto e aparecem como tal, nunca como zero", () => {
+    const perfis = [
+      { id: "cc", nome: "Coordenação de campo", exigido: false, qualificacao: "", requisito: "", fontes: [] },
+      { id: "ap", nome: "Aplicadores", exigido: false, qualificacao: "", requisito: "", fontes: [] },
+    ];
+    const p = calcularPreco(
+      perfis,
+      [
+        { atividade: "c3", perfil: "cc", horas: est(10, 10, 10) },
+        { atividade: "c4", perfil: "cc", horas: null },
+        { atividade: "c3", perfil: "ap", horas: null },
+        { atividade: "c4", perfil: "ap", horas: null },
+      ],
+      { valoresHora: { cc: 100, ap: 50 }, despesas: [] },
+    );
+    const [cc, ap] = p.linhas;
+    expect(textoDasHoras(cc!)).toBe("10 + a definir pelo GP (c4)");
+    expect(textoDasHoras(ap!)).toBe("a definir pelo GP (c3, c4)");
+    expect(cc!.custo).toBeUndefined();
+    expect(p.pessoal).toBeUndefined();
+    expect(textoDasHorasTotais(p)).toBe(
+      "10 + a definir pelo GP (Coordenação de campo: c4; Aplicadores: c3, c4)",
+    );
+  });
+
+  it("o contratante entra na RACI como parte, não como perfil da equipe", () => {
+    expect(
+      LinhaRaci.parse({ atividade: "1", perfil: "fiscal", papel: "C", parte: "contratante" }).parte,
+    ).toBe("contratante");
+    expect(LinhaRaci.parse({ atividade: "1", perfil: "economista", papel: "R" }).parte).toBe("equipe");
+  });
 });
 
 describe("cronograma (código)", () => {
@@ -288,5 +358,96 @@ describe("prazo de cada produto (código)", () => {
       ],
     );
     expect(r[0]?.situacao).toBe("nao-conferido");
+  });
+});
+
+describe("data fixa com o início do projeto: o cronograma respeita o evento", () => {
+  const campo = (pred: string[]): AtividadeEap => ({
+    ...atv("c4", pred, [0, 0, 0]),
+    restricaoData: {
+      inicio: "07/11/2026",
+      fim: "06/01/2027",
+      fonte: { doc: "rfp", pagina: 1, trecho: "previsto para o período de 07/11/2026 a 06/01/2027;" },
+    },
+  });
+
+  it("começa no primeiro dia útil da janela e as predecessoras ganham folga", () => {
+    const c = calcularCronograma([atv("m1", [], [10, 10, 10]), campo(["m1"]), atv("s1", ["c4"], [5, 5, 5])], {
+      inicio: new Date(2026, 8, 21),
+    });
+    const c4 = c.atividades.find((a) => a.id === "c4");
+    expect(c4?.dataInicio?.toLocaleDateString("pt-BR")).toBe("07/11/2026");
+    expect(c4?.dataFim?.toLocaleDateString("pt-BR")).toBe("06/01/2027");
+    expect(c4?.folga).toBe(0);
+    expect(c.atividades.find((a) => a.id === "m1")?.folga).toBeGreaterThan(0);
+    expect(c.problemas.join(" ")).toMatch(
+      /presa à data fixa: de 07\/11\/2026 a 06\/01\/2027, 61 dias corridos.*folga de \d+ dia\(s\) corrido/,
+    );
+    expect(c4?.diasCorridos).toBe(61);
+  });
+
+  it("acusa quando as predecessoras terminam depois do início da janela", () => {
+    const c = calcularCronograma([atv("m1", [], [60, 60, 60]), campo(["m1"])], {
+      inicio: new Date(2026, 8, 21),
+    });
+    expect(c.problemas.join(" ")).toMatch(/não cabe antes do evento/);
+    expect(c.datasFixas[0]).toMatchObject({ atividade: "c4", cabe: false });
+    expect(c.datasFixas[0]!.folgaCorrida).toBeLessThan(0);
+  });
+
+  it("data em aaaa-mm-dd é aceita e sai em dd/mm/aaaa; a folga fica registrada para o B3", () => {
+    const iso: AtividadeEap = {
+      ...campo(["m1"]),
+      restricaoData: { ...campo(["m1"]).restricaoData!, inicio: "2026-11-07", fim: "2027-01-06" },
+    };
+    const c = calcularCronograma([atv("m1", [], [30, 30, 30]), iso], { inicio: new Date(2026, 8, 21) });
+    expect(c.problemas.join(" ")).toMatch(/de 07\/11\/2026 a 06\/01\/2027, 61 dias corridos/);
+    expect(c.problemas.join(" ")).not.toMatch(/2026-11-07/);
+    // m1: 30 dias úteis a partir de 21/09/2026, sem 12/10 e 02/11 (feriados em segunda) → termina em 03/11; folga até 07/11: 3 dias corridos
+    expect(c.datasFixas[0]).toMatchObject({ atividade: "c4", cabe: true, diasCorridos: 61, folgaCorrida: 3 });
+  });
+});
+
+describe("feriados e análise do contratante no cronograma (decisão 0051)", () => {
+  it("feriados nacionais: os fixos, a Sexta-feira Santa móvel; Carnaval e Corpus Christi não", () => {
+    const f = feriadosNacionais(2026).map((x) => x.data.toLocaleDateString("pt-BR"));
+    expect(f).toEqual(
+      expect.arrayContaining(["01/01/2026", "03/04/2026", "21/04/2026", "20/11/2026", "25/12/2026"]),
+    );
+    expect(f).not.toContain("17/02/2026"); // Carnaval
+    expect(f).not.toContain("04/06/2026"); // Corpus Christi
+    expect(pascoa(2025).toLocaleDateString("pt-BR")).toBe("20/04/2025");
+  });
+
+  it("feriado nacional e municipal empurram as datas; feriado ilegível é apontado", () => {
+    const base = [atv("a", [], [3, 3, 3])];
+    const semMunicipal = calcularCronograma(base, { inicio: new Date(2025, 10, 19) });
+    // 19/11 (quarta), 20/11 é feriado, 21/11 (sexta), 24/11 (segunda)
+    expect(semMunicipal.atividades[0]?.dataFim?.toLocaleDateString("pt-BR")).toBe("24/11/2025");
+    const comMunicipal = calcularCronograma(base, {
+      inicio: new Date(2025, 10, 19),
+      feriados: ["21/11/2025", "x"],
+    });
+    expect(comMunicipal.atividades[0]?.dataFim?.toLocaleDateString("pt-BR")).toBe("25/11/2025");
+    expect(comMunicipal.problemas.join(" ")).toMatch(/Feriado municipal ilegível \(x\)/);
+  });
+
+  it("a atividade que é a análise do contratante dura o tempo de aprovação do GP, sem somar por cima", () => {
+    const analise: AtividadeEap = {
+      ...atv("m5", ["m4"], [5, 10, 15]),
+      analiseDoContratante: true,
+      aprovacaoCliente: true,
+    };
+    const sem = calcularCronograma([atv("m4", [], [4, 4, 4]), analise]);
+    expect(sem.total).toBe(14);
+    const com = calcularCronograma([atv("m4", [], [4, 4, 4]), analise], { aprovacaoDias: 5 });
+    expect(com.atividades.find((a) => a.id === "m5")).toMatchObject({ duracao: 5, aprovacao: 0 });
+    expect(com.total).toBe(9);
+    expect(com.problemas.join(" ")).toMatch(
+      /m5 é a análise do contratante: duração trocada pelo tempo de aprovação do GP \(5 dias úteis\)/,
+    );
+    // a entrega com aprovacaoCliente (sem atividade de análise) continua somando o tempo depois
+    const entrega = calcularCronograma([atv("m4", [], [4, 4, 4], true)], { aprovacaoDias: 5 });
+    expect(entrega.total).toBe(9);
   });
 });

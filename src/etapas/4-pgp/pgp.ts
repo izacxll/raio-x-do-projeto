@@ -8,6 +8,7 @@ import { conferirItem } from "../../pmo/redacao";
 import type { ItemPmo } from "../../pmo/schemas/comum";
 import type { ParteGerada, PassoPgp, RespostaAdaptacao } from "../../pmo/schemas/pgp";
 import { PASSOS_PGP } from "./passos";
+import type { PremissaRegistro } from "../../pmo/schemas/tap";
 
 export function pgpInicial(modelo: string = MODELO_PADRAO): PgpDossie {
   return { modelo, gerar: {}, revisoes: {}, parametros: { valoresHora: {}, nomes: {} }, uso: [] };
@@ -66,7 +67,26 @@ function itensDasObservacoes(passo: PassoPgp, obs: ItemPmo[], docs: DocumentoLid
 const NOME_PROB = { baixa: "baixa", media: "média", alta: "alta" } as const;
 const NOME_IMPACTO = { baixo: "baixo", medio: "médio", alto: "alto" } as const;
 
-export function itensDoPgp(p: PgpDossie, docs: DocumentoLido[]): ItemConferido[] {
+/**
+ * Linha do B3 do passo de riscos que repete o registro inicial (etapa 3). O passo de riscos só acrescenta o que nasce
+ * das estimativas (B3.4); o que vem da RFP, da proposta ou do TAP já está no registro inicial quando ele existe: sai a
+ * linha com a mesma premissa crítica ou com a mesma origem e o mesmo tipo (restrição da RFP, premissa da proposta).
+ * Ficam as premissas de estimativa.
+ */
+export function repeteORegistroInicial(x: PremissaRegistro, registroInicial: PremissaRegistro[]): boolean {
+  if (x.origem === "estimativa" || !registroInicial.length) return false;
+  return registroInicial.some(
+    (r) =>
+      (!!x.premissaCritica && r.premissaCritica === x.premissaCritica) ||
+      (r.origem === x.origem && r.tipo === x.tipo),
+  );
+}
+
+export function itensDoPgp(
+  p: PgpDossie,
+  docs: DocumentoLido[],
+  registroInicial: PremissaRegistro[] = [],
+): ItemConferido[] {
   const out: ItemConferido[] = [];
   for (const { passo } of PASSOS_PGP) {
     const r = p[passo]?.resposta;
@@ -92,7 +112,8 @@ export function itensDoPgp(p: PgpDossie, docs: DocumentoLido[]): ItemConferido[]
           conferencia: conferirItem(x.item, docs),
         }),
       );
-      p.riscos.resposta.premissas.forEach((x, k) =>
+      p.riscos.resposta.premissas.forEach((x, k) => {
+        if (repeteORegistroInicial(x, registroInicial)) return;
         out.push({
           id: `riscos:B3:${k}`,
           passo,
@@ -107,8 +128,8 @@ export function itensDoPgp(p: PgpDossie, docs: DocumentoLido[]): ItemConferido[]
             .filter(Boolean)
             .join(" "),
           conferencia: conferirItem(x.item, docs),
-        }),
-      );
+        });
+      });
     }
     itensDasObservacoes(passo, r.observacoes, docs, out);
   }

@@ -1,7 +1,15 @@
 // Testar sem a chave (o Claude do claude.ai faz o papel do PMO): exportar o pedido de um passo e importar a resposta.
 // Uso:
-//   npm run exportar-pedido -- --etapa 1 --passo leitura-rfp --rfp <arquivo> [--dossie <arquivo>] [--saida <pasta>]
+//   npm run exportar-pedido -- --etapa 1 --passo leitura-rfp --rfp <arquivo> [--saida <pasta>]
 //   npm run importar-resposta -- --etapa 1 --passo leitura-rfp --arquivo <resposta.json> --dossie <arquivo>
+// Etapas 2 a 5, encadeadas pelo dossiê (cada passo só sai depois de importar o anterior):
+//   npm run exportar-pedido -- --etapa 2 --passo estrategia --dossie <arquivo>   (passos: estrategia, conteudo, eap)
+//   npm run importar-resposta -- --etapa 2 --passo estrategia --arquivo <r.json> --dossie <arquivo> [--abordagem B]
+//   etapa 3: tap, premissas; etapa 4: adaptacao, escopo, cronograma, riscos, planos, execucao [--gerar "A1,A3,…"]
+//   etapa 5: leitura, com --plano <plano.pdf> na exportação, ou --plano dossie (o PGP da etapa 4, montado pelo app;
+//   grava também o PGP inteiro em DOCX na pasta de saída)
+//   etapas 4 e 5: --porte pequeno|médio|grande e --pcs "PC1,PC3,…" na exportação (ficam no dossiê)
+// Decisões do GP simuladas: a abordagem (padrão: a primeira sugerida) e as partes do PGP (padrão: as não dispensáveis).
 // A pasta de saída padrão é ../pedidos-raio-x/, fora do repositório. Pedido de plano real nunca vai para o Git.
 import { spawnSync } from "node:child_process";
 import { resolve, relative, isAbsolute, sep } from "node:path";
@@ -46,6 +54,11 @@ const env = {
   RAIO_X_DOSSIE: args.dossie ? resolve(args.dossie) : "",
   RAIO_X_ARQUIVO: args.arquivo ? resolve(args.arquivo) : "",
   RAIO_X_SAIDA: saida,
+  RAIO_X_ABORDAGEM: args.abordagem ?? "",
+  RAIO_X_GERAR: args.gerar ?? "",
+  RAIO_X_PLANO: args.plano === "dossie" ? "dossie" : args.plano ? resolve(args.plano) : "",
+  RAIO_X_PORTE: args.porte ?? "",
+  RAIO_X_PCS: args.pcs ?? "",
 };
 delete env.ANTHROPIC_API_KEY;
 const r = spawnSync("npx", ["vitest", "run", "tests/pmo/pedido-externo.test.ts", "--silent=false"], {

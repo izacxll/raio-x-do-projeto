@@ -12,6 +12,7 @@ const REGRAS = `Regras deste pedido (além da skill):
 - Sugestão em redação condicional ("sugere-se", "uma opção é", "recomenda-se avaliar"). Nada de valores, prazos ou quantidades que não estejam no documento: escreva "não informado no documento — a definir pelo GP".
 - Use os números de requisito do ponto de partida (R01, R02…). Requisito novo é sugestão, sem número.
 - Não faça contas (somas, acumulados, pontos por preço, caixa, produtividade): são do código, que já mandou o resultado no esqueleto.
+- Autoconferência (decisão 0044): em "autoconferencia", marque cada item das fichas prop-* usadas como "presente" (onde: o id do item), "dispensado" (motivo) ou "decisao_gp" (motivo). Nenhum item sem marca. Exclusão nunca tira requisito R.
 - Campos de texto sem conteúdo ficam com "" e listas sem conteúdo ficam com [].`;
 
 const TESTE = `Teste de cada item (método da etapa 2): "isto ajuda a ganhar pontos, a cumprir uma exigência ou a proteger a FGV na execução?" Se não ajuda, não entra. Texto genérico sobre o tema, sem ligação com um critério ou uma exigência, não entra.`;
@@ -25,7 +26,7 @@ export function pedidoEstrategia(p: PontoDePartida, esqueleto?: string): string 
 
 Ponto de partida, tirado da RFP pelo código (etapa 1, revisada pelo GP quando houver):
 
-${pontoDePartidaEmTexto(p)}${blocoEsqueleto(esqueleto)}
+${pontoDePartidaEmTexto(p, { pedirDestino: true })}${blocoEsqueleto(esqueleto)}
 
 # O que fazer
 ${TESTE}
@@ -125,7 +126,7 @@ export function pedidoEap(
 2. volumes: o volume previsto (visitas, atendimentos, turmas) por faixa de meses, a unidade, a função que o executa e a fonte; com eles o código confere o quadro contra o teto de produtividade escrito no edital.
 3. atividades, horas: ${tipoProjeto === "hibrido" ? "só para os produtos" : "deixe vazias ([])"}; raci com o contratante como "A" nas validações (um só A por linha).`
     : `Consultoria por produtos:
-1. atividades: a EAP por produto (campo "produto" = id do produto do SOW), com predecessoras (ids) e duração em três pontos em dias úteis, cada uma com a base. Marque aprovacaoCliente nas atividades que terminam num produto que o contratante aprova. Não calcule datas, médias, caminho crítico nem totais.
+1. atividades: a EAP por produto (campo "produto" = id do produto do SOW), com predecessoras (ids) e duração em três pontos em dias úteis, cada uma com a base. Marque aprovacaoCliente nas atividades que terminam num produto que o contratante aprova (o código soma o tempo de aprovação depois); se a análise do contratante for uma atividade própria, marque analiseDoContratante nela e não aprovacaoCliente na entrega (o código troca a duração pelo tempo de aprovação do GP). Não calcule datas, médias, caminho crítico nem totais.
 2. perfis: os exigidos pela RFP (exigido: true, com fonte e número R) e os sugeridos. Nomes de pessoas nunca: são decisão do GP.
 3. horas: horas de cada perfil por atividade, em três pontos, com a base.
 4. raci: quem é R, A, C e I em cada atividade (um só A por linha). quadroEquipe e volumes ficam vazios ([]).`;

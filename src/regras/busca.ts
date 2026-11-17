@@ -80,22 +80,53 @@ export interface OpcoesBusca {
   primeira?: boolean;
 }
 
+const PALAVRAS_SEM_PLURAL = new Set(
+  "de da do das dos e a o as os em no na nos nas para por com sem ao aos um uma que se ou".split(" "),
+);
+const escapar = (t: string) => t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+/**
+ * Singular e plural da palavra (texto já sem acento e em minúsculas): "criterio" acha "criterios", "municipal" acha
+ * "municipais", "acao" acha "acoes". Palavra curta, número e preposição ficam como estão.
+ */
+export function formasDaPalavra(w: string): string {
+  if (w.length < 4 || PALAVRAS_SEM_PLURAL.has(w) || !/^[a-z]+$/.test(w)) return escapar(w);
+  const radical = (n: number) => escapar(w.slice(0, w.length - n));
+  if (/(?:oes|aes|aos)$/.test(w)) return `${radical(3)}(?:ao|oes|aes|aos)`;
+  if (/ao$/.test(w)) return `${radical(2)}(?:ao|oes|aes|aos)`;
+  if (/is$/.test(w)) return `${radical(2)}(?:l|is)`;
+  if (/l$/.test(w)) return `${radical(1)}(?:l|is)`;
+  if (/ns$/.test(w)) return `${radical(2)}(?:m|ns)`;
+  if (/m$/.test(w)) return `${radical(1)}(?:m|ns)`;
+  if (/[rz]es$/.test(w)) return `${radical(2)}(?:es)?`;
+  if (/[rz]$/.test(w)) return `${escapar(w)}(?:es)?`;
+  if (/s$/.test(w)) return `${radical(1)}s?`;
+  return `${escapar(w)}s?`;
+}
+
+/** O termo normalizado como expressão, com singular e plural em cada palavra de conteúdo. */
+export function expressaoDoTermo(n: string): RegExp {
+  return new RegExp(n.split(" ").map(formasDaPalavra).join(" "), "g");
+}
+
 export function procurar(paginas: PaginaLida[], termos: string[], opcoes: OpcoesBusca = {}): Ocorrencia[] {
   const achados: Ocorrencia[] = [];
-  const normais = termos.map((t) => [t, normalizarTermo(t)] as const).filter(([, n]) => n.length >= 2);
+  const normais = termos
+    .map((t) => [t, normalizarTermo(t)] as const)
+    .filter(([, n]) => n.length >= 2)
+    .map(([t, n]) => [t, n, expressaoDoTermo(n)] as const);
   for (const p of paginas) {
     if (opcoes.paginas && !opcoes.paginas.has(p.numero)) continue;
     if (p.origem === "nao-verificavel") continue;
     const pn = normalizarPagina(p);
-    for (const [termo, n] of normais) {
-      let de = 0;
-      for (;;) {
-        const i = pn.normal.indexOf(n, de);
-        if (i < 0) break;
-        de = i + 1;
-        if (!casa(pn.normal, i, n)) continue;
+    for (const [termo, n, re] of normais) {
+      for (const m of pn.normal.matchAll(re)) {
+        const i = m.index ?? 0;
+        const achado = m[0];
+        // a regra de borda vale para a forma achada; o radical longo segue valendo pelo tamanho do termo
+        if (!casa(pn.normal, i, achado.length >= n.length ? achado : n)) continue;
         const posicao = pn.mapa[i] ?? 0;
-        const fim = pn.mapa[i + n.length - 1] ?? posicao;
+        const fim = pn.mapa[i + achado.length - 1] ?? posicao;
         achados.push({
           pagina: p.numero,
           termo,

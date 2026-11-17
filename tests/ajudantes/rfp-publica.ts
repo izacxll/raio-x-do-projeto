@@ -13,8 +13,20 @@ export const PASTA_RFPS = new URL("../fixtures/rfps-publicas/", import.meta.url)
 const pdfjsLocal = join(PASTA_RFPS, "../../../node_modules/pdfjs-dist/");
 
 export async function lerRfpPublica(nome: string, lidoEm = new Date(2026, 10, 13)): Promise<DocumentoLido> {
+  return lerPdf(join(PASTA_RFPS, nome), nome, lidoEm);
+}
+
+/**
+ * Lê um PDF de qualquer caminho (ex.: um documento que fica fora do Git, em referencias/), com o mesmo código do
+ * navegador. Os testes que usam documentos fora do Git são pulados quando o arquivo não existe.
+ */
+export async function lerPdf(
+  caminho: string,
+  nome: string,
+  lidoEm = new Date(2026, 10, 13),
+): Promise<DocumentoLido> {
   const tarefa = pdfjs.getDocument({
-    data: new Uint8Array(readFileSync(join(PASTA_RFPS, nome))),
+    data: new Uint8Array(readFileSync(caminho)),
     standardFontDataUrl: pathToFileURL(join(pdfjsLocal, "standard_fonts/")).href,
     wasmUrl: pathToFileURL(join(pdfjsLocal, "wasm/")).href,
     cMapUrl: pathToFileURL(join(pdfjsLocal, "cmaps/")).href,

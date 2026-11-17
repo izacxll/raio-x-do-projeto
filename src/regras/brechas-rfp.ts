@@ -8,7 +8,7 @@ import { type DocumentoRfp, type ItemAnalise } from "../extracao/rfp/item";
 import { localizarTodos, type Localizado } from "../extracao/rfp/localizar";
 import { faixasDoTema, type MapaRfp } from "../extracao/rfp/mapa";
 import { NOME_PRAZO_EXECUCAO, prazosDeExecucao, datasDoCertame, NOME_EVENTO } from "../extracao/rfp/prazos";
-import { encontrarDatas, formatarData } from "../texto/datas";
+import { ehDataDoFecho, encontrarDatas, formatarData } from "../texto/datas";
 import { limparEspacos } from "../texto/frase";
 import { tirarAcentos } from "../texto/normalizar";
 import { normalizarTermo } from "./busca";
@@ -68,6 +68,7 @@ const MARCOS: Record<string, string> = {
   assinatura: "na assinatura",
   aceite: "no aceite",
   publicacao: "na publicação",
+  divulgacao: "na divulgação (publicação)",
   "ordem de servico": "na ordem de serviço",
   emissao: "na emissão",
   recebimento: "no recebimento",
@@ -308,10 +309,14 @@ export function aplicarRegrasRfp(docs: DocumentoRfp[], mapa: MapaRfp): Resultado
   // origem: App-final-4.jsx, regrasRisco (CE15), linha 1785
   {
     const MOVEL =
-      /(?:prazo|vigencia|execucao)[^.;]{0,140}?contad[oa]s?\s+(?:a\s+partir\s+)?d[aoe]\s+(?:data\s+d[aoe]\s+)?(assinatura|aceite|publicacao|ordem\s+de\s+servico|emissao|recebimento)/;
+      /(?:prazo|vigencia|execucao)[^.;]{0,140}?contad[oa]s?\s+(?:a\s+partir\s+)?d[aoe]\s+(?:(?:primeiro\s+dia\s+util\s+subsequente\s+a\s+)?data\s+d[aoe]\s+)?(assinatura|aceite|publicacao|divulgacao|ordem\s+de\s+servico|emissao|recebimento)/;
     const FUTURO =
       /a\s+ser\s+realizad|sera\s+realizad|ocorrera|acontecera|previst[oa]s?\s+para|programad[oa]s?\s+para|entre\s+os\s+dias/;
-    const moveis = localizarTodos(docs, MOVEL);
+    // o prazo de recurso ou de defesa contra sanção ("contado da data da intimação", "do recebimento dos autos")
+    // não é prazo da execução
+    const moveis = localizarTodos(docs, MOVEL).filter(
+      (l) => !/\brecurs|\bsanc|penalidade|intimacao|\bdefesa\b|\bautos\b/.test(normalizarTermo(l.frase)),
+    );
     let achou = 0;
     const doCertame = datasDoCertame(docs);
     const certame = doCertame.map((d) => `${d.pagina}:${formatarData(d.data)}`);
@@ -320,11 +325,15 @@ export function aplicarRegrasRfp(docs: DocumentoRfp[], mapa: MapaRfp): Resultado
     const mv = moveis[0];
     if (mv) {
       const chave =
-        /(assinatura|aceite|publicacao|ordem\s+de\s+servico|emissao|recebimento)/.exec(mv.termo)?.[1] ?? "";
+        /(assinatura|aceite|publicacao|divulgacao|ordem\s+de\s+servico|emissao|recebimento)/.exec(
+          mv.termo,
+        )?.[1] ?? "";
       const marco = MARCOS[chave.replace(/\s+/g, " ")] ?? "no marco inicial";
       for (const doc of docs) {
         for (const p of doc.paginas) {
           for (const d of encontrarDatas(p.texto)) {
+            // a data do fecho do documento ("Cidade, 04 de setembro de 2026.") é a da assinatura, não um marco
+            if (ehDataDoFecho(p.texto, d)) continue;
             const frase = tirarAcentos(p.texto.slice(Math.max(0, d.posicao - 150), d.posicao + 60));
             if (!FUTURO.test(frase) || certame.includes(`${p.numero}:${formatarData(d.data)}`)) continue;
             if (desde && d.data < desde) continue;

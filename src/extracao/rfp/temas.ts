@@ -250,7 +250,15 @@ export const TEMAS_RFP: Tema[] = [
     nome: "Recebimento e aceite",
     res: [
       /\brecebimento (?:provisorio|definitivo)\b|\btermo de (?:aceite|recebimento)\b|\baceite d[oa]s? (?:produtos?|servicos?|entregas?)\b|\bnao aceite\b/,
+      // sem cláusula própria: o aceite fica na aprovação da nota fiscal por quem fiscaliza (contratação direta curta)
+      /\bnota fiscal[^.;]{0,60}\baprovad[ao]s? pel[oa] (?:responsavel|fiscal|gestor|fiscalizacao)[^.;]{0,60}/,
     ],
+    valor: (l) =>
+      /\bnota fiscal/.test(l.termo)
+        ? `Sem cláusula própria de recebimento no documento: o aceite é a aprovação da nota fiscal pelo responsável pela fiscalização, ${
+            /\b(?:prazo|dias?)\b/.test(l.termo) ? "com o prazo do trecho" : "sem prazo para a análise"
+          } e sem recebimento provisório e definitivo.`
+        : undefined,
     temas: ["recebimento", "pagamento"],
     sempre: true,
   },

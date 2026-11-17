@@ -220,11 +220,29 @@ function analisarRfpSemGuardar(documentos: DocumentoLido[], hoje: Date): Analise
   const identificacao = extrairIdentificacao(docs, mapa);
   const requisitosDoCodigo = extrairRequisitosRfp(docs, mapa);
   const brechas = aplicarRegrasRfp(docs, mapa);
+  // contratação direta (decisão 0042): não há critério de julgamento; "menor preço" achado no texto é da explicação
+  // jurídica de por que não se escolhe pelo preço. O item vira a hipótese legal.
+  const modalidade = identificacao.find((i) => i.id === "identificacao:modalidade");
+  const direta =
+    modalidade?.situacao === "localizado" &&
+    /^(?:Inexigibilidade|Dispensa de licitação)$/.test(modalidade.texto);
+  const julgamento = extrairJulgamento(docs, mapa).map((i): ItemAnalise =>
+    direta && i.id === "julgamento:criterio"
+      ? {
+          ...i,
+          nome: "Hipótese legal (contratação direta)",
+          texto: `${modalidade?.texto ?? ""}: contratação direta, sem critério de julgamento nem pontuação`,
+          origem: modalidade?.origem,
+          situacao: "localizado",
+          campos: undefined,
+        }
+      : i,
+  );
   const itens: ItemAnalise[] = [
     ...identificacao,
     ...itensDoMapa(mapa),
     ...extrairPrazos(docs, mapa, hoje),
-    ...extrairJulgamento(docs, mapa),
+    ...julgamento,
     ...extrairHabilitacao(docs, mapa),
     ...extrairTemas(docs, mapa),
     ...extrairPartesInteressadas(

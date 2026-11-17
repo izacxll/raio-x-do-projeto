@@ -4,6 +4,10 @@
 // - importar: valida a resposta no schema, grava no dossiê como resposta do PMO, roda as travas do código e mede
 //   contra o gabarito do Claude Code, numa seção "leitura independente". O gabarito nunca vai no pedido.
 // Só roda pelos scripts npm run exportar-pedido / importar-resposta (RAIO_X_MODO=exportar|importar).
+import { tapDoDossieComoDocumento } from "../../src/etapas/4-pgp/entrada";
+import { conferirQuestoes, questoesDoCodigo, referenciasDoPlano } from "../../src/etapas/4-pgp/questoes";
+import { montarPgp } from "../../src/exportacao/relatorio-pgp";
+import { pgpComoDocumento } from "../../src/etapas/4-pgp/autoconferencia";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { basename, dirname, join, resolve } from "node:path";
 import { describe, expect, it } from "vitest";
@@ -14,8 +18,60 @@ import type { Dossie, DocumentoLido } from "../../src/dossie/esquema";
 import { analisarRfp } from "../../src/etapas/1-rfp/analisar-rfp";
 import { leituraDoDossie, NOME_TRAVA, pedidoLeituraRfp } from "../../src/etapas/1-rfp/leitura-pmo";
 import { analiseInicial } from "../../src/etapas/1-rfp/revisao";
-import { estimarTokens, referenciasEtapa1, textoDeSistema, textoDosDocumentos } from "../../src/pmo/montagem";
+import {
+  estimarTokens,
+  referenciasEtapa1,
+  referenciasEtapa2,
+  referenciasEtapa3,
+  referenciasEtapa4,
+  referenciasEtapa5,
+  textoDeSistema,
+  textoDosDocumentos,
+} from "../../src/pmo/montagem";
 import { RespostaLeituraRfp } from "../../src/pmo/schemas/leitura-rfp";
+import { CARACTERISTICAS_PADRAO } from "../../src/dominio/caracteristicas";
+import { FICHAS, PARTES_PGP, PREMISSAS_CRITICAS } from "../../src/dominio/skill";
+import type { PgpDossie } from "../../src/dossie/esquema";
+import { autoconferenciaDaLeitura, citacaoEhFraca } from "../../src/etapas/1-rfp/leitura-pmo";
+import { calcularCronograma } from "../../src/etapas/2-proposta/cronograma";
+import { esqueletoEmTexto, montarMinuta } from "../../src/etapas/2-proposta/minuta";
+import { pedidoConteudo, pedidoEap, pedidoEstrategia } from "../../src/etapas/2-proposta/pedidos";
+import { montarPontoDePartida } from "../../src/etapas/2-proposta/ponto-de-partida";
+import { propostaInicial } from "../../src/etapas/2-proposta/proposta";
+import { compararRfpEProposta } from "../../src/etapas/3-tap/divergencias";
+import { dadosDosDocumentos } from "../../src/etapas/3-tap/do-documento";
+import { montarEntradaTap } from "../../src/etapas/3-tap/entrada";
+import { pedidoPremissas, pedidoTap } from "../../src/etapas/3-tap/pedidos";
+import { itensDaEtapa3, tapInicial } from "../../src/etapas/3-tap/tap";
+import { conferirTap } from "../../src/etapas/3-tap/conferencia-tap";
+import { itensEsperadosDaEtapa3 } from "../../src/etapas/3-tap/autoconferencia";
+import { NOME_TIPO_COMPROMISSO, destinosNoTap } from "../../src/etapas/2-proposta/compromissos";
+import { inicioFixo } from "../../src/regras/cruzamentos-rfp";
+import { montarEntradaPgp } from "../../src/etapas/4-pgp/entrada";
+import {
+  rastrearCompromissos,
+  conferirPacotes,
+  conferirRaci,
+  contratanteNaRaci,
+  cronogramaDoPgp,
+  custosDoPgp,
+  inicioDoPgp,
+} from "../../src/etapas/4-pgp/calculos";
+import { autoconferir } from "../../src/etapas/4-pgp/autoconferencia";
+import { textoDasHoras, textoDasHorasTotais } from "../../src/etapas/2-proposta/preco";
+import { PASSOS_PGP } from "../../src/etapas/4-pgp/passos";
+import { PEDIDOS_PGP } from "../../src/etapas/4-pgp/pedidos";
+import { itensDoPgp, passoAnterior, pgpInicial, repeteORegistroInicial } from "../../src/etapas/4-pgp/pgp";
+import { conferirLeitura, pedidoLeitura } from "../../src/etapas/5-conferencia/leitura-pmo";
+import { conferirAutoconferencia, partesARegenerar } from "../../src/pmo/autoconferencia";
+import { citacaoValeComoFato, conferirCitacao } from "../../src/pmo/citacoes";
+import type { FontePmo, ItemAutoconferencia } from "../../src/pmo/schemas/comum";
+import { RespostaLeitura } from "../../src/pmo/schemas/leitura";
+import { SCHEMAS_PGP, type PassoPgp } from "../../src/pmo/schemas/pgp";
+import { SCHEMAS } from "../../src/pmo/schemas/proposta";
+import { SCHEMAS_TAP } from "../../src/pmo/schemas/tap";
+import { conferirPlano } from "../../src/regras/conferencia";
+import { confirmacaoInicial, proporMapa } from "../../src/regras/mapa-pgp";
 import { tirarAcentos } from "../../src/texto/normalizar";
 import { lerPdf } from "../ajudantes/ler-pdf";
 import { lerRfpPublica, PASTA_RFPS } from "../ajudantes/rfp-publica";
@@ -45,8 +101,141 @@ interface Passo {
   schema: z.ZodType;
 }
 
+/** Passos de cada etapa, na ordem: o seguinte só sai depois de importar a resposta do anterior. */
+const PASSOS: Record<number, string[]> = {
+  1: ["leitura-rfp"],
+  2: ["estrategia", "conteudo", "eap"],
+  3: ["tap", "premissas"],
+  4: ["adaptacao", "escopo", "cronograma", "riscos", "planos", "execucao"],
+  5: ["leitura"],
+};
+
+function precisa(cond: unknown, oQue: string): asserts cond {
+  if (!cond) throw new Error(`Antes deste passo: ${oQue}.`);
+}
+
+/** Etapa 5: o plano a conferir entra no dossiê como documento "pgp" na exportação (decisão 0037: o mesmo do app). */
+function entradaDaConferencia(d: Dossie) {
+  const pgp = d.documentos.find((x) => x.papel === "pgp");
+  precisa(pgp, "exporte com --plano <arquivo.pdf> (o plano a conferir)");
+  // sem TAP em PDF, o TAP da etapa 3 no dossiê (o mesmo que a tela da etapa 5 usa)
+  const tap = d.documentos.find((x) => x.papel === "tap") ?? tapDoDossieComoDocumento(d);
+  const rfp = d.documentos.find((x) => x.papel === "rfp");
+  const mapa = confirmacaoInicial(proporMapa(pgp.paginas, PARTES_PGP));
+  const caracteristicas = d.pgp?.caracteristicas ?? CARACTERISTICAS_PADRAO;
+  const premissasAplicaveis =
+    d.pgp?.premissasAplicaveis ?? d.tap?.premissasAplicaveis ?? d.proposta?.premissasAplicaveis ?? {};
+  const resultado = conferirPlano({
+    pgp: pgp.paginas,
+    tap: tap?.paginas,
+    rfp: rfp?.paginas,
+    partes: PARTES_PGP,
+    premissas: PREMISSAS_CRITICAS,
+    mapa,
+    caracteristicas,
+    premissasAplicaveis,
+    requisitos: [],
+  });
+  return { pgp, tap, rfp, mapa, caracteristicas, premissasAplicaveis, achados: resultado.achados };
+}
+
 function montarPasso(d: Dossie): Passo {
   const docs = d.documentos.filter((x) => x.papel === "rfp" || x.papel === "anexo-rfp");
+  if (!PASSOS[etapa]?.includes(passo))
+    throw new Error(
+      `Passo "${passo}" não existe na etapa ${etapa}. Passos: ${PASSOS[etapa]?.join(", ") ?? "—"}.`,
+    );
+  if (etapa === 2) {
+    const ponto = montarPontoDePartida(docs, d.analiseRfp, HOJE);
+    const p = d.proposta ?? propostaInicial();
+    const minuta = montarMinuta(ponto, p, docs, d.analiseRfp);
+    const esqueleto = esqueletoEmTexto(minuta);
+    const base = { sistema: textoDeSistema(referenciasEtapa2()), documentos: textoDosDocumentos(docs) };
+    if (passo === "estrategia")
+      return { ...base, pedido: pedidoEstrategia(ponto, esqueleto), schema: SCHEMAS.estrategia };
+    const e = p.estrategia?.resposta;
+    precisa(e && p.abordagem, "importe a estratégia (a abordagem escolhida vem dela ou de --abordagem)");
+    if (passo === "conteudo")
+      return {
+        ...base,
+        pedido: pedidoConteudo(
+          ponto,
+          e,
+          p.abordagem.id,
+          p.abordagem.justificativa,
+          p.premissasAplicaveis,
+          esqueleto,
+        ),
+        schema: SCHEMAS.conteudo,
+      };
+    const c = p.conteudo?.resposta;
+    precisa(c, "importe o conteúdo");
+    return {
+      ...base,
+      pedido: pedidoEap(ponto, e, p.abordagem.id, c, esqueleto, minuta.tipo.projeto),
+      schema: SCHEMAS.eap,
+    };
+  }
+  if (etapa === 3) {
+    const entrada = montarEntradaTap(d, HOJE);
+    precisa(
+      entrada.fonte !== "nenhuma",
+      "importe a proposta da etapa 2 (ou ponha o PDF da proposta no dossiê)",
+    );
+    const t = d.tap ?? tapInicial();
+    const premissas = t.premissasAplicaveis ?? d.proposta?.premissasAplicaveis ?? {};
+    const base = {
+      sistema: textoDeSistema(referenciasEtapa3()),
+      documentos: textoDosDocumentos(entrada.documentos),
+    };
+    if (passo === "tap")
+      return {
+        ...base,
+        pedido: pedidoTap(
+          entrada,
+          dadosDosDocumentos(entrada),
+          compararRfpEProposta(entrada),
+          t.divergencias,
+          premissas,
+        ),
+        schema: SCHEMAS_TAP.tap,
+      };
+    precisa(t.tap, "importe o TAP");
+    return {
+      ...base,
+      pedido: pedidoPremissas(entrada, t.tap.resposta, premissas),
+      schema: SCHEMAS_TAP.premissas,
+    };
+  }
+  if (etapa === 4) {
+    const entrada = montarEntradaPgp(d, HOJE);
+    precisa(entrada.fonteTap !== "nenhuma", "importe o TAP da etapa 3 (ou ponha o PDF do TAP no dossiê)");
+    const p = d.pgp ?? pgpInicial();
+    const anterior = passoAnterior(passo as PassoPgp);
+    precisa(!anterior || p[anterior], `importe o passo "${anterior}"`);
+    return {
+      sistema: textoDeSistema(referenciasEtapa4()),
+      documentos: textoDosDocumentos(entrada.documentos),
+      pedido: PEDIDOS_PGP[passo as PassoPgp](entrada, p),
+      schema: SCHEMAS_PGP[passo as PassoPgp],
+    };
+  }
+  if (etapa === 5) {
+    const c = entradaDaConferencia(d);
+    return {
+      sistema: textoDeSistema(referenciasEtapa5()),
+      documentos: textoDosDocumentos([c.pgp, ...(c.tap ? [c.tap] : []), ...(c.rfp ? [c.rfp] : [])]),
+      pedido: pedidoLeitura({
+        partesPresentes: c.mapa.filter((m) => m.situacao === "presente").map((m) => m.codigo),
+        caracteristicas: c.caracteristicas,
+        premissasAplicaveis: c.premissasAplicaveis,
+        achadosDoCodigo: c.achados,
+        temTap: Boolean(c.tap),
+        temRfp: Boolean(c.rfp),
+      }),
+      schema: RespostaLeitura,
+    };
+  }
   if (etapa === 1 && passo === "leitura-rfp") {
     const analise = analisarRfp(docs, HOJE);
     const base = d.analiseRfp ?? analiseInicial(analise, HOJE);
@@ -78,6 +267,52 @@ describe.skipIf(MODO !== "exportar")("exportar o pedido de um passo do PMO", () 
       dossie = { ...criarDossieVazio(HOJE), documentos: [rfp] };
       if (etapa === 1) dossie = { ...dossie, analiseRfp: analiseInicial(analisarRfp([rfp], HOJE), HOJE) };
     }
+    // decisões do GP para as etapas 4 e 5: --porte e --pcs ("PC1,PC3,PC4"), guardadas no dossiê para a importação
+    // usar as mesmas; sem elas, valem as do dossiê
+    if (env.RAIO_X_PORTE || env.RAIO_X_PCS) {
+      const atual = dossie.pgp ?? pgpInicial();
+      const porte = env.RAIO_X_PORTE as "pequeno" | "médio" | "grande" | undefined;
+      if (porte && !["pequeno", "médio", "grande"].includes(porte))
+        throw new Error("--porte deve ser pequeno, médio ou grande.");
+      dossie = {
+        ...dossie,
+        pgp: {
+          ...atual,
+          caracteristicas: {
+            ...(atual.caracteristicas ?? CARACTERISTICAS_PADRAO),
+            ...(porte ? { porte } : {}),
+          },
+          premissasAplicaveis: env.RAIO_X_PCS
+            ? Object.fromEntries(env.RAIO_X_PCS.split(",").map((x) => [x.trim().toUpperCase(), true]))
+            : atual.premissasAplicaveis,
+        },
+      };
+      // guardadas também no dossiê de origem: as exportações e importações seguintes usam as mesmas sem repetir
+      if (env.RAIO_X_DOSSIE && existsSync(env.RAIO_X_DOSSIE))
+        writeFileSync(env.RAIO_X_DOSSIE, serializarDossie(dossie, HOJE));
+    }
+    // etapa 5: o plano a conferir (o PGP da etapa 4 exportado em PDF, ou outro) entra no dossiê como "pgp"
+    // --plano dossie: o PGP inteiro montado pelo app a partir do dossiê (uma página por parte, como na
+    // autoconferência da etapa 4); o arquivo vai em DOCX para a leitura (o PDF depende do navegador)
+    if (etapa === 5 && env.RAIO_X_PLANO === "dossie") {
+      if (!dossie.pgp) throw new Error("--plano dossie pede o PGP da etapa 4 no dossiê.");
+      const { gerarDocx } = await import("../../src/exportacao/docx");
+      const logo = readFileSync(new URL("../../src/interface/ativos/logo-fgv-projetos.jpg", import.meta.url));
+      const docx = await gerarDocx(
+        montarPgp(dossie, HOJE),
+        logo.buffer.slice(logo.byteOffset, logo.byteOffset + logo.byteLength),
+      );
+      const baseRfp = basename(
+        dossie.documentos.find((x) => x.papel === "rfp")?.nomeArquivo ?? "rfp",
+        ".pdf",
+      );
+      writeFileSync(join(saida, `pgp-${baseRfp}.docx`), Buffer.from(await docx.arrayBuffer()));
+      const plano = pgpComoDocumento(dossie, HOJE);
+      dossie = { ...dossie, documentos: [...dossie.documentos.filter((x) => x.papel !== "pgp"), plano] };
+    } else if (etapa === 5 && env.RAIO_X_PLANO) {
+      const plano = await lerPdf(resolve(env.RAIO_X_PLANO), "pgp", HOJE);
+      dossie = { ...dossie, documentos: [...dossie.documentos.filter((x) => x.papel !== "pgp"), plano] };
+    }
     const p = montarPasso(dossie);
     const schema = zodOutputFormat(p.schema).schema;
     const tokens = estimarTokens(p.sistema) + estimarTokens(p.documentos) + estimarTokens(p.pedido);
@@ -85,7 +320,27 @@ describe.skipIf(MODO !== "exportar")("exportar o pedido de um passo do PMO", () 
     const nome = `etapa-${etapa}-${passo}-${base}`;
     const md = `# Pedido ao PMO — etapa ${etapa}, passo ${passo}
 
-- RFP: ${base}.pdf
+- RFP: ${base}.pdf${
+      etapa >= 4
+        ? `
+- **Características do projeto usadas:** ${Object.entries(
+            dossie.pgp?.caracteristicas ?? CARACTERISTICAS_PADRAO,
+          )
+            .map(([k, x]) => `${k} ${String(x)}`)
+            .join("; ")}${dossie.pgp?.caracteristicas ? "" : " (padrão conservador: passe --porte)"}
+- **Premissas críticas que se aplicam:** ${
+            Object.entries(
+              dossie.pgp?.premissasAplicaveis ??
+                dossie.tap?.premissasAplicaveis ??
+                dossie.proposta?.premissasAplicaveis ??
+                {},
+            )
+              .filter(([, x]) => x)
+              .map(([k]) => k)
+              .join(", ") || "nenhuma (passe --pcs)"
+          }`
+        : ""
+    }
 - Gerado em ${HOJE.toLocaleString("pt-BR")} pelo app (npm run exportar-pedido), com exatamente o que iria à API.
 - **Estimativa: cerca de ${tokens.toLocaleString("pt-BR")} tokens de entrada** (4 caracteres por token; sistema ${estimarTokens(p.sistema).toLocaleString("pt-BR")}, documentos ${estimarTokens(p.documentos).toLocaleString("pt-BR")}, pedido ${estimarTokens(p.pedido).toLocaleString("pt-BR")}).
 
@@ -124,6 +379,18 @@ ${JSON.stringify(schema, null, 2)}
 });
 
 const normal = (t: string) => tirarAcentos(t).toLowerCase().replace(/\s+/g, " ");
+
+/** Todas as fontes citadas numa resposta do PMO, onde quer que estejam (itens, partes, riscos). */
+function coletarFontes(x: unknown): FontePmo[] {
+  if (Array.isArray(x)) return x.flatMap(coletarFontes);
+  if (!x || typeof x !== "object") return [];
+  const o = x as Record<string, unknown>;
+  const aqui =
+    typeof o.trecho === "string" && typeof o.pagina === "number" && typeof o.doc === "string"
+      ? [o as FontePmo]
+      : [];
+  return [...aqui, ...Object.values(o).flatMap(coletarFontes)];
+}
 
 describe.skipIf(MODO !== "importar")("importar a resposta do PMO (leitura independente)", () => {
   it("valida, grava no dossiê, roda as travas e mede contra o gabarito", async () => {
@@ -173,6 +440,21 @@ describe.skipIf(MODO !== "importar")("importar a resposta do PMO (leitura indepe
             )
           : ["- nenhum"]),
       );
+      // cruzamentos X1 a X6 e autoconferência das 8 seções (decisões 0044 e 0046)
+      const resposta = v.data as z.infer<typeof RespostaLeituraRfp>;
+      const auto = autoconferenciaDaLeitura(resposta);
+      linhas.push(
+        "",
+        `## Cruzamentos (decisão 0046): ${resposta.cruzamentos.length} de 6 registrados${auto.cruzamentosSemRegistro.length ? `; sem registro: ${auto.cruzamentosSemRegistro.join(", ")}` : ""}`,
+        ...resposta.cruzamentos.map(
+          (c) =>
+            `- ${c.codigo} · ${c.estado}: ${c.resultado.slice(0, 220)}${c.itens.length ? ` (itens: ${c.itens.join(", ")})` : ""}`,
+        ),
+        "",
+        `## Autoconferência das 8 seções (decisão 0044): ${auto.ok ? "completa" : "com falha"}`,
+        `- sem marca: ${auto.semMarca.join(", ") || "nenhuma"}`,
+        `- marca incompleta: ${auto.incompletas.join(", ") || "nenhuma"}`,
+      );
       const pasta = GABARITOS[basename(docs[0]?.nomeArquivo ?? "")];
       if (pasta) {
         const g = JSON.parse(
@@ -220,6 +502,386 @@ describe.skipIf(MODO !== "importar")("importar a resposta do PMO (leitura indepe
           "",
           "Faltam:",
           ...todos.filter((gi) => !cobertos.includes(gi)).map((gi) => `- ${gi.secao} · ${gi.id} ${gi.nome}`),
+        );
+      }
+    }
+    if (etapa >= 2) {
+      let decisaoGp = "";
+      const guardada = {
+        resposta: v.data,
+        modelo: "claude.ai (leitura independente)",
+        em: HOJE.toISOString(),
+      };
+      if (etapa === 2) {
+        const atual = dossie.proposta ?? propostaInicial();
+        let proposta = { ...atual, [passo]: guardada } as typeof atual;
+        if (passo === "estrategia") {
+          // decisões do GP com o padrão do teste: --abordagem, ou a primeira sugerida; PC que o PMO não descartou
+          const e = v.data as z.infer<typeof SCHEMAS.estrategia>;
+          const id = env.RAIO_X_ABORDAGEM || e.abordagens[0]?.id;
+          proposta = {
+            ...proposta,
+            abordagem: id
+              ? { id, justificativa: "Escolhida para o teste externo (decisão do GP simulada)." }
+              : undefined,
+            premissasAplicaveis: Object.fromEntries(
+              e.premissasCriticas.filter((x) => x.aplica !== "nao").map((x) => [x.codigo, true]),
+            ),
+          };
+          decisaoGp = `Abordagem para os passos seguintes: ${id ?? "nenhuma"} (troque com --abordagem).`;
+        }
+        dossie = { ...dossie, proposta };
+      }
+      if (etapa === 3) dossie = { ...dossie, tap: { ...(dossie.tap ?? tapInicial()), [passo]: guardada } };
+      if (etapa === 4) {
+        let pgp = { ...(dossie.pgp ?? pgpInicial()), [passo]: guardada } as PgpDossie;
+        if (passo === "adaptacao") {
+          // decisão do GP com o padrão do teste: --gerar "A1,A3,…", ou tudo o que o PMO não marcou como dispensável
+          const a = v.data as z.infer<typeof SCHEMAS_PGP.adaptacao>;
+          const escolhidas = env.RAIO_X_GERAR
+            ? new Set(env.RAIO_X_GERAR.split(",").map((x) => x.trim()))
+            : undefined;
+          pgp = {
+            ...pgp,
+            abordagem: a.abordagem,
+            gerar: Object.fromEntries(
+              a.partes.map((s) => [
+                s.codigo,
+                escolhidas ? escolhidas.has(s.codigo) : s.recomendacao !== "dispensavel",
+              ]),
+            ),
+          };
+        }
+        dossie = { ...dossie, pgp };
+      }
+      // as citações são procuradas nos documentos que foram no pedido: na etapa 3 e na 4, a proposta e o TAP do
+      // dossiê entram como documentos montados pelo app; na 5, o plano conferido
+      const docsDoPedido =
+        etapa === 3
+          ? montarEntradaTap(dossie, HOJE).documentos
+          : etapa === 4
+            ? montarEntradaPgp(dossie, HOJE).documentos
+            : dossie.documentos;
+      const fontes = coletarFontes(v.data);
+      const citacoes = fontes.map((f) => ({ f, c: conferirCitacao(f, docsDoPedido) }));
+      const naoAchadas = citacoes.filter((x) => !citacaoValeComoFato(x.c));
+      const fracas = citacoes.filter((x) => citacaoValeComoFato(x.c) && citacaoEhFraca(x.f.trecho));
+      linhas.push(
+        `# Leitura independente — etapa ${etapa}, passo ${passo}`,
+        "",
+        `Resposta importada em ${HOJE.toLocaleString("pt-BR")}. Citações: ${fontes.length}; não achadas na página: ${naoAchadas.length}; fracas (menos de 6 palavras): ${fracas.length}.`,
+        ...(decisaoGp ? ["", decisaoGp] : []),
+        ...naoAchadas
+          .slice(0, 20)
+          .map((x) => `- não achada · p. ${x.f.pagina}: "${x.f.trecho.slice(0, 120)}"`),
+      );
+      const marcas = (v.data as { autoconferencia?: ItemAutoconferencia[] }).autoconferencia ?? [];
+      if (etapa === 4) {
+        const esperados = PARTES_PGP.filter(
+          (x) =>
+            dossie.pgp?.gerar[x.codigo] &&
+            PASSOS_PGP.find((y) => y.passo === passo)?.textos.includes(x.codigo),
+        ).flatMap((x) => x.itens.map((i) => i.codigo));
+        const r = conferirAutoconferencia(esperados, marcas);
+        linhas.push(
+          "",
+          `## Autoconferência (decisão 0044): ${r.ok ? "completa" : "com falha"}`,
+          `- itens esperados: ${esperados.length}; marcados: ${marcas.length}`,
+          `- sem marca: ${r.semMarca.join(", ") || "nenhum"}`,
+          `- marca incompleta: ${r.incompletas.join(", ") || "nenhuma"}`,
+          `- partes que voltariam ao PMO: ${partesARegenerar(r).join(", ") || "nenhuma"}`,
+        );
+      } else if (etapa < 5) {
+        // etapas 2 e 3: os itens esperados são os das fichas que o pedido do passo manda
+        const FICHAS_DO_PASSO: Record<string, string[]> = {
+          "2:estrategia": ["PROP-ESTRATEGIA."],
+          "2:conteudo": ["PROP-ESTRUTURA.", "PROP-ENTENDIMENTO.", "PROP-METODOLOGIA.", "PROP-SOW."],
+          "2:eap": ["PROP-EAP.", "PROP-EQUIPE.", "PROP-PRECO."],
+        };
+        const prefixos = FICHAS_DO_PASSO[`${etapa}:${passo}`];
+        // etapa 3: os itens de cada passo vêm do mesmo lugar que o app usa (o TAP não cobra o registro, e vice-versa)
+        const doPasso3 = etapa === 3 && (passo === "tap" || passo === "premissas");
+        const prefixo = doPasso3 ? passo : prefixos?.join(", ");
+        const esperados = doPasso3
+          ? itensEsperadosDaEtapa3(passo)
+          : prefixos
+            ? FICHAS.flatMap((x) => x.itens.map((i) => i.codigo)).filter((c) =>
+                prefixos.some((pr) => c.startsWith(pr)),
+              )
+            : [];
+        const r = conferirAutoconferencia(esperados, marcas);
+        linhas.push(
+          "",
+          `## Autoconferência (decisão 0044): ${marcas.length} item(ns) marcados${prefixo ? ` de ${esperados.length} esperados (${r.ok ? "completa" : "com falha"})` : ""}`,
+          ...(prefixo
+            ? [
+                `- sem marca: ${r.semMarca.join(", ") || "nenhum"}`,
+                `- marca incompleta: ${r.incompletas.join(", ") || "nenhuma"}`,
+              ]
+            : marcas.map((m) => `- ${m.item}: ${m.estado}`)),
+        );
+      }
+      if (fracas.length)
+        linhas.push("", "## Citações fracas", ...fracas.map((x) => `- p. ${x.f.pagina}: "${x.f.trecho}"`));
+      if (etapa === 2 && passo !== "estrategia" && dossie.proposta) {
+        // o que o código conferiu com o conteúdo e a EAP: duração × vigência, cronograma, equipe, preço e pendências
+        const docsRfp = dossie.documentos.filter((x) => x.papel === "rfp" || x.papel === "anexo-rfp");
+        const minuta = montarMinuta(
+          montarPontoDePartida(docsRfp, dossie.analiseRfp, HOJE),
+          dossie.proposta,
+          docsRfp,
+          dossie.analiseRfp,
+        );
+        const conferido = esqueletoEmTexto(minuta)
+          .split("\n")
+          .filter((l) => /^- \[(?:metas-equipe|preco|escopo|decisoes)\]/.test(l));
+        linhas.push("", "## O que o código conferiu (esqueleto)", ...conferido.map((l) => l.slice(0, 400)));
+        if (passo === "eap") {
+          const eap = dossie.proposta.eap?.resposta;
+          // início: o do GP, se ele informou; senão, a data fixa de início do documento (o GP confirma)
+          const doGp = dossie.proposta.parametros.inicio;
+          const fixo = inicioFixo(analisarRfp(docsRfp, HOJE).documentos);
+          const inicio = doGp ? new Date(`${doGp}T00:00:00`) : fixo?.data;
+          const cron = eap
+            ? calcularCronograma(eap.atividades, {
+                inicio,
+                aprovacaoDias: dossie.proposta.parametros.aprovacaoDias,
+              })
+            : undefined;
+          if (cron)
+            linhas.push(
+              "",
+              `## Cronograma (conta do código, sem a aprovação do cliente se o GP não a informou): ${cron.total} dias úteis; caminho crítico: ${cron.caminhoCritico.join(" → ") || "—"}`,
+              `- início usado: ${inicio ? `${inicio.toLocaleDateString("pt-BR")} (${doGp ? "decisão do GP" : `data fixa do documento, p. ${fixo?.origem.pagina}; o GP confirma`})` : "nenhum (sem datas)"}${cron.dataFim ? `; fim: ${cron.dataFim.toLocaleDateString("pt-BR")}` : ""}`,
+              ...cron.atividades
+                .filter((a) => eap?.atividades.find((x) => x.id === a.id)?.restricaoData)
+                .map(
+                  (a) =>
+                    `- ${a.id} (data fixa): ${a.dataInicio?.toLocaleDateString("pt-BR") ?? "—"} a ${a.dataFim?.toLocaleDateString("pt-BR") ?? "—"}, ${a.duracao} dias úteis, folga ${a.folga}`,
+                ),
+              ...cron.problemas.map((x) => `- ${x}`),
+            );
+        }
+      }
+      if (etapa === 4 && passo === "cronograma" && dossie.pgp?.cronograma) {
+        // as contas do código do passo: início, rede com a data fixa, RACI, horas e o pacote de cada atividade
+        const ep = montarEntradaPgp(dossie, HOJE);
+        const cr = dossie.pgp.cronograma.resposta;
+        const crono = cronogramaDoPgp(dossie.pgp, ep)!;
+        const { inicio, doDocumento } = inicioDoPgp(dossie.pgp, ep);
+        const custos = custosDoPgp(dossie.pgp, ep)!;
+        const pacotes = dossie.pgp.escopo?.resposta.eap ?? [];
+        const dataBr = (d?: Date) => d?.toLocaleDateString("pt-BR") ?? "—";
+        linhas.push(
+          "",
+          "## Cronograma pelo código",
+          `- início: ${inicio ? `${dataBr(inicio)}${doDocumento ? ` (data do documento, ${doDocumento}, a confirmar pelo GP)` : " (do GP)"}` : "a definir pelo GP"}`,
+          `- total: ${crono.total} dias úteis, fim em ${dataBr(crono.dataFim)}; caminho crítico: ${crono.caminhoCritico.join(" → ")}`,
+          `- ${crono.conferenciaPrazo.texto}`,
+          ...crono.problemas.map((x) => `- ${x}`),
+          ...crono.datasFixas.map(
+            (f) =>
+              `- data fixa ${f.atividade}: ${dataBr(f.inicio)} a ${dataBr(f.fim)} (${f.diasCorridos} dias corridos); predecessoras até ${dataBr(f.fimPredecessoras)}; folga ${f.folgaCorrida ?? "—"} dia(s) corrido(s); ${f.cabe ? "cabe" : "NÃO CABE"}`,
+          ),
+          "",
+          "| Atividade | Pacote | Duração | Início | Fim | Folga | Crítica |",
+          "|---|---|---|---|---|---|---|",
+          ...crono.atividades.map((a) => {
+            const ref = cr.atividades.find((x) => x.id === a.id)?.pacote.trim() ?? "";
+            const pac = pacotes.find((x) => x.id === ref);
+            const pacote = !ref
+              ? "sem pacote"
+              : !pac
+                ? `${ref}: não existe na EAP`
+                : `${ref} (${pac.produto})`;
+            return `| ${a.id} ${a.nome.slice(0, 50)} | ${pacote} | ${a.duracao} | ${dataBr(a.dataInicio)} | ${dataBr(a.dataFim)} | ${a.folga} | ${a.critica ? "sim" : ""} |`;
+          }),
+          "",
+          "## Pacotes pelo código",
+          ...(conferirPacotes(dossie.pgp).map((x) => `- ${x}`).length
+            ? conferirPacotes(dossie.pgp).map((x) => `- ${x}`)
+            : ["- toda atividade com pacote existente do mesmo produto; todo pacote com atividade"]),
+          "",
+          "## RACI pelo código",
+          ...(conferirRaci(cr).length
+            ? conferirRaci(cr).map((x) => `- ${x}`)
+            : ["- um só A por atividade; toda atividade com A; perfis da equipe na lista"]),
+          ...contratanteNaRaci(cr).map((x) => `- contratante (fora da equipe) — ${x}`),
+          "",
+          "## Horas e custos pelo código",
+          ...custos.preco.linhas.map((l) => `- ${l.perfil.id} ${l.perfil.nome}: ${textoDasHoras(l)} h`),
+          `- total: ${textoDasHorasTotais(custos.preco)} h; pessoal: ${custos.preco.pessoal ?? "a definir pelo GP"}`,
+          `- falta: ${custos.faltando.join("; ")}`,
+        );
+      }
+      if (etapa === 4 && ["riscos", "planos", "execucao"].includes(passo) && dossie.pgp?.riscos) {
+        // premissas críticas nos três lugares (regras da etapa 5 sobre o plano gerado), contingência e registro inicial
+        const ep = montarEntradaPgp(dossie, HOJE);
+        const r = dossie.pgp.riscos.resposta;
+        const auto = autoconferir(dossie, ep, HOJE);
+        const custos = custosDoPgp(dossie.pgp, ep);
+        const pcs = Object.entries(dossie.pgp.premissasAplicaveis ?? ep.premissasAnteriores)
+          .filter(([, x]) => x)
+          .map(([pc]) => pc)
+          .sort();
+        const repetidas = r.premissas.filter((x) => repeteORegistroInicial(x, ep.premissasTap));
+        linhas.push(
+          "",
+          "## Autoconferência do plano (regras da etapa 5)",
+          `- achados: ${auto.achados.length} (${["vago", "conflituoso", "ausente"].map((t) => `${t} ${auto.achados.filter((a) => a.tipo === t).length}`).join(", ")})`,
+          ...auto.achados
+            .slice(0, 10)
+            .map(
+              (a) =>
+                `  - ${a.tipo} · ${a.parte} · ${a.titulo}: ${a.evidencias.map((x) => `${x.rotulo} "${x.trecho.slice(0, 160)}"`).join(" × ")}`,
+            ),
+          `- presentes pela marca do PMO, redação a conferir: ${auto.verificacoes.find((v) => v.id === "presentes-pela-marca-do-pmo")?.detalhe ?? "nenhum"}`,
+          `- decisões do GP pendentes: ${auto.verificacoes.find((v) => v.id === "decisoes-do-gp-pendentes")?.detalhe ?? "nenhuma"}`,
+          "",
+          "## Premissas críticas pelo código (B3, B27 e A8)",
+          `- registro inicial da etapa 3: ${ep.premissasTap.length ? `${ep.premissasTap.length} linha(s)` : "não gerado (o passo de premissas da etapa 3 ainda não foi pedido)"}`,
+          ...pcs.map((pc) => {
+            const premissa = r.premissas.some((x) => x.premissaCritica === pc && x.tipo === "premissa");
+            const risco = r.riscos.find(
+              (x) => x.premissaCritica === pc && x.resposta.trim() && x.gatilho.trim(),
+            );
+            return `- ${pc}: premissa no B3 ${premissa || ep.premissasTap.some((x) => x.premissaCritica === pc) ? "sim" : "NÃO"}; risco com resposta e gatilho no B27 ${risco ? `sim (${risco.id})` : "NÃO"}`;
+          }),
+          ...auto.verificacoes
+            .filter((v) => /^item:(B3\.9|B27\.13|A8\.12)$/.test(v.id) || /^premissa:PC\d/.test(v.id))
+            .map((v) => `- conferência ${v.id}: ${v.estado} (${v.detalhe.slice(0, 120)})`),
+          `- premissas do PMO que repetem o registro inicial e saem do B3: ${repetidas.length ? repetidas.map((x) => `${x.item.id} (${x.tipo === "restricao" ? "restrição" : "premissa"}, ${x.origem}${x.premissaCritica ? `, ${x.premissaCritica}` : ""})`).join("; ") : "nenhuma"}`,
+          "",
+          "## Contingência pelo código",
+          `- riscos que pedem reserva: ${custos?.riscosComReserva.map((x) => x.id).join(", ") || "nenhum"}`,
+          `- linha de base dos custos: ${custos?.linhaDeBase ?? "a definir pelo GP"}; falta: ${custos?.faltando.filter((x) => /reserva/.test(x)).join("; ") || "—"}`,
+        );
+        // registro das questões (B9) montado pelo código, com a origem, e o item do PMO que completa cada uma
+        const qs = questoesDoCodigo(ep);
+        if (qs.length && dossie.pgp.execucao) {
+          const its = itensDoPgp(dossie.pgp, ep.documentos, ep.premissasTap);
+          const cq = conferirQuestoes(qs, its, referenciasDoPlano(ep, dossie.pgp, its, qs));
+          const status = (s?: ReturnType<typeof conferirQuestoes>["linhas"][number]["status"]) =>
+            s
+              ? `status ${s.estado}${s.referencias.length ? ` (refs. ${s.referencias.join(", ")})` : ""}${s.avisos.length ? ` — AVISO: ${s.avisos.join("; ")}` : ""}`
+              : "sem status";
+          linhas.push(
+            "",
+            `## Questões (B9) pelo código: ${qs.length}; origem sem questão: ${cq.semItem.join(", ") || "nenhuma"}; questão sem origem nem fonte: ${cq.semOrigem.join(", ") || "nenhuma"}; questões novas com fonte: ${cq.novas.map((n) => n.numero).join(", ") || "nenhuma"}`,
+            ...cq.linhas.map(
+              (l) =>
+                `- ${l.questao.numero} · ${l.questao.origem} → ${l.item ?? "SEM ITEM"}${l.citadaEm.length ? ` (citada também em ${l.citadaEm.join(", ")})` : ""}; ${status(l.status)}`,
+            ),
+            ...cq.novas.map(
+              (n) =>
+                `- ${n.numero} · questão nova do PMO → ${n.item}; fonte ${n.fontes} (${n.citacaoConferida ? "citação conferida" : "citação NÃO conferida"}); ${status(n.status)}`,
+            ),
+          );
+        }
+        // compromissos (decisão 0047): o destino no TAP e no plano, como na matriz B23
+        const cs = rastrearCompromissos(ep, itensDoPgp(dossie.pgp, ep.documentos, ep.premissasTap));
+        if (cs.length)
+          linhas.push(
+            "",
+            `## Compromissos (C) no TAP e no plano: ${cs.filter((x) => x.plano.length).length} de ${cs.length} com destino no plano`,
+            ...cs.map(
+              (x) =>
+                `- ${x.compromisso.numero} · ${NOME_TIPO_COMPROMISSO[x.compromisso.tipo]}: TAP ${x.tap.situacao === "citado" ? x.tap.onde : x.tap.situacao === "provavel" ? `provável (${x.tap.onde})` : "sem destino"}; plano ${x.plano.join("; ") || "sem destino"}`,
+            ),
+          );
+      }
+      if (etapa === 3 && dossie.tap) {
+        // compromissos numerados da proposta (decisão 0047) e o destino de cada um no TAP e no registro
+        const et = montarEntradaTap(dossie, HOJE);
+        const cs = et.dados?.compromissos ?? [];
+        const destinos = destinosNoTap(
+          cs,
+          dossie.tap.tap?.resposta,
+          dossie.tap.premissas?.resposta.premissas,
+        );
+        linhas.push(
+          "",
+          `## Compromissos da proposta (C) e o destino no TAP: ${destinos.filter((d) => d.situacao === "citado").length} citados, ${destinos.filter((d) => d.situacao === "provavel").length} prováveis, ${destinos.filter((d) => d.situacao === "sem-destino").length} sem destino`,
+          ...destinos.map(
+            (d) =>
+              `- ${d.compromisso.numero} · ${NOME_TIPO_COMPROMISSO[d.compromisso.tipo]}: ${d.compromisso.texto.slice(0, 90)} → ${d.texto}`,
+          ),
+        );
+      }
+      if (etapa === 3 && passo === "tap" && dossie.tap) {
+        // a conferência do TAP pelo código (método da etapa 3): elementos, marcos × vigência, valor, divergências
+        const entrada = montarEntradaTap(dossie, HOJE);
+        const conf = conferirTap(
+          entrada,
+          dossie.tap,
+          itensDaEtapa3(dossie.tap, entrada.documentos),
+          dossie.tap.premissasAplicaveis ?? dossie.proposta?.premissasAplicaveis ?? {},
+        );
+        const divergencias = compararRfpEProposta(entrada);
+        const tap = v.data as z.infer<typeof SCHEMAS_TAP.tap>;
+        linhas.push(
+          "",
+          `## Divergências: ${divergencias.length} do código; ${tap.divergenciasTexto.length} de texto do PMO`,
+          ...divergencias.map(
+            (d) =>
+              `- ${d.id} · ${d.situacao}: RFP ${d.rfp.texto.slice(0, 90)} × proposta ${d.proposta.texto.slice(0, 90)}`,
+          ),
+          "",
+          "## O que veio dos documentos (código)",
+          ...dadosDosDocumentos(entrada).map(
+            (d) => `- [${d.elemento}] ${d.nome}: ${d.texto.slice(0, 260)}${d.onde ? ` [${d.onde}]` : ""}`,
+          ),
+          "",
+          "## Conferência do TAP pelo código",
+          ...conf.map((x) => `- ${x.situacao} · ${x.nome}: ${x.texto.slice(0, 400)}`),
+        );
+      }
+      if (etapa === 2 && passo === "estrategia") {
+        const e = v.data as z.infer<typeof SCHEMAS.estrategia>;
+        const ponto = montarPontoDePartida(
+          dossie.documentos.filter((x) => x.papel === "rfp" || x.papel === "anexo-rfp"),
+          dossie.analiseRfp,
+          HOJE,
+        );
+        const ids = ponto.brechas.map((b) => b.id);
+        const comDestino = new Set(e.destinos.map((d) => d.origem));
+        linhas.push(
+          "",
+          `## Abordagens (${e.abordagens.length})`,
+          ...e.abordagens.map((a) => `- ${a.id} · ${a.nome}: ${a.mudaOResultado.slice(0, 160)}`),
+          "",
+          `## Destino das brechas: ${ids.filter((i) => comDestino.has(i)).length} de ${ids.length} do ponto de partida com destino; ${e.destinos.filter((d) => !d.origem).length} achadas pelo PMO`,
+          ...ids.filter((i) => !comDestino.has(i)).map((i) => `- sem destino: ${i}`),
+          ...e.destinos
+            .filter((d) => d.origem && !ids.includes(d.origem))
+            .map((d) => `- origem que não está no ponto de partida: ${d.origem}`),
+          "",
+          `## Premissas críticas: ${e.premissasCriticas.map((p) => `${p.codigo} ${p.aplica}`).join(", ")}`,
+        );
+      }
+      if (etapa === 5) {
+        const c = entradaDaConferencia(dossie);
+        const conferidos = conferirLeitura(v.data as z.infer<typeof RespostaLeitura>, c, c.achados);
+        const porSituacao = (s: string) => conferidos.filter((x) => x.situacao === s).length;
+        linhas.push(
+          "",
+          `Características usadas: ${Object.entries(c.caracteristicas)
+            .map(([k, x]) => `${k} ${String(x)}`)
+            .join("; ")}. Premissas críticas: ${
+            Object.entries(c.premissasAplicaveis)
+              .filter(([, x]) => x)
+              .map(([k]) => k)
+              .join(", ") || "nenhuma"
+          }.`,
+          `Achados do código: ${c.achados.length} (${["ausente", "conflituoso", "vago"].map((t) => `${t} ${c.achados.filter((a) => a.tipo === t).length}`).join(", ")}). Achados do PMO: ${conferidos.length} (válidos ${porSituacao("valido")}, rebaixados ${porSituacao("rebaixado")}, citação não conferida ${porSituacao("citacao-nao-conferida")}).`,
+          "",
+          "## Achados do PMO, um por um",
+          ...conferidos.map(
+            (a) =>
+              `- **${a.situacao}** · ${a.tipo} · ${a.gravidade} · ${a.parte}${a.item ? ` (${a.item})` : ""} · ${a.titulo}${
+                a.localizadoEm ? ` — o código achou o item na p. ${a.localizadoEm.pagina}` : ""
+              }${a.jaApontadoPeloCodigo ? " — o código já tinha apontado" : ""}`,
+          ),
         );
       }
     }

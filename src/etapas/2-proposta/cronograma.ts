@@ -1,11 +1,21 @@
 // Etapa 2, passo 5 (código): datas e caminho crítico a partir da EAP do PMO.
 // O PMO estima em três pontos; o código calcula a duração esperada (PERT: (o + 4m + p) / 6), soma o tempo de
 // aprovação do cliente (decisão do GP), faz a rede (ida e volta), acha o caminho crítico e confere contra o prazo
-// da RFP. Dias úteis descontam só sábados e domingos: a tela pede para conferir feriados.
+// da RFP. Dias úteis descontam sábados, domingos, os feriados nacionais e os municipais que o GP informa (decisão 0051).
 import type { DocumentoLido } from "../../dossie/esquema";
 import { citacaoValeComoFato, conferirCitacao } from "../../pmo/citacoes";
 import type { AtividadeEap, PrazoProduto, ProdutoSow } from "../../pmo/schemas/proposta";
-import { diasEntre, somarDiasUteis, soData, ehDiaUtil } from "../../texto/datas";
+import {
+  contarDiasUteis,
+  formatarData as formatarDataCurta,
+  diasEntre,
+  ehDiaUtil,
+  lerDataSimples,
+  somarDiasUteis,
+  soData,
+} from "../../texto/datas";
+import { calendarioDoProjeto } from "../../texto/feriados";
+import type { Calendario } from "../../texto/datas";
 import type { PrazoEmDias } from "./ponto-de-partida";
 
 export interface AtividadeCalculada {
@@ -26,6 +36,8 @@ export interface AtividadeCalculada {
   critica: boolean;
   dataInicio?: Date;
   dataFim?: Date;
+  /** Atividade de data fixa: dias corridos da janela (as datas valem pela janela, não pela rede em dias úteis). */
+  diasCorridos?: number;
 }
 
 export type SituacaoPrazo = "cabe" | "nao-cabe" | "nao-conferido";
@@ -40,10 +52,34 @@ export interface Cronograma {
   dataFim?: Date;
   problemas: string[];
   conferenciaPrazo: { situacao: SituacaoPrazo; texto: string };
+  /** Atividades presas a data fixa (com o início do projeto): a janela e a folga das predecessoras até ela. */
+  datasFixas: DataFixa[];
+  /** Feriados que as contas descontaram. */
+  calendario: Calendario;
+}
+
+export interface DataFixa {
+  atividade: string;
+  inicio: Date;
+  fim: Date;
+  diasCorridos: number;
+  /** Fim das predecessoras (pela rede em dias úteis). */
+  fimPredecessoras?: Date;
+  /** Dias corridos entre o fim das predecessoras e o início da janela; negativo quando não cabe. */
+  folgaCorrida?: number;
+  cabe: boolean;
 }
 
 export function duracaoEsperada(o: number, m: number, p: number): number {
   return (o + 4 * m + p) / 6;
+}
+
+/** Dias úteis da restrição de data da atividade (janela fixa, os dois dias incluídos), quando ela existe. */
+export function duracaoDaRestricao(a: AtividadeEap, cal?: Calendario): number | undefined {
+  if (!a.restricaoData) return undefined;
+  const ini = lerDataSimples(a.restricaoData.inicio);
+  const fim = lerDataSimples(a.restricaoData.fim);
+  return ini && fim && fim >= ini ? contarDiasUteis(ini, fim, cal) : undefined;
 }
 
 function validar(atividades: AtividadeEap[]): string[] {
@@ -86,9 +122,9 @@ function ordenar(atividades: AtividadeEap[]): AtividadeEap[] | null {
 }
 
 /** O primeiro dia útil a partir de `d` (o próprio, se for útil). */
-export function primeiroDiaUtil(d: Date): Date {
+export function primeiroDiaUtil(d: Date, cal?: Calendario): Date {
   const r = soData(d);
-  while (!ehDiaUtil(r)) r.setDate(r.getDate() + 1);
+  while (!ehDiaUtil(r, cal)) r.setDate(r.getDate() + 1);
   return r;
 }
 
@@ -97,11 +133,18 @@ export interface ParametrosCronograma {
   aprovacaoDias?: number;
   /** Início previsto (decisão do GP). Sem ele, o cronograma sai em dias, sem datas. */
   inicio?: Date;
+  /** Onde o código leu o início, quando ele veio da data fixa do documento ("RFP, p. 1"), e não do GP. */
+  inicioDoDocumento?: string;
   prazoRfp?: PrazoEmDias;
+  /** Feriados municipais (aaaa-mm-dd ou dd/mm/aaaa) que o GP informa; os nacionais o código já desconta. */
+  feriados?: string[];
 }
 
 export function calcularCronograma(atividades: AtividadeEap[], par: ParametrosCronograma = {}): Cronograma {
   const problemas = validar(atividades);
+  const cal = calendarioDoProjeto(par.feriados);
+  if (cal.ilegiveis.length)
+    problemas.push(`Feriado municipal ilegível (${cal.ilegiveis.join(", ")}): use dd/mm/aaaa.`);
   const vazio = (texto: string): Cronograma => ({
     atividades: [],
     total: 0,
@@ -109,21 +152,92 @@ export function calcularCronograma(atividades: AtividadeEap[], par: ParametrosCr
     caminhoCritico: [],
     problemas: [...problemas, texto],
     conferenciaPrazo: { situacao: "nao-conferido", texto: "Cronograma não calculado: corrigir a EAP." },
+    datasFixas: [],
+    calendario: cal,
   });
   if (!atividades.length) return vazio("A EAP não tem atividades.");
   const ordem = ordenar(atividades);
   if (!ordem) return vazio("As predecessoras formam um ciclo: uma atividade depende dela mesma.");
-  if (par.aprovacaoDias === undefined && atividades.some((a) => a.aprovacaoCliente))
+  if (par.aprovacaoDias === undefined && atividades.some((a) => a.aprovacaoCliente || a.analiseDoContratante))
     problemas.push(
       "Tempo de aprovação do cliente não informado: o cronograma está sem ele. É decisão do GP (ou prazo do documento).",
     );
 
   const calc = new Map<string, AtividadeCalculada>();
+  const inicioProjeto = par.inicio ? primeiroDiaUtil(par.inicio, cal) : undefined;
+  /** Dias úteis entre o início do projeto e a data fixa (o deslocamento da atividade presa a ela). */
+  const fixas = new Map<string, { ini: Date; fim: Date; corridos: number }>();
+  const datasFixas: DataFixa[] = [];
   for (const a of ordem) {
-    const { otimista: o, mais_provavel: m, pessimista: p } = a.duracao;
+    const { otimista: o0, mais_provavel: m0, pessimista: p0 } = a.duracao;
+    // restrição de data (evento): a duração é conta do código, os dias úteis da janela fixa; os três pontos não valem
+    const fixa = duracaoDaRestricao(a, cal);
+    if (a.restricaoData && fixa === undefined)
+      problemas.push(
+        `Atividade ${a.id}: restrição de data ilegível (${a.restricaoData.inicio} a ${a.restricaoData.fim}); use dd/mm/aaaa.`,
+      );
+    // a atividade que é a própria análise do contratante dura o tempo de aprovação do GP, quando ele existe: troca a
+    // estimativa do PMO, nunca soma por cima
+    const analise = a.analiseDoContratante && par.aprovacaoDias !== undefined ? par.aprovacaoDias : undefined;
+    const [o, m, p] =
+      fixa !== undefined
+        ? [fixa, fixa, fixa]
+        : analise !== undefined
+          ? [analise, analise, analise]
+          : [o0, m0, p0];
+    if (analise !== undefined)
+      problemas.push(
+        `Atividade ${a.id} é a análise do contratante: duração trocada pelo tempo de aprovação do GP (${analise} dias úteis), no lugar da estimativa do PMO (${m0}).`,
+      );
     const duracao = Math.ceil(duracaoEsperada(o, m, p) - 1e-9);
-    const aprovacao = a.aprovacaoCliente ? (par.aprovacaoDias ?? 0) : 0;
-    const inicio = Math.max(0, ...a.predecessoras.map((pr) => calc.get(pr)?.fimMaisCedo ?? 0));
+    const aprovacao = a.aprovacaoCliente && !a.analiseDoContratante ? (par.aprovacaoDias ?? 0) : 0;
+    const depoisDasPredecessoras = Math.max(
+      0,
+      ...a.predecessoras.map((pr) => calc.get(pr)?.fimMaisCedo ?? 0),
+    );
+    let inicio = depoisDasPredecessoras;
+    const iniFixo = a.restricaoData ? lerDataSimples(a.restricaoData.inicio) : undefined;
+    const fimFixo = a.restricaoData ? lerDataSimples(a.restricaoData.fim) : undefined;
+    // a janela fixa conta em dias corridos (campo em noites, fins de semana e feriados; decisão 0045); para a rede,
+    // que é em dias úteis, ela ocupa os dias úteis da janela
+    const corridos = iniFixo && fimFixo ? diasEntre(iniFixo, fimFixo) + 1 : undefined;
+    if (fixa !== undefined && inicioProjeto && iniFixo) {
+      // com o início do projeto, a atividade começa na data de início da janela, mesmo num sábado
+      const deslocamento =
+        iniFixo > inicioProjeto
+          ? contarDiasUteis(inicioProjeto, iniFixo, cal) - (ehDiaUtil(iniFixo, cal) ? 1 : 0)
+          : 0;
+      fixas.set(a.id, { ini: iniFixo, fim: fimFixo ?? iniFixo, corridos: corridos ?? fixa });
+      inicio = deslocamento;
+      const fimPred =
+        depoisDasPredecessoras > 0
+          ? somarDiasUteis(inicioProjeto, depoisDasPredecessoras - 1, cal)
+          : undefined;
+      const folgaCorrida = fimPred ? diasEntre(fimPred, iniFixo) - 1 : undefined;
+      const cabe = depoisDasPredecessoras <= deslocamento;
+      datasFixas.push({
+        atividade: a.id,
+        inicio: iniFixo,
+        fim: fimFixo ?? iniFixo,
+        diasCorridos: corridos ?? fixa,
+        fimPredecessoras: fimPred,
+        folgaCorrida,
+        cabe,
+      });
+      const janela = `${formatarDataCurta(iniFixo)} a ${formatarDataCurta(fimFixo ?? iniFixo)}`;
+      problemas.push(
+        !cabe && fimPred
+          ? `Atividade ${a.id} tem data fixa (${janela}, ${corridos} dias corridos), mas as predecessoras só terminam em ${formatarDataCurta(fimPred)}, ${-(folgaCorrida ?? 0)} dia(s) corrido(s) depois do início da janela: o cronograma não cabe antes do evento (conta do código, ${cal.descricao}).`
+          : `Atividade ${a.id} presa à data fixa: de ${janela}, ${corridos} dias corridos (campo em dias corridos).${
+              fimPred && folgaCorrida !== undefined
+                ? ` As predecessoras terminam em ${formatarDataCurta(fimPred)}: folga de ${folgaCorrida} dia(s) corrido(s) (${deslocamento - depoisDasPredecessoras} útil(eis)) até ${formatarDataCurta(iniFixo)} (conta do código, ${cal.descricao}).`
+                : ""
+            }`,
+      );
+    } else if (fixa !== undefined)
+      problemas.push(
+        `Atividade ${a.id} tem data fixa (${iniFixo ? formatarDataCurta(iniFixo) : a.restricaoData?.inicio} a ${fimFixo ? formatarDataCurta(fimFixo) : a.restricaoData?.fim}): ${corridos} dias corridos (${fixa} úteis na rede), pela conta do código. Sem o início do projeto (decisão do GP), o cronograma não a prende à data: informe o início.`,
+      );
     calc.set(a.id, {
       id: a.id,
       nome: a.nome,
@@ -147,6 +261,8 @@ export function calcularCronograma(atividades: AtividadeEap[], par: ParametrosCr
       ? Math.min(...sucessoras.map((b) => (calc.get(b.id) as AtividadeCalculada).inicioMaisTarde))
       : total;
     c.inicioMaisTarde = c.fimMaisTarde - c.duracao - c.aprovacao;
+    // a atividade presa à data fixa não flutua: as predecessoras é que ganham folga até ela
+    if (fixas.has(a.id)) c.inicioMaisTarde = c.inicioMaisCedo;
     c.folga = c.inicioMaisTarde - c.inicioMaisCedo;
     c.critica = c.folga === 0;
   }
@@ -156,12 +272,15 @@ export function calcularCronograma(atividades: AtividadeEap[], par: ParametrosCr
 
   let dataFim: Date | undefined;
   if (par.inicio) {
-    const inicio = primeiroDiaUtil(par.inicio);
+    const inicio = primeiroDiaUtil(par.inicio, cal);
     for (const a of lista) {
-      a.dataInicio = somarDiasUteis(inicio, a.inicioMaisCedo);
-      a.dataFim = a.fimMaisCedo > 0 ? somarDiasUteis(inicio, a.fimMaisCedo - 1) : inicio;
+      const f = fixas.get(a.id);
+      // a atividade de data fixa vale pelas datas da janela (dias corridos); as outras, pelos dias úteis da rede
+      a.dataInicio = f ? f.ini : somarDiasUteis(inicio, a.inicioMaisCedo, cal);
+      a.dataFim = f ? f.fim : a.fimMaisCedo > 0 ? somarDiasUteis(inicio, a.fimMaisCedo - 1, cal) : inicio;
+      if (f) a.diasCorridos = f.corridos;
     }
-    dataFim = total > 0 ? somarDiasUteis(inicio, total - 1) : inicio;
+    dataFim = total > 0 ? somarDiasUteis(inicio, total - 1, cal) : inicio;
   }
 
   return {
@@ -171,7 +290,9 @@ export function calcularCronograma(atividades: AtividadeEap[], par: ParametrosCr
     caminhoCritico: criticas.map((a) => a.id),
     dataFim,
     problemas,
-    conferenciaPrazo: conferirPrazo(total, par, dataFim),
+    conferenciaPrazo: conferirPrazo(total, par, dataFim, cal),
+    datasFixas,
+    calendario: cal,
   };
 }
 
@@ -179,6 +300,7 @@ function conferirPrazo(
   total: number,
   par: ParametrosCronograma,
   dataFim?: Date,
+  cal?: Calendario,
 ): Cronograma["conferenciaPrazo"] {
   const prazo = par.prazoRfp;
   if (!prazo)
@@ -200,11 +322,11 @@ function conferirPrazo(
       ? " (meses × 30 e anos × 365, conversão do código)"
       : "";
   if (par.inicio && dataFim) {
-    const corridos = diasEntre(primeiroDiaUtil(par.inicio), dataFim) + 1;
+    const corridos = diasEntre(primeiroDiaUtil(par.inicio, cal), dataFim) + 1;
     const cabe = corridos <= prazo.dias;
     return {
       situacao: cabe ? "cabe" : "nao-cabe",
-      texto: `Cronograma: ${total} dias úteis, ${corridos} dias corridos a partir do início informado pelo GP; prazo da RFP: ${prazo.texto}${onde}, ${prazo.dias} dias${convertido}. ${cabe ? `Sobram ${prazo.dias - corridos} dias corridos.` : `Passa ${corridos - prazo.dias} dias corridos.`}`,
+      texto: `Cronograma: ${total} dias úteis, ${corridos} dias corridos a partir do ${par.inicioDoDocumento ? `início em ${formatarDataCurta(par.inicio)} (data do documento, ${par.inicioDoDocumento}, a confirmar pelo GP)` : "início informado pelo GP"}; prazo da RFP: ${prazo.texto}${onde}, ${prazo.dias} dias${convertido}. ${cabe ? `Sobram ${prazo.dias - corridos} dias corridos.` : `Passa ${corridos - prazo.dias} dias corridos.`}`,
     };
   }
   const aproximado = Math.ceil((total * 7) / 5);
@@ -246,9 +368,9 @@ export function conferirPrazosDosProdutos(
     const fim = atividades.length ? Math.max(...atividades.map(entrega)) : 0;
     const dataFim =
       inicio && fim > 0
-        ? somarDiasUteis(primeiroDiaUtil(inicio), fim - 1)
+        ? somarDiasUteis(primeiroDiaUtil(inicio, crono.calendario), fim - 1, crono.calendario)
         : inicio
-          ? primeiroDiaUtil(inicio)
+          ? primeiroDiaUtil(inicio, crono.calendario)
           : undefined;
     const base = { produto: p.id, nome: p.nome, fim, dataFim, prazo: p.prazo ?? undefined };
     if (!atividades.length)
@@ -285,7 +407,9 @@ export function conferirPrazosDosProdutos(
     const aviso =
       p.prazo.contagem === "não informada" ? " (contagem não informada: tratada como dias corridos)" : "";
     const corridos =
-      inicio && dataFim ? diasEntre(primeiroDiaUtil(inicio), dataFim) + 1 : Math.ceil((fim * 7) / 5);
+      inicio && dataFim
+        ? diasEntre(primeiroDiaUtil(inicio, crono.calendario), dataFim) + 1
+        : Math.ceil((fim * 7) / 5);
     const conta =
       inicio && dataFim ? `${corridos} dias corridos` : `cerca de ${corridos} dias corridos (aproximação)`;
     const cabe = corridos <= p.prazo.dias;

@@ -2,10 +2,18 @@
 // checklist de envio (XLSX) e perguntas de esclarecimento (DOCX). Cada trecho leva o rótulo (do documento,
 // sugestão, decisão do GP); "do documento" sem citação conferida sai como "citação não conferida", nunca como fato.
 // Cabeçalho de minuta enquanto houver item pendente. Sem preço nem nomes quando o GP não preencheu.
+import { numerarCompromissos } from "../etapas/2-proposta/compromissos";
 import type { DocumentoLido, Dossie, PropostaDossie } from "../dossie/esquema";
+import { idsDaBrecha } from "../etapas/2-proposta/ponto-de-partida";
 import { conferirMinuta } from "../etapas/2-proposta/conferencia-final";
 import { calcularCronograma, conferirPrazosDosProdutos } from "../etapas/2-proposta/cronograma";
-import { calcularPreco, conferirValor, lerValorEmReais } from "../etapas/2-proposta/preco";
+import {
+  calcularPreco,
+  conferirValor,
+  lerValorEmReais,
+  textoDasHoras,
+  textoDasHorasTotais,
+} from "../etapas/2-proposta/preco";
 import type { PontoDePartida } from "../etapas/2-proposta/ponto-de-partida";
 import { montarMinuta, SECOES_PROPOSTA, type ItemMinuta } from "../etapas/2-proposta/minuta";
 import {
@@ -120,9 +128,19 @@ export function montarPropostaTecnica(
         ]),
       },
     });
+    // compromissos numerados (decisão 0047): premissas, obrigações, exclusões e limites de volume levam o C
+    const numeros = new Map(numerarCompromissos(conteudo).map((x) => [x.idItem, x.numero]));
+    const comNumero = (i: ItemProposta) => {
+      const n = numeros.get(i.id);
+      return n ? `${n} — ${paragrafo(i, p)}` : paragrafo(i, p);
+    };
+    // a ordem das páginas não muda (o TAP cita a proposta do dossiê pela página): os limites de volume entram na
+    // página das exclusões
     for (const grupo of ["Exclusões", "Premissas", "Restrições", "Obrigações do contratante"]) {
-      const doGrupo = itens.filter((i) => i.grupo === grupo);
-      if (doGrupo.length) secoes.push({ titulo: grupo, paragrafos: doGrupo.map((i) => paragrafo(i, p)) });
+      const doGrupo = itens.filter(
+        (i) => i.grupo === grupo || (grupo === "Exclusões" && i.grupo === "Limites de volume"),
+      );
+      if (doGrupo.length) secoes.push({ titulo: grupo, paragrafos: doGrupo.map(comNumero) });
     }
   }
   const eap = p.eap?.resposta;
@@ -131,6 +149,7 @@ export function montarPropostaTecnica(
       aprovacaoDias: p.parametros.aprovacaoDias,
       inicio: p.parametros.inicio ? new Date(`${p.parametros.inicio}T00:00:00`) : undefined,
       prazoRfp: ponto.prazoExecucao,
+      feriados: p.parametros.feriados,
     });
     secoes.push({
       titulo: "Cronograma executivo (calculado pelo código)",
@@ -376,8 +395,8 @@ export function montarPlanilhaPreco(
           colunas: ["Perfil", "Horas (PERT)", "Valor-hora (GP)", "Custo"],
           larguras: [3, 1, 1, 1],
           linhas: [
-            ...preco.linhas.map((l) => [l.perfil.nome, String(l.horas), reais(l.valorHora), reais(l.custo)]),
-            ["Total", String(preco.horasTotais), "", reais(preco.pessoal)],
+            ...preco.linhas.map((l) => [l.perfil.nome, textoDasHoras(l), reais(l.valorHora), reais(l.custo)]),
+            ["Total", textoDasHorasTotais(preco), "", reais(preco.pessoal)],
           ],
         },
       },
@@ -485,7 +504,7 @@ export function montarPerguntasProposta(
 ): DocumentoExportavel {
   const { p } = preparar(dossie, docs);
   const daEstrategia = (p.estrategia?.resposta.destinos ?? []).filter((d) => d.destino === "pergunta");
-  const daEtapa1 = ponto.brechas.filter((b) => !daEstrategia.some((d) => d.origem === b.id));
+  const daEtapa1 = ponto.brechas.filter((b) => !daEstrategia.some((d) => idsDaBrecha(b).includes(d.origem)));
   const linhas = [
     ...daEstrategia.map(
       (d) => `[Sugestão] ${d.texto}${d.fontes[0] ? ` (Referência: RFP, p. ${d.fontes[0].pagina}.)` : ""}`,

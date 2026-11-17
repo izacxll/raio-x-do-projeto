@@ -8,6 +8,8 @@ import { calcularCronograma, conferirPrazosDosProdutos, type Cronograma } from "
 import { lerValorEmReais } from "../2-proposta/preco";
 import { montarPontoDePartida, type PontoDePartida } from "../2-proposta/ponto-de-partida";
 import { lerContrato, type LidoDoContrato } from "./contrato";
+import { inicioFixo } from "../../regras/cruzamentos-rfp";
+import { numerarCompromissos, type Compromisso } from "../2-proposta/compromissos";
 import type { RespostaEap } from "../../pmo/schemas/proposta";
 
 export type FonteProposta = "pdf" | "dossie" | "nenhuma";
@@ -32,13 +34,18 @@ export interface DadosProposta {
   perfis: { id: string; nome: string; exigido: boolean; requisito: string }[];
   cronograma?: Cronograma;
   marcos: MarcoDaProposta[];
+  /** Compromissos numerados da proposta (decisão 0047): premissas, obrigações, exclusões e limites de volume. */
+  compromissos: Compromisso[];
   inicio?: Date;
+  /** Onde o código leu o início, quando ele veio do documento e não do GP ("RFP, p. 1"): a confirmar pelo GP. */
+  inicioDoDocumento?: string;
   /** Dias úteis de aprovação de cada produto (decisão do GP na etapa 2). */
   aprovacaoDias?: number;
   /** Preço final (decisão do GP na etapa 2). */
   valor?: number;
   /** Fases da metodologia com os meses (etapa 2 pelo método), para conferir a duração × vigência. */
-  fases: { nome: string; meses: number }[];
+  /** Meses de cada fase da proposta; null quando a duração ficou a definir pelo GP. */
+  fases: { nome: string; meses: number | null }[];
   /** Operação contínua: quadro de equipe e volumes da etapa 2, para conferir a produtividade. */
   operacao?: Pick<RespostaEap, "volumes" | "quadroEquipe">;
   abordagem?: string;
@@ -82,12 +89,17 @@ export function dadosDaProposta(
   if (!p?.conteudo) return undefined;
   const c = p.conteudo.resposta;
   const eap = p.eap?.resposta;
-  const inicio = p.parametros.inicio ? new Date(`${p.parametros.inicio}T00:00:00`) : undefined;
+  // início: o que o GP informou na etapa 2; sem ele, a data fixa de início do documento, a confirmar pelo GP
+  const doGp = p.parametros.inicio ? new Date(`${p.parametros.inicio}T00:00:00`) : undefined;
+  const fixo = !doGp && ponto ? inicioFixo(ponto.analise.documentos) : undefined;
+  const inicio = doGp ?? fixo?.data;
   const cronograma = eap
     ? calcularCronograma(eap.atividades, {
         aprovacaoDias: p.parametros.aprovacaoDias,
         inicio,
+        inicioDoDocumento: fixo ? `${fixo.origem.documento}, p. ${fixo.origem.pagina}` : undefined,
         prazoRfp: ponto?.prazoExecucao,
+        feriados: p.parametros.feriados,
       })
     : undefined;
   const marcos = cronograma
@@ -115,7 +127,9 @@ export function dadosDaProposta(
     })),
     cronograma,
     marcos,
+    compromissos: numerarCompromissos(c),
     inicio,
+    inicioDoDocumento: fixo ? `${fixo.origem.documento}, p. ${fixo.origem.pagina}` : undefined,
     aprovacaoDias: p.parametros.aprovacaoDias,
     valor: p.parametros.precoFinal,
     fases: c.metodologia.map((f) => ({ nome: f.nome, meses: f.meses })),

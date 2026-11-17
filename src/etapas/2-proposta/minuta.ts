@@ -6,6 +6,7 @@
 //   descrita ("nesta seção, descrever…") ou vazia é alerta.
 // O código monta e confere (pontos, preço pelo tipo de contrato, caixa, produtividade, duração × vigência, matriz);
 // o PMO redige. Nenhum número é inventado: o que o edital não dá fica "a definir pelo GP".
+import { numerarCompromissos } from "./compromissos";
 import type {
   AnaliseRfpDossie,
   DocumentoLido,
@@ -373,6 +374,17 @@ export function montarMinuta(
         ]),
       },
     });
+  else if (regra.tipo === "contratacao-direta")
+    // contratação direta (decisão 0042): não há pontos; o que sustenta a escolha é o art. 72
+    add({
+      id: "minuta:estrategia:pontos",
+      secao: "estrategia",
+      rotulo: "documento",
+      nome: "O que sustenta a escolha",
+      texto:
+        "Contratação direta: não há critérios de pontuação. A proposta sustenta a notória especialização no objeto (estudos e equipe que a provam), a justificativa de preço e os documentos do art. 72 da Lei 14.133 (conferir).",
+      origem: regra.origem,
+    });
   else
     add({
       id: "minuta:estrategia:pontos",
@@ -549,18 +561,42 @@ export function montarMinuta(
       origem: dependencias[0]?.origem,
       nota: "Cada dependência vira obrigação do contratante com prazo. Prazo que o edital não dá é decisão do GP, nunca um número inventado.",
     });
+  // compromissos numerados (decisão 0047): o número C vai no nome, como o R nos requisitos
+  const compromissos = c ? numerarCompromissos(c) : [];
+  const comNumero = (id: string, nome: string) => {
+    const n = compromissos.find((x) => x.idItem === id)?.numero;
+    return n ? `${n} — ${nome}` : nome;
+  };
   c?.exclusoes.forEach((x, k) =>
-    add(itemDoPmo(`conteudo:exclusoes:${k}`, "escopo", "Exclusão", x, docs, rev)),
+    add(
+      itemDoPmo(
+        `conteudo:exclusoes:${k}`,
+        "escopo",
+        comNumero(`conteudo:exclusoes:${k}`, "Exclusão"),
+        x,
+        docs,
+        rev,
+      ),
+    ),
   );
   c?.limitesVolume.forEach((x, k) =>
-    add(itemDoPmo(`conteudo:limitesVolume:${k}`, "escopo", "Limite de volume", x, docs, rev)),
+    add(
+      itemDoPmo(
+        `conteudo:limitesVolume:${k}`,
+        "escopo",
+        comNumero(`conteudo:limitesVolume:${k}`, "Limite de volume"),
+        x,
+        docs,
+        rev,
+      ),
+    ),
   );
   c?.obrigacoesContratante.forEach((o, k) =>
     add(
       itemDoPmo(
         `conteudo:obrigacoesContratante:${k}`,
         "escopo",
-        "Obrigação do contratante",
+        comNumero(`conteudo:obrigacoesContratante:${k}`, "Obrigação do contratante"),
         o.item,
         docs,
         rev,
@@ -603,7 +639,7 @@ export function montarMinuta(
       id: `minuta:premissas:${pc}`,
       secao: "premissas",
       rotulo: escrita || !ponto1 ? "sugestao" : "documento",
-      nome: `${pc} — ${NOME_PREMISSA[pc as CodigoPremissa] ?? ""}`,
+      nome: `${k >= 0 ? `${compromissos.find((x) => x.idItem === `conteudo:premissas:${k}`)?.numero ?? ""} · ` : ""}${pc} — ${NOME_PREMISSA[pc as CodigoPremissa] ?? ""}`,
       texto: escrita
         ? `${escrita.item.texto} De quem depende: ${escrita.dependeDe || A_DEFINIR}. Até quando: ${escrita.ateQuando || A_DEFINIR}. Se falhar: ${escrita.consequencia || "—"}. Reajuste: ${escrita.reajuste || "—"}.`
         : `${ponto1 ? `Ponto de atenção da etapa 1: ${ponto1.nome} (${pag(ponto1.origem)}). ` : ""}${c ? "A minuta do PMO não escreve esta premissa." : "A minuta do PMO escreve a premissa com a consequência e o reajuste."}`,
@@ -646,9 +682,20 @@ export function montarMinuta(
       nome: "Equipe que o edital fixa",
       texto: equipeR.map((r) => `${r.numero} ${r.descricao}`).join("; "),
     });
-  const fases = (c?.metodologia ?? []).filter((f) => f.meses > 0);
+  // fase com duração a definir (null): a soma contra a vigência só sai quando o GP definir todas
+  const aDefinir = (c?.metodologia ?? []).filter((f) => f.meses === null);
+  const fases = (c?.metodologia ?? []).filter((f): f is typeof f & { meses: number } => (f.meses ?? 0) > 0);
   let duracao: ConferenciaDuracao | undefined;
-  if (fases.length) {
+  if (aDefinir.length)
+    add({
+      id: "minuta:metas:duracao",
+      secao: "metas-equipe",
+      rotulo: "decisao-gp",
+      nome: "Cronograma × vigência (conta do código)",
+      texto: `Duração a definir em ${aDefinir.length} fase(s) (${aDefinir.map((f) => f.nome).join("; ")}): o código não soma o cronograma contra a vigência até o GP definir a duração de todas.`,
+      origem: ponto.prazoExecucao?.origem,
+    });
+  else if (fases.length) {
     duracao = conferirDuracao(
       fases.map((f) => ({ rotulo: f.nome, meses: f.meses })),
       vigencia,

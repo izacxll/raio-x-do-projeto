@@ -3,7 +3,7 @@
 // 2. conteúdo técnico da abordagem escolhida: entendimento, objetivos, metodologia, SOW, obrigações do contratante;
 // 3. EAP, estimativas em três pontos, equipe, horas, RACI, despesas e reservas a considerar.
 import { z } from "zod";
-import { EstimativaTresPontos, FontePmo, ItemPmo, RotuloPmo } from "./comum";
+import { EstimativaTresPontos, FontePmo, ItemPmo, RotuloPmo, ItemAutoconferencia } from "./comum";
 
 // ---------- passo 1: estratégia ----------
 
@@ -64,6 +64,8 @@ export const PremissaCriticaAplicavel = z.object({
 });
 
 export const RespostaEstrategia = z.object({
+  /** Autoconferência (decisão 0044): cada item do método ou das fichas usado, com o estado. */
+  autoconferencia: z.array(ItemAutoconferencia).default([]),
   /** Critério de julgamento e o que pesa na avaliação, com página e trecho. */
   comoSeraAvaliada: z.array(ItemPmo),
   criterios: z.array(CriterioPontuacao),
@@ -138,8 +140,11 @@ export const FaseMetodologia = z.object({
   entrega: z.string(),
   /** Duração como texto, com a base ("meses 1 e 2, a mobilização que o edital prevê"). */
   duracao: z.string(),
-  /** Meses da fase, para o código conferir a soma contra a vigência; 0 quando a fase corre em paralelo. */
-  meses: z.number(),
+  /**
+   * Meses da fase, para o código conferir a soma contra a vigência; 0 quando a fase corre em paralelo; null quando
+   * a duração não está no documento (a definir pelo GP): aí o código não soma.
+   */
+  meses: z.number().nullable(),
 });
 export type FaseMetodologia = z.infer<typeof FaseMetodologia>;
 
@@ -163,6 +168,8 @@ export const RiscoProposta = z.object({
 export type RiscoProposta = z.infer<typeof RiscoProposta>;
 
 export const RespostaConteudo = z.object({
+  /** Autoconferência (decisão 0044): cada item do método ou das fichas usado, com o estado. */
+  autoconferencia: z.array(ItemAutoconferencia).default([]),
   /** Seções na ordem da proposta (modelo do edital, se houver), cada uma redigida: os itens são o texto que vai ao cliente. */
   estrutura: z.array(SecaoProposta),
   produtos: z.array(ProdutoSow),
@@ -189,8 +196,18 @@ export const AtividadeEap = z.object({
   predecessoras: z.array(z.string()),
   /** Em dias úteis. */
   duracao: EstimativaTresPontos,
-  /** Termina num produto que o contratante aprova: o código soma o tempo de aprovação. */
+  /**
+   * Restrição de data (evento, safra, ano letivo): início e fim fixos, como o documento traz (dd/mm/aaaa). Com ela,
+   * a duração é conta do código (dias úteis da janela) e os três pontos não valem; sem ela, null.
+   */
+  restricaoData: z.object({ inicio: z.string(), fim: z.string(), fonte: FontePmo }).nullable().default(null),
+  /** Termina num produto que o contratante aprova: o código soma o tempo de aprovação depois dela. */
   aprovacaoCliente: z.boolean(),
+  /**
+   * A atividade é a própria análise e aceite do contratante: com o tempo de aprovação do GP, o código troca a duração
+   * por ele (não soma por cima). Quem marca isto não marca aprovacaoCliente na entrega anterior.
+   */
+  analiseDoContratante: z.boolean().default(false),
   requisitos: z.array(z.string()),
 });
 export type AtividadeEap = z.infer<typeof AtividadeEap>;
@@ -209,14 +226,18 @@ export type PerfilEquipe = z.infer<typeof PerfilEquipe>;
 export const HorasPerfil = z.object({
   atividade: z.string(),
   perfil: z.string(),
-  horas: EstimativaTresPontos,
+  /** null quando as horas dependem de decisão do GP (produtividade, por exemplo): pendência, não zero. */
+  horas: EstimativaTresPontos.nullable(),
 });
 export type HorasPerfil = z.infer<typeof HorasPerfil>;
 
 export const LinhaRaci = z.object({
   atividade: z.string(),
+  /** Id do perfil da equipe; ou, com parte "contratante", o papel do contratante (fiscal, gestor, secretaria). */
   perfil: z.string(),
   papel: z.enum(["R", "A", "C", "I"]),
+  /** Quem é: a equipe da FGV ou o contratante (PROP-EQUIPE.7 pede o contratante na RACI). */
+  parte: z.enum(["equipe", "contratante"]).default("equipe"),
 });
 
 /** Quadro de equipe por função e faixa de meses (operação contínua): a base da folha e da produtividade. */
@@ -243,6 +264,8 @@ export const VolumePrevisto = z.object({
 export type VolumePrevisto = z.infer<typeof VolumePrevisto>;
 
 export const RespostaEap = z.object({
+  /** Autoconferência (decisão 0044): cada item do método ou das fichas usado, com o estado. */
+  autoconferencia: z.array(ItemAutoconferencia).default([]),
   atividades: z.array(AtividadeEap),
   perfis: z.array(PerfilEquipe),
   horas: z.array(HorasPerfil),

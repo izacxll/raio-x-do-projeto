@@ -5,6 +5,7 @@ import { useMemo, useState } from "react";
 import { MODELOS, type IdModelo } from "../../config/modelo";
 import type { Caracteristicas } from "../../dominio/caracteristicas";
 import { PARTES_PGP, PREMISSAS_CRITICAS } from "../../dominio/skill";
+import { CampoFeriados } from "../componentes/campo-feriados";
 import type { ParametrosPgp, PgpDossie } from "../../dossie/esquema";
 import { useDossie } from "../../dossie/store";
 import {
@@ -87,7 +88,7 @@ export function PlanoDeGerenciamento() {
   const entrada = useMemo(() => montarEntradaPgp(dossie), [dossie]);
   const sistema = useMemo(() => textoDeSistema(referenciasEtapa4()), []);
   const textoDocs = useMemo(() => textoDosDocumentos(entrada.documentos), [entrada]);
-  const itens = useMemo(() => itensDoPgp(p, entrada.documentos), [p, entrada]);
+  const itens = useMemo(() => itensDoPgp(p, entrada.documentos, entrada.premissasTap), [p, entrada]);
   const premissas = p.premissasAplicaveis ?? entrada.premissasAnteriores;
   const { rodando, erro, chamar, cancelar } = useChamadaPmo();
 
@@ -445,6 +446,7 @@ function Cronograma({
           valor={p.parametros.aprovacaoDias}
           aoMudar={(v) => mudarPar({ aprovacaoDias: v })}
         />
+        <CampoFeriados valor={p.parametros.feriados} aoMudar={(v) => mudarPar({ feriados: v })} />
       </div>
       <div
         className={`aviso aviso--coluna${crono.conferenciaPrazo.situacao === "nao-cabe" ? " aviso--erro" : ""}`}
@@ -691,9 +693,18 @@ function Autoconferencia({
               </tbody>
             </table>
             <p className="envio__obs">
-              Além disso, {separados.decisoes.length} trechos com decisão do GP ainda vazia ("a definir pelo
-              GP"): no plano final, eles precisam do valor, do nome ou da cadência que só você define.
+              Além disso,{" "}
+              {resultado.verificacoes.find((v) => v.id === "decisoes-do-gp-pendentes")?.detalhe ??
+                `${separados.decisoes.length} trechos com decisão do GP ainda vazia ("a definir pelo GP").`}{" "}
+              No plano final, eles precisam do valor, do nome ou da cadência que só você define.
             </p>
+            {resultado.verificacoes
+              .filter((v) => v.id === "presentes-pela-marca-do-pmo")
+              .map((v) => (
+                <p key={v.id} className="envio__obs" data-testid="pela-marca-do-pmo">
+                  {v.descricao}: {v.detalhe}
+                </p>
+              ))}
             {separados.demais.map((a) => (
               <article key={a.id} className="cartao cartao--borda bloco">
                 <div className="cartao__corpo">

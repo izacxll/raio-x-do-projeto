@@ -39,7 +39,7 @@ test("etapa 4 em demonstração: adaptação, seis passos, contas, autoconferên
   await page.getByLabel("Reserva de contingência (R$, decisão do GP)").fill("10000");
 
   await page.getByTestId("autoconferir").click();
-  await expect(page.getByTestId("resultado-autoconferencia")).toContainText("decisão do GP ainda vazia");
+  await expect(page.getByTestId("resultado-autoconferencia")).toContainText("decisão(ões) do GP pendente(s)");
   expect(
     await page.evaluate("document.documentElement.scrollWidth <= document.documentElement.clientWidth"),
   ).toBe(true);

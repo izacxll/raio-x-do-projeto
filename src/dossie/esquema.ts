@@ -9,7 +9,7 @@ import { RespostaLeitura } from "../pmo/schemas/leitura";
 import { RespostaLeituraRfp } from "../pmo/schemas/leitura-rfp";
 import {
   RespostaAdaptacao,
-  RespostaCronograma,
+  RespostaCronogramaGuardada,
   RespostaEscopo,
   RespostaExecucao,
   RespostaPlanos,
@@ -222,6 +222,8 @@ export const ParametrosProposta = z.object({
   inicio: z.string().optional(),
   /** Dias úteis de aprovação de cada produto pelo contratante, decisão do GP. */
   aprovacaoDias: z.number().nonnegative().optional(),
+  /** Feriados municipais (aaaa-mm-dd) que o GP informa; os nacionais o código já desconta. */
+  feriados: z.array(z.string()).optional(),
   valoresHora: z.record(z.string(), z.number().nonnegative()),
   despesas: z.array(z.object({ descricao: z.string(), valor: z.number().nonnegative().optional() })),
   indiretosPct: z.number().min(0).max(100).optional(),
@@ -239,7 +241,7 @@ export type ParametrosProposta = z.infer<typeof ParametrosProposta>;
 
 /** Decisão do GP: o tipo de contrato e de projeto (decisão 0034), sugerido pelo código. */
 export const TipoConfirmado = z.object({
-  contrato: z.enum(["licitacao", "parceria"]),
+  contrato: z.enum(["licitacao", "contratacao-direta", "parceria"]),
   projeto: z.enum(["produtos", "operacao", "hibrido"]),
 });
 export type TipoConfirmado = z.infer<typeof TipoConfirmado>;
@@ -309,6 +311,8 @@ export const ParametrosPgp = z.object({
   inicio: z.string().optional(),
   /** Dias úteis de aprovação de cada produto pelo contratante. */
   aprovacaoDias: z.number().nonnegative().optional(),
+  /** Feriados municipais (aaaa-mm-dd) que o GP informa; os nacionais o código já desconta. */
+  feriados: z.array(z.string()).optional(),
   valoresHora: z.record(z.string(), z.number().nonnegative()),
   /** Reserva de contingência (dentro da linha de base) e gerencial (fora dela), em R$. */
   contingencia: z.number().nonnegative().optional(),
@@ -322,7 +326,7 @@ export const PgpDossie = z.object({
   modelo: z.string(),
   adaptacao: RespostaGuardada(RespostaAdaptacao).optional(),
   escopo: RespostaGuardada(RespostaEscopo).optional(),
-  cronograma: RespostaGuardada(RespostaCronograma).optional(),
+  cronograma: RespostaGuardada(RespostaCronogramaGuardada).optional(),
   riscos: RespostaGuardada(RespostaRiscos).optional(),
   planos: RespostaGuardada(RespostaPlanos).optional(),
   execucao: RespostaGuardada(RespostaExecucao).optional(),

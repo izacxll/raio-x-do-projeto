@@ -27,9 +27,13 @@ export interface Clausula {
   noModelo: boolean;
 }
 
-/** Começo de item: "7.1", "7.1.2.", "12.", "a)", "IV -", "1 Comprovante" (lista numerada sem ponto). */
+/**
+ * Começo de item: "7.1", "7.1.2.", "12.", "a)", "IV -", "1 Comprovante" (lista numerada sem ponto). O número
+ * termina em espaço ou no fim da linha: "57.575/2016." no começo da linha é o fim de "Decreto nº" da linha de
+ * cima, não um item novo.
+ */
 const RE_INICIO =
-  /^(?:(\d{1,2}(?:\.\d{1,2}){1,4}\.?)|(\d{1,2}[.)])|([a-z]\))|([IVX]{1,5}\s*[-–.)])|(\d{1,2})(?=\s+[A-ZÀ-Ý]))\s*/;
+  /^(?:(\d{1,2}(?:\.\d{1,2}){1,4}\.?)(?=\s|$)|(\d{1,2}[.)])(?=\s|$)|([a-z]\))|([IVX]{1,5}\s*[-–.)])|(\d{1,2})(?=\s+[A-ZÀ-Ý]))\s*/;
 const RE_TITULO = /^(?:CL[AÁ]USULA|ANEXO|CAP[IÍ]TULO|SE[CÇ][AÃ]O)\b/;
 
 /**

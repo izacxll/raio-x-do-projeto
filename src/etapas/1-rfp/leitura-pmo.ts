@@ -8,6 +8,11 @@
 // - as contas (datas × hoje, soma das parcelas, caixa) continuam do código: os itens calculados do esqueleto ficam.
 import textoMetodo from "../../../docs/estudos/metodo-etapa-1.md?raw";
 import type { AnaliseRfpDossie, DocumentoLido } from "../../dossie/esquema";
+import {
+  conferirAutoconferencia,
+  cruzamentosSemRegistro,
+  type ResultadoAutoconferencia,
+} from "../../pmo/autoconferencia";
 import { citacaoValeComoFato, conferirCitacao, type ResultadoCitacao } from "../../pmo/citacoes";
 import type { ItemLeituraRfpPmo, RespostaLeituraRfp } from "../../pmo/schemas/leitura-rfp";
 import type { CodigoPremissa, Impacto } from "../../regras/premissas-rfp";
@@ -22,10 +27,12 @@ import {
 } from "./leitura";
 import { estadoDoItem } from "./revisao";
 
-export type TravaPmo = "citacao-nao-conferida" | "valor-nao-conferido" | "conta-do-pmo";
+export type TravaPmo = "citacao-nao-conferida" | "citacao-fraca" | "valor-nao-conferido" | "conta-do-pmo";
 
 export const NOME_TRAVA: Record<TravaPmo, string> = {
   "citacao-nao-conferida": "citação não conferida — não vale como fato",
+  "citacao-fraca":
+    "citação fraca — o trecho é curto demais para provar o que o item diz; conferir no documento",
   "valor-nao-conferido": "valor não conferido — o número não está no trecho citado",
   "conta-do-pmo": "conta feita pelo PMO — conferir; as contas são do código",
 };
@@ -54,9 +61,11 @@ export function numerosQuePedemFonte(texto: string): string[] {
     // ids de itens e de meses citados pelo PMO ("AT-01", "UP-08", "M01"): referência, não valor
     .replace(/\b[a-z]{1,2}-?\d{2}\b/g, " ")
     .replace(
-      /\b(?:itens?|subitens?|clausulas?|art\.?|artigos?|anexos?|quadros?|tabelas?|incisos?) (?:n[º°o.]\s*)?[\d.]+[a-z]?(?:\s*(?:,|e)\s*[\d.]+)*/g,
+      /\b(?:itens?|subitens?|clausulas?|art\.?|artigos?|anexos?|quadros?|tabelas?|incisos?|secao|secoes|etapas?) (?:n[º°o.]\s*)?[\d.]+[a-z]?(?:\s*(?:,|e)\s*[\d.]+)*/gi,
       " ",
     )
+    // numeração da própria lista do PMO ("1) …; 2) …"): não é valor
+    .replace(/(^|[\s;:(])\d{1,2}\)/g, "$1 ")
     // número de cláusula entre parênteses ou solto ("(7.12.2)", "6.7.8"): referência ao edital, não valor
     .replace(/\b\d{1,2}\.\d{1,2}\.\d{1,2}(?:\.\d{1,2})*\b/g, " ");
   return [...new Set((limpo.match(/\d[\d.,/]*\d|\d/g) ?? []).map((n) => n.replace(/[.,]$/, "")))];
@@ -84,6 +93,16 @@ function temFonte(n: string, base: string): boolean {
   );
 }
 
+/**
+ * Citação curta demais para provar uma afirmação: menos de 6 palavras com letras ("14.133/2021.", "conforme
+ * anexos", "Lei nº"). O trecho existe na página, mas não sustenta o item.
+ */
+export function citacaoEhFraca(trecho: string): boolean {
+  // datas e números contam como palavras: o princípio 3 manda trazer o número ou a data da afirmação
+  // ("previsto para o período de 07/11/2026 a 06/01/2027" prova as datas)
+  return (normal(trecho).match(/[a-z]{2,}|\d[\d./,]*/gi) ?? []).length < 6;
+}
+
 /** Conta feita pelo PMO: soma, diferença, acumulado, "sobram", "no máximo X% até…". As contas são do código. */
 const RE_CONTA =
   /\d\s*[+−–=]\s*\d|\(\s*\d+\s*%?\s*\+|\b(?:acumulad[oa]s?|somam|soma de|calculad[oa]|sobram|restam|faltam \d|no maximo \d{1,3}\s*%|d\+\d)/;
@@ -109,6 +128,11 @@ export function conferirLeituraRfp(
           .join(" "),
       ),
     );
+  // as contas do código que não estão numa seção (os cruzamentos X1 a X6: janela, folga, soma das parcelas) valem
+  // para qualquer seção: são números do código, não do PMO (decisão 0046)
+  const contasDosCruzamentos = normal(esqueleto.cruzamentos.map((c) => c.resultado).join(" "));
+  // o esqueleto inteiro, só para reconhecer o item que repete uma conta do código ("(conta do código)")
+  const esqueletoInteiro = [...esqueletoDaSecao.values(), contasDosCruzamentos].join(" ");
   const numeros = new Set(dossie.requisitos.map((x) => x.numero));
   // o texto de cada página, sem acento e com os espaços colapsados, para achar a vizinhança do trecho citado
   const paginas = new Map<number, string>();
@@ -145,25 +169,47 @@ export function conferirLeituraRfp(
         .filter(({ c }) => c && citacaoValeComoFato(c))
         .map(({ f, c }) => vizinhanca(f, c?.pagina)),
       esqueletoDaSecao.get(item.secao) ?? "",
+      contasDosCruzamentos,
       dataDeHoje,
     ].join(" ");
     // ano ("2025") e número de norma ou de edital ("13046/2026") valem se estão na página citada (são do
     // cabeçalho ou da abertura, longe do trecho); valor, prazo e quantidade, só na vizinhança do trecho
     const paginasCitadas = item.fontes.map((f) => paginas.get(f.pagina) ?? "").join(" ");
+    // ano solto ("2025") também vale se o esqueleto o tem (item sem fonte, como os pontos que mais pesam)
     const ehReferencia = (n: string) => /^(?:19|20)\d{2}$/.test(n) || /^\d{3,6}\/(?:19|20)\d{2}$/.test(n);
-    const numerosSemFonte = numerosQuePedemFonte(item.texto).filter(
-      (n) => !temFonte(normal(n), base) && !(ehReferencia(n) && temFonte(normal(n), paginasCitadas)),
-    );
+    const ehAno = (n: string) => /^(?:19|20)\d{2}$/.test(n);
+    // o item que diz "conta do código" e só usa números que o esqueleto já tem repete a conta, não a faz: os
+    // números dele são do código, mesmo que estejam noutra seção do esqueleto
+    const repeteContaDoCodigo =
+      /conta do codigo/.test(normal(item.texto).toLowerCase()) &&
+      numerosQuePedemFonte(item.texto).every((n) => temFonte(normal(n), esqueletoInteiro));
+    const numerosSemFonte = repeteContaDoCodigo
+      ? []
+      : numerosQuePedemFonte(item.texto).filter(
+          (n) =>
+            !temFonte(normal(n), base) &&
+            !(ehReferencia(n) && temFonte(normal(n), paginasCitadas)) &&
+            !(ehAno(n) && temFonte(normal(n), esqueletoInteiro)),
+        );
+    // citação fraca (SKILL.md, princípio 3): todas as citações achadas são curtas demais para provar o que o item
+    // afirma ("14.133/2021.", "conforme anexos")
+    const fraca =
+      alguma &&
+      item.fontes.every(
+        (f, k) => !citacoes[k] || !citacaoValeComoFato(citacoes[k]) || citacaoEhFraca(f.trecho),
+      );
     const trava: TravaPmo | undefined =
       item.fontes.length && !alguma
         ? "citacao-nao-conferida"
         : item.rotulo === "documento" && !alguma
           ? "citacao-nao-conferida"
-          : RE_CONTA.test(normal(item.texto).toLowerCase())
-            ? "conta-do-pmo"
-            : numerosSemFonte.length
-              ? "valor-nao-conferido"
-              : undefined;
+          : fraca
+            ? "citacao-fraca"
+            : RE_CONTA.test(normal(item.texto).toLowerCase()) && !repeteContaDoCodigo
+              ? "conta-do-pmo"
+              : numerosSemFonte.length
+                ? "valor-nao-conferido"
+                : undefined;
     return {
       item: { ...item, requisitos: item.requisitos.filter((x) => numeros.has(x)) },
       citacoes,
@@ -277,7 +323,10 @@ const REGRAS = `Regras deste pedido (além da skill e do método):
 - Números R: use só os do esqueleto, no campo requisitos. Requisito novo é sugestão (rotulo "sugestao", requisitos vazio); o GP decide se vira R.
 - Seção 7: premissa (PC1 a PC8 do checklist.md, ou ""), porquePesa, pergunta em redação condicional e impacto (1 = mais pesa: caixa, dependência do contratante, preço, prazo, escopo). Termine com um item das proteções que o texto dá à contratada, se houver.
 - Nas outras seções, premissa "", porquePesa "", pergunta "" e impacto 0.
-- Nada inventado: o que o documento não diz fica "não informado no documento — a definir pelo GP". Sem nomes de pessoas.`;
+- Nada inventado: o que o documento não diz fica "não informado no documento — a definir pelo GP". Sem nomes de pessoas.
+- Cruzamentos (decisão 0046): registre X1 a X6 em "cruzamentos", cada um "feito" (resultado: "confere", "diverge: …" ou "em aberto: …") ou "nao_se_aplica" (com o motivo), partindo do que o código já contou (abaixo). O que diverge vira item da seção 7, e o id dele vai em "itens". Em X3, confira antes se o próprio documento já diz quem executa.
+- Autoconferência (decisão 0044): em "autoconferencia", marque cada uma das 8 seções do método ("etapa-1:secao-1" a "etapa-1:secao-8") como "presente" (onde: o id de um item), "dispensado" (motivo) ou "decisao_gp" (motivo). Nenhuma seção sem marca.
+- O trecho citado tem de provar o que o item afirma (número, data ou termo-chave); trecho com menos de 6 palavras vira "citação fraca".`;
 
 function linhaDoEsqueleto(i: ItemLeitura): string {
   const onde = i.origem ? ` (p. ${i.origem.pagina})` : "";
@@ -306,6 +355,9 @@ ${textoMetodo.trim()}
 
 ## Esqueleto do código (páginas, números, contas e números R já conferidos)
 ${secoes.join("\n\n")}
+
+## Cruzamentos que o código já fez (X1 a X6; você completa e registra)
+${esqueleto.cruzamentos.map((c) => `- ${c.codigo} · ${c.nome} [${c.estado}; quem: ${c.quem}]: ${c.resultado}`).join("\n") || "- nenhum"}
 
 ${REGRAS}`;
 }
@@ -336,4 +388,17 @@ export function itensRevisaveis(leitura: LeituraRfp): ItemLeitura[] {
 
 export function contarPendentesDaLeitura(leitura: LeituraRfp, dossie: AnaliseRfpDossie): number {
   return itensRevisaveis(leitura).filter((i) => estadoDoItem(dossie.revisoes, i.id) === "pendente").length;
+}
+
+/** As 8 seções do método, como o PMO as marca na autoconferência (decisão 0044). */
+export const SECOES_AUTOCONFERENCIA_ETAPA_1 = SECOES_LEITURA.map((_, k) => `etapa-1:secao-${k + 1}`);
+
+/** Autoconferência da leitura do PMO: seções sem marca e cruzamentos X1 a X6 sem registro (decisões 0044 e 0046). */
+export function autoconferenciaDaLeitura(
+  r: RespostaLeituraRfp,
+): ResultadoAutoconferencia & { cruzamentosSemRegistro: string[] } {
+  return {
+    ...conferirAutoconferencia(SECOES_AUTOCONFERENCIA_ETAPA_1, r.autoconferencia),
+    cruzamentosSemRegistro: cruzamentosSemRegistro(r.cruzamentos),
+  };
 }

@@ -55,6 +55,18 @@ export function encontrarDatas(texto: string): DataNoTexto[] {
   return out.sort((a, b) => a.posicao - b.posicao);
 }
 
+/**
+ * Data do fecho do documento: sozinha na linha, depois do nome do lugar e de uma vírgula ("Cidade, 08 de setembro
+ * de 2025.", "Cidade/UF, em 10/03/2026"). É a data de assinatura, não um marco do projeto.
+ */
+export function ehDataDoFecho(texto: string, d: DataNoTexto): boolean {
+  const ini = texto.lastIndexOf("\n", d.posicao - 1) + 1;
+  const fimLinha = texto.indexOf("\n", d.posicao + d.tamanho);
+  const antes = texto.slice(ini, d.posicao);
+  const depois = texto.slice(d.posicao + d.tamanho, fimLinha < 0 ? undefined : fimLinha);
+  return /^\s*[A-ZÀ-Ý][^\d,;:]{1,60},\s*(?:em\s+)?$/.test(antes) && /^\s*\.?\s*$/.test(depois);
+}
+
 // origem: App-final-4.jsx, rrFmt, linha 1681
 export function formatarData(d: Date): string {
   return `${String(d.getDate()).padStart(2, "0")}/${String(d.getMonth() + 1).padStart(2, "0")}/${d.getFullYear()}`;
@@ -65,22 +77,29 @@ export function soData(d: Date): Date {
   return new Date(d.getFullYear(), d.getMonth(), d.getDate());
 }
 
-export function ehDiaUtil(d: Date): boolean {
+/** Feriados que as contas de dias úteis descontam (o cronograma usa os nacionais e os municipais do GP). */
+export interface Calendario {
+  ehFeriado: (d: Date) => boolean;
+  /** "com os feriados nacionais…", para o texto da conta. */
+  descricao: string;
+}
+
+export function ehDiaUtil(d: Date, cal?: Calendario): boolean {
   const s = d.getDay();
-  return s !== 0 && s !== 6;
+  return s !== 0 && s !== 6 && !cal?.ehFeriado(d);
 }
 
 /**
- * Soma (ou subtrai, com n negativo) dias úteis. Conta só sábados e domingos como não úteis: feriados não
- * entram, e a tela pede ao GP para conferi-los.
+ * Soma (ou subtrai, com n negativo) dias úteis. Sem calendário, conta só sábados e domingos como não úteis (a tela
+ * pede ao GP para conferir os feriados); com ele, desconta também os feriados.
  */
-export function somarDiasUteis(d: Date, n: number): Date {
+export function somarDiasUteis(d: Date, n: number, cal?: Calendario): Date {
   const r = soData(d);
   const passo = n < 0 ? -1 : 1;
   let faltam = Math.abs(n);
   while (faltam > 0) {
     r.setDate(r.getDate() + passo);
-    if (ehDiaUtil(r)) faltam--;
+    if (ehDiaUtil(r, cal)) faltam--;
   }
   return r;
 }
@@ -89,6 +108,21 @@ export function somarDiasCorridos(d: Date, n: number): Date {
   const r = soData(d);
   r.setDate(r.getDate() + n);
   return r;
+}
+
+/** Dias úteis de `de` até `ate`, os dois incluídos (só sábados e domingos descontados: conferir feriados). */
+export function contarDiasUteis(de: Date, ate: Date, cal?: Calendario): number {
+  let n = 0;
+  for (const d = soData(de); d <= soData(ate); d.setDate(d.getDate() + 1)) if (ehDiaUtil(d, cal)) n++;
+  return n;
+}
+
+/** Data escrita como dd/mm/aaaa ou aaaa-mm-dd (a restrição de data de uma atividade). */
+export function lerDataSimples(t: string): Date | undefined {
+  const br = /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/.exec(t.trim());
+  if (br) return new Date(Number(br[3]), Number(br[2]) - 1, Number(br[1]));
+  const iso = /^(\d{4})-(\d{2})-(\d{2})$/.exec(t.trim());
+  return iso ? new Date(Number(iso[1]), Number(iso[2]) - 1, Number(iso[3])) : undefined;
 }
 
 /** Dias corridos de `de` até `ate` (negativo se `ate` já passou). */

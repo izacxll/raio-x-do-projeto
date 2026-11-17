@@ -36,7 +36,14 @@ export interface Achado {
 }
 
 export type EstadoVerificacao =
-  "ok" | "achado" | "nao-verificavel" | "nao-conferido" | "dispensavel" | "dispensado-gp";
+  | "ok"
+  | "achado"
+  | "nao-verificavel"
+  | "nao-conferido"
+  | "dispensavel"
+  | "dispensado-gp"
+  /** Presente pela marca do PMO no plano da ferramenta (id conferido), sem os termos da ficha: redação a conferir. */
+  | "pela-marca-do-pmo";
 
 /** Cada verificação feita, com ou sem achado: o relatório mostra o que o código não pôde conferir. */
 export interface Verificacao {

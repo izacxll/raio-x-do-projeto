@@ -125,6 +125,27 @@ function modalidade(docs: DocumentoRfp[], doInstrumento: ItemAnalise): ItemAnali
     const l = localizarPrimeiro(docs, re, faixas);
     if (l) return { ...base, rotulo: "documento", texto: n, origem: origemDe(l), situacao: "localizado" };
   }
+  // 4º: contratação direta declarada em qualquer página ("esta contratação será INEXIGIBILIDADE de licitação, com
+  // base no art. 74"; decisão 0042). Só a declaração: a palavra solta aparece em cláusula padrão.
+  // em ordem de força: "será INEXIGIBILIDADE de licitação"; "modalidade a ser adotada [...] inexigibilidade";
+  // "contratação direta [...] art. 74". "Os casos de inexigibilidade e dispensa" (explicação da lei) não conta.
+  const direta = [
+    /\b(?:sera|fica) (?:a )?(?:inexigibilidade|dispensa) de licitacao\b/,
+    /\bmodalidade a ser adotada\b[^.;]{0,80}?\b(?:inexigibilidade|dispensa)\b/,
+    /\bcontratacao direta\b[^.;]{0,60}\bart(?:igo)?\.? ?7[45]\b/,
+  ]
+    .map((re) => localizarPrimeiro(docs, re))
+    .find(Boolean);
+  if (direta) {
+    const n = /inexigibilidade/.test(direta.termo)
+      ? "Inexigibilidade"
+      : /dispensa/.test(direta.termo)
+        ? "Dispensa de licitação"
+        : /\b74\b/.test(direta.termo)
+          ? "Inexigibilidade"
+          : "Dispensa de licitação";
+    return { ...base, rotulo: "documento", texto: n, origem: origemDe(direta), situacao: "localizado" };
+  }
   return itemSemAchado(docs, base);
 }
 
@@ -170,6 +191,30 @@ function contratante(docs: DocumentoRfp[], capa: CampoDaCapa[]): ItemAnalise {
       }
     }
   }
+  // no corpo (fora dos cabeçalhos repetidos): "Prefeitura Municipal de X" ou "Município de X", e a secretaria que
+  // conduz ("a Secretaria de Turismo e Cultura é responsável…")
+  const orgao = localizarPrimeiro(docs, /\bprefeitura municipal de [a-z]|\bmunicipio de [a-z]/);
+  const nomeOrgao = orgao
+    ? /(?:Prefeitura Municipal|Munic[ií]pio) de [A-ZÀ-Ý][^\s,.;:–-]*(?:\s+(?:d[aeo]s?\s+)?[A-ZÀ-Ý][^\s,.;:–-]*)*/.exec(
+        orgao.frase,
+      )?.[0]
+    : undefined;
+  if (orgao && nomeOrgao) {
+    const sec = localizarPrimeiro(docs, /\bsecretaria (?:municipal )?de [a-z]/);
+    const nomeSec = sec
+      ? /Secretaria (?:Municipal )?de [A-ZÀ-Ý][\wÀ-ÿ]*(?:,?\s+(?:e\s+|d[aeo]s?\s+)?[A-ZÀ-Ý][\wÀ-ÿ]*)*/.exec(
+          sec.frase,
+        )?.[0]
+      : undefined;
+    return {
+      ...base,
+      rotulo: "documento",
+      texto: nomeSec ? `${nomeOrgao} — ${nomeSec}` : nomeOrgao,
+      origem: origemDe(orgao),
+      situacao: "localizado",
+      nota: `Achado no corpo do documento (p. ${orgao.pagina}${sec && nomeSec && sec.pagina !== orgao.pagina ? ` e ${sec.pagina}` : ""}): conferir se é o contratante.`,
+    };
+  }
   const tornaPublico = localizarPrimeiro(docs, /\btorna(?:-se)? publico\b/);
   if (tornaPublico)
     return {
@@ -199,7 +244,12 @@ function objeto(docs: DocumentoRfp[], capa: CampoDaCapa[], mapa: MapaRfp): ItemA
     const d = docs.find((x) => x.id === secao.docId);
     const p = d?.paginas.find((x) => x.numero === secao.pagina);
     if (d && p) {
-      const depois = p.texto.indexOf("\n", secao.posicao) + 1;
+      // título com o texto na mesma linha ("1. OBJETO: Contratação de…"): a frase começa depois dos dois-pontos
+      const fimDaLinha = p.texto.indexOf("\n", secao.posicao);
+      const linhaDoTitulo = p.texto.slice(secao.posicao, fimDaLinha < 0 ? undefined : fimDaLinha);
+      const k = linhaDoTitulo.indexOf(`${secao.titulo}:`);
+      const naLinha = k >= 0 ? secao.posicao + k + secao.titulo.length + 1 : -1;
+      const depois = naLinha >= 0 ? naLinha : p.texto.indexOf("\n", secao.posicao) + 1;
       // pula a numeração do subitem ("1.1. O objeto…"): o ponto dela não é fim de frase
       const numeracao = /^\s*\d{1,2}(?:\.\d{1,2})*\.?\s*/.exec(p.texto.slice(depois))?.[0].length ?? 0;
       const frase = fraseEmVolta(p.texto, depois > 0 ? depois + numeracao : secao.posicao, MAX_OBJETO);

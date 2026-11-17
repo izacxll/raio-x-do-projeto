@@ -2,7 +2,7 @@
 // produtos, marcos, aceite, extinção e partes. O PMO recebe isto pronto e não refaz.
 import type { ItemAnalise } from "../../extracao/rfp/item";
 import { formatarData } from "../../texto/datas";
-import { valorNaProposta, type EntradaTap } from "./entrada";
+import { valorNaProposta, type DadosProposta, type EntradaTap, type MarcoDaProposta } from "./entrada";
 
 export interface DadoDoDocumento {
   id: string;
@@ -34,6 +34,29 @@ function doItem(id: string, elemento: string, nome: string, i?: ItemAnalise): Da
     onde: i.origem ? `${i.origem.documento}, p. ${i.origem.pagina}` : undefined,
     origem: "documento",
   };
+}
+
+/**
+ * Gestor e fiscal: só o papel, nunca o nome de pessoa que o documento traz (CLAUDE.md, seção 4; decisão 0049).
+ * O nome é do GP confirmar no contrato assinado.
+ */
+function apenasPapel(d: DadoDoDocumento, papel: string): DadoDoDocumento {
+  if (d.origem !== "documento") return d;
+  return {
+    ...d,
+    texto: `O documento prevê o ${papel}${d.onde ? ` (${d.onde})` : ""}; o nome é do GP confirmar no contrato.`,
+  };
+}
+
+/** Entrega em data quando o início é conhecido; sem ele, o marco fica sem data e o texto avisa. */
+function quandoEntrega(m: MarcoDaProposta, d?: DadosProposta): string {
+  const dia = `dia útil ${m.fim} do cronograma`;
+  if (!m.dataFim || !d?.inicio)
+    return `${dia}; sem o início do projeto informado, o marco não tem data (o início é decisão do GP na etapa 2)`;
+  const base = d.inicioDoDocumento
+    ? `início em ${formatarData(d.inicio)}, data do documento (${d.inicioDoDocumento}), a confirmar pelo GP`
+    : `início em ${formatarData(d.inicio)}, informado pelo GP`;
+  return `${formatarData(m.dataFim)} (${dia}; ${base})`;
 }
 
 const reais = (v: number) => v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
@@ -164,15 +187,21 @@ export function dadosDosDocumentos(e: EntradaTap): DadoDoDocumento[] {
       id: `marco:${m.produto}`,
       elemento: "TAP.6",
       nome: `Entrega de ${m.produto}`,
-      texto: `${m.nome}: dia útil ${m.fim} do cronograma${m.dataFim ? ` (${formatarData(m.dataFim)})` : ""}, sem a aprovação do cliente. ${m.textoConferencia}`,
+      texto: `${m.nome}: ${quandoEntrega(m, e.dados)}, sem a aprovação do cliente. ${m.textoConferencia}`,
       onde: "proposta (dossiê), EAP",
       origem: "calculado",
     });
   out.push(
     doItem("aceite", "TAP.9", "Recebimento e aceite", porId("condicoes:recebimento")),
     doItem("extincao", "TAP.10", "Extinção ou rescisão", porId("condicoes:extincao")),
-    doItem("gestor", "TAP.8", "Gestor do contrato (trecho)", porId("partes:gestor")),
-    doItem("fiscal", "TAP.8", "Fiscal do contrato (trecho)", porId("partes:fiscal")),
+    apenasPapel(
+      doItem("gestor", "TAP.8", "Gestor do contrato", porId("partes:gestor")),
+      "gestor do contrato",
+    ),
+    apenasPapel(
+      doItem("fiscal", "TAP.8", "Fiscal do contrato", porId("partes:fiscal")),
+      "fiscal do contrato",
+    ),
   );
   for (const u of itens.filter((i) => i.id.startsWith("partes:unidade:")))
     out.push(doItem(u.id, "TAP.8", "Órgão ou área citada", u));

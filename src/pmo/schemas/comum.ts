@@ -48,3 +48,29 @@ export const EstimativaTresPontos = z.object({
   base: z.string(),
 });
 export type EstimativaTresPontos = z.infer<typeof EstimativaTresPontos>;
+
+/**
+ * Autoconferência (decisão 0044): cada item do método ou das fichas que o PMO usou, com o estado. Não há
+ * "ausente": item que faltaria é gerado, ou marcado como dispensado (com o motivo) ou como decisão do GP.
+ */
+export const ItemAutoconferencia = z.object({
+  /** Código do item: "A8.7", "PROP-SOW.4", "TAP6.1" ou a seção do método ("etapa-1:secao-5"). */
+  item: z.string(),
+  estado: z.enum(["presente", "dispensado", "decisao_gp"]),
+  /** Em "presente": o id do item da resposta que cobre este; senão, "". */
+  onde: z.string(),
+  /** Em "dispensado" e "decisao_gp": o motivo; senão, "". */
+  motivo: z.string(),
+});
+export type ItemAutoconferencia = z.infer<typeof ItemAutoconferencia>;
+
+/** Cruzamento obrigatório (decisão 0046), como o PMO o registra depois de ler. */
+export const CruzamentoPmo = z.object({
+  codigo: z.enum(["X1", "X2", "X3", "X4", "X5", "X6"]),
+  estado: z.enum(["feito", "nao_se_aplica"]),
+  /** "confere", "diverge: …" ou "em aberto: …"; em "nao_se_aplica", o motivo. */
+  resultado: z.string(),
+  /** Ids dos itens da resposta que tratam o cruzamento (o ponto de atenção, quando diverge). */
+  itens: z.array(z.string()),
+});
+export type CruzamentoPmo = z.infer<typeof CruzamentoPmo>;

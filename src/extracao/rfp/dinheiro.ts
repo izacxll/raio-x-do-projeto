@@ -12,6 +12,8 @@ export interface ParcelaDesembolso {
   /** "Produto 1 – Plano de trabalho", "1ª parcela". */
   rotulo: string;
   percentual: number;
+  /** Valor em reais, quando o texto dá a parcela em valor ("1ª parcela, no valor de R$ 50.000,00"). */
+  valor?: number;
   /** "30 dias", quando a linha traz o prazo. */
   prazo?: string;
   origem: OrigemItem;
@@ -129,10 +131,61 @@ export function extrairDesembolso(docs: DocumentoRfp[]): Desembolso {
         }
       }
     }
+  // sem tabela de percentuais: parcelas escritas em valor no texto corrido; o percentual é conta do código
+  if (parcelas.length < 2) {
+    const emValor = parcelasEmValor(docs);
+    if (emValor.length >= 2) return { parcelas: emValor, unica, soma: 100 };
+  }
   // só vale como cronograma se as parcelas somam perto de 100% (senão são percentuais soltos de outra tabela)
   const soma = Math.round(parcelas.reduce((s, x) => s + x.percentual, 0) * 100) / 100;
   if (parcelas.length < 2 || soma < 90 || soma > 110) return { parcelas: [], unica, soma: 0 };
   return { parcelas, unica, soma };
+}
+
+/** "1ª parcela, no valor de R$ 50.000,00 (...), paga na entrega do Produto 1". */
+const RE_PARCELA_EM_VALOR =
+  /\b(\d{1,2})\s*(?:a|o)?\s*parcela\b[^.;]{0,40}?r\$\s*(\d{1,3}(?:\.\d{3})*,\d{2})([^;]{0,180})/g;
+
+function reais(texto: string): number {
+  return Number(texto.replace(/\./g, "").replace(",", "."));
+}
+
+/** Parcelas dadas em valor, em ordem e sem repetir o número; o percentual de cada uma é valor ÷ soma. */
+export function parcelasEmValor(docs: DocumentoRfp[]): ParcelaDesembolso[] {
+  const achadas: { n: number; valor: number; rotulo: string; origem: OrigemItem }[] = [];
+  for (const doc of docs)
+    for (const p of doc.paginas) {
+      if (p.origem === "nao-verificavel") continue;
+      const original = p.texto.replace(/\s+/g, " ");
+      const n = tirarAcentos(original).toLowerCase().replace(/[ªº°]/g, "a");
+      for (const m of n.matchAll(RE_PARCELA_EM_VALOR)) {
+        const numero = Number(m[1]);
+        if (achadas.some((a) => a.n === numero)) continue;
+        const produto = /\b(produto|etapa|entrega|relatorio)\s*(?:n[º°o.]\s*)?(\d{1,2})\b/.exec(m[3] ?? "");
+        const fim = (m.index ?? 0) + m[0].length;
+        achadas.push({
+          n: numero,
+          valor: reais(m[2] ?? "0"),
+          rotulo: `${numero}ª parcela${produto ? ` — ${produto[1] === "produto" ? "Produto" : produto[1]} ${produto[2]}` : ""}`,
+          origem: {
+            documento: doc.rotulo,
+            pagina: p.numero,
+            trecho: original.slice(m.index ?? 0, Math.min(original.length, fim)).trim(),
+          },
+        });
+      }
+    }
+  achadas.sort((a, b) => a.n - b.n);
+  // só uma sequência 1, 2, 3…: números soltos ("a 2ª parcela do reajuste") não formam cronograma
+  if (!achadas.every((a, i) => a.n === i + 1)) return [];
+  const total = achadas.reduce((s, a) => s + a.valor, 0);
+  if (!total) return [];
+  return achadas.map((a) => ({
+    rotulo: a.rotulo,
+    valor: a.valor,
+    percentual: Math.round((a.valor / total) * 10000) / 100,
+    origem: a.origem,
+  }));
 }
 
 /** O padrão de cada tipo: o trecho mostrado é o que está em volta dele. */

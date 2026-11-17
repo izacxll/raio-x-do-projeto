@@ -4,6 +4,44 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 
 ## [Não publicado]
 
+### Correções do esqueleto da etapa 1 e autoconferência (decisões 0048 e 0049)
+- **Testes externos da skill** (SMPED e um TR municipal de contratação direta), guardados fora do Git como leituras gravadas externas (decisão 0049).
+- **SMPED:** habilitação com os itens 7 e 8 e sem as alíneas de exemplo; "Diário Oficial" não é obrigação diária; eliminação com as alíneas; requisitos não cortados em "Decreto Municipal nº"; público-alvo e "poderá ser executado" fora dos R.
+- **Contratação direta:** modalidade declarada em qualquer página, objeto pelo título "1. OBJETO: …", seção "Como é escolhida", hipótese legal, documentos como pergunta e "não se aplica" próprio; terceira opção no tipo de contrato da etapa 2.
+- **Parcelas em valor no texto**, com percentual e soma × valor global por código; produtos com número do item na frente; quantidade com erro de digitação; frase que não corta em "Av. Dr."; recurso contra sanção fora do certame.
+- **Cruzamentos X1 a X6** no esqueleto e no pedido ao PMO; prazo sem termo inicial; sinal de estudo sensível.
+- **Citação fraca:** citação conferida com menos de 6 palavras ganha a trava.
+- **Autoconferência** nos esquemas das etapas 1 a 4, validador e o teste que reprova; na etapa 4, item sem marca devolve só a sua parte ao PMO.
+- **Cronograma com data fixa:** a atividade com restrição de data conta em dias corridos e começa na data de início da janela (evento em fim de semana); a folga das predecessoras aparece em dias corridos até essa data.
+- **TAP:** marco com data (o início do projeto) não conta como prazo além da vigência; entregas com data quando há início (o do GP ou a data fixa do documento, a confirmar pelo GP) e aviso de marco sem data quando não há; gestor e fiscal só com o papel, sem o nome.
+- **Aceite pela nota fiscal:** sem cláusula de recebimento, o código mostra que o aceite é a aprovação da nota fiscal por quem fiscaliza (sem prazo e sem recebimento provisório e definitivo); a contratada (FGV) sai dos órgãos citados.
+- **R fora da lista:** requisito de alto nível do TAP com um R descartado na etapa 1 é apontado na conferência e vai marcado no pedido do escopo da etapa 4.
+- **Pedidos externos:** o porte e as premissas críticas passados na primeira exportação ficam no dossiê de origem.
+- **Plano (etapa 4):** cronograma com o início do documento quando o GP não informou (a confirmar pelo GP); datas da janela fixa em dd/mm/aaaa; sem folga até a data fixa, o alerta vai também no registro de premissas (B3, PC3 e PC6).
+- **RACI:** o código confere um só A por atividade e perfil da equipe na lista; o contratante aparece com os seus papéis, fora da equipe.
+- **Horas a definir pelo GP:** aparecem como tal na tabela de custos e no total, e o custo não fecha com zero no lugar delas.
+- **Feriados no cronograma (decisão 0051):** nacionais pela lei e municipais informados pelo GP, nas etapas 2, 3 e 4.
+- **Pacote da EAP em cada atividade (decisão 0051):** obrigatório no cronograma da etapa 4; atividade sem pacote, pacote inexistente, de outro produto e pacote sem atividade são apontados.
+- **Análise do contratante (decisão 0051):** a atividade que é a própria análise dura o tempo de aprovação do GP, sem somar por cima.
+- **Etapa 4:** contingência dos riscos que pedem reserva no B6 e no A15 como "a definir pelo GP"; premissa do PMO que repete o registro inicial sai do B3; parte ainda não gerada não é cobrada na autoconferência.
+- **Testes sem as datas do caso:** os testes e comentários do cronograma usam datas neutras (decisão 0049).
+- **Compromissos numerados (decisão 0047):** premissas, obrigações do contratante, exclusões e limites de volume da proposta recebem um número C (C01…) na etapa 2; o TAP mostra o destino de cada um (citado pelo PMO, provável ou sem destino) e os pedidos da etapa 3 pedem o C no item que o leva.
+- **Autoconferência da etapa 3 por passo:** o TAP cobra os seus itens; o registro de premissas, só TAP-PR e B3.
+- **B3 da etapa 4 com o registro inicial:** o que o passo de riscos traz da RFP, da proposta ou do TAP sai; ficam as premissas de estimativa.
+- **Gestor e fiscal no pedido do TAP:** só o papel; o nome é do GP confirmar no contrato.
+- **Compromissos no plano:** a matriz (B23) mostra cada C com o destino no TAP e no plano (o item que cita o número, no campo ou no texto).
+- **Pedidos da etapa 4:** as partes do passo que o GP dispensou aparecem com o motivo, e nenhum pedido pede texto, exemplo ou indicador de parte dispensada (A16 e valor agregado, A12, A4).
+- **Escopo da etapa 4:** o pedido leva as exclusões e os limites de volume (C) para a B17 (B17.5 e B17.7), com o C no item.
+- **Registro das questões (B9) montado pelo código:** uma QU por ponto da etapa 1 com pergunta e por divergência do TAP sem decisão do GP, com a origem; o PMO completa; a conferência aponta questão sem origem e origem sem questão.
+- **Vago:** "a definir pelo GP" e item de decisão do GP não são vago (viram a verificação de decisões pendentes); expressão do documento citada entre aspas não é vago.
+- **Autoconferência da etapa 4:** item marcado pelo PMO vale quando o código confere o id (existe, está na parte e não foi descartado).
+- **Pedido externo da etapa 5 com `--plano dossie`:** o PGP da etapa 4 montado pelo app, gravado também em DOCX.
+- **Etapa 5 com o TAP do dossiê:** sem TAP em PDF, a conferência usa o TAP da etapa 3 (como a etapa 4).
+- **Busca dos sinais com singular e plural** ("feriados municipais" acha "feriado municipal").
+- **Autoconferência:** item presente só pela marca do PMO sai como verificação própria ("presente pela marca do PMO, redação a conferir"), com a lista.
+- **Brechas do código juntadas ao ponto da leitura** também com o número do item na frente do trecho e pela página citada com o mesmo assunto; cada brecha entra num ponto só, e a questão do B9 leva as duas origens.
+- **Conferência do B9:** cada QU se liga ao item que começa por "QU-nn —" (citação em outro item é referência cruzada, não registro); questão nova com fonte aparece como tal; o status é lido, e status diferente de "aberta" vale com referência que o código acha no plano (C, item, atividade, risco, pacote ou outra QU); "resolvida" com registro pendente ganha aviso.
+
 ### Fase M3 — etapa 3 pelo método (decisão 0041)
 - **Testar sem a chave:** `npm run exportar-pedido` grava, fora do Git, o pedido de um passo do PMO exatamente como iria à API (sistema, mensagem com os PDFs e o esqueleto, schema), para o Claude do claude.ai responder; `npm run importar-resposta` valida a resposta, grava no dossiê, roda as travas e mede contra o gabarito numa seção "leitura independente". Por ora, a etapa 1.
 - **Contrato ou termo assinado como entrada da etapa 3**, com prioridade sobre a proposta e a RFP: o código lê dele o valor, a vigência, as parcelas, a cláusula de parte integrante e quem acompanha.

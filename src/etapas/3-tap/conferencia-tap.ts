@@ -1,8 +1,11 @@
 // Etapa 3, último passo (código): conferência do TAP antes de exportar. Todo elemento preenchido ou "a definir pelo
 // GP"; todo requisito de alto nível ligado a um número R, e todo R da RFP coberto; marcos dentro do prazo da RFP;
 // recursos iguais ao valor da proposta; citações conferidas; premissas críticas no registro, com a consequência.
+import { conferirAutoconferenciaDaEtapa3, itensEsperadosDaEtapa3 } from "./autoconferencia";
+import { destinosNoTap, ehNumeroDeCompromisso } from "../2-proposta/compromissos";
 import type { TapDossie } from "../../dossie/esquema";
 import { estadoDe, type ItemConferido } from "../../pmo/itens";
+import { encontrarDatas, somarDiasCorridos } from "../../texto/datas";
 import { lerValorEmReais } from "../2-proposta/preco";
 import { diasDoTexto, pedeDecisao, type Divergencia } from "./divergencias";
 import { valorNaProposta, type EntradaTap } from "./entrada";
@@ -66,14 +69,20 @@ export function conferirTap(
   const semNumero = altoNivel.filter((i) => !i.item.requisitos.length);
   const citados = new Set(altoNivel.flatMap((i) => i.item.requisitos));
   const faltando = e.ponto.requisitos.map((r) => r.numero).filter((n) => !citados.has(n));
+  // R que saiu da lista na etapa 1 (descartado pelo GP) ou que não existe: não é requisito do TAP
+  const daLista = new Set(e.ponto.requisitos.map((r) => r.numero));
+  const foraDaLista = [...citados].filter((n) => !daLista.has(n) && !ehNumeroDeCompromisso(n)).sort();
   out.push({
     id: "requisitos",
     nome: "Requisitos de alto nível ligados aos números R",
-    situacao: semNumero.length || faltando.length ? "atencao" : "ok",
+    situacao: semNumero.length || faltando.length || foraDaLista.length ? "atencao" : "ok",
     texto: [
       semNumero.length ? `${semNumero.length} requisito(s) de alto nível sem número R.` : "",
       faltando.length ? `Requisitos da RFP não citados no TAP.3: ${faltando.join(", ")}.` : "",
-      !semNumero.length && !faltando.length
+      foraDaLista.length
+        ? `${foraDaLista.join(", ")} no TAP.3 não está na lista de requisitos da etapa 1 (descartado pelo GP ou inexistente): sugere-se tratá-lo como restrição ou observação, não como requisito de alto nível.`
+        : "",
+      !semNumero.length && !faltando.length && !foraDaLista.length
         ? `Os ${e.ponto.requisitos.length} requisitos da RFP estão ligados.`
         : "",
     ]
@@ -98,10 +107,23 @@ export function conferirTap(
       texto: "Prazo de execução da RFP não localizado pelo código — conferir os marcos no documento.",
     });
   } else {
-    const fora = marcos
-      .map((m) => ({ m, dias: diasDoTexto(m.prazo) }))
-      .filter((x) => x.dias !== undefined && x.dias > prazo.dias);
-    const semPrazo = marcos.filter((m) => diasDoTexto(m.prazo) === undefined);
+    // marco com data ("21/09/2026, data fixa do TR") é data, não prazo em dias: o número da data não é duração.
+    // Ele só é conferido contra a vigência quando o início é conhecido (decisão do GP).
+    const comData = marcos.filter((m) => encontrarDatas(m.prazo).length > 0);
+    const emDias = marcos.filter((m) => !comData.includes(m));
+    const fimVigencia = e.dados?.inicio ? somarDiasCorridos(e.dados.inicio, prazo.dias) : undefined;
+    const fora = [
+      ...emDias
+        .map((m) => ({ m, dias: diasDoTexto(m.prazo) }))
+        .filter((x) => x.dias !== undefined && x.dias > prazo.dias),
+      ...(fimVigencia
+        ? comData
+            .filter((m) => encontrarDatas(m.prazo).some((d) => d.data > fimVigencia))
+            .map((m) => ({ m, dias: undefined }))
+        : []),
+    ];
+    const semPrazo = emDias.filter((m) => diasDoTexto(m.prazo) === undefined);
+    const datasSemInicio = fimVigencia ? 0 : comData.length;
     const crono = e.dados?.cronograma?.conferenciaPrazo;
     const produtosFora = (e.dados?.marcos ?? []).filter((m) => m.situacao === "nao-cabe");
     out.push({
@@ -113,6 +135,9 @@ export function conferirTap(
           ? `Marco(s) além da vigência (${prazo.texto}): ${fora.map((x) => x.m.prazo).join("; ")}.`
           : `Nenhum marco com prazo além de ${prazo.texto}.`,
         semPrazo.length ? `${semPrazo.length} marco(s) sem prazo em dias: conferir.` : "",
+        datasSemInicio
+          ? `${datasSemInicio} marco(s) com data: conferidos contra a vigência só com o início do projeto informado (decisão do GP).`
+          : "",
         produtosFora.length
           ? `No cronograma da proposta, a entrega passa do prazo do produto na RFP: ${produtosFora.map((m) => `${m.produto} (${m.textoConferencia})`).join("; ")}`
           : "",
@@ -240,6 +265,52 @@ export function conferirTap(
         : sem.length
           ? `Premissa(s) crítica(s) confirmada(s) sem linha no registro com a consequência: ${sem.join(", ")}.`
           : `As premissas críticas confirmadas (${pcs.join(", ")}) estão no registro, com a consequência.`,
+    });
+  }
+
+  // compromissos da proposta (decisão 0047): cada C com destino no TAP (limite ou registro de premissas)
+  const cs = e.dados?.compromissos ?? [];
+  if (cs.length) {
+    const destinos = destinosNoTap(cs, resposta, t.premissas?.resposta.premissas);
+    const sem = destinos.filter((d) => d.situacao === "sem-destino");
+    const provaveis = destinos.filter((d) => d.situacao === "provavel");
+    out.push({
+      id: "compromissos",
+      nome: "Compromissos da proposta (C) com destino no TAP",
+      situacao: sem.length || provaveis.length ? "atencao" : "ok",
+      texto: [
+        `${destinos.length - sem.length - provaveis.length} de ${destinos.length} citados pelo PMO no item do TAP.`,
+        provaveis.length
+          ? `Destino provável, a conferir: ${provaveis.map((d) => d.compromisso.numero).join(", ")}.`
+          : "",
+        sem.length
+          ? `Sem destino localizado pelo código: ${sem.map((d) => d.compromisso.numero).join(", ")}.`
+          : "",
+      ]
+        .filter(Boolean)
+        .join(" "),
+    });
+  }
+
+  // autoconferência do PMO, por passo: o TAP cobra os seus itens; o registro de premissas, só TAP-PR e B3
+  for (const [passo, nome, r] of [
+    ["tap", "TAP", t.tap?.resposta.autoconferencia],
+    ["premissas", "registro de premissas", t.premissas?.resposta.autoconferencia],
+  ] as const) {
+    if (!r) continue;
+    const a = conferirAutoconferenciaDaEtapa3(passo, r);
+    out.push({
+      id: `autoconferencia:${passo}`,
+      nome: `Autoconferência do PMO no ${nome}`,
+      situacao: a.ok ? "ok" : "atencao",
+      texto: a.ok
+        ? `Os ${itensEsperadosDaEtapa3(passo).length} itens do passo estão marcados.`
+        : [
+            a.semMarca.length ? `Sem marca: ${a.semMarca.join(", ")}.` : "",
+            a.incompletas.length ? `Marca incompleta: ${a.incompletas.join(", ")}.` : "",
+          ]
+            .filter(Boolean)
+            .join(" "),
     });
   }
   return out;
