@@ -41,6 +41,10 @@ Cada divergência tem uma linha: ponto, o que diz cada documento (com página), 
 
 **Produto que a proposta acrescenta e a RFP não pedia é compromisso assinado:** entra como entrega-chave e precisa de critério de aceite.
 
+**Divergência que muda escopo, custo ou quem executa** (formato do produto, quem faz o campo, fonte dos dados) não se resolve no TAP (decisão 0047): o contrato prevalece; sem resposta dele, o TAP adota a versão que mais obriga a FGV, marca a divergência como pendente com o contratante e só troca de versão com resposta por escrito. Antes de abrir a divergência, conferir se a própria RFP já responde.
+
+**Compromissos C da proposta** (premissas, exclusões, obrigações do contratante, método) recebem destino no TAP: premissa, limite, entrega-chave ou divergência. Critério de sucesso preso a data só entra se couber no cronograma (o código confere contra a janela até o marco).
+
 ### 4.2 Os 12 elementos
 - Finalidade, requisitos, recursos, marcos, partes interessadas e término vêm **dos documentos**, com página.
 - Objetivos: cada um com critério de sucesso mensurável. Use as metas e indicadores do contrato quando existirem; senão, sugira a métrica e marque como Sugestão.
@@ -83,3 +87,5 @@ O que falha aparece com o motivo (ex.: "os trimestres do cronograma somam mais m
 - Toda entrega-chave tem aceite; todo marco cabe na vigência.
 - Toda premissa crítica aplicável está no registro, com quem valida.
 - Nenhum nome ou número inventado.
+- Todo compromisso C tem destino no TAP.
+- A autoconferência marca cada item da ficha do TAP (decisão 0044).

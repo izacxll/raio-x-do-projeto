@@ -42,15 +42,24 @@ Uma decisão por arquivo, numerada em ordem. Cada uma registra o contexto, o que
 | [0036](0036-etapa-1-pelo-metodo-m1.md) | Etapa 1 pelo método (M1): leitura em 8 seções, regras do esqueleto, R = entregas e obrigações específicas, leitura do PMO com travas, gabaritos e leitura gravada | aceita |
 | [0037](0037-conexao-antes-de-analisar.md) | Nenhuma etapa analisa sem a conexão com o Claude: sai o "leitura parcial por código", o esqueleto só vai no pedido, demonstração em todas as etapas (muda o item 5 da 0035) | aceita |
 | [0038](0038-etapa-2-pelo-metodo-m2.md) | Etapa 2 pelo método (M2): tipo de contrato e de projeto, as 9 seções e a minuta redigida na ordem do edital, preço pelo tipo, pontos por preço, caixa, produtividade e duração × vigência por código | aceita |
+| [0039](0039-skill-pmo-0-3-0.md) | Skill PMO 0.3.0: etapa 1 e etapa 5 no SKILL.md, tipos de projeto e de plano, ficha PROP-PARCERIA, PC com gatilho e reajuste, contrato, caixa; sem vencedor automático entre Rework e PMBOK | proposta |
 | [0040](0040-custos-indiretos-em-parceria.md) | Parceria: sem valor-hora; custos indiretos só como despesa com memória de cálculo; taxa de administração conferida no edital e na norma local | aceita |
 | [0041](0041-etapa-3-pelo-metodo-m3.md) | Etapa 3 pelo método (M3): contrato assinado como entrada, divergências RFP × proposta × contrato primeiro (valor, parcelas, conformidade, duração, equipe, produtividade), divergências de texto do PMO, conferência pelo método | aceita |
+| [0042](0042-chave-de-modalidade.md) | Chave de modalidade (licitação, contratação direta, parceria) no começo da etapa 1; cada etapa troca o bloco | aceita |
+| [0043](0043-estudo-sensivel.md) | Estudo sensível: característica nova e itens de independência técnica | aceita |
+| [0044](0044-autoconferencia-em-todas-as-etapas.md) | Autoconferência em todas as etapas; na etapa 4, porte reduz documentos, não cobertura; geração em blocos; teste que reprova | aceita |
+| [0045](0045-prazos-e-calendario.md) | Prazos e calendário: referências de início, janela até marco fixo, campo em dias corridos, prazo sem termo inicial | aceita |
+| [0046](0046-cruzamentos-obrigatorios.md) | Cruzamentos obrigatórios X1 a X6 nas etapas 1 e 5 | aceita |
+| [0047](0047-matriz-de-compromissos.md) | Compromissos numerados (C) da proposta ao plano; exclusão nunca tira requisito | aceita |
 | [0048](0048-esqueleto-da-etapa-1-e-autoconferencia-no-codigo.md) | Esqueleto da etapa 1 corrigido (SMPED e TR de contratação direta), contratação direta no código, cruzamentos X1 a X6, citação fraca, autoconferência nos esquemas e o teste que reprova | aceita |
 | [0049](0049-leituras-gravadas-externas.md) | Leituras gravadas externas: evidência, nunca gabarito; fora do Git; o caso sem o nome da cidade | aceita |
+| [0050](0050-abordagem-que-contraria-a-rfp.md) | Abordagem que contraria a RFP sai marcada, com o trecho, e vira pergunta de esclarecimento (ou ajuste da minuta, na contratação direta) | aceita |
 | [0051](0051-feriados-pacote-e-analise-do-contratante.md) | Feriados nacionais e municipais no cronograma, pacote da EAP obrigatório em cada atividade e a atividade de análise do contratante | aceita |
 | [0052](0052-achado-do-codigo-e-candidato-ate-o-veredito-do-pmo.md) | Achado do código é candidato até o veredito do PMO; dispensa declarada só no plano é candidata; busca do ausente do PMO na parte apontada | aceita |
 | [0053](0053-sem-modo-demonstracao.md) | A apresentação do app é feita com a skill PMO na conversa; o site não tem modo de demonstração | aceita |
 | [0054](0054-requisitos-como-entregas-e-modalidade-nao-identificada.md) | Cada R é uma entrega ou obrigação de quem executa, com a equipe-chave num R só; sem modalidade no documento, ela fica não identificada até o GP escolher | aceita |
 | [0055](0055-rework-nos-pedidos-e-compromissos-de-metodo.md) | Os temas do Rework citados nas fichas vão no pedido de cada etapa (FALTA quando não vão); compromissos de método também são C, com o número do PMO quando ele o deu | aceita |
+| [0056](0056-skill-pmo-0-3-2.md) | Skill PMO 0.3.2: 19 regras do teste externo, só acréscimo, cada uma com o erro que evita; itens novos "só PMO"; entra com a 0.3.0 e a 0.3.1 e substitui o #52 | aceita |
 
 Modelo para uma nova decisão:
 

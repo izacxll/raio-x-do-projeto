@@ -6,7 +6,7 @@ etapas: [2]
 gravidade: não se aplica
 categoria: não se aplica
 sinonimos: ["metodologia", "abordagem metodológica", "plano de trabalho", "estratégia de execução", "método", "procedimentos técnicos"]
-versao: 0.2.0
+versao: 0.3.2
 ---
 
 # PROP-METODOLOGIA — Abordagem e metodologia
@@ -65,6 +65,16 @@ Descreve **como** a FGV vai executar a abordagem que o GP escolheu (PROP-ESTRATE
   - sinais: "revisão interna" | "controle de qualidade" | "capacitação" | "transferência de conhecimento" | "repasse"
   - confere: código
   - dispensa: nunca
+- **PROP-METODOLOGIA.11** Validação dos resultados e régua metodológica: o método aprovado é o critério para aceitar ou contestar resultados, e resultado aceito só muda por erro técnico registrado (independência técnica)
+  - fonte: decisão 0043; SKILL.md, seção 3 (estudo sensível); `checklist.md` PC5 (CE17)
+  - sinais: "régua metodológica" | "validação dos resultados" | "independência" | "erro técnico" | "metodologia aprovada"
+  - confere: só PMO
+  - dispensa: estudo comum
+- **PROP-METODOLOGIA.12** Trabalho de campo com as quantidades do método (aplicadores, dias, produtividade, tamanho da amostra) estimadas ou marcadas como decisão do GP antes do preço; em estudo sensível, amostra por cotas de tipo de participante, para nenhum lado ficar sem voz
+  - fonte: teste externo da skill 0.3.1 (regras da 0.3.2), regra 9; SKILL.md, seção 3 (estudo sensível); PROP-EQUIPE.12
+  - sinais: "cotas" | "amostra" | "tipo de participante" | "aplicadores" | "dias de campo"
+  - confere: só PMO
+  - dispensa: sem campo
 
 ## Perguntas de qualidade
 - A metodologia responde ao critério de pontuação que a avalia, item a item? (`licitacoes.md` 2.2)
@@ -79,6 +89,7 @@ Descreve **como** a FGV vai executar a abordagem que o GP escolheu (PROP-ESTRATE
 - Campo sem tempo de deslocamento nem logística (`experiencia.md` §5).
 - Prometer intensidade de campo ou número de oficinas que o preço não paga (Rework RW-071, erros comuns).
 - Mesma equipe que orienta e depois avalia os mesmos participantes (PROP-METODOLOGIA.9, CP14).
+- **Erro que evita (PROP-METODOLOGIA.12):** num estudo que seria contestado por lados em disputa, a amostra de entrevistas não separava os tipos de participante; o resultado podia ser recusado por um dos lados.
 
 ## Quando dispensar a parte inteira
 Não se dispensa: a metodologia é o que a técnica pontua. Em porte pequeno, pode fundir-se com o PROP-SOW numa tabela por produto (como se faz, com que método, com que participação do contratante).

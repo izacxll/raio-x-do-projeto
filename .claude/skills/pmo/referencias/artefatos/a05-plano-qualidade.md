@@ -6,7 +6,7 @@ etapas: [4, 5]
 gravidade: grave
 categoria: entrega
 sinonimos: ["plano de qualidade", "plano da qualidade", "plano de gerenciamento de qualidade", "gestão da qualidade", "gerenciamento da qualidade", "garantia da qualidade", "controle de qualidade", "critérios de aceite"]
-versao: 0.2.0
+versao: 0.3.2
 ---
 
 # A5 — Plano de gerenciamento da qualidade
@@ -75,6 +75,16 @@ Descreve como políticas, procedimentos e diretrizes serão aplicados para ating
   - sinais: "protocolo de coleta" | "consistência" | "checagem" | "anonimização" | "LGPD"
   - confere: código
   - dispensa: sem campo e sem dados pessoais
+- **A5.13** Estabilidade do resultado aceito: depois do aceite, o resultado só muda por erro técnico registrado no registro de mudanças (B5), e a régua é o método aprovado (PROP-METODOLOGIA.11)
+  - fonte: decisão 0043; SKILL.md, seção 3 (estudo sensível)
+  - sinais: "erro técnico" | "resultado aprovado" | "resultado aceito" | "independência" | "régua metodológica"
+  - confere: só PMO
+  - dispensa: estudo comum
+- **A5.14** Fluxo de aceite na ordem análise do contratante → ajuste pela FGV → nova análise → termo de recebimento definitivo, com a análise e o ajuste como atividades separadas no cronograma
+  - fonte: teste externo da skill 0.3.1 (regras da 0.3.2), regra 5; A5.7; PROP-EAP.15
+  - sinais: "ajuste" | "nova análise" | "reanálise" | "termo definitivo" | "recebimento definitivo"
+  - confere: só PMO
+  - dispensa: nunca
 
 ## Perguntas de qualidade
 - Cada produto do contrato tem critério de aceite, prazo de análise e responsável do lado do contratante com capacidade de avaliar? (PC3; `experiencia.md` §1)
@@ -87,6 +97,7 @@ Descreve como políticas, procedimentos e diretrizes serão aplicados para ating
 - Qualidade reduzida a uma "validação final" (PMBOK 7, p. 89, PDF 184).
 - Confundir qualidade com grau: produto simples bem feito pode bastar (PMBOK 6, p. 274, PDF 310).
 - Corrigir devoluções uma a uma, sem ver o padrão (Rework RW-107).
+- **Erro que evita (A5.14):** o plano tinha uma só caixa de "aprovação" por produto; o primeiro pedido de ajuste empurrou o termo definitivo do último produto para depois da vigência.
 
 ## Quando dispensar a parte inteira
 Não se dispensa: todo contrato tem produtos com aceite. Em porte pequeno, plano informal e curto (PMBOK 6, p. 286, PDF 322): critérios de aceite por produto, revisor, fluxo de aceite e devoluções.

@@ -6,7 +6,7 @@ etapas: [2]
 gravidade: não se aplica
 categoria: não se aplica
 sinonimos: ["escopo da proposta", "produtos", "entregáveis", "declaração de trabalho", "SOW", "premissas e exclusões", "obrigações da contratante"]
-versao: 0.2.0
+versao: 0.3.2
 ---
 
 # PROP-SOW — Especificação do trabalho da proposta
@@ -70,6 +70,21 @@ Fixa o que a FGV entrega, como cada produto será aceito, o que fica fora, sob q
   - sinais: "premissa" junto de "caso não" | "se não" | "hipótese de" | "fica condicionad" | "os prazos passam a contar"
   - confere: código
   - dispensa: nunca
+- **PROP-SOW.12** Cada exclusão conferida contra os requisitos R: nenhuma tira requisito; a que encosta num R diz o que continua dentro; a que contradiz o TR vira pergunta, não exclusão; exclusão ou abordagem que reduz o que um R pede (menos períodos, menos cobertura, menos produtos) contraria o TR, diz o que continua dentro do R e segue como pergunta e como divergência no TAP
+  - fonte: decisão 0047; PMBOK 6, 5.3.3.1, p. 154 (PDF 190); `licitacoes.md`, "Como usar"
+  - sinais: exclusão ao lado do número R que ela toca; "continua incluído" | "permanece no escopo"
+  - confere: só PMO
+  - dispensa: nunca
+- **PROP-SOW.13** Compromissos numerados (C01, C02…): cada premissa, exclusão, obrigação do contratante e compromisso de método (protocolo de campo, dados pessoais, revisão, independência), para seguirem ao TAP e ao plano
+  - fonte: decisão 0047; PMBOK 6, 5.2.3.2, p. 148–149 (PDF 184–185) (rastreabilidade)
+  - sinais: "C01" | "C02" | "compromisso" | tabela compromisso × tipo
+  - confere: código
+  - dispensa: nunca
+- **PROP-SOW.14** Para cada produto, de onde vem cada dado e de que período; se o produto pode depender de dado de outro período, a premissa sai escrita com a alternativa; dado que só existe depois de um evento entra numa atividade depois do evento
+  - fonte: teste externo da skill 0.3.1 (regras da 0.3.2), regra 4; `checklist.md` PC1; PROP-EAP.12
+  - sinais: "fonte dos dados" | "período de referência" | "exercício" | "se não estiver disponível" | "alternativa" junto de "dados"
+  - confere: só PMO
+  - dispensa: nunca
 
 ## Perguntas de qualidade
 - Cada produto do TR está no quadro, sem produto a mais nem a menos? (PMBOK 6, p. 154; regra dos 100% em A13)
@@ -85,6 +100,8 @@ Fixa o que a FGV entrega, como cada produto será aceito, o que fica fora, sob q
 - Obrigações do cliente não escritas, e o prazo da FGV contado de um evento sem data (Rework RW-075; PC1, CTR4; obrigação do contratante, CTR3).
 - Premissa não escrita que quebra quando a realidade muda (Rework RW-075).
 - Tentar renegociar escopo, prazo ou pagamento do edital na proposta (Rework RW-075, adaptação).
+- **Erro que evita (PROP-SOW.12):** a abordagem mais barata cobria só os últimos exercícios quando o R pedia a série inteira; saiu como opção equivalente às outras, sem dizer que reduzia o R.
+- **Erro que evita (PROP-SOW.14):** o relatório do ano corrente contava com dados que o órgão só fecha no ano seguinte; faltou a premissa com a alternativa (usar o último exercício fechado e dizer isso no produto).
 
 ## Quando dispensar a parte inteira
 Não se dispensa: é a base para dizer o que está dentro e fora (PMBOK 6, p. 154). Em porte pequeno, cabe numa tabela de produtos com critério, seguida das listas de exclusões, premissas e obrigações do contratante.

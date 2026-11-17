@@ -6,7 +6,7 @@ etapas: [4, 5]
 gravidade: grave
 categoria: partes interessadas
 sinonimos: ["plano de comunicação", "plano de comunicações", "plano de gerenciamento de comunicações", "plano de gestão das comunicações", "matriz de comunicação", "gestão da comunicação", "plano de reuniões", "governança e comunicação"]
-versao: 0.2.0
+versao: 0.3.2
 ---
 
 # A7 — Plano de gerenciamento das comunicações
@@ -35,9 +35,9 @@ Descreve "como, quando e por quem as informações sobre o projeto são administ
   - sinais: "responsável" | "emissor" | "quem comunica" | coluna de responsável preenchida em toda linha
   - confere: código
   - dispensa: nunca
-- **A7.5** Quem autoriza liberar informação confidencial, e as restrições legais e contratuais — itens 7 e 14
+- **A7.5** Quem autoriza liberar informação confidencial, inclusive resultado preliminar, e as restrições legais e contratuais — itens 7 e 14
   - fonte: PMBOK 6, 10.1.3.1, p. 377 (PDF 413); 10.1.2.3, p. 371 (PDF 407)
-  - sinais: "confidencial" | "sigilo" | "autoriza a divulgação" | "LGPD" | "restrições"
+  - sinais: "confidencial" | "sigilo" | "autoriza a divulgação" | "LGPD" | "restrições" | "resultado preliminar"
   - confere: código
   - dispensa: nunca
 - **A7.6** Canais e tecnologias, separando o canal formal com o contratante (ofício, protocolo) do técnico — item 9

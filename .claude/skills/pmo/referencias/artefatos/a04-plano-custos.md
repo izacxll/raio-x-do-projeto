@@ -6,7 +6,7 @@ etapas: [4, 5]
 gravidade: grave
 categoria: custo
 sinonimos: ["plano de custos", "plano de gerenciamento de custos", "gestão de custos", "gerenciamento dos custos", "gestão financeira do projeto", "plano financeiro", "metodologia de custos"]
-versao: 0.2.0
+versao: 0.3.2
 ---
 
 # A4 — Plano de gerenciamento dos custos
@@ -55,9 +55,9 @@ Componente que diz "como os custos serão planejados, estruturados e controlados
   - sinais: "relatório de custos" | "orçado × realizado" | "previsto × realizado" | "mensal" | "frequência"
   - confere: código
   - dispensa: nunca
-- **A4.9** Ligação com as regras do contrato: evento de faturamento (entrega ou aceite), cronograma de desembolso e índice de reajuste, quando houver
+- **A4.9** Ligação com as regras do contrato: evento de faturamento como o texto diz (entrega; aceite; nota "aprovada pelo fiscal" = entrega e aprovação), cronograma de desembolso e índice de reajuste, quando houver
   - fonte: PMBOK 6, 7.3, p. 253 e 256 (PDF 289 e 292); `licitacoes.md` 2.6; `checklist.md` PC3
-  - sinais: "cronograma de desembolso" | "físico-financeiro" | "parcela" | "nota fiscal" | "pagamento" | "reajuste" | "medição"
+  - sinais: "cronograma de desembolso" | "físico-financeiro" | "parcela" | "nota fiscal" | "pagamento" | "reajuste" | "medição" | "aceite" | "aprovada pelo"
   - confere: código
   - dispensa: nunca
 - **A4.10** Procedimento de registro dos custos reais (apontamento de horas, despesas) e quem aprova gastos
@@ -70,9 +70,21 @@ Componente que diz "como os custos serão planejados, estruturados e controlados
   - sinais: "simplificado" | "sem valor agregado" | "porte"
   - confere: só PMO
   - dispensa: nunca
+- **A4.12** Caixa: repasses ou faturamentos acumulados (percentual, data e condição de cada parcela) × custo acumulado mês a mês, com a folga em cada parcela e o ponto mais apertado; sem custo mensal, aproximado pela rampa de equipe quando pessoal é a maior parte do custo, dito como aproximação (conta do código)
+  - fonte: método da etapa 4, 4.3; PMBOK 6, 7.3, p. 253 e 256 (PDF 289 e 292) (requisitos de financiamento); `experiencia.md` §1; `checklist.md` PC3
+  - sinais: "fluxo de caixa" | "caixa" | "folga" | "repasse acumulado" | "faturamento acumulado" | "custo acumulado"
+  - confere: código
+  - dispensa: pagamento por produto
+- **A4.13** Reservas em parceria (Lei 13.019): o repasse só paga o plano de trabalho; a contingência é margem de prazo e remanejamento entre naturezas de despesa; a reserva gerencial, se houver, é da FGV e fica fora do plano de trabalho; saldo não usado costuma ser descontado do repasse seguinte, e provisões não contam como saldo (conferir o edital e o termo)
+  - fonte: método da etapa 4, 4.7; Lei 13.019/2014, art. 46 (`licitacoes.md` §4); PMBOK 6, 7.2, p. 245 (PDF 281) (análise de reservas)
+  - sinais: "remanejamento" | "saldo" | "reserva gerencial" | "contingência" junto de "prazo"
+  - confere: só PMO
+  - dispensa: contratante privado
 
 ## Perguntas de qualidade
 - O plano diz em que evento a FGV fatura (entrega ou aceite) e quanto do trabalho fica sem pagamento até a primeira parcela? (PC3; `experiencia.md` §1; Rework RW-078, observação do leitor)
+- O caixa é lido pelo acumulado, com a folga em cada parcela e o ponto mais apertado, e liga com a PC3 (aprovação que segura pagamento) e com a regra de prorrogação do contrato? (A4.12; método da etapa 4, 4.3)
+- Numa parceria, a contingência está como margem de prazo e remanejamento, e não como dinheiro do repasse guardado sem destino? (A4.13)
 - A contingência está ligada a riscos do B27, e a reserva gerencial tem dono e condição de uso? Valores ficam com o GP (SKILL.md, princípio 1).
 - A definição de custo (só diretos ou com indiretos) é a mesma no orçamento e no acompanhamento? (PMBOK 6, p. 261, PDF 297)
 - A exatidão declarada é coerente com a fase? Proposta e plano não estão no mesmo ponto do cone (Rework RW-040).
@@ -81,13 +93,15 @@ Componente que diz "como os custos serão planejados, estruturados e controlados
 - Acompanhar só o gasto, sem olhar o trabalho que ele comprou (PMBOK 6, p. 259, PDF 295; Rework RW-015).
 - Reserva escondida nas horas, sem linha nem regra de uso (PMBOK 6, p. 245, PDF 281).
 - Misturar estimativa e preço negociado sem registrar a diferença (Rework RW-014).
+- Caixa comparado parcela a parcela, sem o acumulado: o alerta no pico sai exagerado (método da etapa 4, 4.3).
+- Reserva de contingência dentro do repasse de uma parceria, como se fosse preço fixo (método da etapa 4, 4.7).
 
 ## Quando dispensar a parte inteira
 Não se dispensa: todo contrato tem valor e pagamento. Em porte pequeno, estimar e orçar podem ser um processo só (PMBOK 6, p. 231, PDF 267), e o A4 vira seção curta junto ao A15: unidade, método, reservas, relatório e ligação com o pagamento, sem valor agregado.
 Linha para a tela: "Custos simplificados, junto com a linha de base: porte pequeno (PMBOK 6, p. 231 e 234)."
 
 ## Ligações
-- **Vem de:** 7.1, com TAP7 e TAP9 (p. 236, PDF 272), A3 e A8; proposta (planilha de preço, horas por perfil); cláusulas de pagamento, medição e reajuste da RFP.
+- **Vem de:** 7.1, com TAP7 e TAP9 (p. 236, PDF 272), A3 e A8; proposta (planilha de preço, horas por perfil ou folha mês a mês); cláusulas de pagamento, medição e reajuste da RFP; contrato ou termo (parcelas e condições); rampa de equipe (B26).
 - **Vai para:** 7.2 (B6, B4), 7.3 (A15), 7.4 (B7); A16; B27 (contingência); A11; A7 (relatórios).
 
 ## Modelo de redação
@@ -101,10 +115,12 @@ Linha para a tela: "Custos simplificados, junto com a linha de base: porte peque
 7. Medição: critério [0/100 por produto aprovado / outro]; valor agregado [sim/não, motivo].
 8. Relatórios: interno e ao contratante, [frequência]. Horas registradas em [ferramenta].
 9. Contrato: faturamento contra [entrega/aceite] ([cláusula, página]); reajuste [índice ou não informado].
+10. Caixa (código): | Parcela | % e data | Condição | Repasse acumulado | Custo acumulado | Folga | ; ponto mais apertado: [parcela].
+11. Parceria: contingência como margem de prazo e remanejamento; reserva gerencial da FGV [decisão do GP], fora do plano de trabalho; saldo e provisões conforme [edital, p. X].
 ```
 
 ## Fontes
 - PMBOK 6: 7.1, p. 235–239 (PDF 271–275); 7.2, p. 241–245 (PDF 277–281); 7.3, p. 252–256 (PDF 288–292); 7.4, p. 259–261 (PDF 295–297); p. 231 e 234 (PDF 267 e 270); X5.4, p. 681 (PDF 717); glossário, p. 719 (PDF 755).
 - PMBOK 7: 2.4.2.4, p. 62–63 (PDF 157–158); 2.7.5, p. 113–114 (PDF 208–209).
 - Rework: RW-014, RW-015, RW-022 (links nos itens); RW-040 (https://resources.rework.com/libraries/project-management/cone-of-uncertainty); RW-078 (https://resources.rework.com/libraries/deal-closing/payment-terms).
-- `licitacoes.md` 2.6; `checklist.md` (PC3); `experiencia.md` §1.
+- `licitacoes.md` 2.6 e §4; `checklist.md` (PC3); `experiencia.md` §1; método da etapa 4 (4.3 e 4.7).

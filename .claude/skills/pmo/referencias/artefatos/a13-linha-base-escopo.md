@@ -6,7 +6,7 @@ etapas: [2, 4, 5]
 gravidade: média
 categoria: escopo
 sinonimos: ["baseline do escopo", "escopo aprovado", "EAP", "estrutura analítica do projeto", "WBS", "dicionário da EAP"]
-versao: 0.2.0
+versao: 0.3.2
 ---
 
 # A13 — Linha de base do escopo

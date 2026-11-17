@@ -6,7 +6,7 @@ etapas: [4, 5]
 gravidade: baixa
 categoria: tempo
 sinonimos: ["calendário do projeto", "calendário de trabalho", "calendário", "dias úteis", "jornada de trabalho", "calendário de campo"]
-versao: 0.2.0
+versao: 0.3.2
 ---
 
 # B13 — Calendários do projeto
@@ -42,9 +42,9 @@ O calendário do projeto "identifica os dias úteis e os turnos disponíveis par
   - dispensa: porte pequeno
 - **B13.6** Turnos ou jornada, quando o trabalho tem horários próprios (campo, eventos, atendimento)
   - fonte: PMBOK 6, 6.5.3.4, p. 220 (PDF 256)
-  - sinais: "turno" | "jornada" | "horário" | "fim de semana" | "noturno"
+  - sinais: "turno" | "jornada" | "horário" | "fim de semana" | "noturno" | "feriado" | "dias corridos"
   - confere: código
-  - dispensa: porte pequeno ou sem campo
+  - dispensa: sem campo
 - **B13.7** Sazonalidade que afeta o campo (chuva, calendário escolar, safra) refletida em períodos indisponíveis ou restritos
   - fonte: experiencia.md §5
   - sinais: "período chuvoso" | "sazonalidade" | "calendário escolar" | "safra" | "férias escolares"

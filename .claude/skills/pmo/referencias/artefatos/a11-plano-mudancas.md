@@ -6,7 +6,7 @@ etapas: [4, 5]
 gravidade: grave
 categoria: trabalho do projeto
 sinonimos: ["plano de mudanças", "plano de gerenciamento das mudanças", "controle de mudanças", "plano de controle de mudanças", "gestão de mudanças", "controle de alterações", "gestão de alterações"]
-versao: 0.2.0
+versao: 0.3.2
 ---
 
 # A11 — Plano de gerenciamento de mudanças
@@ -70,13 +70,19 @@ Diz como as solicitações de mudança serão autorizadas e incorporadas ao proj
   - sinais: "backlog" | "repriorização" | "dono do produto" | "representante do contratante"
   - confere: só PMO
   - dispensa: abordagem preditiva
-- **A11.12** Como reajustar escopo, prazo e metas se uma premissa crítica falhar: quem identifica, quem decide e qual o caminho (mudança interna, ajuste com o contratante, termo aditivo)
+- **A11.12** Como reajustar escopo, prazo e metas se uma premissa crítica falhar: quem identifica, quem decide e qual o caminho (mudança interna, ajuste com o contratante, termo aditivo); o reajuste cobre também prazo e custo (prorrogação, reequilíbrio ou aditivo de valor), não só escopo e metas
   - fonte: decisão 0021; `checklist.md` (PC1 a PC8, campo "se não se confirmar"); PMBOK 6, 4.6, p. 113–120 (PDF 149–156) (controle integrado de mudanças)
   - sinais: "se a premissa" | "premissa não se confirmar" | "falha de premissa" | "reajuste do cronograma" | "revisão das metas" | "reequilíbrio"
   - confere: código
   - dispensa: nunca
+- **A11.13** Marco que não cabe na vigência (conferido na linha do tempo da etapa 2 ou do TAP) com o caminho de reajuste escrito: prorrogação, aditivo ou redução negociada, quem pede e até quando, e o risco ligado no B27; se todos cabem, uma linha diz que a linha do tempo foi conferida
+  - fonte: teste externo da skill 0.3.1 (regras da 0.3.2), regra 2; PROP-EAP.13; TAP6.4
+  - sinais: "não cabe na vigência" | "prorrogação" | "marco" junto de "aditivo"
+  - confere: só PMO
+  - dispensa: nunca
 
 ## Perguntas de qualidade
+- O reajuste de prazo usa apostila só nas hipóteses que o contrato prevê (impedimento, paralisação, suspensão)? A prorrogação da vigência vem por aditivo ou pelo art. 111 (contrato de escopo), com conferência do jurídico? (`licitacoes.md` 2.7; decisão 0045)
 - O plano dá ao pedido fora do escopo (rodada extra de revisão, produto novo pedido em oficina) um caminho escrito com resposta de impacto? (PC8)
 - Quem decide do lado do contratante está nomeado por papel, com prazo? Sem instância de decisão, a mudança simples para (PC3; experiencia.md §1).
 - O que depende de terceiro (dado de outro órgão que mudou) também entra como pedido de mudança? (PC1)
@@ -89,6 +95,8 @@ Diz como as solicitações de mudança serão autorizadas e incorporadas ao proj
 - Linha de base ajustada ao realizado, sem mudança aprovada (PMBOK 6, p. 120, PDF 156).
 - Plano interno da FGV sem a ponte para o aditivo, ou aditivo pedido depois de executado o acréscimo (licitacoes.md 2.7, art. 132).
 - Confundir controle de mudanças com gestão da mudança organizacional (PMBOK 7, glossário, p. 239 e 244, PDF 334 e 339).
+- **Erro que evita (A11.12):** o reajuste da premissa de dados previa só revisão de metas; quando os dados atrasaram, o projeto precisou de mais prazo e de mais horas e não havia caminho escrito para nenhum dos dois.
+- **Erro que evita (A11.13):** o marco que não cabia na vigência apareceu na etapa 3 como divergência e sumiu no plano, sem risco nem caminho de prorrogação.
 
 ## Quando dispensar a parte inteira
 Não se dispensa: o nível de controle varia com o porte e o contrato, mas existe sempre (PMBOK 6, p. 115, PDF 151); com contratante público, é essencial (pmbok7.md, seção 3, item 10). Em porte pequeno, basta uma seção curta: aprovador único na FGV, aceite do contratante, formulário e caminho do aditivo (Rework RW-028).

@@ -6,7 +6,7 @@ etapas: [2]
 gravidade: não se aplica
 categoria: não se aplica
 sinonimos: ["equipe técnica", "equipe-chave", "composição da equipe", "perfis profissionais", "alocação de horas", "matriz RACI", "quadro de pessoal"]
-versao: 0.2.0
+versao: 0.3.2
 ---
 
 # PROP-EQUIPE — Equipe técnica, horas e responsabilidades
@@ -65,6 +65,31 @@ Mostra quem faz o trabalho, com que perfil, quantas horas em cada atividade da E
   - sinais: "subcontratação" | "equipe local" | "vedada" | "permitida"
   - confere: só PMO
   - dispensa: sem campo
+- **PROP-EQUIPE.11** Quadro de equipe por função e faixa de meses (função, quantidade, mês inicial e final, contados do marco da vigência), com o volume previsto de cada frente e o teto de produtividade escritos com a fonte, para o código conferir volume ÷ pessoas ÷ 21 dias úteis contra o teto
+  - fonte: método da etapa 2, 2.1; método da etapa 4, 4.7; `checklist.md` PC7 (CP11); SKILL.md, etapa 2, passo 10
+  - sinais: "quadro de equipe" | "por mês" | "por trimestre" | "por dia" | "teto" | tabela função × meses
+  - confere: código
+  - dispensa: nunca
+- **PROP-EQUIPE.12** Trabalho de campo com horas e quantidades (aplicadores, dias, produtividade) estimadas, com a base, ou marcadas como decisão do GP antes do preço
+  - fonte: teste externo da skill 0.3.1 (regras da 0.3.2), regra 9; PROP-METODOLOGIA.12; PROP-PRECO
+  - sinais: "aplicadores" | "entrevistadores" | "dias de campo" | "entrevistas por dia" | "a definir pelo GP" junto de campo
+  - confere: só PMO
+  - dispensa: sem campo
+- **PROP-EQUIPE.13** O mesmo perfil como responsável por atividades paralelas vira premissa crítica PC7 (gargalo), com a consequência e o reforço possível
+  - fonte: teste externo da skill 0.3.1 (regras da 0.3.2), regra 10; `checklist.md` PC7
+  - sinais: "gargalo" | "atividades paralelas" | "mesmo responsável" | "premissa" junto de "equipe"
+  - confere: só PMO
+  - dispensa: nunca
+- **PROP-EQUIPE.14** Para cada produto, um responsável com a competência que o produto pede (formação ou experiência na matéria); se nenhum perfil da equipe a tem, é decisão do GP (reforço, parceiro ou ajuste do escopo)
+  - fonte: teste externo da skill 0.3.1 (regras da 0.3.2), regra 11; PROP-EQUIPE.6; B18.11
+  - sinais: "responsável" junto de "produto" | "competência" | "formação" | "experiência em"
+  - confere: só PMO
+  - dispensa: nunca
+- **PROP-EQUIPE.15** Horas de cada perfil são estimativa do PMO: rótulo sugestão, com a base (analogia, volume × produtividade), nunca documento
+  - fonte: teste externo da skill 0.3.1 (regras da 0.3.2), regra 15; SKILL.md, princípio 1
+  - sinais: "estimativa" | "base:" junto de "horas" | "sugere-se"
+  - confere: só PMO
+  - dispensa: nunca
 
 ## Perguntas de qualidade
 - A equipe dá conta do volume em cada frente e em cada mês, e não só na média? (PC7; `experiencia.md` §4)
@@ -75,10 +100,15 @@ Mostra quem faz o trabalho, com que perfil, quantas horas em cada atividade da E
 
 ## Erros comuns
 - Horas iguais todo mês enquanto o trabalho se concentra em poucas fases (`experiencia.md` §4).
+- Quadro de equipe que não fecha com a produtividade que a própria proposta escreve (visitas previstas ÷ agentes ÷ dias úteis acima do teto por dia) (método da etapa 2, 2.1; PC7).
 - Coordenação com poucas horas diante de muitas frentes (PC7).
 - Profissional pontuado que não aparece na execução (`licitacoes.md` 2.2).
 - RACI sem o contratante, ou com mais de um "A" por linha (PMBOK 6, p. 317; Rework RW-049).
 - Campo com equipe local quando o edital veda subcontratação (pergunta de esclarecimento, CTR2).
+- **Erro que evita (PROP-EQUIPE.12):** a proposta de uma pesquisa de campo saiu com preço sem dizer quantos aplicadores, quantos dias e quantas entrevistas por dia; o custo do campo não tinha com o que ser conferido.
+- **Erro que evita (PROP-EQUIPE.13):** o mesmo analista era responsável por dois relatórios produzidos no mesmo mês; o gargalo não apareceu como premissa, e o atraso de um puxou o outro.
+- **Erro que evita (PROP-EQUIPE.14):** o relatório de análise contábil ficou com um perfil de comunicação como responsável porque era quem tinha horas livres.
+- **Erro que evita (PROP-EQUIPE.15):** a matriz de horas saiu rotulada como documento, como se o TR as trouxesse, sem base.
 
 ## Quando dispensar a parte inteira
 Não se dispensa: horas por perfil são a base do preço. Em porte pequeno, a RACI pode virar uma coluna de responsável no quadro de produtos.

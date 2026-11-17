@@ -4,6 +4,16 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 
 ## [Não publicado]
 
+### Skill PMO 0.3.2 (com a 0.3.0 e a 0.3.1, que entram na main junto)
+- **19 regras do teste externo,** só acréscimo, cada uma com o "erro que evita" num exemplo disfarçado:
+  - **SKILL.md:** cada etapa do zero, sem reaproveitar a resposta anterior do mesmo passo (princípio 14); "documento" só quando o trecho prova a frase (princípio 15); compromissos de método também são C, com destino no TAP; linha do tempo antes de fechar EAP, TAP e cronograma; conferência por uma segunda instância antes da próxima etapa; texto de outro projeto copiado no TR é conflito.
+  - **Proposta:** PROP-EAP.13 a .18 (linha do tempo; campo e atividade do cliente sem esperar aceite que o TR não pede; aceite em análise → ajuste → nova análise → termo definitivo; fonte externa de dados com atividade própria; restrição com prazo do TR na EAP; prazos de terceiros como estimativa); PROP-SOW.14 (origem e período de cada dado); PROP-ESTRATEGIA.13 e .14 (só pontua o que o TR diz que pontua; pergunta que muda o preço vai no esclarecimento); PROP-EQUIPE.12 a .15 (campo com quantidades antes do preço; gargalo de perfil como PC7; responsável com a competência certa; horas como estimativa); PROP-METODOLOGIA.12 (amostra por cotas em estudo sensível). PROP-ESTRATEGIA.12 e PROP-SOW.12: abordagem que reduz o que um R pede contraria o TR.
+  - **TAP:** TAP6.4 (linha do tempo), TAP9.5 (ordem do aceite), TAP-DV.8 (abordagem que reduz um R), TAP-DV.9 (pergunta de preço que não foi feita); TAP-DV.7: texto de outro projeto não é "a versão que mais obriga".
+  - **Plano:** A5.14 (ordem do aceite), A11.12 (o reajuste cobre prazo e custo), A11.13 (marco que não cabe na vigência), B3.10 (restrição com prazo do TR), B18.11 (competência do responsável); PC1 (origem e período do dado; fonte externa) e PC7 (mesmo perfil em atividades paralelas) no `checklist.md`; duas lições novas no `experiencia.md`.
+  - Os itens novos das fichas são "só PMO": a conferência por código da etapa 5 não muda.
+- Decisão 0056.
+- Versão 0.3.2 em todos os arquivos da skill.
+
 ### Correções do teste externo pelas etapas 1 a 4 (decisão 0055)
 - **Rework nos pedidos:** cada etapa que leva fichas leva os temas do `rework.md` dos artigos citados nelas (etapa 2: a seção 4 e os temas que faltavam; etapa 3; etapa 4, no texto de sistema). A conferência do pedido (`.conteudo.md`) marca FALTA quando algum artigo citado vai sem resumo e explica por que o método só vai no pedido da etapa 1.
 - **Compromissos de método também são C** (fichas PROP-METODOLOGIA.9 a .11), com o número que o PMO deu quando ele o escreveu; os outros nos números livres, sem colidir com a minuta.
@@ -81,6 +91,34 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 - **Contas novas do código:** pontos de texto × de documento ("a FGV tem?"), regra do preço e tabela de pontos por preço (com a equivalência em pontos técnicos), caixa pelo acumulado com a folga de cada parcela, quadro de equipe × produtividade (volume ÷ pessoas ÷ 21 dias úteis × teto escrito) e duração × vigência.
 - **Pedidos ao PMO** com o esqueleto do código e o teste de cada item; campos novos nos schemas (abordagem que muda o resultado, metodologia por fase, metas, riscos com gatilho, premissa com dependência, prazo e reajuste, quadro de equipe e volumes). Dossiês antigos abrem com os campos vazios.
 - **Gabaritos e leituras gravadas** da SMPED e da OEI na estrutura do método, e placar (`docs/estudos/placar-m2-etapa-2.md`).
+### Skill PMO 0.3.1 (sobre a 0.3.0, ainda não publicada; mostrada à responsável antes de publicar)
+- **Etapa 5, veredito do PMO** (decisão 0052): achado do código é candidato até o veredito (sustenta, falso com o trecho, não se aplica, regra errada com a causa); a dispensa que só o plano declara é candidata (cabe ou não cabe); a busca do ausente do PMO vale na parte apontada, sem a evidência do achado.
+- **Etapa 4, cronograma:** dado que só existe depois de um evento entra depois do fim do evento, numa atividade própria de recebimento, ligada à premissa crítica de quem fornece.
+- **Sinais das fichas** para o que os planos escrevem com outra redação (A9.6, A10.1, A17.4, A17.6, A18.2, B5.1, B12.4, B25.7, B27.1, B31.7), a partir do teste de um TR municipal de contratação direta; termos genéricos, sem nada do caso.
+- **`experiencia.md`:** o "até quando" da premissa crítica sai do cronograma e é o gatilho do risco; linha de base dos custos com as despesas diretas; pesquisa com o público com informação ao respondente e regra de guarda; status inicial do registro de questões igual ao de cada questão.
+- Versão 0.3.1 em todos os arquivos da skill.
+
+### Skill PMO 0.3.0 (mostrada à responsável antes de publicar)
+- **Etapa 1 na skill**, pelo método: as 8 seções, o teste de cada item, o que não entra e, em cada ponto de atenção, a premissa crítica (PC1 a PC8) e a pergunta de esclarecimento.
+- **Etapa 5 como leitura principal** (decisões 0035 e 0037): nenhuma etapa analisa sem a conexão; o código monta o esqueleto e confere depois citações, números e números R.
+- **Etapas 2 e 4 entregam o documento inteiro:** a minuta redigida seção por seção e o PGP nas seções 0 a 13; o resumo é só a capa. O quadro de equipe × produtividade (volume ÷ pessoas ÷ 21 dias úteis contra o teto escrito) é conta do código, e a skill diz o que o PMO entrega para ela (quadro por função e faixa de meses, volume e teto com a fonte; PROP-EQUIPE.11).
+- **Tipos de projeto e de plano** (consultoria por produtos, operação contínua, híbrido; licitação ou parceria; PGP interno ou plano de trabalho): o que muda no vocabulário, no preço, na adaptação (`pmbok7.md`, seção 3) e na régua da etapa 5.
+- **Ficha nova `prop-parceria`** (PROP-PARCERIA.1 a .13): plano de trabalho da Lei 13.019 com o art. 22, metas e parâmetros do edital, folha mês a mês, despesas por natureza, sem valor-hora nem taxa de administração, cronograma de desembolso igual ao do edital e caixa. A ficha `prop-preco` ganha a operação contínua (PROP-PRECO.12 a .14). São 62 fichas.
+- **Premissas críticas com gatilho e reajuste** nos três lugares (B3, B27 e A11): o número do gatilho é decisão do GP; o reajuste segue o caminho do contrato (aditivo, prorrogação, revisão de metas).
+- **Contrato ou termo assinado na etapa 3**, prevalecendo sobre a proposta e a RFP, com as divergências primeiro (bloco TAP-DV e TAP-PR.3).
+- **Caixa nos custos** (A4.12 e B6.11: acumulado de repasse ou faturamento × custo, folga por parcela, ponto mais apertado) e reservas em parceria (A4.13).
+- **Conflitos novos na etapa 5:** frase de conformidade que não confere com o item citado e exclusões de outro tipo de projeto (`experiencia.md`).
+- **Fontes que divergem:** sai "prevalece o PMBOK" do `rework.md`; não há vencedor automático, e o PMO sugere a leitura que serve ao contrato e ao porte, com o motivo.
+- Itens novos foram acrescentados no fim de cada ficha; nenhum código de item mudou.
+- **Testes externos de 16/11/2026** (decisões 0042 a 0047), a partir de duas leituras gravadas externas (SMPED e um TR municipal de contratação direta):
+  - **chave de modalidade** no começo da etapa 1: licitação, contratação direta ou parceria; na contratação direta, a escolha se sustenta na notória especialização **no objeto**, na justificativa de preço e nos documentos do art. 72 (PROP-ESTRATEGIA.1 e .11);
+  - **estudo sensível** (CPI, comissão, denúncia): característica nova `estudo sensível` · `estudo comum`, sugerida pelo código e confirmada pelo GP; régua metodológica (PROP-METODOLOGIA.11), resultado aceito só muda por erro registrado (A5.13), resultado preliminar no A7.5, e o A10.6 não se dispensa em estudo sensível;
+  - **autoconferência em todas as etapas** (presente, dispensado com motivo ou Decisão do GP); na etapa 4, porte reduz documentos, não cobertura, e "ausente" não é estado final; geração em quatro blocos, regenerando só a parte com item ausente;
+  - **prazos e calendário:** qual referência de início vale para quê (A3.13), marco externo fixo e janela até ele (PROP-EAP.11), premissa que muda a predecessora (PROP-EAP.12), prazo sem termo inicial como vago, turnos do campo mesmo em porte pequeno (B13.6), evento de faturamento como o texto diz (A4.9), substituição na inexigibilidade (A6.7), exemplo da janela na PC4;
+  - **cruzamentos obrigatórios** X1 a X6 nas etapas 1 e 5 (pagamento, início × vigência × marcos, quem executa × vedações, contatos repetidos, valor × parcelas, prazos de um mesmo marco);
+  - **compromissos numerados** (C01…) da proposta até o plano: exclusão nunca tira requisito (PROP-SOW.12 e .13), divergência que muda escopo ou custo fica pendente com a versão que mais obriga a FGV (TAP-DV.7), destino no TAP (TAP-PR.4) e no plano (B23.10); C sem destino é ausente na etapa 5;
+  - **abordagem que contraria a RFP** sai marcada, com o trecho, e vira pergunta de esclarecimento ou ajuste da minuta na contratação direta (PROP-ESTRATEGIA.12, decisão 0050);
+  - métodos das etapas 1 a 5 atualizados (os das etapas 1 e 5 deixam de chamar a leitura do PMO de "opcional"; o da 4 deixa de pedir "poucas linhas" por plano) e o rastro das regras novas na engenharia reversa.
 
 ### Documentação — métodos revisados e engenharia reversa das cinco etapas
 - **Métodos das etapas 1 a 5 substituídos** pela versão revisada pela responsável pelo projeto. Saem os detalhes que identificavam o caso real (número de páginas, meses do cronograma e da vigência, duração da jornada); também na decisão 0033 e na 0034.

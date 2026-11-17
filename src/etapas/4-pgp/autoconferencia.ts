@@ -1,7 +1,11 @@
 // Etapa 4, passo 13 (código): autoconferência. Antes da exportação, o plano gerado passa pelas regras da etapa 5
 // (vago, conflituoso, ausente; gravidade pela parte; categoria pela regra fixa). O que o GP dispensou na adaptação
 // fica "dispensada" no mapa e não conta como ausente. O que as regras acharem aparece para o GP corrigir.
-import { CARACTERISTICAS_PADRAO, type Caracteristicas } from "../../dominio/caracteristicas";
+import {
+  CARACTERISTICAS_PADRAO,
+  pareceEstudoSensivel,
+  type Caracteristicas,
+} from "../../dominio/caracteristicas";
 import { PARTES_PGP, PREMISSAS_CRITICAS } from "../../dominio/skill";
 import type { DocumentoLido, Dossie, PgpDossie } from "../../dossie/esquema";
 import {
@@ -34,7 +38,8 @@ export function pgpComoDocumento(dossie: Dossie, agora = new Date()): DocumentoL
 
 /**
  * Características do projeto para a autoconferência: as do GP, se ele já confirmou; senão, uma sugestão do código a
- * partir da adaptação e da RFP (porte pelo número de produtos e pelo prazo; campo pelo "formato remoto"). O resto
+ * partir da adaptação e da RFP (porte pelo número de produtos e pelo prazo; campo pelo "formato remoto"; estudo sensível
+ * pelos sinais da decisão 0043). O resto
  * fica nos valores conservadores, que dispensam pouco.
  */
 export function caracteristicasDoPgp(dossie: Dossie, e: EntradaPgp): Caracteristicas {
@@ -65,6 +70,9 @@ export function caracteristicasDoPgp(dossie: Dossie, e: EntradaPgp): Caracterist
       : /permitid|admitid/.test(sub)
         ? "permitida"
         : "não informada",
+    exposicao: pareceEstudoSensivel(e.rfp.flatMap((d) => d.paginas.map((pg) => pg.texto)))
+      ? "sensível"
+      : "comum",
   };
 }
 

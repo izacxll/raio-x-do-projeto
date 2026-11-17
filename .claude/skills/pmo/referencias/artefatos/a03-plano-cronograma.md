@@ -6,7 +6,7 @@ etapas: [4, 5]
 gravidade: grave
 categoria: tempo
 sinonimos: ["plano de cronograma", "plano de gerenciamento de cronograma", "gestão do cronograma", "gerenciamento do cronograma", "gerenciamento do tempo", "plano de gerenciamento do tempo", "metodologia de cronograma"]
-versao: 0.2.0
+versao: 0.3.2
 ---
 
 # A3 — Plano de gerenciamento do cronograma
@@ -73,6 +73,11 @@ Componente que "estabelece os critérios e as atividades para o desenvolvimento,
 - **A3.12** Nível de detalhe proporcional ao porte e, se houver ondas sucessivas, o horizonte de cada onda e quando se replaneja
   - fonte: PMBOK 6, 6.1, p. 181 (PDF 217); 6.2, p. 184–185 (PDF 220–221); Rework RW-037 (https://resources.rework.com/libraries/project-management/rolling-wave-planning)
   - sinais: "ondas sucessivas" | "onda" | "replanejamento" | "nível de detalhe" | "pacote de planejamento"
+  - confere: só PMO
+  - dispensa: nunca
+- **A3.13** Referências de início e marcos externos fixos: quando o contrato traz mais de uma referência (data fixa, ordem de serviço, assinatura, publicação), o plano diz qual conta para quê (prazos, vigência, marcos); marcos externos fixos (evento, safra, ano letivo) entram como restrição de data, com a janela até eles (conta do código)
+  - fonte: decisão 0045; PMBOK 6, 6.5, p. 207 (PDF 243); `checklist.md` PC4
+  - sinais: "vigência" junto de "ordem de serviço" | "contados a partir" | "marco fixo" | "data do evento" | "restrição de data"
   - confere: só PMO
   - dispensa: nunca
 

@@ -22,3 +22,14 @@
 
 > [!NOTE] Inferido — validar com a responsável pelo projeto
 > A especificação prevê como entrada só a RFP e a proposta. A análise usou o contrato assinado, e ele mudou o resultado (precedência, parcelas, gestor). Sugere-se incluí-lo como entrada opcional com prioridade.
+
+## Regras novas (decisão 0047)
+
+Evidência dos testes externos de 16/11/2026 (leituras gravadas externas, fora do Git): o edital da SMPED e um TR municipal de contratação direta (estudo de impacto de evento). Exemplos disfarçados.
+
+| Saída | Evidência | Regra | Quem | Skill |
+|---|---|---|---|---|
+| Divergência que muda escopo ou custo | Formato do produto (PPT × relatório); quem faz o campo; fonte dos dados | Contrato prevalece; sem resposta, a versão que mais obriga a FGV, pendente com o contratante | PMO | TAP-DV.7 |
+| Divergência que a RFP já responde | Dúvida "quem faz o campo?" aberta, e o TR dizia "equipe da contratada" | Conferir a RFP antes de abrir divergência | PMO | TAP-DV.7 |
+| Compromissos C com destino | Premissas e exclusões da proposta | Cada C vira premissa, limite, entrega-chave ou divergência | Código confere presença; PMO escreve | TAP-PR.4 |
+| Critério de sucesso que não cabe | "Metodologia aceita antes do início do evento", com estimativas maiores que a janela | Critério preso a data só entra se couber no cronograma | Código (janela) | decisão 0045 |

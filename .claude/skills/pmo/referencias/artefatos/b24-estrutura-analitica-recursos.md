@@ -6,7 +6,7 @@ etapas: [4, 5]
 gravidade: baixa
 categoria: equipe
 sinonimos: ["estrutura analítica dos recursos", "EAR", "RBS", "árvore de recursos", "hierarquia de recursos", "categorias de recursos", "catálogo de perfis"]
-versao: 0.2.0
+versao: 0.3.2
 ---
 
 # B24 — Estrutura analítica dos recursos

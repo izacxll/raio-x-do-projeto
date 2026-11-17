@@ -6,7 +6,7 @@ etapas: [4, 5]
 gravidade: baixa
 categoria: medição
 sinonimos: ["métricas de qualidade", "indicadores de qualidade", "indicadores da qualidade", "métricas", "definição de pronto", "padrões de aceitação"]
-versao: 0.2.0
+versao: 0.3.2
 ---
 
 # B20 — Métricas da qualidade
