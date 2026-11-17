@@ -6,7 +6,7 @@ versao: 0.3.0
 
 # Skill PMO — Raio-X do Projeto
 
-Versão 0.3.0: leitura da RFP pelo método da etapa 1; tipos de projeto e de plano; proposta de parceria da Lei 13.019; premissas críticas com gatilho e reajuste; contrato ou termo assinado como entrada da etapa 3; caixa nos custos; frase de conformidade e exclusões de outro projeto como conflito (decisões 0034, 0035 e 0037); chave de modalidade (licitação, contratação direta, parceria), estudo sensível, autoconferência em todas as etapas, prazos e calendário de campo, cruzamentos obrigatórios e compromissos numerados (decisões 0042 a 0047). A versão desta skill e a do app vão para o dossiê e para o cabeçalho de todo documento gerado.
+Versão 0.3.0: leitura da RFP pelo método da etapa 1; tipos de projeto e de plano; proposta de parceria da Lei 13.019; premissas críticas com gatilho e reajuste; contrato ou termo assinado como entrada da etapa 3; caixa nos custos; frase de conformidade e exclusões de outro projeto como conflito (decisões 0034, 0035 e 0037); chave de modalidade (licitação, contratação direta, parceria), estudo sensível, autoconferência em todas as etapas, prazos e calendário de campo, cruzamentos obrigatórios e compromissos numerados (decisões 0042 a 0047); na etapa 5, veredito sobre cada achado do código (decisão 0052). A versão desta skill e a do app vão para o dossiê e para o cabeçalho de todo documento gerado.
 
 ## 1. Papel
 
@@ -244,10 +244,10 @@ Seções 0 a 13, na ordem da decisão 0007:
 
 ### Etapa 5 — Leitura do PMO na conferência (F5b)
 
-**É a leitura principal da etapa, não um extra** (decisões 0035 e 0037). "Conferir o plano" roda a conferência por código e a sua leitura numa ação só, e o resultado só aparece com a leitura. Antes, o código monta o esqueleto: tipo de plano confirmado pelo GP, mapa das partes, comparações numéricas e de datas (valor, parcelas, vigência, equipe, metas, quadro × produtividade), frase de conformidade sobre valor e parcelas, PC5 pela conta da eleição, presença dos itens do núcleo ou da adaptação e o que está em ordem. Depois, confere cada citação sua, cada número e cada prazo, e procura de novo no plano inteiro o que você disser que falta.
+**É a leitura principal da etapa, não um extra** (decisões 0035 e 0037). "Conferir o plano" roda a conferência por código e a sua leitura numa ação só, e o resultado só aparece com a leitura. Antes, o código monta o esqueleto: tipo de plano confirmado pelo GP, mapa das partes, comparações numéricas e de datas (valor, parcelas, vigência, equipe, metas, quadro × produtividade), frase de conformidade sobre valor e parcelas, PC5 pela conta da eleição, presença dos itens do núcleo ou da adaptação e o que está em ordem. Depois, confere cada citação sua, cada número e cada prazo, e procura de novo, na parte que você apontar, o que você disser que falta.
 
 - **Teste de cada achado:** "se o gerente não corrigir isto, o projeto corre um risco concreto na execução?" Se não corre, não é achado. **Precisão antes de cobertura:** num plano típico, 10 a 25 achados; num plano correto, quase nada.
-- **A régua é a do tipo de plano** (seção 3). Parte que não se aplica ao tipo de plano, ou que o GP dispensou na adaptação, nunca vira achado.
+- **A régua é a do tipo de plano** (seção 3). Parte que não se aplica ao tipo de plano, ou que o GP dispensou na adaptação, nunca vira achado. A dispensa que só o plano declara (lista "Partes dispensadas pelo GP", sem a adaptação no dossiê) é candidata: diga se ela cabe pelas condições da ficha (`cabe` ou `nao_cabe`, com o motivo). Se não couber, a parte volta a ser conferida, e os achados do código para ela vêm no mesmo pedido.
 - **O que é da sua leitura**, porque depende de interpretação:
   - **premissa crítica escrita como premissa ou só citada:** a PC que se aplica só conta como tratada se estiver escrita como premissa (o que se assume, de quem depende, consequência) e nos três lugares (B3, B27, A11). Assunto citado numa matriz de riscos é "assunto citado, sem premissa escrita". Sem registro de premissas, é **um** achado `ausente`, com uma linha por PC aplicável;
   - **frase de conformidade que não confere:** "em conformidade com o item X" quando o plano diz outra coisa que o item X é `conflituoso`. O código compara valor e parcelas; você cobre o que é texto (metas, equipe, prazos de aprovação, obrigações);
@@ -263,7 +263,14 @@ Seções 0 a 13, na ordem da decisão 0007:
   - a evidência vem dos dois lados (documento, página, trecho literal);
   - acompanha uma sugestão de ajuste em redação condicional.
 - **Você não dá categoria nem gravidade:** o código as aplica por regra fixa.
-- **"Ausente" só depois de procurar no plano inteiro.** O código vai procurar de novo e rebaixar o achado se encontrar o item.
+- **"Ausente" só depois de procurar no plano inteiro.** Em `termosProcurados`, ponha os termos que o código deve procurar: ele procura só esses, na parte apontada (e, se ela foi dispensada, nas partes que absorvem o conteúdo), sem os trechos que você cita como evidência, e rebaixa o achado se encontrar.
+- **Achado do código é candidato até o seu veredito** (decisão 0052). O pedido lista os achados do código (ausente, vago e conflituoso) com o id. Não os repita entre os seus; dê um veredito para cada um:
+  - `sustenta`: o achado vale;
+  - `falso`: o plano tem o conteúdo, com outra redação ou em outro lugar; traga a evidência (doc `pgp`, página e trecho literal), de preferência na parte apontada;
+  - `nao_se_aplica`: o item não vale para este projeto (tipo de plano, porte, condição da ficha); diga por quê;
+  - `regra_errada`: a regra do código errou; diga a causa (por exemplo, a palavra está num trecho que descreve o problema de outro documento), para a regra ser revista.
+
+  Só os que você confirmar como `sustenta` contam no total; os outros aparecem à parte, com o seu veredito. Veredito sem a evidência (`falso`) ou sem o motivo (`nao_se_aplica`, `regra_errada`) não vale, e o achado fica como candidato.
 - **Diga também o que está em ordem**, quando você conferiu algo e passou: a seção "O que está em ordem" aparece sempre.
 
 ## 4. Formato de saída
@@ -298,6 +305,7 @@ Toda resposta é **um objeto JSON** que segue o schema do passo, enviado pelo ap
 - **Autoconferência** (todas as etapas, princípio 13): `"autoconferencia": [{ "item": "A8.7", "estado": "presente" | "dispensado" | "decisao_gp", "onde": "id do item que cobre", "motivo": "..." }]`. `onde` é obrigatório em `presente`; `motivo`, em `dispensado` e `decisao_gp`.
 - **Cruzamentos** (etapas 1 e 5): `"cruzamentos": [{ "codigo": "X1", "estado": "feito" | "nao_se_aplica", "resultado": "confere | diverge: ... | em aberto: ...", "itens": ["id do item gerado, se houver"] }]`.
 - **Compromissos** (etapas 2 a 4): `"compromissos": [{ "codigo": "C01", "tipo": "premissa" | "exclusao" | "obrigacao_contratante" | "metodo", "texto": "...", "destino": "TAP-PR | TAP4.3 | A5.12 ..." }]`.
+- **Vereditos** (etapa 5, decisão 0052): `"vereditos": [{ "achado": "id do achado do código", "veredito": "sustenta" | "falso" | "nao_se_aplica" | "regra_errada", "evidencias": [{ "doc": "pgp", "pagina": n, "trecho": "..." }], "motivo": "..." }]` e `"dispensas": [{ "parte": "B28", "veredito": "cabe" | "nao_cabe", "motivo": "..." }]`. `evidencias` é obrigatório no `falso`; `motivo`, no `nao_se_aplica`, no `regra_errada` e no `nao_cabe`.
 - Os campos acima entram nos schemas conforme cada etapa é atualizada no app; até lá, o app ignora o que o schema não pede.
 
 ## 5. O que carregar em cada etapa
