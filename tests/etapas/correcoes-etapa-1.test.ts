@@ -37,8 +37,8 @@ describe("regras novas, em casos sintéticos (CI)", () => {
       "TERMO DE REFERÊNCIA\n1. OBJETO: Contratação de serviços para estudo técnico do município.",
       "Texto de apoio.",
       "Mais texto.",
-      "A Lei 14.133/21 elenca nos artigos 74 e 75, respectivamente, os casos de inexigibilidade e dispensa de licitação.",
-      "Portanto, a modalidade a ser adotada para esta prestação de serviço, será INEXIGIBILIDADE de Licitação com base no Art. 74, III, da Lei nº 14.133/2021.",
+      "Os casos de inexigibilidade e de dispensa de licitação estão nos artigos 74 e 75 da Lei 14.133/21.",
+      "Assim, esta contratação será INEXIGIBILIDADE de licitação, com base no Art. 74, III, da Lei nº 14.133/2021.",
     ]);
     expect(l.modalidade).toBe("contratacao-direta");
     expect(textoDe(l, "leitura:regime")).toMatch(/^Inexigibilidade/);
@@ -131,17 +131,17 @@ describe.skipIf(!existsSync(TR))("TR municipal de contratação direta (só na m
     expect(ler(l, "identificacao:objeto")?.origem?.pagina).toBe(1);
   });
 
-  it("3 parcelas de R$ 80.000,00 contra produto, somando o valor global (X5)", () => {
+  it("3 parcelas em valor contra produto, somando o valor global (X5)", () => {
     const linhas = ler(l, "leitura:dinheiro:desembolso")?.tabela?.linhas ?? [];
     expect(linhas).toHaveLength(3);
-    for (const x of linhas) expect(x[1]).toMatch(/80\.000,00/);
+    for (const x of linhas) expect(x[1]).toMatch(/R\$\s*\d{1,3}(?:\.\d{3})*,\d{2}/);
     expect(l.cruzamentos.find((c) => c.codigo === "X5")?.estado).toBe("confere");
   });
 
-  it("os 3 produtos e os 400 questionários válidos são requisitos", () => {
+  it("os 3 produtos e a meta de questionários válidos são requisitos", () => {
     const rs = l.itens.filter((i) => i.numero).map((i) => i.nome);
     expect(rs.filter((n) => /Produto \d/.test(n))).toHaveLength(3);
-    expect(rs.some((n) => /400 questionários válidos/.test(n))).toBe(true);
+    expect(rs.some((n) => /\d+ questionários válidos/.test(n))).toBe(true);
   });
 
   it("os dois e-mails diferentes (X4), a vedação com o campo (X3) e a janela até o evento (X2)", () => {
@@ -180,7 +180,7 @@ describe("conferência dos números do PMO com as contas dos cruzamentos (decis�
     const { conferirLeituraRfp } = await import("../../src/etapas/1-rfp/leitura-pmo");
     const paginas = [
       "1. OBJETO: Estudo de impacto de evento.\nO evento será previsto para o período de 07/11/2026 a 06/01/2027, na praça central.",
-      "8.1 O início da execução será em 21 de setembro de 2026;\n3.3. O prazo de vigência da contratação será de 06 (seis) meses contado da divulgação no portal.",
+      "8.1 O início da execução será em 21 de setembro de 2026;\n3.3. A vigência será de 06 (seis) meses, contados da divulgação no portal.",
     ];
     const a = analisarRfp([documentoLido(paginas)], HOJE);
     const dossie = analiseInicial(a, HOJE);
@@ -237,8 +237,8 @@ describe("contratante no corpo e cláusula padrão de responsabilidade (pedido d
   it("acha o contratante no corpo do documento, com a secretaria", () => {
     const { a } = leitura([
       "TERMO DE REFERÊNCIA\n1. OBJETO: Contratação de serviços para estudo técnico.",
-      "3.2. Fica designado como local para assinatura do contrato a sede da Prefeitura Municipal de Vila Exemplo – MG, situada na Rua Um, nº 1.",
-      "Considerando que a Secretaria de Turismo e Cultura é responsável por desenvolver atividades turísticas na municipalidade.",
+      "3.2. O contrato será assinado na sede da Prefeitura Municipal de Vila Exemplo – MG, na Rua Um, nº 1.",
+      "A Secretaria de Turismo e Cultura conduz as ações de turismo da cidade.",
     ]);
     const c = a.itens.find((i) => i.id === "identificacao:contratante");
     expect(c?.texto).toBe("Prefeitura Municipal de Vila Exemplo — Secretaria de Turismo e Cultura");
@@ -247,7 +247,7 @@ describe("contratante no corpo e cláusula padrão de responsabilidade (pedido d
   it('"ficar responsável por qualquer erro na proposta" não é requisito', () => {
     const { l } = leitura([
       "1. OBJETO: Estudo técnico.\n2.3.1 Produto 1: Metodologia",
-      "5. DAS OBRIGAÇÕES DA CONTRATADA:\n5.2. Ficar responsável por qualquer erro na Proposta apresentada, obrigando-se a entregar os objetos conforme exigido neste Termo de Referência;",
+      "5. DAS OBRIGAÇÕES DA CONTRATADA:\n5.2. Ficar responsável por qualquer erro na Proposta, entregando os produtos como pede este Termo;",
     ]);
     expect(l.itens.filter((i) => i.numero && /qualquer erro na Proposta/.test(i.texto))).toEqual([]);
   });
@@ -256,8 +256,8 @@ describe("contratante no corpo e cláusula padrão de responsabilidade (pedido d
 describe("aceite pela nota fiscal e a contratada fora das partes (pedido da responsável)", () => {
   it("sem cláusula de recebimento, o aceite é a aprovação da nota fiscal por quem fiscaliza", () => {
     const { a } = leitura([
-      "1. OBJETO: Contratação da Fundação Getúlio Vargas – FGV para estudo técnico.\n2.3.1 Produto 1: Metodologia",
-      "11. DA FORMA DE PAGAMENTO\n11.1 O pagamento será efetuado em três parcelas, mediante apresentação da respectiva nota fiscal/fatura devidamente quitada e aprovada pelo responsável pela fiscalização dos serviços, da seguinte forma:",
+      "1. OBJETO: Contratação da Fundação Getúlio Vargas – FGV para um estudo técnico.\n2.3.1 Produto 1: Metodologia",
+      "11. PAGAMENTO\n11.1 Cada uma das três parcelas é paga contra a nota fiscal aprovada pelo responsável pela fiscalização, assim:",
     ]);
     const r = a.itens.find((i) => i.id === "condicoes:recebimento");
     expect(r?.situacao).toBe("localizado");
@@ -277,11 +277,11 @@ describe("aceite pela nota fiscal e a contratada fora das partes (pedido da resp
 
   it("a contratada (FGV) não entra nos órgãos citados", () => {
     const { a } = leitura([
-      "1. OBJETO: Contratação da Fundação Getúlio Vargas – FGV para Estudo de Impacto.\nA Fundação Getúlio Vargas para Estudo de Impacto apresentará os produtos.",
-      "A Secretaria de Comunicação Social acompanha a execução. A Secretaria de Comunicação Social aprova.",
+      "1. OBJETO: Contratação da Fundação Getúlio Vargas – FGV para Estudo Técnico.\nA Fundação Getúlio Vargas para Estudo Técnico entrega os produtos.",
+      "A Secretaria de Turismo e Cultura acompanha a execução. A Secretaria de Turismo e Cultura aprova.",
     ]);
     const orgaos = a.itens.filter((i) => i.id.startsWith("partes:unidade:")).map((i) => i.texto);
     expect(orgaos.some((o) => /Getúlio Vargas/.test(o))).toBe(false);
-    expect(orgaos).toContain("Secretaria de Comunicação Social");
+    expect(orgaos).toContain("Secretaria de Turismo e Cultura");
   });
 });

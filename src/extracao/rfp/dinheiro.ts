@@ -12,7 +12,7 @@ export interface ParcelaDesembolso {
   /** "Produto 1 – Plano de trabalho", "1ª parcela". */
   rotulo: string;
   percentual: number;
-  /** Valor em reais, quando o texto dá a parcela em valor ("1ª parcela, no valor de R$ 80.000,00"). */
+  /** Valor em reais, quando o texto dá a parcela em valor ("1ª parcela, no valor de R$ 50.000,00"). */
   valor?: number;
   /** "30 dias", quando a linha traz o prazo. */
   prazo?: string;
@@ -142,7 +142,7 @@ export function extrairDesembolso(docs: DocumentoRfp[]): Desembolso {
   return { parcelas, unica, soma };
 }
 
-/** "1ª parcela, no valor de R$ 80.000,00 (...), cuja nota fiscal será emitida contra a entrega do Produto 1". */
+/** "1ª parcela, no valor de R$ 50.000,00 (...), paga na entrega do Produto 1". */
 const RE_PARCELA_EM_VALOR =
   /\b(\d{1,2})\s*(?:a|o)?\s*parcela\b[^.;]{0,40}?r\$\s*(\d{1,3}(?:\.\d{3})*,\d{2})([^;]{0,180})/g;
 
