@@ -16,7 +16,6 @@ import {
 import { resumirLeitura, type Progresso } from "../../leitura/ler-documento";
 import { caixaParece } from "../../leitura/tipo-documento";
 import { LegendaRotulos, RotuloSecao, Titulo } from "../componentes/basicos";
-import { BotaoDemonstracao } from "../componentes/demonstracao";
 import { AnaliseDaRfp } from "./analise-rfp";
 import { ConferenciaPgp } from "./conferencia";
 import { PropostaDoFornecedor } from "./proposta";
@@ -62,18 +61,6 @@ function PassosFluxo({ lidos }: { lidos: boolean }) {
 }
 
 function AvisoEnvio({ etapa }: { etapa: Etapa }) {
-  const demonstracao = useDossie((s) => s.dossie.demonstracao);
-  if (demonstracao && etapa.usaPmo) {
-    return (
-      <div className="aviso aviso--pmo">
-        <p>
-          <b>Demonstração.</b> Os passos do PMO carregam respostas gravadas para esta RFP pública: nada é
-          enviado à API do Claude e não há custo. A leitura, a conferência e as contas acontecem aqui no
-          navegador, como no uso real.
-        </p>
-      </div>
-    );
-  }
   if (etapa.usaPmo) {
     return (
       <div className="aviso aviso--pmo">
@@ -89,7 +76,7 @@ function AvisoEnvio({ etapa }: { etapa: Etapa }) {
                 : "da RFP"}{" "}
           é enviado à API do Claude, pela sua chave, na organização da FGV. Nada é enviado sem o seu clique, e
           o custo aparece antes.
-          {" Sem a conexão com o Claude, nada é analisado: conecte a chave ou veja a demonstração."}
+          {" Sem a conexão com o Claude, nada é analisado: conecte a chave."}
         </p>
       </div>
     );
@@ -295,7 +282,6 @@ export function TelaEtapa() {
         <Titulo>{etapa.nome}</Titulo>
         <PassosFluxo lidos={obrigatoriosLidos} />
         <AvisoEnvio etapa={etapa} />
-        <BotaoDemonstracao etapa={etapa.numero as 1 | 2 | 3 | 4 | 5} />
 
         <section className="bloco">
           <RotuloSecao>Documentos</RotuloSecao>

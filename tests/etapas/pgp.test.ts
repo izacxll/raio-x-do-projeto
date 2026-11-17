@@ -2,7 +2,7 @@
 // contas do código (cronograma, marcos, custos, rastreabilidade), pedidos e a autoconferência pelas regras da etapa 5.
 import { readFileSync } from "node:fs";
 import { beforeAll, describe, expect, it } from "vitest";
-import { propostaGravada, tapGravado } from "../../src/demonstracao/preparar";
+import { propostaGravada, tapGravado } from "../ajudantes/gravadas";
 import { criarDossieVazio } from "../../src/dossie/arquivo";
 import type { Dossie, PgpDossie } from "../../src/dossie/esquema";
 import { avaliarItens, type ItemProposta } from "../../src/etapas/2-proposta/proposta";

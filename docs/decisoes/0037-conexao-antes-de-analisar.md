@@ -1,7 +1,7 @@
 # 0037 — Nenhuma etapa analisa sem a conexão com o Claude
 
 - **Data:** 16/11/2026
-- **Status:** aceita
+- **Status:** aceita; a demonstração como alternativa à conexão saiu com a decisão 0053
 - **Quem decidiu:** responsável pelo projeto
 - **Muda:** o item 5 da decisão 0035 ("sem chave, as etapas 1 e 5 mostram o esqueleto do código, com o aviso 'leitura parcial por código'")
 

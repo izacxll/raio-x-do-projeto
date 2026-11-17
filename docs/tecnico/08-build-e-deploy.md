@@ -31,7 +31,7 @@ A rodada real das etapas 2 a 4 com a chave (`npm run rodada-real`, `scripts/roda
 | RFPs públicas | `tests/fixtures/rfps-publicas/` (9 editais, com fonte e data no README) | A etapa 1 e a leitura são testadas sobre editais reais |
 | Respostas do PMO gravadas | `tests/fixtures/gerados/*-oei/` | Etapas 2 a 4 sem chave, com as citações conferidas pelo código |
 | Gabarito da etapa 1 | `tests/fixtures/gerados/rfp-smped/` | Comparação item por item (está no PR #14) |
-| Fumaça no navegador | `tests/fumaca/*.spec.ts` | Leitura com OCR, as cinco etapas, a demonstração e os downloads |
+| Fumaça no navegador | `tests/fumaca/*.spec.ts` | Leitura com OCR, as cinco etapas (com o PMO simulado pela rota) e os downloads |
 | API simulada | `tests/ajudantes/api-simulada.ts` | Respostas no formato de streaming, sem rede |
 
 ## Integração contínua (`.github/workflows/ci.yml`)

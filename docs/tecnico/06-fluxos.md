@@ -41,7 +41,7 @@ sequenceDiagram
   participant P as etapas/1-rfp/leitura-pmo.ts
   participant API as API do Claude
   participant Store as dossie/store.ts
-  GP->>Tela: Analisar a RFP (com a conexão ou na demonstração)
+  GP->>Tela: Analisar a RFP (com a conexão)
   Tela->>A: analisarRfp(documentos, hoje)
   A-->>Tela: itens, requisitos, obrigações, dinheiro, pontos de atenção
   Tela->>L: montarLeituraRfp (8 seções do método)
@@ -107,7 +107,7 @@ sequenceDiagram
   GP->>Tela: confirma o mapa, as características e as premissas
   Tela->>Conf: conferirPlano (vai no pedido)
   Conf-->>Tela: achados vago, conflituoso e ausente, com gravidade e categoria
-  GP->>Tela: Conferir o plano (com a conexão ou na demonstração)
+  GP->>Tela: Conferir o plano (com a conexão)
   Tela->>Leit: pedidoLeitura
   Leit->>API: plano, TAP, RFP e o que o código achou
   API-->>Leit: achados sugeridos

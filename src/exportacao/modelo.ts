@@ -1,11 +1,8 @@
 // Modelo neutro de documento exportável: o conteúdo fica separado da formatação.
 // Cada formato (DOCX, PDF, XLSX) tem o seu montador, que recebe este modelo.
-import { TEXTO_DEMONSTRACAO } from "../demonstracao/demonstracao";
 import type { Dossie, ItemRotulado } from "../dossie/esquema";
 import { analisarRfp } from "../etapas/1-rfp/analisar-rfp";
 import { nomeSugeridoNoCabecalho, sugerirNomeProjeto } from "../etapas/1-rfp/nome-do-projeto";
-
-export { TEXTO_DEMONSTRACAO };
 
 /**
  * Sem nome dado pelo GP: o nome sugerido a partir da RFP, marcado como sugestão. Sem RFP no dossiê, "Projeto
@@ -39,8 +36,6 @@ export interface DocumentoExportavel {
   projeto: string;
   /** Enquanto houver item pendente, o cabeçalho de minuta continua (seção 2). */
   minuta: boolean;
-  /** Modo demonstração (decisão 0027): o cabeçalho diz que as respostas são gravadas, sem chamada à IA. */
-  demonstracao?: boolean;
   geradoEm: Date;
   versaoApp: string;
   versaoSkill: string;
@@ -55,13 +50,12 @@ export function precisaDeMinuta(itens: ItemRotulado[]): boolean {
   return itens.length === 0 || itens.some((i) => i.estado === "pendente");
 }
 
-/** Campos do cabeçalho que vêm do dossiê: projeto, versões e o aviso de demonstração. */
+/** Campos do cabeçalho que vêm do dossiê: projeto e versões. */
 export function camposDoDossie(dossie: Dossie) {
   return {
     projeto: dossie.projeto.nome.trim() || nomeProvisorio(dossie),
     versaoApp: dossie.versaoApp,
     versaoSkill: dossie.versaoSkill,
-    demonstracao: Boolean(dossie.demonstracao),
   };
 }
 

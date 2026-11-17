@@ -3,7 +3,7 @@
 import { readFileSync } from "node:fs";
 import { strFromU8, unzipSync } from "fflate";
 import { beforeAll, describe, expect, it } from "vitest";
-import { propostaGravada, tapGravado } from "../../src/demonstracao/preparar";
+import { propostaGravada, tapGravado } from "../ajudantes/gravadas";
 import { criarDossieVazio } from "../../src/dossie/arquivo";
 import { Dossie as EsquemaDossie, type Dossie, type PgpDossie } from "../../src/dossie/esquema";
 import { gerarSugerido, pgpInicial } from "../../src/etapas/4-pgp/pgp";

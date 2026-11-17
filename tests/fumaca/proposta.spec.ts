@@ -92,6 +92,10 @@ test("etapa 2: chave, três passos do PMO, decisões do GP, contas, conferência
   await expect(page.getByText(/Total: \d+ dias úteis/)).toBeVisible();
   await expect(page.getByTestId("preco-calculado")).toHaveText("a definir pelo GP");
   await expect(page.getByTestId("matriz")).toContainText("R05");
+  // a minuta pelo método (decisão 0038): a capa, as seções e a minuta redigida na ordem do edital
+  await expect(page.locator('[data-secao="capa"]')).toContainText("Consultoria por produtos");
+  await expect(page.locator('[data-secao="preco"]')).toContainText("Pontos por preço");
+  await expect(page.locator('[data-secao="minuta-redigida"]')).toContainText("14 de 14 seções redigidas");
   await expect(page.getByTestId("uso").locator("tbody tr")).toHaveCount(3);
   expect(passos).toEqual(["estrategia", "conteudo", "eap"]);
 

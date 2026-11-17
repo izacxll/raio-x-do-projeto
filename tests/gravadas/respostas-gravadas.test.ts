@@ -1,21 +1,19 @@
-// Modo demonstração (decisão 0027): as respostas gravadas passam pelo mesmo schema da API, e os exportados levam o
-// aviso no cabeçalho.
+// Respostas gravadas da OEI (material de teste, decisão 0053): passam pelo mesmo schema da API; o site não tem modo
+// de demonstração, e o dossiê antigo que tinha o campo abre sem ele.
 import { readFileSync } from "node:fs";
 import { strFromU8, unzipSync } from "fflate";
 import { describe, expect, it } from "vitest";
-import { MODELO_GRAVADO, respostaGravada, TEXTO_DEMONSTRACAO } from "../../src/demonstracao/demonstracao";
-import { propostaGravada } from "../../src/demonstracao/preparar";
 import { criarDossieVazio } from "../../src/dossie/arquivo";
 import { Dossie } from "../../src/dossie/esquema";
 import { gerarDocx } from "../../src/exportacao/docx";
-import { camposDoDossie } from "../../src/exportacao/modelo";
 import { montarRelatorioLeitura } from "../../src/exportacao/relatorio-leitura";
 import { RespostaEstrategia } from "../../src/pmo/schemas/proposta";
+import { MODELO_GRAVADO, propostaGravada, respostaGravada } from "../ajudantes/gravadas";
 
 const logo = readFileSync(new URL("../../src/interface/ativos/logo-fgv-projetos.jpg", import.meta.url));
 const logoBuffer = logo.buffer.slice(logo.byteOffset, logo.byteOffset + logo.byteLength) as ArrayBuffer;
 
-describe("modo demonstração", () => {
+describe("respostas gravadas da OEI (material de teste)", () => {
   it("carrega a resposta gravada da etapa 2 pelo schema da API", async () => {
     const e = await respostaGravada(2, "estrategia", RespostaEstrategia);
     expect(e.abordagens.map((a) => a.id)).toEqual(["A", "B", "C"]);
@@ -32,25 +30,19 @@ describe("modo demonstração", () => {
     expect(p.conteudo?.modelo).toBe(MODELO_GRAVADO);
     expect(p.uso).toEqual([]);
   });
+});
 
-  it("o dossiê guarda o modo e os exportados levam o aviso no cabeçalho", async () => {
-    const dossie = Dossie.parse({ ...criarDossieVazio(), demonstracao: true });
-    expect(camposDoDossie(dossie).demonstracao).toBe(true);
-    const blob = await gerarDocx(montarRelatorioLeitura(dossie), logoBuffer);
-    const arquivos = unzipSync(new Uint8Array(await blob.arrayBuffer()));
-    const cabecalhos = Object.entries(arquivos)
-      .filter(([n]) => /word\/header\d*\.xml$/.test(n))
-      .map(([, c]) => strFromU8(c))
-      .join(" ");
-    expect(cabecalhos).toContain(TEXTO_DEMONSTRACAO);
+describe("sem modo de demonstração (decisão 0053)", () => {
+  it("dossiê antigo com o campo de demonstração abre sem ele", () => {
+    const d = Dossie.parse({ ...criarDossieVazio(), demonstracao: true });
+    expect("demonstracao" in d).toBe(false);
   });
 
-  it("fora da demonstração, o cabeçalho não leva o aviso", async () => {
+  it("os exportados não levam aviso de demonstração", async () => {
     const blob = await gerarDocx(montarRelatorioLeitura(criarDossieVazio()), logoBuffer);
-    const arquivos = unzipSync(new Uint8Array(await blob.arrayBuffer()));
-    const tudo = Object.values(arquivos)
+    const tudo = Object.values(unzipSync(new Uint8Array(await blob.arrayBuffer())))
       .map((c) => strFromU8(c))
       .join(" ");
-    expect(tudo).not.toContain(TEXTO_DEMONSTRACAO);
+    expect(tudo).not.toMatch(/Demonstração com respostas gravadas/);
   });
 });

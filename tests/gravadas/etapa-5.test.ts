@@ -1,7 +1,7 @@
-// Demonstração da etapa 5 (decisão 0037): o plano de trabalho inventado, com erros plantados, e a resposta gravada
-// do PMO, conferida pelo código como no uso real.
+// Leitura gravada da etapa 5 (material de teste, decisão 0053): o plano de trabalho inventado, com erros plantados, e
+// a resposta gravada do PMO, conferida pelo código como no uso real.
 import { describe, expect, it } from "vitest";
-import { planoDaDemonstracao, respostaGravada } from "../../src/demonstracao/demonstracao";
+import { planoGravado, respostaGravada } from "../ajudantes/gravadas";
 import { CARACTERISTICAS_PADRAO } from "../../src/dominio/caracteristicas";
 import { PARTES_PGP, PREMISSAS_CRITICAS } from "../../src/dominio/skill";
 import { conferirLeitura } from "../../src/etapas/5-conferencia/leitura-pmo";
@@ -13,9 +13,9 @@ import { lerRfpPublica } from "../ajudantes/rfp-publica";
 import { extrairRequisitos } from "../../src/extracao/requisitos";
 import { semRevisoesDoPmo } from "../../src/pmo/itens";
 
-describe("demonstração da etapa 5", () => {
+describe("leitura gravada da etapa 5", () => {
   it("a leitura gravada passa no schema e cada citação é achada no plano inventado ou no edital", async () => {
-    const plano = await planoDaDemonstracao();
+    const plano = planoGravado();
     const rfp = await lerRfpPublica("concorrencia-tecnica-preco-oei-mdhc-criancas-situacao-rua-2026.pdf");
     const leitura = await respostaGravada(5, "leitura", RespostaLeitura);
     const proposta = proporMapa(plano.paginas, PARTES_PGP);
@@ -45,7 +45,7 @@ describe("demonstração da etapa 5", () => {
   }, 60_000);
 
   it("como na tela: requisitos da RFP e o tipo de plano padrão não mudam a conferência das citações", async () => {
-    const plano = await planoDaDemonstracao();
+    const plano = planoGravado();
     const rfp = await lerRfpPublica("concorrencia-tecnica-preco-oei-mdhc-criancas-situacao-rua-2026.pdf");
     const leitura = await respostaGravada(5, "leitura", RespostaLeitura);
     const proposta = proporMapa(plano.paginas, PARTES_PGP);

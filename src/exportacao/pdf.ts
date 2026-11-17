@@ -3,7 +3,7 @@ import pdfMake from "pdfmake/build/pdfmake";
 import type { Content, TDocumentDefinitions } from "pdfmake/interfaces";
 import { cor } from "../interface/tokens";
 import { planejarTabelas } from "./larguras";
-import { linhaDeVersoes, TEXTO_DEMONSTRACAO, TEXTO_MINUTA, type DocumentoExportavel } from "./modelo";
+import { linhaDeVersoes, TEXTO_MINUTA, type DocumentoExportavel } from "./modelo";
 
 let fontesProntas = false;
 
@@ -78,20 +78,11 @@ export async function gerarPdf(doc: DocumentoExportavel, logo: ArrayBuffer): Pro
   const definicao: TDocumentDefinitions = {
     pageSize: "A4",
     pageOrientation: plano.paisagem ? "landscape" : "portrait",
-    pageMargins: [40, 62 + (doc.minuta ? 16 : 0) + (doc.demonstracao ? 16 : 0), 40, 48],
+    pageMargins: [40, 62 + (doc.minuta ? 16 : 0), 40, 48],
     defaultStyle: { font: "Arimo", fontSize: 10 },
     info: { title: doc.titulo, creator: "Raio-X do Projeto" },
     header: (): Content => {
       const pilha: Content[] = [{ image: paraDataUrl(logo), width: 150 }];
-      if (doc.demonstracao) {
-        pilha.push({
-          text: TEXTO_DEMONSTRACAO,
-          fontSize: 9,
-          bold: true,
-          color: hex("laranja-txt"),
-          margin: [0, 6, 0, 0],
-        });
-      }
       if (doc.minuta) {
         pilha.push({
           text: TEXTO_MINUTA,

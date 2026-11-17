@@ -11,7 +11,7 @@ Este é o resumo. O detalhe técnico, com diagramas (camadas, dependências e ci
 | Código | ler PDF, extrair, contar, comparar, calcular; montar o **esqueleto** que vai no pedido ao PMO; **conferir** cada citação, número e prazo que o PMO devolve; montar documentos | `src/leitura`, `src/texto`, `src/extracao`, `src/regras`, `src/exportacao` |
 | PMO (API do Claude, chave do GP) | a **leitura** de cada etapa, na estrutura do método: o que pesa e por quê, cruzamento de trechos, estratégia, conteúdo técnico, EAP, estimativas, redação do TAP e do PGP, conferência do plano | `src/pmo` + `.claude/skills/pmo/` |
 
-**O PMO lê; o código monta e confere** (decisão 0035), em todas as etapas. **Nenhuma etapa analisa sem a conexão** (decisão 0037): sem a chave, as opções são conectar ou ver a demonstração, que existe em todas as etapas. O esqueleto vai no pedido e não aparece sozinho como resultado.
+**O PMO lê; o código monta e confere** (decisão 0035), em todas as etapas. **Nenhuma etapa analisa sem a conexão** (decisão 0037): sem a chave, nada é analisado; o site não tem modo de demonstração (decisão 0053). O esqueleto vai no pedido e não aparece sozinho como resultado.
 
 ## Pastas de `src/`
 
@@ -27,7 +27,6 @@ Este é o resumo. O detalhe técnico, com diagramas (camadas, dependências e ci
 | `extracao/` | Requisitos (produtos rotulados) e prazo total da RFP. `rfp/`: mapa da RFP, quadro da capa, identificação, requisitos (equipe, quantidades, local), prazos do certame e da execução, julgamento, habilitação, temas (apresentação e condições contratuais) e partes interessadas | F5, F1 |
 | `regras/` | Busca com página e trecho, mapa do PGP, vago, conflituoso, ausente, conferência; brechas da RFP com a pergunta de esclarecimento (`brechas-rfp.ts`) | F5, F1 |
 | `config/` | Modelo, esforço e limites de cada passo do PMO (`modelo.ts`) e tabela de preços (`precos.ts`) | F2 |
-| `demonstracao/` | Modo demonstração (decisão 0027): respostas gravadas do PMO para a RFP pública da OEI, empacotadas no build, e a preparação das etapas anteriores | F2 |
 | `pmo/` | Único módulo que chama a API (`cliente.ts`); itens do PMO com a conferência, comuns às etapas (`itens.ts`); chave só no `sessionStorage` (`chave.ts`); montagem do pedido com a skill e o texto dos documentos (`montagem.ts`); schemas Zod de cada passo (`schemas/`); custo à vista (`custo.ts`); conferência de citações (`citacoes.ts`) e de redação e números sem fonte (`redacao.ts`) | F2 |
 
 ## Fluxo de uma etapa (seção 5.0 da especificação)
@@ -49,8 +48,8 @@ Este é o resumo. O detalhe técnico, com diagramas (camadas, dependências e ci
 5. O uso de cada chamada (tokens e valor) fica no dossiê.
 6. Na etapa 3, o código compara a RFP e a proposta (PDF final do GP ou a proposta da etapa 2, que vira um documento com uma "página" por seção), traz o que vem dos documentos e confere o TAP; o PMO redige os 12 elementos e o registro de premissas. Os componentes de passo e de item do PMO são comuns (`interface/componentes/passo-pmo.tsx`, `item-pmo.tsx`).
 7. Na etapa 4, seis pedidos ao PMO na ordem da decisão 0007; as fichas vão no pedido de cada passo (o prefixo com a skill e os documentos fica no cache). O código monta as tabelas de cronograma, marcos, custos, designações e rastreabilidade, desenha a EAP e a rede em SVG e roda a autoconferência: o plano gerado, como documento "lido", passa por `conferirPlano` (etapa 5), com o que o GP dispensou marcado como dispensado.
-8. Na etapa 5, "Conferir o plano" roda a conferência por código e a leitura do PMO numa ação só (decisões 0035 e 0037; a fase M5 põe a saída na estrutura do método): o código confere as citações, procura no plano inteiro o que o PMO diz estar ausente (e rebaixa se achar) e aplica a gravidade e a categoria pela parte.
-9. **Demonstração** (decisões 0027 e 0037), em todas as etapas: com o dossiê marcado, cada passo carrega a resposta gravada em `tests/fixtures/gerados/<etapa>-oei/`, validada pelo mesmo schema, sem chamar a API; na etapa 5, com um plano de trabalho inventado com erros plantados (`leitura-oei/`).
+8. Na etapa 5, "Conferir o plano" roda a conferência por código e a leitura do PMO numa ação só (decisões 0035 e 0037; a fase M5 põe a saída na estrutura do método): o código confere as citações, procura, na parte apontada, o que o PMO diz estar ausente (e rebaixa se achar); cada achado do código é candidato até o veredito do PMO (decisão 0052) e aplica a gravidade e a categoria pela parte.
+9. **Sem demonstração** (decisão 0053): as respostas gravadas em `tests/fixtures/gerados/<etapa>-oei/` são só material dos testes; os de fumaça as servem pela rota do Playwright, como se fossem a API (`tests/fumaca/pmo-simulado.ts`).
 
 ## Dossiê
 

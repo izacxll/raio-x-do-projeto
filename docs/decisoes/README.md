@@ -30,7 +30,7 @@ Uma decisão por arquivo, numerada em ordem. Cada uma registra o contexto, o que
 | [0024](0024-leitura-da-rfp-f1.md) | Leitura da RFP só com código (F1): mapa, extração, prazos calculados, brechas com pergunta, revisão do GP | aceita |
 | [0025](0025-proposta-com-o-pmo-f2.md) | Proposta com o PMO (F2), construída sem a chave: três passos do PMO, conferência do que ele devolve, contas do código, tela da chave, comparação de modelos | aceita (teste com a chave pendente) |
 | [0026](0026-f1-e-f2-publicadas-antes-do-teste.md) | F1 e F2 publicadas antes do teste da responsável; ordem F3, F4 e F5b e as tags v0.6.0, v0.7.0 e v0.8.0 | aceita |
-| [0027](0027-modo-demonstracao.md) | Modo demonstração: botão "Ver demonstração" com as respostas gravadas do PMO para a RFP pública da OEI, sem chamada à API; aviso na tela e nos exportados | aceita |
+| [0027](0027-modo-demonstracao.md) | Modo demonstração: botão "Ver demonstração" com as respostas gravadas do PMO para a RFP pública da OEI, sem chamada à API; aviso na tela e nos exportados | substituída pela 0053 |
 | [0028](0028-termo-de-abertura-f3.md) | Termo de abertura com o PMO (F3), construído sem a chave: proposta do dossiê como documento, divergências RFP × proposta, o que vem dos documentos, 12 elementos e registro de premissas, conferência do TAP | aceita (teste com a chave pendente) |
 | [0029](0029-plano-de-gerenciamento-f4.md) | Plano de gerenciamento com o PMO (F4), construído sem a chave: seis passos na ordem da 0007, adaptação decidida pelo GP, contas do código, autoconferência pelas regras da etapa 5, pacote .zip | aceita (teste com a chave pendente) |
 | [0030](0030-leitura-do-pmo-na-conferencia-f5b.md) | Leitura opcional do PMO na conferência (F5b), construída sem a chave: travas em código (citação, ausente procurado no plano, gravidade pela parte) e decisão do GP | aceita (teste com a chave pendente) |
@@ -48,6 +48,7 @@ Uma decisão por arquivo, numerada em ordem. Cada uma registra o contexto, o que
 | [0049](0049-leituras-gravadas-externas.md) | Leituras gravadas externas: evidência, nunca gabarito; fora do Git; o caso sem o nome da cidade | aceita |
 | [0051](0051-feriados-pacote-e-analise-do-contratante.md) | Feriados nacionais e municipais no cronograma, pacote da EAP obrigatório em cada atividade e a atividade de análise do contratante | aceita |
 | [0052](0052-achado-do-codigo-e-candidato-ate-o-veredito-do-pmo.md) | Achado do código é candidato até o veredito do PMO; dispensa declarada só no plano é candidata; busca do ausente do PMO na parte apontada | aceita |
+| [0053](0053-sem-modo-demonstracao.md) | A apresentação do app é feita com a skill PMO na conversa; o site não tem modo de demonstração | aceita |
 
 Modelo para uma nova decisão:
 

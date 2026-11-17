@@ -25,7 +25,13 @@ Os gabaritos e as leituras gravadas foram feitos pelo Claude Code seguindo a ski
 
 **Correções da etapa 5 (decisão 0052), PR #57 em cima do #55:** partes dispensadas no mapa da etapa 5, busca do ausente do PMO na parte apontada e achado do código como candidato até o veredito do PMO. Com ele, o teste externo do TR municipal de contratação direta fica **encerrado** (etapas 1 a 5); o resumo e as pendências ficam fora do Git, em `referencias/estudos-externos/`. Os 77 vereditos da demonstração da etapa 5 foram escritos pelo Claude Code, a revisar pelo PMO.
 
-**Ordem de revisão dos PRs (de baixo para cima na pilha):** #44 → #45 → #46 → #53 (M2) → #54 (M3) → #55 (squash) → #57; o #52 (skill 0.3.0) sai do #46 e é revisado à parte, recebendo a regra do veredito antes de publicar.
+**Na main (17/11/2026), por squash:** #44 (M0), #45 (M1), #46 (métodos revisados), #53 (M2), #54 (M3), #55 (correções da etapa 1 e autoconferência, com os trechos do caso trocados por equivalentes neutros) e #57 (correções da etapa 5, decisão 0052).
+
+**Sem modo de demonstração (decisão 0053), PR próprio sobre a main:** a apresentação do app é feita com a skill PMO na conversa; as respostas gravadas da OEI ficam só como material dos testes (fumaça com o PMO simulado pela rota do Playwright).
+
+**Skill PMO 0.3.1 (#52):** aberto, sem merge, aguardando a revisão da responsável (a SKILL.md cresceu e vai ser revista inteira). O conflito com a main fica sem resolver até ela voltar.
+
+**Teste externo novo:** TR de um diagnóstico fiscal estadual, com a skill 0.3.1, fora do Git em `referencias/estudos-externos/` (decisão 0049); um pedido de cada vez, na ordem do app.
 
 **Fase M2 (etapa 2 pelo método), PR aberto em cima do #46, aguarda o teste e o ok da responsável** (decisão 0038): a minuta redigida por inteiro na ordem do modelo do edital, preço pelo tipo de contrato, pontos por preço, caixa, quadro de equipe × produtividade e duração × vigência por código. Placar em `docs/estudos/placar-m2-etapa-2.md`: o esqueleto do código cobre todos os itens do gabarito que são do código (28 de 28 na SMPED, 31 de 31 na OEI); com a leitura gravada, 40 de 40 e a minuta redigida por inteiro (17 e 14 seções). **Skill 0.3.0 no PR #51 (rascunho), sem publicar antes do ok.**
 
@@ -58,11 +64,8 @@ O que cada fase M ainda precisa cobrir está nas issues de cada uma (rótulos `e
 
 ## Próximo passo
 
-1. **Responsável pelo projeto** (combinado em 16/11/2026):
-   - testar a demonstração e dar os oks em ordem: #44, #45, #46 e #53; o #52 (skill 0.3.0) depois de ler o diff da skill;
-   - com a chave, no dia seguinte, nesta ordem: etapas 1 e 2 na prévia; o roteiro da etapa 5 com o plano real; a comparação de modelos;
-   - conferir os 10 itens do gabarito separados em cada placar antes do merge da fase.
-2. **Claude Code:** fase M3 (etapa 3 pelo método, contrato como entrada), em cima da M2.
+1. **Claude Code:** merge do PR da decisão 0053 (autorizado, com CI verde e varredura limpa) e o teste externo do TR fiscal, etapa por etapa, sem mudar a skill durante o teste.
+2. **Responsável pelo projeto:** responder os pedidos do teste externo; revisar a skill 0.3.1 inteira (#52) antes do merge.
 3. **Histórico do Git:** a responsável decidiu não reescrever a `main` (16/11/2026). Os arquivos atuais e o site estão sem os detalhes do caso real.
 
 **Com a chave da API** (pedir ao administrador do Claude da FGV, no Claude Console). A chave fica num arquivo fora do projeto; passo a passo no PowerShell em [`tecnico/07-configuracao.md`](tecnico/07-configuracao.md#chave-da-api-nos-scripts-locais-powershell). Nunca defina `ANTHROPIC_API_KEY` no terminal: com ela, o Claude Code passa a cobrar o uso dele nessa chave.

@@ -83,7 +83,6 @@ function CampoValor({
 export function PlanoDeGerenciamento() {
   const { dossie, guardarPgp } = useDossie();
   const p = dossie.pgp ?? pgpInicial(dossie.tap?.modelo ?? dossie.proposta?.modelo);
-  const demonstracao = Boolean(dossie.demonstracao);
   const chave = useChave();
   const entrada = useMemo(() => montarEntradaPgp(dossie), [dossie]);
   const sistema = useMemo(() => textoDeSistema(referenciasEtapa4()), []);
@@ -109,7 +108,6 @@ export function PlanoDeGerenciamento() {
       etapa: 4,
       passo,
       schema: SCHEMAS_PGP[passo],
-      demonstracao,
       chave,
       modelo: p.modelo,
       sistema,
@@ -137,41 +135,32 @@ export function PlanoDeGerenciamento() {
     <>
       <section className="bloco">
         <RotuloSecao>Conexão com o PMO</RotuloSecao>
-        {demonstracao ? (
-          <div className="cartao cartao__corpo">
-            <p className="texto-apoio">
-              Demonstração: a chave não é usada e nada é enviado à API. Cada passo do PMO carrega a resposta
-              gravada para esta RFP; a adaptação, as contas, a autoconferência e as decisões do GP são as de
-              verdade.
-            </p>
+
+        <>
+          <ConectarClaude modelo={p.modelo as IdModelo} />
+          <div className="cartao cartao__corpo acoes-exportar" style={{ marginTop: 8 }}>
+            <label>
+              <span className="lb">Modelo</span>{" "}
+              <select
+                aria-label="Modelo"
+                value={p.modelo}
+                onChange={(e) => atualizar({ ...p, modelo: e.target.value })}
+                disabled={Boolean(rodando)}
+              >
+                {Object.entries(MODELOS).map(([id, m]) => (
+                  <option key={id} value={id}>
+                    {m.nome}
+                    {id === "claude-opus-5-5" ? " (padrão provisório)" : ""}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <span className="envio__obs">
+              Gasto deste plano até agora: {formatarDolar(totalUso)} em {p.uso.length}{" "}
+              {p.uso.length === 1 ? "chamada" : "chamadas"}.
+            </span>
           </div>
-        ) : (
-          <>
-            <ConectarClaude modelo={p.modelo as IdModelo} />
-            <div className="cartao cartao__corpo acoes-exportar" style={{ marginTop: 8 }}>
-              <label>
-                <span className="lb">Modelo</span>{" "}
-                <select
-                  aria-label="Modelo"
-                  value={p.modelo}
-                  onChange={(e) => atualizar({ ...p, modelo: e.target.value })}
-                  disabled={Boolean(rodando)}
-                >
-                  {Object.entries(MODELOS).map(([id, m]) => (
-                    <option key={id} value={id}>
-                      {m.nome}
-                      {id === "claude-opus-5-5" ? " (padrão provisório)" : ""}
-                    </option>
-                  ))}
-                </select>
-              </label>
-              <span className="envio__obs">
-                Gasto deste plano até agora: {formatarDolar(totalUso)} em {p.uso.length}{" "}
-                {p.uso.length === 1 ? "chamada" : "chamadas"}.
-              </span>
-            </div>
-          </>
-        )}
+        </>
       </section>
 
       <section className="bloco">
@@ -233,7 +222,6 @@ export function PlanoDeGerenciamento() {
                 : `Antes, peça o passo anterior (${PASSOS_PGP.find((x) => x.passo === anterior)?.nome ?? ""}).`
             }
             feito={p[passo] ? { modelo: p[passo]!.modelo, em: p[passo]!.em } : undefined}
-            demonstracao={demonstracao}
             chave={chave}
             estimativa={
               pedido ? estimarCusto(p.modelo, passo, tokensFixos, estimarTokens(pedido)) : undefined

@@ -1023,28 +1023,6 @@ tr[data-critica="sim"] td:first-child {
   color: var(--navy950);
 }
 
-/* Modo demonstração (decisão 0027): aviso fixo no alto enquanto o dossiê for de demonstração */
-.faixa-demonstracao {
-  position: sticky;
-  top: 0;
-  z-index: 20;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px 16px;
-  align-items: center;
-  justify-content: space-between;
-  padding: 8px 16px;
-  background: var(--laranja-claro);
-  color: var(--laranja-txt);
-  border-bottom: 2px solid var(--laranja);
-  font-size: 0.9rem;
-}
-
-.demonstracao {
-  margin-top: 12px;
-  border-left: var(--borda-destaque) solid var(--laranja);
-}
-
 /* Tabela com texto longo nas primeiras colunas (divergências, dados dos documentos): só a 1ª coluna fica numa linha */
 .tabela--texto td:nth-child(n + 2),
 .tabela--texto th:nth-child(n + 2) {

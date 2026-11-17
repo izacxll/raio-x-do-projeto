@@ -20,7 +20,7 @@ As etapas estão definidas em `src/etapas/etapas.ts` (documentos pedidos, obriga
 
 - **Sugerir, nunca afirmar.** Todo item tem um de três rótulos: do documento, sugestão ou decisão do GP (`Rotulo` em `src/dossie/esquema.ts`). Cada um tem estado de revisão: pendente, aceito, editado ou descartado. Os documentos exportados levam o cabeçalho de minuta enquanto houver item pendente (`precisaDeMinuta` em `src/exportacao/modelo.ts`).
 - **"Não achado não é ausente".** O que o código não acha sai como "não localizado pelo código — conferir no documento". Página ilegível deixa o item "não verificável" (`src/extracao/rfp/item.ts`).
-- **O PMO lê; o código monta e confere** (decisão 0035), e nenhuma etapa analisa sem a conexão com o Claude (decisão 0037; sem a chave, só a demonstração). Contas, datas, extração, o esqueleto do pedido e a conferência de tudo o que o PMO devolve (citação na página, número no trecho, nenhum R ou valor criado por ele) são de código. A leitura, em todas as etapas, é do PMO, a API do Claude chamada com a chave do GP. A instrução do PMO é a skill em `.claude/skills/pmo/`, fonte única usada pelo Claude Code e importada no build.
+- **O PMO lê; o código monta e confere** (decisão 0035), e nenhuma etapa analisa sem a conexão com o Claude (decisão 0037; sem a chave, nada é analisado, e o site não tem modo de demonstração, decisão 0053). Contas, datas, extração, o esqueleto do pedido e a conferência de tudo o que o PMO devolve (citação na página, número no trecho, nenhum R ou valor criado por ele) são de código. A leitura, em todas as etapas, é do PMO, a API do Claude chamada com a chave do GP. A instrução do PMO é a skill em `.claude/skills/pmo/`, fonte única usada pelo Claude Code e importada no build.
 - **Nada em servidor.** O app é estático; os PDFs são lidos no navegador. Só a leitura do PMO envia texto, quando o GP a pede, direto do navegador para `api.anthropic.com`.
 
 ## Stack
@@ -57,7 +57,6 @@ Linhas de TypeScript por pasta de `src/`, contadas em 16/11/2026:
 | `texto/` | 341 |
 | `dominio/` | 296 |
 | `config/` | 116 |
-| `demonstracao/` | 110 |
 
 Há 36 arquivos de teste em `tests/`. A skill tem 62 arquivos de ficha em `referencias/artefatos/`.
 

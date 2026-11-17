@@ -4,6 +4,11 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 
 ## [Não publicado]
 
+### Sem modo de demonstração (decisão 0053)
+- **A apresentação do app é feita com a skill PMO na conversa; o site não tem modo de demonstração.** Saem o botão "Ver demonstração", a faixa do topo, os textos sobre a demonstração na tela e nos relatórios, o aviso no cabeçalho dos exportados, o campo `demonstracao` do dossiê (um dossiê antigo abre sem ele) e a cópia do PDF da OEI para o build.
+- **As respostas gravadas da OEI ficam só como material dos testes**, fora do build: os de unidade as leem do disco (`tests/ajudantes/gravadas.ts`); os de fumaça as servem pela rota do Playwright, com uma chave falsa (`tests/fumaca/pmo-simulado.ts`). A fumaça da etapa 4 passa pelas etapas 2 e 3 no mesmo dossiê; a da etapa 5 confirma os achados do código pelo veredito simulado. Os 77 vereditos da leitura gravada da etapa 5 continuam marcados como escritos pelo Claude Code, a revisar pelo PMO.
+- Decisão 0027 substituída pela 0053.
+
 ### Correções do esqueleto da etapa 1 e autoconferência (decisões 0048 e 0049)
 - **Testes externos da skill** (SMPED e um TR municipal de contratação direta), guardados fora do Git como leituras gravadas externas (decisão 0049).
 - **SMPED:** habilitação com os itens 7 e 8 e sem as alíneas de exemplo; "Diário Oficial" não é obrigação diária; eliminação com as alíneas; requisitos não cortados em "Decreto Municipal nº"; público-alvo e "poderá ser executado" fora dos R.

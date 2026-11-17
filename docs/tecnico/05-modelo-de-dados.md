@@ -34,7 +34,6 @@ erDiagram
     string versaoApp
     string versaoSkill
     string projeto_nome
-    bool demonstracao
   }
   DOCUMENTO_LIDO {
     string id
@@ -73,7 +72,7 @@ erDiagram
 
 | Entidade | O que guarda | Esquema |
 |---|---|---|
-| `Dossie` | Formato e versão (para migrar), versões do app e da skill, nome do projeto, marca de demonstração | `Dossie` |
+| `Dossie` | Formato e versão (para migrar), versões do app e da skill, nome do projeto | `Dossie` |
 | `DocumentoLido` | Cada PDF lido, com o papel e as páginas | `DocumentoLido` |
 | `PaginaLida` | Texto da página e de onde veio: texto do PDF, OCR (com a confiança) ou não verificável (com o motivo) | `PaginaLida` |
 | `ItemRotulado` | Item genérico com rótulo, estado e origem (documento, página e trecho) | `ItemRotulado` |
