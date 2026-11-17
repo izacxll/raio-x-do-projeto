@@ -138,7 +138,7 @@ function periodosFixos(docs: DocumentoRfp[]): Periodo[] {
   return out;
 }
 
-function inicioFixo(docs: DocumentoRfp[]): { data: Date; origem: OrigemItem } | undefined {
+export function inicioFixo(docs: DocumentoRfp[]): { data: Date; origem: OrigemItem } | undefined {
   for (const l of localizarTodos(docs, RE_INICIO_FIXO)) {
     const pagina = l.doc.paginas.find((p) => p.numero === l.pagina)?.texto ?? "";
     const d = encontrarDatas(pagina.slice(l.posicao, l.posicao + 80))[0];

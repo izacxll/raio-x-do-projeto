@@ -38,7 +38,9 @@ import { compararRfpEProposta } from "../../src/etapas/3-tap/divergencias";
 import { dadosDosDocumentos } from "../../src/etapas/3-tap/do-documento";
 import { montarEntradaTap } from "../../src/etapas/3-tap/entrada";
 import { pedidoPremissas, pedidoTap } from "../../src/etapas/3-tap/pedidos";
-import { tapInicial } from "../../src/etapas/3-tap/tap";
+import { itensDaEtapa3, tapInicial } from "../../src/etapas/3-tap/tap";
+import { conferirTap } from "../../src/etapas/3-tap/conferencia-tap";
+import { inicioFixo } from "../../src/regras/cruzamentos-rfp";
 import { montarEntradaPgp } from "../../src/etapas/4-pgp/entrada";
 import { PASSOS_PGP } from "../../src/etapas/4-pgp/passos";
 import { PEDIDOS_PGP } from "../../src/etapas/4-pgp/pedidos";
@@ -595,14 +597,53 @@ describe.skipIf(MODO !== "importar")("importar a resposta do PMO (leitura indepe
         linhas.push("", "## O que o código conferiu (esqueleto)", ...conferido.map((l) => l.slice(0, 400)));
         if (passo === "eap") {
           const eap = dossie.proposta.eap?.resposta;
-          const cron = eap ? calcularCronograma(eap.atividades, {}) : undefined;
+          // início: o do GP, se ele informou; senão, a data fixa de início do documento (o GP confirma)
+          const doGp = dossie.proposta.parametros.inicio;
+          const fixo = inicioFixo(analisarRfp(docsRfp, HOJE).documentos);
+          const inicio = doGp ? new Date(`${doGp}T00:00:00`) : fixo?.data;
+          const cron = eap
+            ? calcularCronograma(eap.atividades, {
+                inicio,
+                aprovacaoDias: dossie.proposta.parametros.aprovacaoDias,
+              })
+            : undefined;
           if (cron)
             linhas.push(
               "",
               `## Cronograma (conta do código, sem a aprovação do cliente se o GP não a informou): ${cron.total} dias úteis; caminho crítico: ${cron.caminhoCritico.join(" → ") || "—"}`,
+              `- início usado: ${inicio ? `${inicio.toLocaleDateString("pt-BR")} (${doGp ? "decisão do GP" : `data fixa do documento, p. ${fixo?.origem.pagina}; o GP confirma`})` : "nenhum (sem datas)"}${cron.dataFim ? `; fim: ${cron.dataFim.toLocaleDateString("pt-BR")}` : ""}`,
+              ...cron.atividades
+                .filter((a) => eap?.atividades.find((x) => x.id === a.id)?.restricaoData)
+                .map(
+                  (a) =>
+                    `- ${a.id} (data fixa): ${a.dataInicio?.toLocaleDateString("pt-BR") ?? "—"} a ${a.dataFim?.toLocaleDateString("pt-BR") ?? "—"}, ${a.duracao} dias úteis, folga ${a.folga}`,
+                ),
               ...cron.problemas.map((x) => `- ${x}`),
             );
         }
+      }
+      if (etapa === 3 && passo === "tap" && dossie.tap) {
+        // a conferência do TAP pelo código (método da etapa 3): elementos, marcos × vigência, valor, divergências
+        const entrada = montarEntradaTap(dossie, HOJE);
+        const conf = conferirTap(
+          entrada,
+          dossie.tap,
+          itensDaEtapa3(dossie.tap, entrada.documentos),
+          dossie.tap.premissasAplicaveis ?? dossie.proposta?.premissasAplicaveis ?? {},
+        );
+        const divergencias = compararRfpEProposta(entrada);
+        const tap = v.data as z.infer<typeof SCHEMAS_TAP.tap>;
+        linhas.push(
+          "",
+          `## Divergências: ${divergencias.length} do código; ${tap.divergenciasTexto.length} de texto do PMO`,
+          ...divergencias.map(
+            (d) =>
+              `- ${d.id} · ${d.situacao}: RFP ${d.rfp.texto.slice(0, 90)} × proposta ${d.proposta.texto.slice(0, 90)}`,
+          ),
+          "",
+          "## Conferência do TAP pelo código",
+          ...conf.map((x) => `- ${x.situacao} · ${x.nome}: ${x.texto.slice(0, 260)}`),
+        );
       }
       if (etapa === 2 && passo === "estrategia") {
         const e = v.data as z.infer<typeof SCHEMAS.estrategia>;
