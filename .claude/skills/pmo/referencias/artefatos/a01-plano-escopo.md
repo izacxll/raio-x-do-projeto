@@ -6,7 +6,7 @@ etapas: [4, 5]
 gravidade: grave
 categoria: escopo
 sinonimos: ["plano do escopo", "plano de gestão do escopo", "gerenciamento do escopo", "gestão do escopo", "controle do escopo", "gerenciamento do escopo e dos requisitos"]
-versao: 0.3.0
+versao: 0.3.1
 ---
 
 # A1 — Plano de gerenciamento do escopo

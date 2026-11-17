@@ -6,7 +6,7 @@ etapas: [4, 5]
 gravidade: baixa
 categoria: abordagem de desenvolvimento e ciclo de vida
 sinonimos: ["abordagem de desenvolvimento", "abordagem de gerenciamento", "abordagem de gestão", "modelo de gestão do projeto", "abordagem preditiva", "abordagem híbrida", "abordagem ágil"]
-versao: 0.3.0
+versao: 0.3.1
 ---
 
 # A18 — Abordagem de desenvolvimento
@@ -22,7 +22,7 @@ Diz como o produto, serviço ou resultado será desenvolvido: preditiva, iterati
   - dispensa: nunca
 - **A18.2** Abordagem por entrega ou frente, quando as entregas são de naturezas diferentes
   - fonte: PMBOK 7, Tab. 2-4, p. 46 (PDF 141) e Tab. 2-5, p. 50 (PDF 145); PMBOK 6, X3.1, p. 666 (PDF 702)
-  - sinais: tabela com colunas de entrega (ou frente) e abordagem | "para o produto" | "para a frente"
+  - sinais: tabela com colunas de entrega (ou frente) e abordagem | "para o produto" | "para a frente" | "mesma abordagem" | "a abordagem vale para"
   - confere: código
   - dispensa: uma frente
 - **A18.3** Cadência de cada entrega: única, múltipla, periódica ou contínua

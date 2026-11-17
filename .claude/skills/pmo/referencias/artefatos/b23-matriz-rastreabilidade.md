@@ -6,7 +6,7 @@ etapas: [4, 5]
 gravidade: baixa
 categoria: escopo
 sinonimos: ["matriz de rastreabilidade", "rastreabilidade dos requisitos", "matriz de atendimento", "matriz de requisitos", "quadro de atendimento aos requisitos"]
-versao: 0.3.0
+versao: 0.3.1
 ---
 
 # B23 — Matriz de rastreabilidade dos requisitos

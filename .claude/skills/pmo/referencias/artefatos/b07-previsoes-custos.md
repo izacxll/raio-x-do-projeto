@@ -6,7 +6,7 @@ etapas: [4, 5]
 gravidade: baixa
 categoria: custo
 sinonimos: ["previsão de custos", "estimativa no término", "ENT", "EAC", "projeção de custos", "custo projetado", "previsão de gastos"]
-versao: 0.3.0
+versao: 0.3.1
 ---
 
 # B7 — Previsões de custos

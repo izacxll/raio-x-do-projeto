@@ -6,7 +6,7 @@ etapas: [4, 5]
 gravidade: baixa
 categoria: equipe
 sinonimos: ["requisitos de recursos", "necessidades de recursos", "dimensionamento da equipe", "alocação de horas", "matriz de horas", "quadro de horas", "estimativa de recursos", "histograma de recursos"]
-versao: 0.3.0
+versao: 0.3.1
 ---
 
 # B26 — Requisitos de recursos

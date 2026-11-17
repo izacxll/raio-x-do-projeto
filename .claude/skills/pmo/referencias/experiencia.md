@@ -1,6 +1,6 @@
 # Experiência: onde os planos costumam falhar
 
-Versão 0.3.0.
+Versão 0.3.1.
 
 Padrões gerais tirados da pesquisa com a gestão de projetos da FGV Projetos (a mesma da taxonomia V29) e das rodadas do Raio-X do Plano de Trabalho. **Sem nomes de pessoas, sem projeto identificável, sem trechos de entrevista.**
 
@@ -27,6 +27,7 @@ A experiência melhora a sugestão, mas **não vira fato**: o que sai daqui entr
 - Fornecedor, sistema ou plataforma imposta ou única.
 - Condição que o método supõe existir no território: rede de serviços, conectividade, mercado.
 - **Resposta típica:** a dependência escrita como premissa, com prazo e responsável do outro lado, uma alternativa se não vier e um marco no cronograma.
+- **O "até quando" da premissa crítica sai do cronograma:** é a data em que ela precisa estar confirmada para a atividade que depende dela começar. Essa data é o gatilho do risco ligado. Premissa crítica sem "até quando" não dá para verificar, mesmo quando o plano já tem as datas em outra parte.
 
 ## 4. Equipe × volume
 
@@ -43,6 +44,8 @@ A experiência melhora a sugestão, mas **não vira fato**: o que sai daqui entr
 - Estruturas locais que já atuam no mesmo objeto podem ver o projeto como concorrência.
 - Clima (chuva, calor) e segurança da equipe e do público.
 - Vedação de subcontratação no edital combinada com atividade de campo que exigiria equipe local.
+- **Linha de base dos custos só com horas e reserva:** as despesas diretas (campo, viagens, diárias, impressão, material) ficam de fora, e o controle de custos não tem com o que comparar. A linha de base inclui as despesas diretas, com valor a definir pelo GP e memória de cálculo.
+- **Pesquisa com o público:** antes do campo, o plano diz como o respondente é informado (quem faz a pesquisa, para quê, sem identificação) e qual é a regra de guarda dos dados. "Microdados anonimizados" não responde a nenhum dos dois.
 
 ## 6. Beneficiários
 
@@ -65,6 +68,7 @@ A experiência melhora a sugestão, mas **não vira fato**: o que sai daqui entr
 - Frentes paralelas sem momento de integração.
 - Plano de comunicações só com o cliente, sem as reuniões internas da equipe.
 - Plano de riscos que não conversa com o cronograma nem com a reserva.
+- **Registro de questões que se contradiz:** a regra escrita ("toda questão começa aberta") não bate com o status de cada questão no registro. O status inicial escrito tem de bater com o de cada linha, e a questão que sai de "aberta" diz por quê, com a referência.
 
 ## 9. Proporcionalidade
 

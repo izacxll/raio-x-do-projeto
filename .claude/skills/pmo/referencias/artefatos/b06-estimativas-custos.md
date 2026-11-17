@@ -6,7 +6,7 @@ etapas: [4, 5]
 gravidade: média
 categoria: custo
 sinonimos: ["estimativa de custos", "estimativa de custo", "orçamento detalhado", "planilha de custos", "memória de cálculo", "composição de custos", "custos por atividade", "planilha de preços"]
-versao: 0.3.0
+versao: 0.3.1
 ---
 
 # B6 — Estimativas de custos

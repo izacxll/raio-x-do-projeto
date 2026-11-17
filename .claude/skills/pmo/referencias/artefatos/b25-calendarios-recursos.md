@@ -6,7 +6,7 @@ etapas: [4, 5]
 gravidade: baixa
 categoria: equipe
 sinonimos: ["calendário dos recursos", "calendários dos recursos", "disponibilidade da equipe", "disponibilidade dos recursos", "dedicação da equipe", "capacidade da equipe", "mapa de alocação", "histograma de alocação"]
-versao: 0.3.0
+versao: 0.3.1
 ---
 
 # B25 — Calendários dos recursos
@@ -47,7 +47,7 @@ Diz quando cada recurso está disponível e por quanto tempo: "Um calendário qu
   - dispensa: porte pequeno
 - **B25.7** Local e calendário local da equipe de campo (feriados municipais, sazonalidade, fuso)
   - fonte: PMBOK 6, 9.3.1.2, p. 331 (PDF 367) e 9.3.3.3, p. 334 (PDF 370)
-  - sinais: "feriado municipal" | "localização" | "fuso" | "período chuvoso" | "calendário de campo"
+  - sinais: "feriado municipal" | "feriados municipais" | "localização" | "fuso" | "período chuvoso" | "calendário de campo"
   - confere: código
   - dispensa: sem campo
 - **B25.8** Atualização progressiva e coerência com o cronograma (B15) e com as designações (B18)

@@ -6,7 +6,7 @@ etapas: [4, 5]
 gravidade: baixa
 categoria: partes interessadas
 sinonimos: ["comunicações do projeto", "relatório de status", "relatório de andamento", "relatório de acompanhamento", "relatório mensal", "ata de reunião", "modelo de ata", "boletim", "registros do projeto"]
-versao: 0.3.0
+versao: 0.3.1
 ---
 
 # B14 — Comunicações do projeto

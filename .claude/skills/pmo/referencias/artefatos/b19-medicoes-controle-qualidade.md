@@ -6,7 +6,7 @@ etapas: [4, 5]
 gravidade: baixa
 categoria: medição
 sinonimos: ["medições da qualidade", "registro de controle da qualidade", "resultados das revisões", "registro de revisões", "folha de verificação", "controle de qualidade dos produtos"]
-versao: 0.3.0
+versao: 0.3.1
 ---
 
 # B19 — Medições de controle da qualidade

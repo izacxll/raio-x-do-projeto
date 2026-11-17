@@ -6,7 +6,7 @@ etapas: [3, 4, 5]
 gravidade: baixa
 categoria: partes interessadas
 sinonimos: ["registro de partes interessadas", "registro de stakeholders", "mapa de stakeholders", "mapeamento das partes interessadas", "matriz de partes interessadas", "matriz poder x interesse", "lista de partes interessadas"]
-versao: 0.3.0
+versao: 0.3.1
 ---
 
 # B31 — Registro das partes interessadas
@@ -47,7 +47,7 @@ versao: 0.3.0
   - dispensa: porte pequeno
 - **B31.7** Fase do ciclo de vida em que a parte tem mais influência
   - fonte: PMBOK 6, 13.1.3.1, p. 514 (PDF 550)
-  - sinais: "fase de maior influência" | fase ou etapa indicada ao lado de cada parte
+  - sinais: "fase de maior influência" | "influência por fase" | "influência na fase" | fase ou etapa indicada ao lado de cada parte
   - confere: código
   - dispensa: uma fase
 - **B31.8** Data ou gatilho de revisão do registro (a cada fase, entrada ou saída de partes, mudança relevante)

@@ -6,7 +6,7 @@ etapas: [2, 5]
 gravidade: não se aplica
 categoria: não se aplica
 sinonimos: ["plano de trabalho", "plano de trabalho da parceria", "proposta da OSC", "previsão de receitas e despesas", "cronograma de desembolso", "quadro de metas e indicadores"]
-versao: 0.3.0
+versao: 0.3.1
 ---
 
 # PROP-PARCERIA — Plano de trabalho da parceria (Lei 13.019/2014)

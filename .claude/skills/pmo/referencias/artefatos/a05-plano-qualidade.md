@@ -6,7 +6,7 @@ etapas: [4, 5]
 gravidade: grave
 categoria: entrega
 sinonimos: ["plano de qualidade", "plano da qualidade", "plano de gerenciamento de qualidade", "gestão da qualidade", "gerenciamento da qualidade", "garantia da qualidade", "controle de qualidade", "critérios de aceite"]
-versao: 0.3.0
+versao: 0.3.1
 ---
 
 # A5 — Plano de gerenciamento da qualidade

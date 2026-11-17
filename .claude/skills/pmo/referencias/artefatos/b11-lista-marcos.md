@@ -6,7 +6,7 @@ etapas: [3, 4, 5]
 gravidade: média
 categoria: tempo
 sinonimos: ["marcos", "marcos do projeto", "cronograma de marcos", "gráfico de marcos", "marcos contratuais", "cronograma de entregas", "datas-chave"]
-versao: 0.3.0
+versao: 0.3.1
 ---
 
 # B11 — Lista de marcos

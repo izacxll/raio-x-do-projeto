@@ -6,7 +6,7 @@ etapas: [4, 5]
 gravidade: média
 categoria: medição
 sinonimos: ["linha de base integrada", "LMD", "PMB", "baseline integrada", "medição do desempenho", "indicadores de desempenho", "indicadores de acompanhamento", "painel de indicadores", "valor agregado"]
-versao: 0.3.0
+versao: 0.3.1
 ---
 
 # A16 — Linha de base da medição do desempenho

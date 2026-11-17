@@ -6,7 +6,7 @@ etapas: [2, 4, 5]
 gravidade: média
 categoria: tempo
 sinonimos: ["cronograma", "cronograma de execução", "cronograma de atividades", "cronograma físico", "cronograma físico-financeiro", "Gantt", "gráfico de Gantt", "plano de trabalho detalhado"]
-versao: 0.3.0
+versao: 0.3.1
 ---
 
 # B15 — Cronograma do projeto

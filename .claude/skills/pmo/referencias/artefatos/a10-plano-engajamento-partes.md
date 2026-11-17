@@ -6,7 +6,7 @@ etapas: [4, 5]
 gravidade: grave
 categoria: partes interessadas
 sinonimos: ["plano de engajamento", "plano de gerenciamento das partes interessadas", "engajamento das partes interessadas", "estratégia de engajamento", "gestão de stakeholders", "plano de engajamento de stakeholders"]
-versao: 0.3.0
+versao: 0.3.1
 ---
 
 # A10 — Plano de engajamento das partes interessadas
@@ -17,7 +17,7 @@ versao: 0.3.0
 ## Conteúdo mínimo
 - **A10.1** Estratégia ou ação de engajamento para cada parte interessada ou grupo
   - fonte: PMBOK 6, 13.2.3.1, p. 522 (PDF 558); PMBOK 7, 2.1, p. 12 (PDF 107); Rework RW-006 (https://resources.rework.com/libraries/project-management/stakeholder-analysis-matrix)
-  - sinais: "estratégia de engajamento" | "gerenciar de perto" | "manter satisfeito" | "manter informado" | "monitorar" | tabela com parte interessada e ação
+  - sinais: "estratégia de engajamento" | "estratégias" | "gerenciar de perto" | "manter satisfeito" | "manter informado" | "manter envolvido" | "manter envolvida" | "monitorar" | tabela com parte interessada e ação
   - confere: código
   - dispensa: nunca
 - **A10.2** Nível de engajamento atual e desejado de cada parte

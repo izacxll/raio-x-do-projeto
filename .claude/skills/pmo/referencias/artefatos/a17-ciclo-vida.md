@@ -6,7 +6,7 @@ etapas: [4, 5]
 gravidade: baixa
 categoria: abordagem de desenvolvimento e ciclo de vida
 sinonimos: ["ciclo de vida", "ciclo de vida do projeto", "fases do projeto", "etapas do projeto", "fases e marcos", "estrutura de fases"]
-versao: 0.3.0
+versao: 0.3.1
 ---
 
 # A17 — Descrição do ciclo de vida do projeto
@@ -32,7 +32,7 @@ Descreve "a série de fases pelas quais um projeto passa, do início ao término
   - dispensa: uma fase
 - **A17.4** Critérios de entrada de cada fase (aprovações, documentos ou insumos que precisam existir)
   - fonte: PMBOK 6, 1.2.4.2, p. 20 (PDF 56)
-  - sinais: "critério de entrada" | "pré-requisito" | "condição para início" | "após a aprovação do produto"
+  - sinais: "critério de entrada" | "critérios de entrada" | "pré-requisito" | "condição para início" | "após a aprovação do produto"
   - confere: código
   - dispensa: uma fase
 - **A17.5** Critérios de saída de cada fase, ligados a aceite, obrigação contratual ou meta
@@ -42,7 +42,7 @@ Descreve "a série de fases pelas quais um projeto passa, do início ao término
   - dispensa: nunca
 - **A17.6** Revisão ao fim de cada fase: quem decide e quais decisões são possíveis (seguir, seguir com ajustes, repetir, encerrar)
   - fonte: PMBOK 6, 1.2.4.3, p. 21 (PDF 57); glossário, p. 723 (PDF 759)
-  - sinais: "revisão de fase" | "ponto de decisão" | "portão" | "gate" | "aprovação para a fase seguinte" | "go/no-go"
+  - sinais: "revisão de fase" | "revisão ao fim de cada fase" | "ao fim de cada fase" | "ponto de decisão" | "portão" | "gate" | "aprovação para a fase seguinte" | "go/no-go"
   - confere: código
   - dispensa: uma fase
 - **A17.7** Recursos previstos por fase (equipe que entra e sai, equipamentos)

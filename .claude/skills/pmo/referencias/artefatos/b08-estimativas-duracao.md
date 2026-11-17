@@ -6,7 +6,7 @@ etapas: [2, 4, 5]
 gravidade: baixa
 categoria: tempo
 sinonimos: ["estimativas de duração", "estimativas de duração das atividades", "estimativa de duração", "durações", "estimativa de prazos", "estimativa de três pontos", "PERT"]
-versao: 0.3.0
+versao: 0.3.1
 ---
 
 # B8 — Estimativas de duração

@@ -6,7 +6,7 @@ etapas: [4, 5]
 gravidade: grave
 categoria: trabalho do projeto
 sinonimos: ["plano de aquisições", "plano de contratações", "plano de compras", "gestão de aquisições", "subcontratações", "contratação de terceiros", "gestão de fornecedores"]
-versao: 0.3.0
+versao: 0.3.1
 ---
 
 # A9 — Plano de gerenciamento das aquisições
@@ -42,7 +42,7 @@ Descreve "como a equipe do projeto adquirirá produtos e serviços fora da organ
   - dispensa: porte pequeno
 - **A9.6** Cronograma das aquisições, integrado ao do projeto: contratar antes da atividade que depende do fornecedor
   - fonte: PMBOK 6, 12.1.3.1, p. 475 (PDF 511); 12.1, p. 468 (PDF 504)
-  - sinais: "cronograma das aquisições" | "prazo de contratação" | "data de contratação" | marco de contratação no cronograma
+  - sinais: "cronograma das aquisições" | "prazo de contratação" | "data de contratação" | "comprado antes" | "contratado antes" | marco de contratação no cronograma
   - confere: código
   - dispensa: nunca
 - **A9.7** Papéis e autoridade: quem conduz, quem aprova e quem assina (compras, jurídico, GP)

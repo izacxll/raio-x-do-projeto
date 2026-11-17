@@ -6,7 +6,7 @@ etapas: [4, 5]
 gravidade: média
 categoria: tempo
 sinonimos: ["baseline do cronograma", "cronograma aprovado", "cronograma de referência", "cronograma físico", "cronograma físico-financeiro", "linha de base de prazo"]
-versao: 0.3.0
+versao: 0.3.1
 ---
 
 # A14 — Linha de base do cronograma

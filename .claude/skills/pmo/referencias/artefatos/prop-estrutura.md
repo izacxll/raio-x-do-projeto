@@ -6,7 +6,7 @@ etapas: [2]
 gravidade: não se aplica
 categoria: não se aplica
 sinonimos: ["estrutura da proposta", "sumário da proposta", "modelo de proposta", "índice", "roteiro da proposta técnica"]
-versao: 0.3.0
+versao: 0.3.1
 ---
 
 # PROP-ESTRUTURA — Estrutura da proposta técnica

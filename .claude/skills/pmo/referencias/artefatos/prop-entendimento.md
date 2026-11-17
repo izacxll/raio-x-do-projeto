@@ -6,7 +6,7 @@ etapas: [2]
 gravidade: não se aplica
 categoria: não se aplica
 sinonimos: ["entendimento do objeto", "compreensão do problema", "contextualização", "diagnóstico preliminar", "objetivos", "justificativa"]
-versao: 0.3.0
+versao: 0.3.1
 ---
 
 # PROP-ENTENDIMENTO — Entendimento do contexto, do problema e dos objetivos

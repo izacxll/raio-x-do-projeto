@@ -6,7 +6,7 @@ etapas: [2]
 gravidade: não se aplica
 categoria: não se aplica
 sinonimos: ["metodologia", "abordagem metodológica", "plano de trabalho", "estratégia de execução", "método", "procedimentos técnicos"]
-versao: 0.3.0
+versao: 0.3.1
 ---
 
 # PROP-METODOLOGIA — Abordagem e metodologia

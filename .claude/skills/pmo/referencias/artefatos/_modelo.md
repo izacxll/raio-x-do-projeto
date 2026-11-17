@@ -21,7 +21,7 @@ etapas: [4, 5]                  # etapas que usam a ficha
 gravidade: grave                # na conferência (etapa 5): grave | média | baixa | não se aplica
 categoria: partes interessadas  # decisão 0008
 sinonimos: ["plano de comunicação", "matriz de comunicação"]   # títulos que o mapa do PGP reconhece
-versao: 0.3.0
+versao: 0.3.1
 ---
 ```
 

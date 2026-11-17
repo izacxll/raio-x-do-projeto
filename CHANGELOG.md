@@ -4,6 +4,13 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 
 ## [Não publicado]
 
+### Skill PMO 0.3.1 (sobre a 0.3.0, ainda não publicada; mostrada à responsável antes de publicar)
+- **Etapa 5, veredito do PMO** (decisão 0052): achado do código é candidato até o veredito (sustenta, falso com o trecho, não se aplica, regra errada com a causa); a dispensa que só o plano declara é candidata (cabe ou não cabe); a busca do ausente do PMO vale na parte apontada, sem a evidência do achado.
+- **Etapa 4, cronograma:** dado que só existe depois de um evento entra depois do fim do evento, numa atividade própria de recebimento, ligada à premissa crítica de quem fornece.
+- **Sinais das fichas** para o que os planos escrevem com outra redação (A9.6, A10.1, A17.4, A17.6, A18.2, B5.1, B12.4, B25.7, B27.1, B31.7), a partir do teste de um TR municipal de contratação direta; termos genéricos, sem nada do caso.
+- **`experiencia.md`:** o "até quando" da premissa crítica sai do cronograma e é o gatilho do risco; linha de base dos custos com as despesas diretas; pesquisa com o público com informação ao respondente e regra de guarda; status inicial do registro de questões igual ao de cada questão.
+- Versão 0.3.1 em todos os arquivos da skill.
+
 ### Skill PMO 0.3.0 (mostrada à responsável antes de publicar)
 - **Etapa 1 na skill**, pelo método: as 8 seções, o teste de cada item, o que não entra e, em cada ponto de atenção, a premissa crítica (PC1 a PC8) e a pergunta de esclarecimento.
 - **Etapa 5 como leitura principal** (decisões 0035 e 0037): nenhuma etapa analisa sem a conexão; o código monta o esqueleto e confere depois citações, números e números R.

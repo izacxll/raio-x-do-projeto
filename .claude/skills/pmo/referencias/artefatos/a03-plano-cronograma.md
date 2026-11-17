@@ -6,7 +6,7 @@ etapas: [4, 5]
 gravidade: grave
 categoria: tempo
 sinonimos: ["plano de cronograma", "plano de gerenciamento de cronograma", "gestão do cronograma", "gerenciamento do cronograma", "gerenciamento do tempo", "plano de gerenciamento do tempo", "metodologia de cronograma"]
-versao: 0.3.0
+versao: 0.3.1
 ---
 
 # A3 — Plano de gerenciamento do cronograma

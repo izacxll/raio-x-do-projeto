@@ -1,6 +1,6 @@
 # Premissas críticas comuns
 
-Versão 0.3.0 (decisões 0021 e 0034: gatilho e reajuste de cada premissa).
+Versão 0.3.1 (decisões 0021 e 0034: gatilho e reajuste de cada premissa).
 
 **O que é uma premissa crítica:** algo que o plano assume que vai acontecer e que, se não acontecer, obriga a refazer escopo, prazo e metas. Não é uma lista de riscos à parte: **cada premissa crítica que se aplica ao projeto tem de estar escrita no próprio plano.**
 

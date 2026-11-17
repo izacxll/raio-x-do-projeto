@@ -6,7 +6,7 @@ etapas: [4, 5]
 gravidade: baixa
 categoria: tempo
 sinonimos: ["atributos das atividades", "atributos da atividade", "dicionário das atividades", "ficha das atividades", "detalhamento das atividades", "planilha de atividades"]
-versao: 0.3.0
+versao: 0.3.1
 ---
 
 # B1 — Atributos das atividades
