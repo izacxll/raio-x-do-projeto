@@ -100,12 +100,16 @@ function palavras(t: string): Set<string> {
   );
 }
 
-/** Parte das palavras do compromisso que está no texto do item do TAP. */
+/**
+ * Parte das palavras do compromisso que está no texto do item do TAP. Item que junta vários compromissos ("Fora:
+ * auditoria…; pesquisa com empresas; vias extras") cobre cada um em parte: vale a partir de 40%, com 3 palavras.
+ */
 function cobertura(compromisso: string, item: string): number {
   const c = palavras(compromisso);
   if (!c.size) return 0;
   const i = palavras(item);
-  return [...c].filter((w) => i.has(w)).length / c.size;
+  const comuns = [...c].filter((w) => i.has(w)).length;
+  return comuns >= 3 ? comuns / c.size : 0;
 }
 
 interface LugarNoTap {
@@ -149,7 +153,7 @@ export function destinosNoTap(
       : undefined;
     const pelaRedacao = lugares
       .map((l) => ({ l, c: cobertura(compromisso.texto, l.item.texto) }))
-      .filter((x) => x.c >= 0.6)
+      .filter((x) => x.c >= 0.4)
       .sort((a, b) => b.c - a.c)[0]?.l;
     const provavel = pelaPc ?? pelaRedacao;
     if (provavel)
