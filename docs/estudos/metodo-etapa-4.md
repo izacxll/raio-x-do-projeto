@@ -62,6 +62,7 @@ Cada linha da adaptação traz o motivo em uma frase, com a regra da ficha. O qu
 - Rampa de equipe a partir da proposta (ou dos parâmetros do edital), mês a mês ou por trimestre.
 - **Caixa:** repasses ou faturamentos acumulados (percentual, data, condição) × custo acumulado. Se não houver custo mensal, aproximar pela rampa de equipe quando pessoal for a maior parte do custo, e dizer que é aproximação. Mostrar a folga em cada parcela e o ponto de menor folga.
 - O caixa liga com a PC3 (aprovação que segura pagamento) e com a regra de prorrogação do contrato.
+- **Dado que só existe depois de um evento** (por exemplo, os dados administrativos da edição em curso de um evento): entra no cronograma depois do fim do evento, numa atividade própria de recebimento, ligada à premissa crítica de quem fornece o dado (em geral a PC1, dados e acessos do contratante). Não aparece como recebido antes de o evento terminar, nem junto da coleta de dados das edições anteriores.
 
 ### 4.4 Premissas críticas nos três lugares
 - Uma linha por PC aplicável, com quatro colunas: B3 (premissa, com o ID do registro do TAP), B27 (gatilho mensurável → resposta), A11 (como se reajusta: aditivo, prorrogação, revisão de metas) e quem valida.
