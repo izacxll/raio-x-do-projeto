@@ -7,6 +7,7 @@ import { conferirMinuta } from "../etapas/2-proposta/conferencia-final";
 import { calcularCronograma, conferirPrazosDosProdutos } from "../etapas/2-proposta/cronograma";
 import { calcularPreco, conferirValor, lerValorEmReais } from "../etapas/2-proposta/preco";
 import type { PontoDePartida } from "../etapas/2-proposta/ponto-de-partida";
+import { montarMinuta, SECOES_PROPOSTA, type ItemMinuta } from "../etapas/2-proposta/minuta";
 import {
   contarPendentesProposta,
   estadoDe,
@@ -78,19 +79,33 @@ export function montarPropostaTecnica(
       "Os itens marcados [Sugestão] são propostas do PMO em redação condicional; os [Decisão do GP] só o GP preenche.",
     ],
   });
-  const conteudo = p.conteudo?.resposta;
-  conteudo?.estrutura.forEach((s, k) => {
-    const daSecao = itens.filter((i) => i.id.startsWith(`conteudo:estrutura:${k}:`));
-    secoes.push({
-      titulo: `${k + 1}. ${s.titulo}`,
-      paragrafos: [
-        ...(s.criterio ? [`Responde ao quesito: ${s.criterio}.`] : []),
-        ...(daSecao.length
-          ? daSecao.map((i) => paragrafo(i, p))
-          : ["(todos os itens desta seção foram descartados pelo GP)"]),
-      ],
-    });
+  // método da etapa 2 (decisão 0038): a capa resume; a minuta vem inteira, na ordem do modelo do edital
+  const minuta = montarMinuta(ponto, p, docs, dossie.analiseRfp, agora);
+  secoes.push({
+    titulo: "Capa: resumo e decisões",
+    paragrafos: minuta.itens.filter((i) => i.secao === "capa").map(linhaDaMinuta),
   });
+  const conteudo = p.conteudo?.resposta;
+  if (conteudo)
+    minuta.documento.forEach((s, k) => {
+      const daSecao = s.paragrafos
+        .map((x) => itens.find((i) => i.id === x.id))
+        .filter((i): i is ItemProposta => Boolean(i));
+      secoes.push({
+        titulo: `${k + 1}. ${s.doModelo ? `${s.codigo} ` : ""}${s.titulo}`,
+        paragrafos: [
+          ...(s.criterio ? [`Responde ao critério: ${s.criterio}.`] : []),
+          ...(s.situacao === "so-descrita" ? ["[Alerta] Seção só descrita: o texto não está redigido."] : []),
+          ...(daSecao.length
+            ? daSecao.map((i) => paragrafo(i, p))
+            : [
+                s.paragrafos.length
+                  ? "(todos os itens desta seção foram descartados pelo GP)"
+                  : "[Alerta] Seção do modelo do edital não redigida pelo PMO — a redigir.",
+              ]),
+        ],
+      });
+    });
   if (conteudo) {
     secoes.push({
       titulo: "Escopo do trabalho (SOW): produtos e critérios de aceite",
@@ -182,6 +197,7 @@ export function montarPropostaTecnica(
       },
     });
   }
+  secoes.push(...secoesDoMetodo(dossie, ponto, docs, agora));
   return {
     ...base(
       dossie,
@@ -192,6 +208,40 @@ export function montarPropostaTecnica(
     ),
     secoes,
   };
+}
+
+/** Uma linha de item da minuta pelo método, com o rótulo e a nota. */
+function linhaDaMinuta(i: ItemMinuta): string {
+  const rotulo =
+    i.rotulo === "documento"
+      ? `[Do documento${i.origem ? `, p. ${i.origem.pagina}` : ""}]`
+      : i.rotulo === "decisao-gp"
+        ? "[Decisão do GP]"
+        : "[Sugestão]";
+  const avisos = [
+    i.conferencia?.citacaoNaoConferida ? "citação não conferida" : "",
+    i.conferencia?.numerosSemFonte.length
+      ? `valor não conferido: ${i.conferencia.numerosSemFonte.join(", ")}`
+      : "",
+    i.pendente ? "pendente de revisão do GP" : "",
+  ].filter(Boolean);
+  return `${rotulo}${i.alerta ? " [Alerta]" : ""} ${i.nome}: ${i.texto}${i.nota ? ` ${i.nota}` : ""}${avisos.length ? ` (${avisos.join("; ")})` : ""}`;
+}
+
+/** As seções 1 a 8 do método da etapa 2, como anexo da proposta técnica (o que o GP decide e as contas do código). */
+export function secoesDoMetodo(
+  dossie: Dossie,
+  ponto: PontoDePartida,
+  docs: DocumentoLido[],
+  agora = new Date(),
+): Secao[] {
+  const p = dossie.proposta;
+  if (!p) return [];
+  const minuta = montarMinuta(ponto, p, docs, dossie.analiseRfp, agora);
+  return SECOES_PROPOSTA.filter((s) => s.id !== "capa").map((s, n) => ({
+    titulo: `Anexo ${n + 1}. ${s.titulo}`,
+    paragrafos: minuta.itens.filter((i) => i.secao === s.id).map(linhaDaMinuta),
+  }));
 }
 
 export function montarPlanilhaPreco(
@@ -206,6 +256,104 @@ export function montarPlanilhaPreco(
   const reais = (v?: number) =>
     v === undefined ? A_DEFINIR : v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
   const estimado = ponto.valorEstimado ? lerValorEmReais(ponto.valorEstimado.texto) : undefined;
+  // operação contínua e parceria (decisão 0038): folha mês a mês e despesas por natureza, sem valor-hora
+  const minuta = montarMinuta(ponto, p, docs, dossie.analiseRfp, agora);
+  const folha = minuta.contas.folha;
+  if (minuta.tipo.projeto !== "produtos" && folha) {
+    const conf2 = conferirValor(p.parametros.precoFinal ?? folha.total, estimado);
+    const caixa = minuta.contas.caixa;
+    return {
+      ...base(
+        dossie,
+        "Planilha de preço — minuta",
+        "Folha da equipe mês a mês e despesas por natureza, com os valores do GP; sem valor-hora. Custos indiretos só como despesa, com memória de cálculo; taxa de administração: conferir no edital e na norma local.",
+        pendentes > 0 || folha.faltando.length > 0 || p.parametros.precoFinal === undefined,
+        agora,
+      ),
+      secoes: [
+        {
+          titulo: "Folha da equipe",
+          paragrafos: [
+            ponto.planilhaDoEdital
+              ? `O edital tem quadro próprio (${ponto.planilhaDoEdital.origem?.documento}, p. ${ponto.planilhaDoEdital.origem?.pagina}): transpor os valores para ele.`
+              : "O código não localizou planilha ou quadro de despesas no edital — conferir no documento.",
+            "Pessoas por mês: quadro sugerido pelo PMO (a curva de contratação é decisão do GP). Custo mensal de cada função: decisão do GP.",
+          ],
+          tabela: {
+            colunas: ["Função", "Pessoas-mês", "Custo mensal (GP)", "Custo"],
+            larguras: [3, 1, 1.5, 1.5],
+            linhas: [
+              ...folha.funcoes.map((f) => [
+                f.funcao,
+                String(f.pessoasMes),
+                reais(f.custoMensal),
+                reais(f.custo),
+              ]),
+              ["Total da folha", "", "", reais(folha.totalFolha)],
+            ],
+          },
+        },
+        {
+          titulo: "Folha mês a mês",
+          tabela: {
+            colunas: ["Mês", "Pessoas", "Custo"],
+            larguras: [1, 1, 2],
+            linhas: folha.pessoasPorMes.map((n, k) => [
+              String(k + 1),
+              String(n),
+              reais(folha.custoPorMes?.[k]),
+            ]),
+          },
+        },
+        {
+          titulo: "Composição",
+          tabela: {
+            colunas: ["Item", "Valor", "Origem"],
+            larguras: [3, 1.5, 2],
+            linhas: [
+              ["Folha da equipe", reais(folha.totalFolha), "código, com o custo mensal do GP"],
+              ...p.parametros.despesas.map((d) => [`Despesa: ${d.descricao}`, reais(d.valor), "GP"]),
+              ["Total calculado", reais(folha.total), "código"],
+              [
+                "Valor final",
+                p.parametros.precoFinal === undefined
+                  ? `[Decisão do GP] ${A_DEFINIR}`
+                  : `[Decisão do GP] ${reais(p.parametros.precoFinal)}`,
+                "GP",
+              ],
+            ],
+          },
+        },
+        {
+          titulo: "Conferência e caixa",
+          paragrafos: [
+            conf2.texto,
+            ...(folha.faltando.length ? [`Falta preencher: ${folha.faltando.join("; ")}.`] : []),
+            ...(caixa ? [`${caixa.texto} Base do custo: ${minuta.contas.baseDoCaixa}.`] : []),
+          ],
+          tabela: caixa?.parcelas.length
+            ? {
+                colunas: [
+                  "Parcela",
+                  "Mês",
+                  "Recebido até ela",
+                  "Custo até a véspera da seguinte",
+                  "Folga (p.p.)",
+                ],
+                larguras: [3, 1, 1.5, 2, 1],
+                linhas: caixa.parcelas.map((f) => [
+                  f.parcela.rotulo,
+                  String(f.parcela.mes ?? "—"),
+                  `${f.recebidoAte}%`,
+                  `${f.custoAte}% (mês ${f.ateMes})`,
+                  String(f.folga),
+                ]),
+              }
+            : undefined,
+        },
+      ],
+    };
+  }
   const conf = conferirValor(p.parametros.precoFinal ?? preco.precoCalculado, estimado);
   return {
     ...base(

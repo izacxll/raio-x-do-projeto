@@ -1,0 +1,373 @@
+{
+  "atividades": [],
+  "perfis": [
+    {
+      "id": "coord",
+      "nome": "Coordenação técnica (responsável técnico do projeto)",
+      "exigido": true,
+      "qualificacao": "Experiência em projetos para pessoas com deficiência e em formação; currículo no modelo do Anexo II.",
+      "requisito": "",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 11,
+          "trecho": "Nome do responsável técnico do projeto"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 4,
+          "trecho": "6.5.7 Os Currículos dos profissionais integrantes do projeto deverão ser apresentados conforme modelo do Anexo II"
+        }
+      ]
+    },
+    {
+      "id": "formador",
+      "nome": "Formador(a) em acessibilidade e inclusão",
+      "exigido": false,
+      "qualificacao": "Sugere-se experiência em acessibilidade comunicacional e atitudinal e em formação de adultos.",
+      "requisito": "",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 19,
+          "trecho": "4.1 A PARCEIRA fica obrigada a manter em seu quadro profissionais aptos a exercer as funções designadas no projeto"
+        }
+      ]
+    },
+    {
+      "id": "libras",
+      "nome": "Intérprete de Libras",
+      "exigido": false,
+      "qualificacao": "Sugere-se certificação em tradução e interpretação de Libras; uma opção é contratar como serviço (Quadro 14).",
+      "requisito": "",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 1,
+          "trecho": "2.3 Todos os materiais, espaços e metodologias utilizados no projeto devem necessariamente prever recursos de acessibilidade"
+        }
+      ]
+    },
+    {
+      "id": "adm",
+      "nome": "Apoio administrativo-financeiro",
+      "exigido": false,
+      "qualificacao": "Sugere-se experiência em prestação de contas de parcerias pela Lei 13.019.",
+      "requisito": "",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 21,
+          "trecho": "7.6 A PARCEIRA, para fins de prestação de contas parciais e final, deverá apresentar os seguintes documentos"
+        }
+      ]
+    },
+    {
+      "id": "comunicacao",
+      "nome": "Comunicação e conteúdo acessível",
+      "exigido": false,
+      "qualificacao": "Sugere-se experiência em comunicação acessível, legendagem e redes sociais.",
+      "requisito": "",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 11,
+          "trecho": "Descrever como o projeto será divulgado: locais de divulgação e frequência."
+        }
+      ]
+    }
+  ],
+  "horas": [],
+  "raci": [],
+  "quadroEquipe": [
+    {
+      "funcao": "Coordenação técnica (responsável técnico do projeto)",
+      "quantidade": 1,
+      "deMes": 1,
+      "ateMes": 12,
+      "base": "Uma pessoa durante toda a vigência: responde pela execução e pelas metas (sugestão do PMO; o GP confirma)."
+    },
+    {
+      "funcao": "Apoio administrativo-financeiro",
+      "quantidade": 1,
+      "deMes": 1,
+      "ateMes": 12,
+      "base": "Prestação de contas trimestral, semestral e final durante toda a vigência (p. 9; sugestão do PMO)."
+    },
+    {
+      "funcao": "Comunicação e conteúdo acessível",
+      "quantidade": 1,
+      "deMes": 1,
+      "ateMes": 12,
+      "base": "Divulgação contínua e preparação do conteúdo aberto entregue ao final (sugestão do PMO)."
+    },
+    {
+      "funcao": "Formador(a) em acessibilidade e inclusão",
+      "quantidade": 1,
+      "deMes": 3,
+      "ateMes": 10,
+      "base": "Ciclos de turmas dos Meses 03 a 10; o número de formadores depende do número de turmas, a definir pelo GP."
+    },
+    {
+      "funcao": "Intérprete de Libras",
+      "quantidade": 1,
+      "deMes": 3,
+      "ateMes": 10,
+      "base": "Acompanha as turmas e os encontros; pode ser contratado como serviço (decisão do GP)."
+    }
+  ],
+  "volumes": [
+    {
+      "descricao": "Prestações de contas trimestrais",
+      "unidade": "prestação de contas",
+      "quantidade": 4,
+      "deMes": 1,
+      "ateMes": 12,
+      "funcao": "Apoio administrativo-financeiro",
+      "rotulo": "documento",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 9,
+          "trecho": "trimestralmente, semestralmente e, em caráter final, ao término do Termo De Fomento"
+        }
+      ]
+    },
+    {
+      "descricao": "Prestações de contas semestrais",
+      "unidade": "prestação de contas",
+      "quantidade": 2,
+      "deMes": 1,
+      "ateMes": 12,
+      "funcao": "Apoio administrativo-financeiro",
+      "rotulo": "documento",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 9,
+          "trecho": "trimestralmente, semestralmente e, em caráter final, ao término do Termo De Fomento"
+        }
+      ]
+    },
+    {
+      "descricao": "Entrega do conteúdo do projeto à SMPED (formato aberto e vídeos em HD)",
+      "unidade": "entrega",
+      "quantidade": 1,
+      "deMes": 12,
+      "ateMes": 12,
+      "funcao": "Comunicação e conteúdo acessível",
+      "rotulo": "documento",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 19,
+          "trecho": "3.4 Ao final da execução da parceria, a PARCEIRA deverá disponibilizar à SMPED o conteúdo do projeto"
+        }
+      ]
+    }
+  ],
+  "despesas": [
+    {
+      "id": "desp-1",
+      "texto": "Sugere-se compor a folha da equipe mês a mês ao longo da vigência (Quadro 12), com encargos, benefícios e as rescisões proporcionais, sem valor-hora; custos indiretos só como despesa, com memória de cálculo; taxa de administração a conferir no edital e na norma local; salários a definir pelo GP.",
+      "rotulo": "sugestao",
+      "motivo": "Estrutura de preço de parceria com equipe (método da etapa 2, 3.6).",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 18,
+          "trecho": "2.10 Poderá ser paga com recursos da parceria a remuneração da equipe dimensionada no Plano de Trabalho"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 19,
+          "trecho": "3.3.14 Responsabilizar-se por todos os tributos, contribuições e demais encargos de natureza trabalhista, social e previdenciária"
+        }
+      ],
+      "alternativas": [],
+      "requisitos": [],
+      "ficha": "PROP-PRECO.7"
+    },
+    {
+      "id": "desp-2",
+      "texto": "Sugere-se prever, como serviços, interpretação em Libras, audiodescrição, legendagem e edição de vídeos em HD e plataforma de ensino a distância acessível.",
+      "rotulo": "sugestao",
+      "motivo": "Acessibilidade e conteúdo entregue à SMPED.",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 1,
+          "trecho": "2.3 Todos os materiais, espaços e metodologias utilizados no projeto devem necessariamente prever recursos de acessibilidade"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 19,
+          "trecho": "documento digital seja em formato aberto e os vídeos com qualidade HD"
+        }
+      ],
+      "alternativas": [],
+      "requisitos": [
+        "R03",
+        "R13"
+      ],
+      "ficha": "PROP-PRECO.3"
+    },
+    {
+      "id": "desp-3",
+      "texto": "Sugere-se prever, como materiais, materiais didáticos em formatos acessíveis e equipamentos de gravação e transmissão, e, como serviços, locação de espaços acessíveis e contabilidade.",
+      "rotulo": "sugestao",
+      "motivo": "Naturezas de despesa dos Quadros 13 e 14.",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 14,
+          "trecho": "Materiais: itens de bens que serão utilizados no projeto, como mobiliário, materiais de escritório, equipamentos de tecnologia"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 14,
+          "trecho": "Serviços: atividades ligadas a serviços terceirizados que serão utilizadas no projeto, como transporte, contabilidade"
+        }
+      ],
+      "alternativas": [],
+      "requisitos": [],
+      "ficha": "PROP-PRECO.3"
+    },
+    {
+      "id": "desp-4",
+      "texto": "Sugere-se não lançar volumes de turmas e beneficiários no quadro de produtividade enquanto o GP não definir as metas: o edital não dá esses números, e o código só confere o que tiver base.",
+      "rotulo": "sugestao",
+      "motivo": "Nenhum número inventado.",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 11,
+          "trecho": "Apresentar grade horária, número de turmas, quantitativo de beneficiários por turma"
+        }
+      ],
+      "alternativas": [],
+      "requisitos": [],
+      "ficha": "PROP-EQUIPE.4"
+    }
+  ],
+  "reservas": [
+    {
+      "id": "rsv-1",
+      "texto": "Recomenda-se avaliar como cobrir o risco de glosa de metas, que o repasse não cobre como rubrica; uma opção é reserva com recursos próprios, a definir pelo GP.",
+      "rotulo": "sugestao",
+      "motivo": "Glosa (AT-03).",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 9,
+          "trecho": "9.4.2 Serão glosados os valores relacionados a metas e resultados descumpridos sem justificativa suficiente."
+        }
+      ],
+      "alternativas": [],
+      "requisitos": [],
+      "ficha": "PROP-PRECO.6"
+    },
+    {
+      "id": "rsv-2",
+      "texto": "Recomenda-se avaliar o custo de iniciar as atividades antes de o repasse cair na conta, que só é compensado quando o recurso chega.",
+      "rotulo": "sugestao",
+      "motivo": "Repasse sem prazo (AT-02).",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 8,
+          "trecho": "8.12 O atraso na disponibilidade dos recursos da parceria autoriza a compensação das despesas despendidas"
+        }
+      ],
+      "alternativas": [],
+      "requisitos": [],
+      "ficha": "PROP-PRECO.8"
+    },
+    {
+      "id": "rsv-3",
+      "texto": "Sugere-se considerar as rescisões e a substituição de profissionais ao longo dos 12 meses na composição da folha.",
+      "rotulo": "sugestao",
+      "motivo": "Rotatividade da equipe (PC7).",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 19,
+          "trecho": "3.3.14 Responsabilizar-se por todos os tributos, contribuições e demais encargos de natureza trabalhista, social e previdenciária"
+        }
+      ],
+      "alternativas": [],
+      "requisitos": [],
+      "ficha": "PROP-PRECO.6"
+    }
+  ],
+  "estrategiasPreco": [
+    {
+      "id": "pre-1",
+      "texto": "Recomenda-se partir do custo — folha mensal e despesas por natureza, com três cotações por item — para chegar ao valor do repasse, e não do teto de R$ 200.000,00 para o custo; o valor final é decisão do GP.",
+      "rotulo": "sugestao",
+      "motivo": "Método da etapa 2, 3.6; critérios C e L.",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 1,
+          "trecho": "1.7 O valor máximo a ser repassado pela Administração Pública Municipal para o desenvolvimento de cada projeto é de R$ 200.000,00"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 4,
+          "trecho": "deverá apresentar o orçamento de preços de no mínimo 03 (três) fornecedores para cada"
+        }
+      ],
+      "alternativas": [],
+      "requisitos": [],
+      "ficha": "PROP-PRECO.1"
+    },
+    {
+      "id": "pre-2",
+      "texto": "Sugere-se mostrar no Quadro 11 o caixa mês a mês: com o repasse em parcela única, a conta não fica negativa; se o repasse for mensal, o código aponta o mês de menor folga.",
+      "rotulo": "sugestao",
+      "motivo": "Parcela única × Quadro 11 (AT-01).",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 5,
+          "trecho": "6.7.8 Para a realização da parceria, o recurso será liberado de forma integral em parcela única"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 17,
+          "trecho": "2.3 O pagamento será realizado nos termos do Quadro 11 – Cronograma de Receitas e Despesas"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 8,
+          "trecho": "8.2 Os valores a serem empenhados guardarão proporcionalidade aos meses do exercício financeiro."
+        }
+      ],
+      "alternativas": [],
+      "requisitos": [],
+      "ficha": "PROP-PRECO.8"
+    },
+    {
+      "id": "pre-3",
+      "texto": "Uma opção é justificar no Quadro 17 o custo por beneficiário, já que o critério L avalia o custo-benefício e a comissão compara o valor com uma estimativa que o edital não mostra.",
+      "rotulo": "sugestao",
+      "motivo": "Critério L e AT-06.",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 5,
+          "trecho": "eficiência e custo-benefício do recurso público"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 5,
+          "trecho": "Com valor incompatível com o objeto da parceria, a ser avaliado pela Comissão de Seleção à luz da estimativa realizada"
+        }
+      ],
+      "alternativas": [],
+      "requisitos": [],
+      "ficha": "PROP-PRECO"
+    }
+  ]
+}

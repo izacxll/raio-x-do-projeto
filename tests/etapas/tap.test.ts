@@ -57,7 +57,7 @@ describe("entrada da etapa 3", () => {
   it("sem PDF da proposta, usa a proposta da etapa 2 como documento, uma página por seção", () => {
     expect(entrada.fonte).toBe("dossie");
     expect(entrada.proposta?.papel).toBe("proposta");
-    expect(entrada.proposta?.paginas[6]?.texto).toContain("Escopo do trabalho (SOW)");
+    expect(entrada.proposta?.paginas[16]?.texto).toContain("Escopo do trabalho (SOW)");
     expect(entrada.dados?.produtos.map((p) => p.id)).toEqual(["P1", "P2", "P3", "P4", "P5"]);
     expect(entrada.documentos).toHaveLength(2);
   });

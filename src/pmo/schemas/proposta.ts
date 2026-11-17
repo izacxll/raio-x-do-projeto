@@ -3,7 +3,7 @@
 // 2. conteúdo técnico da abordagem escolhida: entendimento, objetivos, metodologia, SOW, obrigações do contratante;
 // 3. EAP, estimativas em três pontos, equipe, horas, RACI, despesas e reservas a considerar.
 import { z } from "zod";
-import { EstimativaTresPontos, FontePmo, ItemPmo } from "./comum";
+import { EstimativaTresPontos, FontePmo, ItemPmo, RotuloPmo } from "./comum";
 
 // ---------- passo 1: estratégia ----------
 
@@ -27,6 +27,10 @@ export const Abordagem = z.object({
   contras: z.array(z.string()),
   requisitos: z.array(z.string()),
   riscos: z.array(z.string()),
+  /** O que a abordagem muda no resultado (equipe, desconto, subcontratar, alcance), não só na redação. */
+  mudaOResultado: z.string(),
+  /** O risco principal, inclusive o de eliminação. */
+  riscoPrincipal: z.string(),
   /** Em termos relativos ("maior que B"), nunca em número inventado. */
   impactoPrazo: z.string(),
   impactoCusto: z.string(),
@@ -111,6 +115,12 @@ export const PremissaSow = z.object({
   premissaCritica: z.string(),
   /** O que acontece se a premissa não se confirmar (PROP-SOW.11). */
   consequencia: z.string(),
+  /** De quem depende (o contratante, a rede, o público). */
+  dependeDe: z.string(),
+  /** Até quando; prazo que o documento não dá é "a definir pelo GP". */
+  ateQuando: z.string(),
+  /** Como se reajusta: aditivo, prorrogação, revisão de metas (com a proteção do edital, se houver). */
+  reajuste: z.string(),
 });
 
 export const ObrigacaoContratante = z.object({
@@ -119,12 +129,50 @@ export const ObrigacaoContratante = z.object({
   prazo: z.string(),
 });
 
+/** Fase ou módulo da metodologia (método da etapa 2, seção 2.1): objetivo, atividades, quem faz, entrega e duração. */
+export const FaseMetodologia = z.object({
+  nome: z.string(),
+  objetivo: z.string(),
+  atividades: z.array(z.string()),
+  quemFaz: z.string(),
+  entrega: z.string(),
+  /** Duração como texto, com a base ("meses 1 e 2, a mobilização que o edital prevê"). */
+  duracao: z.string(),
+  /** Meses da fase, para o código conferir a soma contra a vigência; 0 quando a fase corre em paralelo. */
+  meses: z.number(),
+});
+export type FaseMetodologia = z.infer<typeof FaseMetodologia>;
+
+/** Meta ou indicador: os do edital (Do documento), nunca metas novas. */
+export const MetaProposta = z.object({
+  item: ItemPmo,
+  indicador: z.string(),
+  formula: z.string(),
+  meioDeAfericao: z.string(),
+});
+export type MetaProposta = z.infer<typeof MetaProposta>;
+
+/** Linha da matriz de riscos da proposta: gatilho e dono (método da etapa 2, seção 2.1). */
+export const RiscoProposta = z.object({
+  item: ItemPmo,
+  gatilho: z.string(),
+  dono: z.string(),
+  resposta: z.string(),
+  premissaCritica: z.string(),
+});
+export type RiscoProposta = z.infer<typeof RiscoProposta>;
+
 export const RespostaConteudo = z.object({
-  /** Seções na ordem da proposta (modelo do edital, se houver). */
+  /** Seções na ordem da proposta (modelo do edital, se houver), cada uma redigida: os itens são o texto que vai ao cliente. */
   estrutura: z.array(SecaoProposta),
   produtos: z.array(ProdutoSow),
+  metodologia: z.array(FaseMetodologia),
+  metas: z.array(MetaProposta),
+  /** Exclusões próprias deste objeto (o que é do contratante, da rede, além do volume ou da vigência). */
   exclusoes: z.array(ItemPmo),
+  limitesVolume: z.array(ItemPmo),
   premissas: z.array(PremissaSow),
+  riscos: z.array(RiscoProposta),
   restricoes: z.array(ItemPmo),
   obrigacoesContratante: z.array(ObrigacaoContratante),
 });
@@ -171,11 +219,37 @@ export const LinhaRaci = z.object({
   papel: z.enum(["R", "A", "C", "I"]),
 });
 
+/** Quadro de equipe por função e faixa de meses (operação contínua): a base da folha e da produtividade. */
+export const LinhaQuadro = z.object({
+  funcao: z.string(),
+  quantidade: z.number(),
+  deMes: z.number(),
+  ateMes: z.number(),
+  base: z.string(),
+});
+export type LinhaQuadro = z.infer<typeof LinhaQuadro>;
+
+/** Volume previsto (visitas, atendimentos, turmas) numa faixa de meses, e a função que o executa. */
+export const VolumePrevisto = z.object({
+  descricao: z.string(),
+  unidade: z.string(),
+  quantidade: z.number(),
+  deMes: z.number(),
+  ateMes: z.number(),
+  funcao: z.string(),
+  rotulo: RotuloPmo,
+  fontes: z.array(FontePmo),
+});
+export type VolumePrevisto = z.infer<typeof VolumePrevisto>;
+
 export const RespostaEap = z.object({
   atividades: z.array(AtividadeEap),
   perfis: z.array(PerfilEquipe),
   horas: z.array(HorasPerfil),
   raci: z.array(LinhaRaci),
+  /** Operação contínua: quadro mês a mês por função (vazio em consultoria por produtos). */
+  quadroEquipe: z.array(LinhaQuadro),
+  volumes: z.array(VolumePrevisto),
   /** Despesas a considerar (viagens, campo, logística): sem valor, que é do GP. */
   despesas: z.array(ItemPmo),
   /** Riscos que pedem reserva, para o GP decidir o valor. */
@@ -183,6 +257,35 @@ export const RespostaEap = z.object({
   estrategiasPreco: z.array(ItemPmo),
 });
 export type RespostaEap = z.infer<typeof RespostaEap>;
+
+// ---------- dossiês e gravações antigas ----------
+
+/** Preenche os campos que a fase M2 acrescentou, para abrir dossiês de antes dela (decisão 0038). */
+export function comCamposNovos(passo: keyof typeof SCHEMAS, dados: unknown): unknown {
+  if (!dados || typeof dados !== "object") return dados;
+  const d = { ...(dados as Record<string, unknown>) };
+  const lista = (k: string) => {
+    if (!Array.isArray(d[k])) d[k] = [];
+  };
+  if (passo === "estrategia" && Array.isArray(d.abordagens))
+    d.abordagens = (d.abordagens as Record<string, unknown>[]).map((a) => ({
+      mudaOResultado: "",
+      riscoPrincipal: "",
+      ...a,
+    }));
+  if (passo === "conteudo") {
+    ["metodologia", "metas", "limitesVolume", "riscos"].forEach(lista);
+    if (Array.isArray(d.premissas))
+      d.premissas = (d.premissas as Record<string, unknown>[]).map((p) => ({
+        dependeDe: "",
+        ateQuando: "",
+        reajuste: "",
+        ...p,
+      }));
+  }
+  if (passo === "eap") ["quadroEquipe", "volumes"].forEach(lista);
+  return d;
+}
 
 export const SCHEMAS = {
   estrategia: RespostaEstrategia,

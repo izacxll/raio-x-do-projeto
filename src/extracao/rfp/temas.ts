@@ -74,7 +74,7 @@ export const TEMAS_RFP: Tema[] = [
     secao: "apresentacao",
     nome: "Limite de páginas",
     res: [
-      /\b(?:maximo|limite|nao podera exceder|nao deverao exceder|ate) (?:de )?\d{1,3} (?:\([a-z ]+\) )?(?:paginas|laudas|folhas)\b/,
+      /\b(?:maximo|limite|nao podera exceder|nao deverao exceder|ate),? (?:de )?\d{1,3} (?:\([a-z ]+\) )?(?:paginas|laudas|folhas)\b/,
     ],
     valor: (l) =>
       /\d{1,3} (?:\([a-z ]+\) )?(?:paginas|laudas|folhas)/.exec(l.termo)?.[0]?.replace(/\([^)]*\) /, ""),

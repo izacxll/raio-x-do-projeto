@@ -74,7 +74,7 @@ describe("saídas da etapa 3", () => {
     expect(xml).toContain("[Decisão do GP] Nome escolhido pelo GP");
     expect(xml).toContain("Patrocinador: [Decisão do GP] a definir pelo GP");
     expect(xml).toContain("[Do documento, p. 24]");
-    expect(xml).toContain("[Do documento, proposta, p. 7]");
+    expect(xml).toContain("[Do documento, proposta, p. 17]");
     expect(xml).toContain(
       "[Do documento — citação não conferida] O contrato termina com a entrega do quinto produto.",
     );

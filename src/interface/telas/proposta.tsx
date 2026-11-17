@@ -9,6 +9,8 @@ import { useDossie } from "../../dossie/store";
 import { conferirMinuta } from "../../etapas/2-proposta/conferencia-final";
 import { calcularCronograma, conferirPrazosDosProdutos } from "../../etapas/2-proposta/cronograma";
 import { pedidoConteudo, pedidoEap, pedidoEstrategia } from "../../etapas/2-proposta/pedidos";
+import { esqueletoEmTexto, montarMinuta } from "../../etapas/2-proposta/minuta";
+import { MinutaPeloMetodo, TipoDoProjeto } from "./minuta-proposta";
 import { calcularPreco, conferirValor, lerValorEmReais } from "../../etapas/2-proposta/preco";
 import { montarPontoDePartida, type PontoDePartida } from "../../etapas/2-proposta/ponto-de-partida";
 import {
@@ -72,6 +74,12 @@ export function PropostaDoFornecedor({ todos }: { todos: DocumentoLido[] }) {
   const sistema = useMemo(() => textoDeSistema(referenciasEtapa2()), []);
   const textoDocs = useMemo(() => textoDosDocumentos(docs), [docs]);
   const itens = useMemo(() => itensDaProposta(p, docs), [p, docs]);
+  // a minuta pelo método (decisão 0038): o esqueleto do código vai em cada pedido ao PMO
+  const minuta = useMemo(
+    () => montarMinuta(ponto, p, docs, dossie.analiseRfp),
+    [ponto, p, docs, dossie.analiseRfp],
+  );
+  const esqueleto = useMemo(() => esqueletoEmTexto(minuta), [minuta]);
   const [rodando, setRodando] = useState<{ passo: PassoProposta; recebidos: number } | null>(null);
   const [erro, setErro] = useState<ErroPmo | null>(null);
   const cancelar = useRef<AbortController | null>(null);
@@ -84,7 +92,7 @@ export function PropostaDoFornecedor({ todos }: { todos: DocumentoLido[] }) {
 
   function pedidoDo(passo: PassoProposta, prop: PropostaDossie): string | null {
     const e = prop.estrategia?.resposta;
-    if (passo === "estrategia") return pedidoEstrategia(ponto);
+    if (passo === "estrategia") return pedidoEstrategia(ponto, esqueleto);
     if (!e || !prop.abordagem) return null;
     if (passo === "conteudo")
       return pedidoConteudo(
@@ -93,9 +101,10 @@ export function PropostaDoFornecedor({ todos }: { todos: DocumentoLido[] }) {
         prop.abordagem.id,
         prop.abordagem.justificativa,
         prop.premissasAplicaveis,
+        esqueleto,
       );
     const c = prop.conteudo?.resposta;
-    return c ? pedidoEap(ponto, e, prop.abordagem.id, c) : null;
+    return c ? pedidoEap(ponto, e, prop.abordagem.id, c, esqueleto, minuta.tipo.projeto) : null;
   }
 
   /** Demonstração (decisão 0027): a resposta gravada do passo, sem chamar a API e sem custo. */
@@ -210,6 +219,8 @@ export function PropostaDoFornecedor({ todos }: { todos: DocumentoLido[] }) {
           </div>
         )}
       </section>
+
+      <TipoDoProjeto minuta={minuta} p={p} atualizar={atualizar} />
 
       <PontoDePartidaNaTela ponto={ponto} />
 
@@ -327,6 +338,8 @@ export function PropostaDoFornecedor({ todos }: { todos: DocumentoLido[] }) {
           </section>
         );
       })}
+
+      {p.estrategia && <MinutaPeloMetodo minuta={minuta} p={p} atualizar={atualizar} />}
 
       {(p.conteudo || p.estrategia) && <ConferenciaNaTela p={p} ponto={ponto} />}
 

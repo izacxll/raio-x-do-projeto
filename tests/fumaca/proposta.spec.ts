@@ -45,9 +45,9 @@ test("etapa 2: chave, três passos do PMO, decisões do GP, contas, conferência
         headers: { ...CORS, "content-type": "application/json" },
         body: corpoJson("OK"),
       });
-    const passo = texto.includes("passo 2: estratégia")
+    const passo = texto.includes("passo: estratégia")
       ? "estrategia"
-      : texto.includes("passo 4: conteúdo")
+      : texto.includes("passo: a minuta redigida")
         ? "conteudo"
         : "eap";
     passos.push(passo);
@@ -81,7 +81,7 @@ test("etapa 2: chave, três passos do PMO, decisões do GP, contas, conferência
 
   // passo 2: conteúdo técnico
   await page.getByTestId("pedir-conteudo").click();
-  await expect(page.getByRole("heading", { name: "Seção 2 — Compreensão do objeto" })).toBeVisible({
+  await expect(page.getByRole("heading", { name: "Seção 3 — Compreensão do objeto" })).toBeVisible({
     timeout: 30_000,
   });
 
