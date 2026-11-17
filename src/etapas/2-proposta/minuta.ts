@@ -373,6 +373,17 @@ export function montarMinuta(
         ]),
       },
     });
+  else if (regra.tipo === "contratacao-direta")
+    // contratação direta (decisão 0042): não há pontos; o que sustenta a escolha é o art. 72
+    add({
+      id: "minuta:estrategia:pontos",
+      secao: "estrategia",
+      rotulo: "documento",
+      nome: "O que sustenta a escolha",
+      texto:
+        "Contratação direta: não há critérios de pontuação. A proposta sustenta a notória especialização no objeto (estudos e equipe que a provam), a justificativa de preço e os documentos do art. 72 da Lei 14.133 (conferir).",
+      origem: regra.origem,
+    });
   else
     add({
       id: "minuta:estrategia:pontos",
