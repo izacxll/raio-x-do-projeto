@@ -157,7 +157,8 @@ export function destinosNoTap(
         .map((l) => ({ l, c: cobertura(compromisso.texto, l.item.texto) }))
         .filter((x) => x.c >= 0.4)
         .sort((a, b) => b.c - a.c)[0]?.l;
-    const esperado = compromisso.tipo === "exclusao" || compromisso.tipo === "limite" ? "limites" : "registro";
+    const esperado =
+      compromisso.tipo === "exclusao" || compromisso.tipo === "limite" ? "limites" : "registro";
     const pelaRedacao = melhor(lugares.filter((l) => l.onde.startsWith(esperado))) ?? melhor(lugares);
     const provavel = pelaPc ?? pelaRedacao;
     if (provavel)
