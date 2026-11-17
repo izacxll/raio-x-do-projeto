@@ -38,7 +38,8 @@ export interface DadosProposta {
   /** Preço final (decisão do GP na etapa 2). */
   valor?: number;
   /** Fases da metodologia com os meses (etapa 2 pelo método), para conferir a duração × vigência. */
-  fases: { nome: string; meses: number }[];
+  /** Meses de cada fase da proposta; null quando a duração ficou a definir pelo GP. */
+  fases: { nome: string; meses: number | null }[];
   /** Operação contínua: quadro de equipe e volumes da etapa 2, para conferir a produtividade. */
   operacao?: Pick<RespostaEap, "volumes" | "quadroEquipe">;
   abordagem?: string;

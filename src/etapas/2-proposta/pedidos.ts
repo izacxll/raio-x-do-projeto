@@ -26,7 +26,7 @@ export function pedidoEstrategia(p: PontoDePartida, esqueleto?: string): string 
 
 Ponto de partida, tirado da RFP pelo código (etapa 1, revisada pelo GP quando houver):
 
-${pontoDePartidaEmTexto(p)}${blocoEsqueleto(esqueleto)}
+${pontoDePartidaEmTexto(p, { pedirDestino: true })}${blocoEsqueleto(esqueleto)}
 
 # O que fazer
 ${TESTE}

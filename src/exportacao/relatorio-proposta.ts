@@ -3,6 +3,7 @@
 // sugestão, decisão do GP); "do documento" sem citação conferida sai como "citação não conferida", nunca como fato.
 // Cabeçalho de minuta enquanto houver item pendente. Sem preço nem nomes quando o GP não preencheu.
 import type { DocumentoLido, Dossie, PropostaDossie } from "../dossie/esquema";
+import { idsDaBrecha } from "../etapas/2-proposta/ponto-de-partida";
 import { conferirMinuta } from "../etapas/2-proposta/conferencia-final";
 import { calcularCronograma, conferirPrazosDosProdutos } from "../etapas/2-proposta/cronograma";
 import { calcularPreco, conferirValor, lerValorEmReais } from "../etapas/2-proposta/preco";
@@ -485,7 +486,7 @@ export function montarPerguntasProposta(
 ): DocumentoExportavel {
   const { p } = preparar(dossie, docs);
   const daEstrategia = (p.estrategia?.resposta.destinos ?? []).filter((d) => d.destino === "pergunta");
-  const daEtapa1 = ponto.brechas.filter((b) => !daEstrategia.some((d) => d.origem === b.id));
+  const daEtapa1 = ponto.brechas.filter((b) => !daEstrategia.some((d) => idsDaBrecha(b).includes(d.origem)));
   const linhas = [
     ...daEstrategia.map(
       (d) => `[Sugestão] ${d.texto}${d.fontes[0] ? ` (Referência: RFP, p. ${d.fontes[0].pagina}.)` : ""}`,

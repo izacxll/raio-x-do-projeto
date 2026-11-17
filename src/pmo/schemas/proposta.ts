@@ -140,8 +140,11 @@ export const FaseMetodologia = z.object({
   entrega: z.string(),
   /** Duração como texto, com a base ("meses 1 e 2, a mobilização que o edital prevê"). */
   duracao: z.string(),
-  /** Meses da fase, para o código conferir a soma contra a vigência; 0 quando a fase corre em paralelo. */
-  meses: z.number(),
+  /**
+   * Meses da fase, para o código conferir a soma contra a vigência; 0 quando a fase corre em paralelo; null quando
+   * a duração não está no documento (a definir pelo GP): aí o código não soma.
+   */
+  meses: z.number().nullable(),
 });
 export type FaseMetodologia = z.infer<typeof FaseMetodologia>;
 

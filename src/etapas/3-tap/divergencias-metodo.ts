@@ -151,7 +151,9 @@ function vigenciaQueVale(e: EntradaTap): { meses?: number; lado: LadoDivergencia
 
 /** Os meses do cronograma da proposta: as fases do dossiê, ou o maior trimestre ou mês que o PDF cita. */
 function mesesDaProposta(e: EntradaTap): { meses: number; texto: string; onde: string } | undefined {
-  const fases = e.dados?.fases?.filter((f) => f.meses > 0) ?? [];
+  // fase com duração a definir: a soma não sai (o código não soma o que o GP ainda não definiu)
+  if (e.dados?.fases?.some((f) => f.meses === null)) return undefined;
+  const fases = e.dados?.fases?.filter((f): f is { nome: string; meses: number } => (f.meses ?? 0) > 0) ?? [];
   if (fases.length) {
     const soma = Math.round(fases.reduce((s, f) => s + f.meses, 0) * 100) / 100;
     return {

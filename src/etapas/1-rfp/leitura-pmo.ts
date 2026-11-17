@@ -98,7 +98,9 @@ function temFonte(n: string, base: string): boolean {
  * anexos", "Lei nº"). O trecho existe na página, mas não sustenta o item.
  */
 export function citacaoEhFraca(trecho: string): boolean {
-  return (normal(trecho).match(/[a-z]{2,}/gi) ?? []).length < 6;
+  // datas e números contam como palavras: o princípio 3 manda trazer o número ou a data da afirmação
+  // ("realizado no período de 08/11/2025 a 07/01/2026" prova as datas)
+  return (normal(trecho).match(/[a-z]{2,}|\d[\d./,]*/gi) ?? []).length < 6;
 }
 
 /** Conta feita pelo PMO: soma, diferença, acumulado, "sobram", "no máximo X% até…". As contas são do código. */

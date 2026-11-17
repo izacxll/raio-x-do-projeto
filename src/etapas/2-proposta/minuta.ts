@@ -646,9 +646,20 @@ export function montarMinuta(
       nome: "Equipe que o edital fixa",
       texto: equipeR.map((r) => `${r.numero} ${r.descricao}`).join("; "),
     });
-  const fases = (c?.metodologia ?? []).filter((f) => f.meses > 0);
+  // fase com duração a definir (null): a soma contra a vigência só sai quando o GP definir todas
+  const aDefinir = (c?.metodologia ?? []).filter((f) => f.meses === null);
+  const fases = (c?.metodologia ?? []).filter((f): f is typeof f & { meses: number } => (f.meses ?? 0) > 0);
   let duracao: ConferenciaDuracao | undefined;
-  if (fases.length) {
+  if (aDefinir.length)
+    add({
+      id: "minuta:metas:duracao",
+      secao: "metas-equipe",
+      rotulo: "decisao-gp",
+      nome: "Cronograma × vigência (conta do código)",
+      texto: `Duração a definir em ${aDefinir.length} fase(s) (${aDefinir.map((f) => f.nome).join("; ")}): o código não soma o cronograma contra a vigência até o GP definir a duração de todas.`,
+      origem: ponto.prazoExecucao?.origem,
+    });
+  else if (fases.length) {
     duracao = conferirDuracao(
       fases.map((f) => ({ rotulo: f.nome, meses: f.meses })),
       vigencia,

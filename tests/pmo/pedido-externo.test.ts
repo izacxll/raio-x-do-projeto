@@ -551,16 +551,18 @@ describe.skipIf(MODO !== "importar")("importar a resposta do PMO (leitura indepe
           `- partes que voltariam ao PMO: ${partesARegenerar(r).join(", ") || "nenhuma"}`,
         );
       } else if (etapa < 5) {
-        // etapas 2 e 3: os itens esperados são os das fichas do passo (estratégia: PROP-ESTRATEGIA; TAP: a ficha do TAP)
-        const prefixo =
-          etapa === 2 && passo === "estrategia"
-            ? "PROP-ESTRATEGIA."
-            : etapa === 3 && passo === "tap"
-              ? "TAP"
-              : undefined;
-        const esperados = prefixo
-          ? FICHAS.flatMap((f) => f.itens.map((i) => i.codigo)).filter((c) =>
-              prefixo === "TAP" ? /^TAP(?:-DV|\d)/.test(c) : c.startsWith(prefixo),
+        // etapas 2 e 3: os itens esperados são os das fichas que o pedido do passo manda
+        const FICHAS_DO_PASSO: Record<string, string[]> = {
+          "2:estrategia": ["PROP-ESTRATEGIA."],
+          "2:conteudo": ["PROP-ESTRUTURA.", "PROP-ENTENDIMENTO.", "PROP-METODOLOGIA.", "PROP-SOW."],
+          "2:eap": ["PROP-EAP.", "PROP-EQUIPE.", "PROP-PRECO."],
+          "3:tap": ["TAP"],
+        };
+        const prefixos = FICHAS_DO_PASSO[`${etapa}:${passo}`];
+        const prefixo = prefixos?.join(", ");
+        const esperados = prefixos
+          ? FICHAS.flatMap((x) => x.itens.map((i) => i.codigo)).filter((c) =>
+              prefixos.some((pr) => (pr === "TAP" ? /^TAP(?:-DV|\d)/.test(c) : c.startsWith(pr))),
             )
           : [];
         const r = conferirAutoconferencia(esperados, marcas);

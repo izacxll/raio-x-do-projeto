@@ -83,3 +83,66 @@ describe("regra do preço na contratação direta", () => {
     expect(textoDaRegraPreco(regra)).toMatch(/justificativa de preço/);
   });
 });
+
+describe("brechas do ponto de partida: junção, proteções, destino e requisitos", () => {
+  const ponto = (id: string, trecho: string, nome = "Ponto") => ({
+    id,
+    secao: "brechas" as const,
+    rotulo: "sugestao" as const,
+    nome,
+    texto: nome,
+    origem: { documento: "RFP", pagina: 1, trecho },
+    situacao: "localizado" as const,
+    perguntaFinal: "",
+  });
+
+  it("ponto da leitura e brecha do código do mesmo trecho viram um item, com os ids juntados", async () => {
+    const { juntarBrechas, idsDaBrecha } = await import("../../src/etapas/2-proposta/ponto-de-partida");
+    const trecho = "O não cumprimento em tempo hábil da Ordem de Serviço acarretará notificação";
+    const codigo = { ...ponto("brechas:vago:rfp:5", trecho), perguntaFinal: "Solicita-se informar o prazo." };
+    const outra = ponto("brechas:outra", "Texto que não tem nada a ver com o anterior, outra cláusula");
+    const r = juntarBrechas(
+      [codigo, outra],
+      [ponto("etapa-1:a10", trecho, "Ordem de serviço em tempo hábil")],
+    );
+    expect(r.map((b) => b.id)).toEqual(["brechas:outra", "etapa-1:a10"]);
+    const a10 = r.find((b) => b.id === "etapa-1:a10");
+    expect(a10 && idsDaBrecha(a10)).toEqual(["etapa-1:a10", "brechas:vago:rfp:5"]);
+    expect(a10?.perguntaFinal).toMatch(/informar o prazo/);
+  });
+
+  it("só o pedido da estratégia pede destino para cada brecha", async () => {
+    const docs = [documentoLido(PAGINAS)];
+    const p = montarPontoDePartida(docs, undefined, HOJE);
+    expect(pontoDePartidaEmTexto(p, { pedirDestino: true })).toMatch(/dê um destino a cada um pelo id/);
+    expect(pontoDePartidaEmTexto(p)).toMatch(/os destinos já foram dados na estratégia/);
+  });
+
+  it("a lista de requisitos traz também as obrigações (a mesma contagem do esqueleto)", () => {
+    const docs = [
+      documentoLido([
+        ...PAGINAS,
+        "5. DAS OBRIGAÇÕES DA CONTRATADA:\n5.1. Comunicar ao Contratante, no prazo máximo de 72 (setenta e duas) horas, os motivos que impossibilitem o cumprimento do prazo previsto, com a devida comprovação;",
+      ]),
+    ];
+    const p = montarPontoDePartida(docs, undefined, HOJE);
+    const texto = pontoDePartidaEmTexto(p);
+    for (const r of [...p.requisitos, ...p.obrigacoes]) expect(texto).toContain(`- ${r.numero} · `);
+  });
+});
+
+describe("duração da fase a definir (null)", () => {
+  it("o schema aceita null e a soma contra a vigência não é feita", async () => {
+    const { FaseMetodologia } = await import("../../src/pmo/schemas/proposta");
+    const fase = FaseMetodologia.parse({
+      nome: "Campo",
+      objetivo: "",
+      atividades: [],
+      quemFaz: "",
+      entrega: "",
+      duracao: "a definir pelo GP",
+      meses: null,
+    });
+    expect(fase.meses).toBeNull();
+  });
+});
