@@ -151,10 +151,14 @@ export function destinosNoTap(
     const pelaPc = compromisso.premissaCritica
       ? lugares.find((l) => l.premissaCritica === compromisso.premissaCritica)
       : undefined;
-    const pelaRedacao = lugares
-      .map((l) => ({ l, c: cobertura(compromisso.texto, l.item.texto) }))
-      .filter((x) => x.c >= 0.4)
-      .sort((a, b) => b.c - a.c)[0]?.l;
+    // primeiro no destino esperado (limites ou registro); só sem achado ali, no resto do TAP
+    const melhor = (ls: LugarNoTap[]) =>
+      ls
+        .map((l) => ({ l, c: cobertura(compromisso.texto, l.item.texto) }))
+        .filter((x) => x.c >= 0.4)
+        .sort((a, b) => b.c - a.c)[0]?.l;
+    const esperado = compromisso.tipo === "exclusao" || compromisso.tipo === "limite" ? "limites" : "registro";
+    const pelaRedacao = melhor(lugares.filter((l) => l.onde.startsWith(esperado))) ?? melhor(lugares);
     const provavel = pelaPc ?? pelaRedacao;
     if (provavel)
       return {
