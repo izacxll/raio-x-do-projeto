@@ -13,6 +13,11 @@ import { pedidoPremissas, pedidoTap } from "../../src/etapas/3-tap/pedidos";
 import { contarPendentesTap, itensDaEtapa3, tapInicial } from "../../src/etapas/3-tap/tap";
 import { avaliarItens, type ItemProposta } from "../../src/etapas/2-proposta/proposta";
 import { RespostaPremissas, RespostaTap } from "../../src/pmo/schemas/tap";
+import {
+  destinosNoTap,
+  ehNumeroDeCompromisso,
+  type Compromisso,
+} from "../../src/etapas/2-proposta/compromissos";
 import { lerRfpPublica } from "../ajudantes/rfp-publica";
 
 const ler = (n: string) =>
@@ -314,5 +319,99 @@ describe("respostas gravadas do PMO na etapa 3 (OEI)", () => {
     expect(p).toContain("PC3");
     expect(p).toContain("cada página é uma seção da minuta");
     expect(pedidoPremissas(entrada, tap, { PC6: true })).toContain("PC6");
+  });
+});
+
+describe("compromissos numerados da proposta e o destino no TAP (decisão 0047)", () => {
+  const tap = RespostaTap.parse(ler("tap"));
+  const premissas = RespostaPremissas.parse(ler("premissas"));
+
+  it("a etapa 2 numera premissas, obrigações, exclusões e limites de volume em C01, C02…", () => {
+    const cs = entrada.dados!.compromissos;
+    const c = dossie.proposta!.conteudo!.resposta;
+    expect(cs).toHaveLength(
+      c.premissas.length + c.obrigacoesContratante.length + c.exclusoes.length + c.limitesVolume.length,
+    );
+    expect(cs[0]?.numero).toBe("C01");
+    expect(cs.map((x) => x.numero)).toEqual(cs.map((_, k) => `C${String(k + 1).padStart(2, "0")}`));
+    expect(ehNumeroDeCompromisso("C07")).toBe(true);
+    expect(ehNumeroDeCompromisso("R07")).toBe(false);
+  });
+
+  it("destino: citado pelo número, provável pela premissa crítica ou pelo texto, ou sem destino", () => {
+    const cs: Compromisso[] = [
+      { numero: "C01", tipo: "exclusao", idItem: "x", texto: "Auditoria contábil dos repasses" },
+      {
+        numero: "C02",
+        tipo: "premissa",
+        idItem: "y",
+        texto: "Dados enviados no prazo",
+        premissaCritica: "PC1",
+      },
+      {
+        numero: "C03",
+        tipo: "limite",
+        idItem: "z",
+        texto: "Até duas rodadas de revisão por produto entregue",
+      },
+      { numero: "C04", tipo: "obrigacao", idItem: "w", texto: "Ceder sala para as oficinas presenciais" },
+    ];
+    const item = (id: string, texto: string, requisitos: string[] = []) => ({
+      ...tap.limites[0]!,
+      id,
+      texto,
+      requisitos,
+    });
+    const t = {
+      ...tap,
+      limites: [
+        item("lm1", "Fora do escopo: auditoria contábil.", ["C01"]),
+        item("lm2", "O estudo prevê até duas rodadas de revisão para cada produto entregue."),
+      ],
+    };
+    const registro = [{ ...premissas.premissas[0]!, premissaCritica: "PC1" }];
+    const d = destinosNoTap(cs, t, registro);
+    expect(d[0]).toMatchObject({ situacao: "citado", onde: "limites, item lm1" });
+    expect(d[1]?.situacao).toBe("provavel");
+    expect(d[1]?.texto).toMatch(/mesma premissa crítica PC1.*conferir/);
+    expect(d[2]).toMatchObject({ situacao: "provavel", onde: "limites, item lm2" });
+    expect(d[3]?.situacao).toBe("sem-destino");
+    expect(d[3]?.texto).toMatch(/registro de premissas \(depende do contratante\)/);
+  });
+
+  it("o pedido do TAP leva as exclusões e os limites; o do registro, as premissas e as obrigações", () => {
+    const pTap = pedidoTap(entrada, dadosDosDocumentos(entrada), [], {}, {});
+    const pPrem = pedidoPremissas(entrada, tap, {});
+    const cs = entrada.dados!.compromissos;
+    const exclusao = cs.find((x) => x.tipo === "exclusao");
+    const premissa = cs.find((x) => x.tipo === "premissa");
+    if (exclusao) {
+      expect(pTap).toContain(`- ${exclusao.numero} (exclusão`);
+      expect(pPrem).not.toContain(`- ${exclusao.numero} (exclusão`);
+    }
+    if (premissa) expect(pPrem).toContain(`- ${premissa.numero} (premissa`);
+    expect(pPrem).toContain("do bloco TAP-PR e da ficha B3");
+    expect(pTap).toContain("O registro de premissas é outro passo: não marque TAP-PR nem B3.");
+  });
+
+  it("a conferência do TAP mostra os compromissos sem destino; C em requisitos não é R fora da lista", () => {
+    const t: TapDossie = {
+      ...tapInicial(),
+      tap: {
+        resposta: {
+          ...tap,
+          requisitosAltoNivel: tap.requisitosAltoNivel.map((r, k) =>
+            k === 0 ? { ...r, requisitos: [...r.requisitos, "C01"] } : r,
+          ),
+        },
+        modelo: "teste",
+        em: "",
+      },
+    };
+    const v = conferirTap(entrada, t, itensDaEtapa3(t, entrada.documentos), {});
+    expect(v.find((x) => x.id === "compromissos")?.nome).toBe(
+      "Compromissos da proposta (C) com destino no TAP",
+    );
+    expect(v.find((x) => x.id === "requisitos")?.texto).not.toMatch(/C01/);
   });
 });

@@ -1,6 +1,7 @@
 // Saídas da etapa 3: o termo de abertura (DOCX e PDF) e o registro de premissas inicial (XLSX). Cada trecho leva o
 // rótulo; "do documento" sem citação conferida sai como "citação não conferida"; campos do GP vazios saem "a definir
 // pelo GP". Cabeçalho de minuta enquanto houver pendência (item, divergência sem decisão, TAP sem aprovação).
+import { DESTINO_NO_TAP, NOME_TIPO_COMPROMISSO, destinosNoTap } from "../etapas/2-proposta/compromissos";
 import type { Dossie, TapDossie } from "../dossie/esquema";
 import { conferirTap, NOME_SITUACAO_VERIFICACAO } from "../etapas/3-tap/conferencia-tap";
 import { compararRfpEProposta, NOME_SITUACAO_DIVERGENCIA, pedeDecisao } from "../etapas/3-tap/divergencias";
@@ -185,6 +186,26 @@ export function montarTap(dossie: Dossie, agora = new Date()): DocumentoExportav
       "Assinaturas: ______________________ (patrocinador)    ______________________ (gerente do projeto)",
     ],
   });
+  // no fim, para não mudar as páginas que o plano (etapa 4) cita
+  const cs = entrada.dados?.compromissos ?? [];
+  if (cs.length)
+    secoes.push({
+      titulo: "Compromissos da proposta e o destino no TAP (código)",
+      paragrafos: [
+        "Cada compromisso numerado da proposta (decisão 0047) e onde ele está no TAP: citado pelo PMO, provável (a conferir) ou sem destino localizado.",
+      ],
+      tabela: {
+        colunas: ["C", "Tipo", "Compromisso", "Destino esperado", "No TAP"],
+        larguras: [1, 2, 5, 2, 4],
+        linhas: destinosNoTap(cs, r, t.premissas?.resposta.premissas).map((d) => [
+          d.compromisso.numero,
+          NOME_TIPO_COMPROMISSO[d.compromisso.tipo],
+          d.compromisso.texto,
+          DESTINO_NO_TAP[d.compromisso.tipo],
+          d.texto,
+        ]),
+      },
+    });
 
   return {
     titulo: "Termo de abertura do projeto",

@@ -2,6 +2,7 @@
 // checklist de envio (XLSX) e perguntas de esclarecimento (DOCX). Cada trecho leva o rótulo (do documento,
 // sugestão, decisão do GP); "do documento" sem citação conferida sai como "citação não conferida", nunca como fato.
 // Cabeçalho de minuta enquanto houver item pendente. Sem preço nem nomes quando o GP não preencheu.
+import { numerarCompromissos } from "../etapas/2-proposta/compromissos";
 import type { DocumentoLido, Dossie, PropostaDossie } from "../dossie/esquema";
 import { idsDaBrecha } from "../etapas/2-proposta/ponto-de-partida";
 import { conferirMinuta } from "../etapas/2-proposta/conferencia-final";
@@ -127,9 +128,19 @@ export function montarPropostaTecnica(
         ]),
       },
     });
+    // compromissos numerados (decisão 0047): premissas, obrigações, exclusões e limites de volume levam o C
+    const numeros = new Map(numerarCompromissos(conteudo).map((x) => [x.idItem, x.numero]));
+    const comNumero = (i: ItemProposta) => {
+      const n = numeros.get(i.id);
+      return n ? `${n} — ${paragrafo(i, p)}` : paragrafo(i, p);
+    };
+    // a ordem das páginas não muda (o TAP cita a proposta do dossiê pela página): os limites de volume entram na
+    // página das exclusões
     for (const grupo of ["Exclusões", "Premissas", "Restrições", "Obrigações do contratante"]) {
-      const doGrupo = itens.filter((i) => i.grupo === grupo);
-      if (doGrupo.length) secoes.push({ titulo: grupo, paragrafos: doGrupo.map((i) => paragrafo(i, p)) });
+      const doGrupo = itens.filter(
+        (i) => i.grupo === grupo || (grupo === "Exclusões" && i.grupo === "Limites de volume"),
+      );
+      if (doGrupo.length) secoes.push({ titulo: grupo, paragrafos: doGrupo.map(comNumero) });
     }
   }
   const eap = p.eap?.resposta;

@@ -6,6 +6,7 @@
 //   descrita ("nesta seção, descrever…") ou vazia é alerta.
 // O código monta e confere (pontos, preço pelo tipo de contrato, caixa, produtividade, duração × vigência, matriz);
 // o PMO redige. Nenhum número é inventado: o que o edital não dá fica "a definir pelo GP".
+import { numerarCompromissos } from "./compromissos";
 import type {
   AnaliseRfpDossie,
   DocumentoLido,
@@ -560,18 +561,42 @@ export function montarMinuta(
       origem: dependencias[0]?.origem,
       nota: "Cada dependência vira obrigação do contratante com prazo. Prazo que o edital não dá é decisão do GP, nunca um número inventado.",
     });
+  // compromissos numerados (decisão 0047): o número C vai no nome, como o R nos requisitos
+  const compromissos = c ? numerarCompromissos(c) : [];
+  const comNumero = (id: string, nome: string) => {
+    const n = compromissos.find((x) => x.idItem === id)?.numero;
+    return n ? `${n} — ${nome}` : nome;
+  };
   c?.exclusoes.forEach((x, k) =>
-    add(itemDoPmo(`conteudo:exclusoes:${k}`, "escopo", "Exclusão", x, docs, rev)),
+    add(
+      itemDoPmo(
+        `conteudo:exclusoes:${k}`,
+        "escopo",
+        comNumero(`conteudo:exclusoes:${k}`, "Exclusão"),
+        x,
+        docs,
+        rev,
+      ),
+    ),
   );
   c?.limitesVolume.forEach((x, k) =>
-    add(itemDoPmo(`conteudo:limitesVolume:${k}`, "escopo", "Limite de volume", x, docs, rev)),
+    add(
+      itemDoPmo(
+        `conteudo:limitesVolume:${k}`,
+        "escopo",
+        comNumero(`conteudo:limitesVolume:${k}`, "Limite de volume"),
+        x,
+        docs,
+        rev,
+      ),
+    ),
   );
   c?.obrigacoesContratante.forEach((o, k) =>
     add(
       itemDoPmo(
         `conteudo:obrigacoesContratante:${k}`,
         "escopo",
-        "Obrigação do contratante",
+        comNumero(`conteudo:obrigacoesContratante:${k}`, "Obrigação do contratante"),
         o.item,
         docs,
         rev,
@@ -614,7 +639,7 @@ export function montarMinuta(
       id: `minuta:premissas:${pc}`,
       secao: "premissas",
       rotulo: escrita || !ponto1 ? "sugestao" : "documento",
-      nome: `${pc} — ${NOME_PREMISSA[pc as CodigoPremissa] ?? ""}`,
+      nome: `${k >= 0 ? `${compromissos.find((x) => x.idItem === `conteudo:premissas:${k}`)?.numero ?? ""} · ` : ""}${pc} — ${NOME_PREMISSA[pc as CodigoPremissa] ?? ""}`,
       texto: escrita
         ? `${escrita.item.texto} De quem depende: ${escrita.dependeDe || A_DEFINIR}. Até quando: ${escrita.ateQuando || A_DEFINIR}. Se falhar: ${escrita.consequencia || "—"}. Reajuste: ${escrita.reajuste || "—"}.`
         : `${ponto1 ? `Ponto de atenção da etapa 1: ${ponto1.nome} (${pag(ponto1.origem)}). ` : ""}${c ? "A minuta do PMO não escreve esta premissa." : "A minuta do PMO escreve a premissa com a consequência e o reajuste."}`,

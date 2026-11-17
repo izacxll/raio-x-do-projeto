@@ -1,6 +1,8 @@
 // Etapa 3, último passo (código): conferência do TAP antes de exportar. Todo elemento preenchido ou "a definir pelo
 // GP"; todo requisito de alto nível ligado a um número R, e todo R da RFP coberto; marcos dentro do prazo da RFP;
 // recursos iguais ao valor da proposta; citações conferidas; premissas críticas no registro, com a consequência.
+import { conferirAutoconferenciaDaEtapa3, itensEsperadosDaEtapa3 } from "./autoconferencia";
+import { destinosNoTap, ehNumeroDeCompromisso } from "../2-proposta/compromissos";
 import type { TapDossie } from "../../dossie/esquema";
 import { estadoDe, type ItemConferido } from "../../pmo/itens";
 import { encontrarDatas, somarDiasCorridos } from "../../texto/datas";
@@ -69,7 +71,7 @@ export function conferirTap(
   const faltando = e.ponto.requisitos.map((r) => r.numero).filter((n) => !citados.has(n));
   // R que saiu da lista na etapa 1 (descartado pelo GP) ou que não existe: não é requisito do TAP
   const daLista = new Set(e.ponto.requisitos.map((r) => r.numero));
-  const foraDaLista = [...citados].filter((n) => !daLista.has(n)).sort();
+  const foraDaLista = [...citados].filter((n) => !daLista.has(n) && !ehNumeroDeCompromisso(n)).sort();
   out.push({
     id: "requisitos",
     nome: "Requisitos de alto nível ligados aos números R",
@@ -263,6 +265,52 @@ export function conferirTap(
         : sem.length
           ? `Premissa(s) crítica(s) confirmada(s) sem linha no registro com a consequência: ${sem.join(", ")}.`
           : `As premissas críticas confirmadas (${pcs.join(", ")}) estão no registro, com a consequência.`,
+    });
+  }
+
+  // compromissos da proposta (decisão 0047): cada C com destino no TAP (limite ou registro de premissas)
+  const cs = e.dados?.compromissos ?? [];
+  if (cs.length) {
+    const destinos = destinosNoTap(cs, resposta, t.premissas?.resposta.premissas);
+    const sem = destinos.filter((d) => d.situacao === "sem-destino");
+    const provaveis = destinos.filter((d) => d.situacao === "provavel");
+    out.push({
+      id: "compromissos",
+      nome: "Compromissos da proposta (C) com destino no TAP",
+      situacao: sem.length || provaveis.length ? "atencao" : "ok",
+      texto: [
+        `${destinos.length - sem.length - provaveis.length} de ${destinos.length} citados pelo PMO no item do TAP.`,
+        provaveis.length
+          ? `Destino provável, a conferir: ${provaveis.map((d) => d.compromisso.numero).join(", ")}.`
+          : "",
+        sem.length
+          ? `Sem destino localizado pelo código: ${sem.map((d) => d.compromisso.numero).join(", ")}.`
+          : "",
+      ]
+        .filter(Boolean)
+        .join(" "),
+    });
+  }
+
+  // autoconferência do PMO, por passo: o TAP cobra os seus itens; o registro de premissas, só TAP-PR e B3
+  for (const [passo, nome, r] of [
+    ["tap", "TAP", t.tap?.resposta.autoconferencia],
+    ["premissas", "registro de premissas", t.premissas?.resposta.autoconferencia],
+  ] as const) {
+    if (!r) continue;
+    const a = conferirAutoconferenciaDaEtapa3(passo, r);
+    out.push({
+      id: `autoconferencia:${passo}`,
+      nome: `Autoconferência do PMO no ${nome}`,
+      situacao: a.ok ? "ok" : "atencao",
+      texto: a.ok
+        ? `Os ${itensEsperadosDaEtapa3(passo).length} itens do passo estão marcados.`
+        : [
+            a.semMarca.length ? `Sem marca: ${a.semMarca.join(", ")}.` : "",
+            a.incompletas.length ? `Marca incompleta: ${a.incompletas.join(", ")}.` : "",
+          ]
+            .filter(Boolean)
+            .join(" "),
     });
   }
   return out;

@@ -1,5 +1,6 @@
 // Pedido de cada passo do PMO na etapa 4 (ordem da decisão 0007). Vai depois da skill e dos documentos (RFP, TAP e
 // proposta, com cache). As fichas das partes do passo vão aqui, só as que o GP marcou para gerar.
+import { ehNumeroDeCompromisso } from "../2-proposta/compromissos";
 import type { PgpDossie } from "../../dossie/esquema";
 import { PARTES_PGP } from "../../dominio/skill";
 import { dispensaDasFichas, fichasDasPartes } from "../../pmo/montagem";
@@ -108,7 +109,7 @@ function requisitosDoTapEmTexto(e: EntradaPgp): string {
   const daLista = new Set(e.ponto.requisitos.map((r) => r.numero));
   return e.requisitosTap
     .map((r) => {
-      const fora = r.requisitos.filter((n) => !daLista.has(n));
+      const fora = r.requisitos.filter((n) => !daLista.has(n) && !ehNumeroDeCompromisso(n));
       const aviso = fora.length
         ? ` — ${fora.join(", ")} fora da lista de requisitos da RFP (descartado na etapa 1): trate como restrição, não como requisito.`
         : "";

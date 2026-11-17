@@ -9,6 +9,7 @@ import { lerValorEmReais } from "../2-proposta/preco";
 import { montarPontoDePartida, type PontoDePartida } from "../2-proposta/ponto-de-partida";
 import { lerContrato, type LidoDoContrato } from "./contrato";
 import { inicioFixo } from "../../regras/cruzamentos-rfp";
+import { numerarCompromissos, type Compromisso } from "../2-proposta/compromissos";
 import type { RespostaEap } from "../../pmo/schemas/proposta";
 
 export type FonteProposta = "pdf" | "dossie" | "nenhuma";
@@ -33,6 +34,8 @@ export interface DadosProposta {
   perfis: { id: string; nome: string; exigido: boolean; requisito: string }[];
   cronograma?: Cronograma;
   marcos: MarcoDaProposta[];
+  /** Compromissos numerados da proposta (decisão 0047): premissas, obrigações, exclusões e limites de volume. */
+  compromissos: Compromisso[];
   inicio?: Date;
   /** Onde o código leu o início, quando ele veio do documento e não do GP ("RFP, p. 1"): a confirmar pelo GP. */
   inicioDoDocumento?: string;
@@ -124,6 +127,7 @@ export function dadosDaProposta(
     })),
     cronograma,
     marcos,
+    compromissos: numerarCompromissos(c),
     inicio,
     inicioDoDocumento: fixo ? `${fixo.origem.documento}, p. ${fixo.origem.pagina}` : undefined,
     aprovacaoDias: p.parametros.aprovacaoDias,
