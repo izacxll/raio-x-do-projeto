@@ -6,7 +6,7 @@ etapas: [2, 4, 5]
 gravidade: baixa
 categoria: planejamento
 sinonimos: ["bases das estimativas", "base das estimativas", "base da estimativa", "memória de cálculo", "memorial de cálculo", "premissas de dimensionamento", "premissas das estimativas", "justificativa das estimativas"]
-versao: 0.2.0
+versao: 0.3.2
 ---
 
 # B4 — Bases das estimativas

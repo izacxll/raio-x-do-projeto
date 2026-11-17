@@ -6,7 +6,7 @@ etapas: [2, 4, 5]
 gravidade: baixa
 categoria: equipe
 sinonimos: ["designações da equipe", "designação da equipe", "equipe do projeto", "composição da equipe", "matriz RACI", "matriz de responsabilidades", "diretório da equipe", "quadro de equipe", "equipe técnica"]
-versao: 0.2.0
+versao: 0.3.2
 ---
 
 # B18 — Designações da equipe do projeto
@@ -65,6 +65,11 @@ Registra quem está na equipe, com que papel e com que responsabilidades, e pode
   - sinais: "diretório" | "contato" | "e-mail" | "telefone"
   - confere: código
   - dispensa: porte pequeno
+- **B18.11** Responsável de cada produto com a competência que o produto pede; falta de competência na equipe é decisão do GP (reforço, parceiro ou ajuste do escopo)
+  - fonte: teste externo da skill 0.3.1 (regras da 0.3.2), regra 11; PROP-EQUIPE.14
+  - sinais: "competência" | "formação" | "experiência em" junto de "responsável"
+  - confere: só PMO
+  - dispensa: nunca
 
 ## Perguntas de qualidade
 - A RACI bate com as obrigações da contratada e da contratante escritas no contrato e no edital? (Rework RW-059, adaptação do leitor)
@@ -80,6 +85,7 @@ Registra quem está na equipe, com que papel e com que responsabilidades, e pode
 - Profissional pontuado que não aparece na execução (`licitacoes.md` 2.2).
 - Decisões de seguir ou parar e de orçamento forçadas em linhas de tarefa (Rework RW-059).
 - Matriz montada uma vez e esquecida depois da abertura (Rework RW-059).
+- **Erro que evita (B18.11):** o responsável pelo produto técnico era o perfil com horas livres, não o que tinha formação na matéria.
 
 ## Quando dispensar a parte inteira
 Não se dispensa: a equipe e o responsável por produto entram nas durações e no cronograma (no PMBOK 6, as designações são entrada de 6.4 e 6.5; `pmbok6.md`, quadro dos documentos). Em porte pequeno, a RACI pode virar uma coluna de responsável no quadro de produtos; o Rework lembra que até equipes de três pessoas ganham com uma RACI enxuta (RW-058).

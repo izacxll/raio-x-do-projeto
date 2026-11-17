@@ -51,6 +51,7 @@ export const OPCOES: { [K in keyof Caracteristicas]: { rotulo: string; valores: 
   frentes: { rotulo: "Frentes de trabalho", valores: ["uma", "várias"] },
   contratante: { rotulo: "Contratante", valores: ["público", "privado"] },
   pagamento: { rotulo: "Pagamento", valores: ["por produto", "por medição", "de outra forma"] },
+  exposicao: { rotulo: "Estudo sensível (CPI, comissão, órgão de controle)", valores: ["sensível", "comum"] },
 };
 
 export function rotuloValor(v: string | boolean): string {

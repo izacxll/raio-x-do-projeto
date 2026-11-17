@@ -6,7 +6,7 @@ etapas: [4, 5]
 gravidade: baixa
 categoria: escopo
 sinonimos: ["matriz de rastreabilidade", "rastreabilidade dos requisitos", "matriz de atendimento", "matriz de requisitos", "quadro de atendimento aos requisitos"]
-versao: 0.2.0
+versao: 0.3.2
 ---
 
 # B23 — Matriz de rastreabilidade dos requisitos
@@ -59,6 +59,11 @@ versao: 0.2.0
   - fonte: PMBOK 6, p. 148 (PDF 184); Rework RW-031; `checklist.md` (campo "onde no plano" e tabela "O que não é premissa crítica")
   - sinais: "não atendido" | "atendido parcialmente" | "fora do escopo" | "pendente de esclarecimento" | célula de entrega vazia
   - confere: só PMO
+  - dispensa: nunca
+- **B23.10** Compromissos numerados da proposta (C01…) ao lado dos requisitos R, cada um com destino no TAP e no plano; compromisso sem destino é ausente
+  - fonte: decisão 0047; PMBOK 6, 5.2.3.2, p. 148–149 (PDF 184–185)
+  - sinais: "C01" | "compromisso" | coluna de destino ao lado do compromisso
+  - confere: código
   - dispensa: nunca
 
 ## Perguntas de qualidade

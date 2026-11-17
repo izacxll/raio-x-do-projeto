@@ -1,5 +1,5 @@
 # PMBOK 7 — princípios, domínios de desempenho e adaptação
-Versão 0.2.0. Fonte: PMI, Padrão de Gerenciamento de Projetos e Guia PMBOK, 7ª ed., em português. Páginas: impressa (PDF).
+Versão 0.3.2. Fonte: PMI, Padrão de Gerenciamento de Projetos e Guia PMBOK, 7ª ed., em português. Páginas: impressa (PDF).
 
 **Leitura.** Duas numerações: **Padrão** (PDF = p. + 27) e **Guia**, com apêndices e glossário (PDF = p. + 95). Tudo resumido com outras palavras; entre aspas, só definições curtas literais. **[aplicação]** = leitura aplicada a planos ou ao app (dos leitores ou da skill), não está no livro. **[sugestão]** = ligação com os códigos A (componentes do plano) e B (documentos do projeto) do PMBOK 6 proposta pelos leitores; o PMBOK 7 não usa códigos. **[citado]** = o PMBOK 7 nomeia o artefato.
 
@@ -175,6 +175,19 @@ Ameaças e oportunidades de incerteza, ambiguidade, complexidade e volatilidade;
 11. **pagamento por produto:** aceite e prazo de aprovação por produto (A13, B17) e marcos-produto (B11) essenciais. **por medição:** A16 e B14 essenciais (a medição vira faturamento).
 12. **Documentos de execução** (B5, B7, B9, B10, B19, B21, B28, B30, B33): modelo inicial (decisão 0007); B33 só com entrega testável.
 13. **Justificativa:** característica + livro. Ex.: "dispensável: porte pequeno, uma frente; plano detalhado é ineficiente em projeto menor (Guia 2.4.9, p. 67 (PDF 162))".
+
+**Pelo tipo de projeto, junto com o porte** — [aplicação para o app; decisão 0034; métodos das etapas 4 e 5]. O tipo (SKILL.md, seção 3) vem antes da lista acima: ele diz quais partes carregam o projeto; o porte diz com que detalhe. Âncoras: o produto, a cadência e a forma de entrega escolhem a abordagem (Guia 2.3.4, p. 39–41 (PDF 134–136)); remover o que não agrega (Guia, p. 135 (PDF 230)).
+
+| Tipo | Essencial | Normalmente dispensável ou fundido |
+|---|---|---|
+| Consultoria por produtos encadeados | A13/B17 por produto, com aceite; B2, B16 e B15 com dependências e caminho crítico; B6 e A15 por horas; A8/B27; A11 | B26 e B25 com rampa mês a mês, se a equipe é pequena e estável; o caixa vira "produto × aceite" no A4 |
+| Operação contínua (campo ou atendimento, equipe grande paga por parcela ou posto) | B26 com a rampa de equipe; A4 com o caixa (parcela × custo acumulado); A16 com metas como métricas (planejado × real de metas, caixa e equipe); B3, A11, A7 com comunicação interna; A6 com substituição e retenção de pessoal | Valor agregado completo (A4.7, B7, B30); três pontos (B8) em atividades repetitivas, que se medem por produtividade; B16 como rede completa (fica a tabela de predecessoras com as dependências externas como marcos) |
+| Híbrido | Os dois blocos, cada um na sua frente | O que nenhum dos dois usa |
+
+- **O porte vale junto com o tipo.** Em porte médio ou grande: B8 não se dispensa (vale para as entregas de conhecimento); B16 é recomendado, ao menos como tabela de predecessoras; B13 é recomendado quando há campo; A12 se funde ao A11, mas não se omite.
+- **Regime.** Na parceria (Lei 13.019), o plano de mudanças segue o art. 57 (aditivo ou apostila) e o art. 55 (prorrogação), e as reservas seguem a lógica do repasse (ficha `a04`); o limite de 25% do art. 125 é da Lei 14.133 e não vale para parceria (`licitacoes.md`).
+- **Tipo de plano.** No PGP interno, a adaptação acima é a régua da etapa 5. No plano de trabalho ou proposta para o cliente, a régua é a lei, o edital, os requisitos e metas, as premissas críticas e o núcleo (SKILL.md, seção 3); as partes só do PGP interno (A12, A13 a A16, B7, B10, B13, B25, B29, B30, B32, B33) vão para "não se aplica a este tipo de plano" (decisão 0033).
+- **Linha para a tela:** tipo + porte + regra da ficha. Ex.: "dispensável: operação contínua, atividades repetitivas medidas por produtividade (ficha B08, 'Quando dispensar')".
 
 **Papel do EGP** (o livro diz "EGP")
 - A equipe escolhe abordagem, processos, métodos e artefatos com o EGP, dentro da governança; políticas fixam os limites do ajuste (Padrão 3.7, p. 45 (PDF 72)).

@@ -1,6 +1,6 @@
 # Experiência: onde os planos costumam falhar
 
-Versão 0.2.0.
+Versão 0.3.2.
 
 Padrões gerais tirados da pesquisa com a gestão de projetos da FGV Projetos (a mesma da taxonomia V29) e das rodadas do Raio-X do Plano de Trabalho. **Sem nomes de pessoas, sem projeto identificável, sem trechos de entrevista.**
 
@@ -20,6 +20,7 @@ A experiência melhora a sugestão, mas **não vira fato**: o que sai daqui entr
 - A assinatura atrasa, mas a data final (um evento, um ciclo orçamentário, um prazo legal) não se move. As etapas seguintes absorvem o atraso.
 - Os prazos ficam contados de pontos diferentes: produtos intermediários a partir da etapa anterior, produto final a partir de uma data fixa. O conflito só aparece quando se monta a rede.
 - **Resposta típica:** cronograma em dias contados da ordem de serviço, premissa sobre a data de início e contingência com gatilho para a entrega presa a data imóvel.
+- **Atividade do cliente ou de campo presa ao aceite sem o TR pedir** (0.3.2): prender o campo ou uma oficina ao aceite de um produto, quando o TR não exige, gasta a janela esperando o cliente. Uma validação curta própria (reunião, nota técnica), com prazo, basta. Erro que evita: questionários em campo postos depois do aceite do plano de trabalho, e a espera pelo aceite consumiu a janela até o evento.
 
 ## 3. Dependência de terceiros
 
@@ -27,6 +28,8 @@ A experiência melhora a sugestão, mas **não vira fato**: o que sai daqui entr
 - Fornecedor, sistema ou plataforma imposta ou única.
 - Condição que o método supõe existir no território: rede de serviços, conectividade, mercado.
 - **Resposta típica:** a dependência escrita como premissa, com prazo e responsável do outro lado, uma alternativa se não vier e um marco no cronograma.
+- **O "até quando" da premissa crítica sai do cronograma:** é a data em que ela precisa estar confirmada para a atividade que depende dela começar. Essa data é o gatilho do risco ligado. Premissa crítica sem "até quando" não dá para verificar, mesmo quando o plano já tem as datas em outra parte.
+- **De onde vem cada dado e de que período** (0.3.2): para cada produto, a fonte e o período de cada dado. Se o produto pode depender de dado de outro período, a premissa sai com a alternativa; dado que só existe depois de um evento entra numa atividade depois do evento. Erro que evita: o relatório do ano corrente contava com dados que o órgão só fecha no ano seguinte.
 
 ## 4. Equipe × volume
 
@@ -43,6 +46,8 @@ A experiência melhora a sugestão, mas **não vira fato**: o que sai daqui entr
 - Estruturas locais que já atuam no mesmo objeto podem ver o projeto como concorrência.
 - Clima (chuva, calor) e segurança da equipe e do público.
 - Vedação de subcontratação no edital combinada com atividade de campo que exigiria equipe local.
+- **Linha de base dos custos só com horas e reserva:** as despesas diretas (campo, viagens, diárias, impressão, material) ficam de fora, e o controle de custos não tem com o que comparar. A linha de base inclui as despesas diretas, com valor a definir pelo GP e memória de cálculo.
+- **Pesquisa com o público:** antes do campo, o plano diz como o respondente é informado (quem faz a pesquisa, para quê, sem identificação) e qual é a regra de guarda dos dados. "Microdados anonimizados" não responde a nenhum dos dois.
 
 ## 6. Beneficiários
 
@@ -53,6 +58,8 @@ A experiência melhora a sugestão, mas **não vira fato**: o que sai daqui entr
 ## 7. Texto e escopo
 
 - **Texto reaproveitado** de outra proposta ou fase: nome de outro órgão, termos de outro tipo de contrato, "neste Termo de Referência" dentro de um plano.
+- **Frase de conformidade que não confere:** "em conformidade com o item X do edital" ao lado de parcelas, valores, metas, equipe ou prazos diferentes dos do item X (por exemplo, as duas primeiras parcelas trocadas). A frase dá ao leitor a falsa segurança de que alguém conferiu. Na etapa 5 é **conflituoso**, e grave quando trata de valor ou parcelas; na etapa 3, é divergência à parte.
+- **Exclusões de outro tipo de projeto:** uma lista de "não incluído" com estudos de arquitetura, engenharia ou seguros num projeto social é texto de outro documento. É **conflituoso**, não "ausente": a lista existe, mas não protege a FGV, porque faltam as exclusões do próprio objeto (o que é da rede, do contratante, dos municípios). A lista pode vir com outro título: "não estão incluídos", "não fazem parte", "não contempla".
 - **Escopo sem limite com preço fixo:** "entre outras", revisões sem número, apoio sem volume nem prazo.
 - **Trecho com duas leituras** sobre entrega, prazo ou formato, adotado no plano sem confirmação do cliente.
 - **Premissa sem base:** número redondo sem memória de cálculo, método escolhido por hábito e não pelo objeto.
@@ -63,10 +70,12 @@ A experiência melhora a sugestão, mas **não vira fato**: o que sai daqui entr
 - Frentes paralelas sem momento de integração.
 - Plano de comunicações só com o cliente, sem as reuniões internas da equipe.
 - Plano de riscos que não conversa com o cronograma nem com a reserva.
+- **Registro de questões que se contradiz:** a regra escrita ("toda questão começa aberta") não bate com o status de cada questão no registro. O status inicial escrito tem de bater com o de cada linha, e a questão que sai de "aberta" diz por quê, com a referência.
 
 ## 9. Proporcionalidade
 
 - **O PMBOK é guia, não checklist.** Projeto pequeno, de equipe curta e escopo fechado, não precisa de todos os 18 componentes e 33 documentos com o mesmo detalhe. A adaptação (PMBOK 7) é a regra; preencher tudo por obrigação produz plano que ninguém lê.
+- **O tipo vale junto com o porte.** Uma operação contínua paga por parcela não leva EAP com horas, valor-hora, rede completa nem valor agregado; uma consultoria por produtos não precisa de rampa de equipe mês a mês nem de caixa por parcela (SKILL.md, seção 3; `pmbok7.md`, seção 3).
 - Sugerir o essencial primeiro e explicar em uma linha por que cada parte é essencial, recomendada ou dispensável para **este** projeto.
 
 ## 10. Como o PMO deve escrever a partir disso

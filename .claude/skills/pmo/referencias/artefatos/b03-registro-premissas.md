@@ -6,7 +6,7 @@ etapas: [3, 4, 5]
 gravidade: baixa
 categoria: incerteza
 sinonimos: ["registro das premissas", "premissas e restrições", "premissas", "lista de premissas", "registro de premissas e restrições", "assumption log", "RAID"]
-versao: 0.2.0
+versao: 0.3.2
 ---
 
 # B3 — Registro de premissas
@@ -60,6 +60,11 @@ versao: 0.2.0
   - sinais: os "sinais no plano" de cada premissa no `checklist.md` | "premissa crítica"
   - confere: código
   - dispensa: nunca
+- **B3.10** Restrição com prazo no TR registrada com o prazo, a página e a atividade da EAP que ela limita
+  - fonte: teste externo da skill 0.3.1 (regras da 0.3.2), regra 13; PROP-EAP.17
+  - sinais: "restrição" junto de "prazo" | coluna com a atividade limitada
+  - confere: só PMO
+  - dispensa: nunca
 
 ## Perguntas de qualidade
 - Cada premissa tem base (documento, histórico, estimativa), ou é número redondo sem memória de cálculo? (vago, CP9; experiencia.md §7)
@@ -76,6 +81,7 @@ versao: 0.2.0
 - Premissa inexata, instável ou incompleta sem risco correspondente (PMBOK 6, p. 415, PDF 451).
 - Apagar a premissa invalidada em vez de encerrá-la com a situação (PMBOK 6, p. 97, PDF 133; Rework RW-004).
 - "Pressupõe-se" ou "considera-se que" sem fonte (vago, CP9).
+- **Erro que evita (B3.10):** o prazo do TR para a entrega do plano de trabalho não estava no registro de premissas, e ninguém conferiu se a EAP o respeitava.
 
 ## Quando dispensar a parte inteira
 Nunca: o B3 nasce no 4.1 junto com o TAP, e o app o entrega na etapa 3. Em porte pequeno, basta uma lista simples, ou as linhas de premissas de um RAID junto com o B27 (Rework RW-004).

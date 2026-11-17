@@ -62,3 +62,18 @@ Cada linha é uma saída da análise à mão. **Evidência** descreve o tipo de 
 
 > [!NOTE] Inferido — validar com a responsável pelo projeto
 > A ordem de impacto dos pontos (caixa > dependência > preço > prazo) foi julgamento da análise, não regra da skill. Sugere-se confirmar antes de virar código.
+
+## Regras novas (decisões 0042 a 0046)
+
+Evidência dos testes externos de 16/11/2026 (leituras gravadas externas, fora do Git): o edital da SMPED e um TR municipal de contratação direta (estudo de impacto de evento). Exemplos disfarçados.
+
+| Saída | Evidência | Regra | Quem | Skill |
+|---|---|---|---|---|
+| Chave de modalidade | Seção da modalidade que declara inexigibilidade com base no art. 74, III | Três caminhos (licitação, contratação direta, parceria); troca as seções 5, 6 e 8 | Código + GP confirma | SKILL.md §3 (Modalidade); decisão 0042 |
+| O que sustenta a contratação direta | Justificativa de notória especialização que descreve áreas que não são o objeto | Texto de outro projeto é conflituoso e vira pergunta | PMO | `prop-estrategia` .11; CP8 |
+| TR montado da proposta | Obrigação da contratada introduzida por "conforme objeto da proposta" | Perguntas viram ajustes na minuta antes da assinatura | PMO | SKILL.md §3 |
+| Prazo sem termo inicial | "no prazo de N dias" para repassar informações ao contratante, sem dizer de quando | Duas leituras ("em até" × "com antecedência"): vago, com pergunta | Código sinaliza; PMO escreve as leituras | decisão 0045 |
+| Janela até marco fixo | Início em data fixa; campo preso a um evento com data | Dias úteis entre o início e o marco × atividades que precisam acabar antes | Código (conta); PMO (quais atividades) | PROP-EAP.11; A3.13 |
+| Cruzamentos X1 a X6 | "Parcela única" num item × desembolso mensal num quadro; dois e-mails para a mesma finalidade; vigência × fim do evento | Lista fixa, registrada como feita ou não se aplica | Código lista e conta; PMO compara | SKILL.md §3; decisão 0046 |
+| Quem executa × vedação | Dados de campo "levantados pela equipe da contratada" × a vedação do art. 74, § 4º | Conferir se a RFP já responde antes de perguntar; a dúvida que sobra é a de aplicadores temporários | PMO | X3; A6.7 |
+| Estudo sensível | Justificativa que cita comissão do Legislativo com intenção de CPI sobre o objeto do estudo | Sinal forte de disputa junto de impacto ou recursos, na mesma página | Código sugere; GP confirma | decisão 0043 |

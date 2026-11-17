@@ -6,7 +6,7 @@ etapas: [4, 5]
 gravidade: grave
 categoria: partes interessadas
 sinonimos: ["plano de engajamento", "plano de gerenciamento das partes interessadas", "engajamento das partes interessadas", "estratégia de engajamento", "gestão de stakeholders", "plano de engajamento de stakeholders"]
-versao: 0.2.0
+versao: 0.3.2
 ---
 
 # A10 — Plano de engajamento das partes interessadas
@@ -17,7 +17,7 @@ versao: 0.2.0
 ## Conteúdo mínimo
 - **A10.1** Estratégia ou ação de engajamento para cada parte interessada ou grupo
   - fonte: PMBOK 6, 13.2.3.1, p. 522 (PDF 558); PMBOK 7, 2.1, p. 12 (PDF 107); Rework RW-006 (https://resources.rework.com/libraries/project-management/stakeholder-analysis-matrix)
-  - sinais: "estratégia de engajamento" | "gerenciar de perto" | "manter satisfeito" | "manter informado" | "monitorar" | tabela com parte interessada e ação
+  - sinais: "estratégia de engajamento" | "estratégias" junto de "parte interessada" ou "engajamento" | "gerenciar de perto" | "manter satisfeito" | "manter informado" | "manter envolvido" | "manter envolvida" | "monitorar" | tabela com parte interessada e ação
   - confere: código
   - dispensa: nunca
 - **A10.2** Nível de engajamento atual e desejado de cada parte
@@ -42,9 +42,9 @@ versao: 0.2.0
   - dispensa: sem campo e sem beneficiários
 - **A10.6** Tratamento das partes que podem se opor e gestão das expectativas
   - fonte: PMBOK 6, 13.3, p. 524–525 (PDF 560–561), orientação sobre expectativas atribuída ao plano fora da lista; PMBOK 7, 2.1, p. 8 (PDF 103)
-  - sinais: "resistência" | "oposição" | "resistente" | "expectativas" | "conflito"
+  - sinais: "resistência" | "oposição" | "resistente" | "expectativas" | "conflito" | "CPI" | "comissão" | "órgão de controle"
   - confere: só PMO
-  - dispensa: porte pequeno
+  - dispensa: porte pequeno e estudo comum
 - **A10.7** Como e quando o engajamento é monitorado (reuniões, pesquisas, revisão do nível atual × desejado)
   - fonte: PMBOK 6, 13.4, p. 535 (PDF 571), reuniões acordadas no plano, fora da lista; PMBOK 7, 2.1, p. 14 (PDF 109)
   - sinais: "monitoramento do engajamento" | "pesquisa de satisfação" | "avaliação do engajamento" | "feedback"

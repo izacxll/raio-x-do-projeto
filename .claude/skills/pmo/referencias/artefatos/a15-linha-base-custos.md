@@ -6,7 +6,7 @@ etapas: [4, 5]
 gravidade: média
 categoria: custo
 sinonimos: ["baseline de custos", "orçamento aprovado", "orçamento de referência", "orçamento do projeto", "cronograma de desembolso", "curva S", "linha de base de custo"]
-versao: 0.2.0
+versao: 0.3.2
 ---
 
 # A15 — Linha de base dos custos

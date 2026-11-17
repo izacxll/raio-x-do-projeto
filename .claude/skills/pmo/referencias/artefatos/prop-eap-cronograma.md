@@ -6,7 +6,7 @@ etapas: [2]
 gravidade: não se aplica
 categoria: não se aplica
 sinonimos: ["EAP", "estrutura analítica do projeto", "plano de trabalho", "cronograma", "cronograma físico", "cronograma de execução", "WBS"]
-versao: 0.2.0
+versao: 0.3.2
 ---
 
 # PROP-EAP — EAP e estimativas de duração da proposta
@@ -65,6 +65,46 @@ O PMO monta a EAP por produto e estima as durações em três pontos, com a base
   - sinais: "deslocamento" | "viagem" | "território" | base que cita distância ou logística
   - confere: código
   - dispensa: sem campo
+- **PROP-EAP.11** Marcos externos fixos (evento, safra, ano letivo) como restrição de data, com as atividades que precisam acabar antes de cada um; a janela entre o início e o marco é conta do código
+  - fonte: decisão 0045; PMBOK 6, 6.5, p. 207 (PDF 243); `checklist.md` PC4
+  - sinais: "marco fixo" | "data do evento" | "antes do evento" | "não pode ser adiado" | data fixa no cronograma
+  - confere: código
+  - dispensa: nunca
+- **PROP-EAP.12** Premissa que muda a origem de um dado muda a predecessora da atividade que usa o dado (o produto que usa a pesquisa de outro período depende dela)
+  - fonte: decisão 0045; PMBOK 6, 6.3, p. 187 (PDF 223)
+  - sinais: predecessora ao lado da premissa (P-nn) que muda a origem do dado
+  - confere: só PMO
+  - dispensa: nunca
+- **PROP-EAP.13** Linha do tempo escrita antes de fechar a EAP: início, cada entrega com e sem a análise do cliente, marcos fixos e fim da vigência, e cada marco conferido (cabe ou não cabe); marco que não cabe vira pergunta na estratégia e segue ao TAP como divergência
+  - fonte: teste externo da skill 0.3.1 (regras da 0.3.2), regra 2; decisão 0045; PROP-EAP.11
+  - sinais: "linha do tempo" | "cabe na vigência" | "não cabe" | tabela de marcos com a data com e sem a análise do cliente
+  - confere: só PMO
+  - dispensa: nunca
+- **PROP-EAP.14** Atividade do cliente ou de campo não fica presa ao aceite de um produto quando o TR não exige; no lugar, uma validação curta própria (reunião, nota técnica), com prazo
+  - fonte: teste externo da skill 0.3.1 (regras da 0.3.2), regra 3; `experiencia.md` §2
+  - sinais: "validação" | "reunião de validação" | predecessora de campo que não é o aceite de um produto
+  - confere: só PMO
+  - dispensa: nunca
+- **PROP-EAP.15** Aceite de cada produto na ordem análise do cliente → ajuste → nova análise → termo definitivo, com a análise e o ajuste como atividades separadas, cada uma com a sua duração
+  - fonte: teste externo da skill 0.3.1 (regras da 0.3.2), regra 5; PROP-EAP.6; A5.7
+  - sinais: "ajuste" | "nova análise" | "reanálise" | "termo definitivo" | "recebimento definitivo"
+  - confere: só PMO
+  - dispensa: nunca
+- **PROP-EAP.16** Fonte externa de dados (órgão federal, base pública, outro ente) com atividade própria de obtenção na EAP, ligada à premissa crítica PC1, quando o trabalho usa dado de fonte externa
+  - fonte: teste externo da skill 0.3.1 (regras da 0.3.2), regra 12; `checklist.md` PC1
+  - sinais: "obtenção dos dados" | "extração" | "base pública" | "dados de outro órgão" | atividade de recebimento ligada à PC1
+  - confere: só PMO
+  - dispensa: nunca
+- **PROP-EAP.17** Restrição com prazo no TR (prazo de uma entrega, de um relatório, de uma resposta) chega à EAP como restrição de data ou de duração e ao registro de premissas (PROP-SOW.7, B3.5)
+  - fonte: teste externo da skill 0.3.1 (regras da 0.3.2), regra 13; PROP-SOW.7; B3.5
+  - sinais: "restrição" | "prazo do TR" | "conforme o TR" junto de prazo | restrição de data na EAP
+  - confere: só PMO
+  - dispensa: nunca
+- **PROP-EAP.18** Prazo de terceiro (análise do cliente quando o TR não o diz, resposta de outro órgão, publicação de base) é estimativa do PMO: rótulo sugestão, com a base, nunca documento
+  - fonte: teste externo da skill 0.3.1 (regras da 0.3.2), regra 15; SKILL.md, princípio 1
+  - sinais: "estimativa" | "sugere-se" | "base:" junto de prazo de terceiro
+  - confere: só PMO
+  - dispensa: nunca
 
 ## Perguntas de qualidade
 - Somando os filhos chega-se ao produto, sem trabalho órfão? (PMBOK 6, p. 161; ficha A13)
@@ -79,6 +119,12 @@ O PMO monta a EAP por produto e estima as durações em três pontos, com a base
 - Cronograma sem os tempos de aprovação do cliente (`experiencia.md` §1).
 - Datas fixas misturadas com prazos relativos, sem rede que mostre o conflito (`experiencia.md` §2).
 - O PMO calculando média, datas ou caminho crítico (SKILL.md, princípio 6).
+- **Erro que evita (PROP-EAP.13):** num estudo com entrega presa a um evento anual, o cronograma fechou somando só a produção; com as análises do cliente, o produto anterior ao evento só ficaria aprovado depois dele, e o TAP repetiu o marco como se coubesse.
+- **Erro que evita (PROP-EAP.14):** a aplicação de questionários em campo foi posta depois do aceite do plano de trabalho, que o TR não exigia antes do campo; a espera pelo aceite consumiu a janela até o evento.
+- **Erro que evita (PROP-EAP.15):** uma só caixa "aprovação do cliente" por produto; quando o cliente pediu ajustes, não havia tempo para o ajuste nem para a nova análise, e o termo definitivo do último produto caiu fora da vigência.
+- **Erro que evita (PROP-EAP.16):** os dados de uma base federal entraram na EAP como se já estivessem disponíveis no início; não havia atividade de extração nem premissa sobre a data de publicação.
+- **Erro que evita (PROP-EAP.17):** o TR dava prazo, contado da assinatura, para entregar o plano de trabalho; a restrição ficou só no texto do SOW, e nem a EAP nem o registro de premissas a tinham.
+- **Erro que evita (PROP-EAP.18):** o prazo de resposta de um órgão de outro ente saiu rotulado como documento, sem trecho, quando era estimativa do PMO.
 
 ## Quando dispensar a parte inteira
 Não se dispensa: a EAP sustenta o preço e o cronograma. Em porte pequeno, basta uma tabela de produtos e pacotes com as três durações e a base.

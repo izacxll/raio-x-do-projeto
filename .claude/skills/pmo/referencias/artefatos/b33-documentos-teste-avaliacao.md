@@ -6,7 +6,7 @@ etapas: [4, 5]
 gravidade: baixa
 categoria: entrega
 sinonimos: ["plano de testes", "documentos de teste", "roteiro de revisão", "lista de verificação dos produtos", "checklist de revisão", "plano de validação", "protocolo de avaliação"]
-versao: 0.2.0
+versao: 0.3.2
 ---
 
 # B33 — Documentos de teste e avaliação

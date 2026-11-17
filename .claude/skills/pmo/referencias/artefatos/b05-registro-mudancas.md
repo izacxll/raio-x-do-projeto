@@ -6,7 +6,7 @@ etapas: [4, 5]
 gravidade: baixa
 categoria: trabalho do projeto
 sinonimos: ["registro de mudanças", "log de mudanças", "controle de solicitações de mudança", "histórico de mudanças", "registro de alterações", "change log"]
-versao: 0.2.0
+versao: 0.3.2
 ---
 
 # B5 — Registro das mudanças
@@ -17,7 +17,7 @@ versao: 0.2.0
 ## Conteúdo mínimo
 - **B5.1** Identificador único e data de cada solicitação
   - fonte: PMBOK 6, 4.6, p. 120 (PDF 156); Rework RW-028 (https://resources.rework.com/libraries/project-management/change-control-process)
-  - sinais: "nº" | "ID" | "SM-01" | "CR-" | "data da solicitação" | colunas de número e data
+  - sinais: "nº" | "ID" | "CR-" | "número da solicitação" | "solicitação nº" | "identificador da mudança" | "data da solicitação" | "data de cada solicitação" | colunas de número e data
   - confere: código
   - dispensa: nunca
 - **B5.2** Quem pediu e descrição da mudança, com a justificativa

@@ -6,7 +6,7 @@ etapas: [2, 4, 5]
 gravidade: baixa
 categoria: tempo
 sinonimos: ["lista de atividades", "relação de atividades", "atividades do projeto", "plano de atividades", "descrição das atividades", "atividades por produto", "detalhamento das atividades"]
-versao: 0.2.0
+versao: 0.3.2
 ---
 
 # B2 — Lista de atividades

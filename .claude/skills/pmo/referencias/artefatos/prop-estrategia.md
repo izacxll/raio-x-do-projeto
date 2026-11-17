@@ -6,7 +6,7 @@ etapas: [2]
 gravidade: não se aplica
 categoria: não se aplica
 sinonimos: ["estratégia da proposta", "abordagem técnica", "alternativas de abordagem", "critérios de julgamento", "como seremos avaliados"]
-versao: 0.2.0
+versao: 0.3.2
 ---
 
 # PROP-ESTRATEGIA — Estratégia da proposta e abordagens técnicas
@@ -15,9 +15,9 @@ versao: 0.2.0
 Documento interno de decisão, que não vai ao contratante. Lê o edital do lado de quem avalia: método de seleção, critérios, pesos e onde estão os pontos (PMBOK 6, 12.1, p. 473–474 e 478–479, PDF 509–510 e 514–515). Depois oferece ao GP 2 ou 3 abordagens técnicas comparáveis. **O GP escolhe uma** (`decisao_gp`), e o resto da proposta parte dela. Também dá destino a cada brecha da etapa 1; as premissas críticas que se aplicam (PC1 a PC8) saem escritas com a consequência no SOW (PROP-SOW.11).
 
 ## Conteúdo mínimo
-- **PROP-ESTRATEGIA.1** Critério de julgamento do edital (menor preço, técnica e preço, melhor técnica etc.), com página e trecho
+- **PROP-ESTRATEGIA.1** Critério de julgamento do edital (menor preço, técnica e preço, melhor técnica etc.), com página e trecho; na contratação direta, a hipótese legal (inexigibilidade ou dispensa, com o artigo); na parceria, os critérios de seleção do chamamento
   - fonte: PMBOK 6, 12.1, p. 473–474 (PDF 509–510); `licitacoes.md` 2.2
-  - sinais: "critério de julgamento" | "técnica e preço" | "melhor técnica" | "menor preço" | página da RFP
+  - sinais: "critério de julgamento" | "técnica e preço" | "melhor técnica" | "menor preço" | "inexigibilidade" | "dispensa de licitação" | "critérios de seleção" | página da RFP
   - confere: código
   - dispensa: nunca
 - **PROP-ESTRATEGIA.2** Critérios de pontuação técnica, com pontos máximos e pesos de técnica e preço, como o edital os traz; ou a nota de que o edital não pontua técnica
@@ -65,8 +65,30 @@ Documento interno de decisão, que não vai ao contratante. Lê o edital do lado
   - sinais: "esclarecimento" | "impugnação" | "até" | data | "decisão do GP"
   - confere: código
   - dispensa: nunca
+- **PROP-ESTRATEGIA.11** O que sustenta a escolha, pela modalidade: na licitação, os pontos (PROP-ESTRATEGIA.3); na contratação direta, a notória especialização **no objeto** (os estudos e a equipe que a provam), a justificativa de preço e os documentos do art. 72; na parceria, o plano de trabalho e a capacidade da organização
+  - fonte: `licitacoes.md` 2.4 (arts. 72 e 74) e 4 (Lei 13.019); SKILL.md, seção 3 (modalidade); decisão 0042
+  - sinais: "notória especialização" | "justificativa de preço" | "art. 72" | "experiência no objeto" | "plano de trabalho"
+  - confere: só PMO
+  - dispensa: nunca
+- **PROP-ESTRATEGIA.12** Abordagem que contraria a RFP (quem executa, escopo, formato do produto, prazo, local) sai marcada como tal, com o trecho da RFP que ela contraria, e vira pergunta de esclarecimento (na contratação direta, ajuste da minuta do contrato antes da assinatura); nunca é apresentada como opção equivalente às outras; abordagem que reduz o que um R pede (menos períodos, menos cobertura, menos produtos) também contraria a RFP: diz o que continua dentro do R e leva a diferença a pergunta e, na etapa 3, a divergência no TAP
+  - fonte: decisão 0050; SKILL.md, etapa 2, passo 2; `licitacoes.md`, "Como usar" (o edital manda)
+  - sinais: "contraria a RFP" | "contraria o TR" | "depende de ajuste" | "pergunta de esclarecimento" junto de "abordagem"
+  - confere: só PMO
+  - dispensa: nunca
+- **PROP-ESTRATEGIA.13** Só é critério pontuado o que o TR ou o edital diz que pontua (tabela ou trecho de pontuação, com a página); o resto das exigências de equipe e experiência é perfil mínimo ou habilitação, sem pontos
+  - fonte: teste externo da skill 0.3.1 (regras da 0.3.2), regra 7; PROP-ESTRATEGIA.2
+  - sinais: "pontuação" | "pontos" | "critério de julgamento" | "perfil mínimo" | "requisito mínimo"
+  - confere: só PMO
+  - dispensa: nunca
+- **PROP-ESTRATEGIA.14** Pergunta que muda o preço (volume, número de períodos, campo, quem fornece o dado, quantos produtos) vai no pedido de esclarecimento, antes da proposta, e não fica para o TAP; sem prazo de esclarecimento, vira premissa escrita na proposta
+  - fonte: teste externo da skill 0.3.1 (regras da 0.3.2), regra 16; PROP-ESTRATEGIA.10
+  - sinais: "esclarecimento" junto de "preço" | pergunta ligada a horas, volume ou despesa
+  - confere: só PMO
+  - dispensa: nunca
 
 ## Perguntas de qualidade
+- Na contratação direta, a justificativa de notória especialização do TR descreve o objeto, ou outras áreas? Texto de outro projeto é conflituoso (CP8) e vira pergunta (decisão 0042).
+- O TR diz "conforme a proposta" ou "conforme objeto da proposta"? Então ele foi montado a partir de uma proposta da FGV, e as perguntas viram ajustes na minuta do contrato antes da assinatura (decisão 0042).
 - A estratégia mira o que o avaliador pontua, ou o que a equipe gosta de fazer? (Rework RW-071)
 - As abordagens são de fato diferentes (método, alcance, intensidade de campo), e não variações da mesma? (PMBOK 6, p. 150–155)
 - Alguma abordagem promete o que não cabe no preço ou no prazo do edital? (Rework RW-071, erros comuns)
@@ -80,6 +102,9 @@ Documento interno de decisão, que não vai ao contratante. Lê o edital do lado
 - Tratar brecha como risco do projeto e mandá-la só para o registro, sem premissa nem pergunta (SKILL.md, princípio 8).
 - Perder o prazo de esclarecimento e ter de assumir uma leitura como premissa (vago, CTR7; PROP-SOW.6; `licitacoes.md` 2.3).
 - Dizer "o prazo é curto" em vez de mostrar a conta ao código (SKILL.md, princípio 6).
+- **Erro que evita (PROP-ESTRATEGIA.12):** uma abordagem que cortava parte da série histórica pedida num R apareceu ao lado das outras como se fosse equivalente, sem o trecho do R que ela reduzia.
+- **Erro que evita (PROP-ESTRATEGIA.13):** a estratégia tratou cada perfil da equipe-chave como critério pontuado quando o TR só exigia os perfis como mínimo; a proposta gastou páginas para pontos que não existiam.
+- **Erro que evita (PROP-ESTRATEGIA.14):** a dúvida sobre quantos exercícios a análise cobria, que mudava as horas de quase toda a equipe, ficou para a reunião de abertura, depois do preço fechado.
 
 ## Quando dispensar a parte inteira
 Não se dispensa. Em contratação direta ou porte pequeno, pode reduzir-se a uma abordagem principal com uma alternativa e a tabela de destinos.

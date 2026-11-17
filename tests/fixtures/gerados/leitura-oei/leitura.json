@@ -1,5 +1,5 @@
 {
-  "_origem": "Os achados e as observações vêm da leitura gravada da demonstração. Os 77 vereditos sobre os achados do código (decisão 0052) foram escritos pelo Claude Code, a revisar pelo PMO, como os gabaritos feitos pelo próprio código.",
+  "_origem": "Os achados e as observações vêm da leitura gravada da demonstração. Os 78 vereditos sobre os achados do código (decisão 0052) foram escritos pelo Claude Code, a revisar pelo PMO, como os gabaritos feitos pelo próprio código; o do B23.10 entrou com a skill 0.3.2.",
   "achados": [
     {
       "id": "pmo-1",
@@ -481,6 +481,12 @@
     },
     {
       "achado": "conteudo-minimo:B23:B23.6",
+      "veredito": "nao_se_aplica",
+      "evidencias": [],
+      "motivo": "Plano de trabalho para o cliente: B23 (Matriz de rastreabilidade dos requisitos) é parte do PGP interno e não entra neste tipo de plano (decisão 0033). Recomenda-se marcar o tipo de plano como plano de trabalho."
+    },
+    {
+      "achado": "conteudo-minimo:B23:B23.10",
       "veredito": "nao_se_aplica",
       "evidencias": [],
       "motivo": "Plano de trabalho para o cliente: B23 (Matriz de rastreabilidade dos requisitos) é parte do PGP interno e não entra neste tipo de plano (decisão 0033). Recomenda-se marcar o tipo de plano como plano de trabalho."

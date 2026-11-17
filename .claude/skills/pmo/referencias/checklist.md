@@ -1,6 +1,6 @@
 # Premissas críticas comuns
 
-Versão 0.2.0 (decisão 0021).
+Versão 0.3.2 (decisões 0021 e 0034: gatilho e reajuste de cada premissa).
 
 **O que é uma premissa crítica:** algo que o plano assume que vai acontecer e que, se não acontecer, obriga a refazer escopo, prazo e metas. Não é uma lista de riscos à parte: **cada premissa crítica que se aplica ao projeto tem de estar escrita no próprio plano.**
 
@@ -13,8 +13,8 @@ Versão 0.2.0 (decisão 0021).
 | 2 — proposta | Premissas do SOW, escritas com a consequência e, quando couber, como obrigação do contratante com prazo | PROP-SOW.11 |
 | 3 — TAP | Premissas de alto nível, com a consequência | TAP-PR.2 |
 | 4 — plano | Registro de premissas, com responsável por validar | B3.9 |
-| 4 — plano | Registro de riscos, com resposta e gatilho | B27.13 |
-| 4 — plano | Plano de mudanças: como reajustar escopo, prazo e metas se ela falhar | A11.12 |
+| 4 — plano | Registro de riscos, com gatilho mensurável (o número é do GP) e resposta | B27.13 |
+| 4 — plano | Plano de mudanças: como reajustar escopo, prazo e metas se ela falhar (aditivo, prorrogação, revisão de metas) | A11.12 |
 | 4 — plano | Plano de riscos: como as premissas críticas são tratadas | A8.12 (grave) |
 | 5 — conferência | A premissa crítica que se aplica ao projeto e não está no plano é **ausente** | — |
 
@@ -26,6 +26,27 @@ Versão 0.2.0 (decisão 0021).
 - **Redação condicional** ("sugere-se", "recomenda-se avaliar"), sempre com o trecho e a página que motivam a sugestão.
 - **Sem números inventados:** prazos de aprovação, datas de início e volumes que o documento não traz ficam "a definir pelo GP".
 
+## Gatilho e reajuste
+
+No plano (etapa 4), cada premissa crítica que se aplica aparece nos três lugares com o mesmo código (método da etapa 4, 4.4):
+
+| Lugar | O que se escreve |
+|---|---|
+| B3 — registro de premissas | O que se assume, de quem depende, até quando e quem valida (com o ID do registro do TAP, quando houver) |
+| B27 — registro de riscos | O **gatilho** mensurável e a **resposta**: o que se faz quando o gatilho dispara, e quem faz |
+| A11 — plano de mudanças | O **reajuste**: como escopo, prazo e metas são refeitos e por qual caminho do contrato |
+
+- **Gatilho com número.** O gatilho tem unidade (dias de atraso, percentual da lista, rodadas de revisão, atendimentos por pessoa, folga de caixa) e um número, que é **Decisão do GP**: escreva "[N dias, a definir pelo GP]", nunca um número inventado. O código acompanha os que consegue calcular (datas, folga de caixa por parcela, quadro × produtividade).
+- **Reajuste pelo caminho do contrato.** Conferir sempre o que o edital e o contrato dizem; os artigos estão em `licitacoes.md`:
+
+  | Reajuste | Licitação (Lei 14.133) | Parceria (Lei 13.019) |
+  |---|---|---|
+  | Prazo | Prorrogação por termo aditivo; no escopo predefinido, prorrogação se o objeto não for concluído (art. 111) | Prorrogação pedida com 30 dias de antecedência, ou de ofício quando a administração atrasa o repasse (art. 55) |
+  | Escopo e valor | Termo aditivo, até 25% do valor inicial (art. 125); reequilíbrio (arts. 124 e 131) | Revisão do plano de trabalho por aditivo ou apostila (art. 57); remanejamento entre naturezas de despesa como o edital e o termo permitirem |
+  | Metas | Termo aditivo do escopo | Revisão das metas no plano de trabalho por aditivo ou apostila (art. 57) |
+
+- **Matriz genérica não basta.** Uma matriz de riscos que cita o assunto sem a premissa, o gatilho e o reajuste conta como "assunto citado, sem premissa escrita" na etapa 5.
+
 ## Formato de cada premissa
 
 Cada premissa tem um bloco com campos fixos, lidos pelo código da etapa 5:
@@ -34,6 +55,9 @@ Cada premissa tem um bloco com campos fixos, lidos pelo código da etapa 5:
 - **sinais de aplicação:** termos na RFP, no TAP ou no plano que indicam que ela vale (`|` separa os termos);
 - **sinais no plano:** termos que indicam que o plano a tratou (achar o sinal não prova que está bem tratada, só que existe);
 - **se não se confirmar:** o efeito em escopo, prazo, metas e custo;
+- **B3 — premissa:** como ela se escreve no registro de premissas;
+- **B27 — gatilho e resposta:** o indicador que dispara a resposta, com o número a definir pelo GP;
+- **A11 — reajuste:** como se refazem escopo, prazo e metas (aditivo, prorrogação, revisão de metas);
 - **onde no plano:** os itens de conteúdo mínimo em que ela tem de aparecer;
 - **confere:** `código` para a presença; `só PMO` para a qualidade.
 
@@ -63,8 +87,14 @@ Cada premissa tem um bloco com campos fixos, lidos pelo código da etapa 5:
   - **escopo:** cadastro desatualizado exige saneamento que não estava previsto (TB24);
   - **metas:** amostra, cobertura ou indicador calculado sobre dado incompleto perde validade;
   - **custo:** horas de coleta ou tratamento extras.
+- **B3 — premissa:** a base [dados ou lista do contratante] chega até [data a definir pelo GP], no formato [a definir], atualizada há no máximo [prazo a definir pelo GP]; depende de [órgão]; valida: o contratante.
+- **B27 — gatilho e resposta:** atraso de mais de [N dias, a definir pelo GP] na entrega combinada, ou mais de [N%, a definir pelo GP] de registros incompletos ou desatualizados na conferência do recebimento → notificar por escrito, passar a contar os prazos dependentes do recebimento e tratar o saneamento como mudança.
+- **A11 — reajuste:** prazos dos produtos dependentes recontados do recebimento (prorrogação); saneamento fora do previsto como acréscimo de escopo (aditivo); meta calculada sobre a base revista (revisão de metas).
 - **onde no plano:** B3.9, B27.13, A11.12, A8.12; na proposta, PROP-SOW.8 (obrigação do contratante com prazo) e PROP-SOW.11; no TAP, TAP-PR.2.
 - **confere:** código (presença); só PMO (se o prazo e a qualidade estão definidos)
+- **origem e período de cada dado (0.3.2):** para cada produto, de onde vem cada dado e de que período. Se o produto pode depender de dado de outro período, a premissa sai com a alternativa (por exemplo, usar o último período fechado e dizer isso no produto). Dado que só existe depois de um evento entra numa atividade depois do evento.
+- **fonte externa (0.3.2):** dado de órgão federal, base pública ou outro ente é PC1 também, mesmo sem obrigação do contratante, com atividade própria de obtenção na EAP (PROP-EAP.16).
+- **erro que evita:** o relatório do ano corrente contava com dados que o órgão só publica no ano seguinte, e a extração de uma base federal não tinha atividade nem data no cronograma.
 - **Exemplo de redação:** "Premissa: a base de [dados do contratante] é entregue até [data a definir pelo GP], atualizada há no máximo [prazo a definir pelo GP]. Se não for, os prazos dos produtos [n] passam a contar do recebimento, e o saneamento é tratado como mudança (A11)."
 
 ### PC2 — Sistemas e ferramentas que não são da FGV funcionam (nova)
@@ -78,6 +108,9 @@ Cada premissa tem um bloco com campos fixos, lidos pelo código da etapa 5:
   - **escopo:** trabalho manual ou registro duplicado para contornar o sistema;
   - **metas:** registros que não entram no sistema não contam para a meta medida por ele;
   - **custo:** horas extras de retrabalho e suporte.
+- **B3 — premissa:** o sistema [do contratante] fica disponível e a equipe recebe os acessos até [data a definir pelo GP]; depende da área responsável do contratante; valida: o contratante.
+- **B27 — gatilho e resposta:** indisponibilidade acumulada acima de [N horas por mês, a definir pelo GP], ou acesso não liberado [N dias, a definir pelo GP] depois do pedido → registro de contingência combinado com o contratante, ocorrências registradas e contagem dos prazos afetados suspensa.
+- **A11 — reajuste:** prorrogação dos prazos afetados; meta medida pelo sistema revista ou com registro alternativo aceito (revisão de metas); retrabalho de registro como mudança.
 - **onde no plano:** B3.9, B27.13, A11.12, A8.12; na proposta, PROP-SOW.8 (acessos como obrigação do contratante) e PROP-SOW.11; no TAP, TAP-PR.2.
 - **confere:** código (presença); só PMO (se há contingência viável)
 - **Exemplo de redação:** "Premissa: o sistema de gestão do contratante fica disponível e a equipe recebe os acessos até [data a definir pelo GP]. Indisponibilidade de mais de [prazo a definir pelo GP] suspende a contagem dos prazos afetados."
@@ -93,6 +126,9 @@ Cada premissa tem um bloco com campos fixos, lidos pelo código da etapa 5:
   - **escopo:** critério aberto gera rodadas de revisão sem fim (liga com PC8);
   - **custo:** parcela presa ao aceite atrasa o caixa; se o período sem pagamento for longo, pesa no custo financeiro (CTR5);
   - **metas:** produto aprovado por quem não avalia tecnicamente pode ser contestado depois.
+- **B3 — premissa:** o contratante analisa cada produto, relatório ou prestação de contas em até [prazo a definir pelo GP], pela instância [a definir pelo GP], com o critério de aceite combinado; valida: o contratante.
+- **B27 — gatilho e resposta:** análise que passa [N dias, a definir pelo GP] do prazo combinado; mais de [N rodadas, a definir pelo GP] de ajuste no mesmo produto; folga de caixa abaixo de [N, a definir pelo GP] numa parcela presa à aprovação → escalonamento ao gestor do contrato e ao patrocinador, notificação formal e deslocamento dos produtos dependentes.
+- **A11 — reajuste:** prazos dos dependentes deslocados pelo mesmo número de dias (prorrogação; na parceria, de ofício quando o repasse atrasa); rodada além do limite como mudança.
 - **onde no plano:** B3.9, B27.13, A11.12, A8.12; na proposta, PROP-SOW.9 e PROP-SOW.11; no TAP, TAP9 (requisitos de aprovação), TAP8 (quem decide) e TAP-PR.2.
 - **confere:** código (presença); só PMO (se o critério é mensurável e o prazo é coerente com o cronograma)
 - **Leia como o plano liga o pagamento:** se a nota é emitida contra a entrega, atraso no aceite não bloqueia o pagamento, a menos que o documento diga o contrário.
@@ -109,10 +145,14 @@ Cada premissa tem um bloco com campos fixos, lidos pelo código da etapa 5:
   - **escopo:** com prazo final fixo, cabe menos trabalho no tempo que sobra;
   - **metas:** atividade sazonal (calendário escolar, safra, ano fiscal) pode perder a janela;
   - **custo:** equipe mobilizada sem poder trabalhar.
+- **B3 — premissa:** o projeto começa em [data a definir pelo GP] (assinatura, ordem de serviço ou primeiro repasse); valida: o GP com o contratante.
+- **B27 — gatilho e resposta:** início, ou primeiro repasse, mais de [N dias, a definir pelo GP] depois da data usada no cronograma → replanejar as datas contadas do marco e segurar a mobilização da equipe.
+- **A11 — reajuste:** datas recontadas do início real (prorrogação); com prazo final fixo, redução de escopo ou de metas combinada com o contratante (aditivo ou apostila).
 - **onde no plano:** B3.9, B27.13, A11.12, A8.12; cronograma em dias contados do início (B15); na proposta, PROP-SOW.11; no TAP, TAP6 (marcos) e TAP-PR.2.
 - **confere:** código (presença); só PMO (se o reajuste proposto é viável)
 - **Limite do PMO:** o PMO não avalia se o prazo total "é suficiente". O código calcula datas e folgas; o PMO aponta o que depende de datas (marco sem data, prazo contado de evento sem data).
 - **Exemplo de redação:** "Premissa: o projeto começa em [data a definir pelo GP]. Os prazos são contados em dias a partir da ordem de serviço; se o início atrasar, sugere-se reajustar as datas dos produtos ou, com prazo final fixo, renegociar o escopo (A11)."
+- **Exemplo (janela antes de marco externo fixo):** num estudo com pesquisa de campo presa a um evento, o que precisa acabar antes dele (método aprovado, questionário, autorização, treinamento) cabe na janela entre o início e o evento? O código conta a janela; se o início atrasar, ela encolhe e o campo perde parte do período (decisão 0045).
 
 ### PC5 — As prioridades e os interlocutores do cliente se mantêm (CE17)
 
@@ -125,6 +165,9 @@ Cada premissa tem um bloco com campos fixos, lidos pelo código da etapa 5:
   - **prazo:** decisões param no período eleitoral ou de transição;
   - **metas:** indicadores pensados para o programa anterior perdem sentido;
   - **custo:** retrabalho de produtos já aprovados.
+- **B3 — premissa:** os interlocutores e as prioridades do contratante se mantêm até [marco a definir pelo GP]; valida: o contratante.
+- **B27 — gatilho e resposta:** troca do gestor do contrato ou do dirigente do órgão, ou início do período eleitoral do nível do contratante → reunião de revalidação do escopo e das metas em até [N dias, a definir pelo GP].
+- **A11 — reajuste:** revisão de escopo e metas com os produtos aprovados mantidos (aditivo ou apostila); prorrogação se as decisões pararem.
 - **onde no plano:** B3.9, B27.13, A11.12, A8.12; plano de engajamento (A10) com a revalidação dos interlocutores; na proposta, PROP-SOW.11; no TAP, TAP-PR.2.
 - **confere:** código (presença); só PMO (se há marco de revalidação)
 - **Exemplo de redação:** "Premissa: os interlocutores e as prioridades do contratante se mantêm até [marco a definir pelo GP]. Se houver troca de gestão, sugere-se uma reunião de revalidação do escopo e das metas antes do produto seguinte (A11)."
@@ -141,6 +184,9 @@ Cada premissa tem um bloco com campos fixos, lidos pelo código da etapa 5:
   - **escopo:** a FGV assume mobilização que não estava no escopo;
   - **custo:** mais deslocamento, mais rodadas de convite.
 - **Atenção à causa mal atribuída:** atribuir baixa adesão à "desconfiança das famílias" quando ninguém tem a obrigação de divulgar o programa. A causa estrutural (quem mobiliza) é o que vai para o plano.
+- **B3 — premissa:** [órgão ou parceiro] faz [atividade] até [data a definir pelo GP], e a adesão dos participantes fica em [proporção a definir pelo GP]; valida: o contratante e o parceiro.
+- **B27 — gatilho e resposta:** adesão abaixo de [N%, a definir pelo GP] da meta no mês [a definir], ou apoio local não formalizado até [data a definir pelo GP] → reforço da mobilização com quem tem essa obrigação e alternativa de território ou de público.
+- **A11 — reajuste:** meta condicionada revista (revisão de metas); prorrogação; mobilização extra como acréscimo de escopo.
 - **onde no plano:** B3.9, B27.13, A11.12, A8.12; partes interessadas (B31) e engajamento (A10); atividades de mobilização na EAP; na proposta, PROP-SOW.8 (o que cabe ao contratante) e PROP-SOW.11; no TAP, TAP8 e TAP-PR.2.
 - **confere:** código (presença); só PMO (se a meta está condicionada e a mobilização tem responsável)
 - **Exemplo de redação:** "Premissa: [órgão parceiro] apoia [atividade] e os participantes aderem na proporção de [a definir pelo GP]. A meta de [indicador] fica condicionada a essa adesão; abaixo de [limite a definir pelo GP], sugere-se rever a meta ou a estratégia de mobilização (A11)."
@@ -156,8 +202,13 @@ Cada premissa tem um bloco com campos fixos, lidos pelo código da etapa 5:
   - **metas:** volume prometido não é entregue com a qualidade combinada;
   - **custo:** horas extras ou reforço de equipe sem previsão;
   - **escopo:** frente sem responsável fica para trás (CP10).
+- **B3 — premissa:** a equipe de [funções e quantidade por mês] atende ao volume de [quantidade do edital, com a página] com a produtividade de [teto do edital ou da proposta, ou a definir pelo GP]; valida: o GP.
+- **B27 — gatilho e resposta:** a conta do código (volume ÷ pessoas ÷ 21 dias úteis) acima do teto; produtividade real abaixo de [N%, a definir pelo GP] do previsto por [N semanas, a definir pelo GP]; rotatividade acima de [N%, a definir pelo GP] → reforço, redistribuição entre frentes ou priorização combinada.
+- **A11 — reajuste:** reforço de equipe como mudança de custo (na parceria, remanejamento entre naturezas; na licitação, aditivo); revisão do volume ou das metas; prorrogação.
 - **onde no plano:** B3.9, B27.13, A11.12, A8.12; requisitos de recursos (B26), designações (B18), RACI; na proposta, PROP-SOW.11 e o quadro de equipe; no TAP, TAP-PR.2.
 - **confere:** código (presença); a conta equipe × volume é do código; só PMO (se o dimensionamento cobre cada frente)
+- **mesmo perfil em atividades paralelas (0.3.2):** o mesmo perfil como responsável por atividades que correm ao mesmo tempo é gargalo: vira esta premissa, com a consequência e o reforço possível (PROP-EQUIPE.13).
+- **erro que evita:** um analista responsável por dois relatórios no mesmo mês, sem premissa; o atraso de um puxou o outro.
 - **Exemplo de redação:** "Premissa: a equipe de [perfis] com [horas a definir pelo GP] atende ao volume de [quantidade do TR]. Se o volume exceder [limite a definir pelo GP], sugere-se tratar como mudança de escopo ou reforço de equipe (A11)."
 
 ### PC8 — O escopo não cresce sem aditivo (CTR6)
@@ -170,6 +221,9 @@ Cada premissa tem um bloco com campos fixos, lidos pelo código da etapa 5:
   - **escopo e custo:** trabalho a mais pelo mesmo preço;
   - **prazo:** revisões sem limite seguram a aprovação e o produto seguinte;
   - **metas:** esforço desviado para demandas fora do objeto.
+- **B3 — premissa:** cada produto tem até [N rodadas, a definir pelo GP] de revisão, e demanda nova entra só por solicitação de mudança; valida: o contratante.
+- **B27 — gatilho e resposta:** pedido fora da lista de produtos ou dentro das exclusões; rodada além do limite; horas de um produto acima de [N%, a definir pelo GP] do estimado → registrar a solicitação de mudança, avaliar o impacto e não executar antes da decisão.
+- **A11 — reajuste:** aditivo de escopo e valor (licitação, dentro do limite do art. 125); revisão do plano de trabalho por aditivo ou apostila (parceria, art. 57); ou recusa registrada.
 - **onde no plano:** B3.9, B27.13, A11.12, A8.12; especificação do escopo com exclusões (B17); na proposta, PROP-SOW.4, PROP-SOW.5 e PROP-SOW.11; no TAP, TAP4 (limites) e TAP-PR.2.
 - **confere:** código (presença); só PMO (se o limite é claro)
 - **Exemplo de redação:** "Premissa: cada produto tem até [número a definir pelo GP] rodadas de revisão. Pedido além disso, ou produto novo, é tratado como solicitação de mudança e, se alterar o contrato, como termo aditivo (A11)."

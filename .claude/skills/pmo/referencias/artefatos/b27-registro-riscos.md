@@ -6,7 +6,7 @@ etapas: [4, 5]
 gravidade: baixa
 categoria: incerteza
 sinonimos: ["registro de riscos", "matriz de riscos", "mapa de riscos", "planilha de riscos", "riscos identificados", "RAID"]
-versao: 0.2.0
+versao: 0.3.2
 ---
 
 # B27 — Registro dos riscos
@@ -17,7 +17,7 @@ versao: 0.2.0
 ## Conteúdo mínimo
 - **B27.1** Cada risco com identificador único e descrição clara
   - fonte: PMBOK 6, 11.2.3.1, p. 417 (PDF 453)
-  - sinais: "ID do risco" | "RK01" | "risco 1" | "descrição do risco" | tabela com uma linha por risco
+  - sinais: "ID do risco" | "identificador do risco" | "código do risco" | "nº do risco" | "R-01" | "risco 1" | "descrição do risco" | tabela com uma linha por risco
   - confere: código
   - dispensa: nunca
 - **B27.2** Causa e efeito escritos separados do evento de risco

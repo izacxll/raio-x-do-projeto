@@ -88,6 +88,8 @@ export const CaracteristicasProjeto = z.object({
   frentes: z.enum(["uma", "várias"]),
   contratante: z.enum(["público", "privado"]),
   pagamento: z.enum(["por produto", "por medição", "de outra forma"]),
+  // decisão 0043; dossiês anteriores não têm o campo e ficam no valor conservador
+  exposicao: z.enum(["sensível", "comum"]).default("sensível"),
 });
 
 export const ParteDoMapa = z.object({

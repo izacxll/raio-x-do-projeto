@@ -53,6 +53,8 @@ Tudo o que a régua não pede vai para "não se aplica a este tipo de plano", nu
 - Antes de dizer que falta, procurar no plano inteiro, com sinônimos **só** dos itens fixos (decisão do PR #43).
 - Parte dispensada pelo GP na etapa 4 não é procurada. A dispensa que só o plano declara (lista "Partes dispensadas pelo GP", sem a etapa 4 no dossiê) é candidata: o PMO diz se cabe pelas condições da ficha; se não couber, a parte volta a ser conferida (decisão 0052).
 - O ausente que o PMO aponta é procurado pelo código só na parte apontada (ou nas que absorvem a parte dispensada), sem os trechos que o próprio achado cita como evidência, e só com os termos que o PMO mandou (decisão 0052).
+- **Primeiro o que o plano deve aos documentos**, depois as fichas: requisitos R, **compromissos C** da proposta e do TAP (o que não chegou ao plano é ausente, com a página da proposta; decisão 0047) e os **cruzamentos X1 a X6** entre o plano e o contrato, o TAP e a RFP (o que diverge é conflituoso; decisão 0046).
+- **Item que a condição de dispensa da ficha tira para o projeto nunca é achado** (ex.: em porte pequeno, A3.10, A4.6, A8.5, A10.2, B27.11).
 
 ### 4.4 Vagos
 - Só quando o trecho fala de obrigação, prazo ou entrega de alguém (decisão 0031), e principalmente quando deixa a aprovação do contratante sem prazo.
@@ -70,10 +72,11 @@ Pela regra fixa (decisões 0008 e 0009), pela parte do plano. Ajustes deste mét
 ## 6. Código × PMO
 **Achado do código é candidato até o veredito do PMO** (decisão 0052). O PMO dá um veredito para cada achado do código (ausente, vago e conflituoso): sustenta, falso (com o trecho do plano), não se aplica (com o motivo) ou regra errada (com a causa). Só os confirmados como "sustenta" contam no total; os outros aparecem à parte, com o veredito. O código confere o veredito: o trecho do "falso" é procurado na página, e veredito incompleto ou ausente deixa o achado como "candidato sem veredito", fora do total.
 - **Código:** tipo de plano (com confirmação), comparações numéricas e de datas, frase de conformidade, presença das partes e itens do núcleo, PC5 pela eleição, o que está em ordem.
-- **PMO (leitura opcional, F5b):** premissa escrita como premissa ou só citada, exclusões de outro tipo de projeto, orçamento × obrigação, vagos em texto corrido.
+- **PMO (leitura principal, decisões 0035 e 0037):** premissa escrita como premissa ou só citada, exclusões de outro tipo de projeto, orçamento × obrigação, vagos em texto corrido.
 
 ## 7. Critério de aceite
 - Num plano de trabalho real, pelo menos metade dos graves se sustenta (critério da responsável), e num plano correto quase nada aparece.
 - Nenhum achado de parte que não se aplica ao tipo de plano.
 - A seção "O que está em ordem" aparece sempre.
 - Num plano de tamanho típico, 10 a 25 achados.
+- Os cruzamentos X1 a X6 registrados e os compromissos C procurados no plano.
