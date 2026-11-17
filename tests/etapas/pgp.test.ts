@@ -34,6 +34,10 @@ import {
 } from "../../src/etapas/4-pgp/pgp";
 import { PARTES_PGP } from "../../src/dominio/skill";
 import { RespostaCronogramaGuardada, SCHEMAS_PGP, type PassoPgp } from "../../src/pmo/schemas/pgp";
+import {
+  conferirAutoconferenciaDaEtapa3,
+  itensEsperadosDaEtapa3,
+} from "../../src/etapas/3-tap/autoconferencia";
 import { lerRfpPublica } from "../ajudantes/rfp-publica";
 
 const ler = (n: string) =>
@@ -316,14 +320,29 @@ describe("pacote, parte não gerada, contingência e registro inicial (teste ext
     expect(c.linhaDeBase).toBeUndefined();
   });
 
-  it("premissa do PMO com a mesma premissa crítica do registro inicial sai do B3; a de estimativa fica", () => {
+  it("com o registro inicial, o que vem da RFP, da proposta ou do TAP sai do B3; a premissa de estimativa fica", () => {
     const registro = entrada.premissasTap;
     const pc = registro.find((x) => x.premissaCritica)?.premissaCritica;
     expect(pc).toBeTruthy();
     const base = registro.find((x) => x.premissaCritica === pc)!;
+    // mesma premissa crítica
     expect(repeteORegistroInicial({ ...base, origem: "proposta" }, registro)).toBe(true);
+    // sem premissa crítica, mas a mesma origem e o mesmo tipo que o registro já tem
+    expect(repeteORegistroInicial({ ...base, premissaCritica: "" }, registro)).toBe(true);
+    // estimativa é nova (B3.4), com ou sem premissa crítica
     expect(repeteORegistroInicial({ ...base, origem: "estimativa" }, registro)).toBe(false);
-    expect(repeteORegistroInicial({ ...base, tipo: "restricao" }, registro)).toBe(false);
+    // sem registro inicial, nada sai
     expect(repeteORegistroInicial({ ...base, origem: "proposta" }, [])).toBe(false);
+  });
+
+  it("autoconferência da etapa 3 por passo: o registro de premissas cobra só TAP-PR e B3", () => {
+    const premissas = itensEsperadosDaEtapa3("premissas");
+    expect(premissas.filter((c) => c.startsWith("TAP-PR.")).length).toBeGreaterThan(0);
+    expect(premissas.every((c) => /^(?:TAP-PR|B3)\.\d+$/.test(c))).toBe(true);
+    const tap = itensEsperadosDaEtapa3("tap");
+    expect(tap.some((c) => /^TAP-PR\.|^B3\./.test(c))).toBe(false);
+    expect(tap).toContain("TAP1.1");
+    const marcas = premissas.map((item) => ({ item, estado: "presente" as const, onde: "pr1", motivo: "" }));
+    expect(conferirAutoconferenciaDaEtapa3("premissas", marcas).ok).toBe(true);
   });
 });

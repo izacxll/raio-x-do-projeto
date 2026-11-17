@@ -25,6 +25,10 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 - **Análise do contratante (decisão 0051):** a atividade que é a própria análise dura o tempo de aprovação do GP, sem somar por cima.
 - **Etapa 4:** contingência dos riscos que pedem reserva no B6 e no A15 como "a definir pelo GP"; premissa do PMO que repete o registro inicial sai do B3; parte ainda não gerada não é cobrada na autoconferência.
 - **Testes sem as datas do caso:** os testes e comentários do cronograma usam datas neutras (decisão 0049).
+- **Compromissos numerados (decisão 0047):** premissas, obrigações do contratante, exclusões e limites de volume da proposta recebem um número C (C01…) na etapa 2; o TAP mostra o destino de cada um (citado pelo PMO, provável ou sem destino) e os pedidos da etapa 3 pedem o C no item que o leva.
+- **Autoconferência da etapa 3 por passo:** o TAP cobra os seus itens; o registro de premissas, só TAP-PR e B3.
+- **B3 da etapa 4 com o registro inicial:** o que o passo de riscos traz da RFP, da proposta ou do TAP sai; ficam as premissas de estimativa.
+- **Gestor e fiscal no pedido do TAP:** só o papel; o nome é do GP confirmar no contrato.
 
 ### Fase M3 — etapa 3 pelo método (decisão 0041)
 - **Testar sem a chave:** `npm run exportar-pedido` grava, fora do Git, o pedido de um passo do PMO exatamente como iria à API (sistema, mensagem com os PDFs e o esqueleto, schema), para o Claude do claude.ai responder; `npm run importar-resposta` valida a resposta, grava no dossiê, roda as travas e mede contra o gabarito numa seção "leitura independente". Por ora, a etapa 1.

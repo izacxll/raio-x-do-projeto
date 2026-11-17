@@ -36,7 +36,7 @@ function repetidasNoRegistro(p: PgpDossie, e: EntradaPgp): string[] {
   );
   return repetidas.length
     ? [
-        `Conferência do código: ${repetidas.length} premissa(s) do passo de riscos repetiam o registro inicial (${[...new Set(repetidas.map((x) => x.premissaCritica))].join(", ")}) e ficaram só uma vez.`,
+        `Conferência do código: ${repetidas.length} linha(s) do passo de riscos repetiam o registro inicial (${[...new Set(repetidas.map((x) => x.premissaCritica || (x.tipo === "restricao" ? "restrição" : "premissa")))].join(", ")}) e ficaram só uma vez.`,
       ]
     : [];
 }
