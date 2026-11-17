@@ -74,7 +74,7 @@ export function calendarioDoProjeto(municipais: string[] = []): Calendario & { i
     ehFeriado: (d) => nacionais(d.getFullYear()).has(chave(d)) || locais.has(chave(d)),
     descricao: locais.size
       ? `com os feriados nacionais e ${locais.size} municipal(is) informado(s) pelo GP`
-      : "com os feriados nacionais (municipais: o GP informa)",
+      : "com os feriados nacionais; os municipais, o GP informa",
     ilegiveis,
   };
 }
