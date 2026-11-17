@@ -45,6 +45,7 @@ import { NOME_TIPO_COMPROMISSO, destinosNoTap } from "../../src/etapas/2-propost
 import { inicioFixo } from "../../src/regras/cruzamentos-rfp";
 import { montarEntradaPgp } from "../../src/etapas/4-pgp/entrada";
 import {
+  rastrearCompromissos,
   conferirPacotes,
   conferirRaci,
   contratanteNaRaci,
@@ -56,7 +57,7 @@ import { autoconferir } from "../../src/etapas/4-pgp/autoconferencia";
 import { textoDasHoras, textoDasHorasTotais } from "../../src/etapas/2-proposta/preco";
 import { PASSOS_PGP } from "../../src/etapas/4-pgp/passos";
 import { PEDIDOS_PGP } from "../../src/etapas/4-pgp/pedidos";
-import { passoAnterior, pgpInicial, repeteORegistroInicial } from "../../src/etapas/4-pgp/pgp";
+import { itensDoPgp, passoAnterior, pgpInicial, repeteORegistroInicial } from "../../src/etapas/4-pgp/pgp";
 import { conferirLeitura, pedidoLeitura } from "../../src/etapas/5-conferencia/leitura-pmo";
 import { conferirAutoconferencia, partesARegenerar } from "../../src/pmo/autoconferencia";
 import { citacaoValeComoFato, conferirCitacao } from "../../src/pmo/citacoes";
@@ -691,7 +692,7 @@ describe.skipIf(MODO !== "importar")("importar a resposta do PMO (leitura indepe
           `- falta: ${custos.faltando.join("; ")}`,
         );
       }
-      if (etapa === 4 && passo === "riscos" && dossie.pgp?.riscos) {
+      if (etapa === 4 && ["riscos", "planos", "execucao"].includes(passo) && dossie.pgp?.riscos) {
         // premissas críticas nos três lugares (regras da etapa 5 sobre o plano gerado), contingência e registro inicial
         const ep = montarEntradaPgp(dossie, HOJE);
         const r = dossie.pgp.riscos.resposta;
@@ -722,6 +723,17 @@ describe.skipIf(MODO !== "importar")("importar a resposta do PMO (leitura indepe
           `- riscos que pedem reserva: ${custos?.riscosComReserva.map((x) => x.id).join(", ") || "nenhum"}`,
           `- linha de base dos custos: ${custos?.linhaDeBase ?? "a definir pelo GP"}; falta: ${custos?.faltando.filter((x) => /reserva/.test(x)).join("; ") || "—"}`,
         );
+        // compromissos (decisão 0047): o destino no TAP e no plano, como na matriz B23
+        const cs = rastrearCompromissos(ep, itensDoPgp(dossie.pgp, ep.documentos, ep.premissasTap));
+        if (cs.length)
+          linhas.push(
+            "",
+            `## Compromissos (C) no TAP e no plano: ${cs.filter((x) => x.plano.length).length} de ${cs.length} com destino no plano`,
+            ...cs.map(
+              (x) =>
+                `- ${x.compromisso.numero} · ${NOME_TIPO_COMPROMISSO[x.compromisso.tipo]}: TAP ${x.tap.situacao === "citado" ? x.tap.onde : x.tap.situacao === "provavel" ? `provável (${x.tap.onde})` : "sem destino"}; plano ${x.plano.join("; ") || "sem destino"}`,
+            ),
+          );
       }
       if (etapa === 3 && dossie.tap) {
         // compromissos numerados da proposta (decisão 0047) e o destino de cada um no TAP e no registro
