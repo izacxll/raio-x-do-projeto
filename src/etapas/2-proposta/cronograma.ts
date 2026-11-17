@@ -134,6 +134,9 @@ export function calcularCronograma(atividades: AtividadeEap[], par: ParametrosCr
     );
 
   const calc = new Map<string, AtividadeCalculada>();
+  const inicioProjeto = par.inicio ? primeiroDiaUtil(par.inicio) : undefined;
+  /** Dias úteis entre o início do projeto e a data fixa (o deslocamento da atividade presa a ela). */
+  const fixas = new Map<string, number>();
   for (const a of ordem) {
     const { otimista: o0, mais_provavel: m0, pessimista: p0 } = a.duracao;
     // restrição de data (evento): a duração é conta do código, os dias úteis da janela fixa; os três pontos não valem
@@ -142,14 +145,30 @@ export function calcularCronograma(atividades: AtividadeEap[], par: ParametrosCr
       problemas.push(
         `Atividade ${a.id}: restrição de data ilegível (${a.restricaoData.inicio} a ${a.restricaoData.fim}); use dd/mm/aaaa.`,
       );
-    if (fixa !== undefined)
-      problemas.push(
-        `Atividade ${a.id} tem data fixa (${a.restricaoData?.inicio} a ${a.restricaoData?.fim}): ${fixa} dias úteis pela conta do código, sem feriados. Com o início do projeto informado, ela não começa antes da data fixa.`,
-      );
     const [o, m, p] = fixa !== undefined ? [fixa, fixa, fixa] : [o0, m0, p0];
     const duracao = Math.ceil(duracaoEsperada(o, m, p) - 1e-9);
     const aprovacao = a.aprovacaoCliente ? (par.aprovacaoDias ?? 0) : 0;
-    const inicio = Math.max(0, ...a.predecessoras.map((pr) => calc.get(pr)?.fimMaisCedo ?? 0));
+    const depoisDasPredecessoras = Math.max(
+      0,
+      ...a.predecessoras.map((pr) => calc.get(pr)?.fimMaisCedo ?? 0),
+    );
+    let inicio = depoisDasPredecessoras;
+    const iniFixo = a.restricaoData ? lerDataSimples(a.restricaoData.inicio) : undefined;
+    if (fixa !== undefined && inicioProjeto && iniFixo) {
+      // com o início do projeto, a atividade começa no primeiro dia útil da janela fixa, nem antes nem depois
+      const deslocamento =
+        iniFixo > inicioProjeto ? contarDiasUteis(inicioProjeto, iniFixo) - (ehDiaUtil(iniFixo) ? 1 : 0) : 0;
+      fixas.set(a.id, deslocamento);
+      inicio = deslocamento;
+      problemas.push(
+        depoisDasPredecessoras > deslocamento
+          ? `Atividade ${a.id} tem data fixa (${a.restricaoData?.inicio} a ${a.restricaoData?.fim}), mas as predecessoras só terminam ${depoisDasPredecessoras - deslocamento} dia(s) útil(eis) depois do início da janela: o cronograma não cabe antes do evento (conta do código, sem feriados).`
+          : `Atividade ${a.id} presa à data fixa (${a.restricaoData?.inicio} a ${a.restricaoData?.fim}): ${fixa} dias úteis, começando no primeiro dia útil da janela; as predecessoras terminam ${deslocamento - depoisDasPredecessoras} dia(s) útil(eis) antes (conta do código, sem feriados).`,
+      );
+    } else if (fixa !== undefined)
+      problemas.push(
+        `Atividade ${a.id} tem data fixa (${a.restricaoData?.inicio} a ${a.restricaoData?.fim}): ${fixa} dias úteis pela conta do código, sem feriados. Sem o início do projeto (decisão do GP), o cronograma não a prende à data: informe o início.`,
+      );
     calc.set(a.id, {
       id: a.id,
       nome: a.nome,
@@ -173,6 +192,8 @@ export function calcularCronograma(atividades: AtividadeEap[], par: ParametrosCr
       ? Math.min(...sucessoras.map((b) => (calc.get(b.id) as AtividadeCalculada).inicioMaisTarde))
       : total;
     c.inicioMaisTarde = c.fimMaisTarde - c.duracao - c.aprovacao;
+    // a atividade presa à data fixa não flutua: as predecessoras é que ganham folga até ela
+    if (fixas.has(a.id)) c.inicioMaisTarde = c.inicioMaisCedo;
     c.folga = c.inicioMaisTarde - c.inicioMaisCedo;
     c.critica = c.folga === 0;
   }

@@ -326,3 +326,33 @@ describe("prazo de cada produto (código)", () => {
     expect(r[0]?.situacao).toBe("nao-conferido");
   });
 });
+
+describe("data fixa com o início do projeto: o cronograma respeita o evento", () => {
+  const campo = (pred: string[]): AtividadeEap => ({
+    ...atv("c4", pred, [0, 0, 0]),
+    restricaoData: {
+      inicio: "08/11/2025",
+      fim: "07/01/2026",
+      fonte: { doc: "rfp", pagina: 1, trecho: "realizado no período de 08/11/2025 a 07/01/2026;" },
+    },
+  });
+
+  it("começa no primeiro dia útil da janela e as predecessoras ganham folga", () => {
+    const c = calcularCronograma([atv("m1", [], [10, 10, 10]), campo(["m1"]), atv("s1", ["c4"], [5, 5, 5])], {
+      inicio: new Date(2025, 8, 22),
+    });
+    const c4 = c.atividades.find((a) => a.id === "c4");
+    expect(c4?.dataInicio?.toLocaleDateString("pt-BR")).toBe("10/11/2025");
+    expect(c4?.dataFim?.toLocaleDateString("pt-BR")).toBe("07/01/2026");
+    expect(c4?.folga).toBe(0);
+    expect(c.atividades.find((a) => a.id === "m1")?.folga).toBeGreaterThan(0);
+    expect(c.problemas.join(" ")).toMatch(/presa à data fixa/);
+  });
+
+  it("acusa quando as predecessoras terminam depois do início da janela", () => {
+    const c = calcularCronograma([atv("m1", [], [60, 60, 60]), campo(["m1"])], {
+      inicio: new Date(2025, 8, 22),
+    });
+    expect(c.problemas.join(" ")).toMatch(/não cabe antes do evento/);
+  });
+});
