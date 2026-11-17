@@ -101,12 +101,26 @@ ${fichasDasPartes(["A17", "A18"])}
 ${REGRAS}`;
 }
 
+/** Requisitos de alto nível do TAP; o R que saiu da lista na etapa 1 vai marcado, para não virar requisito do plano. */
+function requisitosDoTapEmTexto(e: EntradaPgp): string {
+  const daLista = new Set(e.ponto.requisitos.map((r) => r.numero));
+  return e.requisitosTap
+    .map((r) => {
+      const fora = r.requisitos.filter((n) => !daLista.has(n));
+      const aviso = fora.length
+        ? ` — ${fora.join(", ")} fora da lista de requisitos da RFP (descartado na etapa 1): trate como restrição, não como requisito.`
+        : "";
+      return `- ${r.texto} (${r.requisitos.join(", ")})${aviso}`;
+    })
+    .join("\n");
+}
+
 export function pedidoEscopo(e: EntradaPgp, p: PgpDossie): string {
   const partes = partesDoPasso("escopo", p);
   return `${cabecalho(e, p, "passo 3: escopo e requisitos (fichas A1, A2, B22, B17, A13)")}
 
 Requisitos de alto nível do TAP:
-${e.requisitosTap.map((r) => `- ${r.texto} (${r.requisitos.join(", ")})`).join("\n") || "- (TAP em PDF ou sem TAP: ler no documento)"}
+${requisitosDoTapEmTexto(e) || "- (TAP em PDF ou sem TAP: ler no documento)"}
 
 Partes a escrever neste passo (o GP marcou):
 ${listaDePartes(partes)}

@@ -263,6 +263,26 @@ describe("respostas gravadas do PMO na etapa 3 (OEI)", () => {
     expect(com.texto).not.toMatch(/além da vigência|marco\(s\) com data/);
   });
 
+  it("requisito de alto nível com R fora da lista da etapa 1 é apontado", () => {
+    const comR99: TapDossie = {
+      ...t,
+      tap: {
+        ...t.tap!,
+        resposta: {
+          ...tap,
+          requisitosAltoNivel: [
+            ...tap.requisitosAltoNivel,
+            { ...tap.requisitosAltoNivel[0]!, id: "rq99", requisitos: ["R99"] },
+          ],
+        },
+      },
+    };
+    const v = conferirTap(entrada, comR99, itensDaEtapa3(comR99, entrada.documentos), {});
+    const r = v.find((x) => x.id === "requisitos")!;
+    expect(r.situacao).toBe("atencao");
+    expect(r.texto).toMatch(/R99 no TAP\.3 não está na lista de requisitos da etapa 1/);
+  });
+
   it("premissa crítica confirmada sem linha no registro é apontada", () => {
     const itens = itensDaEtapa3(t, entrada.documentos);
     const v = conferirTap(entrada, t, itens, { PC2: true });

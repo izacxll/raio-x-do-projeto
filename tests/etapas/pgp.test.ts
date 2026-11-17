@@ -146,6 +146,21 @@ describe("pedidos da etapa 4", () => {
     expect(PEDIDOS_PGP.adaptacao(entrada, p)).toContain("### B33");
     expect(PEDIDOS_PGP.cronograma(entrada, p)).toContain("P1.1 Alinhamento e plano de trabalho");
   });
+
+  it("requisito do TAP com R fora da lista da etapa 1 vai marcado no pedido do escopo", () => {
+    const e: EntradaPgp = {
+      ...entrada,
+      requisitosTap: [
+        { texto: "Três produtos.", requisitos: ["R01"] },
+        { texto: "Responder por erro na proposta.", requisitos: ["R99"] },
+      ],
+    };
+    const pedido = PEDIDOS_PGP.escopo(e, dossie.pgp!);
+    expect(pedido).toContain("- Três produtos. (R01)\n");
+    expect(pedido).toContain(
+      "- Responder por erro na proposta. (R99) — R99 fora da lista de requisitos da RFP (descartado na etapa 1): trate como restrição, não como requisito.",
+    );
+  });
 });
 
 describe("autoconferência pelas regras da etapa 5", () => {

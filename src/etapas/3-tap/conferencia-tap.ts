@@ -67,14 +67,20 @@ export function conferirTap(
   const semNumero = altoNivel.filter((i) => !i.item.requisitos.length);
   const citados = new Set(altoNivel.flatMap((i) => i.item.requisitos));
   const faltando = e.ponto.requisitos.map((r) => r.numero).filter((n) => !citados.has(n));
+  // R que saiu da lista na etapa 1 (descartado pelo GP) ou que não existe: não é requisito do TAP
+  const daLista = new Set(e.ponto.requisitos.map((r) => r.numero));
+  const foraDaLista = [...citados].filter((n) => !daLista.has(n)).sort();
   out.push({
     id: "requisitos",
     nome: "Requisitos de alto nível ligados aos números R",
-    situacao: semNumero.length || faltando.length ? "atencao" : "ok",
+    situacao: semNumero.length || faltando.length || foraDaLista.length ? "atencao" : "ok",
     texto: [
       semNumero.length ? `${semNumero.length} requisito(s) de alto nível sem número R.` : "",
       faltando.length ? `Requisitos da RFP não citados no TAP.3: ${faltando.join(", ")}.` : "",
-      !semNumero.length && !faltando.length
+      foraDaLista.length
+        ? `${foraDaLista.join(", ")} no TAP.3 não está na lista de requisitos da etapa 1 (descartado pelo GP ou inexistente): sugere-se tratá-lo como restrição ou observação, não como requisito de alto nível.`
+        : "",
+      !semNumero.length && !faltando.length && !foraDaLista.length
         ? `Os ${e.ponto.requisitos.length} requisitos da RFP estão ligados.`
         : "",
     ]

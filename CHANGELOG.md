@@ -14,6 +14,9 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 - **Autoconferência** nos esquemas das etapas 1 a 4, validador e o teste que reprova; na etapa 4, item sem marca devolve só a sua parte ao PMO.
 - **Cronograma com data fixa:** a atividade com restrição de data conta em dias corridos e começa na data de início da janela (evento em fim de semana); a folga das predecessoras aparece em dias corridos até essa data.
 - **TAP:** marco com data (o início do projeto) não conta como prazo além da vigência; entregas com data quando há início (o do GP ou a data fixa do documento, a confirmar pelo GP) e aviso de marco sem data quando não há; gestor e fiscal só com o papel, sem o nome.
+- **Aceite pela nota fiscal:** sem cláusula de recebimento, o código mostra que o aceite é a aprovação da nota fiscal por quem fiscaliza (sem prazo e sem recebimento provisório e definitivo); a contratada (FGV) sai dos órgãos citados.
+- **R fora da lista:** requisito de alto nível do TAP com um R descartado na etapa 1 é apontado na conferência e vai marcado no pedido do escopo da etapa 4.
+- **Pedidos externos:** o porte e as premissas críticas passados na primeira exportação ficam no dossiê de origem.
 
 ### Fase M3 — etapa 3 pelo método (decisão 0041)
 - **Testar sem a chave:** `npm run exportar-pedido` grava, fora do Git, o pedido de um passo do PMO exatamente como iria à API (sistema, mensagem com os PDFs e o esqueleto, schema), para o Claude do claude.ai responder; `npm run importar-resposta` valida a resposta, grava no dossiê, roda as travas e mede contra o gabarito numa seção "leitura independente". Por ora, a etapa 1.
