@@ -69,6 +69,36 @@ No app, a chave fica só no navegador (decisão 0003). Para os scripts que chama
 
 O script recusa um arquivo dentro da pasta do projeto e nunca imprime a chave.
 
+## Testar sem a chave: o Claude do claude.ai faz o papel do PMO
+
+1. **Exportar o pedido de um passo:**
+
+   ```powershell
+   npm run exportar-pedido -- --etapa 1 --passo leitura-rfp --rfp chamamento-publico-termo-fomento-smped-sp-2025.pdf
+   ```
+
+   O script grava em `..\pedidos-raio-x\`, fora do repositório:
+   - um `.md` com exatamente o que o app mandaria à API: o texto de sistema (a skill e o método), a mensagem do usuário (o texto dos PDFs e o pedido com o esqueleto do código) e o schema JSON da resposta, com a estimativa de tokens no topo;
+   - um `.dossie.json` para a importação.
+
+   O gabarito do Claude Code nunca vai no pedido. Por ora, só a etapa 1 (`leitura-rfp`).
+2. No claude.ai, cole o texto de sistema e a mensagem e peça só o JSON. Salve a resposta num arquivo `.json`.
+3. **Importar a resposta:**
+
+   ```powershell
+   npm run importar-resposta -- --etapa 1 --passo leitura-rfp --arquivo <resposta.json> --dossie <arquivo .dossie.json>
+   ```
+
+   O script:
+   - valida a resposta no schema;
+   - grava a resposta no dossiê como leitura do PMO;
+   - roda as travas do código e mostra os avisos um por um;
+   - mede contra o gabarito do Claude Code, numa seção "leitura independente".
+
+   O relatório fica ao lado da resposta (`<resposta>.placar.md`).
+
+Pedido de edital público pode ir depois para `tests/fixtures/gerados/`. Pedido de plano real nunca vai para o Git.
+
 `.env` e `.env.*` estão no `.gitignore`. Não há `.env.example`, porque o app não precisa de nenhum.
 
 ## Arquivos de configuração das ferramentas

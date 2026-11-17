@@ -32,6 +32,8 @@ const NOME_ORIGEM_DADO = {
   "nao-localizado": "conferir",
 };
 
+const NOME_VERSAO = { rfp: "a RFP", proposta: "a proposta", contrato: "o contrato" } as const;
+
 export function TermoDeAbertura() {
   const { dossie, guardarTap } = useDossie();
   const t = dossie.tap ?? tapInicial(dossie.proposta?.modelo);
@@ -133,6 +135,11 @@ export function TermoDeAbertura() {
                 ? `${NOME_PROPOSTA_DO_DOSSIE}: a minuta da etapa 2, com as revisões do GP. Se o GP editou a proposta fora da ferramenta, envie o PDF da versão final acima: ele passa a valer.`
                 : "Nenhuma proposta: envie o PDF da proposta final acima, ou faça a etapa 2 neste dossiê."}
           </p>
+          <p className="texto-apoio" data-testid="fonte-contrato">
+            {entrada.contrato
+              ? `Contrato ou termo assinado: ${entrada.contrato.nomeArquivo}. Ele prevalece sobre a proposta e a RFP.${entrada.lidoDoContrato?.parteIntegrante ? ` A proposta ou o plano de trabalho é parte integrante (p. ${entrada.lidoDoContrato.parteIntegrante.pagina}): também obriga.` : ""}`
+              : "Sem o contrato ou termo assinado: envie-o acima, se já houver. O TAP parte do que foi assinado; sem ele, os números ficam a confirmar."}
+          </p>
         </div>
       </section>
 
@@ -162,11 +169,14 @@ export function TermoDeAbertura() {
 
       {divergencias.length > 0 && (
         <section className="bloco">
-          <RotuloSecao>Divergências RFP × proposta (código)</RotuloSecao>
+          <RotuloSecao>1. Divergências para o GP decidir (código)</RotuloSecao>
           <div className="cartao cartao__corpo">
             <p className="texto-apoio">
-              Requisito a requisito, mais o prazo e o valor. Onde a proposta diverge da RFP, o GP decide qual
-              vale no TAP. “Não localizado” quer dizer que o código não achou: conferir.
+              Vêm primeiro: o resto do TAP depende de qual versão vale. Requisito a requisito, o valor, as
+              parcelas (com a frase de conformidade), a duração × a vigência, a regra da equipe e a
+              produtividade. O contrato assinado costuma prevalecer; quem decide é o GP. “Não localizado” quer
+              dizer que o código não achou: conferir. As divergências de texto vêm da leitura do PMO, no passo
+              dos 12 elementos.
             </p>
             <table className="tabela tabela--texto" data-testid="divergencias">
               <thead>
@@ -174,7 +184,8 @@ export function TermoDeAbertura() {
                   <th>Item</th>
                   <th>RFP</th>
                   <th>Proposta</th>
-                  <th>Situação</th>
+                  {entrada.contrato && <th>Contrato</th>}
+                  <th>Situação e o que fazer</th>
                   <th>O que vale (decisão do GP)</th>
                 </tr>
               </thead>
@@ -192,7 +203,23 @@ export function TermoDeAbertura() {
                         {d.proposta.texto}
                         {d.proposta.onde && <div className="envio__obs">{d.proposta.onde}</div>}
                       </td>
-                      <td title={d.observacao}>{NOME_SITUACAO_DIVERGENCIA[d.situacao]}</td>
+                      {entrada.contrato && (
+                        <td>
+                          {d.contrato?.texto ?? "—"}
+                          {d.contrato?.onde && <div className="envio__obs">{d.contrato.onde}</div>}
+                        </td>
+                      )}
+                      <td>
+                        {NOME_SITUACAO_DIVERGENCIA[d.situacao]}
+                        <div className="envio__obs">{d.observacao}</div>
+                        {d.versaoSugerida && (
+                          <div className="envio__obs">
+                            <EtiquetaRotulo rotulo="sugestao" /> Versão sugerida:{" "}
+                            {NOME_VERSAO[d.versaoSugerida]}
+                            {d.oQueFazer ? `. ${d.oQueFazer}` : ""}
+                          </div>
+                        )}
+                      </td>
                       <td>
                         {pedeDecisao(d) ? (
                           <>
@@ -202,13 +229,18 @@ export function TermoDeAbertura() {
                               onChange={(e) => {
                                 const divs = { ...t.divergencias };
                                 if (!e.target.value) delete divs[d.id];
-                                else divs[d.id] = { vale: e.target.value as "rfp", texto: dec?.texto };
+                                else
+                                  divs[d.id] = {
+                                    vale: e.target.value as "rfp" | "proposta" | "contrato" | "outra",
+                                    texto: dec?.texto,
+                                  };
                                 atualizar({ ...t, divergencias: divs });
                               }}
                             >
                               <option value="">pendente</option>
                               <option value="rfp">vale a RFP</option>
                               <option value="proposta">vale a proposta</option>
+                              {entrada.contrato && <option value="contrato">vale o contrato</option>}
                               <option value="outra">outra redação</option>
                             </select>
                             {dec?.vale === "outra" && (
@@ -296,7 +328,7 @@ export function TermoDeAbertura() {
             erro={erro}
             aoPedir={() => void executar(passo)}
             aoCancelar={cancelar}
-            envio="O texto dos PDFs da RFP e da proposta vai para a API do Claude, pela sua chave, na organização da FGV."
+            envio="O texto dos PDFs da RFP, da proposta e do contrato (quando enviado) vai para a API do Claude, pela sua chave, na organização da FGV."
           >
             {t[passo] && (
               <ItensPmo
@@ -396,7 +428,7 @@ function ConferenciaDoTap({ t }: { t: TapDossie }) {
   const entrada = useMemo(() => montarEntradaTap(dossie), [dossie]);
   const itens = itensDaEtapa3(t, entrada.documentos);
   const premissas = t.premissasAplicaveis ?? dossie.proposta?.premissasAplicaveis ?? {};
-  const v = conferirTap(entrada, t, itens, premissas);
+  const v = conferirTap(entrada, t, itens, premissas, compararRfpEProposta(entrada));
   return (
     <section className="bloco">
       <RotuloSecao>Conferência do TAP (código)</RotuloSecao>

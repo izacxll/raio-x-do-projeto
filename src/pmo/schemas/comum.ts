@@ -3,7 +3,7 @@
 // Sem limites numéricos nem de tamanho no schema: a API não os aceita; quem confere é o código depois.
 import { z } from "zod";
 
-export const DocFonte = z.enum(["rfp", "proposta", "tap", "pgp"]);
+export const DocFonte = z.enum(["rfp", "proposta", "contrato", "tap", "pgp"]);
 
 export const FontePmo = z.object({
   doc: DocFonte,

@@ -6,7 +6,13 @@ import { tapInicial } from "../etapas/3-tap/tap";
 import { RespostaPremissas, RespostaTap } from "../pmo/schemas/tap";
 import { propostaInicial } from "../etapas/2-proposta/proposta";
 import { RespostaConteudo, RespostaEap, RespostaEstrategia } from "../pmo/schemas/proposta";
-import { ABORDAGEM_GRAVADA, MODELO_GRAVADO, planoDaDemonstracao, respostaGravada } from "./demonstracao";
+import {
+  ABORDAGEM_GRAVADA,
+  contratoDaDemonstracao,
+  MODELO_GRAVADO,
+  planoDaDemonstracao,
+  respostaGravada,
+} from "./demonstracao";
 
 /** Premissas críticas confirmadas na gravação da proposta (as que o conteúdo técnico gravado escreve no SOW). */
 export const PREMISSAS_GRAVADAS = { PC1: true, PC3: true, PC6: true, PC8: true };
@@ -52,5 +58,10 @@ export async function prepararEtapasAnteriores(etapa: 1 | 2 | 3 | 4 | 5): Promis
     return;
   }
   guardarProposta(await propostaGravada());
+  // etapa 3: o contrato inventado, que prevalece sobre a proposta e a RFP (decisão 0041)
+  if (etapa === 3) {
+    const contrato = await contratoDaDemonstracao();
+    if (contrato) guardarDocumento(contrato, false);
+  }
   if (etapa === 4) guardarTap(await tapGravado());
 }

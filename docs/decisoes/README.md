@@ -43,6 +43,7 @@ Uma decisão por arquivo, numerada em ordem. Cada uma registra o contexto, o que
 | [0037](0037-conexao-antes-de-analisar.md) | Nenhuma etapa analisa sem a conexão com o Claude: sai o "leitura parcial por código", o esqueleto só vai no pedido, demonstração em todas as etapas (muda o item 5 da 0035) | aceita |
 | [0038](0038-etapa-2-pelo-metodo-m2.md) | Etapa 2 pelo método (M2): tipo de contrato e de projeto, as 9 seções e a minuta redigida na ordem do edital, preço pelo tipo, pontos por preço, caixa, produtividade e duração × vigência por código | aceita |
 | [0040](0040-custos-indiretos-em-parceria.md) | Parceria: sem valor-hora; custos indiretos só como despesa com memória de cálculo; taxa de administração conferida no edital e na norma local | aceita |
+| [0041](0041-etapa-3-pelo-metodo-m3.md) | Etapa 3 pelo método (M3): contrato assinado como entrada, divergências RFP × proposta × contrato primeiro (valor, parcelas, conformidade, duração, equipe, produtividade), divergências de texto do PMO, conferência pelo método | aceita |
 
 Modelo para uma nova decisão:
 

@@ -150,8 +150,19 @@ describe("respostas gravadas do PMO na etapa 3 (OEI)", () => {
     premissas: { resposta: premissas, modelo: "teste", em: "" },
   };
 
-  it("toda citação é achada pelo código, na RFP e na proposta do dossiê; sem número sem fonte", () => {
-    const itens = itensDaEtapa3(t, entrada.documentos);
+  it("toda citação é achada pelo código, na RFP, na proposta do dossiê e no contrato; sem número sem fonte", () => {
+    // as respostas gravadas da M3 citam o contrato fictício de teste (decisão 0041), que entra como documento
+    const c = ler("contrato-teste") as { nomeArquivo: string; paginas: string[] };
+    const contrato: DocumentoLido = {
+      id: "contrato",
+      papel: "contrato",
+      nomeArquivo: c.nomeArquivo,
+      tamanhoBytes: 1,
+      totalPaginas: c.paginas.length,
+      lidoEm: "",
+      paginas: c.paginas.map((texto, k) => pagina(k + 1, texto)),
+    };
+    const itens = itensDaEtapa3(t, [...entrada.documentos, contrato]);
     const naoAchadas = itens.flatMap((i) =>
       i.conferencia.citacoes
         .map((c, k) => ({ id: i.id, trecho: i.item.fontes[k]?.trecho, estado: c.estado }))

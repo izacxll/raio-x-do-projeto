@@ -4,6 +4,13 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 
 ## [Não publicado]
 
+### Fase M3 — etapa 3 pelo método (decisão 0041)
+- **Testar sem a chave:** `npm run exportar-pedido` grava, fora do Git, o pedido de um passo do PMO exatamente como iria à API (sistema, mensagem com os PDFs e o esqueleto, schema), para o Claude do claude.ai responder; `npm run importar-resposta` valida a resposta, grava no dossiê, roda as travas e mede contra o gabarito numa seção "leitura independente". Por ora, a etapa 1.
+- **Contrato ou termo assinado como entrada da etapa 3**, com prioridade sobre a proposta e a RFP: o código lê dele o valor, a vigência, as parcelas, a cláusula de parte integrante e quem acompanha.
+- **Divergências primeiro**, entre RFP, proposta e contrato: valor, parcelas parcela a parcela, frase de conformidade, duração × vigência, equipe com regra diferente e quadro × produtividade, cada uma com a versão sugerida e o que fazer; o GP pode escolher "vale o contrato". Divergências de texto pela leitura do PMO.
+- **Conferência do TAP pelo método:** valor e parcelas iguais ao contrato, marcos dentro da vigência, entregas com aceite, divergências decididas.
+- **Contratos inventados** para teste (SMPED e OEI) e as leituras gravadas da OEI no formato da M3; a demonstração da etapa 3 abre com o contrato. Não há gabarito da etapa 3: o placar dela vem do teste às cegas, com os contratos que a responsável vai mandar.
+
 ### Fase M2 — etapa 2 pelo método (decisão 0038)
 - **A minuta redigida por inteiro**, na ordem do modelo do edital (quadros do modelo obrigatório ou a lista de partes), com a capa e as 9 seções do método: estratégia, estrutura, escopo, premissas críticas, metas/equipe/cronograma, preço, matriz e checklist, decisões do GP. Seção não redigida ou só descrita é alerta.
 - **Tipo de contrato e de projeto** sugerido pelo código e confirmado pelo GP; o preço segue o tipo: consultoria por produtos com horas × valor-hora; operação contínua e parceria com a folha mês a mês e as despesas por natureza, sem valor-hora; custos indiretos só com memória de cálculo e taxa de administração conferida no edital e na norma local (decisão 0040; também na planilha exportada).

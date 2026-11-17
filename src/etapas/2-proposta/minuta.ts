@@ -19,7 +19,7 @@ import { localizarTodos, origemDe } from "../../extracao/rfp/localizar";
 import { extrairEstruturaDoEdital, type EstruturaDoEdital } from "../../extracao/rfp/modelo-proposta";
 import { conferirItem, type ConferenciaItem } from "../../pmo/redacao";
 import type { ItemPmo } from "../../pmo/schemas/comum";
-import type { SecaoProposta } from "../../pmo/schemas/proposta";
+import type { RespostaEap, SecaoProposta } from "../../pmo/schemas/proposta";
 import { normalizarTermo } from "../../regras/busca";
 import { calcularCaixa, fmtPp, mesDoPrazo, type Caixa, type ParcelaCaixa } from "../../regras/caixa";
 import { NOME_PREMISSA, type CodigoPremissa } from "../../regras/premissas-rfp";
@@ -28,6 +28,7 @@ import {
   extrairTetos,
   type ConferenciaProdutividade,
   type PeriodoQuadro,
+  type TetoProdutividade,
 } from "../../regras/produtividade";
 import { conferirDuracao, vigenciaEmMeses, type ConferenciaDuracao } from "../../regras/vigencia";
 import { tirarAcentos } from "../../texto/normalizar";
@@ -665,26 +666,7 @@ export function montarMinuta(
   let produtividade: ConferenciaProdutividade | undefined;
   const tetos = extrairTetos(analise.documentos);
   if (eap?.volumes.length) {
-    const periodos: PeriodoQuadro[] = eap.volumes.map((v) => {
-      // pessoas médias no período: as pessoas-mês que se sobrepõem a ele ÷ os meses
-      const meses = v.ateMes - v.deMes + 1;
-      const pessoasMes = (eap.quadroEquipe ?? [])
-        .filter((l) => normalizarTermo(l.funcao) === normalizarTermo(v.funcao))
-        .reduce((s, l) => {
-          const sobreposicao = Math.min(l.ateMes, v.ateMes) - Math.max(l.deMes, v.deMes) + 1;
-          return s + (sobreposicao > 0 ? sobreposicao * l.quantidade : 0);
-        }, 0);
-      const pessoas = meses > 0 ? Math.round((pessoasMes / meses) * 10) / 10 : 0;
-      return {
-        rotulo: `${v.descricao} (meses ${v.deMes} a ${v.ateMes})`,
-        meses: v.ateMes - v.deMes + 1,
-        pessoas,
-        volume: v.quantidade,
-      };
-    });
-    const teto = tetos.find((t) =>
-      eap.volumes.some((v) => normalizarTermo(v.unidade).startsWith(normalizarTermo(t.unidade).slice(0, 5))),
-    );
+    const { periodos, teto } = quadroContraOTeto(eap, tetos);
     produtividade = conferirProdutividade(periodos, teto);
     add({
       id: "minuta:metas:produtividade",
@@ -999,6 +981,38 @@ function lerReais(texto: string): number | undefined {
   if (!m?.[1] || m[2]) return undefined;
   const v = Number(m[1].replace(/\./g, "").replace(",", "."));
   return Number.isFinite(v) && v > 0 ? v : undefined;
+}
+
+/**
+ * Os períodos do quadro (pessoas médias por faixa de meses do volume) e o teto escrito na mesma unidade do volume.
+ * Usado na etapa 2 e na conferência das divergências da etapa 3.
+ */
+export function quadroContraOTeto(
+  eap: Pick<RespostaEap, "volumes" | "quadroEquipe">,
+  tetos: TetoProdutividade[],
+): { periodos: PeriodoQuadro[]; teto?: TetoProdutividade } {
+  const periodos: PeriodoQuadro[] = eap.volumes.map((v) => {
+    // pessoas médias no período: as pessoas-mês que se sobrepõem a ele ÷ os meses
+    const meses = v.ateMes - v.deMes + 1;
+    const pessoasMes = (eap.quadroEquipe ?? [])
+      .filter((l) => normalizarTermo(l.funcao) === normalizarTermo(v.funcao))
+      .reduce((s, l) => {
+        const sobreposicao = Math.min(l.ateMes, v.ateMes) - Math.max(l.deMes, v.deMes) + 1;
+        return s + (sobreposicao > 0 ? sobreposicao * l.quantidade : 0);
+      }, 0);
+    const pessoas = meses > 0 ? Math.round((pessoasMes / meses) * 10) / 10 : 0;
+    return {
+      rotulo: `${v.descricao} (meses ${v.deMes} a ${v.ateMes})`,
+      meses,
+      pessoas,
+      volume: v.quantidade,
+    };
+  });
+  // só o teto na mesma unidade do volume: nunca visitas contra famílias
+  const teto = tetos.find((t) =>
+    eap.volumes.some((v) => normalizarTermo(v.unidade).startsWith(normalizarTermo(t.unidade).slice(0, 5))),
+  );
+  return { periodos, teto };
 }
 
 /** O texto do pedido ao PMO com o esqueleto do código (a estrutura do edital, os pontos, o preço, as contas). */

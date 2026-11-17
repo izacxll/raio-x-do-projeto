@@ -63,9 +63,9 @@ Quando você pede a leitura do PMO, em qualquer etapa, o texto dos PDFs vai para
 O custo de cada chamada (tokens e valor estimado em dólar) fica na tabela "Uso da API nesta proposta" e no dossiê.
 
 ### Etapa 3 — Termo de abertura (TAP)
-1. Envie a RFP. A proposta vem da etapa 2, se ela foi feita no mesmo dossiê; se você editou a proposta fora da ferramenta, envie o PDF da versão final: ele passa a valer.
+1. Envie a RFP e, se já houver, o **contrato ou termo assinado**: ele prevalece sobre a proposta e a RFP. A proposta vem da etapa 2, se ela foi feita no mesmo dossiê; se você editou a proposta fora da ferramenta, envie o PDF da versão final: ele passa a valer.
 2. Confira as **premissas críticas** (vêm confirmadas da etapa 2).
-3. **Divergências RFP × proposta:** o código compara requisito a requisito (produtos e equipe), o prazo e o valor. Onde houver diferença, escolha o que vale: a RFP, a proposta ou outra redação.
+3. **Divergências, primeiro:** o código compara a RFP, a proposta e o contrato: requisito a requisito, o valor, as parcelas (com a frase de conformidade), a duração × a vigência, a regra da equipe e a produtividade. Cada uma traz a versão sugerida (o contrato costuma prevalecer) e o que fazer. Escolha o que vale: a RFP, a proposta, o contrato ou outra redação. As divergências de texto vêm da leitura do PMO, no passo dos 12 elementos.
 4. **O que vem dos documentos:** contratante, objeto, vigência, produtos, a entrega de cada produto no cronograma da proposta, aceite e extinção, com a página.
 5. Peça ao PMO **os 12 elementos do TAP** e revise item a item. Preencha os campos que só você preenche: recursos financeiros, gerente e nível de autoridade, patrocinador.
 6. Peça o **registro de premissas inicial** e revise.

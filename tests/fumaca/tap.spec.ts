@@ -58,7 +58,8 @@ test("etapa 3 em demonstração: proposta gravada, divergências, 12 elementos, 
   await page.getByLabel("Gerente do projeto (TAP.11)").fill("Nome escolhido pelo GP");
   await page.getByTestId("pedir-premissas").click();
   await expect(page.getByRole("heading", { name: "Premissas críticas" })).toBeVisible();
-  await expect(page.getByTestId("conferencia-tap")).toContainText("Marcos dentro do prazo da RFP");
+  // método da etapa 3 (decisão 0041): os marcos são conferidos contra a vigência do contrato
+  await expect(page.getByTestId("conferencia-tap")).toContainText("Marcos dentro da vigência");
   await page.getByLabel("Aprovado por").fill("Patrocinador");
   // tabelas de texto longo quebram linha: a página não rola na horizontal
   expect(
