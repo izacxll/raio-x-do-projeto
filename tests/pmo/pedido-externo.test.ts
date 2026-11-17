@@ -269,6 +269,9 @@ describe.skipIf(MODO !== "exportar")("exportar o pedido de um passo do PMO", () 
             : atual.premissasAplicaveis,
         },
       };
+      // guardadas também no dossiê de origem: as exportações e importações seguintes usam as mesmas sem repetir
+      if (env.RAIO_X_DOSSIE && existsSync(env.RAIO_X_DOSSIE))
+        writeFileSync(env.RAIO_X_DOSSIE, serializarDossie(dossie, HOJE));
     }
     // etapa 5: o plano a conferir (o PGP da etapa 4 exportado em PDF, ou outro) entra no dossiê como "pgp"
     if (etapa === 5 && env.RAIO_X_PLANO) {
