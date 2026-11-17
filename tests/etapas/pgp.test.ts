@@ -526,9 +526,43 @@ describe("registro das questões (B9) montado pelo código", () => {
       },
     ];
     const c = conferirQuestoes(questoesDoCodigo(e), itens);
-    expect(c.linhas[0]?.itens).toEqual(["b9-2"]);
+    expect(c.linhas[0]?.item).toBe("b9-2");
     expect(c.semItem).toEqual(["QU-02"]);
     expect(c.semOrigem).toEqual(["QU-09"]);
+  });
+
+  it("liga pelo item que começa por QU-nn; citação em outro item não conta; questão nova com fonte; status", () => {
+    const e = comQuestoes();
+    const base = itensDoPgp(dossie.pgp!, entrada.documentos)[0]!;
+    const b9 = (id: string, texto: string, fontes = base.item.fontes) => ({
+      ...base,
+      grupo: "B9 — Registro das questões",
+      item: { ...base.item, id, texto, fontes },
+    });
+    const itens = [
+      b9("b9-1", "Estrutura: QU-01 a QU-02 vêm da etapa 1; QU-03 é nova.", []),
+      b9("b9-q01", "QU-01 — Datas. Status: tratada na proposta (C15); ligada à QU-02."),
+      b9("b9-q02", "QU-02 — Campo. Status: resolvida pelo TR (C16); falta registrar em ata."),
+      b9("b9-q03", "QU-03 — Nomes dos fiscais. Status: aberta.", [
+        { doc: "tap", pagina: 10, trecho: "Gestor do contrato" },
+      ]),
+    ];
+    const qs = questoesDoCodigo(e);
+    const c = conferirQuestoes(qs, itens, new Set(["C15", ...qs.map((q) => q.numero)]));
+    expect(c.linhas.map((l) => l.item)).toEqual(["b9-q01", "b9-q02"]);
+    expect(c.linhas[0]?.citadaEm).toEqual(["b9-1"]);
+    expect(c.linhas[1]?.citadaEm).toEqual(["b9-1", "b9-q01"]);
+    expect(c.semOrigem).toEqual([]);
+    expect(c.novas.map((n) => n.numero)).toEqual(["QU-03"]);
+    expect(c.linhas[0]?.status).toMatchObject({
+      estado: "tratada",
+      referencias: ["C15", "QU-02"],
+      avisos: [],
+    });
+    const s2 = c.linhas[1]?.status;
+    expect(s2?.estado).toBe("resolvida");
+    expect(s2?.naoLocalizadas).toEqual(["C16"]);
+    expect(s2?.avisos.join(" ")).toMatch(/sem referência.*não localizada: C16.*registro pendente/);
   });
 });
 

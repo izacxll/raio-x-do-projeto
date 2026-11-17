@@ -40,6 +40,7 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 - **Busca dos sinais com singular e plural** ("feriados municipais" acha "feriado municipal").
 - **Autoconferência:** item presente só pela marca do PMO sai como verificação própria ("presente pela marca do PMO, redação a conferir"), com a lista.
 - **Brechas do código juntadas ao ponto da leitura** também com o número do item na frente do trecho e pela página citada com o mesmo assunto; cada brecha entra num ponto só, e a questão do B9 leva as duas origens.
+- **Conferência do B9:** cada QU se liga ao item que começa por "QU-nn —" (citação em outro item é referência cruzada, não registro); questão nova com fonte aparece como tal; o status é lido, e status diferente de "aberta" vale com referência que o código acha no plano (C, item, atividade, risco, pacote ou outra QU); "resolvida" com registro pendente ganha aviso.
 
 ### Fase M3 — etapa 3 pelo método (decisão 0041)
 - **Testar sem a chave:** `npm run exportar-pedido` grava, fora do Git, o pedido de um passo do PMO exatamente como iria à API (sistema, mensagem com os PDFs e o esqueleto, schema), para o Claude do claude.ai responder; `npm run importar-resposta` valida a resposta, grava no dossiê, roda as travas e mede contra o gabarito numa seção "leitura independente". Por ora, a etapa 1.

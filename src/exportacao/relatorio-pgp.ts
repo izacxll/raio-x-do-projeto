@@ -1,7 +1,7 @@
 // Saídas da etapa 4: o plano (DOCX e PDF), os registros, o cronograma e as matrizes (XLSX). O mesmo plano, como
 // documento "lido", passa pelas regras da etapa 5 (autoconferência). Cada parte que o GP marcou sai com um título
 // próprio ("N. Nome da parte"), que o mapa do PGP reconhece; as tabelas das contas são do código.
-import { conferirQuestoes, questoesDoCodigo } from "../etapas/4-pgp/questoes";
+import { conferirQuestoes, questoesDoCodigo, referenciasDoPlano } from "../etapas/4-pgp/questoes";
 import { NOME_TIPO_COMPROMISSO } from "../etapas/2-proposta/compromissos";
 import type { Dossie, PgpDossie } from "../dossie/esquema";
 import {
@@ -137,7 +137,10 @@ function tabelasDoCodigo(codigo: string, c: Contexto): { paragrafos?: string[]; 
     });
   const questoes = codigo === "B9" ? questoesDoCodigo(e) : [];
   if (questoes.length) {
-    const conf = conferirQuestoes(questoes, c.itens);
+    const conf = conferirQuestoes(questoes, c.itens, referenciasDoPlano(e, p, c.itens, questoes));
+    const avisos = conf.linhas.flatMap((l) =>
+      (l.status?.avisos ?? []).map((a) => `${l.questao.numero}: ${a}`),
+    );
     out.push({
       paragrafos: [
         "Questões montadas pelo código a partir dos pontos da etapa 1 com pergunta e das divergências do TAP sem decisão do GP; o PMO completa tipo, prioridade, responsável e data-alvo.",
@@ -147,15 +150,23 @@ function tabelasDoCodigo(codigo: string, c: Contexto): { paragrafos?: string[]; 
         ...(conf.semOrigem.length
           ? [`Conferência do código: questão sem origem nem fonte (${conf.semOrigem.join(", ")}).`]
           : []),
+        ...conf.novas.map(
+          (n) =>
+            `Questão nova do PMO: ${n.numero} (item ${n.item}), fonte ${n.fontes}${n.citacaoConferida ? "" : ", citação não conferida"}.`,
+        ),
+        ...(avisos.length ? [`Conferência do status: ${avisos.join("; ")}.`] : []),
       ],
       tabela: {
-        colunas: ["Questão", "Origem", "Pergunta (código)", "No registro"],
-        larguras: [1, 2, 5, 2],
+        colunas: ["Questão", "Origem", "Pergunta (código)", "No registro", "Status"],
+        larguras: [1, 2, 5, 2, 2],
         linhas: conf.linhas.map((l) => [
           l.questao.numero,
           l.questao.origem,
           l.questao.texto,
-          l.itens.join(", ") || "sem item do PMO",
+          l.item
+            ? [l.item, ...(l.citadaEm.length ? [`citada em ${l.citadaEm.join(", ")}`] : [])].join("; ")
+            : "sem item do PMO",
+          l.status ? [l.status.estado, ...l.status.referencias].join(" · ") : "—",
         ]),
       },
     });

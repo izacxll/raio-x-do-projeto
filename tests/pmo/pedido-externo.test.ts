@@ -5,7 +5,7 @@
 //   contra o gabarito do Claude Code, numa seção "leitura independente". O gabarito nunca vai no pedido.
 // Só roda pelos scripts npm run exportar-pedido / importar-resposta (RAIO_X_MODO=exportar|importar).
 import { tapDoDossieComoDocumento } from "../../src/etapas/4-pgp/entrada";
-import { conferirQuestoes, questoesDoCodigo } from "../../src/etapas/4-pgp/questoes";
+import { conferirQuestoes, questoesDoCodigo, referenciasDoPlano } from "../../src/etapas/4-pgp/questoes";
 import { montarPgp } from "../../src/exportacao/relatorio-pgp";
 import { pgpComoDocumento } from "../../src/etapas/4-pgp/autoconferencia";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
@@ -729,6 +729,12 @@ describe.skipIf(MODO !== "importar")("importar a resposta do PMO (leitura indepe
           "",
           "## Autoconferência do plano (regras da etapa 5)",
           `- achados: ${auto.achados.length} (${["vago", "conflituoso", "ausente"].map((t) => `${t} ${auto.achados.filter((a) => a.tipo === t).length}`).join(", ")})`,
+          ...auto.achados
+            .slice(0, 10)
+            .map(
+              (a) =>
+                `  - ${a.tipo} · ${a.parte} · ${a.titulo}: ${a.evidencias.map((x) => `${x.rotulo} "${x.trecho.slice(0, 160)}"`).join(" × ")}`,
+            ),
           `- presentes pela marca do PMO, redação a conferir: ${auto.verificacoes.find((v) => v.id === "presentes-pela-marca-do-pmo")?.detalhe ?? "nenhum"}`,
           `- decisões do GP pendentes: ${auto.verificacoes.find((v) => v.id === "decisoes-do-gp-pendentes")?.detalhe ?? "nenhuma"}`,
           "",
@@ -753,13 +759,22 @@ describe.skipIf(MODO !== "importar")("importar a resposta do PMO (leitura indepe
         // registro das questões (B9) montado pelo código, com a origem, e o item do PMO que completa cada uma
         const qs = questoesDoCodigo(ep);
         if (qs.length && dossie.pgp.execucao) {
-          const cq = conferirQuestoes(qs, itensDoPgp(dossie.pgp, ep.documentos, ep.premissasTap));
+          const its = itensDoPgp(dossie.pgp, ep.documentos, ep.premissasTap);
+          const cq = conferirQuestoes(qs, its, referenciasDoPlano(ep, dossie.pgp, its, qs));
+          const status = (s?: ReturnType<typeof conferirQuestoes>["linhas"][number]["status"]) =>
+            s
+              ? `status ${s.estado}${s.referencias.length ? ` (refs. ${s.referencias.join(", ")})` : ""}${s.avisos.length ? ` — AVISO: ${s.avisos.join("; ")}` : ""}`
+              : "sem status";
           linhas.push(
             "",
-            `## Questões (B9) pelo código: ${qs.length}; sem item do PMO: ${cq.semItem.join(", ") || "nenhuma"}; sem origem nem fonte: ${cq.semOrigem.join(", ") || "nenhuma"}`,
+            `## Questões (B9) pelo código: ${qs.length}; origem sem questão: ${cq.semItem.join(", ") || "nenhuma"}; questão sem origem nem fonte: ${cq.semOrigem.join(", ") || "nenhuma"}; questões novas com fonte: ${cq.novas.map((n) => n.numero).join(", ") || "nenhuma"}`,
             ...cq.linhas.map(
               (l) =>
-                `- ${l.questao.numero} · ${l.questao.origem}: ${l.questao.texto.slice(0, 100)} → ${l.itens.join(", ") || "sem item"}`,
+                `- ${l.questao.numero} · ${l.questao.origem} → ${l.item ?? "SEM ITEM"}${l.citadaEm.length ? ` (citada também em ${l.citadaEm.join(", ")})` : ""}; ${status(l.status)}`,
+            ),
+            ...cq.novas.map(
+              (n) =>
+                `- ${n.numero} · questão nova do PMO → ${n.item}; fonte ${n.fontes} (${n.citacaoConferida ? "citação conferida" : "citação NÃO conferida"}); ${status(n.status)}`,
             ),
           );
         }
