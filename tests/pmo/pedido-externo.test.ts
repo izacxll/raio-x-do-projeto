@@ -26,7 +26,7 @@ import {
 } from "../../src/pmo/montagem";
 import { RespostaLeituraRfp } from "../../src/pmo/schemas/leitura-rfp";
 import { CARACTERISTICAS_PADRAO } from "../../src/dominio/caracteristicas";
-import { PARTES_PGP, PREMISSAS_CRITICAS } from "../../src/dominio/skill";
+import { FICHAS, PARTES_PGP, PREMISSAS_CRITICAS } from "../../src/dominio/skill";
 import type { PgpDossie } from "../../src/dossie/esquema";
 import { autoconferenciaDaLeitura, citacaoEhFraca } from "../../src/etapas/1-rfp/leitura-pmo";
 import { esqueletoEmTexto, montarMinuta } from "../../src/etapas/2-proposta/minuta";
@@ -550,8 +550,56 @@ describe.skipIf(MODO !== "importar")("importar a resposta do PMO (leitura indepe
           `- marca incompleta: ${r.incompletas.join(", ") || "nenhuma"}`,
           `- partes que voltariam ao PMO: ${partesARegenerar(r).join(", ") || "nenhuma"}`,
         );
-      } else if (etapa < 5)
-        linhas.push("", `## Autoconferência (decisão 0044): ${marcas.length} item(ns) marcados`);
+      } else if (etapa < 5) {
+        // etapas 2 e 3: os itens esperados são os das fichas do passo (estratégia: PROP-ESTRATEGIA; TAP: a ficha do TAP)
+        const prefixo =
+          etapa === 2 && passo === "estrategia"
+            ? "PROP-ESTRATEGIA."
+            : etapa === 3 && passo === "tap"
+              ? "TAP"
+              : undefined;
+        const esperados = prefixo
+          ? FICHAS.flatMap((f) => f.itens.map((i) => i.codigo)).filter((c) =>
+              prefixo === "TAP" ? /^TAP(?:-DV|\d)/.test(c) : c.startsWith(prefixo),
+            )
+          : [];
+        const r = conferirAutoconferencia(esperados, marcas);
+        linhas.push(
+          "",
+          `## Autoconferência (decisão 0044): ${marcas.length} item(ns) marcados${prefixo ? ` de ${esperados.length} esperados (${r.ok ? "completa" : "com falha"})` : ""}`,
+          ...(prefixo
+            ? [
+                `- sem marca: ${r.semMarca.join(", ") || "nenhum"}`,
+                `- marca incompleta: ${r.incompletas.join(", ") || "nenhuma"}`,
+              ]
+            : marcas.map((m) => `- ${m.item}: ${m.estado}`)),
+        );
+      }
+      if (fracas.length)
+        linhas.push("", "## Citações fracas", ...fracas.map((x) => `- p. ${x.f.pagina}: "${x.f.trecho}"`));
+      if (etapa === 2 && passo === "estrategia") {
+        const e = v.data as z.infer<typeof SCHEMAS.estrategia>;
+        const ponto = montarPontoDePartida(
+          dossie.documentos.filter((x) => x.papel === "rfp" || x.papel === "anexo-rfp"),
+          dossie.analiseRfp,
+          HOJE,
+        );
+        const ids = ponto.brechas.map((b) => b.id);
+        const comDestino = new Set(e.destinos.map((d) => d.origem));
+        linhas.push(
+          "",
+          `## Abordagens (${e.abordagens.length})`,
+          ...e.abordagens.map((a) => `- ${a.id} · ${a.nome}: ${a.mudaOResultado.slice(0, 160)}`),
+          "",
+          `## Destino das brechas: ${ids.filter((i) => comDestino.has(i)).length} de ${ids.length} do ponto de partida com destino; ${e.destinos.filter((d) => !d.origem).length} achadas pelo PMO`,
+          ...ids.filter((i) => !comDestino.has(i)).map((i) => `- sem destino: ${i}`),
+          ...e.destinos
+            .filter((d) => d.origem && !ids.includes(d.origem))
+            .map((d) => `- origem que não está no ponto de partida: ${d.origem}`),
+          "",
+          `## Premissas críticas: ${e.premissasCriticas.map((p) => `${p.codigo} ${p.aplica}`).join(", ")}`,
+        );
+      }
       if (etapa === 5) {
         const c = entradaDaConferencia(dossie);
         const conferidos = conferirLeitura(v.data as z.infer<typeof RespostaLeitura>, c, c.achados);
