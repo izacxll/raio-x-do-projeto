@@ -12,6 +12,8 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 - **Cruzamentos X1 a X6** no esqueleto e no pedido ao PMO; prazo sem termo inicial; sinal de estudo sensível.
 - **Citação fraca:** citação conferida com menos de 6 palavras ganha a trava.
 - **Autoconferência** nos esquemas das etapas 1 a 4, validador e o teste que reprova; na etapa 4, item sem marca devolve só a sua parte ao PMO.
+- **Cronograma com data fixa:** a atividade com restrição de data conta em dias corridos e começa na data de início da janela (evento em fim de semana); a folga das predecessoras aparece em dias corridos até essa data.
+- **TAP:** marco com data (o início do projeto) não conta como prazo além da vigência; entregas com data quando há início (o do GP ou a data fixa do documento, a confirmar pelo GP) e aviso de marco sem data quando não há; gestor e fiscal só com o papel, sem o nome.
 
 ### Fase M3 — etapa 3 pelo método (decisão 0041)
 - **Testar sem a chave:** `npm run exportar-pedido` grava, fora do Git, o pedido de um passo do PMO exatamente como iria à API (sistema, mensagem com os PDFs e o esqueleto, schema), para o Claude do claude.ai responder; `npm run importar-resposta` valida a resposta, grava no dossiê, roda as travas e mede contra o gabarito numa seção "leitura independente". Por ora, a etapa 1.

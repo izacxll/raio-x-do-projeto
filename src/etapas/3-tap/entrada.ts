@@ -8,6 +8,7 @@ import { calcularCronograma, conferirPrazosDosProdutos, type Cronograma } from "
 import { lerValorEmReais } from "../2-proposta/preco";
 import { montarPontoDePartida, type PontoDePartida } from "../2-proposta/ponto-de-partida";
 import { lerContrato, type LidoDoContrato } from "./contrato";
+import { inicioFixo } from "../../regras/cruzamentos-rfp";
 import type { RespostaEap } from "../../pmo/schemas/proposta";
 
 export type FonteProposta = "pdf" | "dossie" | "nenhuma";
@@ -33,6 +34,8 @@ export interface DadosProposta {
   cronograma?: Cronograma;
   marcos: MarcoDaProposta[];
   inicio?: Date;
+  /** Onde o código leu o início, quando ele veio do documento e não do GP ("RFP, p. 1"): a confirmar pelo GP. */
+  inicioDoDocumento?: string;
   /** Dias úteis de aprovação de cada produto (decisão do GP na etapa 2). */
   aprovacaoDias?: number;
   /** Preço final (decisão do GP na etapa 2). */
@@ -83,7 +86,10 @@ export function dadosDaProposta(
   if (!p?.conteudo) return undefined;
   const c = p.conteudo.resposta;
   const eap = p.eap?.resposta;
-  const inicio = p.parametros.inicio ? new Date(`${p.parametros.inicio}T00:00:00`) : undefined;
+  // início: o que o GP informou na etapa 2; sem ele, a data fixa de início do documento, a confirmar pelo GP
+  const doGp = p.parametros.inicio ? new Date(`${p.parametros.inicio}T00:00:00`) : undefined;
+  const fixo = !doGp && ponto ? inicioFixo(ponto.analise.documentos) : undefined;
+  const inicio = doGp ?? fixo?.data;
   const cronograma = eap
     ? calcularCronograma(eap.atividades, {
         aprovacaoDias: p.parametros.aprovacaoDias,
@@ -117,6 +123,7 @@ export function dadosDaProposta(
     cronograma,
     marcos,
     inicio,
+    inicioDoDocumento: fixo ? `${fixo.origem.documento}, p. ${fixo.origem.pagina}` : undefined,
     aprovacaoDias: p.parametros.aprovacaoDias,
     valor: p.parametros.precoFinal,
     fases: c.metodologia.map((f) => ({ nome: f.nome, meses: f.meses })),

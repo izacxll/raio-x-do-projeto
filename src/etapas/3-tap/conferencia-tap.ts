@@ -3,6 +3,7 @@
 // recursos iguais ao valor da proposta; citações conferidas; premissas críticas no registro, com a consequência.
 import type { TapDossie } from "../../dossie/esquema";
 import { estadoDe, type ItemConferido } from "../../pmo/itens";
+import { encontrarDatas, somarDiasCorridos } from "../../texto/datas";
 import { lerValorEmReais } from "../2-proposta/preco";
 import { diasDoTexto, pedeDecisao, type Divergencia } from "./divergencias";
 import { valorNaProposta, type EntradaTap } from "./entrada";
@@ -98,10 +99,23 @@ export function conferirTap(
       texto: "Prazo de execução da RFP não localizado pelo código — conferir os marcos no documento.",
     });
   } else {
-    const fora = marcos
-      .map((m) => ({ m, dias: diasDoTexto(m.prazo) }))
-      .filter((x) => x.dias !== undefined && x.dias > prazo.dias);
-    const semPrazo = marcos.filter((m) => diasDoTexto(m.prazo) === undefined);
+    // marco com data ("22/09/2025, data fixa do TR") é data, não prazo em dias: o número da data não é duração.
+    // Ele só é conferido contra a vigência quando o início é conhecido (decisão do GP).
+    const comData = marcos.filter((m) => encontrarDatas(m.prazo).length > 0);
+    const emDias = marcos.filter((m) => !comData.includes(m));
+    const fimVigencia = e.dados?.inicio ? somarDiasCorridos(e.dados.inicio, prazo.dias) : undefined;
+    const fora = [
+      ...emDias
+        .map((m) => ({ m, dias: diasDoTexto(m.prazo) }))
+        .filter((x) => x.dias !== undefined && x.dias > prazo.dias),
+      ...(fimVigencia
+        ? comData
+            .filter((m) => encontrarDatas(m.prazo).some((d) => d.data > fimVigencia))
+            .map((m) => ({ m, dias: undefined }))
+        : []),
+    ];
+    const semPrazo = emDias.filter((m) => diasDoTexto(m.prazo) === undefined);
+    const datasSemInicio = fimVigencia ? 0 : comData.length;
     const crono = e.dados?.cronograma?.conferenciaPrazo;
     const produtosFora = (e.dados?.marcos ?? []).filter((m) => m.situacao === "nao-cabe");
     out.push({
@@ -113,6 +127,9 @@ export function conferirTap(
           ? `Marco(s) além da vigência (${prazo.texto}): ${fora.map((x) => x.m.prazo).join("; ")}.`
           : `Nenhum marco com prazo além de ${prazo.texto}.`,
         semPrazo.length ? `${semPrazo.length} marco(s) sem prazo em dias: conferir.` : "",
+        datasSemInicio
+          ? `${datasSemInicio} marco(s) com data: conferidos contra a vigência só com o início do projeto informado (decisão do GP).`
+          : "",
         produtosFora.length
           ? `No cronograma da proposta, a entrega passa do prazo do produto na RFP: ${produtosFora.map((m) => `${m.produto} (${m.textoConferencia})`).join("; ")}`
           : "",

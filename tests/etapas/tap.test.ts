@@ -139,6 +139,50 @@ describe("o que vem dos documentos (código)", () => {
     expect(id("aceite")?.onde).toBe("RFP, p. 24");
     expect(id("extincao")?.onde).toBe("RFP, p. 53");
   });
+
+  it("entrega sem o início informado: o marco avisa que não tem data; com o início, mostra a data", () => {
+    const sem = dadosDosDocumentos(entrada).find((d) => d.id === "marco:P2")!;
+    expect(sem.texto).toMatch(
+      /dia útil \d+ do cronograma; sem o início do projeto informado, o marco não tem data/,
+    );
+    const comInicio: Dossie = {
+      ...dossie,
+      proposta: { ...dossie.proposta!, parametros: { ...dossie.proposta!.parametros, inicio: "2026-03-02" } },
+    };
+    const com = dadosDosDocumentos(montarEntradaTap(comInicio, HOJE)).find((d) => d.id === "marco:P2")!;
+    expect(com.texto).toMatch(
+      /^.+: \d{2}\/\d{2}\/\d{4} \(dia útil \d+ do cronograma; início em 02\/03\/2026, informado pelo GP\)/,
+    );
+  });
+
+  it("gestor e fiscal: só o papel e a página, nunca o nome que o documento traz", () => {
+    const comGestor: EntradaTap = {
+      ...entrada,
+      ponto: {
+        ...entrada.ponto,
+        analise: {
+          ...entrada.ponto.analise,
+          itens: [
+            ...entrada.ponto.analise.itens.filter((i) => i.id !== "partes:gestor"),
+            {
+              id: "partes:gestor",
+              secao: "partes",
+              rotulo: "documento",
+              nome: "Gestor do contrato",
+              texto: "Fulana de Tal, matrícula 0000",
+              origem: { documento: "RFP", pagina: 12, trecho: "Gestora do contrato: Fulana de Tal" },
+              situacao: "localizado",
+            },
+          ],
+        },
+      },
+    };
+    const g = dadosDosDocumentos(comGestor).find((d) => d.id === "gestor")!;
+    expect(g.texto).toBe(
+      "O documento prevê o gestor do contrato (RFP, p. 12); o nome é do GP confirmar no contrato.",
+    );
+    expect(g.texto).not.toMatch(/Fulana/);
+  });
 });
 
 describe("respostas gravadas do PMO na etapa 3 (OEI)", () => {
@@ -186,6 +230,37 @@ describe("respostas gravadas do PMO na etapa 3 (OEI)", () => {
     expect(de("marcos").situacao).toBe("atencao");
     expect(de("marcos").texto).toMatch(/P2/);
     expect(de("valor").situacao).toBe("nao-conferido");
+  });
+
+  it("marco com data é data de início, não prazo além da vigência; sem o início, avisa que não confere", () => {
+    const comData: TapDossie = {
+      ...t,
+      tap: {
+        ...t.tap!,
+        resposta: {
+          ...tap,
+          marcos: [{ ...tap.marcos[0]!, produto: "início", prazo: "02/03/2026, início da execução" }],
+        },
+      },
+    };
+    const itens = itensDaEtapa3(comData, entrada.documentos);
+    const sem = conferirTap(entrada, comData, itens, {}).find((x) => x.id === "marcos")!;
+    expect(sem.texto).not.toMatch(/além da vigência/);
+    expect(sem.texto).toMatch(/1 marco\(s\) com data: conferidos contra a vigência só com o início/);
+    const e = montarEntradaTap(
+      {
+        ...dossie,
+        proposta: {
+          ...dossie.proposta!,
+          parametros: { ...dossie.proposta!.parametros, inicio: "2026-03-02" },
+        },
+      },
+      HOJE,
+    );
+    const com = conferirTap(e, comData, itensDaEtapa3(comData, e.documentos), {}).find(
+      (x) => x.id === "marcos",
+    )!;
+    expect(com.texto).not.toMatch(/além da vigência|marco\(s\) com data/);
   });
 
   it("premissa crítica confirmada sem linha no registro é apontada", () => {
