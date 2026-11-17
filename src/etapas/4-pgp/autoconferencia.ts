@@ -16,7 +16,8 @@ import { conferirPlano, type ResultadoConferencia } from "../../regras/conferenc
 import { confirmacaoInicial, proporMapa, type ParteConfirmada } from "../../regras/mapa-pgp";
 import { documentoDeExportavel } from "../documento-virtual";
 import type { EntradaPgp } from "./entrada";
-import { pgpInicial } from "./pgp";
+import { itensDoPgp, pgpInicial } from "./pgp";
+import { itensValidos } from "../../pmo/itens";
 import { NOME_PASSO_PGP, passoDaParte } from "./passos";
 
 export const NOME_PGP_GERADO = "Plano gerado na etapa 4";
@@ -100,7 +101,7 @@ export function partesNaoGeradas(p: PgpDossie): Set<string> {
  */
 export function autoconferir(dossie: Dossie, e: EntradaPgp, agora = new Date()): ResultadoConferencia {
   const p = dossie.pgp ?? pgpInicial();
-  const r = conferirTodoOPlano(dossie, e, agora);
+  const r = ligarPeloId(conferirTodoOPlano(dossie, e, agora), p, e);
   const naoGeradas = partesNaoGeradas(p);
   if (!naoGeradas.size) return r;
   const daParte = (id: string) => /[:]([AB]\d+)(?:\.\d+)?$/.exec(id)?.[1];
@@ -113,6 +114,60 @@ export function autoconferir(dossie: Dossie, e: EntradaPgp, agora = new Date()):
             ...v,
             estado: "nao-conferido" as const,
             detalhe: `Parte ${parte} ainda não gerada (passo "${NOME_PASSO_PGP[passoDaParte(parte)!.passo]}" não pedido ao PMO).`,
+          }
+        : v;
+    }),
+  };
+}
+
+/**
+ * No plano da própria ferramenta, o item de conteúdo mínimo que a busca de termos não achou, mas que o PMO marcou
+ * "presente" apontando um item, vale quando o código confere o id: o item existe, está na parte da ficha e não foi
+ * descartado pelo GP. A busca procura termos exatos ("critério de entrada"); a redação do PMO varia ("Critérios de
+ * entrada"). No plano de fora (etapa 5) não há marca, e continua valendo a busca.
+ */
+export function ligarPeloId(r: ResultadoConferencia, p: PgpDossie, e: EntradaPgp): ResultadoConferencia {
+  const validos = itensValidos(p.revisoes, itensDoPgp(p, e.documentos, e.premissasTap));
+  const parteDoItem = new Map<string, string>();
+  for (const i of validos) {
+    const parte = i.grupo.split(" — ")[0] ?? "";
+    parteDoItem.set(i.item.id, parte);
+    // risco: o PMO aponta pelo id do risco (rk9), não pelo id do item
+    const k = /^riscos:B27:(\d+)$/.exec(i.id)?.[1];
+    const risco = k !== undefined ? p.riscos?.resposta.riscos[Number(k)] : undefined;
+    if (risco) parteDoItem.set(risco.id, "B27");
+  }
+  const marcas = new Map(
+    marcasDoPgp(p)
+      .filter((m) => m.estado === "presente")
+      .map((m) => [m.item.trim(), m.onde]),
+  );
+  const ligados = new Map<string, string[]>();
+  for (const a of r.achados) {
+    const m = /^conteudo-minimo:([AB]\d+):([AB]\d+\.\d+)$/.exec(a.id);
+    if (!m || a.tipo !== "ausente") continue;
+    const [, parte, codigo] = m;
+    const ids = (marcas.get(codigo!) ?? "")
+      .split(/[\s,;]+|\ba\b/)
+      .map((x) => x.trim())
+      .filter(Boolean);
+    const naParte = ids.filter((id) => parteDoItem.get(id) === parte);
+    if (naParte.length) ligados.set(codigo!, naParte);
+  }
+  if (!ligados.size) return r;
+  return {
+    achados: r.achados.filter((a) => {
+      const c = /:([AB]\d+\.\d+)$/.exec(a.id)?.[1];
+      return !(a.regra === "conteudo-minimo" && c && ligados.has(c));
+    }),
+    verificacoes: r.verificacoes.map((v) => {
+      const c = /^item:([AB]\d+\.\d+)$/.exec(v.id)?.[1];
+      const ids = c ? ligados.get(c) : undefined;
+      return ids && v.estado === "achado"
+        ? {
+            ...v,
+            estado: "ok" as const,
+            detalhe: `Marcado pelo PMO no item ${ids.join(", ")}, que existe na parte e não foi descartado (id conferido pelo código); os termos da ficha não aparecem na redação — conferir.`,
           }
         : v;
     }),

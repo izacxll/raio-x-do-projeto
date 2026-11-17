@@ -8,6 +8,7 @@ import type { Dossie, PgpDossie } from "../../src/dossie/esquema";
 import { avaliarItens, type ItemProposta } from "../../src/etapas/2-proposta/proposta";
 import {
   autoconferir,
+  ligarPeloId,
   mapaDoPgpGerado,
   partesNaoGeradas,
   pgpComoDocumento,
@@ -429,5 +430,53 @@ describe("pedidos da etapa 4 só com as partes marcadas", () => {
     expect(
       PEDIDOS_PGP.escopo(entrada, { ...dossie.pgp!, gerar: { ...dossie.pgp!.gerar, B17: false } }),
     ).not.toContain("exclusão → B17.5");
+  });
+});
+
+describe("autoconferência: item marcado pelo PMO com o id", () => {
+  it("ausente da busca de termos vira 'ok' quando o PMO aponta um item que existe na parte", () => {
+    const item = itensDoPgp(dossie.pgp!, entrada.documentos).find((i) => /^[AB]\d+ — /.test(i.grupo))!;
+    const parte = item.grupo.split(" — ")[0]!;
+    const codigo = `${parte}.99`;
+    const base = {
+      achados: [
+        {
+          id: `conteudo-minimo:${parte}:${codigo}`,
+          tipo: "ausente" as const,
+          regra: "conteudo-minimo",
+          parte,
+          partes: [parte],
+          gravidade: "média" as const,
+          categoria: "",
+          origemCategoria: "parte" as const,
+          titulo: "",
+          descricao: "",
+          evidencias: [],
+          sugestao: "",
+        },
+      ],
+      verificacoes: [
+        { id: `item:${codigo}`, alvo: codigo, descricao: "", estado: "achado" as const, detalhe: "" },
+      ],
+    };
+    const comMarca = (onde: string) => {
+      const p = dossie.pgp!;
+      const r0 = p.planos!;
+      return {
+        ...p,
+        planos: {
+          ...r0,
+          resposta: {
+            ...r0.resposta,
+            autoconferencia: [{ item: codigo, estado: "presente" as const, onde, motivo: "" }],
+          },
+        },
+      };
+    };
+    const ligado = ligarPeloId(base, comMarca(item.item.id), entrada);
+    expect(ligado.achados).toEqual([]);
+    expect(ligado.verificacoes[0]?.estado).toBe("ok");
+    expect(ligado.verificacoes[0]?.detalhe).toMatch(/id conferido pelo código/);
+    expect(ligarPeloId(base, comMarca("id-que-nao-existe"), entrada).achados).toHaveLength(1);
   });
 });
