@@ -61,9 +61,11 @@ export function numerosQuePedemFonte(texto: string): string[] {
     // ids de itens e de meses citados pelo PMO ("AT-01", "UP-08", "M01"): referência, não valor
     .replace(/\b[a-z]{1,2}-?\d{2}\b/g, " ")
     .replace(
-      /\b(?:itens?|subitens?|clausulas?|art\.?|artigos?|anexos?|quadros?|tabelas?|incisos?) (?:n[º°o.]\s*)?[\d.]+[a-z]?(?:\s*(?:,|e)\s*[\d.]+)*/g,
+      /\b(?:itens?|subitens?|clausulas?|art\.?|artigos?|anexos?|quadros?|tabelas?|incisos?|secao|secoes|etapas?) (?:n[º°o.]\s*)?[\d.]+[a-z]?(?:\s*(?:,|e)\s*[\d.]+)*/gi,
       " ",
     )
+    // numeração da própria lista do PMO ("1) …; 2) …"): não é valor
+    .replace(/(^|[\s;:(])\d{1,2}\)/g, "$1 ")
     // número de cláusula entre parênteses ou solto ("(7.12.2)", "6.7.8"): referência ao edital, não valor
     .replace(/\b\d{1,2}\.\d{1,2}\.\d{1,2}(?:\.\d{1,2})*\b/g, " ");
   return [...new Set((limpo.match(/\d[\d.,/]*\d|\d/g) ?? []).map((n) => n.replace(/[.,]$/, "")))];
@@ -171,14 +173,22 @@ export function conferirLeituraRfp(
     // ano ("2025") e número de norma ou de edital ("13046/2026") valem se estão na página citada (são do
     // cabeçalho ou da abertura, longe do trecho); valor, prazo e quantidade, só na vizinhança do trecho
     const paginasCitadas = item.fontes.map((f) => paginas.get(f.pagina) ?? "").join(" ");
+    // ano solto ("2025") também vale se o esqueleto o tem (item sem fonte, como os pontos que mais pesam)
     const ehReferencia = (n: string) => /^(?:19|20)\d{2}$/.test(n) || /^\d{3,6}\/(?:19|20)\d{2}$/.test(n);
-    const numerosSemFonte = numerosQuePedemFonte(item.texto).filter(
-      (n) => !temFonte(normal(n), base) && !(ehReferencia(n) && temFonte(normal(n), paginasCitadas)),
-    );
-    // o item que diz "conta do código" e só usa números que o esqueleto já tem repete a conta, não a faz
+    const ehAno = (n: string) => /^(?:19|20)\d{2}$/.test(n);
+    // o item que diz "conta do código" e só usa números que o esqueleto já tem repete a conta, não a faz: os
+    // números dele são do código, mesmo que estejam noutra seção do esqueleto
     const repeteContaDoCodigo =
       /conta do codigo/.test(normal(item.texto).toLowerCase()) &&
       numerosQuePedemFonte(item.texto).every((n) => temFonte(normal(n), esqueletoInteiro));
+    const numerosSemFonte = repeteContaDoCodigo
+      ? []
+      : numerosQuePedemFonte(item.texto).filter(
+          (n) =>
+            !temFonte(normal(n), base) &&
+            !(ehReferencia(n) && temFonte(normal(n), paginasCitadas)) &&
+            !(ehAno(n) && temFonte(normal(n), esqueletoInteiro)),
+        );
     // citação fraca (SKILL.md, princípio 3): todas as citações achadas são curtas demais para provar o que o item
     // afirma ("14.133/2021.", "conforme anexos")
     const fraca =

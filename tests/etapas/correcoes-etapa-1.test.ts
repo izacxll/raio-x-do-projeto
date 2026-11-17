@@ -203,3 +203,11 @@ describe("conferência dos números do PMO com as contas dos cruzamentos (decis�
     expect(c.find((x) => x.item.id === "k")?.trava).toBe("conta-do-pmo");
   });
 });
+
+describe("números que pedem fonte: referências não são valores", () => {
+  it('numeração da lista e "seção 7" saem; valor fica', async () => {
+    const { numerosQuePedemFonte } = await import("../../src/etapas/1-rfp/leitura-pmo");
+    expect(numerosQuePedemFonte("1) dados sem prazo; 2) pagamento; ver seção 7")).toEqual([]);
+    expect(numerosQuePedemFonte("Repassar no prazo de 30 dias (ver seção 7).")).toEqual(["30"]);
+  });
+});
