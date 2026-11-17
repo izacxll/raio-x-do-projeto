@@ -32,7 +32,7 @@ Registra os materiais, equipamentos, suprimentos, locais e outros recursos físi
   - dispensa: nunca
 - **B12.4** Utilização esperada: em que atividade e em que período cada recurso é usado
   - fonte: PMBOK 6, 9.3.3.1, p. 333 (PDF 369)
-  - sinais: "período de uso" | "uso do" | "uso da" | "utilização" | código da atividade | datas ou meses
+  - sinais: "período de uso" | "utilização" | código da atividade | datas ou meses
   - confere: código
   - dispensa: nunca
 - **B12.5** Origem: próprio da FGV, alugado ou contratado, ou fornecido pelo contratante; o que vem do contratante vira premissa com prazo no B3

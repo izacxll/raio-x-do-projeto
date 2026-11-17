@@ -17,7 +17,7 @@ versao: 0.3.1
 ## Conteúdo mínimo
 - **A10.1** Estratégia ou ação de engajamento para cada parte interessada ou grupo
   - fonte: PMBOK 6, 13.2.3.1, p. 522 (PDF 558); PMBOK 7, 2.1, p. 12 (PDF 107); Rework RW-006 (https://resources.rework.com/libraries/project-management/stakeholder-analysis-matrix)
-  - sinais: "estratégia de engajamento" | "estratégias" | "gerenciar de perto" | "manter satisfeito" | "manter informado" | "manter envolvido" | "manter envolvida" | "monitorar" | tabela com parte interessada e ação
+  - sinais: "estratégia de engajamento" | "estratégias" junto de "parte interessada" ou "engajamento" | "gerenciar de perto" | "manter satisfeito" | "manter informado" | "manter envolvido" | "manter envolvida" | "monitorar" | tabela com parte interessada e ação
   - confere: código
   - dispensa: nunca
 - **A10.2** Nível de engajamento atual e desejado de cada parte
