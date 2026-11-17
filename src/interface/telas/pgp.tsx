@@ -242,6 +242,7 @@ export function PlanoDeGerenciamento() {
                 respostaEm={p[passo]!.em}
                 documentos={entrada.documentos}
                 modelo={p.modelo}
+                pedidoDoPasso={pedido ?? ""}
               />
             )}
             {passo === "adaptacao" && p.adaptacao && <Adaptacao p={p} atualizar={atualizar} />}

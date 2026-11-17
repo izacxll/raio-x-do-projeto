@@ -21,6 +21,7 @@ import {
   chaveDaSegundaInstancia,
   conferirSegundaInstancia,
   pedidoSegundaInstancia,
+  proximaRodada,
   segundaInstanciaEmTexto,
   sistemaDaSegundaInstancia,
 } from "../../src/pmo/segunda-instancia";
@@ -99,7 +100,8 @@ import { lerRfpPublica, PASTA_RFPS } from "../ajudantes/rfp-publica";
 const env = process.env;
 const MODO = env.RAIO_X_MODO;
 const etapa = Number(env.RAIO_X_ETAPA ?? "0");
-const passo = env.RAIO_X_PASSO ?? "";
+const PASSO = env.RAIO_X_PASSO ?? "";
+const passo = PASSO;
 const HOJE = new Date();
 
 /** Gabaritos dos editais públicos de teste, por nome do PDF. */
@@ -151,7 +153,7 @@ function documentosDoPasso(d: Dossie): DocumentoLido[] {
 }
 
 /** Segunda instância (decisão 0057): só a skill, os documentos e a resposta do passo. */
-function montarSegunda(d: Dossie): Passo {
+function montarSegunda(d: Dossie, passo: string): Passo {
   const alvo = alvoDaSegunda(passo);
   precisa(PASSOS[etapa]?.includes(alvo), `o passo "${alvo}" não existe na etapa ${etapa}`);
   const r = respostaDoPasso(d, alvo);
@@ -159,7 +161,8 @@ function montarSegunda(d: Dossie): Passo {
   return {
     sistema: sistemaDaSegundaInstancia(),
     documentos: textoDosDocumentos(documentosDoPasso(d)),
-    pedido: pedidoSegundaInstancia(etapa, alvo, r.resposta),
+    // o pedido do passo conferido, como foi ao PMO (esqueleto e o que o passo exige; decisão 0059)
+    pedido: pedidoSegundaInstancia(etapa, alvo, r.resposta, montarPasso(d, alvo).pedido),
     schema: RespostaSegundaInstancia,
   };
 }
@@ -218,8 +221,8 @@ function entradaDaConferencia(d: Dossie) {
   };
 }
 
-function montarPasso(d: Dossie): Passo {
-  if (passo.startsWith("segunda-")) return montarSegunda(d);
+function montarPasso(d: Dossie, passo: string = PASSO): Passo {
+  if (passo.startsWith("segunda-")) return montarSegunda(d, passo);
   const docs = d.documentos.filter((x) => x.papel === "rfp" || x.papel === "anexo-rfp");
   if (!PASSOS[etapa]?.includes(passo))
     throw new Error(
@@ -534,15 +537,18 @@ describe.skipIf(MODO !== "importar")("importar a resposta do PMO (leitura indepe
       const alvo = alvoDaSegunda(passo);
       const r = respostaDoPasso(dossie, alvo)!;
       const resposta = v.data as z.infer<typeof RespostaSegundaInstancia>;
+      const chave = chaveDaSegundaInstancia(etapa, alvo);
+      const rodada = proximaRodada(dossie.segundaInstancia?.[chave], r.em);
       dossie = {
         ...dossie,
         segundaInstancia: {
           ...dossie.segundaInstancia,
-          [chaveDaSegundaInstancia(etapa, alvo)]: {
+          [chave]: {
             resposta,
             modelo: "claude.ai (segunda instância)",
             em: HOJE.toISOString(),
             deResposta: r.em,
+            rodada,
           },
         },
       };
@@ -553,8 +559,10 @@ describe.skipIf(MODO !== "importar")("importar a resposta do PMO (leitura indepe
         dirname(resolve(env.RAIO_X_ARQUIVO ?? "")),
         `conferencia-etapa-${etapa}-${alvo}-${base}.md`,
       );
-      writeFileSync(arq, `${segundaInstanciaEmTexto(etapa, alvo, res)}\n`);
-      console.log(`Conferência: ${arq}\nAchados: ${res.achados.length}; de gravidade alta: ${res.altas}`);
+      writeFileSync(arq, `${segundaInstanciaEmTexto(etapa, alvo, res, rodada)}\n`);
+      console.log(
+        `Conferência: ${arq}\nRodada ${rodada}. Achados: ${res.achados.length}; de gravidade alta: ${res.altas}`,
+      );
       expect(res.achados.length).toBeGreaterThanOrEqual(0);
       return;
     }

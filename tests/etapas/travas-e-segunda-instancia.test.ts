@@ -18,6 +18,7 @@ import type { RespostaTap } from "../../src/pmo/schemas/tap";
 import {
   conferirSegundaInstancia,
   pedidoSegundaInstancia,
+  proximaRodada,
   sistemaDaSegundaInstancia,
 } from "../../src/pmo/segunda-instancia";
 import { ehDataDeAtoOuAssinatura, encontrarDatas } from "../../src/texto/datas";
@@ -295,6 +296,25 @@ describe("segunda instância (item 12c)", () => {
     const s = sistemaDaSegundaInstancia();
     expect([...s.matchAll(/<arquivo nome="([^"]+)">/g)].map((m) => m[1])).toEqual(["SKILL.md"]);
     expect(pedidoSegundaInstancia(2, "conteudo", { marcador: "xyz-123" })).toMatch(/xyz-123/);
+  });
+
+  it("leva o pedido do passo, com o esqueleto, e a régua é o que ele exige (decisão 0059)", () => {
+    const p = pedidoSegundaInstancia(
+      1,
+      "leitura-rfp",
+      {},
+      "# Esqueleto do código\n- R01 Relatório final\n# O que fazer\n1. as 8 seções",
+    );
+    expect(p).toMatch(/<pedido-do-passo>[\s\S]*R01 Relatório final[\s\S]*<\/pedido-do-passo>/);
+    expect(p).toMatch(/nem mais nem menos/);
+    expect(p).toMatch(/Item do método ou das fichas que o pedido não pediu não é falta/);
+  });
+
+  it("a rodada sobe só quando a resposta do passo muda (decisão 0059)", () => {
+    expect(proximaRodada(undefined, "t1")).toBe(1);
+    expect(proximaRodada({ deResposta: "t1", rodada: 1 }, "t1")).toBe(1);
+    expect(proximaRodada({ deResposta: "t1", rodada: 1 }, "t2")).toBe(2);
+    expect(proximaRodada({ deResposta: "t1" }, "t2")).toBe(2);
   });
 
   it("ordena por gravidade e marca a evidência que o código não achou", () => {

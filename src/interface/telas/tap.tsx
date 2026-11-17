@@ -328,6 +328,7 @@ export function TermoDeAbertura() {
                 respostaEm={t[passo]!.em}
                 documentos={entrada.documentos}
                 modelo={t.modelo}
+                pedidoDoPasso={pedido ?? ""}
               />
             )}
             {t[passo] && (

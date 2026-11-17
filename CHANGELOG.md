@@ -4,6 +4,11 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 
 ## [Não publicado]
 
+### Segunda instância com o pedido do passo e rodadas (decisão 0059)
+- **Pedido da segunda instância:** leva o pedido do passo conferido, com o esqueleto do código (números R e C, contas e datas). A régua é o que esse pedido exige, nem mais nem menos.
+- **Rodadas:** cada conferência do passo é uma rodada, que fica no dossiê e aparece na tela e no `conferencia-*.md` do teste externo.
+- **Conferência do pedido:** confere que o pedido do passo foi junto.
+
 ### "Citação a conferir" como aviso e segunda instância da etapa 1 (decisão 0058)
 - **Menos alarme falso:** a data vale também por extenso e o termo-chave é procurado em todos os trechos do item. Números e datas do esqueleto (ou de "conta do código") ficam de fora, e o e-mail ou o telefone contam quando o item fala deles.
 - **Aviso, não erro:** a "citação não prova" vira o aviso "citação a conferir". Não conta entre os fatos sem citação nem muda a situação da conferência.
