@@ -4,6 +4,9 @@
 // - importar: valida a resposta no schema, grava no dossiê como resposta do PMO, roda as travas do código e mede
 //   contra o gabarito do Claude Code, numa seção "leitura independente". O gabarito nunca vai no pedido.
 // Só roda pelos scripts npm run exportar-pedido / importar-resposta (RAIO_X_MODO=exportar|importar).
+import { conferirQuestoes, questoesDoCodigo } from "../../src/etapas/4-pgp/questoes";
+import { montarPgp } from "../../src/exportacao/relatorio-pgp";
+import { pgpComoDocumento } from "../../src/etapas/4-pgp/autoconferencia";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { basename, dirname, join, resolve } from "node:path";
 import { describe, expect, it } from "vitest";
@@ -287,7 +290,24 @@ describe.skipIf(MODO !== "exportar")("exportar o pedido de um passo do PMO", () 
         writeFileSync(env.RAIO_X_DOSSIE, serializarDossie(dossie, HOJE));
     }
     // etapa 5: o plano a conferir (o PGP da etapa 4 exportado em PDF, ou outro) entra no dossiê como "pgp"
-    if (etapa === 5 && env.RAIO_X_PLANO) {
+    // --plano dossie: o PGP inteiro montado pelo app a partir do dossiê (uma página por parte, como na
+    // autoconferência da etapa 4); o arquivo vai em DOCX para a leitura (o PDF depende do navegador)
+    if (etapa === 5 && env.RAIO_X_PLANO === "dossie") {
+      if (!dossie.pgp) throw new Error("--plano dossie pede o PGP da etapa 4 no dossiê.");
+      const { gerarDocx } = await import("../../src/exportacao/docx");
+      const logo = readFileSync(new URL("../../src/interface/ativos/logo-fgv-projetos.jpg", import.meta.url));
+      const docx = await gerarDocx(
+        montarPgp(dossie, HOJE),
+        logo.buffer.slice(logo.byteOffset, logo.byteOffset + logo.byteLength),
+      );
+      const baseRfp = basename(
+        dossie.documentos.find((x) => x.papel === "rfp")?.nomeArquivo ?? "rfp",
+        ".pdf",
+      );
+      writeFileSync(join(saida, `pgp-${baseRfp}.docx`), Buffer.from(await docx.arrayBuffer()));
+      const plano = pgpComoDocumento(dossie, HOJE);
+      dossie = { ...dossie, documentos: [...dossie.documentos.filter((x) => x.papel !== "pgp"), plano] };
+    } else if (etapa === 5 && env.RAIO_X_PLANO) {
       const plano = await lerPdf(resolve(env.RAIO_X_PLANO), "pgp", HOJE);
       dossie = { ...dossie, documentos: [...dossie.documentos.filter((x) => x.papel !== "pgp"), plano] };
     }
@@ -723,6 +743,19 @@ describe.skipIf(MODO !== "importar")("importar a resposta do PMO (leitura indepe
           `- riscos que pedem reserva: ${custos?.riscosComReserva.map((x) => x.id).join(", ") || "nenhum"}`,
           `- linha de base dos custos: ${custos?.linhaDeBase ?? "a definir pelo GP"}; falta: ${custos?.faltando.filter((x) => /reserva/.test(x)).join("; ") || "—"}`,
         );
+        // registro das questões (B9) montado pelo código, com a origem, e o item do PMO que completa cada uma
+        const qs = questoesDoCodigo(ep);
+        if (qs.length && dossie.pgp.execucao) {
+          const cq = conferirQuestoes(qs, itensDoPgp(dossie.pgp, ep.documentos, ep.premissasTap));
+          linhas.push(
+            "",
+            `## Questões (B9) pelo código: ${qs.length}; sem item do PMO: ${cq.semItem.join(", ") || "nenhuma"}; sem origem nem fonte: ${cq.semOrigem.join(", ") || "nenhuma"}`,
+            ...cq.linhas.map(
+              (l) =>
+                `- ${l.questao.numero} · ${l.questao.origem}: ${l.questao.texto.slice(0, 100)} → ${l.itens.join(", ") || "sem item"}`,
+            ),
+          );
+        }
         // compromissos (decisão 0047): o destino no TAP e no plano, como na matriz B23
         const cs = rastrearCompromissos(ep, itensDoPgp(dossie.pgp, ep.documentos, ep.premissasTap));
         if (cs.length)
