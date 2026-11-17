@@ -5,6 +5,7 @@
 import type { ItemAnalise } from "../../extracao/rfp/item";
 import type { RespostaConteudo, RespostaEap, RespostaEstrategia } from "../../pmo/schemas/proposta";
 import { normalizarTermo } from "../../regras/busca";
+import { perfisDoRequisito } from "../../extracao/requisitos";
 import type { PontoDePartida } from "./ponto-de-partida";
 
 export interface LinhaMatriz {
@@ -87,17 +88,27 @@ export function conferirMinuta(
       origem: r.pagina ? `${r.documento ?? "RFP"}, p. ${r.pagina}` : "incluído pelo GP",
     };
   });
+  // os perfis da equipe-chave (decisão 0054): a seção de equipe responde a cada critério que pontua um perfil
+  const perfisDaEquipe = p.requisitos
+    .filter((r) => r.tipo === "equipe")
+    .flatMap(perfisDoRequisito)
+    .map((x) => normalizarTermo(x));
   for (const cr of e?.criterios ?? []) {
     const alvo = normalizarTermo(cr.criterio);
+    const ehPerfil = perfisDaEquipe.some((x) => x.includes(alvo) || alvo.includes(x));
     const atendidoEm = (c?.estrutura ?? [])
       .map((s, i) => ({ s, i }))
-      .filter(
-        ({ s }) =>
-          s.criterio &&
-          (normalizarTermo(s.criterio) === alvo ||
-            normalizarTermo(s.criterio).includes(alvo) ||
-            alvo.includes(normalizarTermo(s.criterio))),
-      )
+      .filter(({ s }) => {
+        if (!s.criterio) return false;
+        // uma seção pode responder a vários critérios, separados por ponto e vírgula
+        const partes = s.criterio
+          .split(";")
+          .map((x) => normalizarTermo(x))
+          .filter(Boolean);
+        const pelaLista = partes.some((x) => x === alvo || x.includes(alvo) || alvo.includes(x));
+        const daEquipe = ehPerfil && /\bequipe\b|\bperfis?\b/.test(normalizarTermo(s.criterio));
+        return pelaLista || daEquipe;
+      })
       .map(({ s, i }) => `Seção ${i + 1} — ${s.titulo}`);
     matriz.push({
       chave: cr.criterio,

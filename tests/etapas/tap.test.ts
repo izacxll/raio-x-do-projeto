@@ -92,6 +92,23 @@ describe("divergências RFP × proposta (código)", () => {
     expect(d.find((x) => x.id === "prazo")?.situacao).toBe("igual");
   });
 
+  it("equipe-chave: a proposta mostra a lista ligada ao R; perfil da RFP que falta deixa 'diferente'", () => {
+    const equipe = compararRfpEProposta(entrada).find((x) => x.tema === "equipe")!;
+    expect(equipe.proposta.texto.split("; ").length).toBeGreaterThanOrEqual(4);
+    const semUm = {
+      ...entrada,
+      dados: {
+        ...entrada.dados!,
+        perfis: entrada.dados!.perfis.filter(
+          (_, k, todos) => k !== todos.findIndex((y) => y.requisito === "R06"),
+        ),
+      },
+    };
+    const d = compararRfpEProposta(semUm).find((x) => x.tema === "equipe")!;
+    expect(d.situacao).toBe("diferente");
+    expect(d.observacao).toMatch(/não traz:/);
+  });
+
   it("valor: o estimado da RFP contra o preço final do GP", () => {
     expect(entrada.ponto.valorEstimado?.texto).toBe("R$ 500.000,00");
     expect(compararRfpEProposta(entrada).find((x) => x.id === "valor")?.situacao).toBe("nao-conferido");

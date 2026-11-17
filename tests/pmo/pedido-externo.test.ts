@@ -303,7 +303,9 @@ describe.skipIf(MODO !== "exportar")("exportar o pedido de um passo do PMO", () 
     // usar as mesmas; sem elas, valem as do dossiê
     if (env.RAIO_X_PORTE || env.RAIO_X_PCS) {
       const atual = dossie.pgp ?? pgpInicial();
-      const porte = env.RAIO_X_PORTE as "pequeno" | "médio" | "grande" | undefined;
+      // "medio" sem acento também vale
+      const porte = (env.RAIO_X_PORTE === "medio" ? "médio" : env.RAIO_X_PORTE) as
+        "pequeno" | "médio" | "grande" | undefined;
       if (porte && !["pequeno", "médio", "grande"].includes(porte))
         throw new Error("--porte deve ser pequeno, médio ou grande.");
       dossie = {
@@ -563,7 +565,8 @@ describe.skipIf(MODO !== "importar")("importar a resposta do PMO (leitura indepe
         const atual = dossie.proposta ?? propostaInicial();
         let proposta = { ...atual, [passo]: guardada } as typeof atual;
         if (passo === "estrategia") {
-          // decisões do GP com o padrão do teste: --abordagem, ou a primeira sugerida; PC que o PMO não descartou
+          // decisões do GP com o padrão do teste: --abordagem, ou a primeira sugerida; --pcs, ou só as PC que o PMO
+          // marcou "sim" (a "a confirmar" é decisão do GP: sem --pcs, não vira confirmada)
           const e = v.data as z.infer<typeof SCHEMAS.estrategia>;
           const id = env.RAIO_X_ABORDAGEM || e.abordagens[0]?.id;
           proposta = {
@@ -571,9 +574,11 @@ describe.skipIf(MODO !== "importar")("importar a resposta do PMO (leitura indepe
             abordagem: id
               ? { id, justificativa: "Escolhida para o teste externo (decisão do GP simulada)." }
               : undefined,
-            premissasAplicaveis: Object.fromEntries(
-              e.premissasCriticas.filter((x) => x.aplica !== "nao").map((x) => [x.codigo, true]),
-            ),
+            premissasAplicaveis: env.RAIO_X_PCS
+              ? Object.fromEntries(env.RAIO_X_PCS.split(",").map((x) => [x.trim().toUpperCase(), true]))
+              : Object.fromEntries(
+                  e.premissasCriticas.filter((x) => x.aplica === "sim").map((x) => [x.codigo, true]),
+                ),
           };
           decisaoGp = `Abordagem para os passos seguintes: ${id ?? "nenhuma"} (troque com --abordagem).`;
         }

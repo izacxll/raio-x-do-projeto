@@ -74,10 +74,10 @@ export function conteudoDoPedido(opcoes: {
     ...[...pedido.matchAll(/<ficha parte="[^"]+">\n([\s\S]*?)\n<\/ficha>/g)].map((m) => m[1] ?? ""),
   ].join("\n");
   const citadosRework = [...new Set([...textoFichas.matchAll(/\bRW-\d{3}\b/g)].map((m) => m[0]))];
-  const rework = arquivos.find((a) => a.nome.startsWith("referencias/rework.md"));
+  const reworks = arquivos.filter((a) => a.nome.startsWith("referencias/rework.md"));
   // o rework.md resume os artigos por tema ("**Artigos.** RW-071 (…); RW-072 (…)"): o artigo foi junto quando o
   // trecho do Rework que foi no pedido traz o id dele (as fichas citam o id, mas não trazem o resumo)
-  const textoDoRework = rework?.texto ?? "";
+  const textoDoRework = reworks.map((a) => a.texto).join("\n");
   const artigoJunto = (id: string) => new RegExp(`\\b${id}\\b`).test(textoDoRework);
   const reworkFaltando = citadosRework.filter((id) => !artigoJunto(id));
 
@@ -128,14 +128,16 @@ export function conteudoDoPedido(opcoes: {
       fichasInteiras.length > 0,
       fichasInteiras.join(", ") || "nenhuma",
     );
+  }
+  // em toda etapa que leva fichas inteiras, o artigo do Rework que elas citam vai com o resumo (o tema do rework.md)
+  if (etapa >= 2 && etapa <= 4)
     confere(
-      "artigos do rework.md citados nas fichas",
+      "artigos do rework.md citados nas fichas, com o resumo",
       reworkFaltando.length === 0,
       citadosRework.length
         ? `citados: ${citadosRework.join(", ")}${reworkFaltando.length ? `; sem o resumo: ${reworkFaltando.join(", ")}` : ""}`
         : "nenhum citado",
     );
-  }
   if (etapa === 5) {
     confere(
       "fichas das partes do mapa, só o conteúdo mínimo e as perguntas de qualidade",
@@ -171,7 +173,7 @@ export function conteudoDoPedido(opcoes: {
       ? [`- Fichas só com "Quando dispensar": ${fichasSoDispensa.join(", ")}`]
       : []),
     `- Artigos do Rework citados nas fichas: ${citadosRework.join(", ") || "nenhum"}${reworkFaltando.length ? ` (sem o resumo no trecho do rework.md que foi junto: ${reworkFaltando.join(", ")})` : ""}`,
-    `- Método da etapa no pedido: ${metodo ? "sim" : "não"}`,
+    `- Método da etapa no pedido: ${metodo ? "sim" : etapa === 1 ? "não" : "não (esperado: a tabela da seção 5 só manda o da etapa 1; nas etapas 2 a 5, o método está na seção da etapa na SKILL.md)"}`,
     "",
     "## Comparação com a tabela da seção 5 da SKILL.md",
     `Linha da tabela: ${linha.replace(/^\| /, "").replace(/ \|$/, "") || "(não achada)"}`,

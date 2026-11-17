@@ -116,7 +116,8 @@ export const TEMAS_RFP: Tema[] = [
     res: [
       /\bpagamento\b[^.;]{0,120}?\b(?:ate|em|no prazo (?:maximo )?de)\s+\d{1,3}\s*(?:\([a-z ]+\)\s*)?dias(?: uteis| corridos)?/,
       /\bpagamento\b[^.;]{0,80}\b(?:por produto|mediante (?:a )?(?:entrega|apresentacao)|apos (?:a |o )?(?:aprovacao|aceite|entrega|atesto|recebimento))/,
-      /\bpagamento\b/,
+      // a palavra sozinha, fora de nome de indicador ("CAPAG (Capacidade de Pagamento)")
+      /(?<!capacidade de )\bpagamento\b/,
     ],
     temas: ["pagamento"],
     valor: (l) => {

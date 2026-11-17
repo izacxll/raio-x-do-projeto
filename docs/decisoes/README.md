@@ -50,6 +50,7 @@ Uma decisão por arquivo, numerada em ordem. Cada uma registra o contexto, o que
 | [0052](0052-achado-do-codigo-e-candidato-ate-o-veredito-do-pmo.md) | Achado do código é candidato até o veredito do PMO; dispensa declarada só no plano é candidata; busca do ausente do PMO na parte apontada | aceita |
 | [0053](0053-sem-modo-demonstracao.md) | A apresentação do app é feita com a skill PMO na conversa; o site não tem modo de demonstração | aceita |
 | [0054](0054-requisitos-como-entregas-e-modalidade-nao-identificada.md) | Cada R é uma entrega ou obrigação de quem executa, com a equipe-chave num R só; sem modalidade no documento, ela fica não identificada até o GP escolher | aceita |
+| [0055](0055-rework-nos-pedidos-e-compromissos-de-metodo.md) | Os temas do Rework citados nas fichas vão no pedido de cada etapa (FALTA quando não vão); compromissos de método também são C, com o número do PMO quando ele o deu | aceita |
 
 Modelo para uma nova decisão:
 
