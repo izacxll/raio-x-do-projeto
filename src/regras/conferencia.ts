@@ -104,11 +104,22 @@ const ATIVIDADE_PARA_O_PUBLICO =
  */
 const ASPAS = /['"\u201c\u201d\u2018\u2019\u00ab\u00bb]/;
 
-/** A expressão está entre aspas no texto ("prazo de cada ordem de serviço ('em tempo hábil')"). */
+/**
+ * A expressão está entre aspas no texto, colada a elas ("prazo de cada ordem de serviço ('em tempo hábil')") ou
+ * dentro de um trecho citado na mesma linha ("informar o prazo do trecho "O não cumprimento em tempo hábil…"").
+ */
 export function entreAspas(texto: string, posicao: number, tamanho: number): boolean {
   const antes = texto.slice(Math.max(0, posicao - 2), posicao);
   const depois = texto.slice(posicao + tamanho, posicao + tamanho + 2);
-  return ASPAS.test(antes) && ASPAS.test(depois);
+  if (ASPAS.test(antes) && ASPAS.test(depois)) return true;
+  const ini = texto.lastIndexOf("\n", posicao) + 1;
+  const fimLinha = texto.indexOf("\n", posicao + tamanho);
+  const linhaAntes = texto.slice(ini, posicao);
+  const linhaDepois = texto.slice(posicao + tamanho, fimLinha < 0 ? undefined : fimLinha);
+  // aspas retas: número ímpar antes e uma depois; aspas curvas: abertura sem fechamento antes, fechamento depois
+  const retas = (linhaAntes.match(/"/g) ?? []).length % 2 === 1 && linhaDepois.includes('"');
+  const curvas = linhaAntes.lastIndexOf("“") > linhaAntes.lastIndexOf("”") && linhaDepois.includes("”");
+  return retas || curvas;
 }
 
 /** "a definir pelo GP", "a ser definido pelo GP", "a definir: decisão do GP": pendência do GP, convenção do app. */

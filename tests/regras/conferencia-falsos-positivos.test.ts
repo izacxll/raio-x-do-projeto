@@ -260,3 +260,16 @@ describe("vago: convenção do app e expressão citada entre aspas (teste extern
     expect(r.achados.filter((a) => a.regra === "vago:em-tempo-habil")).toHaveLength(1);
   });
 });
+
+describe("vago dentro de trecho citado", () => {
+  it("a expressão dentro de uma citação longa do documento não é vago do plano", () => {
+    const r = conferirPlano(
+      entrada({
+        pgp: paginas([
+          'QU-02: informar o prazo do trecho "O não cumprimento em tempo hábil da ordem de serviço sujeita a multa".\nA equipe responde em tempo hábil.',
+        ]),
+      }),
+    );
+    expect(r.achados.filter((a) => a.regra === "vago:em-tempo-habil")).toHaveLength(1);
+  });
+});
