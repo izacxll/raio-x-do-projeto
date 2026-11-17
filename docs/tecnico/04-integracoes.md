@@ -34,9 +34,9 @@ graph LR
 | Reserva em recusa | Beta `server-side-fallback-2026-07-01` com `fallbacks: "default"` | `src/pmo/cliente.ts` |
 | Erros | Traduzidos para o português, cada um com o que fazer; a chave é apagada das mensagens (`semChave`) | `traduzirErro` em `src/pmo/cliente.ts` |
 | Custo | Estimado antes (tokens × preços) e registrado depois, no dossiê (`UsoPmo`) | `src/pmo/custo.ts`, `src/config/precos.ts` |
-| Quem chama | Etapas 2, 3 e 4 e a leitura opcional da etapa 5. O passo "teste" só valida a chave | `src/etapas/*/pedidos.ts`, `src/etapas/5-conferencia/leitura-pmo.ts` |
+| Quem chama | A leitura do PMO em todas as etapas (decisão 0035): etapa 1 (`src/etapas/1-rfp/leitura-pmo.ts`), etapas 2, 3 e 4 (`src/etapas/*/pedidos.ts`) e etapa 5 (`src/etapas/5-conferencia/leitura-pmo.ts`). O passo "teste" só valida a chave | ver a coluna anterior |
 
-Sem chave, as etapas 1 e 5 funcionam inteiras. O **modo demonstração** troca a chamada pelas respostas gravadas em `tests/fixtures/gerados/*-oei/`, validadas pelos mesmos schemas (`src/demonstracao/`, decisão 0027).
+Sem chave, nenhuma etapa analisa (decisão 0037): a tela oferece conectar ou ver a demonstração. O **modo demonstração** troca a chamada pelas respostas gravadas em `tests/fixtures/gerados/*-oei/` (todas as etapas; na 5, com um plano inventado), validadas pelos mesmos schemas (`src/demonstracao/`, decisão 0027).
 
 ## GitHub Pages e GitHub Actions
 

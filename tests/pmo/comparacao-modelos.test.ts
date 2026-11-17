@@ -1,7 +1,8 @@
 // Comparação de modelos da decisão 0002: os três passos da etapa 2 na mesma RFP pública (OEI), com o Opus 5.5 e
 // com o Sonnet 5.5, lado a lado: aderência à redação condicional, números sem fonte (tem de ser zero), citações
 // conferidas, cobertura dos requisitos, tokens e valor.
-// Só roda com a chave: no PowerShell, $env:ANTHROPIC_API_KEY = "<chave>"; npm run comparar-modelos
+// Só roda com a chave num arquivo fora do repositório: $env:RAIO_X_ARQUIVO_CHAVE = "<caminho>"; npm run comparar-modelos
+// (passo a passo em docs/tecnico/07-configuracao.md; nunca ANTHROPIC_API_KEY).
 // Custo estimado de uma rodada (preços de 13/11/2026): cerca de US$ 2 a 3 somando os dois modelos.
 // Saída: tests/fixtures/gerados/comparacao-modelos/ (respostas de RFP pública, sem preço nem nomes).
 import { mkdirSync, writeFileSync } from "node:fs";
@@ -22,9 +23,10 @@ import { chamarPmo } from "../../src/pmo/cliente";
 import { formatarDolar } from "../../src/pmo/custo";
 import { referenciasEtapa2, textoDeSistema, textoDosDocumentos } from "../../src/pmo/montagem";
 import { SCHEMAS } from "../../src/pmo/schemas/proposta";
+import { lerChaveDeArquivo } from "../ajudantes/chave-de-arquivo";
 import { lerRfpPublica } from "../ajudantes/rfp-publica";
 
-const CHAVE = process.env.ANTHROPIC_API_KEY;
+const CHAVE = process.env.COMPARAR_MODELOS === "sim" ? lerChaveDeArquivo() : undefined;
 // só pelo npm run comparar-modelos: ter a chave no ambiente não basta para gastar crédito num npm test
 const LIGADA = process.env.COMPARAR_MODELOS === "sim" && Boolean(CHAVE);
 const RFP = "concorrencia-tecnica-preco-oei-mdhc-criancas-situacao-rua-2026.pdf";

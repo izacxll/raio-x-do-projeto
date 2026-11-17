@@ -1,0 +1,127 @@
+{
+  "achados": [
+    {
+      "id": "pmo-1",
+      "tipo": "conflituoso",
+      "parte": "A4",
+      "item": "",
+      "titulo": "Parcelas diferentes das do edital, com frase de conformidade",
+      "descricao": "O plano diz seguir o item 5 do Termo de Referência, mas atribui 25% ao Produto 2 e 20% ao Produto 4; o edital atribui 20% ao Produto 2 e 25% ao Produto 4.",
+      "evidencias": [
+        {
+          "doc": "pgp",
+          "pagina": 4,
+          "trecho": "em conformidade com o item 5 do Termo de Referência"
+        },
+        { "doc": "pgp", "pagina": 4, "trecho": "Produto 2 (dois cadernos temáticos) – 25%" },
+        {
+          "doc": "rfp",
+          "pagina": 21,
+          "trecho": "Produto 2 – Dois cadernos temáticos sobre direitos 75 20%"
+        }
+      ],
+      "sugestao": "Sugere-se reproduzir os percentuais do edital (5, 20, 20, 25 e 30%) ou, se a diferença for intencional, dizê-la e justificá-la, retirando a frase de conformidade.",
+      "termosProcurados": []
+    },
+    {
+      "id": "pmo-2",
+      "tipo": "conflituoso",
+      "parte": "B15",
+      "item": "",
+      "titulo": "As fases somam mais meses que a vigência",
+      "descricao": "As cinco fases somam 13 meses (2 + 3 + 3 + 3 + 2), e o contrato tem vigência de 12 meses a contar da assinatura.",
+      "evidencias": [
+        { "doc": "pgp", "pagina": 3, "trecho": "Fase 1 – Mobilização e plano de trabalho: 2 meses." },
+        { "doc": "rfp", "pagina": 11, "trecho": "prazo de vigência de 12 (doze) meses" }
+      ],
+      "sugestao": "Recomenda-se ajustar as fases para caberem na vigência, com folga para a análise e o ateste do último produto.",
+      "termosProcurados": []
+    },
+    {
+      "id": "pmo-3",
+      "tipo": "ausente",
+      "parte": "B3",
+      "item": "B3.9",
+      "titulo": "Sem registro de premissas: as premissas críticas não estão escritas",
+      "descricao": "O plano não registra premissas. As que se aplicam a este projeto (informações e diretrizes gráficas da contratante, aprovação dos produtos com prazo, acesso à rede para as escutas) não aparecem como premissa, nem como risco com gatilho, nem no plano de mudanças.",
+      "evidencias": [
+        {
+          "doc": "pgp",
+          "pagina": 5,
+          "trecho": "Risco 2 – Dificuldade de agenda com a rede de proteção. Resposta: reuniões virtuais."
+        }
+      ],
+      "sugestao": "Sugere-se incluir um registro de premissas com cada premissa crítica, a consequência se falhar, o gatilho no registro de riscos e a forma de reajuste no plano de mudanças.",
+      "termosProcurados": ["premissa", "premissas", "pressuposto"]
+    },
+    {
+      "id": "pmo-4",
+      "tipo": "ausente",
+      "parte": "A11",
+      "item": "A11.9",
+      "titulo": "Mudanças sem o caminho contratual",
+      "descricao": "O plano trata mudanças só por correspondência oficial; não diz que a mudança de escopo, prazo ou valor passa por termo aditivo ou apostilamento.",
+      "evidencias": [
+        {
+          "doc": "pgp",
+          "pagina": 5,
+          "trecho": "As mudanças serão comunicadas e documentadas por correspondência oficial entre as partes."
+        }
+      ],
+      "sugestao": "Recomenda-se dizer quando a mudança exige termo aditivo e quando basta apostilamento, e quem aprova cada uma.",
+      "termosProcurados": ["aditivo", "apostila", "apostilamento"]
+    },
+    {
+      "id": "pmo-5",
+      "tipo": "ausente",
+      "parte": "B17",
+      "item": "B17.3",
+      "titulo": "Produtos sem critério de aceite",
+      "descricao": "Os produtos são listados com o conteúdo, mas sem o critério que a contratante usa para aceitar cada um.",
+      "evidencias": [
+        {
+          "doc": "pgp",
+          "pagina": 2,
+          "trecho": "Cada produto será entregue em versão editável e em PDF, com os arquivos-fonte."
+        }
+      ],
+      "sugestao": "Sugere-se escrever, para cada produto, o conteúdo mínimo que a contratante confere, o prazo de análise e o número de rodadas de ajuste.",
+      "termosProcurados": ["critério de aceite", "critérios de aceite", "aceitação"]
+    },
+    {
+      "id": "pmo-6",
+      "tipo": "vago",
+      "parte": "B17",
+      "item": "",
+      "titulo": "Aprovação dos produtos sem prazo",
+      "descricao": "A contratante analisa os produtos \"oportunamente\" e pede ajustes \"quando necessários e pertinentes\", sem prazo nem limite de rodadas; o pagamento depende dessa aprovação.",
+      "evidencias": [
+        {
+          "doc": "pgp",
+          "pagina": 2,
+          "trecho": "que os analisará oportunamente e solicitará os ajustes quando necessários e pertinentes"
+        }
+      ],
+      "sugestao": "Recomenda-se propor um prazo de análise (a definir pelo GP com a contratante) e um limite de rodadas de ajuste.",
+      "termosProcurados": []
+    },
+    {
+      "id": "pmo-7",
+      "tipo": "conflituoso",
+      "parte": "B17",
+      "item": "",
+      "titulo": "Exclusões de outro tipo de projeto",
+      "descricao": "A lista do que não está incluído fala de engenharia, arquitetura, licenciamento ambiental e seguros de obra, que não têm relação com o objeto; faltam as exclusões deste objeto (por exemplo, a mobilização da rede pela contratante e as despesas de viagem fora de Brasília).",
+      "evidencias": [
+        {
+          "doc": "pgp",
+          "pagina": 2,
+          "trecho": "estudos de engenharia, projetos arquitetônicos, licenciamento ambiental e seguros de obra"
+        }
+      ],
+      "sugestao": "Sugere-se trocar a lista pelas exclusões próprias deste objeto.",
+      "termosProcurados": []
+    }
+  ],
+  "observacoes": []
+}

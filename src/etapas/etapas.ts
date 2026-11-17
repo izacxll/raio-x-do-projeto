@@ -25,7 +25,7 @@ export interface Etapa {
   nome: string;
   nomeCurto: string;
   resumoEntrada: string;
-  /** Etapas 2, 3 e 4 usam o PMO (API do Claude, com a chave do GP). As etapas 1 e 5 rodam só com código. */
+  /** Todas as etapas usam o PMO (API do Claude, com a chave do GP): nada é analisado sem a conexão (decisão 0037). */
   usaPmo: boolean;
   /** Fase do plano em que a etapa fica pronta. Uso interno: nunca aparece na tela (o GP não conhece as fases). */
   fase: string;
@@ -40,7 +40,7 @@ export const ETAPAS: Etapa[] = [
     nome: "Leitura da RFP",
     nomeCurto: "RFP",
     resumoEntrada: "entra: RFP em PDF",
-    // decisão 0035: o PMO lê; sem a chave, a etapa mostra o esqueleto do código ("leitura parcial por código")
+    // decisões 0035 e 0037: o PMO lê, o código monta e confere; sem a conexão com o Claude, nada é analisado
     usaPmo: true,
     fase: "F1",
     documentos: [
@@ -177,7 +177,8 @@ export const ETAPAS: Etapa[] = [
     nome: "Conferência do plano",
     nomeCurto: "Conferência",
     resumoEntrada: "entra: plano + TAP ou termo + RFP",
-    usaPmo: false,
+    // decisão 0037: a conferência por código e a leitura do PMO numa ação só, com a conexão
+    usaPmo: true,
     fase: "F5",
     documentos: [
       { papel: "pgp", nome: "Plano (PGP ou plano de trabalho)", obrigatorio: true },
@@ -198,6 +199,7 @@ export const ETAPAS: Etapa[] = [
       "O que está vago, conflituoso ou ausente, por tempo, custo, escopo e domínios do PMBOK 7",
       "A gravidade pela parte do plano: grave, média ou baixa",
       "Cada achado com o trecho e a página, e um ajuste que o gerente acata ou descarta",
+      "A leitura do PMO, com cada citação conferida pelo código e o ausente procurado no plano inteiro",
     ],
     saidas: [
       { nome: "Relatório de conformidade", formatos: ["DOCX", "PDF"] },

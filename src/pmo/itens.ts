@@ -79,3 +79,8 @@ export function usoDaChamada(passo: string, r: RespostaPmo<unknown>): UsoPmo {
     em: r.em,
   };
 }
+
+/** Revisões e decisões sobre itens do PMO ("pmo:…"): uma leitura nova não herda as da anterior (os ids se repetem). */
+export function semRevisoesDoPmo<T>(registro: Record<string, T>): Record<string, T> {
+  return Object.fromEntries(Object.entries(registro).filter(([id]) => !id.startsWith("pmo:")));
+}

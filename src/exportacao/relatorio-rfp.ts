@@ -1,6 +1,6 @@
 // Saídas da etapa 1 pelo método (decisões 0034 e 0035): "Análise da RFP" (DOCX e PDF) nas 8 seções, requisitos e
 // prazos (XLSX), checklist de habilitação linha a linha (XLSX) e perguntas de esclarecimento (DOCX), estas com a
-// premissa crítica de cada ponto. Sem a leitura do PMO, o cabeçalho diz "leitura parcial por código". Cabeçalho de
+// premissa crítica de cada ponto. A tela só exporta depois da leitura do PMO (decisão 0037); um dossiê sem ela sai marcado como "sem a leitura do PMO". Cabeçalho de
 // minuta enquanto houver item pendente.
 import type { Dossie, RevisaoItem } from "../dossie/esquema";
 import type { AnaliseRfp } from "../etapas/1-rfp/analisar-rfp";
@@ -29,7 +29,7 @@ const NOME_PARTICIPACAO = {
 } as const;
 
 export const AVISO_LEITURA_PARCIAL =
-  "Leitura parcial por código: o esqueleto que o código montou (páginas, números, datas, contas e o que as regras acham por padrão de texto), sem a leitura do PMO.";
+  "Sem a leitura do PMO: só o esqueleto que o código montou (páginas, números, datas, contas e o que as regras acham por padrão de texto). Peça a análise com o PMO antes de usar este documento.";
 
 function base(dossie: Dossie, titulo: string, subtitulo: string, minuta: boolean, agora: Date) {
   return {
@@ -188,7 +188,7 @@ export function montarAnaliseRfp(
       dossie,
       "Análise da RFP",
       leitura.fonte === "codigo"
-        ? "Leitura parcial por código, com a página de cada item. A ferramenta sugere; quem decide é o GP."
+        ? "Sem a leitura do PMO: só o esqueleto do código, com a página de cada item. A ferramenta sugere; quem decide é o GP."
         : "Leitura do PMO, conferida pelo código, com a página de cada item. A ferramenta sugere; quem decide é o GP.",
       pendentes > 0,
       agora,

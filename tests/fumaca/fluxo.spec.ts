@@ -115,16 +115,26 @@ test("nenhum termo interno de construção (fases do plano) aparece para o GP", 
   }
 });
 
-test("etapa 5: mapa, conferência, decisão do GP e exportação do relatório", async ({ page }) => {
+test("etapa 5: sem a chave, nada é conferido; na demonstração, conferência, decisão do GP e relatório", async ({
+  page,
+}) => {
   const erros = vigiarErros(page);
   await page.goto("./#/etapa/5");
-  // um edital público faz as vezes de plano: o teste é do fluxo da tela, não das regras
+  // um edital público faz as vezes de plano: sem a conexão, o botão fica desligado e nada aparece (decisão 0037)
   await page.getByTestId("enviar-pgp").setInputFiles(TEXTO);
   await expect(page.getByText("Mapa do plano", { exact: true })).toBeVisible({ timeout: 60_000 });
-  await expect(page.getByText("Premissas críticas", { exact: true })).toBeVisible();
-  await page.getByRole("button", { name: "Conferir o plano" }).click();
+  await expect(page.getByTestId("conferir-plano")).toBeDisabled();
+  await expect(page.getByRole("table", { name: "Resumo dos achados" })).toHaveCount(0);
+  // a demonstração: o plano inventado, com erros plantados, e a resposta gravada do PMO
+  page.on("dialog", (d) => void d.accept());
+  await page.getByTestId("ver-demonstracao").click();
+  await expect(page.getByTestId("aviso-demonstracao")).toBeVisible({ timeout: 60_000 });
+  await expect(page.getByText("Premissas críticas", { exact: true })).toBeVisible({ timeout: 60_000 });
+  await page.getByTestId("conferir-plano").click();
   await expect(page.getByRole("table", { name: "Resumo dos achados" })).toBeVisible();
-  const primeiro = page.locator("article.achado").first();
+  await expect(page.getByTestId("achado-pmo-pmo-1")).toContainText("leitura do PMO");
+  // o primeiro achado do código (os do PMO têm a decisão própria, "O achado pmo-N procede?")
+  const primeiro = page.locator("article.achado:not([data-testid^='achado-pmo'])").first();
   await expect(primeiro).toBeVisible();
   await primeiro.getByLabel("O achado procede?").selectOption("nao");
   await primeiro.getByLabel("Justificativa").fill("Teste de fumaça.");
@@ -140,7 +150,7 @@ test("etapa 5: mapa, conferência, decisão do GP e exportação do relatório",
   expect(erros).toEqual([]);
 });
 
-test("etapa 1: leitura parcial por código nas 8 seções, revisão do GP e as quatro saídas", async ({
+test("etapa 1: sem a chave, nada é analisado; na demonstração, as 8 seções, a revisão do GP e as saídas", async ({
   page,
 }) => {
   const erros = vigiarErros(page);
@@ -149,14 +159,25 @@ test("etapa 1: leitura parcial por código nas 8 seções, revisão do GP e as q
     .getByTestId("enviar-rfp")
     .setInputFiles(`${FIXTURES}/pregao-eletronico-politicas-mulheres-barra-bonita-2026.pdf`);
   await expect(page.locator(".envio__arquivo").first()).toContainText("barra-bonita", { timeout: 60_000 });
+  // decisão 0037: sem a conexão, o botão fica desligado e o esqueleto não aparece sozinho
+  await expect(page.getByTestId("analisar-rfp")).toBeDisabled();
+  await expect(page.getByTestId("custo-leitura-rfp")).toContainText("US$");
+  await expect(page.getByText("1. Em uma página", { exact: true })).toHaveCount(0);
+  page.on("dialog", (d) => void d.accept());
+  await page.getByTestId("ver-demonstracao").click();
+  await expect(page.getByTestId("aviso-demonstracao")).toBeVisible({ timeout: 60_000 });
   await page.getByTestId("analisar-rfp").click();
-  await expect(page.getByTestId("leitura-parcial")).toContainText("Leitura parcial por código");
   await expect(page.getByText("1. Em uma página", { exact: true })).toBeVisible();
   await expect(page.getByText("7. Pontos de atenção", { exact: true })).toBeVisible();
-  await expect(page.getByTestId("item-leitura:regime")).toContainText("Pregão eletrônico");
+  await expect(page.locator('[data-secao="uma-pagina"]')).toContainText("Concorrência");
   await expect(page.getByTestId("requisitos-numerados")).toBeVisible();
   await page.getByLabel("Participar da disputa?").selectOption("participar");
-  await page.getByTestId("item-leitura:regime").getByRole("combobox").selectOption("aceito");
+  await page
+    .locator('[data-secao="uma-pagina"] [data-testid^="item-"]')
+    .first()
+    .getByRole("combobox")
+    .first()
+    .selectOption("aceito");
   for (const [botao, extensao] of [
     ["Análise da RFP · DOCX", "docx"],
     ["Análise da RFP · PDF", "pdf"],
@@ -170,6 +191,5 @@ test("etapa 1: leitura parcial por código nas 8 seções, revisão do GP e as q
     expect(arquivo.suggestedFilename().endsWith(`.${extensao}`)).toBe(true);
     expect(readFileSync(await arquivo.path()).length).toBeGreaterThan(2000);
   }
-  expect(await page.locator("body").innerText()).not.toMatch(/não informado no documento/);
   expect(erros).toEqual([]);
 });

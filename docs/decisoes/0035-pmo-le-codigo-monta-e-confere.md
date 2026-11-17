@@ -7,14 +7,14 @@
 
 ## Contexto
 
-Na fase M1 (etapa 1 pelo método, decisão 0034), as regras de código foram refeitas na estrutura do método e medidas contra os gabaritos que o PMO fez à mão para dois editais públicos:
+Na fase M1 (etapa 1 pelo método, decisão 0034), as regras de código foram refeitas na estrutura do método e medidas contra gabaritos de dois editais públicos, feitos pelo Claude Code seguindo a skill PMO (não são uma leitura independente; ver a seção "Como se testa sem a chave"). Números do placar final da M1 (`docs/estudos/placar-m1-etapa-1.md`, a fonte deles):
 
 | | SMPED (parceria) | OEI (licitação) |
 |---|---|---|
-| Itens na tela | 122 → 42 | 183 → 50 |
-| Itens que não passam no teste do método | 82 → 9 | 102 → 7 |
-| Gabarito coberto (maioria das chaves do item) | 15 → 27 de 50 | 30 → 36 de 50 |
-| Gabarito coberto por inteiro | 5 → 11 | 9 → 18 |
+| Itens na tela | 122 → 40 cartões + 16 R | 183 → 39 cartões + 16 R |
+| Cartões que não passam no teste do método | 82 → 6 | 102 → 3 |
+| Gabarito coberto (maioria das chaves do item) | 15 → 28 de 50 | 30 → 35 de 50 |
+| Gabarito coberto por inteiro | 5 → 12 | 9 → 20 |
 | Números sem fonte | 0 | 0 |
 
 O código tirou o ruído e acerta o que é mecânico (páginas, números, datas, soma das parcelas, documentos linha a linha, o padrão de cada premissa crítica). O que falta é leitura: cruzar trechos distantes (a "parcela única" de um item contra o repasse mensal de um quadro), dizer por que um ponto pesa e em que ordem, resumir uma obrigação como o gerente lê. Mais regra não chega lá; viraria uma pilha de exceções por edital.
@@ -30,7 +30,7 @@ O código tirou o ruído e acerta o que é mecânico (páginas, números, datas,
    - as contas continuam do código (CLAUDE.md, seção 2);
    - categoria e gravidade (etapa 5) continuam por regra fixa.
 4. **Tudo o que vem do PMO é Sugestão**, com a etiqueta "leitura do PMO"; o que o código conferiu no documento continua "Do documento", com a página.
-5. **Sem chave**, as etapas 1 e 5 mostram o esqueleto do código, com o aviso **"leitura parcial por código"**. As etapas 2, 3 e 4 continuam pedindo a chave (ou o modo demonstração).
+5. **Mudado pela decisão 0037.** Antes: sem chave, as etapas 1 e 5 mostravam o esqueleto do código, com o aviso "leitura parcial por código". Agora nenhuma etapa analisa sem a conexão com o Claude; sem chave, as opções são conectar ou ver a demonstração.
 6. **Custo à vista** antes de cada pedido e uso real depois, como hoje. Estimativa da decisão 0032: cerca de US$ 0,20 a 0,45 por edital na etapa 1 (até US$ 0,75 num edital longo com anexos); a etapa 5 fica na mesma faixa.
 7. **Envio de conteúdo:** a tela avisa, em todas as etapas, que o texto dos PDFs vai para a API do Claude quando o GP pede a leitura (CLAUDE.md, seção 5).
 

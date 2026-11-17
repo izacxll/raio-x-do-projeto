@@ -1,6 +1,6 @@
 # 01 — Visão geral
 
-O que o Raio-X do Projeto faz, para quem e com que tecnologia, como está no código da versão 0.8.1.
+O que o Raio-X do Projeto faz, para quem e com que tecnologia, como está no código da fase M1 (etapa 1 pelo método, decisões 0034 a 0036).
 
 ## Propósito
 
@@ -8,11 +8,11 @@ App web para gerentes de projeto (GP) da FGV Projetos. Apoia o ciclo RFP → pro
 
 | Etapa | Entra | Sai | Quem trabalha |
 |---|---|---|---|
-| 1 — RFP | RFP e anexos (PDF) | Análise com identificação, requisitos numerados (R01…), prazos, julgamento, habilitação, condições, partes e brechas com pergunta de esclarecimento | Só código |
-| 2 — Proposta | RFP (e a análise da etapa 1) | Minuta técnica e de preço, cronograma, matriz de atendimento | Código + PMO (API do Claude) |
-| 3 — TAP | RFP e proposta | Termo de abertura com 12 elementos e registro de premissas | Código + PMO |
-| 4 — PGP | TAP (e proposta) | Plano de gerenciamento, registros, cronograma, EAP e rede | Código + PMO |
-| 5 — Conferência | PGP (e TAP, RFP) | Achados vago, conflituoso e ausente, com gravidade e categoria; leitura opcional do PMO | Código (+ PMO opcional) |
+| 1 — RFP | RFP e anexos (PDF) | Leitura em 8 seções (em uma página; fazer e entregar, com os requisitos R; prazos; dinheiro; julgamento; habilitação; pontos de atenção com a premissa crítica e a pergunta; não se aplica) | Código monta o esqueleto e confere; PMO lê |
+| 2 — Proposta | RFP (e a análise da etapa 1) | Minuta técnica e de preço, cronograma, matriz de atendimento | PMO lê e redige; código monta e confere |
+| 3 — TAP | RFP e proposta | Termo de abertura com 12 elementos e registro de premissas | PMO lê e redige; código monta e confere |
+| 4 — PGP | TAP (e proposta) | Plano de gerenciamento, registros, cronograma, EAP e rede | PMO lê e redige; código monta e confere |
+| 5 — Conferência | PGP (e TAP, RFP) | Achados vago, conflituoso e ausente, com gravidade e categoria | Código confere; PMO lê, na mesma ação |
 
 As etapas estão definidas em `src/etapas/etapas.ts` (documentos pedidos, obrigatórios e opcionais).
 
@@ -20,8 +20,8 @@ As etapas estão definidas em `src/etapas/etapas.ts` (documentos pedidos, obriga
 
 - **Sugerir, nunca afirmar.** Todo item tem um de três rótulos: do documento, sugestão ou decisão do GP (`Rotulo` em `src/dossie/esquema.ts`). Cada um tem estado de revisão: pendente, aceito, editado ou descartado. Os documentos exportados levam o cabeçalho de minuta enquanto houver item pendente (`precisaDeMinuta` em `src/exportacao/modelo.ts`).
 - **"Não achado não é ausente".** O que o código não acha sai como "não localizado pelo código — conferir no documento". Página ilegível deixa o item "não verificável" (`src/extracao/rfp/item.ts`).
-- **Código × PMO.** Contas, datas, extração e conferência são de código. Criar e interpretar é do PMO, a API do Claude chamada com a chave do GP. A instrução do PMO é a skill em `.claude/skills/pmo/`, fonte única usada pelo Claude Code e importada no build.
-- **Nada em servidor.** O app é estático; os PDFs são lidos no navegador. Só as etapas com o PMO enviam texto, direto do navegador para `api.anthropic.com`.
+- **O PMO lê; o código monta e confere** (decisão 0035), e nenhuma etapa analisa sem a conexão com o Claude (decisão 0037; sem a chave, só a demonstração). Contas, datas, extração, o esqueleto do pedido e a conferência de tudo o que o PMO devolve (citação na página, número no trecho, nenhum R ou valor criado por ele) são de código. A leitura, em todas as etapas, é do PMO, a API do Claude chamada com a chave do GP. A instrução do PMO é a skill em `.claude/skills/pmo/`, fonte única usada pelo Claude Code e importada no build.
+- **Nada em servidor.** O app é estático; os PDFs são lidos no navegador. Só a leitura do PMO envia texto, quando o GP a pede, direto do navegador para `api.anthropic.com`.
 
 ## Stack
 

@@ -119,7 +119,7 @@ export interface LeituraRfp {
   foraDaLeitura: { motivo: string; quantos: number }[];
   /** Páginas sem texto legível, por documento. */
   ilegiveis: string[];
-  /** "codigo": só o esqueleto ("leitura parcial por código"); "pmo": com a leitura do PMO, conferida. */
+  /** "codigo": só o esqueleto (o que vai no pedido ao PMO); "pmo": com a leitura do PMO, conferida. */
   fonte: "codigo" | "pmo";
   /** Com a leitura do PMO: o que o código leu em cada seção e não ficou na leitura (recolhido na tela). */
   doCodigo: Partial<Record<SecaoLeitura, ItemLeitura[]>>;

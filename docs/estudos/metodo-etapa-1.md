@@ -1,6 +1,6 @@
 # Método da etapa 1 — leitura da RFP
 
-Escrito pela responsável pelo projeto, a partir de uma análise feita à mão, item por item, de um chamamento real de 63 páginas (fora do Git) e do edital público da SMPED. Este arquivo diz **para que serve a etapa 1** e **como a saída deve ser montada**. Ele prevalece sobre o que a etapa faz hoje.
+Escrito pela responsável pelo projeto, a partir de uma análise feita à mão, item por item, de um chamamento real (fora do Git) e do edital público da SMPED. Este arquivo diz **para que serve a etapa 1** e **como a saída deve ser montada**. Ele prevalece sobre o que a etapa faz hoje.
 
 ## 1. Para que serve
 
@@ -12,7 +12,7 @@ A etapa 1 deixa o gerente ciente, em poucos minutos, de **o que a RFP pede e o q
 
 **Teste de cada item:** "isto muda uma decisão do gerente ou algo que a FGV terá de fazer, entregar, cumprir ou pagar?" Se não muda, o item não entra.
 
-Hoje a saída é um inventário do documento (todas as leis, todos os órgãos, cada número solto, cada linha da tabela de pontuação, a leitura página a página). Num chamamento real de 63 páginas, isso deu 107 itens e deixou de fora o que mais pesava: as condições de repasse, as dependências do contratante e o que a equipe teria de fazer.
+Hoje a saída é um inventário do documento (todas as leis, todos os órgãos, cada número solto, cada linha da tabela de pontuação, a leitura página a página). Num chamamento real, isso deu 107 itens e deixou de fora o que mais pesava: as condições de repasse, as dependências do contratante e o que a equipe teria de fazer.
 
 ## 2. Estrutura da saída (nesta ordem)
 
@@ -95,7 +95,7 @@ Também entram, sem premissa: pressão de preço (peso do desconto, eliminação
 
 ## 4. Código × PMO
 - **Código:** seções 1 a 6 e 8 quase inteiras, e os padrões da seção 7.
-- **PMO (leitura opcional, decisão 0032):** ordenar os pontos de atenção por impacto, cruzar trechos distantes (ex.: jornada de 30 meses dentro de 30 meses de execução; repasse em parcela única num item e proporcional em outro) e achar obrigações escritas em texto corrido.
+- **PMO (leitura opcional, decisão 0032):** ordenar os pontos de atenção por impacto, cruzar trechos distantes (ex.: jornada por família tão longa quanto o período de execução; repasse em parcela única num item e proporcional em outro) e achar obrigações escritas em texto corrido.
 
 ## 5. Critério de aceite
 - O gerente lê a seção 1 e sabe o que é, quanto, quanto tempo, como se ganha e o que mais pesa.

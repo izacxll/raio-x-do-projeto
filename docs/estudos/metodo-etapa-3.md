@@ -34,7 +34,7 @@ As divergências vêm **primeiro**, porque o resto do TAP depende de qual versã
 
 ### 4.1 Divergências
 Comparar, nesta ordem:
-- **por código:** valor (proposta × teto × contrato); parcelas ou medições (ordem, percentual, prazo); vigência × cronograma da proposta (meses, trimestres, fases: a soma cabe na vigência?); contagem dos meses (o mês 1 da proposta é o mês 1 da vigência?); equipe (quantidade e regra: mínimo, referência ou limite); produtos (a RFP pede? a proposta acrescenta?);
+- **por código:** valor (proposta × teto × contrato); parcelas ou medições (ordem, percentual, prazo); vigência × cronograma da proposta (meses, trimestres, fases: a soma cabe na vigência?); contagem dos meses (o mês 1 da proposta é o mês 1 da vigência?); equipe (quantidade e regra: mínimo, referência ou limite); **dimensionamento × produtividade** (volume previsto ÷ equipe ÷ dias úteis contra o teto escrito, ex.: visitas por dia); produtos (a RFP pede? a proposta acrescenta?);
 - **por texto (Sugestão):** frase da proposta que diz "em conformidade com o item X" e não está; cláusulas de proteção da proposta × cláusulas do contrato; quem aprova e em que prazo; critério de conclusão da proposta × término do contrato; orçamento que parece não cobrir uma obrigação (ex.: equipamento exigido para toda a equipe × valor da linha de despesa).
 
 Cada divergência tem uma linha: ponto, o que diz cada documento (com página), sugestão de versão e o que fazer (confirmar por escrito, levar à reunião de abertura, consultar o jurídico).
@@ -65,7 +65,7 @@ Cada divergência tem uma linha: ponto, o que diz cada documento (com página), 
 - toda entrega-chave com critério de aceite;
 - toda premissa crítica aplicável no registro;
 - toda divergência com versão escolhida.
-O que falha aparece com o motivo (ex.: "11 trimestres somam 33 meses numa vigência de 32").
+O que falha aparece com o motivo (ex.: "os trimestres do cronograma somam mais meses que a vigência").
 
 ## 5. O que não entra
 - Texto de contexto, justificativa longa ou histórico do contratante.

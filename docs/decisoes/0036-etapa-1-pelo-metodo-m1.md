@@ -24,7 +24,7 @@ A fase M1 aplica o método da etapa 1 (`docs/estudos/metodo-etapa-1.md`) com o d
    - o que o código não pega, a leitura do PMO sugere; o item do PMO na seção 2 tem o botão "Incluir como requisito", e o número só nasce com o clique do GP (decisão 0032);
    - por ora, as etapas 2 a 4 recebem só as entregas: as obrigações vão à parte no ponto de partida, e as fases M2 a M4 as levam à proposta, ao TAP e ao plano. Na etapa 5, a obrigação fica "conferir no plano" até a M5.
 4. **Leitura do PMO** (`leitura-pmo.ts`, schema `leitura-rfp.ts`): o pedido leva o método e o esqueleto; as travas conferem citação, número (contra o trecho, a página citada, o esqueleto e a data de hoje) e número R. A conta do código vale mais que a do PMO (o item do PMO com o mesmo assunto de uma conta do código sai). Item do PMO travado nunca aparece como "Do documento".
-5. **Gabaritos e leitura gravada:** os gabaritos da SMPED e da OEI na estrutura do método (`tests/fixtures/gerados/rfp-smped/` e `rfp-oei/`, feitos pelo PMO com todas as citações conferidas) e as leituras gravadas derivadas deles (`leitura-pmo.json`). A da OEI serve à demonstração, que agora também abre na etapa 1.
+5. **Gabaritos e leitura gravada:** os gabaritos da SMPED e da OEI na estrutura do método (`tests/fixtures/gerados/rfp-smped/` e `rfp-oei/`, feitos pelo Claude Code seguindo a skill PMO, com todas as citações conferidas; não são uma leitura independente) e as leituras gravadas derivadas deles (`leitura-pmo.json`). A da OEI serve à demonstração, que agora também abre na etapa 1.
 6. **Contagem da meta de 30 a 50:** conta os cartões; os requisitos R são linhas de uma tabela da seção 2 e aparecem em separado no placar.
 
 7. **Ajustes da revisão independente** (19 achados, antes do PR):

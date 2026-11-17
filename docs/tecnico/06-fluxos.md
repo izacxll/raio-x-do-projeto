@@ -28,32 +28,37 @@ sequenceDiagram
   Tela->>Store: guardarDocumento
 ```
 
-## 2. Etapa 1 — análise da RFP (só código)
+## 2. Etapa 1 — leitura da RFP (o código monta o esqueleto; o PMO lê; o código confere)
 
-A análise é pura e refeita do texto; o que fica no dossiê são os números R e as decisões do GP.
+A análise é pura e refeita do texto; o que fica no dossiê são os números R, a leitura do PMO (quando pedida) e as decisões do GP (decisões 0035 e 0036).
 
 ```mermaid
 sequenceDiagram
   actor GP
   participant Tela as interface/telas/analise-rfp.tsx
   participant A as etapas/1-rfp/analisar-rfp.ts
-  participant X as extracao/rfp/*
-  participant R as regras/brechas-rfp.ts
+  participant L as etapas/1-rfp/leitura.ts
+  participant P as etapas/1-rfp/leitura-pmo.ts
+  participant API as API do Claude
   participant Store as dossie/store.ts
-  GP->>Tela: Analisar a RFP
+  GP->>Tela: Analisar a RFP (com a conexão ou na demonstração)
   Tela->>A: analisarRfp(documentos, hoje)
-  A->>X: mapearRfp, identificação, requisitos, prazos
-  A->>X: julgamento, habilitação, temas, partes
-  A->>R: aplicarRegrasRfp (brechas com pergunta)
-  A-->>Tela: itens, requisitos, estado das regras
-  Tela->>Store: guardarAnaliseRfp (R01… fixos, revisões)
-  GP->>Tela: aceita, edita ou descarta cada item
+  A-->>Tela: itens, requisitos, obrigações, dinheiro, pontos de atenção
+  Tela->>L: montarLeituraRfp (8 seções do método)
+  L-->>Tela: esqueleto (vai no pedido; não aparece sozinho)
+  Note over Tela: sem a conexão, o botão fica desligado (decisão 0037)
+  Tela->>API: método da etapa 1 + esqueleto + texto da RFP (custo à vista antes)
+  API-->>Tela: leitura nas 8 seções (JSON)
+  Tela->>P: conferirLeituraRfp (citação, número, R, conta do PMO)
+  P-->>Tela: itens do PMO como Sugestão, com as travas
+  Tela->>Store: guardarAnaliseRfp (R01… fixos, leitura, revisões)
+  GP->>Tela: aceita, edita ou descarta; inclui R a partir do PMO
   GP->>Tela: exporta (DOCX, PDF, XLSX)
 ```
 
 A parceria da Lei 13.019 é reconhecida pela abertura do documento. Com ela, o que é só de licitação sai como "não se aplica a esta modalidade" (`src/extracao/rfp/parceria.ts`, decisão 0031).
 
-## 3. Passo do PMO (etapas 2, 3 e 4)
+## 3. Passo do PMO (etapas 2, 3 e 4; o mesmo desenho das etapas 1 e 5)
 
 ```mermaid
 sequenceDiagram
@@ -86,7 +91,7 @@ As contas ficam com o código:
 - preço (`preco.ts`);
 - custos e marcos do PGP (`src/etapas/4-pgp/calculos.ts`).
 
-## 4. Etapa 5 — conferência do PGP
+## 4. Etapa 5 — conferência do plano (o código e o PMO numa ação só, decisão 0037)
 
 ```mermaid
 sequenceDiagram
@@ -95,20 +100,19 @@ sequenceDiagram
   participant Mapa as regras/mapa-pgp.ts
   participant Conf as regras/conferencia.ts
   participant Leit as etapas/5-conferencia/leitura-pmo.ts
-  participant API as API do Claude (opcional)
+  participant API as API do Claude
   GP->>Tela: envia o PGP (e TAP, RFP)
   Tela->>Mapa: proporMapa (51 partes pelos títulos)
   Mapa-->>Tela: partes com página e situação
   GP->>Tela: confirma o mapa, as características e as premissas
-  Tela->>Conf: conferirPlano
+  Tela->>Conf: conferirPlano (vai no pedido)
   Conf-->>Tela: achados vago, conflituoso e ausente, com gravidade e categoria
-  opt com a chave
-    GP->>Tela: pede a leitura do PMO
-    Tela->>Leit: pedidoLeitura
-    Leit->>API: plano, TAP, RFP e o que o código achou
-    API-->>Leit: achados sugeridos
-    Leit->>Conf: conferirLeitura (citação, ausente procurado no plano)
-  end
+  GP->>Tela: Conferir o plano (com a conexão ou na demonstração)
+  Tela->>Leit: pedidoLeitura
+  Leit->>API: plano, TAP, RFP e o que o código achou
+  API-->>Leit: achados sugeridos
+  Leit->>Conf: conferirLeitura (citação, ausente procurado no plano)
+  Conf-->>Tela: achados do código e do PMO, só agora na tela
   GP->>Tela: procede ou não, em cada achado
 ```
 

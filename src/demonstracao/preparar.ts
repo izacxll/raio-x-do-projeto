@@ -6,7 +6,7 @@ import { tapInicial } from "../etapas/3-tap/tap";
 import { RespostaPremissas, RespostaTap } from "../pmo/schemas/tap";
 import { propostaInicial } from "../etapas/2-proposta/proposta";
 import { RespostaConteudo, RespostaEap, RespostaEstrategia } from "../pmo/schemas/proposta";
-import { ABORDAGEM_GRAVADA, MODELO_GRAVADO, respostaGravada } from "./demonstracao";
+import { ABORDAGEM_GRAVADA, MODELO_GRAVADO, planoDaDemonstracao, respostaGravada } from "./demonstracao";
 
 /** Premissas críticas confirmadas na gravação da proposta (as que o conteúdo técnico gravado escreve no SOW). */
 export const PREMISSAS_GRAVADAS = { PC1: true, PC3: true, PC6: true, PC8: true };
@@ -43,9 +43,14 @@ export async function tapGravado(): Promise<TapDossie> {
   };
 }
 
-export async function prepararEtapasAnteriores(etapa: 1 | 2 | 3 | 4): Promise<void> {
+export async function prepararEtapasAnteriores(etapa: 1 | 2 | 3 | 4 | 5): Promise<void> {
   if (etapa === 1 || etapa === 2) return;
-  const { guardarProposta, guardarTap } = useDossie.getState();
+  const { guardarProposta, guardarTap, guardarDocumento } = useDossie.getState();
+  // etapa 5: o plano inventado, com erros plantados, na caixa do plano (decisão 0037)
+  if (etapa === 5) {
+    guardarDocumento(await planoDaDemonstracao(), false);
+    return;
+  }
   guardarProposta(await propostaGravada());
   if (etapa === 4) guardarTap(await tapGravado());
 }

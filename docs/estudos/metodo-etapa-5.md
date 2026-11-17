@@ -1,6 +1,6 @@
 # Método da etapa 5 — conferência do plano
 
-Escrito pela responsável pelo projeto, a partir de uma conferência feita à mão de um plano de trabalho real de 64 páginas (fora do Git), contra o termo assinado e o edital. Complementa a especificação, as decisões 0013, 0022 e 0033 e o método da etapa 4. Prevalece sobre o que a etapa faz hoje.
+Escrito pela responsável pelo projeto, a partir de uma conferência feita à mão de um plano de trabalho real (fora do Git), contra o termo assinado e o edital. Complementa a especificação, as decisões 0013, 0022 e 0033 e o método da etapa 4. Prevalece sobre o que a etapa faz hoje.
 
 ## 1. Para que serve
 
@@ -42,6 +42,7 @@ Tudo o que a régua não pede vai para "não se aplica a este tipo de plano", nu
 - Parcelas ou medições: ordem, percentual, prazo. **Frase de conformidade** ("em conformidade com o item X") que não confere com o item X é conflito grave.
 - Duração: soma de trimestres, meses ou fases × vigência.
 - Equipe: quantidade e **regra** (mínimo, referência, limite).
+- Dimensionamento × produtividade: volume previsto no quadro ÷ equipe ÷ dias úteis contra o teto que o próprio plano escreve. Passar do teto é achado grave (a meta não fecha).
 - Metas e indicadores do plano × do edital.
 - Exclusões que não têm relação com o objeto (outro tipo de projeto: obra, arquitetura, seguros num projeto social) são **texto de outro documento**. Comparar o vocabulário da lista com o do objeto; na dúvida, Sugestão da leitura do PMO.
 - Orçamento que parece não cobrir uma obrigação do edital (equipamento exigido para toda a equipe × valor da linha): só pela leitura do PMO, como Sugestão.

@@ -4,13 +4,27 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 
 ## [Não publicado]
 
+### Documentação — métodos revisados e engenharia reversa das cinco etapas
+- **Métodos das etapas 1 a 5 substituídos** pela versão revisada pela responsável pelo projeto. Saem os detalhes que identificavam o caso real (número de páginas, meses do cronograma e da vigência, duração da jornada); também na decisão 0033 e na 0034.
+- **O que muda nos métodos:**
+  - etapas 2 e 4: a saída é o documento inteiro (a minuta redigida seção por seção; o PGP com as seções 0 a 13 da decisão 0007), e o resumo é só a capa;
+  - nova conferência por código, quadro de equipe × produtividade (etapas 2 a 5);
+  - etapa 4: adaptação por porte e tipo, três pontos só nas entregas de conhecimento e reservas em parceria (seção 4.7).
+- **Chave da API nos scripts lida de um arquivo fora do repositório** (`RAIO_X_ARQUIVO_CHAVE`), nunca de `ANTHROPIC_API_KEY`, que faz o Claude Code cobrar o uso dele nessa chave. O script recusa arquivo dentro do projeto e avisa se a variável antiga estiver definida. Passo a passo no PowerShell em `docs/tecnico/07-configuracao.md`.
+- **Roteiro da etapa 5 sobre um plano real** (`npm run conferir-plano-real`, `docs/estudos/roteiro-etapa-5-plano-real.md`): roda na máquina da responsável, com os PDFs fora do repositório, e grava só números (por tipo, gravidade, parte e situação; com o gabarito dela, acertos, precisão e cobertura).
+- **Documentação coerente com a decisão 0035 e a M1:** README (o que cada etapa faz hoje, com e sem a chave), guia do gerente (etapa 1 nas 8 seções e "Pedir ao PMO"; etapa 5 com a leitura do PMO como principal), arquitetura e `docs/tecnico/` 01, 02, 04 e 06 sem "etapas 1 e 5 só com código"; andamento enxuto, fase P encerrada.
+- **Mesmos números do placar em todo lugar:** a decisão 0035 e o CHANGELOG da M1 passam a usar os de `placar-m1-etapa-1.md`. O placar diz que os gabaritos foram feitos pelo Claude Code (mede o esqueleto e as travas, não a leitura do PMO) e traz 10 itens para a responsável conferir antes do merge.
+- **Decisão 0037: nenhuma etapa analisa sem a conexão com o Claude.** Nas etapas 1 e 5, a tela pede a conexão antes de "Analisar a RFP" e de "Conferir o plano"; sem chave, as opções são conectar ou ver a demonstração. Sai o aviso "leitura parcial por código": o esqueleto do código vai no pedido e o resultado só aparece com a leitura do PMO, conferida pelo código. Na etapa 5, a conferência por código e a leitura do PMO viram uma ação só.
+- **Demonstração da etapa 5:** um plano de trabalho inventado sobre o edital público da OEI, com erros plantados, e a resposta gravada do PMO, conferida pelo código como no uso real.
+- **Engenharia reversa das cinco etapas** (`docs/estudos/engenharia-reversa/`): o rastro de cada saída da análise à mão (saída → evidência → regra → código ou PMO → item da skill), com os fluxos, o modelo de dados e os pontos a validar.
+
 ### Fase M1 — etapa 1 pelo método (decisões 0034, 0035 e 0036)
 - **Leitura da RFP em 8 seções,** na ordem da decisão do gerente, na tela e na "Análise da RFP" (DOCX e PDF): em uma página; o que a contratada teria de fazer e entregar; prazos; dinheiro; julgamento e o que vai na proposta; habilitação; pontos de atenção; o que não se aplica à modalidade. Saem o mapa página a página, as normas além do regime, os órgãos sem papel e as faixas da pontuação (contados em "fora da leitura").
 - **O PMO lê; o código monta e confere:** botão "Pedir ao PMO" na etapa 1, com o custo antes e o aviso de envio. A leitura parte do esqueleto do código, e o código confere cada citação, número e número R ("citação não conferida", "valor não conferido"). Sem a chave, a tela mostra o esqueleto com o aviso "leitura parcial por código". Demonstração também na etapa 1.
 - **Regras novas do esqueleto:** obrigações de quem executa por tema; cronograma de desembolso com a soma conferida e a condição de cada pagamento; glosa, contrapartida e "não obriga a contratar"; habilitação linha a linha da lista do edital e quem entrega; pontos de atenção com a premissa crítica (PC1 a PC8) e a pergunta; proteções da contratada; situação das datas × hoje e caixa concentrado nas últimas parcelas.
 - **Requisitos R = entregas e obrigações específicas de quem executa.** Saem dos R o número de projetos selecionados, o limite por proponente e o prazo de execução. Obrigação lida pelo PMO vira R só quando o GP inclui.
 - **Exportados:** checklist de habilitação linha a linha; perguntas com a premissa crítica de cada ponto; requisitos e prazos na lista nova.
-- **Gabaritos da SMPED e da OEI** na estrutura do método e **placar** antes e depois (`docs/estudos/placar-m1-etapa-1.md`): itens que não passam no teste caíram de 82 para 6 (SMPED) e de 102 para 2 (OEI); gabarito coberto de 15 para 28 e de 30 para 36 de 50; zero número sem fonte.
+- **Gabaritos da SMPED e da OEI** na estrutura do método e **placar** antes e depois (`docs/estudos/placar-m1-etapa-1.md`): cartões que não passam no teste caíram de 82 para 6 (SMPED) e de 102 para 3 (OEI); gabarito coberto de 15 para 28 e de 30 para 35 de 50; zero número sem fonte. Os gabaritos foram feitos pelo Claude Code: o placar mede o esqueleto do código e as travas, não a leitura do PMO.
 
 ### Documentação — métodos das etapas
 - **Métodos das etapas 1 a 5** (`docs/estudos/metodo-etapa-1.md` a `metodo-etapa-5.md`), escritos pela responsável pelo projeto a partir da análise à mão de um caso real de parceria (fora do Git). Passam a valer pela decisão 0034: teste de cada item, saída na ordem da decisão do gerente e régua pelo tipo de contrato, de projeto e de plano. Aplicação em cinco fases, uma por etapa (M1 a M5).

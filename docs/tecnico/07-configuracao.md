@@ -31,9 +31,43 @@ O app publicado não lê nenhuma. Elas só existem para ferramentas locais e par
 
 | Variável | Quem lê | Para quê |
 |---|---|---|
-| `ANTHROPIC_API_KEY` | `scripts/comparar-modelos.mjs`, `tests/pmo/comparacao-modelos.test.ts` | Comparação Opus × Sonnet com a chave (gasta crédito) |
-| `COMPARAR_MODELOS=sim` | `tests/pmo/comparacao-modelos.test.ts` | Trava: sem ela, o teste não gasta crédito mesmo com a chave no ambiente |
+| `RAIO_X_ARQUIVO_CHAVE` | `scripts/comparar-modelos.mjs`, `tests/ajudantes/chave-de-arquivo.ts` | Caminho do arquivo com a chave da API, **fora** da pasta do projeto, para os scripts que gastam crédito (seção abaixo) |
+| `RAIO_X_PLANO`, `RAIO_X_RFP`, `RAIO_X_TAP`, `RAIO_X_TIPO_PLANO`, `RAIO_X_GABARITO`, `RAIO_X_SAIDA`, `RAIO_X_PCS`, `RAIO_X_MODELO`, `RAIO_X_CARACTERISTICAS` | `scripts/conferir-plano-real.mjs`, `tests/pmo/plano-real.test.ts` | Roteiro da etapa 5 sobre um plano real, com os arquivos fora do repositório e o resumo só com números (`docs/estudos/roteiro-etapa-5-plano-real.md`) |
+| `COMPARAR_MODELOS=sim`, `CONFERIR_PLANO_REAL=sim` | os testes acima | Travas: sem elas, os testes não gastam crédito nem leem arquivo de fora |
 | `CI` | `playwright.config.ts` | Uma nova tentativa e saída no formato do GitHub |
+
+**Nunca use `ANTHROPIC_API_KEY` neste projeto.** Com essa variável definida no terminal, o Claude Code passa a cobrar o próprio uso nessa chave. Os scripts não a leem, não a repassam e avisam se ela estiver definida.
+
+## Chave da API nos scripts locais (PowerShell)
+
+No app, a chave fica só no navegador (decisão 0003). Para os scripts que chamam a API na sua máquina (hoje, `npm run comparar-modelos`), ela fica num arquivo fora do repositório:
+
+1. **Uma vez:** crie a pasta e o arquivo, e cole a chave pelo Bloco de Notas (assim ela não fica no histórico do PowerShell):
+
+   ```powershell
+   New-Item -ItemType Directory -Force "$env:USERPROFILE\.raio-x" | Out-Null
+   notepad "$env:USERPROFILE\.raio-x\chave-api.txt"
+   ```
+
+   No Bloco de Notas, cole só a chave, numa linha, salve e feche.
+
+2. **Opcional:** deixe o arquivo legível só pelo seu usuário:
+
+   ```powershell
+   icacls "$env:USERPROFILE\.raio-x\chave-api.txt" /inheritance:r /grant:r "$($env:USERNAME):(R,W)"
+   ```
+
+3. **Em cada rodada**, na pasta do projeto:
+
+   ```powershell
+   Remove-Item Env:ANTHROPIC_API_KEY -ErrorAction SilentlyContinue
+   $env:RAIO_X_ARQUIVO_CHAVE = "$env:USERPROFILE\.raio-x\chave-api.txt"
+   npm run comparar-modelos
+   ```
+
+4. **Para apagar a chave da máquina:** `Remove-Item "$env:USERPROFILE\.raio-x\chave-api.txt"`.
+
+O script recusa um arquivo dentro da pasta do projeto e nunca imprime a chave.
 
 `.env` e `.env.*` estão no `.gitignore`. Não há `.env.example`, porque o app não precisa de nenhum.
 
