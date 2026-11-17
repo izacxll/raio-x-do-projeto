@@ -727,6 +727,11 @@ describe.skipIf(MODO !== "importar")("importar a resposta do PMO (leitura indepe
         const repetidas = r.premissas.filter((x) => repeteORegistroInicial(x, ep.premissasTap));
         linhas.push(
           "",
+          "## Autoconferência do plano (regras da etapa 5)",
+          `- achados: ${auto.achados.length} (${["vago", "conflituoso", "ausente"].map((t) => `${t} ${auto.achados.filter((a) => a.tipo === t).length}`).join(", ")})`,
+          `- presentes pela marca do PMO, redação a conferir: ${auto.verificacoes.find((v) => v.id === "presentes-pela-marca-do-pmo")?.detalhe ?? "nenhum"}`,
+          `- decisões do GP pendentes: ${auto.verificacoes.find((v) => v.id === "decisoes-do-gp-pendentes")?.detalhe ?? "nenhuma"}`,
+          "",
           "## Premissas críticas pelo código (B3, B27 e A8)",
           `- registro inicial da etapa 3: ${ep.premissasTap.length ? `${ep.premissasTap.length} linha(s)` : "não gerado (o passo de premissas da etapa 3 ainda não foi pedido)"}`,
           ...pcs.map((pc) => {
