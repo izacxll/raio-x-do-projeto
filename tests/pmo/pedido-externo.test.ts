@@ -29,6 +29,7 @@ import { CARACTERISTICAS_PADRAO } from "../../src/dominio/caracteristicas";
 import { FICHAS, PARTES_PGP, PREMISSAS_CRITICAS } from "../../src/dominio/skill";
 import type { PgpDossie } from "../../src/dossie/esquema";
 import { autoconferenciaDaLeitura, citacaoEhFraca } from "../../src/etapas/1-rfp/leitura-pmo";
+import { calcularCronograma } from "../../src/etapas/2-proposta/cronograma";
 import { esqueletoEmTexto, montarMinuta } from "../../src/etapas/2-proposta/minuta";
 import { pedidoConteudo, pedidoEap, pedidoEstrategia } from "../../src/etapas/2-proposta/pedidos";
 import { montarPontoDePartida } from "../../src/etapas/2-proposta/ponto-de-partida";
@@ -579,6 +580,30 @@ describe.skipIf(MODO !== "importar")("importar a resposta do PMO (leitura indepe
       }
       if (fracas.length)
         linhas.push("", "## Citações fracas", ...fracas.map((x) => `- p. ${x.f.pagina}: "${x.f.trecho}"`));
+      if (etapa === 2 && passo !== "estrategia" && dossie.proposta) {
+        // o que o código conferiu com o conteúdo e a EAP: duração × vigência, cronograma, equipe, preço e pendências
+        const docsRfp = dossie.documentos.filter((x) => x.papel === "rfp" || x.papel === "anexo-rfp");
+        const minuta = montarMinuta(
+          montarPontoDePartida(docsRfp, dossie.analiseRfp, HOJE),
+          dossie.proposta,
+          docsRfp,
+          dossie.analiseRfp,
+        );
+        const conferido = esqueletoEmTexto(minuta)
+          .split("\n")
+          .filter((l) => /^- \[(?:metas-equipe|preco|escopo|decisoes)\]/.test(l));
+        linhas.push("", "## O que o código conferiu (esqueleto)", ...conferido.map((l) => l.slice(0, 400)));
+        if (passo === "eap") {
+          const eap = dossie.proposta.eap?.resposta;
+          const cron = eap ? calcularCronograma(eap.atividades, {}) : undefined;
+          if (cron)
+            linhas.push(
+              "",
+              `## Cronograma (conta do código, sem a aprovação do cliente se o GP não a informou): ${cron.total} dias úteis; caminho crítico: ${cron.caminhoCritico.join(" → ") || "—"}`,
+              ...cron.problemas.map((x) => `- ${x}`),
+            );
+        }
+      }
       if (etapa === 2 && passo === "estrategia") {
         const e = v.data as z.infer<typeof SCHEMAS.estrategia>;
         const ponto = montarPontoDePartida(
