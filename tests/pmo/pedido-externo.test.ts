@@ -43,16 +43,18 @@ import { conferirTap } from "../../src/etapas/3-tap/conferencia-tap";
 import { inicioFixo } from "../../src/regras/cruzamentos-rfp";
 import { montarEntradaPgp } from "../../src/etapas/4-pgp/entrada";
 import {
+  conferirPacotes,
   conferirRaci,
   contratanteNaRaci,
   cronogramaDoPgp,
   custosDoPgp,
   inicioDoPgp,
 } from "../../src/etapas/4-pgp/calculos";
+import { autoconferir } from "../../src/etapas/4-pgp/autoconferencia";
 import { textoDasHoras, textoDasHorasTotais } from "../../src/etapas/2-proposta/preco";
 import { PASSOS_PGP } from "../../src/etapas/4-pgp/passos";
 import { PEDIDOS_PGP } from "../../src/etapas/4-pgp/pedidos";
-import { passoAnterior, pgpInicial } from "../../src/etapas/4-pgp/pgp";
+import { passoAnterior, pgpInicial, repeteORegistroInicial } from "../../src/etapas/4-pgp/pgp";
 import { conferirLeitura, pedidoLeitura } from "../../src/etapas/5-conferencia/leitura-pmo";
 import { conferirAutoconferencia, partesARegenerar } from "../../src/pmo/autoconferencia";
 import { citacaoValeComoFato, conferirCitacao } from "../../src/pmo/citacoes";
@@ -654,20 +656,23 @@ describe.skipIf(MODO !== "importar")("importar a resposta do PMO (leitura indepe
               `- data fixa ${f.atividade}: ${dataBr(f.inicio)} a ${dataBr(f.fim)} (${f.diasCorridos} dias corridos); predecessoras até ${dataBr(f.fimPredecessoras)}; folga ${f.folgaCorrida ?? "—"} dia(s) corrido(s); ${f.cabe ? "cabe" : "NÃO CABE"}`,
           ),
           "",
-          "| Atividade | Pacote (pelo nome) | Duração | Início | Fim | Folga | Crítica |",
+          "| Atividade | Pacote | Duração | Início | Fim | Folga | Crítica |",
           "|---|---|---|---|---|---|---|",
           ...crono.atividades.map((a) => {
-            const ref = /\(EAP ([\d.]+)\)/.exec(a.nome)?.[1];
-            const pac = ref ? pacotes.find((x) => x.id === ref) : undefined;
+            const ref = cr.atividades.find((x) => x.id === a.id)?.pacote.trim() ?? "";
+            const pac = pacotes.find((x) => x.id === ref);
             const pacote = !ref
-              ? "sem referência"
+              ? "sem pacote"
               : !pac
                 ? `${ref}: não existe na EAP`
-                : pac.produto === a.produto
-                  ? `${ref} (${pac.produto})`
-                  : `${ref}: pacote de ${pac.produto}, atividade em ${a.produto}`;
+                : `${ref} (${pac.produto})`;
             return `| ${a.id} ${a.nome.slice(0, 50)} | ${pacote} | ${a.duracao} | ${dataBr(a.dataInicio)} | ${dataBr(a.dataFim)} | ${a.folga} | ${a.critica ? "sim" : ""} |`;
           }),
+          "",
+          "## Pacotes pelo código",
+          ...(conferirPacotes(dossie.pgp).map((x) => `- ${x}`).length
+            ? conferirPacotes(dossie.pgp).map((x) => `- ${x}`)
+            : ["- toda atividade com pacote existente do mesmo produto; todo pacote com atividade"]),
           "",
           "## RACI pelo código",
           ...(conferirRaci(cr).length
@@ -679,6 +684,38 @@ describe.skipIf(MODO !== "importar")("importar a resposta do PMO (leitura indepe
           ...custos.preco.linhas.map((l) => `- ${l.perfil.id} ${l.perfil.nome}: ${textoDasHoras(l)} h`),
           `- total: ${textoDasHorasTotais(custos.preco)} h; pessoal: ${custos.preco.pessoal ?? "a definir pelo GP"}`,
           `- falta: ${custos.faltando.join("; ")}`,
+        );
+      }
+      if (etapa === 4 && passo === "riscos" && dossie.pgp?.riscos) {
+        // premissas críticas nos três lugares (regras da etapa 5 sobre o plano gerado), contingência e registro inicial
+        const ep = montarEntradaPgp(dossie, HOJE);
+        const r = dossie.pgp.riscos.resposta;
+        const auto = autoconferir(dossie, ep, HOJE);
+        const custos = custosDoPgp(dossie.pgp, ep);
+        const pcs = Object.entries(dossie.pgp.premissasAplicaveis ?? ep.premissasAnteriores)
+          .filter(([, x]) => x)
+          .map(([pc]) => pc)
+          .sort();
+        const repetidas = r.premissas.filter((x) => repeteORegistroInicial(x, ep.premissasTap));
+        linhas.push(
+          "",
+          "## Premissas críticas pelo código (B3, B27 e A8)",
+          `- registro inicial da etapa 3: ${ep.premissasTap.length ? `${ep.premissasTap.length} linha(s)` : "não gerado (o passo de premissas da etapa 3 ainda não foi pedido)"}`,
+          ...pcs.map((pc) => {
+            const premissa = r.premissas.some((x) => x.premissaCritica === pc && x.tipo === "premissa");
+            const risco = r.riscos.find(
+              (x) => x.premissaCritica === pc && x.resposta.trim() && x.gatilho.trim(),
+            );
+            return `- ${pc}: premissa no B3 ${premissa || ep.premissasTap.some((x) => x.premissaCritica === pc) ? "sim" : "NÃO"}; risco com resposta e gatilho no B27 ${risco ? `sim (${risco.id})` : "NÃO"}`;
+          }),
+          ...auto.verificacoes
+            .filter((v) => /^item:(B3\.9|B27\.13|A8\.12)$/.test(v.id) || /^premissa:PC\d/.test(v.id))
+            .map((v) => `- conferência ${v.id}: ${v.estado} (${v.detalhe.slice(0, 120)})`),
+          `- premissas do PMO que repetem o registro inicial (saem do B3): ${repetidas.length ? repetidas.map((x) => x.premissaCritica).join(", ") : "nenhuma"}`,
+          "",
+          "## Contingência pelo código",
+          `- riscos que pedem reserva: ${custos?.riscosComReserva.map((x) => x.id).join(", ") || "nenhum"}`,
+          `- linha de base dos custos: ${custos?.linhaDeBase ?? "a definir pelo GP"}; falta: ${custos?.faltando.filter((x) => /reserva/.test(x)).join("; ") || "—"}`,
         );
       }
       if (etapa === 3 && passo === "tap" && dossie.tap) {
