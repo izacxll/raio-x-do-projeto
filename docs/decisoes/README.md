@@ -47,6 +47,7 @@ Uma decisão por arquivo, numerada em ordem. Cada uma registra o contexto, o que
 | [0048](0048-esqueleto-da-etapa-1-e-autoconferencia-no-codigo.md) | Esqueleto da etapa 1 corrigido (SMPED e TR de contratação direta), contratação direta no código, cruzamentos X1 a X6, citação fraca, autoconferência nos esquemas e o teste que reprova | aceita |
 | [0049](0049-leituras-gravadas-externas.md) | Leituras gravadas externas: evidência, nunca gabarito; fora do Git; o caso sem o nome da cidade | aceita |
 | [0051](0051-feriados-pacote-e-analise-do-contratante.md) | Feriados nacionais e municipais no cronograma, pacote da EAP obrigatório em cada atividade e a atividade de análise do contratante | aceita |
+| [0052](0052-achado-do-codigo-e-candidato-ate-o-veredito-do-pmo.md) | Achado do código é candidato até o veredito do PMO; dispensa declarada só no plano é candidata; busca do ausente do PMO na parte apontada | aceita |
 
 Modelo para uma nova decisão:
 

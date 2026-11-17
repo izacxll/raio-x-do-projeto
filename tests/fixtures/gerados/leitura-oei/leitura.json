@@ -1,4 +1,5 @@
 {
+  "_origem": "Os achados e as observações vêm da leitura gravada da demonstração. Os 77 vereditos sobre os achados do código (decisão 0052) foram escritos pelo Claude Code, a revisar pelo PMO, como os gabaritos feitos pelo próprio código.",
   "achados": [
     {
       "id": "pmo-1",
@@ -13,7 +14,11 @@
           "pagina": 4,
           "trecho": "em conformidade com o item 5 do Termo de Referência"
         },
-        { "doc": "pgp", "pagina": 4, "trecho": "Produto 2 (dois cadernos temáticos) – 25%" },
+        {
+          "doc": "pgp",
+          "pagina": 4,
+          "trecho": "Produto 2 (dois cadernos temáticos) – 25%"
+        },
         {
           "doc": "rfp",
           "pagina": 21,
@@ -31,8 +36,16 @@
       "titulo": "As fases somam mais meses que a vigência",
       "descricao": "As cinco fases somam 13 meses (2 + 3 + 3 + 3 + 2), e o contrato tem vigência de 12 meses a contar da assinatura.",
       "evidencias": [
-        { "doc": "pgp", "pagina": 3, "trecho": "Fase 1 – Mobilização e plano de trabalho: 2 meses." },
-        { "doc": "rfp", "pagina": 11, "trecho": "prazo de vigência de 12 (doze) meses" }
+        {
+          "doc": "pgp",
+          "pagina": 3,
+          "trecho": "Fase 1 – Mobilização e plano de trabalho: 2 meses."
+        },
+        {
+          "doc": "rfp",
+          "pagina": 11,
+          "trecho": "prazo de vigência de 12 (doze) meses"
+        }
       ],
       "sugestao": "Recomenda-se ajustar as fases para caberem na vigência, com folga para a análise e o ateste do último produto.",
       "termosProcurados": []
@@ -52,7 +65,11 @@
         }
       ],
       "sugestao": "Sugere-se incluir um registro de premissas com cada premissa crítica, a consequência se falhar, o gatilho no registro de riscos e a forma de reajuste no plano de mudanças.",
-      "termosProcurados": ["premissa", "premissas", "pressuposto"]
+      "termosProcurados": [
+        "premissa",
+        "premissas",
+        "pressuposto"
+      ]
     },
     {
       "id": "pmo-4",
@@ -69,7 +86,11 @@
         }
       ],
       "sugestao": "Recomenda-se dizer quando a mudança exige termo aditivo e quando basta apostilamento, e quem aprova cada uma.",
-      "termosProcurados": ["aditivo", "apostila", "apostilamento"]
+      "termosProcurados": [
+        "aditivo",
+        "apostila",
+        "apostilamento"
+      ]
     },
     {
       "id": "pmo-5",
@@ -86,7 +107,11 @@
         }
       ],
       "sugestao": "Sugere-se escrever, para cada produto, o conteúdo mínimo que a contratante confere, o prazo de análise e o número de rodadas de ajuste.",
-      "termosProcurados": ["critério de aceite", "critérios de aceite", "aceitação"]
+      "termosProcurados": [
+        "critério de aceite",
+        "critérios de aceite",
+        "aceitação"
+      ]
     },
     {
       "id": "pmo-6",
@@ -123,5 +148,518 @@
       "termosProcurados": []
     }
   ],
+  "vereditos": [
+    {
+      "achado": "premissa-critica:A8:PC1",
+      "veredito": "sustenta",
+      "evidencias": [],
+      "motivo": ""
+    },
+    {
+      "achado": "premissa-critica:A8:PC2",
+      "veredito": "nao_se_aplica",
+      "evidencias": [],
+      "motivo": "O estudo não depende de sistema ou ferramenta de terceiros; recomenda-se o GP marcar a PC2 como não aplicável."
+    },
+    {
+      "achado": "premissa-critica:A8:PC3",
+      "veredito": "sustenta",
+      "evidencias": [],
+      "motivo": ""
+    },
+    {
+      "achado": "premissa-critica:A8:PC4",
+      "veredito": "sustenta",
+      "evidencias": [],
+      "motivo": ""
+    },
+    {
+      "achado": "premissa-critica:A8:PC5",
+      "veredito": "sustenta",
+      "evidencias": [],
+      "motivo": ""
+    },
+    {
+      "achado": "premissa-critica:A8:PC6",
+      "veredito": "sustenta",
+      "evidencias": [],
+      "motivo": ""
+    },
+    {
+      "achado": "premissa-critica:A8:PC7",
+      "veredito": "sustenta",
+      "evidencias": [],
+      "motivo": ""
+    },
+    {
+      "achado": "premissa-critica:A8:PC8",
+      "veredito": "sustenta",
+      "evidencias": [],
+      "motivo": ""
+    },
+    {
+      "achado": "parte-ausente:A1:parte",
+      "veredito": "nao_se_aplica",
+      "evidencias": [],
+      "motivo": "Plano de trabalho para o cliente: A1 (Plano de gerenciamento do escopo) é parte do PGP interno e não entra neste tipo de plano (decisão 0033). Recomenda-se marcar o tipo de plano como plano de trabalho."
+    },
+    {
+      "achado": "parte-ausente:A2:parte",
+      "veredito": "nao_se_aplica",
+      "evidencias": [],
+      "motivo": "Plano de trabalho para o cliente: A2 (Plano de gerenciamento dos requisitos) é parte do PGP interno e não entra neste tipo de plano (decisão 0033). Recomenda-se marcar o tipo de plano como plano de trabalho."
+    },
+    {
+      "achado": "parte-ausente:A3:parte",
+      "veredito": "nao_se_aplica",
+      "evidencias": [],
+      "motivo": "Plano de trabalho para o cliente: A3 (Plano de gerenciamento do cronograma) é parte do PGP interno e não entra neste tipo de plano (decisão 0033). Recomenda-se marcar o tipo de plano como plano de trabalho."
+    },
+    {
+      "achado": "parte-ausente:A4:parte",
+      "veredito": "nao_se_aplica",
+      "evidencias": [],
+      "motivo": "Plano de trabalho para o cliente: A4 (Plano de gerenciamento dos custos) é parte do PGP interno e não entra neste tipo de plano (decisão 0033). Recomenda-se marcar o tipo de plano como plano de trabalho."
+    },
+    {
+      "achado": "parte-ausente:A5:parte",
+      "veredito": "sustenta",
+      "evidencias": [],
+      "motivo": ""
+    },
+    {
+      "achado": "parte-ausente:A6:parte",
+      "veredito": "falso",
+      "evidencias": [
+        {
+          "doc": "pgp",
+          "pagina": 5,
+          "trecho": "A substituição de qualquer integrante da equipe-chave depende de comunicação prévia e aprovação da contratante"
+        }
+      ],
+      "motivo": "A equipe e a regra de substituição estão na seção 6."
+    },
+    {
+      "achado": "parte-ausente:A7:parte",
+      "veredito": "falso",
+      "evidencias": [
+        {
+          "doc": "pgp",
+          "pagina": 5,
+          "trecho": "Reuniões quinzenais com a equipe técnica da contratante, com memória registrada em até 3 dias úteis."
+        }
+      ],
+      "motivo": "A comunicação, com frequência e escalonamento, está na seção 7."
+    },
+    {
+      "achado": "parte-ausente:A8:parte",
+      "veredito": "falso",
+      "evidencias": [
+        {
+          "doc": "pgp",
+          "pagina": 5,
+          "trecho": "Risco 1 – Atraso na produção dos cadernos. Resposta: reforço da equipe."
+        }
+      ],
+      "motivo": "A parte existe (seção 8); falta o gatilho e as premissas críticas, apontados à parte."
+    },
+    {
+      "achado": "parte-ausente:A9:parte",
+      "veredito": "nao_se_aplica",
+      "evidencias": [],
+      "motivo": "Plano de trabalho para o cliente: A9 (Plano de gerenciamento das aquisições) é parte do PGP interno e não entra neste tipo de plano (decisão 0033). Recomenda-se marcar o tipo de plano como plano de trabalho."
+    },
+    {
+      "achado": "parte-ausente:A10:parte",
+      "veredito": "nao_se_aplica",
+      "evidencias": [],
+      "motivo": "Plano de trabalho para o cliente: A10 (Plano de engajamento das partes interessadas) é parte do PGP interno e não entra neste tipo de plano (decisão 0033). Recomenda-se marcar o tipo de plano como plano de trabalho."
+    },
+    {
+      "achado": "parte-ausente:A11:parte",
+      "veredito": "falso",
+      "evidencias": [
+        {
+          "doc": "pgp",
+          "pagina": 5,
+          "trecho": "As mudanças serão comunicadas e documentadas por correspondência oficial entre as partes."
+        }
+      ],
+      "motivo": "A parte existe (seção 9); o problema é o caminho contratual, apontado na leitura."
+    },
+    {
+      "achado": "parte-ausente:B6:parte",
+      "veredito": "nao_se_aplica",
+      "evidencias": [],
+      "motivo": "Plano de trabalho para o cliente: B6 (Estimativas de custos) é parte do PGP interno e não entra neste tipo de plano (decisão 0033). Recomenda-se marcar o tipo de plano como plano de trabalho."
+    },
+    {
+      "achado": "parte-ausente:B11:parte",
+      "veredito": "nao_se_aplica",
+      "evidencias": [],
+      "motivo": "Plano de trabalho para o cliente: B11 (Lista de marcos) é parte do PGP interno e não entra neste tipo de plano (decisão 0033). Recomenda-se marcar o tipo de plano como plano de trabalho."
+    },
+    {
+      "achado": "parte-ausente:B15:parte",
+      "veredito": "falso",
+      "evidencias": [
+        {
+          "doc": "pgp",
+          "pagina": 3,
+          "trecho": "Fase 1 – Mobilização e plano de trabalho: 2 meses."
+        }
+      ],
+      "motivo": "O cronograma por fases está na seção 4."
+    },
+    {
+      "achado": "parte-ausente:B17:parte",
+      "veredito": "falso",
+      "evidencias": [
+        {
+          "doc": "pgp",
+          "pagina": 2,
+          "trecho": "3.1 Temas e atividades que não estão incluídos neste plano"
+        }
+      ],
+      "motivo": "O escopo, com produtos e exclusões, está na seção 3; o problema das exclusões é apontado na leitura."
+    },
+    {
+      "achado": "conteudo-minimo:A17:A17.4",
+      "veredito": "nao_se_aplica",
+      "evidencias": [],
+      "motivo": "Plano de trabalho para o cliente: A17 (Descrição do ciclo de vida do projeto) é parte do PGP interno e não entra neste tipo de plano (decisão 0033). Recomenda-se marcar o tipo de plano como plano de trabalho."
+    },
+    {
+      "achado": "conteudo-minimo:A17:A17.6",
+      "veredito": "nao_se_aplica",
+      "evidencias": [],
+      "motivo": "Plano de trabalho para o cliente: A17 (Descrição do ciclo de vida do projeto) é parte do PGP interno e não entra neste tipo de plano (decisão 0033). Recomenda-se marcar o tipo de plano como plano de trabalho."
+    },
+    {
+      "achado": "conteudo-minimo:A17:A17.10",
+      "veredito": "nao_se_aplica",
+      "evidencias": [],
+      "motivo": "Plano de trabalho para o cliente: A17 (Descrição do ciclo de vida do projeto) é parte do PGP interno e não entra neste tipo de plano (decisão 0033). Recomenda-se marcar o tipo de plano como plano de trabalho."
+    },
+    {
+      "achado": "parte-ausente:A18:parte",
+      "veredito": "nao_se_aplica",
+      "evidencias": [],
+      "motivo": "Plano de trabalho para o cliente: A18 (Abordagem de desenvolvimento) é parte do PGP interno e não entra neste tipo de plano (decisão 0033). Recomenda-se marcar o tipo de plano como plano de trabalho."
+    },
+    {
+      "achado": "parte-ausente:B1:parte",
+      "veredito": "nao_se_aplica",
+      "evidencias": [],
+      "motivo": "Plano de trabalho para o cliente: B1 (Atributos das atividades) é parte do PGP interno e não entra neste tipo de plano (decisão 0033). Recomenda-se marcar o tipo de plano como plano de trabalho."
+    },
+    {
+      "achado": "conteudo-minimo:B2:B2.8",
+      "veredito": "nao_se_aplica",
+      "evidencias": [],
+      "motivo": "Plano de trabalho para o cliente: B2 (Lista de atividades) é parte do PGP interno e não entra neste tipo de plano (decisão 0033). Recomenda-se marcar o tipo de plano como plano de trabalho."
+    },
+    {
+      "achado": "parte-ausente:B3:parte",
+      "veredito": "sustenta",
+      "evidencias": [],
+      "motivo": ""
+    },
+    {
+      "achado": "parte-ausente:B4:parte",
+      "veredito": "nao_se_aplica",
+      "evidencias": [],
+      "motivo": "Plano de trabalho para o cliente: B4 (Bases das estimativas) é parte do PGP interno e não entra neste tipo de plano (decisão 0033). Recomenda-se marcar o tipo de plano como plano de trabalho."
+    },
+    {
+      "achado": "conteudo-minimo:B5:B5.1",
+      "veredito": "nao_se_aplica",
+      "evidencias": [],
+      "motivo": "Plano de trabalho para o cliente: B5 (Registro das mudanças) é parte do PGP interno e não entra neste tipo de plano (decisão 0033). Recomenda-se marcar o tipo de plano como plano de trabalho."
+    },
+    {
+      "achado": "conteudo-minimo:B5:B5.2",
+      "veredito": "nao_se_aplica",
+      "evidencias": [],
+      "motivo": "Plano de trabalho para o cliente: B5 (Registro das mudanças) é parte do PGP interno e não entra neste tipo de plano (decisão 0033). Recomenda-se marcar o tipo de plano como plano de trabalho."
+    },
+    {
+      "achado": "conteudo-minimo:B5:B5.5",
+      "veredito": "nao_se_aplica",
+      "evidencias": [],
+      "motivo": "Plano de trabalho para o cliente: B5 (Registro das mudanças) é parte do PGP interno e não entra neste tipo de plano (decisão 0033). Recomenda-se marcar o tipo de plano como plano de trabalho."
+    },
+    {
+      "achado": "conteudo-minimo:B5:B5.7",
+      "veredito": "nao_se_aplica",
+      "evidencias": [],
+      "motivo": "Plano de trabalho para o cliente: B5 (Registro das mudanças) é parte do PGP interno e não entra neste tipo de plano (decisão 0033). Recomenda-se marcar o tipo de plano como plano de trabalho."
+    },
+    {
+      "achado": "conteudo-minimo:B5:B5.8",
+      "veredito": "nao_se_aplica",
+      "evidencias": [],
+      "motivo": "Plano de trabalho para o cliente: B5 (Registro das mudanças) é parte do PGP interno e não entra neste tipo de plano (decisão 0033). Recomenda-se marcar o tipo de plano como plano de trabalho."
+    },
+    {
+      "achado": "parte-ausente:B8:parte",
+      "veredito": "nao_se_aplica",
+      "evidencias": [],
+      "motivo": "Plano de trabalho para o cliente: B8 (Estimativas de duração) é parte do PGP interno e não entra neste tipo de plano (decisão 0033). Recomenda-se marcar o tipo de plano como plano de trabalho."
+    },
+    {
+      "achado": "parte-ausente:B9:parte",
+      "veredito": "nao_se_aplica",
+      "evidencias": [],
+      "motivo": "Plano de trabalho para o cliente: B9 (Registro das questões) é parte do PGP interno e não entra neste tipo de plano (decisão 0033). Recomenda-se marcar o tipo de plano como plano de trabalho."
+    },
+    {
+      "achado": "parte-ausente:B12:parte",
+      "veredito": "nao_se_aplica",
+      "evidencias": [],
+      "motivo": "Plano de trabalho para o cliente: B12 (Designações de recursos físicos) é parte do PGP interno e não entra neste tipo de plano (decisão 0033). Recomenda-se marcar o tipo de plano como plano de trabalho."
+    },
+    {
+      "achado": "parte-ausente:B14:parte",
+      "veredito": "nao_se_aplica",
+      "evidencias": [],
+      "motivo": "Plano de trabalho para o cliente: B14 (Comunicações do projeto) é parte do PGP interno e não entra neste tipo de plano (decisão 0033). Recomenda-se marcar o tipo de plano como plano de trabalho."
+    },
+    {
+      "achado": "parte-ausente:B16:parte",
+      "veredito": "nao_se_aplica",
+      "evidencias": [],
+      "motivo": "Plano de trabalho para o cliente: B16 (Diagrama de rede do cronograma do projeto) é parte do PGP interno e não entra neste tipo de plano (decisão 0033). Recomenda-se marcar o tipo de plano como plano de trabalho."
+    },
+    {
+      "achado": "parte-ausente:B18:parte",
+      "veredito": "falso",
+      "evidencias": [
+        {
+          "doc": "pgp",
+          "pagina": 5,
+          "trecho": "A equipe-chave é formada por Coordenador(a) Geral"
+        }
+      ],
+      "motivo": "A equipe-chave está na seção 6."
+    },
+    {
+      "achado": "conteudo-minimo:B19:B19.4",
+      "veredito": "nao_se_aplica",
+      "evidencias": [],
+      "motivo": "Plano de trabalho para o cliente: B19 (Medições de controle da qualidade) é parte do PGP interno e não entra neste tipo de plano (decisão 0033). Recomenda-se marcar o tipo de plano como plano de trabalho."
+    },
+    {
+      "achado": "conteudo-minimo:B19:B19.5",
+      "veredito": "nao_se_aplica",
+      "evidencias": [],
+      "motivo": "Plano de trabalho para o cliente: B19 (Medições de controle da qualidade) é parte do PGP interno e não entra neste tipo de plano (decisão 0033). Recomenda-se marcar o tipo de plano como plano de trabalho."
+    },
+    {
+      "achado": "parte-ausente:B20:parte",
+      "veredito": "nao_se_aplica",
+      "evidencias": [],
+      "motivo": "Plano de trabalho para o cliente: B20 (Métricas da qualidade) é parte do PGP interno e não entra neste tipo de plano (decisão 0033). Recomenda-se marcar o tipo de plano como plano de trabalho."
+    },
+    {
+      "achado": "parte-ausente:B21:parte",
+      "veredito": "nao_se_aplica",
+      "evidencias": [],
+      "motivo": "Plano de trabalho para o cliente: B21 (Relatório de qualidade) é parte do PGP interno e não entra neste tipo de plano (decisão 0033). Recomenda-se marcar o tipo de plano como plano de trabalho."
+    },
+    {
+      "achado": "parte-ausente:B22:parte",
+      "veredito": "nao_se_aplica",
+      "evidencias": [],
+      "motivo": "Plano de trabalho para o cliente: B22 (Documentação dos requisitos) é parte do PGP interno e não entra neste tipo de plano (decisão 0033). Recomenda-se marcar o tipo de plano como plano de trabalho."
+    },
+    {
+      "achado": "conteudo-minimo:B23:B23.1",
+      "veredito": "nao_se_aplica",
+      "evidencias": [],
+      "motivo": "Plano de trabalho para o cliente: B23 (Matriz de rastreabilidade dos requisitos) é parte do PGP interno e não entra neste tipo de plano (decisão 0033). Recomenda-se marcar o tipo de plano como plano de trabalho."
+    },
+    {
+      "achado": "conteudo-minimo:B23:B23.6",
+      "veredito": "nao_se_aplica",
+      "evidencias": [],
+      "motivo": "Plano de trabalho para o cliente: B23 (Matriz de rastreabilidade dos requisitos) é parte do PGP interno e não entra neste tipo de plano (decisão 0033). Recomenda-se marcar o tipo de plano como plano de trabalho."
+    },
+    {
+      "achado": "parte-ausente:B24:parte",
+      "veredito": "nao_se_aplica",
+      "evidencias": [],
+      "motivo": "Plano de trabalho para o cliente: B24 (Estrutura analítica dos recursos) é parte do PGP interno e não entra neste tipo de plano (decisão 0033). Recomenda-se marcar o tipo de plano como plano de trabalho."
+    },
+    {
+      "achado": "parte-ausente:B26:parte",
+      "veredito": "nao_se_aplica",
+      "evidencias": [],
+      "motivo": "Plano de trabalho para o cliente: B26 (Requisitos de recursos) é parte do PGP interno e não entra neste tipo de plano (decisão 0033). Recomenda-se marcar o tipo de plano como plano de trabalho."
+    },
+    {
+      "achado": "parte-ausente:B27:parte",
+      "veredito": "falso",
+      "evidencias": [
+        {
+          "doc": "pgp",
+          "pagina": 5,
+          "trecho": "Risco 2 – Dificuldade de agenda com a rede de proteção. Resposta: reuniões virtuais."
+        }
+      ],
+      "motivo": "Os riscos estão listados na seção 8, sem gatilho."
+    },
+    {
+      "achado": "parte-ausente:B28:parte",
+      "veredito": "nao_se_aplica",
+      "evidencias": [],
+      "motivo": "Plano de trabalho para o cliente: B28 (Relatório de riscos) é parte do PGP interno e não entra neste tipo de plano (decisão 0033). Recomenda-se marcar o tipo de plano como plano de trabalho."
+    },
+    {
+      "achado": "parte-ausente:B31:parte",
+      "veredito": "nao_se_aplica",
+      "evidencias": [],
+      "motivo": "Plano de trabalho para o cliente: B31 (Registro das partes interessadas) é parte do PGP interno e não entra neste tipo de plano (decisão 0033). Recomenda-se marcar o tipo de plano como plano de trabalho."
+    },
+    {
+      "achado": "vago:oportunamente:—:2:548",
+      "veredito": "sustenta",
+      "evidencias": [],
+      "motivo": ""
+    },
+    {
+      "achado": "vago:quando-necessario:—:2:586",
+      "veredito": "sustenta",
+      "evidencias": [],
+      "motivo": ""
+    },
+    {
+      "achado": "vago:conforme-demanda:—:5:335",
+      "veredito": "sustenta",
+      "evidencias": [],
+      "motivo": ""
+    },
+    {
+      "achado": "parte-ausente:A12:parte",
+      "veredito": "nao_se_aplica",
+      "evidencias": [],
+      "motivo": "Plano de trabalho para o cliente: A12 (Plano de gerenciamento de configuração) é parte do PGP interno e não entra neste tipo de plano (decisão 0033). Recomenda-se marcar o tipo de plano como plano de trabalho."
+    },
+    {
+      "achado": "parte-ausente:A13:parte",
+      "veredito": "nao_se_aplica",
+      "evidencias": [],
+      "motivo": "Plano de trabalho para o cliente: A13 (Linha de base do escopo) é parte do PGP interno e não entra neste tipo de plano (decisão 0033). Recomenda-se marcar o tipo de plano como plano de trabalho."
+    },
+    {
+      "achado": "parte-ausente:A14:parte",
+      "veredito": "nao_se_aplica",
+      "evidencias": [],
+      "motivo": "Plano de trabalho para o cliente: A14 (Linha de base do cronograma) é parte do PGP interno e não entra neste tipo de plano (decisão 0033). Recomenda-se marcar o tipo de plano como plano de trabalho."
+    },
+    {
+      "achado": "conteudo-minimo:A15:A15.1",
+      "veredito": "nao_se_aplica",
+      "evidencias": [],
+      "motivo": "Plano de trabalho para o cliente: A15 (Linha de base dos custos) é parte do PGP interno e não entra neste tipo de plano (decisão 0033). Recomenda-se marcar o tipo de plano como plano de trabalho."
+    },
+    {
+      "achado": "conteudo-minimo:A15:A15.2",
+      "veredito": "nao_se_aplica",
+      "evidencias": [],
+      "motivo": "Plano de trabalho para o cliente: A15 (Linha de base dos custos) é parte do PGP interno e não entra neste tipo de plano (decisão 0033). Recomenda-se marcar o tipo de plano como plano de trabalho."
+    },
+    {
+      "achado": "conteudo-minimo:A15:A15.3",
+      "veredito": "nao_se_aplica",
+      "evidencias": [],
+      "motivo": "Plano de trabalho para o cliente: A15 (Linha de base dos custos) é parte do PGP interno e não entra neste tipo de plano (decisão 0033). Recomenda-se marcar o tipo de plano como plano de trabalho."
+    },
+    {
+      "achado": "conteudo-minimo:A15:A15.4",
+      "veredito": "nao_se_aplica",
+      "evidencias": [],
+      "motivo": "Plano de trabalho para o cliente: A15 (Linha de base dos custos) é parte do PGP interno e não entra neste tipo de plano (decisão 0033). Recomenda-se marcar o tipo de plano como plano de trabalho."
+    },
+    {
+      "achado": "conteudo-minimo:A15:A15.5",
+      "veredito": "nao_se_aplica",
+      "evidencias": [],
+      "motivo": "Plano de trabalho para o cliente: A15 (Linha de base dos custos) é parte do PGP interno e não entra neste tipo de plano (decisão 0033). Recomenda-se marcar o tipo de plano como plano de trabalho."
+    },
+    {
+      "achado": "conteudo-minimo:A15:A15.9",
+      "veredito": "nao_se_aplica",
+      "evidencias": [],
+      "motivo": "Plano de trabalho para o cliente: A15 (Linha de base dos custos) é parte do PGP interno e não entra neste tipo de plano (decisão 0033). Recomenda-se marcar o tipo de plano como plano de trabalho."
+    },
+    {
+      "achado": "conteudo-minimo:A15:A15.10",
+      "veredito": "nao_se_aplica",
+      "evidencias": [],
+      "motivo": "Plano de trabalho para o cliente: A15 (Linha de base dos custos) é parte do PGP interno e não entra neste tipo de plano (decisão 0033). Recomenda-se marcar o tipo de plano como plano de trabalho."
+    },
+    {
+      "achado": "parte-ausente:A16:parte",
+      "veredito": "nao_se_aplica",
+      "evidencias": [],
+      "motivo": "Plano de trabalho para o cliente: A16 (Linha de base da medição do desempenho) é parte do PGP interno e não entra neste tipo de plano (decisão 0033). Recomenda-se marcar o tipo de plano como plano de trabalho."
+    },
+    {
+      "achado": "parte-ausente:B7:parte",
+      "veredito": "nao_se_aplica",
+      "evidencias": [],
+      "motivo": "Plano de trabalho para o cliente: B7 (Previsões de custos) é parte do PGP interno e não entra neste tipo de plano (decisão 0033). Recomenda-se marcar o tipo de plano como plano de trabalho."
+    },
+    {
+      "achado": "parte-ausente:B10:parte",
+      "veredito": "nao_se_aplica",
+      "evidencias": [],
+      "motivo": "Plano de trabalho para o cliente: B10 (Registro das lições aprendidas) é parte do PGP interno e não entra neste tipo de plano (decisão 0033). Recomenda-se marcar o tipo de plano como plano de trabalho."
+    },
+    {
+      "achado": "parte-ausente:B13:parte",
+      "veredito": "nao_se_aplica",
+      "evidencias": [],
+      "motivo": "Plano de trabalho para o cliente: B13 (Calendários do projeto) é parte do PGP interno e não entra neste tipo de plano (decisão 0033). Recomenda-se marcar o tipo de plano como plano de trabalho."
+    },
+    {
+      "achado": "parte-ausente:B25:parte",
+      "veredito": "nao_se_aplica",
+      "evidencias": [],
+      "motivo": "Plano de trabalho para o cliente: B25 (Calendários dos recursos) é parte do PGP interno e não entra neste tipo de plano (decisão 0033). Recomenda-se marcar o tipo de plano como plano de trabalho."
+    },
+    {
+      "achado": "parte-ausente:B29:parte",
+      "veredito": "nao_se_aplica",
+      "evidencias": [],
+      "motivo": "Plano de trabalho para o cliente: B29 (Dados do cronograma) é parte do PGP interno e não entra neste tipo de plano (decisão 0033). Recomenda-se marcar o tipo de plano como plano de trabalho."
+    },
+    {
+      "achado": "parte-ausente:B30:parte",
+      "veredito": "nao_se_aplica",
+      "evidencias": [],
+      "motivo": "Plano de trabalho para o cliente: B30 (Previsões do cronograma) é parte do PGP interno e não entra neste tipo de plano (decisão 0033). Recomenda-se marcar o tipo de plano como plano de trabalho."
+    },
+    {
+      "achado": "parte-ausente:B32:parte",
+      "veredito": "nao_se_aplica",
+      "evidencias": [],
+      "motivo": "Plano de trabalho para o cliente: B32 (Termo de nomeação da equipe) é parte do PGP interno e não entra neste tipo de plano (decisão 0033). Recomenda-se marcar o tipo de plano como plano de trabalho."
+    },
+    {
+      "achado": "parte-ausente:B33:parte",
+      "veredito": "nao_se_aplica",
+      "evidencias": [],
+      "motivo": "Plano de trabalho para o cliente: B33 (Documentos de teste e avaliação) é parte do PGP interno e não entra neste tipo de plano (decisão 0033). Recomenda-se marcar o tipo de plano como plano de trabalho."
+    },
+    {
+      "achado": "vago:conforme-demanda:A15:5:335",
+      "veredito": "sustenta",
+      "evidencias": [],
+      "motivo": ""
+    }
+  ],
+  "dispensas": [],
   "observacoes": []
 }

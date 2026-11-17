@@ -249,3 +249,56 @@ export function sincronizarMapa(mapa: ParteConfirmada[], proposta: ParteNoMapa[]
   const inicial = new Map(confirmacaoInicial(proposta).map((p) => [p.codigo, p]));
   return mapa.map((p) => (p.situacao === "dispensada" ? p : (inicial.get(p.codigo) ?? p)));
 }
+
+/** Título da lista que o app grava no fim do plano gerado na etapa 4. */
+const TITULO_DISPENSADAS = /^partes dispensadas pelo gp\b/;
+const LINHA_DISPENSADA = /^([AB]\d{1,2})\s+(.+)$/;
+
+/**
+ * Partes que o próprio plano declara dispensadas pelo GP (a lista "Partes dispensadas pelo GP", com o código, o nome
+ * e a justificativa). Código → justificativa. Plano sem a lista devolve um mapa vazio.
+ */
+export function dispensasDeclaradasNoPlano(paginas: PaginaLida[], partes: Ficha[]): Map<string, string> {
+  const codigos = new Set(partes.map((p) => p.codigo));
+  const nomes = new Map(partes.map((p) => [p.codigo, normalizarTermo(p.nome)]));
+  const out = new Map<string, string>();
+  for (const p of paginas) {
+    let dentro = false;
+    for (const original of p.texto.split(/\r?\n/)) {
+      const linha = original.trim();
+      if (TITULO_DISPENSADAS.test(normalizarTermo(linha))) {
+        dentro = true;
+        continue;
+      }
+      if (!dentro) continue;
+      const m = LINHA_DISPENSADA.exec(linha);
+      if (!m || !codigos.has(m[1]!)) continue;
+      const codigo = m[1]!;
+      // "A16 Linha de base…<tab>Fundido no A4…": a justificativa vem depois do nome da parte
+      const resto = m[2]!.split("\t").slice(1).join(" ").trim();
+      const semNome = resto || m[2]!.slice((nomes.get(codigo) ?? "").length).trim();
+      out.set(codigo, semNome);
+    }
+  }
+  return out;
+}
+
+/**
+ * Marca como dispensadas as partes da lista (código → justificativa), sem páginas: a conferência não procura os
+ * itens delas. Parte que o GP já mexeu na tela não muda.
+ */
+export function aplicarDispensas(mapa: ParteConfirmada[], dispensas: Map<string, string>): ParteConfirmada[] {
+  return mapa.map((p) =>
+    p.confirmadaPeloGp || !dispensas.has(p.codigo)
+      ? p
+      : { codigo: p.codigo, situacao: "dispensada", justificativa: dispensas.get(p.codigo) },
+  );
+}
+
+/** Partes que absorvem o conteúdo de uma dispensada: os códigos citados na justificativa ("Fundido no A4 e no A7"). */
+export function partesQueAbsorvem(p: ParteConfirmada | undefined): string[] {
+  if (!p || p.situacao !== "dispensada") return [];
+  return [...new Set([...(p.justificativa ?? "").matchAll(/\b([AB]\d{1,2})\b/g)].map((m) => m[1]!))].filter(
+    (c) => c !== p.codigo,
+  );
+}

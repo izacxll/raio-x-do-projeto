@@ -4,6 +4,7 @@ import type { DecisaoAchado, Dossie } from "../dossie/esquema";
 import type { Achado, Verificacao } from "../regras/achado";
 import { resumirAchados } from "../regras/conferencia";
 import { NOME_SITUACAO_PMO, type AchadoPmoConferido } from "../etapas/5-conferencia/leitura-pmo";
+import { NOME_SITUACAO_CANDIDATO, type ResultadoVereditos } from "../etapas/5-conferencia/candidatos";
 import { camposDoDossie, type DocumentoExportavel, type Secao } from "./modelo";
 
 export const NOME_TIPO = { vago: "Vago", conflituoso: "Conflituoso", ausente: "Ausente" } as const;
@@ -37,6 +38,8 @@ export function montarRelatorioConformidade(
   verificacoes: Verificacao[],
   agora = new Date(),
   leitura: AchadoPmoConferido[] = [],
+  /** Os vereditos do PMO (decisão 0052): "achados" já vem só com os confirmados; os outros vão numa seção à parte. */
+  vereditos?: ResultadoVereditos,
 ): DocumentoExportavel {
   const decisoes = dossie.conferencia?.decisoes ?? {};
   const finais = achados.map((a) => aplicarDecisao(a, decisoes[a.id]));
@@ -53,6 +56,11 @@ export function montarRelatorioConformidade(
       paragrafos: [
         `${finais.length} achados: cada um é vago, conflituoso ou ausente, com a gravidade dada pela parte do plano. ${pendentes} ainda sem decisão do GP.`,
         "Ausente quer dizer não localizado pelo código no plano inteiro: conferir no documento antes de decidir.",
+        ...(vereditos
+          ? [
+              `Só contam os achados do código que o PMO confirmou (decisão 0052). ${vereditos.candidatos.length - vereditos.contam.length} ficaram à parte, com o veredito, na seção "Achados do código que o PMO não confirmou".`,
+            ]
+          : []),
       ],
       tabela: {
         colunas: ["Gravidade", "Vago", "Conflituoso", "Ausente"],
@@ -103,6 +111,7 @@ export function montarRelatorioConformidade(
     },
   ];
   if (leitura.length) secoes.push(secaoDaLeitura(leitura, decisoes));
+  if (vereditos) secoes.push(...secoesDosVereditos(vereditos));
   if (dispensadas.length) {
     secoes.push({
       titulo: "Partes dispensadas pelo GP",
@@ -125,12 +134,66 @@ export function montarRelatorioConformidade(
   };
 }
 
+/** Achados do código que o PMO não confirmou e dispensas declaradas só no plano, com o veredito (decisão 0052). */
+function secoesDosVereditos(v: ResultadoVereditos): Secao[] {
+  const aParte = v.candidatos.filter((c) => c.situacao !== "sustenta");
+  const out: Secao[] = [];
+  if (aParte.length)
+    out.push({
+      titulo: "Achados do código que o PMO não confirmou",
+      paragrafos: [
+        "Achado do código é candidato até o veredito do PMO. Estes não contam no total: falso (o plano tem o conteúdo), não se aplica, regra errada ou sem veredito. O GP pode rever.",
+      ],
+      tabela: {
+        colunas: ["Parte", "Tipo", "Achado do código", "Veredito", "Motivo ou trecho", "Conferência"],
+        larguras: [0.8, 1.1, 3, 1.6, 3.5, 2],
+        linhas: aParte.map((c) => [
+          c.achado.parte,
+          NOME_TIPO[c.achado.tipo],
+          `${c.achado.titulo}${c.daDispensa ? ` (parte devolvida: a dispensa do ${c.daDispensa} não cabe)` : ""}`,
+          NOME_SITUACAO_CANDIDATO[c.situacao],
+          [
+            c.veredito?.motivo ?? "",
+            ...(c.veredito?.evidencias ?? []).map(
+              (e) => `${e.doc.toUpperCase()}, p. ${e.pagina}: "${e.trecho}"`,
+            ),
+          ]
+            .filter(Boolean)
+            .join("\n") || "—",
+          c.avisos.join("; ") || "—",
+        ]),
+      },
+    });
+  if (v.dispensas.length)
+    out.push({
+      titulo: "Dispensas declaradas só no plano",
+      paragrafos: [
+        "O plano declara estas partes como dispensadas pelo GP, sem a dispensa da etapa 4 no dossiê. O PMO disse se cada uma cabe pelas condições da ficha; a que não cabe volta a ser conferida.",
+      ],
+      tabela: {
+        colunas: ["Parte", "Justificativa no plano", "Veredito do PMO", "Motivo"],
+        larguras: [0.8, 3, 1.5, 3],
+        linhas: v.dispensas.map((d) => [
+          d.parte,
+          d.justificativa,
+          d.situacao === "cabe"
+            ? "cabe"
+            : d.situacao === "nao-cabe"
+              ? "não cabe: a parte volta à conferência"
+              : "sem veredito",
+          [d.motivo, ...d.avisos].filter(Boolean).join("; ") || "—",
+        ]),
+      },
+    });
+  return out;
+}
+
 /** Achados da leitura do PMO (F5b): sugestões, com a situação dada pelo código e a decisão do GP. */
 function secaoDaLeitura(leitura: AchadoPmoConferido[], decisoes: Record<string, DecisaoAchado>): Secao {
   return {
     titulo: "Leitura do PMO (sugestões)",
     paragrafos: [
-      "Leitura opcional pedida pelo GP. Todo achado é sugestão: o código conferiu as citações, procurou no plano inteiro o que o PMO apontou como ausente e aplicou a gravidade e a categoria pela parte do plano.",
+      "Leitura opcional pedida pelo GP. Todo achado é sugestão: o código conferiu as citações, procurou o que o PMO apontou como ausente na parte apontada (sem os trechos que o próprio achado cita) e aplicou a gravidade e a categoria pela parte do plano.",
     ],
     tabela: {
       colunas: [
@@ -166,16 +229,21 @@ export function montarListaAchados(
   achados: Achado[],
   agora = new Date(),
   leitura: AchadoPmoConferido[] = [],
+  vereditos?: ResultadoVereditos,
 ): DocumentoExportavel {
-  const doc = montarRelatorioConformidade(dossie, achados, [], agora, leitura);
+  const doc = montarRelatorioConformidade(dossie, achados, [], agora, leitura, vereditos);
   const tabela = doc.secoes[1]?.tabela;
   const daLeitura = doc.secoes.find((s) => s.titulo === "Leitura do PMO (sugestões)")?.tabela;
+  const naoConfirmados = doc.secoes.find(
+    (s) => s.titulo === "Achados do código que o PMO não confirmou",
+  )?.tabela;
   return {
     ...doc,
     titulo: "Lista de achados",
     secoes: [
       ...(tabela ? [{ titulo: "Achados", tabela }] : []),
       ...(daLeitura ? [{ titulo: "Leitura do PMO", tabela: daLeitura }] : []),
+      ...(naoConfirmados ? [{ titulo: "Não confirmados", tabela: naoConfirmados }] : []),
     ],
   };
 }

@@ -70,8 +70,13 @@ import { RespostaLeitura } from "../../src/pmo/schemas/leitura";
 import { SCHEMAS_PGP, type PassoPgp } from "../../src/pmo/schemas/pgp";
 import { SCHEMAS } from "../../src/pmo/schemas/proposta";
 import { SCHEMAS_TAP } from "../../src/pmo/schemas/tap";
-import { conferirPlano } from "../../src/regras/conferencia";
-import { confirmacaoInicial, proporMapa } from "../../src/regras/mapa-pgp";
+import { proporMapa } from "../../src/regras/mapa-pgp";
+import { mapaInicialDaConferencia } from "../../src/etapas/5-conferencia/dispensas";
+import {
+  conferirComCandidatos,
+  conferirVereditos,
+  NOME_SITUACAO_CANDIDATO,
+} from "../../src/etapas/5-conferencia/candidatos";
 import { tirarAcentos } from "../../src/texto/normalizar";
 import { lerPdf } from "../ajudantes/ler-pdf";
 import { lerRfpPublica, PASTA_RFPS } from "../ajudantes/rfp-publica";
@@ -121,22 +126,38 @@ function entradaDaConferencia(d: Dossie) {
   // sem TAP em PDF, o TAP da etapa 3 no dossiê (o mesmo que a tela da etapa 5 usa)
   const tap = d.documentos.find((x) => x.papel === "tap") ?? tapDoDossieComoDocumento(d);
   const rfp = d.documentos.find((x) => x.papel === "rfp");
-  const mapa = confirmacaoInicial(proporMapa(pgp.paginas, PARTES_PGP));
+  // como na tela: as partes dispensadas pelo GP na etapa 4 (e as que o plano declara) entram como dispensadas
+  const proposta = proporMapa(pgp.paginas, PARTES_PGP);
+  const mapa = mapaInicialDaConferencia(proposta, pgp.paginas, PARTES_PGP, d.pgp);
   const caracteristicas = d.pgp?.caracteristicas ?? CARACTERISTICAS_PADRAO;
   const premissasAplicaveis =
     d.pgp?.premissasAplicaveis ?? d.tap?.premissasAplicaveis ?? d.proposta?.premissasAplicaveis ?? {};
-  const resultado = conferirPlano({
-    pgp: pgp.paginas,
-    tap: tap?.paginas,
-    rfp: rfp?.paginas,
-    partes: PARTES_PGP,
-    premissas: PREMISSAS_CRITICAS,
+  // como na tela: com dispensa declarada só no plano, também os achados que valem se ela não couber (decisão 0052)
+  const c = conferirComCandidatos(
+    {
+      pgp: pgp.paginas,
+      tap: tap?.paginas,
+      rfp: rfp?.paginas,
+      partes: PARTES_PGP,
+      premissas: PREMISSAS_CRITICAS,
+      mapa,
+      caracteristicas,
+      premissasAplicaveis,
+      requisitos: [],
+    },
+    proposta,
+  );
+  return {
+    pgp,
+    tap,
+    rfp,
     mapa,
     caracteristicas,
     premissasAplicaveis,
-    requisitos: [],
-  });
-  return { pgp, tap, rfp, mapa, caracteristicas, premissasAplicaveis, achados: resultado.achados };
+    achados: c.resultado.achados,
+    dispensasCandidatas: c.dispensas,
+    condicionais: c.condicionais,
+  };
 }
 
 function montarPasso(d: Dossie): Passo {
@@ -232,6 +253,8 @@ function montarPasso(d: Dossie): Passo {
         achadosDoCodigo: c.achados,
         temTap: Boolean(c.tap),
         temRfp: Boolean(c.rfp),
+        dispensasCandidatas: c.dispensasCandidatas,
+        condicionais: c.condicionais,
       }),
       schema: RespostaLeitura,
     };
@@ -861,8 +884,16 @@ describe.skipIf(MODO !== "importar")("importar a resposta do PMO (leitura indepe
       }
       if (etapa === 5) {
         const c = entradaDaConferencia(dossie);
-        const conferidos = conferirLeitura(v.data as z.infer<typeof RespostaLeitura>, c, c.achados);
+        const resposta = v.data as z.infer<typeof RespostaLeitura>;
+        const conferidos = conferirLeitura(resposta, c, c.achados, c.mapa);
         const porSituacao = (s: string) => conferidos.filter((x) => x.situacao === s).length;
+        const vd = conferirVereditos(resposta, c.achados, c.condicionais, c.mapa, [
+          c.pgp,
+          ...(c.tap ? [c.tap] : []),
+          ...(c.rfp ? [c.rfp] : []),
+        ]);
+        const porVeredito = (s: keyof typeof NOME_SITUACAO_CANDIDATO) =>
+          vd.candidatos.filter((x) => x.situacao === s);
         linhas.push(
           "",
           `Características usadas: ${Object.entries(c.caracteristicas)
@@ -873,13 +904,46 @@ describe.skipIf(MODO !== "importar")("importar a resposta do PMO (leitura indepe
               .map(([k]) => k)
               .join(", ") || "nenhuma"
           }.`,
-          `Achados do código: ${c.achados.length} (${["ausente", "conflituoso", "vago"].map((t) => `${t} ${c.achados.filter((a) => a.tipo === t).length}`).join(", ")}). Achados do PMO: ${conferidos.length} (válidos ${porSituacao("valido")}, rebaixados ${porSituacao("rebaixado")}, citação não conferida ${porSituacao("citacao-nao-conferida")}).`,
+          `Achados do código (candidatos, decisão 0052): ${vd.candidatos.length} (${["ausente", "conflituoso", "vago"].map((t) => `${t} ${vd.candidatos.filter((x) => x.achado.tipo === t).length}`).join(", ")}); contam (o PMO confirmou): ${vd.contam.length}. Achados do PMO: ${conferidos.length} (válidos ${porSituacao("valido")}, rebaixados ${porSituacao("rebaixado")}, citação não conferida ${porSituacao("citacao-nao-conferida")}).`,
+          "",
+          "## Vereditos do PMO sobre os achados do código",
+          ...(["sustenta", "falso", "nao-se-aplica", "regra-errada", "sem-veredito"] as const).flatMap(
+            (sit) => {
+              const xs = porVeredito(sit);
+              return xs.length
+                ? [
+                    `### ${NOME_SITUACAO_CANDIDATO[sit]}: ${xs.length}`,
+                    ...xs.map(
+                      (x) =>
+                        `- ${x.achado.tipo} · ${x.achado.parte} · ${x.achado.titulo}${x.daDispensa ? ` (parte devolvida: ${x.daDispensa})` : ""}${x.veredito?.motivo ? ` — ${x.veredito.motivo}` : ""}${(x.veredito?.evidencias ?? []).map((e) => ` — ${e.doc.toUpperCase()} p. ${e.pagina}: "${e.trecho.slice(0, 120)}"`).join("")}${x.avisos.length ? ` — AVISO: ${x.avisos.join("; ")}` : ""}`,
+                    ),
+                  ]
+                : [];
+            },
+          ),
+          ...(vd.dispensas.length
+            ? [
+                "",
+                "## Dispensas declaradas só no plano",
+                ...vd.dispensas.map(
+                  (d) =>
+                    `- ${d.parte}: ${d.situacao}${d.motivo ? ` — ${d.motivo}` : ""}${d.avisos.length ? ` — AVISO: ${d.avisos.join("; ")}` : ""} (no plano: ${d.justificativa.slice(0, 120)})`,
+                ),
+              ]
+            : []),
+          ...(vd.desconhecidos.length
+            ? [`- vereditos com id fora da lista: ${vd.desconhecidos.join(", ")}`]
+            : []),
           "",
           "## Achados do PMO, um por um",
           ...conferidos.map(
             (a) =>
               `- **${a.situacao}** · ${a.tipo} · ${a.gravidade} · ${a.parte}${a.item ? ` (${a.item})` : ""} · ${a.titulo}${
-                a.localizadoEm ? ` — o código achou o item na p. ${a.localizadoEm.pagina}` : ""
+                a.localizadoEm
+                  ? ` — o código achou o item na p. ${a.localizadoEm.pagina}: "${a.localizadoEm.trecho.slice(0, 140)}"`
+                  : ""
+              }${
+                a.procuradoEm ? ` — procurado em: ${a.procuradoEm}` : ""
               }${a.jaApontadoPeloCodigo ? " — o código já tinha apontado" : ""}`,
           ),
         );
@@ -890,6 +954,8 @@ describe.skipIf(MODO !== "importar")("importar a resposta do PMO (leitura indepe
       dirname(resolve(env.RAIO_X_ARQUIVO ?? "")),
       `${basename(env.RAIO_X_ARQUIVO ?? "resposta", ".json")}.placar.md`,
     );
+    const notas = relatorio.replace(/\.placar\.md$/, ".notas.md");
+    if (existsSync(notas)) linhas.splice(1, 0, "", `Notas à mão (a importação não toca): ${basename(notas)}`);
     writeFileSync(relatorio, `${linhas.join("\n")}\n`);
     console.log(`${linhas.join("\n")}\n\nDossiê atualizado: ${arqDossie}\nRelatório: ${relatorio}`);
   }, 120_000);

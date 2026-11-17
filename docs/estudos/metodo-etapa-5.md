@@ -51,6 +51,8 @@ Tudo o que a régua não pede vai para "não se aplica a este tipo de plano", nu
 - Só do núcleo ou da adaptação.
 - **Incompleto** é ausente de um item do conteúdo mínimo dentro de uma parte presente (ex.: regra de mudança sem aditivo nem apostila). Mostrar a parte presente com a página e o item que falta.
 - Antes de dizer que falta, procurar no plano inteiro, com sinônimos **só** dos itens fixos (decisão do PR #43).
+- Parte dispensada pelo GP na etapa 4 não é procurada. A dispensa que só o plano declara (lista "Partes dispensadas pelo GP", sem a etapa 4 no dossiê) é candidata: o PMO diz se cabe pelas condições da ficha; se não couber, a parte volta a ser conferida (decisão 0052).
+- O ausente que o PMO aponta é procurado pelo código só na parte apontada (ou nas que absorvem a parte dispensada), sem os trechos que o próprio achado cita como evidência, e só com os termos que o PMO mandou (decisão 0052).
 
 ### 4.4 Vagos
 - Só quando o trecho fala de obrigação, prazo ou entrega de alguém (decisão 0031), e principalmente quando deixa a aprovação do contratante sem prazo.
@@ -66,6 +68,7 @@ Pela regra fixa (decisões 0008 e 0009), pela parte do plano. Ajustes deste mét
 - parte que não se aplica ao tipo de plano: nunca vira achado.
 
 ## 6. Código × PMO
+**Achado do código é candidato até o veredito do PMO** (decisão 0052). O PMO dá um veredito para cada achado do código (ausente, vago e conflituoso): sustenta, falso (com o trecho do plano), não se aplica (com o motivo) ou regra errada (com a causa). Só os confirmados como "sustenta" contam no total; os outros aparecem à parte, com o veredito. O código confere o veredito: o trecho do "falso" é procurado na página, e veredito incompleto ou ausente deixa o achado como "candidato sem veredito", fora do total.
 - **Código:** tipo de plano (com confirmação), comparações numéricas e de datas, frase de conformidade, presença das partes e itens do núcleo, PC5 pela eleição, o que está em ordem.
 - **PMO (leitura opcional, F5b):** premissa escrita como premissa ou só citada, exclusões de outro tipo de projeto, orçamento × obrigação, vagos em texto corrido.
 

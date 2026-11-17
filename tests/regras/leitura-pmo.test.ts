@@ -82,16 +82,26 @@ describe("leitura do PMO na conferência (travas do código)", () => {
     ).toBe("vago:A8:x");
   });
 
-  it("o pedido leva o que o código já apontou e o conteúdo mínimo só das partes presentes", () => {
+  it("o pedido leva os achados do código como candidatos, com o id, e o conteúdo mínimo só das partes presentes", () => {
     const p = pedidoLeitura({
       partesPresentes: ["A8", "B27"],
       caracteristicas: CARACTERISTICAS_PADRAO,
       premissasAplicaveis: { PC3: true },
-      achadosDoCodigo: [{ tipo: "ausente", parte: "A7", titulo: "Reuniões internas" } as unknown as Achado],
+      achadosDoCodigo: [
+        {
+          id: "x1",
+          tipo: "ausente",
+          parte: "A7",
+          titulo: "Reuniões internas",
+          evidencias: [],
+        } as unknown as Achado,
+      ],
       temTap: true,
       temRfp: false,
     });
-    expect(p).toContain("ausente · A7 · Reuniões internas");
+    expect(p).toContain("- id `x1` · ausente · A7 · Reuniões internas");
+    expect(p).toContain("dê um veredito para cada um, pelo id");
+    expect(p).not.toContain("Dispensas declaradas só no plano");
     expect(p).toContain("### A8 —");
     expect(p).toContain("## Perguntas de qualidade");
     expect(p).not.toContain("### A5 —");

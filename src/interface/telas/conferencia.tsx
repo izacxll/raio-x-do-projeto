@@ -22,15 +22,16 @@ import {
 } from "../../exportacao/relatorio-conformidade";
 import { procurarSinais } from "../../regras/busca";
 import { conferirPlano, resumirAchados } from "../../regras/conferencia";
-import {
-  aplicarTipoPlano,
-  confirmacaoInicial,
-  proporMapa,
-  sincronizarMapa,
-  type ParteNoMapa,
-} from "../../regras/mapa-pgp";
+import { aplicarTipoPlano, proporMapa, sincronizarMapa, type ParteNoMapa } from "../../regras/mapa-pgp";
 import { LeituraDoPmo } from "./leitura-pmo";
 import { conferirLeitura, type AchadoPmoConferido } from "../../etapas/5-conferencia/leitura-pmo";
+import { mapaInicialDaConferencia } from "../../etapas/5-conferencia/dispensas";
+import {
+  conferirComCandidatos,
+  conferirVereditos,
+  NOME_SITUACAO_CANDIDATO,
+  type ResultadoVereditos,
+} from "../../etapas/5-conferencia/candidatos";
 import { EtiquetaRotulo, RotuloSecao } from "../componentes/basicos";
 
 const NOME_SITUACAO_PROPOSTA: Record<ParteNoMapa["situacao"], string> = {
@@ -79,20 +80,10 @@ function conferenciaInicial(
     : props.rfp
       ? extrairRequisitos(props.rfp.paginas)
       : [];
-  const justificativas = new Map(
-    (pgp?.adaptacao?.resposta.partes ?? []).map((s) => [s.codigo, s.justificativa]),
-  );
   return {
     caracteristicas: pgp?.caracteristicas ?? CARACTERISTICAS_PADRAO,
-    mapa: confirmacaoInicial(mapa).map((m) =>
-      pgp?.gerar[m.codigo] === false
-        ? {
-            codigo: m.codigo,
-            situacao: "dispensada" as const,
-            justificativa: `Dispensada pelo GP na etapa 4: ${justificativas.get(m.codigo) ?? ""}`.trim(),
-          }
-        : m,
-    ),
+    // as dispensas da etapa 4 e as que o próprio plano declara (mesma função do script de teste)
+    mapa: mapaInicialDaConferencia(mapa, props.pgp.paginas, PARTES_PGP, pgp),
     // na dúvida, a premissa "se aplica", para o GP decidir (decisão 0021)
     premissasAplicaveis:
       pgp?.premissasAplicaveis ?? Object.fromEntries(PREMISSAS_CRITICAS.map((p) => [p.codigo, true])),
@@ -127,21 +118,26 @@ export function ConferenciaPgp(props: Props) {
   const atualizar = (mudanca: Partial<Conferencia>) => guardarConferencia({ ...conf, ...mudanca });
 
   // a conferência por código roda sempre (ela monta o pedido ao PMO); a tela só a mostra com a leitura (decisão 0037)
-  const resultado = useMemo(
+  // com dispensa declarada só no plano, também os achados que valem se ela não couber (decisão 0052)
+  const comCandidatos = useMemo(
     () =>
-      conferirPlano({
-        pgp: props.pgp.paginas,
-        tap: props.tap?.paginas,
-        rfp: props.rfp?.paginas,
-        partes: PARTES_PGP,
-        premissas: PREMISSAS_CRITICAS,
-        mapa: conf.mapa,
-        caracteristicas: conf.caracteristicas,
-        premissasAplicaveis: conf.premissasAplicaveis,
-        requisitos: conf.requisitos,
-        tipoPlano: conf.tipoPlano,
-      }),
+      conferirComCandidatos(
+        {
+          pgp: props.pgp.paginas,
+          tap: props.tap?.paginas,
+          rfp: props.rfp?.paginas,
+          partes: PARTES_PGP,
+          premissas: PREMISSAS_CRITICAS,
+          mapa: conf.mapa,
+          caracteristicas: conf.caracteristicas,
+          premissasAplicaveis: conf.premissasAplicaveis,
+          requisitos: conf.requisitos,
+          tipoPlano: conf.tipoPlano,
+        },
+        proposta,
+      ),
     [
+      proposta,
       props.pgp,
       props.tap,
       props.rfp,
@@ -152,6 +148,8 @@ export function ConferenciaPgp(props: Props) {
       conf.tipoPlano,
     ],
   );
+  const resultado = comCandidatos.resultado;
+  const documentos = [props.pgp, ...(props.tap ? [props.tap] : []), ...(props.rfp ? [props.rfp] : [])];
 
   return (
     <>
@@ -178,6 +176,8 @@ export function ConferenciaPgp(props: Props) {
         conf={conf}
         atualizar={atualizar}
         achadosDoCodigo={resultado.achados}
+        dispensasCandidatas={comCandidatos.dispensas}
+        condicionais={comCandidatos.condicionais}
       />
       {/* decisão 0037: o resultado só aparece com a leitura do PMO (ou a resposta gravada da demonstração) */}
       {conf.leituraPmo && (
@@ -186,10 +186,18 @@ export function ConferenciaPgp(props: Props) {
           verificacoes={resultado.verificacoes}
           conf={conf}
           atualizar={atualizar}
+          vereditos={conferirVereditos(
+            conf.leituraPmo.resposta,
+            resultado.achados,
+            comCandidatos.condicionais,
+            conf.mapa,
+            documentos,
+          )}
           leitura={conferirLeitura(
             conf.leituraPmo.resposta,
             { pgp: props.pgp, tap: props.tap, rfp: props.rfp },
             resultado.achados,
+            conf.mapa,
           )}
         />
       )}
@@ -553,16 +561,21 @@ function Resultado({
   conf,
   atualizar,
   leitura,
+  vereditos,
 }: {
   achados: ReturnType<typeof conferirPlano>["achados"];
   verificacoes: ReturnType<typeof conferirPlano>["verificacoes"];
   conf: Conferencia;
   atualizar: (m: Partial<Conferencia>) => void;
   leitura: AchadoPmoConferido[];
+  vereditos: ResultadoVereditos;
 }) {
   const dossie = useDossie((s) => s.dossie);
   const [mensagem, setMensagem] = useState("");
-  const finais = achados.map((a) => aplicarDecisao(a, conf.decisoes[a.id]));
+  // decisão 0052: só contam os achados do código que o PMO confirmou; os outros aparecem à parte, com o veredito
+  const confirmados = vereditos.contam;
+  const aParte = vereditos.candidatos.filter((c) => c.situacao !== "sustenta");
+  const finais = confirmados.map((a) => aplicarDecisao(a, conf.decisoes[a.id]));
   const resumo = resumirAchados(finais);
   const decidir = (id: string, d: Partial<DecisaoAchado>) =>
     atualizar({ decisoes: { ...conf.decisoes, [id]: { ...conf.decisoes[id], ...d } } });
@@ -573,8 +586,8 @@ function Resultado({
     try {
       const doc =
         formato === "xlsx"
-          ? montarListaAchados(dossie, achados, new Date(), leitura)
-          : montarRelatorioConformidade(dossie, achados, verificacoes, new Date(), leitura);
+          ? montarListaAchados(dossie, confirmados, new Date(), leitura, vereditos)
+          : montarRelatorioConformidade(dossie, confirmados, verificacoes, new Date(), leitura, vereditos);
       const nome = await exportar(
         doc,
         formato,
@@ -613,8 +626,9 @@ function Resultado({
           </tbody>
         </table>
         <p className="envio__obs">
-          "Ausente" quer dizer não localizado pelo código no plano inteiro: conferir no documento antes de
-          decidir.
+          Só contam os achados do código que o PMO confirmou ({confirmados.length} de{" "}
+          {vereditos.candidatos.length}); os outros estão abaixo, com o veredito. "Ausente" quer dizer não
+          localizado pelo código no plano: conferir no documento antes de decidir.
           {naoConferidos > 0 &&
             ` ${naoConferidos} itens dependem de interpretação e não foram conferidos pelo código.`}
           {naoVerificaveis > 0 &&
@@ -634,7 +648,13 @@ function Resultado({
         </div>
       </div>
 
-      {finais.length === 0 && <p className="texto-apoio">Nenhum achado nas regras do código.</p>}
+      {finais.length === 0 && (
+        <p className="texto-apoio">
+          {achados.length
+            ? "Nenhum achado do código confirmado pelo PMO."
+            : "Nenhum achado nas regras do código."}
+        </p>
+      )}
       {finais.map((a) => (
         <article
           key={a.id}
@@ -704,6 +724,76 @@ function Resultado({
           </div>
         </article>
       ))}
+      {(aParte.length > 0 || vereditos.dispensas.length > 0) && (
+        <NaoConfirmados aParte={aParte} vereditos={vereditos} />
+      )}
     </section>
+  );
+}
+
+/** Achados do código que o PMO não confirmou e dispensas declaradas só no plano (decisão 0052). */
+function NaoConfirmados({
+  aParte,
+  vereditos,
+}: {
+  aParte: ResultadoVereditos["candidatos"];
+  vereditos: ResultadoVereditos;
+}) {
+  return (
+    <div className="cartao cartao__corpo bloco" data-testid="nao-confirmados">
+      {aParte.length > 0 && (
+        <>
+          <h3 style={{ margin: "0 0 4px" }}>Achados do código que o PMO não confirmou ({aParte.length})</h3>
+          <p className="envio__obs">
+            Achado do código é candidato até o veredito do PMO. Estes não contam no total; você pode rever.
+          </p>
+          <ul className="evidencias">
+            {aParte.map((c) => (
+              <li key={c.achado.id}>
+                <span className="lb">
+                  {NOME_SITUACAO_CANDIDATO[c.situacao]} · parte {c.achado.parte}
+                </span>{" "}
+                {c.achado.titulo}
+                {c.daDispensa && ` (a dispensa do ${c.daDispensa} não cabe)`}
+                {c.veredito?.motivo && <> — {c.veredito.motivo}</>}
+                {(c.veredito?.evidencias ?? []).map((e, k) => (
+                  <span key={k}>
+                    {" "}
+                    <EtiquetaRotulo rotulo="documento" pagina={e.pagina} /> “{e.trecho}”
+                  </span>
+                ))}
+                {c.avisos.length > 0 && <span className="envio__obs"> ({c.avisos.join("; ")})</span>}
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
+      {vereditos.dispensas.length > 0 && (
+        <>
+          <h3 style={{ margin: "8px 0 4px" }}>Dispensas declaradas só no plano</h3>
+          <ul className="evidencias">
+            {vereditos.dispensas.map((d) => (
+              <li key={d.parte}>
+                <span className="lb">
+                  {d.situacao === "cabe"
+                    ? "cabe"
+                    : d.situacao === "nao-cabe"
+                      ? "não cabe: a parte volta à conferência"
+                      : "sem veredito do PMO"}
+                </span>{" "}
+                {d.parte}: {d.justificativa}
+                {d.motivo && <> — {d.motivo}</>}
+                {d.avisos.length > 0 && <span className="envio__obs"> ({d.avisos.join("; ")})</span>}
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
+      {vereditos.desconhecidos.length > 0 && (
+        <p className="envio__obs">
+          Vereditos com id fora da lista do pedido (ignorados): {vereditos.desconhecidos.join(", ")}.
+        </p>
+      )}
+    </div>
   );
 }

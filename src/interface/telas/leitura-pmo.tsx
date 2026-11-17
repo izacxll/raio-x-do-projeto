@@ -26,6 +26,8 @@ export function LeituraDoPmo({
   conf,
   atualizar,
   achadosDoCodigo,
+  dispensasCandidatas,
+  condicionais,
 }: {
   pgp: DocumentoLido;
   tap?: DocumentoLido;
@@ -33,6 +35,8 @@ export function LeituraDoPmo({
   conf: Conferencia;
   atualizar: (m: Partial<Conferencia>) => void;
   achadosDoCodigo: Achado[];
+  dispensasCandidatas: { parte: string; justificativa: string }[];
+  condicionais: Map<string, Achado[]>;
 }) {
   const demonstracao = Boolean(useDossie((s) => s.dossie.demonstracao));
   const chave = useChave();
@@ -48,9 +52,11 @@ export function LeituraDoPmo({
     achadosDoCodigo,
     temTap: Boolean(tap),
     temRfp: Boolean(rfp),
+    dispensasCandidatas,
+    condicionais,
   });
   const conferidos = conf.leituraPmo
-    ? conferirLeitura(conf.leituraPmo.resposta, { pgp, tap, rfp }, achadosDoCodigo)
+    ? conferirLeitura(conf.leituraPmo.resposta, { pgp, tap, rfp }, achadosDoCodigo, conf.mapa)
     : [];
   const uso = conf.usoPmo ?? [];
 
@@ -114,7 +120,7 @@ export function LeituraDoPmo({
         titulo="Conferência do plano"
         rotuloBotao="Conferir o plano"
         testid="conferir-plano"
-        explicacao="Confira o mapa, as características, as premissas e os requisitos acima. O código confere o plano no navegador e monta o pedido; o PMO lê o plano a partir do que o código apontou; o código confere cada citação do PMO, procura no plano inteiro o que ele diz estar ausente e dá a gravidade pela parte. Mudou algo acima? Os achados do código se refazem sozinhos; a leitura do PMO, só se você pedir de novo."
+        explicacao="Confira o mapa, as características, as premissas e os requisitos acima. O código confere o plano no navegador e monta o pedido; o PMO lê o plano a partir do que o código apontou; o código confere cada citação do PMO, procura o que ele diz estar ausente na parte apontada (sem os trechos que ele mesmo cita) e dá a gravidade pela parte. Mudou algo acima? Os achados do código se refazem sozinhos; a leitura do PMO, só se você pedir de novo."
         pedido={pedido}
         semPedido=""
         feito={conf.leituraPmo ? { modelo: conf.leituraPmo.modelo, em: conf.leituraPmo.em } : undefined}
@@ -140,8 +146,9 @@ export function LeituraDoPmo({
         {conferidos.length > 0 && (
           <div data-testid="leitura-pmo">
             <p className="envio__obs" style={{ margin: "8px 0" }}>
-              Todo achado do PMO é sugestão. O código conferiu as citações, procurou no plano inteiro o que o
-              PMO diz estar ausente e aplicou a gravidade e a categoria pela parte do plano.
+              Todo achado do PMO é sugestão. O código conferiu as citações, procurou o que o PMO diz estar
+              ausente na parte apontada (sem os trechos que o próprio achado cita) e aplicou a gravidade e a
+              categoria pela parte do plano.
             </p>
             {conferidos.map((a) => {
               const id = `pmo:${a.id}`;
@@ -175,6 +182,9 @@ export function LeituraDoPmo({
                       <p className="envio__obs">
                         O código achou no plano, p. {a.localizadoEm.pagina}: “{a.localizadoEm.trecho}”
                       </p>
+                    )}
+                    {a.procuradoEm && (
+                      <p className="envio__obs">Procurado pelo código em: {a.procuradoEm}.</p>
                     )}
                     {a.evidencias.map((f, k) => (
                       <p key={k} className="envio__obs">
