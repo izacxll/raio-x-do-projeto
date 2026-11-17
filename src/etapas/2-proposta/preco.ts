@@ -20,7 +20,10 @@ export interface ParametrosPreco {
 
 export interface LinhaPerfil {
   perfil: PerfilEquipe;
+  /** Horas que o código somou (sem as que estão a definir pelo GP). */
   horas: number;
+  /** Atividades com as horas deste perfil a definir pelo GP (null): a linha não fecha sem elas. */
+  horasADefinir: string[];
   valorHora?: number;
   custo?: number;
 }
@@ -48,6 +51,18 @@ export function horasEsperadas(h: HorasPerfil): number {
   return Math.round(duracaoEsperada(h.horas.otimista, h.horas.mais_provavel, h.horas.pessimista) * 10) / 10;
 }
 
+/** Horas de uma linha para exibir: as horas a definir pelo GP aparecem como tal, nunca como zero. */
+export function textoDasHoras(l: Pick<LinhaPerfil, "horas" | "horasADefinir">): string {
+  if (!l.horasADefinir.length) return String(l.horas);
+  const quais = `a definir pelo GP (${l.horasADefinir.join(", ")})`;
+  return l.horas ? `${l.horas} + ${quais}` : quais;
+}
+
+/** Total de horas para exibir, com as atividades a definir pelo GP. */
+export function textoDasHorasTotais(p: Preco): string {
+  return textoDasHoras({ horas: p.horasTotais, horasADefinir: p.linhas.flatMap((l) => l.horasADefinir) });
+}
+
 export function calcularPreco(perfis: PerfilEquipe[], horas: HorasPerfil[], par: ParametrosPreco): Preco {
   const faltando: string[] = [];
   // horas que dependem de decisão do GP (produtividade): pendência, nunca zero na conta
@@ -58,17 +73,21 @@ export function calcularPreco(perfis: PerfilEquipe[], horas: HorasPerfil[], par:
   const linhas: LinhaPerfil[] = perfis.map((perfil) => {
     const h = horas.filter((x) => x.perfil === perfil.id).reduce((s, x) => s + horasEsperadas(x), 0);
     const total = Math.round(h * 10) / 10;
+    const horasADefinir = horas.filter((x) => x.perfil === perfil.id && !x.horas).map((x) => x.atividade);
     const valorHora = par.valoresHora[perfil.id];
-    if (valorHora === undefined && total > 0) faltando.push(`valor-hora de ${perfil.nome}`);
+    if (valorHora === undefined && (total > 0 || horasADefinir.length))
+      faltando.push(`valor-hora de ${perfil.nome}`);
     return {
       perfil,
       horas: total,
+      horasADefinir,
       valorHora,
-      custo: valorHora === undefined ? undefined : arred2(total * valorHora),
+      // com horas a definir, o custo da linha não fecha: nunca a conta com zero no lugar delas
+      custo: valorHora === undefined || horasADefinir.length ? undefined : arred2(total * valorHora),
     };
   });
   const horasTotais = Math.round(linhas.reduce((s, l) => s + l.horas, 0) * 10) / 10;
-  const semValor = linhas.some((l) => l.horas > 0 && l.custo === undefined);
+  const semValor = linhas.some((l) => (l.horas > 0 || l.horasADefinir.length) && l.custo === undefined);
   const pessoal = semValor ? undefined : arred2(linhas.reduce((s, l) => s + (l.custo ?? 0), 0));
 
   const despesasSemValor = par.despesas.filter((d) => d.valor === undefined);

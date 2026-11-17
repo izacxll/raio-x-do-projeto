@@ -6,7 +6,13 @@ import type { DocumentoLido, Dossie, PropostaDossie } from "../dossie/esquema";
 import { idsDaBrecha } from "../etapas/2-proposta/ponto-de-partida";
 import { conferirMinuta } from "../etapas/2-proposta/conferencia-final";
 import { calcularCronograma, conferirPrazosDosProdutos } from "../etapas/2-proposta/cronograma";
-import { calcularPreco, conferirValor, lerValorEmReais } from "../etapas/2-proposta/preco";
+import {
+  calcularPreco,
+  conferirValor,
+  lerValorEmReais,
+  textoDasHoras,
+  textoDasHorasTotais,
+} from "../etapas/2-proposta/preco";
 import type { PontoDePartida } from "../etapas/2-proposta/ponto-de-partida";
 import { montarMinuta, SECOES_PROPOSTA, type ItemMinuta } from "../etapas/2-proposta/minuta";
 import {
@@ -377,8 +383,8 @@ export function montarPlanilhaPreco(
           colunas: ["Perfil", "Horas (PERT)", "Valor-hora (GP)", "Custo"],
           larguras: [3, 1, 1, 1],
           linhas: [
-            ...preco.linhas.map((l) => [l.perfil.nome, String(l.horas), reais(l.valorHora), reais(l.custo)]),
-            ["Total", String(preco.horasTotais), "", reais(preco.pessoal)],
+            ...preco.linhas.map((l) => [l.perfil.nome, textoDasHoras(l), reais(l.valorHora), reais(l.custo)]),
+            ["Total", textoDasHorasTotais(preco), "", reais(preco.pessoal)],
           ],
         },
       },
