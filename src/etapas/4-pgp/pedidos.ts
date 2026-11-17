@@ -9,6 +9,8 @@ import { premissasEmTexto } from "../3-tap/pedidos";
 import type { EntradaPgp } from "./entrada";
 import { PASSOS_PGP } from "./passos";
 import { nomeDaParte, partesAGerar } from "./pgp";
+import { cronogramaDoPgp, custosDoPgp } from "./calculos";
+import { textoDasHorasTotais } from "../2-proposta/preco";
 
 const REGRAS = `Regras deste pedido (além da skill):
 - Responda só com o objeto JSON do passo, no schema enviado.
@@ -162,6 +164,19 @@ ${fichasDasPartes(partes)}
 ${REGRAS}`;
 }
 
+/** Prazo, data fixa com a folga até ela e horas a definir: a base dos riscos de prazo e das premissas PC3 e PC6. */
+function contasDoCronograma(e: EntradaPgp, p: PgpDossie): string {
+  const crono = cronogramaDoPgp(p, e);
+  const custos = custosDoPgp(p, e);
+  if (!crono) return "- cronograma ainda não calculado";
+  const linhas = [crono.conferenciaPrazo.texto, ...crono.problemas];
+  if (custos) {
+    const abertas = custos.preco.linhas.filter((l) => l.horasADefinir.length);
+    if (abertas.length) linhas.push(`Horas a definir pelo GP: ${textoDasHorasTotais(custos.preco)}.`);
+  }
+  return linhas.map((x) => `- ${x}`).join("\n");
+}
+
 export function pedidoRiscos(e: EntradaPgp, p: PgpDossie): string {
   const partes = partesDoPasso("riscos", p);
   const brechas = e.ponto.brechas.map((b) => `- ${b.id}: ${b.nome} — ${b.texto}`);
@@ -169,6 +184,9 @@ export function pedidoRiscos(e: EntradaPgp, p: PgpDossie): string {
 
 Atividades e perfis (passo anterior):
 ${resumoDoCronograma(p)}
+
+Contas do código sobre o cronograma (use; não refaça as contas):
+${contasDoCronograma(e, p)}
 
 Brechas da etapa 1 (o que o texto da RFP cria; não confundir com risco do projeto):
 ${brechas.join("\n") || "- nenhuma"}

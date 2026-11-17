@@ -244,3 +244,11 @@ describe("RACI e data fixa no plano (teste externo do TR)", () => {
     expect(sim).toMatch(/folga de 3 dia\(s\) corrido\(s\)/);
   });
 });
+
+describe("pedido de riscos com as contas do cronograma", () => {
+  it("leva o prazo e os avisos do cronograma calculados pelo código", () => {
+    const pedido = PEDIDOS_PGP.riscos(entrada, dossie.pgp!);
+    expect(pedido).toContain("Contas do código sobre o cronograma (use; não refaça as contas):");
+    expect(pedido).toContain(cronogramaDoPgp(dossie.pgp!, entrada)!.conferenciaPrazo.texto);
+  });
+});
