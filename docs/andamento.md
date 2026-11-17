@@ -1,10 +1,12 @@
 # Andamento
 
-Atualizado em 16/11/2026 (v0.8.3 publicada; métodos das etapas em vigor, decisão 0034; o PMO lê e o código confere, decisão 0035; fase M1 em andamento).
+Atualizado em 16/11/2026 (v0.8.3 publicada; métodos das etapas em vigor, decisão 0034; o PMO lê e o código confere, decisão 0035; fase M1 com PR aberto).
 
 ## Onde estamos
 
 **Métodos das etapas em vigor (decisão 0034, 16/11/2026).** A responsável escreveu cinco métodos (`docs/estudos/metodo-etapa-1.md` a `metodo-etapa-5.md`), a partir da análise à mão de um caso real de parceria (fora do Git). Eles prevalecem sobre o que as etapas fazem hoje: leitura e decisão para o gerente, não inventário; a régua pelo tipo de contrato, de projeto e de plano. Aplicação em cinco fases, uma por etapa (M1 a M5, v0.9.0 a v0.13.0), cada uma com a saída refeita, os gabaritos da SMPED e da OEI, o placar antes e depois, a revisão independente e os prints. O sprint de regras da 0032 e as fases restantes da 0033 entram dentro delas. A skill PMO 0.3.0 vai num PR próprio, mostrado à responsável antes de publicar.
+
+**Fase M1 (etapa 1 pelo método) no PR #45 (em cima do #44), aguarda o teste e o ok da responsável** (decisão 0036): leitura em 8 seções, "Pedir ao PMO" com as travas, aviso "leitura parcial por código" sem a chave, R = entregas e obrigações específicas, gabaritos da SMPED e da OEI e placar (`docs/estudos/placar-m1-etapa-1.md`).
 
 **O PMO lê; o código monta e confere (decisão 0035, 16/11/2026).** As regras de código da etapa 1, refeitas no método, cobriram 27 e 36 dos 50 itens dos gabaritos (SMPED e OEI), sem ruído e sem número sem fonte; o que falta é leitura. Em todas as etapas, o PMO lê a partir do esqueleto do código, e o código confere cada citação e número. Sem chave, as etapas 1 e 5 mostram o esqueleto com o aviso "leitura parcial por código".
 
@@ -92,8 +94,8 @@ Atualizado em 16/11/2026 (v0.8.3 publicada; métodos das etapas em vigor, decis�
 | F3 | Etapa 3: TAP, com o PMO | concluída (PR #9) sem a chave; teste com a chave pendente | v0.6.0 |
 | F4 | Etapa 4: PGP, com o PMO | concluída (PR #10) sem a chave; teste com a chave pendente | v0.7.0 |
 | F5b | Leitura opcional do PMO na etapa 5 | concluída (PR #11) sem a chave; teste com a chave pendente | v0.8.0 |
-| M0 | Métodos das etapas em vigor (decisão 0034), CLAUDE.md | PR aberto | — |
-| M1 | Etapa 1 pelo método | em andamento | v0.9.0 |
+| M0 | Métodos das etapas em vigor (decisões 0034 e 0035), CLAUDE.md | PR #44 | — |
+| M1 | Etapa 1 pelo método | PR #45; teste da responsável pendente | v0.9.0 |
 | M2 | Etapa 2 pelo método | a fazer | v0.10.0 |
 | M3 | Etapa 3 pelo método (contrato como entrada) | a fazer | v0.11.0 |
 | M4 | Etapa 4 pelo método (adaptação pelo tipo de projeto) | a fazer | v0.12.0 |
@@ -110,8 +112,8 @@ Atualizado em 16/11/2026 (v0.8.3 publicada; métodos das etapas em vigor, decis�
 
 ## Próximo passo
 
-1. **Claude Code:** fase M1 (etapa 1 pelo método): as 8 seções na tela e nos exportados, os gabaritos da SMPED e da OEI nessa estrutura, o placar antes e depois, a revisão independente e os prints. Depois, M2 a M5, na ordem, e a skill 0.3.0.
-2. **Responsável pelo projeto:** ok no PR da decisão 0034; no fim de cada fase, o teste e o ok do PR.
+1. **Claude Code:** com o ok da M1, a fase M2 (etapa 2 pelo método) e a skill 0.3.0 (mostrar antes de publicar).
+2. **Responsável pelo projeto:** ok nos PRs #44 (decisões 0034 e 0035) e da M1; teste da etapa 1 na prévia.
 3. **Quando a chave da API chegar** (pedir ao administrador do Claude da FGV, no Claude Console):
    - no PowerShell, na pasta do projeto: `$env:ANTHROPIC_API_KEY = "<chave>"; npm run comparar-modelos` (custa cerca de US$ 2 a 3); o resultado fica em `tests/fixtures/gerados/comparacao-modelos/resumo.md`. A responsável escolhe o modelo e a decisão 0002 é atualizada;
    - testar as etapas 2, 3 e 4 e a leitura do PMO na etapa 5 com a chave, numa RFP pública.

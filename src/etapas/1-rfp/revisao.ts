@@ -12,6 +12,7 @@ export const NOME_TIPO_REQUISITO: Record<TipoRequisito, string> = {
   quantidade: "Quantidade",
   local: "Local",
   condicao: "Condição do objeto",
+  obrigacao: "Obrigação de quem executa",
   outro: "Incluído pelo GP",
 };
 
@@ -38,9 +39,17 @@ export function requisitoComoItem(r: Requisito): ItemAnalise {
     nome: `${r.numero} · ${r.rotulo}`,
     texto: r.descricao,
     campos: { Número: r.numero, Tipo: NOME_TIPO_REQUISITO[r.tipo ?? "produto"] },
-    origem: doCodigo ? { documento: r.documento ?? "RFP", pagina: r.pagina, trecho: r.trecho } : undefined,
+    // o incluído pelo GP a partir da leitura do PMO guarda a página e o trecho que o código conferiu
+    origem:
+      doCodigo || r.pagina > 0
+        ? { documento: r.documento ?? "RFP", pagina: r.pagina, trecho: r.trecho }
+        : undefined,
     situacao: "localizado",
-    nota: doCodigo ? undefined : "Incluído pelo GP.",
+    nota: doCodigo
+      ? undefined
+      : r.pagina > 0
+        ? "Incluído pelo GP a partir da leitura do PMO."
+        : "Incluído pelo GP.",
   };
 }
 
@@ -106,5 +115,37 @@ export function incluirRequisito(
     proximoRequisito: dossie.proximoRequisito + 1,
     // incluído pelo GP já está revisado por ele
     revisoes: { ...dossie.revisoes, [idDoRequisito(novo)]: { estado: "aceito" } },
+  };
+}
+
+/**
+ * Obrigação lida pelo PMO que o GP inclui como requisito (decisão 0032): ganha o próximo número, como obrigação de
+ * quem executa, e guarda a página e o trecho só quando o código conferiu a citação.
+ */
+export function incluirRequisitoDaLeitura(
+  dossie: AnaliseRfpDossie,
+  item: {
+    nome: string;
+    texto: string;
+    origem?: { documento: string; pagina: number; trecho: string };
+    citacaoConferida?: boolean;
+  },
+): AnaliseRfpDossie {
+  const comOrigem = item.citacaoConferida && item.origem;
+  const base = incluirRequisito(dossie, item.nome, item.texto);
+  const novo = base.requisitos.at(-1);
+  if (!novo) return base;
+  return {
+    ...base,
+    requisitos: [
+      ...base.requisitos.slice(0, -1),
+      {
+        ...novo,
+        tipo: "obrigacao",
+        pagina: comOrigem ? item.origem!.pagina : 0,
+        trecho: comOrigem ? item.origem!.trecho : "",
+        documento: comOrigem ? item.origem!.documento : undefined,
+      },
+    ],
   };
 }

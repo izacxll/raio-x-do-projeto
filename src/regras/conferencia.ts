@@ -389,12 +389,13 @@ export function conferirPlano(e: EntradaConferencia): ResultadoConferencia {
     const base = { id, alvo: r.numero, descricao: `${r.rotulo}: ${r.descricao}` };
     // quantidade, local e condição dependem de leitura (o plano pode escrever "doze oficinas", o nome do
     // município ou o público com outras palavras)
-    if (r.tipo === "quantidade" || r.tipo === "local" || r.tipo === "condicao") {
+    // a obrigação de quem executa (método da etapa 1) também: a regra do plano de trabalho fica para a fase M5
+    if (r.tipo === "quantidade" || r.tipo === "local" || r.tipo === "condicao" || r.tipo === "obrigacao") {
       verificacoes.push({
         ...base,
         estado: "nao-conferido",
         detalhe:
-          "Quantidade, local e condição do objeto não são conferidos pelo código nesta versão: conferir no plano.",
+          "Quantidade, local, condição do objeto e obrigação de quem executa não são conferidos pelo código nesta versão: conferir no plano.",
       });
       continue;
     }

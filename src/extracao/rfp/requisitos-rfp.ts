@@ -7,6 +7,7 @@ import { ehCampoEmBranco, limparEspacos, MARCA_DE_ITEM } from "../../texto/frase
 import { compactar, tirarAcentos } from "../../texto/normalizar";
 import { extrairRequisitos, type Requisito } from "../requisitos";
 import type { DocumentoRfp } from "./item";
+import { ehObrigacaoEspecifica, extrairObrigacoes, NOME_TEMA_OBRIGACAO } from "./obrigacoes";
 import { localizarTodos } from "./localizar";
 import { faixasDoTema, type MapaRfp } from "./mapa";
 
@@ -93,6 +94,8 @@ function quantidades(docs: DocumentoRfp[], mapa: MapaRfp): Omit<Requisito, "nume
     const inicioDaLinha = pagina.lastIndexOf("\n", l.posicao - 1) + 1;
     if (m[1].startsWith("0") && !pagina.slice(inicioDaLinha, l.posicao).trim()) continue;
     const chave = `${n} ${m[2]}`;
+    // "até 15 projetos" selecionados é o tamanho do chamamento, não entrega de quem executa (método, seção 3.1)
+    if (/^(?:projetos?|propostas?)$/.test(m[2])) continue;
     // "cada proponente… apenas 01 projeto" é limite por proponente (condição), não quantidade a entregar
     if (vistos.has(chave) || RE_POR_PROPONENTE.test(normalizarTermo(l.frase))) continue;
     vistos.add(chave);
@@ -142,17 +145,16 @@ function local(docs: DocumentoRfp[]): Omit<Requisito, "numero">[] {
   return out;
 }
 
-const RE_POR_PROPONENTE =
+export const RE_POR_PROPONENTE =
   /\bcada (?:proponente|organizacao|osc|entidade|instituicao|licitante|participante)\b[^.;]{0,60}\b(?:apenas|somente|no maximo|ate|um unico|uma unica)\b/;
 
-/** Condições do objeto, com o rótulo: o que a proposta precisa respeitar sem ser produto, equipe ou número. */
+/**
+ * Condições do objeto, com o rótulo: o que a proposta precisa respeitar sem ser produto, equipe ou número. O limite
+ * por proponente (quem pode participar) e o prazo de execução (prazos) não são obrigação nem entrega: no método da
+ * etapa 1 (decisão 0034) eles saem dos requisitos numerados e vão para a seção 1 e para os prazos.
+ */
 const CONDICOES: [string, RegExp][] = [
   ["Público-alvo", /\bpublico[- ]alvo\b|\bbeneficiarios? (?:diretos?|finais?) (?:serao|sao)\b/],
-  ["Limite por proponente", RE_POR_PROPONENTE],
-  [
-    "Prazo de execução",
-    /\b(?:desenvolvid|executad|realizad|concluid)[oa]s?\b[^.;]{0,40}\b(?:no|pelo|em|dentro do) (?:periodo|prazo) (?:maximo )?de\s+\d/,
-  ],
   [
     "Forma de execução",
     /\b(?:executad|realizad|desenvolvid|ofertad|prestad)[oa]s?\b[^.;]{0,60}\b(?:presencial|a distancia|remot[oa]|hibrid[oa]|on-?line)\b/,
@@ -213,6 +215,25 @@ export function extrairRequisitosRfp(docs: DocumentoRfp[], mapa: MapaRfp): Requi
       return x.pagina === r.pagina && pedacos.some((p) => outro.includes(p));
     });
   };
-  const todos = [...antes, ...condicoes(docs, mapa).filter((r) => !repetida(r))];
+  const comCondicoes = [...antes, ...condicoes(docs, mapa).filter((r) => !repetida(r))];
+  // as obrigações específicas de quem executa (método da etapa 1, seção 3.2: cada R é uma obrigação ou entrega);
+  // as genéricas ("observar a legislação") ficam só no cartão do tema
+  const jaListadas = (r: Omit<Requisito, "numero">) => {
+    const c = compactar(r.descricao).slice(0, 60);
+    return comCondicoes.some((x) => x.pagina === r.pagina && compactar(x.descricao).includes(c));
+  };
+  const obrigacoes = extrairObrigacoes(docs, mapa)
+    .filter(ehObrigacaoEspecifica)
+    .map((o): Omit<Requisito, "numero"> => ({
+      rotulo: NOME_TEMA_OBRIGACAO[o.tema],
+      descricao: o.texto,
+      pagina: o.origem.pagina,
+      trecho: o.origem.trecho,
+      origem: "codigo",
+      tipo: "obrigacao",
+      documento: o.origem.documento,
+    }))
+    .filter((r) => !jaListadas(r));
+  const todos = [...comCondicoes, ...obrigacoes];
   return todos.map((r, i) => ({ ...r, numero: `R${String(i + 1).padStart(2, "0")}` }));
 }

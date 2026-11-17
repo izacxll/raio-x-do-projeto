@@ -734,6 +734,14 @@ textarea {
   white-space: nowrap;
 }
 
+/* Tabela com texto longo na 2ª coluna (requisitos, detalhe dos itens da leitura): só a 1ª coluna não quebra. */
+.tabela--livre th:nth-child(n + 2),
+.tabela--livre td:nth-child(n + 2) {
+  width: auto;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
 .tabela td {
   border-bottom: 1px solid var(--line);
   padding: 6px 10px;

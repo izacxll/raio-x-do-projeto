@@ -1,0 +1,1424 @@
+{
+  "itens": [
+    {
+      "id": "UP-01",
+      "secao": "uma-pagina",
+      "nome": "Instrumento, regime e contratante",
+      "texto": "Concorrência nº 13046/2026 – OEI/MDHC, critério técnica e preço, regida pela Lei 14.133/2021: é licitação (contrato de consultoria por produtos), não parceria. Quem contrata e paga é a OEI (organismo internacional), no Projeto de cooperação técnica OEI/BRA/16/002 com a Secretaria Nacional dos Direitos da Criança e do Adolescente (SNDCA) do MDHC. O MDHC atesta a nota fiscal e a CGCFC/SNDCA acompanha e valida etapas e produtos.",
+      "rotulo": "documento",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 1,
+          "trecho": "licitação, na modalidade Concorrência, critério de julgamento Técnica e Preço"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 16,
+          "trecho": "em cooperação com a Secretaria Nacional dos Direitos da Criança e do Adolescente do Ministério dos Direitos Humanos e da Cidadania"
+        }
+      ],
+      "requisitos": [],
+      "tema": "",
+      "premissa": "",
+      "porquePesa": "",
+      "pergunta": "",
+      "impacto": 0
+    },
+    {
+      "id": "UP-02",
+      "secao": "uma-pagina",
+      "nome": "Objeto",
+      "texto": "Contratação de empresa especializada para desenvolver subsídios técnicos para o fortalecimento do Sistema de Garantia de Direitos na proteção integral de crianças e adolescentes em situação de rua: cinco cadernos temáticos, um documento sintético de consolidação dos achados e um guia de orientação para os profissionais da rede.",
+      "rotulo": "documento",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 1,
+          "trecho": "Contratação de empresa especializada para a prestação de serviços de desenvolvimento de subsídios técnicos voltados ao fortalecimento do Sistema de Garantia de Direitos"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 16,
+          "trecho": "com a elaboração de cadernos temáticos destinados ao aprofundamento de dimensões estruturais relacionadas a esse público"
+        }
+      ],
+      "requisitos": [],
+      "tema": "",
+      "premissa": "",
+      "porquePesa": "",
+      "pergunta": "",
+      "impacto": 0
+    },
+    {
+      "id": "UP-03",
+      "secao": "uma-pagina",
+      "nome": "Quem pode participar",
+      "texto": "Pessoa jurídica (o edital fala em \"empresa especializada\" e em \"entidade licitante\"), isolada ou em consórcio de até 3 empresas (com acréscimo de 10% na exigência econômico-financeira). Não podem participar: quem tenha dirigente, sócio ou responsável técnico ligado à OEI, ao MDHC ou à Comissão de Avaliação; inidôneos ou suspensos; condenados por trabalho infantil ou escravo nos 5 anos anteriores.",
+      "rotulo": "documento",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 5,
+          "trecho": "comprovação de compromisso público ou particular de constituição de consórcio, subscrito pelos consorciados, em número máximo de 3"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 3,
+          "trecho": "Não poderão participar da presente Concorrência"
+        }
+      ],
+      "requisitos": [],
+      "tema": "",
+      "premissa": "",
+      "porquePesa": "",
+      "pergunta": "",
+      "impacto": 0
+    },
+    {
+      "id": "UP-04",
+      "secao": "uma-pagina",
+      "nome": "Tamanho e prazo",
+      "texto": "5 produtos: plano de trabalho, 5 cadernos temáticos em 3 entregas (2 + 2 + 1, este junto com o documento sintético) e o guia de orientação. Equipe-chave de 4 profissionais avaliada na proposta; o dimensionamento total é da contratada. Trabalho remoto, com reuniões presenciais em Brasília quando pedidas. Execução em 300 dias contados da assinatura, dentro de vigência de 12 meses.",
+      "rotulo": "documento",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 18,
+          "trecho": "Produzir cinco cadernos temáticos sobre direitos de crianças e adolescentes em situação de rua"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 21,
+          "trecho": "Os serviços serão prestados, como regra, em formato remoto."
+        },
+        {
+          "doc": "rfp",
+          "pagina": 23,
+          "trecho": "terá vigência total de 12 (doze) meses, contados a partir da data de sua assinatura"
+        }
+      ],
+      "requisitos": [],
+      "tema": "",
+      "premissa": "",
+      "porquePesa": "",
+      "pergunta": "",
+      "impacto": 0
+    },
+    {
+      "id": "UP-05",
+      "secao": "uma-pagina",
+      "nome": "Valor estimado",
+      "texto": "R$ 500.000,00 estimados e reservados no Projeto OEI/BRA/16/002, contrato por preço global. Proposta acima do orçamento estimado é desclassificada. Sem garantia contratual.",
+      "rotulo": "documento",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 11,
+          "trecho": "estimados em R$ 500.000,00 (quinhentos mil reais), estão devidamente reservados"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 6,
+          "trecho": "apresentarem preços inexequíveis ou permanecerem acima do orçamento estimado para a contratação"
+        }
+      ],
+      "requisitos": [],
+      "tema": "",
+      "premissa": "",
+      "porquePesa": "",
+      "pergunta": "",
+      "impacto": 0
+    },
+    {
+      "id": "UP-06",
+      "secao": "uma-pagina",
+      "nome": "Como se ganha",
+      "texto": "Técnica e preço, com 70% para a técnica e 30% para o preço: PF = (IT × 7) + (IP × 3). A técnica vale até 100 pontos (empresa 20, metodologia 50, equipe-chave 30); abaixo de 50 pontos a proposta técnica é desclassificada. Habilitação só do 1º classificado.",
+      "rotulo": "documento",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 37,
+          "trecho": "com ponderação de 70% para a técnica e 30% para o preço"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 36,
+          "trecho": "obtiver pontuação técnica inferior a 50 (cinquenta) pontos"
+        }
+      ],
+      "requisitos": [],
+      "tema": "",
+      "premissa": "",
+      "porquePesa": "",
+      "pergunta": "",
+      "impacto": 0
+    },
+    {
+      "id": "UP-07",
+      "secao": "uma-pagina",
+      "nome": "Situação (datas × hoje)",
+      "texto": "Recebimento dos envelopes e abertura em 25/08/2026 (terça-feira), às 10h: o prazo já passou há 83 dias (hoje, 16/11/2026). Esclarecimentos e impugnação até 3 dias úteis antes da abertura, contando só dias úteis para trás a partir de 25/08 (24, 21 e 20/08): até 20/08/2026 (quinta-feira), também passado. A validade mínima das propostas (60 dias da entrega) chegou a 24/10/2026, um sábado; pela regra de contagem do edital (término em dia útil), 26/10/2026, também passada. Sugere-se confirmar com a OEI a situação do processo antes de qualquer decisão; o edital serve de referência para um certame semelhante.",
+      "rotulo": "sugestao",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 1,
+          "trecho": "DATA: 25 de agosto de 2026"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 2,
+          "trecho": "até 3 (três) dias úteis antes da data fixada para a abertura"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 5,
+          "trecho": "prazo de validade não inferior a 60 (sessenta) dias"
+        }
+      ],
+      "requisitos": [],
+      "tema": "",
+      "premissa": "",
+      "porquePesa": "",
+      "pergunta": "",
+      "impacto": 0
+    },
+    {
+      "id": "UP-08",
+      "secao": "uma-pagina",
+      "nome": "Os pontos que mais pesam",
+      "texto": "Sugere-se olhar primeiro: (1) cada pagamento só sai depois do ateste e da aprovação do produto, sem prazo de análise e com várias instâncias (OEI, MDHC, CGCFC/SNDCA) — AT-01; (2) 55% do valor fica para os produtos 4 e 5 (D+210 e D+300) — AT-02; (3) a escuta de crianças e o diálogo com a rede dependem de aprovação prévia, de possível instância ética e de terceiros — AT-03; (4) pressão de preço: preço pesa 30%, remuneração balizada pela Portaria MDHC 757/2025, reuniões em Brasília e licenças por conta da contratada — AT-04; (5) produtos em cascata com prazos contados da assinatura e regras de prorrogação divergentes — AT-05.",
+      "rotulo": "sugestao",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 21,
+          "trecho": "O pagamento é realizado somente após ateste de conformidade e aprovação pela Contratante."
+        },
+        {
+          "doc": "rfp",
+          "pagina": 19,
+          "trecho": "avaliação quanto à necessidade de submissão a instância ética competente"
+        }
+      ],
+      "requisitos": [],
+      "tema": "",
+      "premissa": "",
+      "porquePesa": "",
+      "pergunta": "",
+      "impacto": 0
+    },
+    {
+      "id": "FE-01",
+      "secao": "fazer-e-entregar",
+      "nome": "Produto 1 — Plano de trabalho da consultoria",
+      "texto": "Entrega em até 30 dias da assinatura; 5% do valor. Conteúdo mínimo: objetivos e etapas, abordagem metodológica, estratégias de pesquisa e sistematização, organização dos cinco cadernos, estrutura preliminar do guia, cronograma por etapas e forma de interlocução com a equipe técnica da SNDCA para acompanhamento e validação dos produtos. Aceite: ateste de conformidade e aprovação pela contratante (o documento não declara prazo de análise).",
+      "rotulo": "documento",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 19,
+          "trecho": "O plano de trabalho deverá apresentar, no mínimo: objetivos e etapas da consultoria"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 21,
+          "trecho": "Produto 1 – Plano de trabalho da consultoria"
+        }
+      ],
+      "requisitos": [],
+      "tema": "produtos",
+      "premissa": "",
+      "porquePesa": "",
+      "pergunta": "",
+      "impacto": 0
+    },
+    {
+      "id": "FE-02",
+      "secao": "fazer-e-entregar",
+      "nome": "Produto 2 — Dois cadernos temáticos",
+      "texto": "Entrega em até 75 dias da assinatura; 20% do valor. Cadernos: (a) crianças e adolescentes em situação de rua e relações raciais; (b) convivência familiar e comunitária. Cada um com abordagem conceitual e analítica, linguagem técnica acessível e referenciais normativos, institucionais e programáticos. Aceite: ateste e aprovação pela contratante.",
+      "rotulo": "documento",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 19,
+          "trecho": "Crianças e adolescentes em situação de rua e relações raciais"
+        }
+      ],
+      "requisitos": [],
+      "tema": "produtos",
+      "premissa": "",
+      "porquePesa": "",
+      "pergunta": "",
+      "impacto": 0
+    },
+    {
+      "id": "FE-03",
+      "secao": "fazer-e-entregar",
+      "nome": "Produto 3 — Dois cadernos temáticos",
+      "texto": "Entrega em até 135 dias da assinatura; 20% do valor. Cadernos: (a) situação de rua e trabalho infantil; (b) trajetórias territoriais e institucionais. Aceite: ateste e aprovação pela contratante.",
+      "rotulo": "documento",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 20,
+          "trecho": "Crianças e adolescentes em situação de rua e trabalho infantil"
+        }
+      ],
+      "requisitos": [],
+      "tema": "produtos",
+      "premissa": "",
+      "porquePesa": "",
+      "pergunta": "",
+      "impacto": 0
+    },
+    {
+      "id": "FE-04",
+      "secao": "fazer-e-entregar",
+      "nome": "Produto 4 — Quinto caderno e documento sintético",
+      "texto": "Entrega em até 210 dias da assinatura; 25% do valor. Quinto caderno (violências múltiplas) e documento sintético que consolida achados, convergências, desafios e referências operacionais dos cinco cadernos, para subsidiar o guia. Deve manter coerência com os produtos anteriores. Aceite: ateste e aprovação pela contratante.",
+      "rotulo": "documento",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 20,
+          "trecho": "Este produto consiste na elaboração do quinto caderno temático"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 20,
+          "trecho": "extraídos do conjunto dos cinco cadernos temáticos, com vistas a subsidiar a elaboração do guia de orientação"
+        }
+      ],
+      "requisitos": [],
+      "tema": "produtos",
+      "premissa": "",
+      "porquePesa": "",
+      "pergunta": "",
+      "impacto": 0
+    },
+    {
+      "id": "FE-05",
+      "secao": "fazer-e-entregar",
+      "nome": "Produto 5 — Guia de orientação",
+      "texto": "Entrega em até 300 dias da assinatura; 30% do valor. Guia para os profissionais do Sistema de Garantia de Direitos com, no mínimo: direitos (ECA, legislação e tratados), atribuições dos atores, fluxos de atendimento intersetorial, diretrizes e protocolos nacionais e locais (abordagem social, reintegração familiar), linguagem acessível, checklists, quadros-síntese, glossário, boas práticas e recomendações de uso em formação. Aceite: ateste e aprovação pela contratante.",
+      "rotulo": "documento",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 20,
+          "trecho": "O guia deverá contemplar, no mínimo: sistematização dos direitos de crianças e adolescentes em situação de rua"
+        }
+      ],
+      "requisitos": [],
+      "tema": "produtos",
+      "premissa": "",
+      "porquePesa": "",
+      "pergunta": "",
+      "impacto": 0
+    },
+    {
+      "id": "FE-06",
+      "secao": "fazer-e-entregar",
+      "nome": "Formato das entregas",
+      "texto": "Todos os produtos em versão editável e em PDF, com todos os arquivos-fonte. Cadernos e guia em versão final diagramada, revisada e pronta para publicação online, com projeto gráfico compatível com as diretrizes da contratante (capa, sumário, paginação, tabelas, imagens); os recursos técnicos para isso são da contratada.",
+      "rotulo": "documento",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 20,
+          "trecho": "Todos os produtos deverão ser entregues em versão editável e em PDF"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 21,
+          "trecho": "deverão ser entregues em versão final diagramada, revisada e pronta para publicação online"
+        }
+      ],
+      "requisitos": [],
+      "tema": "entregas",
+      "premissa": "",
+      "porquePesa": "",
+      "pergunta": "",
+      "impacto": 0
+    },
+    {
+      "id": "FE-07",
+      "secao": "fazer-e-entregar",
+      "nome": "Rotina de trabalho e gestão",
+      "texto": "Reuniões periódicas com a CGCFC para alinhamento, acompanhamento e validação; levantamento bibliográfico, documental e normativo; diálogo técnico com atores do Sistema de Garantia de Direitos, políticas setoriais, serviços e OSCs. Trabalho remoto, com reuniões presenciais em Brasília sempre que pedidas, sem custo adicional. Preposto aceito pela contratante (com substituto às próprias expensas). Comunicar intercorrências de imediato e ocorrência anormal ao Supervisor Técnico em 24 horas; refazer, às próprias custas, serviço rejeitado no prazo que a contratante fixar.",
+      "rotulo": "documento",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 18,
+          "trecho": "Participar de reuniões periódicas com a equipe da Coordenação-Geral de Políticas para a Convivência Familiar e Comunitária"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 21,
+          "trecho": "participar de reuniões presenciais em Brasília/DF, sem custos adicionais para a CONTRATANTE"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 48,
+          "trecho": "comunicar ao Supervisor Técnico do contrato, no prazo de 24 (vinte e quatro) horas"
+        }
+      ],
+      "requisitos": [],
+      "tema": "gestao",
+      "premissa": "",
+      "porquePesa": "",
+      "pergunta": "",
+      "impacto": 0
+    },
+    {
+      "id": "FE-08",
+      "secao": "fazer-e-entregar",
+      "nome": "Escuta de crianças, dados pessoais e sigilo",
+      "texto": "Escuta qualificada de crianças e adolescentes só \"quando cabível\" e após aprovação prévia de plano metodológico específico pela contratante, com consentimento dos responsáveis, assentimento, anonimização, fluxo de encaminhamento em situação de risco e avaliação de submissão a instância ética. LGPD: dados só para a finalidade, eliminação ao fim do tratamento, treinamento dos empregados, contratos de suboperação informados em 5 dias úteis. Sigilo sobre todas as informações do contrato.",
+      "rotulo": "documento",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 19,
+          "trecho": "somente poderá ocorrer mediante aprovação prévia de plano metodológico específico pela contratante"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 49,
+          "trecho": "É dever do contratado orientar e treinar seus empregados sobre os deveres"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 23,
+          "trecho": "Guardar sigilo sobre todas as informações obtidas em decorrência do cumprimento do contrato"
+        }
+      ],
+      "requisitos": [],
+      "tema": "dados",
+      "premissa": "",
+      "porquePesa": "",
+      "pergunta": "",
+      "impacto": 0
+    },
+    {
+      "id": "FE-09",
+      "secao": "fazer-e-entregar",
+      "nome": "Equipe",
+      "texto": "Equipe-chave nominal de 4: Coordenador(a) Geral (mestrado e 5 anos de coordenação); Especialista em Políticas Públicas e Direitos da Criança e do Adolescente; Especialista em Assistência Social, Convivência Familiar e Comunitária e Situação de Rua; Especialista em Produção de Conteúdos Técnicos e Metodologias Participativas (especialistas: pós-graduação e 4 anos). A equipe-chave participa diretamente da execução; substituição só com comunicação prévia e aprovação da contratante, por profissional equivalente ou superior. Não se exige vínculo empregatício prévio. O restante da equipe (revisores, diagramadores, designers, pesquisadores) é dimensionado pela contratada, sem quantitativo mínimo nem dedicação exclusiva.",
+      "rotulo": "documento",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 27,
+          "trecho": "Relação nominal da equipe-chave indicada para fins de avaliação técnica, composta por"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 28,
+          "trecho": "A equipe-chave indicada na Proposta Técnica deverá participar diretamente da execução do contrato"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 28,
+          "trecho": "Caberá à contratada, caso selecionada, dimensionar a equipe necessária ao adequado cumprimento do objeto"
+        }
+      ],
+      "requisitos": [],
+      "tema": "equipe",
+      "premissa": "",
+      "porquePesa": "",
+      "pergunta": "",
+      "impacto": 0
+    },
+    {
+      "id": "FE-10",
+      "secao": "fazer-e-entregar",
+      "nome": "Direitos autorais e licenças",
+      "texto": "Cessão total, definitiva, irrevogável e gratuita à contratante dos direitos patrimoniais de todos os produtos e arquivos-fonte, sem limite territorial ou temporal, já remunerada pelo valor do contrato. A contratada garante a originalidade e obtém, às próprias expensas, as licenças de fontes, imagens, bancos de imagem e outros elementos de terceiros; responde por violação mesmo depois do aceite.",
+      "rotulo": "documento",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 39,
+          "trecho": "a cessão dos respectivos direitos patrimoniais de autor, na máxima extensão admitida pela legislação aplicável"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 39,
+          "trecho": "deverá assegurar, previamente e às suas expensas, a obtenção das autorizações, licenças ou permissões"
+        }
+      ],
+      "requisitos": [],
+      "tema": "propriedade-intelectual",
+      "premissa": "",
+      "porquePesa": "",
+      "pergunta": "",
+      "impacto": 0
+    },
+    {
+      "id": "FE-11",
+      "secao": "fazer-e-entregar",
+      "nome": "Vedações",
+      "texto": "Vedado: subcontratar o objeto; usar material de terceiros sem licença; qualquer trabalho de criança ou adolescente (e trabalho noturno, perigoso ou insalubre a menores de 18), trabalho degradante, exploração sexual, discriminação e assédio; contratar cônjuge ou parente de dirigente da contratante ou do fiscal; prorrogação automática ou tácita do contrato.",
+      "rotulo": "documento",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 46,
+          "trecho": "Não será admitida a subcontratação do objeto contratual."
+        },
+        {
+          "doc": "rfp",
+          "pagina": 39,
+          "trecho": "É vedada a utilização de quaisquer elementos, conteúdos, imagens, fontes, ilustrações"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 22,
+          "trecho": "Não permitir a realização de qualquer trabalho por criança ou adolescente"
+        }
+      ],
+      "requisitos": [],
+      "tema": "vedacao",
+      "premissa": "",
+      "porquePesa": "",
+      "pergunta": "",
+      "impacto": 0
+    },
+    {
+      "id": "PZ-01",
+      "secao": "prazos",
+      "nome": "Linha do tempo do certame",
+      "texto": "Esclarecimentos e impugnação até 20/08/2026 (3 dias úteis antes da abertura; contagem exclui o dia do início e inclui o do vencimento), pelo e-mail de compras da OEI, com respostas na página da OEI. Recebimento dos três envelopes e abertura em 25/08/2026, às 10h, na sede da OEI em Brasília (entrega presencial ou postal até a data e hora). Ambas as datas já passaram em 16/11/2026.",
+      "rotulo": "sugestao",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 1,
+          "trecho": "RECEBIMENTO DOS ENVELOPES E ABERTURA DA DOCUMENTAÇÃO"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 2,
+          "trecho": "exclui-se o dia do início e inclui-se o do vencimento"
+        }
+      ],
+      "requisitos": [],
+      "tema": "",
+      "premissa": "",
+      "porquePesa": "",
+      "pergunta": "",
+      "impacto": 0
+    },
+    {
+      "id": "PZ-02",
+      "secao": "prazos",
+      "nome": "Depois do julgamento",
+      "texto": "Intenção de recorrer manifestada na sessão; razões em 3 dias úteis da ata e contrarrazões no mesmo prazo. Habilitação aberta só do 1º classificado, depois dos recursos. Assinatura em até 5 dias úteis da convocação (prorrogável uma vez). ME/EPP têm 2 dias úteis para regularizar a situação fiscal. Sem convocação em 60 dias da entrega das propostas, os licitantes ficam liberados.",
+      "rotulo": "documento",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 9,
+          "trecho": "O prazo para apresentação das razões recursais será de 3 (três) dias úteis"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 11,
+          "trecho": "convocada para firmar o contrato no prazo de até 5 (cinco) dias úteis"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 12,
+          "trecho": "caso não ocorra a convocação para assinatura do termo de contrato, ficam as entidades licitantes liberadas"
+        }
+      ],
+      "requisitos": [],
+      "tema": "",
+      "premissa": "",
+      "porquePesa": "",
+      "pergunta": "",
+      "impacto": 0
+    },
+    {
+      "id": "PZ-03",
+      "secao": "prazos",
+      "nome": "Linha do tempo da execução",
+      "texto": "Marco: assinatura do contrato (data não informada no documento — a definir). Produto 1 em D+30; Produto 2 em D+75; Produto 3 em D+135; Produto 4 em D+210; Produto 5 em D+300 (intervalos de 45, 60, 75 e 90 dias). As datas são prazo máximo. A vigência acaba em 12 meses da assinatura: sobram cerca de 65 dias entre a entrega do Produto 5 e o fim da vigência para análise, ajustes, ateste e pagamento.",
+      "rotulo": "sugestao",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 21,
+          "trecho": "As datas da tabela se referem ao prazo máximo para entrega dos produtos"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 11,
+          "trecho": "com prazo de vigência de 12 (doze) meses, a contar da data de sua assinatura"
+        }
+      ],
+      "requisitos": [],
+      "tema": "",
+      "premissa": "",
+      "porquePesa": "",
+      "pergunta": "",
+      "impacto": 0
+    },
+    {
+      "id": "PZ-04",
+      "secao": "prazos",
+      "nome": "Obrigações recorrentes e a pedido",
+      "texto": "Reuniões periódicas com a CGCFC: a periodicidade não é informada no documento — a proposta deve sugeri-la (item VIII da proposta técnica). O Supervisor Técnico pode pedir versão prévia de qualquer produto antes do prazo, para acompanhamento.",
+      "rotulo": "documento",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 27,
+          "trecho": "periodicidade sugerida para reuniões, fluxo de submissão dos produtos"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 21,
+          "trecho": "É facultado ao Supervisor Técnico da Contratante solicitar a entrega de uma versão prévia"
+        }
+      ],
+      "requisitos": [],
+      "tema": "",
+      "premissa": "",
+      "porquePesa": "",
+      "pergunta": "",
+      "impacto": 0
+    },
+    {
+      "id": "DI-01",
+      "secao": "dinheiro",
+      "nome": "Valor estimado e forma do preço",
+      "texto": "R$ 500.000,00 estimados (teto: acima disso a proposta é desclassificada). Contrato por preço global; a proposta traz um valor global em reais, com duas casas decimais, em algarismos e por extenso (prevalece o por extenso).",
+      "rotulo": "documento",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 45,
+          "trecho": "demais normas complementares, por preço global"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 37,
+          "trecho": "Valor global total da proposta, expresso em reais (R$), com até duas casas decimais"
+        }
+      ],
+      "requisitos": [],
+      "tema": "",
+      "premissa": "",
+      "porquePesa": "",
+      "pergunta": "",
+      "impacto": 0
+    },
+    {
+      "id": "DI-02",
+      "secao": "dinheiro",
+      "nome": "Desembolso por produto",
+      "texto": "Produto 1: 5% (D+30) · Produto 2: 20% (D+75) · Produto 3: 20% (D+135) · Produto 4: 25% (D+210) · Produto 5: 30% (D+300). Acumulado (calculado): 5%, 25%, 45%, 70% e 100%.",
+      "rotulo": "documento",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 21,
+          "trecho": "CRONOGRAMA DE ENTREGA E PERCENTUAL DE DESEMBOLSO VINCULADO A"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 10,
+          "trecho": "Cronograma de Entrega e Percentual de Desembolso Vinculado a Cada Produto"
+        }
+      ],
+      "requisitos": [],
+      "tema": "",
+      "premissa": "",
+      "porquePesa": "",
+      "pergunta": "",
+      "impacto": 0
+    },
+    {
+      "id": "DI-03",
+      "secao": "dinheiro",
+      "nome": "Condição de cada pagamento",
+      "texto": "Cada produto só é pago após ateste de conformidade e aprovação pela contratante. A nota fiscal só é emitida depois do recebimento definitivo, quando a contratante comunica o valor dimensionado pela fiscalização, e é atestada pelo MDHC. Pagamento em até 10 dias úteis do recebimento da nota, por crédito em conta. O documento não declara prazo para análise, aprovação, ateste ou recebimento definitivo.",
+      "rotulo": "documento",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 21,
+          "trecho": "O pagamento é realizado somente após ateste de conformidade e aprovação pela Contratante."
+        },
+        {
+          "doc": "rfp",
+          "pagina": 25,
+          "trecho": "A emissão da Nota Fiscal/Fatura será precedida da comprovação do recebimento definitivo do serviço"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 11,
+          "trecho": "apresentação de Nota Fiscal/Fatura devidamente atestada pelo MDHC"
+        }
+      ],
+      "requisitos": [],
+      "tema": "",
+      "premissa": "",
+      "porquePesa": "",
+      "pergunta": "",
+      "impacto": 0
+    },
+    {
+      "id": "DI-04",
+      "secao": "dinheiro",
+      "nome": "Glosas, retenções e multas",
+      "texto": "Pagamento sobrestado se houver erro na nota ou algo que impeça a liquidação (o prazo recomeça depois da correção). Danos podem ser descontados dos pagamentos. Multa moratória de 0,5% por dia de atraso injustificado sobre a parcela, até 30 dias; compensatória de 15% do valor total por inexecução total. Serviço rejeitado é refeito às custas da contratada. Não há garantia contratual.",
+      "rotulo": "documento",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 25,
+          "trecho": "o pagamento ficará sobrestado até que a CONTRATADA providencie as medidas saneadoras"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 51,
+          "trecho": "moratória de 0,5% (zero vírgula cinco décimos por cento) por dia de atraso"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 48,
+          "trecho": "ficará autorizado a descontar dos pagamentos devidos ou da garantia"
+        }
+      ],
+      "requisitos": [],
+      "tema": "",
+      "premissa": "",
+      "porquePesa": "",
+      "pergunta": "",
+      "impacto": 0
+    },
+    {
+      "id": "DI-05",
+      "secao": "dinheiro",
+      "nome": "O que o preço precisa cobrir",
+      "texto": "Todos os custos: remuneração e encargos, reserva técnica, tributos, logística, administração e lucro. A remuneração mensal de cada profissional tem como parâmetro de razoabilidade o Anexo III da Portaria MDHC nº 757/2025 (o texto recomenda não ultrapassar). Reuniões presenciais em Brasília e licenças de terceiros ficam por conta da contratada; o ônus de equívoco na proposta ou no dimensionamento também. Deslocamentos a outros locais, se autorizados, são custeados pela contratante, sujeitos à disponibilidade orçamentária.",
+      "rotulo": "documento",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 26,
+          "trecho": "os valores correspondentes à formação acadêmica e ao tempo de experiência constantes do Anexo III da Portaria MDHC"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 22,
+          "trecho": "serão custeados pela CONTRATANTE e estarão condicionadas à disponibilidade orçamentária do projeto"
+        }
+      ],
+      "requisitos": [],
+      "tema": "",
+      "premissa": "",
+      "porquePesa": "",
+      "pergunta": "",
+      "impacto": 0
+    },
+    {
+      "id": "JU-01",
+      "secao": "julgamento",
+      "nome": "Peso técnica × preço e fórmula",
+      "texto": "70% técnica e 30% preço. IT = PTP / MPT (pontuação técnica da proponente ÷ maior pontuação técnica); IP = PMP / PP (menor preço ÷ preço da proposta); PF = (IT × 7) + (IP × 3), com duas casas decimais, desprezando as demais. Vence a maior PF que for habilitada.",
+      "rotulo": "documento",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 38,
+          "trecho": "A Pontuação Final de cada proponente será obtida pela aplicação da seguinte fórmula"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 37,
+          "trecho": "O Índice Técnico de cada proponente será obtido pela aplicação da seguinte fórmula"
+        }
+      ],
+      "requisitos": [],
+      "tema": "",
+      "premissa": "",
+      "porquePesa": "",
+      "pergunta": "",
+      "impacto": 0
+    },
+    {
+      "id": "JU-02",
+      "secao": "julgamento",
+      "nome": "Quesito 1 — Experiência da empresa (20 pontos)",
+      "texto": "Pesquisa aplicada, estudos, consultorias ou materiais técnicos em políticas públicas, direitos humanos, criança e adolescente, assistência social ou situação de rua: 2 pontos por experiência, máximo 8 (4 comprovações). Guias, cadernos temáticos, materiais orientadores ou produtos similares: 2 por produto, máximo 6 (3). Projetos com crianças e adolescentes em vulnerabilidade, SGD, convivência familiar, trabalho infantil, relações raciais, violências ou situação de rua: 2 por experiência, máximo 4 (2). Capacidade editorial (revisão, diagramação, PDF, editável, arquivos-fonte): até 2, por portfólio ou atestado. Uma experiência conta em um só subitem; experiência genérica não pontua.",
+      "rotulo": "documento",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 30,
+          "trecho": "O quesito “Qualificação e experiência da empresa proponente” está limitado a 20 (vinte)"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 31,
+          "trecho": "Uma mesma experiência não poderá ser considerada em mais de um subitem."
+        }
+      ],
+      "requisitos": [],
+      "tema": "",
+      "premissa": "",
+      "porquePesa": "",
+      "pergunta": "",
+      "impacto": 0
+    },
+    {
+      "id": "JU-03",
+      "secao": "julgamento",
+      "nome": "Quesito 2 — Metodologia e estratégia (50 pontos)",
+      "texto": "Máximo por subitem: compreensão do objeto 6; metodologia de pesquisa e sistematização 8; estratégia dos cinco cadernos 8; consolidação dos achados transversais 5; guia de orientação 10; viabilidade do cronograma 4; interlocução com a contratante 3; riscos e medidas mitigadoras 3; linguagem, revisão e diagramação 3. Cada subitem recebe 100%, 75%, 50%, 25% ou 0%; a nota máxima exige abordagem detalhada, consistente, fundamentada e diretamente aplicável. Metodologia genérica ou cópia do Termo de Referência não alcança a nota máxima.",
+      "rotulo": "documento",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 31,
+          "trecho": "está limitado a 50 (cinquenta) pontos e será apurado segundo os critérios de pontuação"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 32,
+          "trecho": "Não será considerada suficiente, para fins de pontuação máxima, a apresentação de metodologia genérica"
+        }
+      ],
+      "requisitos": [],
+      "tema": "",
+      "premissa": "",
+      "porquePesa": "",
+      "pergunta": "",
+      "impacto": 0
+    },
+    {
+      "id": "JU-04",
+      "secao": "julgamento",
+      "nome": "Quesito 3 — Equipe-chave (30 pontos)",
+      "texto": "Coordenador(a) Geral, 10 pontos: perfil mínimo (mestrado e 5 anos de coordenação na área) 4; doutorado 2; 1 por ano adicional até 2; 1 por produção técnica ou acadêmica até 2. Especialista em Políticas Públicas e Direitos da Criança, 7; Especialista em Assistência Social e Situação de Rua, 7; Especialista em Produção de Conteúdos e Metodologias Participativas, 6: perfil mínimo (pós-graduação e 4 anos) 3; mestrado 1 ou doutorado 1,5; 1 por ano adicional até 2 (até 1 no de conteúdos); experiência específica até 0,5. Só pontua o que vier com comprovante; a declaração no currículo não basta.",
+      "rotulo": "documento",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 32,
+          "trecho": "O quesito “Qualificação e experiência da equipe-chave indicada” está limitado a 30 (trinta)"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 36,
+          "trecho": "não sendo suficiente a simples declaração de experiência no currículo"
+        }
+      ],
+      "requisitos": [],
+      "tema": "",
+      "premissa": "",
+      "porquePesa": "",
+      "pergunta": "",
+      "impacto": 0
+    },
+    {
+      "id": "JU-05",
+      "secao": "julgamento",
+      "nome": "Eliminação e desempate",
+      "texto": "Desclassifica: técnica abaixo de 50 pontos; falta de metodologia mínima, de equipe-chave ou de documentação para avaliar; conteúdo incompatível; preço acima do orçamento estimado, inexequível ou incompatível com a execução integral; qualquer condicionante para a entrega; vício insanável. Desempate: art. 60 da Lei 14.133; depois maior pontuação técnica, metodologia, equipe-chave, empresa, menor preço e sorteio. ME/EPP com preço até 10% acima do mais bem classificado pode cobrir a proposta.",
+      "rotulo": "documento",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 6,
+          "trecho": "Será desclassificada a Proposta que contiver qualquer condicionante para a entrega dos serviços"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 38,
+          "trecho": "apresentarem proposta de preço incompatível com a execução integral do objeto"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 38,
+          "trecho": "Em caso de empate no resultado da avaliação, será observado o disposto no artigo 60"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 10,
+          "trecho": "sejam iguais ou até 10% (dez por cento) superiores à proposta mais bem classificada"
+        }
+      ],
+      "requisitos": [],
+      "tema": "",
+      "premissa": "",
+      "porquePesa": "",
+      "pergunta": "",
+      "impacto": 0
+    },
+    {
+      "id": "JU-06",
+      "secao": "julgamento",
+      "nome": "O que vai na proposta e como entregar",
+      "texto": "Envelope 1, proposta técnica: conteúdo mínimo I a XI (compreensão; metodologia; estratégia dos cadernos, do documento sintético e do guia; linguagem e diagramação; cronograma executivo; interlocução; riscos e medidas mitigadoras; experiência da proponente; relação nominal da equipe-chave), de preferência na estrutura a–n; parte narrativa com até 30 páginas (inclui capa e sumário); currículos com até 5 páginas (recomendado); A4, fonte 11, margens de 2 cm, páginas numeradas (preferencialmente). Por profissional: currículo, comprovantes, função e declaração de disponibilidade; mais a declaração de que não haverá substituições e a de que atende à habilitação. Envelope 2, preço: valor global, validade mínima de 60 dias, declaração de que inclui todos os custos, caderno único numerado e assinado. Envelope 3: habilitação. Três envelopes fechados e identificados, impressos e assinados, entregues na sessão ou por via postal até a data e hora.",
+      "rotulo": "documento",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 28,
+          "trecho": "deverá conter, no máximo, 30 (trinta) páginas"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 4,
+          "trecho": "em 3 (três) envelopes separados, fechados e rubricados"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 4,
+          "trecho": "Junto com a proposta técnica a Licitante deverá apresentar declaração de que atende aos requisitos de habilitação"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 36,
+          "trecho": "declaração afirmando que não haverá substituições na equipe-chave"
+        }
+      ],
+      "requisitos": [],
+      "tema": "",
+      "premissa": "",
+      "porquePesa": "",
+      "pergunta": "",
+      "impacto": 0
+    },
+    {
+      "id": "HA-01",
+      "secao": "habilitacao",
+      "nome": "Quem entrega e quando",
+      "texto": "O envelope 3 vai junto com as propostas, mas só é aberto o do 1º classificado, depois dos recursos do julgamento; o do 2º e o do 3º ficam retidos até a assinatura. Se o 1º for inabilitado, abre-se o do seguinte. ME/EPP comprovam a regularidade fiscal só para assinar.",
+      "rotulo": "documento",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 6,
+          "trecho": "seu conteúdo apenas do licitante que obtiver a maior Nota Final"
+        }
+      ],
+      "requisitos": [],
+      "tema": "",
+      "premissa": "",
+      "porquePesa": "",
+      "pergunta": "",
+      "impacto": 0
+    },
+    {
+      "id": "HA-02",
+      "secao": "habilitacao",
+      "nome": "Jurídica, fiscal e declarações",
+      "texto": "Ato constitutivo, estatuto ou contrato social em vigor (ou inscrição de sociedade civil com a diretoria); compromisso de consórcio, se houver. CNPJ; regularidade com as fazendas federal, estadual e municipal; FGTS; certidão negativa trabalhista. O SICAF pode substituir os documentos fiscais e do FGTS. Declarações dos Anexos B a E: não emprego de menor, inexistência de trabalho escravo e infantil, reserva de cargos e integralidade dos custos trabalhistas.",
+      "rotulo": "documento",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 6,
+          "trecho": "Ato constitutivo, estatuto ou contrato social em vigor, devidamente registrado"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 7,
+          "trecho": "Prova de regularidade relativa ao Fundo de Garantia por Tempo de Serviço"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 8,
+          "trecho": "Sistema de Cadastramento de Fornecedores do Governo Federal - SICAF"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 8,
+          "trecho": "Declaração Integralidade Custos Trabalhistas (Modelo Anexo \"E\")"
+        }
+      ],
+      "requisitos": [],
+      "tema": "",
+      "premissa": "",
+      "porquePesa": "",
+      "pergunta": "",
+      "impacto": 0
+    },
+    {
+      "id": "HA-03",
+      "secao": "habilitacao",
+      "nome": "Econômico-financeira",
+      "texto": "Balanço e demonstrações dos 2 últimos exercícios; índices de Liquidez Geral, Solvência Geral e Liquidez Corrente maiores que 1, calculados e assinados pelo contador. Se algum for igual ou menor que 1, patrimônio líquido mínimo de R$ 50.000,00. Certidão negativa de falência da sede.",
+      "rotulo": "documento",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 7,
+          "trecho": "resultantes da aplicação das fórmulas abaixo, devendo ser maiores que um"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 7,
+          "trecho": "patrimônio líquido mínimo de R$ 50.000,00 (cinquenta mil reais)"
+        }
+      ],
+      "requisitos": [],
+      "tema": "",
+      "premissa": "",
+      "porquePesa": "",
+      "pergunta": "",
+      "impacto": 0
+    },
+    {
+      "id": "HA-04",
+      "secao": "habilitacao",
+      "nome": "Qualificação técnica",
+      "texto": "Atestado(s) de pessoa jurídica de direito público ou privado que demonstre(m) capacidade operacional em serviços similares, de complexidade equivalente ao objeto. Os atestados da proposta técnica podem ser aproveitados.",
+      "rotulo": "documento",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 7,
+          "trecho": "que demonstre/m capacidade operacional na execução de serviços similares de complexidade equivalente"
+        }
+      ],
+      "requisitos": [],
+      "tema": "",
+      "premissa": "",
+      "porquePesa": "",
+      "pergunta": "",
+      "impacto": 0
+    },
+    {
+      "id": "HA-05",
+      "secao": "habilitacao",
+      "nome": "O que a FGV precisa conferir sobre si",
+      "texto": "Sugere-se conferir: (a) enquadramento — o objeto fala em \"empresa especializada\" e a lista cita registro comercial, contrato social e sociedades civis; recomenda-se confirmar por esclarecimento que fundação de direito privado é aceita, com estatuto e ata; (b) impedimentos: nenhum dirigente, sócio ou responsável técnico servidor ou dirigente da OEI ou do MDHC, nem parente de membro da Comissão; (c) índices maiores que 1 nos dois últimos balanços; (d) atestados de serviço similar e portfólio editorial; (e) quatro profissionais que cumpram o perfil mínimo, com comprovantes e declaração de disponibilidade.",
+      "rotulo": "sugestao",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 1,
+          "trecho": "Contratação de empresa especializada para a prestação de serviços"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 3,
+          "trecho": "seja servidor ou dirigente da OEI ou do Ministério dos Direitos Humanos e da Cidadania"
+        }
+      ],
+      "requisitos": [],
+      "tema": "",
+      "premissa": "",
+      "porquePesa": "",
+      "pergunta": "",
+      "impacto": 0
+    },
+    {
+      "id": "AT-01",
+      "secao": "atencao",
+      "nome": "Pagamento só depois do ateste e da aprovação, sem prazo e com várias instâncias",
+      "texto": "Cada produto só é pago após ateste de conformidade e aprovação pela contratante (OEI); a nota fiscal depende do recebimento definitivo e é atestada pelo MDHC; a validação das etapas e dos produtos passa pelas reuniões com a CGCFC e pela equipe técnica da SNDCA. O documento não declara prazo para analisar, aprovar ou atestar, nem qual instância decide.",
+      "rotulo": "documento",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 21,
+          "trecho": "O pagamento é realizado somente após ateste de conformidade e aprovação pela Contratante."
+        },
+        {
+          "doc": "rfp",
+          "pagina": 11,
+          "trecho": "apresentação de Nota Fiscal/Fatura devidamente atestada pelo MDHC"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 18,
+          "trecho": "à validação das etapas e dos produtos previstos neste Termo de Referência"
+        }
+      ],
+      "requisitos": [],
+      "tema": "",
+      "premissa": "PC3",
+      "porquePesa": "Sem prazo de análise, cada atraso de aprovação vira atraso de caixa para a FGV, que só emite a nota depois do recebimento definitivo.",
+      "pergunta": "Sugere-se perguntar qual é o prazo da contratante (OEI e MDHC) para analisar, aprovar e atestar cada produto, qual instância aprova (Supervisor Técnico, CGCFC ou SNDCA) e se a falta de manifestação nesse prazo vale como aceite.",
+      "impacto": 1
+    },
+    {
+      "id": "AT-02",
+      "secao": "atencao",
+      "nome": "Mais da metade do valor nos dois últimos produtos",
+      "texto": "Produtos 4 e 5 somam 55% do valor (25% + 30%) e vencem em D+210 e D+300, mais o tempo de aprovação e os 10 dias úteis de pagamento. Até D+135 a FGV pode faturar no máximo 45%; nos primeiros 75 dias, só os 5% do plano de trabalho. A equipe trabalha desde a assinatura.",
+      "rotulo": "sugestao",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 21,
+          "trecho": "CRONOGRAMA DE ENTREGA E PERCENTUAL DE DESEMBOLSO VINCULADO A"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 21,
+          "trecho": "O pagamento é realizado somente após ateste de conformidade e aprovação pela Contratante."
+        }
+      ],
+      "requisitos": [],
+      "tema": "",
+      "premissa": "",
+      "porquePesa": "A FGV financia a maior parte da execução e o custo financeiro entra num preço que pesa 30% da nota.",
+      "pergunta": "Sugere-se perguntar se a contratante admite uma parcela intermediária do Produto 5 (por exemplo, contra a estrutura do guia aprovada), já que 55% do valor só é pago depois de D+210 e D+300.",
+      "impacto": 2
+    },
+    {
+      "id": "AT-03",
+      "secao": "atencao",
+      "nome": "Escuta de crianças e diálogo com a rede dependem de aprovação e de terceiros",
+      "texto": "A escuta direta de crianças e adolescentes ocorre \"quando cabível, pertinente e técnica e institucionalmente viável\", só depois de aprovado um plano metodológico específico, com consentimento, assentimento e avaliação de submissão a instância ética. O diálogo técnico com atores do Sistema de Garantia de Direitos, serviços e OSCs alimenta os cadernos. O documento não declara quem mobiliza esses atores, o prazo para aprovar o plano nem se a escuta é condição para o aceite.",
+      "rotulo": "documento",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 18,
+          "trecho": "Realizar, quando cabível, pertinente e técnica e institucionalmente viável"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 19,
+          "trecho": "avaliação quanto à necessidade de submissão a instância ética competente"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 18,
+          "trecho": "Promover diálogo técnico com atores do Sistema de Garantia de Direitos"
+        }
+      ],
+      "requisitos": [],
+      "tema": "",
+      "premissa": "PC6",
+      "porquePesa": "Se a escuta e as entrevistas forem esperadas na prática, os cadernos de D+75 e D+135 ficam presos a aprovação, a eventual comitê de ética e à adesão de serviços que a FGV não controla.",
+      "pergunta": "Sugere-se perguntar se a escuta direta de crianças é obrigatória para o aceite dos cadernos; se for, qual o prazo para aprovar o plano metodológico, se a submissão a comitê de ética é esperada e se a SNDCA articula o acesso aos serviços e atores da rede.",
+      "impacto": 3
+    },
+    {
+      "id": "AT-04",
+      "secao": "atencao",
+      "nome": "Pressão de preço",
+      "texto": "O preço pesa 30% (IP = menor preço ÷ preço). A remuneração de cada profissional tem como parâmetro o Anexo III da Portaria MDHC 757/2025, com recomendação de não ultrapassar; acima de R$ 500 mil a proposta é desclassificada. Ficam com a contratada: reuniões presenciais em Brasília sempre que pedidas, licenças de terceiros, revisões e o ônus de qualquer equívoco no dimensionamento. ME/EPP até 10% mais cara pode cobrir a proposta.",
+      "rotulo": "documento",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 26,
+          "trecho": "Recomenda-se que os valores propostos não ultrapassem os referidos parâmetros."
+        },
+        {
+          "doc": "rfp",
+          "pagina": 21,
+          "trecho": "sempre que solicitado pela CONTRATANTE, participar de reuniões presenciais em Brasília/DF"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 49,
+          "trecho": "arcar com o ônus decorrente de eventual equívoco no dimensionamento dos quantitativos de sua proposta"
+        }
+      ],
+      "requisitos": [],
+      "tema": "",
+      "premissa": "",
+      "porquePesa": "Custos sem número definido (viagens a Brasília, licenças, rodadas de revisão) ficam com a FGV, enquanto o preço pesa 30% e a remuneração tem parâmetro externo.",
+      "pergunta": "Sugere-se perguntar quantas reuniões presenciais em Brasília a contratante prevê e se o Anexo III da Portaria MDHC 757/2025 é limite obrigatório ou só referência (o texto diz \"recomenda-se\").",
+      "impacto": 4
+    },
+    {
+      "id": "AT-05",
+      "secao": "atencao",
+      "nome": "Produtos em cascata, prazos contados da assinatura e prorrogação divergente",
+      "texto": "Todos os prazos contam da assinatura, não da aprovação do produto anterior; o Produto 4 consolida os cinco cadernos e o guia parte dele. Entre D+300 e o fim da vigência sobram cerca de 65 dias. O Termo de Referência veda prorrogação automática ou tácita (só por aditivo), mas a minuta diz que a vigência fica prorrogada até a conclusão do objeto se as obrigações não forem cumpridas no prazo.",
+      "rotulo": "documento",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 20,
+          "trecho": "extraídos do conjunto dos cinco cadernos temáticos, com vistas a subsidiar a elaboração do guia de orientação"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 23,
+          "trecho": "É vedada a prorrogação automática ou tácita do contrato"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 53,
+          "trecho": "a vigência ficará prorrogada até a conclusão do objeto"
+        }
+      ],
+      "requisitos": [],
+      "tema": "",
+      "premissa": "PC4",
+      "porquePesa": "Atraso na assinatura ou na aprovação de um caderno comprime os produtos seguintes e o guia, e não está claro se a vigência acompanha.",
+      "pergunta": "Sugere-se perguntar se os prazos dos produtos 2 a 5 passam a contar da aprovação do produto anterior quando a análise atrasar, e qual regra de prorrogação prevalece: a do Termo de Referência (só por aditivo) ou a da minuta (prorrogação até a conclusão).",
+      "impacto": 5
+    },
+    {
+      "id": "AT-06",
+      "secao": "atencao",
+      "nome": "Informações e diretrizes gráficas da contratante sem prazo",
+      "texto": "A contratante deve fornecer as informações necessárias, sem prazo definido. Cadernos e guia seguem projeto gráfico compatível com diretrizes definidas pela contratante, que não estão no edital. O guia incorpora protocolos nacionais e locais existentes.",
+      "rotulo": "documento",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 23,
+          "trecho": "Fornecer as informações necessárias para o desenvolvimento dos serviços objeto do contrato."
+        },
+        {
+          "doc": "rfp",
+          "pagina": 21,
+          "trecho": "com projeto gráfico-visual compatível com as diretrizes definidas pela contratante"
+        }
+      ],
+      "requisitos": [],
+      "tema": "",
+      "premissa": "PC1",
+      "porquePesa": "Diretrizes visuais ou documentos que chegam tarde obrigam a refazer diagramação e conteúdo, e o prazo do produto corre contra a FGV.",
+      "pergunta": "Sugere-se perguntar se as diretrizes de projeto gráfico já existem e quando serão enviadas, e quais documentos, protocolos e dados a SNDCA fornecerá e em que prazo.",
+      "impacto": 6
+    },
+    {
+      "id": "AT-07",
+      "secao": "atencao",
+      "nome": "Troca de gestão no governo federal durante a execução",
+      "texto": "O trabalho é validado pela SNDCA/CGCFC do MDHC. Como o contrato de 12 meses seria assinado depois de hoje (16/11/2026), a execução cruzaria a posse do governo federal eleito em outubro de 2026, no início de janeiro de 2027, com possível troca de interlocutores e prioridades. Recomenda-se avaliar este ponto com o GP.",
+      "rotulo": "sugestao",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 27,
+          "trecho": "contemplando a forma de comunicação com a equipe técnica da SNDCA"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 23,
+          "trecho": "terá vigência total de 12 (doze) meses, contados a partir da data de sua assinatura"
+        }
+      ],
+      "requisitos": [],
+      "tema": "",
+      "premissa": "PC5",
+      "porquePesa": "Nova gestão no MDHC pode pedir revisão de cadernos já validados ou parar a validação durante a transição.",
+      "pergunta": "Sugere-se perguntar quem será o interlocutor técnico da SNDCA/CGCFC e se a contratante admite uma reunião de revalidação do plano de trabalho caso haja troca de gestão.",
+      "impacto": 7
+    },
+    {
+      "id": "AT-08",
+      "secao": "atencao",
+      "nome": "Subcontratação vedada, mas equipe com terceiros prevista",
+      "texto": "A minuta veda a subcontratação do objeto, mas o Termo de Referência prevê mobilizar revisores, diagramadores, designers e pesquisadores e aceita a equipe-chave por contrato de prestação de serviços. O documento não declara se contratar pessoa jurídica para diagramação ou especialista por contrato conta como subcontratação.",
+      "rotulo": "documento",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 46,
+          "trecho": "Não será admitida a subcontratação do objeto contratual."
+        },
+        {
+          "doc": "rfp",
+          "pagina": 28,
+          "trecho": "podendo mobilizar profissionais adicionais, revisores, diagramadores, designers"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 28,
+          "trecho": "contrato de prestação de serviços, declaração de compromisso de futura contratação"
+        }
+      ],
+      "requisitos": [],
+      "tema": "",
+      "premissa": "",
+      "porquePesa": "Se diagramação e parte da equipe não puderem vir de terceiros, a FGV precisa ter tudo em casa ou corre o risco de descumprir a cláusula.",
+      "pergunta": "Sugere-se perguntar se a contratação de profissionais pessoa jurídica ou de serviços de revisão e diagramação conta como subcontratação vedada pela Cláusula Quarta da minuta.",
+      "impacto": 8
+    },
+    {
+      "id": "AT-09",
+      "secao": "atencao",
+      "nome": "Revisões sem limite e acréscimos obrigatórios",
+      "texto": "Serviço rejeitado é refeito no prazo que a contratante fixar, às custas da contratada, sem limite de rodadas; o Supervisor Técnico pode pedir versões prévias; mudança de método depende de aprovação prévia; a contratada é obrigada a aceitar acréscimos de até 25% nas mesmas condições.",
+      "rotulo": "documento",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 24,
+          "trecho": "devendo ser corrigidos/refeitos/substituídos no prazo fixado pela CONTRATANTE, às custas da CONTRATADA"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 54,
+          "trecho": "os acréscimos ou supressões que se fizerem necessários, até o limite de 25%"
+        }
+      ],
+      "requisitos": [],
+      "tema": "",
+      "premissa": "PC8",
+      "porquePesa": "Com preço fixo e sem limite de revisões, cada rodada é custo da FGV e empurra o produto seguinte.",
+      "pergunta": "Sugere-se perguntar quantas rodadas de revisão por produto a contratante prevê, qual o prazo mínimo para cada correção e se versões prévias pedidas antes do prazo contam como entrega.",
+      "impacto": 9
+    },
+    {
+      "id": "AT-10",
+      "secao": "atencao",
+      "nome": "Regras divergentes entre edital, Termo de Referência e minuta",
+      "texto": "Reajuste: o edital diz preços fixos e irreajustáveis; a minuta prevê IPCA depois de um ano da data do orçamento. Atraso de pagamento: o edital prevê atualização pelo IGP-DI após 30 dias; o Termo de Referência, juros de 0,5% ao mês desde o vencimento. Multa: o edital fala em 0,5% do valor do contrato; a minuta, em 0,5% por dia até 30 dias e 15% por inexecução total.",
+      "rotulo": "documento",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 11,
+          "trecho": "Os preços contratados serão considerados fixos e irreajustáveis"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 46,
+          "trecho": "o preço inicial será reajustado mediante a aplicação, pelo contratante, do Índice Preços ao Consumidor Amplo"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 13,
+          "trecho": "no percentual de 0,5% (cinco décimos por cento) do valor do contrato licitado"
+        }
+      ],
+      "requisitos": [],
+      "tema": "",
+      "premissa": "",
+      "porquePesa": "Duas leituras para a mesma regra abrem discussão na execução; vale saber antes qual prevalece.",
+      "pergunta": "Sugere-se perguntar qual documento prevalece em caso de divergência (edital, Termo de Referência ou minuta) para reajuste, atualização por atraso de pagamento e multa.",
+      "impacto": 10
+    },
+    {
+      "id": "AT-11",
+      "secao": "atencao",
+      "nome": "Proteções que o texto dá à contratada",
+      "texto": "Atualização do valor em atraso de pagamento a que a contratada não deu causa; vigência prorrogada até a conclusão, com readequação do cronograma pela Administração; decisão sobre solicitações em até um mês e resposta a pedido de reequilíbrio em até um mês; nota da parcela incontroversa quando houver controvérsia; deslocamentos fora de Brasília pagos pela contratante; equipe-chave sem dedicação exclusiva nem quantitativo mínimo; sem garantia contratual.",
+      "rotulo": "documento",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 25,
+          "trecho": "os juros de mora serão calculados à taxa de 0,5% (meio por cento) ao mês"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 47,
+          "trecho": "comunicar a empresa para emissão de Nota Fiscal no que pertine à parcela incontroversa"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 47,
+          "trecho": "responder eventuais pedidos de reestabelecimento do equilíbrio econômico-financeiro"
+        },
+        {
+          "doc": "rfp",
+          "pagina": 51,
+          "trecho": "Não haverá exigência de garantia contratual da execução."
+        }
+      ],
+      "requisitos": [],
+      "tema": "",
+      "premissa": "",
+      "porquePesa": "São os pontos em que o texto já ampara a contratada; vale citá-los na proposta e no plano.",
+      "pergunta": "Sugere-se confirmar, nos esclarecimentos, se a prorrogação até a conclusão e a atualização por atraso valem também quando o atraso vier da análise dos produtos pela contratante.",
+      "impacto": 11
+    },
+    {
+      "id": "NA-01",
+      "secao": "nao-se-aplica",
+      "nome": "Garantia de execução",
+      "texto": "Não exigida.",
+      "rotulo": "documento",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 51,
+          "trecho": "Não haverá exigência de garantia contratual da execução."
+        }
+      ],
+      "requisitos": [],
+      "tema": "",
+      "premissa": "",
+      "porquePesa": "",
+      "pergunta": "",
+      "impacto": 0
+    },
+    {
+      "id": "NA-02",
+      "secao": "nao-se-aplica",
+      "nome": "Regras de parceria (Lei 13.019)",
+      "texto": "Contrapartida, plano de trabalho do art. 22, metas de parceria e prestação de contas por resultados não se aplicam: é contrato por preço global regido pela Lei 14.133.",
+      "rotulo": "documento",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 45,
+          "trecho": "demais normas complementares, por preço global"
+        }
+      ],
+      "requisitos": [],
+      "tema": "",
+      "premissa": "",
+      "porquePesa": "",
+      "pergunta": "",
+      "impacto": 0
+    },
+    {
+      "id": "NA-03",
+      "secao": "nao-se-aplica",
+      "nome": "Mão de obra dedicada",
+      "texto": "Não é contratação de mão de obra, postos de trabalho ou dedicação exclusiva: regras próprias desse tipo de contrato (quantitativo mínimo, postos) não se aplicam.",
+      "rotulo": "documento",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 28,
+          "trecho": "não se confundindo com contratação de mão de obra, alocação de postos de trabalho, dedicação exclusiva"
+        }
+      ],
+      "requisitos": [],
+      "tema": "",
+      "premissa": "",
+      "porquePesa": "",
+      "pergunta": "",
+      "impacto": 0
+    },
+    {
+      "id": "NA-04",
+      "secao": "nao-se-aplica",
+      "nome": "Benefícios de ME/EPP",
+      "texto": "Desempate ficto e regularidade fiscal só na assinatura valem apenas para microempresa e empresa de pequeno porte. Sugere-se que o GP confirme o enquadramento da FGV; se não se enquadrar, a regra só importa como vantagem de concorrentes (ver JU-05).",
+      "rotulo": "sugestao",
+      "fontes": [
+        {
+          "doc": "rfp",
+          "pagina": 8,
+          "trecho": "a comprovação de regularidade fiscal das microempresas e empresas de pequeno porte somente será exigida para efeito de assinatura do contrato"
+        }
+      ],
+      "requisitos": [],
+      "tema": "",
+      "premissa": "",
+      "porquePesa": "",
+      "pergunta": "",
+      "impacto": 0
+    }
+  ]
+}

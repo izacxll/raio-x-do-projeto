@@ -5,13 +5,11 @@ import { CARACTERISTICAS_PADRAO } from "../../src/dominio/caracteristicas";
 import { PARTES_PGP, PREMISSAS_CRITICAS } from "../../src/dominio/skill";
 import { analisarRfp } from "../../src/etapas/1-rfp/analisar-rfp";
 import {
-  analiseInicial,
-  contarPendentes,
-  ehRevisavel,
-  incluirRequisito,
-  itensFinais,
-  requisitosValidos,
-} from "../../src/etapas/1-rfp/revisao";
+  contarPendentesDaLeitura,
+  itensRevisaveis,
+  leituraDoDossie,
+} from "../../src/etapas/1-rfp/leitura-pmo";
+import { analiseInicial, incluirRequisito, requisitosValidos } from "../../src/etapas/1-rfp/revisao";
 import {
   montarAnaliseRfp,
   montarChecklistHabilitacao,
@@ -52,28 +50,32 @@ describe("revisão da análise da RFP", () => {
     const a = analiseInicial(analise);
     const dossie = { ...criarDossieVazio(), documentos: [RFP], analiseRfp: a };
     expect(montarAnaliseRfp(dossie, analise).minuta).toBe(true);
-    const todos = itensFinais(analise, a).filter(ehRevisavel);
+    // o que o GP revisa são os itens da leitura (decisão 0034), com os requisitos numerados entre eles
+    const todos = itensRevisaveis(leituraDoDossie(analise, a, [RFP]));
     const revisado = {
       ...a,
       revisoes: Object.fromEntries(todos.map((i) => [i.id, { estado: "aceito" as const }])),
     };
-    expect(contarPendentes(itensFinais(analise, revisado), revisado.revisoes)).toBe(0);
+    expect(contarPendentesDaLeitura(leituraDoDossie(analise, revisado, [RFP]), revisado)).toBe(0);
     const d2 = { ...dossie, analiseRfp: revisado };
     expect(montarAnaliseRfp(d2, analise).minuta).toBe(false);
     expect(montarRequisitosEPrazos(d2, analise).minuta).toBe(false);
     expect(montarPerguntas(d2, analise).minuta).toBe(false);
-    expect(montarChecklistHabilitacao(d2, analise).secoes[0]?.titulo).toBe("Habilitação");
+    expect(montarChecklistHabilitacao(d2, analise).titulo).toBe("Checklist de habilitação");
   });
 
   it("pergunta descartada não vai para o documento de perguntas", () => {
     const a = analiseInicial(analise);
-    const brechas = analise.itens.filter((i) => i.secao === "brechas");
-    expect(brechas.length).toBeGreaterThan(0);
+    const pontos = leituraDoDossie(analise, a, [RFP]).itens.filter((i) => i.secao === "atencao");
+    expect(pontos.length).toBeGreaterThan(0);
     const descartadas = {
       ...a,
-      revisoes: Object.fromEntries(brechas.map((i) => [i.id, { estado: "descartado" as const }])),
+      revisoes: Object.fromEntries(pontos.map((i) => [i.id, { estado: "descartado" as const }])),
     };
-    const doc = montarPerguntas({ ...criarDossieVazio(), analiseRfp: descartadas }, analise);
+    const doc = montarPerguntas(
+      { ...criarDossieVazio(), documentos: [RFP], analiseRfp: descartadas },
+      analise,
+    );
     expect(doc.secoes[0]?.paragrafos).toEqual(["Nenhuma pergunta mantida pelo GP."]);
   });
 

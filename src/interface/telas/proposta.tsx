@@ -374,6 +374,11 @@ function PontoDePartidaNaTela({ ponto }: { ponto: PontoDePartida }) {
               "Requisitos numerados",
               `${ponto.requisitos.length} (${ponto.requisitos.map((r) => r.numero).join(", ")})`,
             )}
+            {ponto.obrigacoes.length > 0 &&
+              linha(
+                "Obrigações de quem executa (à parte)",
+                `${ponto.obrigacoes.length} (${ponto.obrigacoes.map((r) => r.numero).join(", ")}). Em construção: ainda não entram nos passos do PMO nem na matriz de atendimento; conferir na proposta.`,
+              )}
             {linha(
               "Critério de julgamento",
               criterio?.texto ?? "não localizado pelo código — conferir no documento",

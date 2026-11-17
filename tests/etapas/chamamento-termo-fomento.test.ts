@@ -33,20 +33,37 @@ describe("1. requisitos", () => {
   it("ignora o campo em branco do formulário do Anexo I", () => {
     for (const r of a.requisitosDoCodigo) {
       expect(r.descricao).not.toMatch(/Nome do Projeto:|Local de realização:/);
-      expect(r.pagina).toBeLessThan(10);
+      // o formulário do Anexo I começa na p. 10; as obrigações da minuta (p. 18 em diante) são de outro anexo
+      if (r.tipo !== "obrigacao") expect(r.pagina).toBeLessThan(10);
+      else expect(r.pagina === 1 || r.pagina >= 8).toBe(true);
     }
   });
 
-  it("acha 1.2, 1.4, 1.5, 1.9, 1.10 e 2.3, todos na p. 1", () => {
+  it("acha 1.2, 1.10 e 2.3 como requisitos, todos na p. 1", () => {
     const porItem = (n: string) => a.requisitosDoCodigo.find((r) => r.descricao.startsWith(`${n} `));
     expect(porItem("1.2")?.rotulo).toBe("Público-alvo");
-    expect(porItem("1.4")?.rotulo).toBe("Quantidade: 15 projetos");
-    expect(porItem("1.5")?.rotulo).toBe("Limite por proponente");
-    expect(porItem("1.9")?.rotulo).toBe("Prazo de execução");
     expect(porItem("1.10")?.rotulo).toBe("Forma de execução");
     expect(porItem("2.3")?.rotulo).toBe("Acessibilidade");
-    for (const n of ["1.2", "1.4", "1.5", "1.9", "1.10", "2.3"]) expect(porItem(n)?.pagina).toBe(1);
-    expect(a.requisitosDoCodigo.map((r) => r.numero)).toEqual(["R01", "R02", "R03", "R04", "R05", "R06"]);
+    for (const n of ["1.2", "1.10", "2.3"]) expect(porItem(n)?.pagina).toBe(1);
+    // decisão 0034: cada R é obrigação ou entrega de quem executa; quantos projetos são selecionados (1.4), o
+    // limite por proponente (1.5) e o prazo (1.9) vão para a seção 1 e para os prazos da leitura
+    for (const n of ["1.4", "1.5", "1.9"]) expect(porItem(n)).toBeUndefined();
+    expect(a.requisitosDoCodigo.slice(0, 3).map((r) => r.tipo)).toEqual(["condicao", "condicao", "condicao"]);
+    // as obrigações específicas de quem executa vêm depois, numeradas (método, seção 3.2)
+    const obrigacoes = a.requisitosDoCodigo.filter((r) => r.tipo === "obrigacao").map((r) => r.descricao);
+    for (const re of [
+      /totalmente gratuita/,
+      /conteúdo do projeto/,
+      /deverá ser original/,
+      /^Divulgar/,
+      /prestação de contas parcial e final/,
+    ])
+      expect(
+        obrigacoes.some((d) => re.test(d)),
+        String(re),
+      ).toBe(true);
+    // e as genéricas ficam de fora
+    expect(obrigacoes.some((d) => /^Executar satisfatória/.test(d))).toBe(false);
   });
 });
 
@@ -226,13 +243,14 @@ describe("7. PDF exportado", () => {
     const celulas = linhas.flat();
     expect(celulas).not.toContain("Do documento");
     expect(celulas).toContain("Documento");
-    // a habilitação traz o trecho como conteúdo: não repete na coluna da origem
-    const fm = linhas.find((l) => l[0] === "Regularidade com a Fazenda Municipal");
-    expect(fm?.join(" | ")).toMatch(/RFP, p\. 6 \(o trecho é o conteúdo\)/);
-    // a legislação citada na mesma frase da abertura: o trecho sai uma vez só
-    const leis = linhas.filter((l) => l[0] === "Legislação citada");
-    expect(leis.filter((l) => l.some((c) => /mesmo trecho da linha de cima/.test(c))).length).toBeGreaterThan(
-      0,
-    );
+    // pelo método (decisão 0034): as 8 seções na ordem, sem a legislação item a item nem o mapa do documento
+    const titulos = exportavel.secoes.map((s) => s.titulo);
+    expect(titulos).toContain("1. Em uma página");
+    expect(titulos).toContain("7. Pontos de atenção");
+    expect(linhas.filter((l) => l[0] === "Legislação citada")).toEqual([]);
+    expect(exportavel.secoes[0]?.paragrafos?.join(" ")).toMatch(/Leitura parcial por código/);
+    // a habilitação linha a linha da Tabela 04, com o CADIN (linha 5)
+    const lista = exportavel.secoes.find((s) => /^Documentos \(/.test(s.titulo));
+    expect(lista).toBeUndefined(); // o detalhe da habilitação vai no checklist, não repete na análise
   });
 });

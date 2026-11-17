@@ -32,8 +32,8 @@ export function AvisoDemonstracao() {
   );
 }
 
-/** Botão das etapas 2, 3 e 4: abre a RFP pública da OEI com as respostas gravadas, sem chamar a API. */
-export function BotaoDemonstracao({ etapa }: { etapa: 2 | 3 | 4 }) {
+/** Botão das etapas 1 a 4: abre a RFP pública da OEI com as respostas gravadas, sem chamar a API. */
+export function BotaoDemonstracao({ etapa }: { etapa: 1 | 2 | 3 | 4 }) {
   const { dossie, alterado, iniciarDemonstracao } = useDossie();
   const [lendo, setLendo] = useState<string | null>(null);
   const [erro, setErro] = useState("");

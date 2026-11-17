@@ -4,6 +4,14 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 
 ## [Não publicado]
 
+### Fase M1 — etapa 1 pelo método (decisões 0034, 0035 e 0036)
+- **Leitura da RFP em 8 seções,** na ordem da decisão do gerente, na tela e na "Análise da RFP" (DOCX e PDF): em uma página; o que a contratada teria de fazer e entregar; prazos; dinheiro; julgamento e o que vai na proposta; habilitação; pontos de atenção; o que não se aplica à modalidade. Saem o mapa página a página, as normas além do regime, os órgãos sem papel e as faixas da pontuação (contados em "fora da leitura").
+- **O PMO lê; o código monta e confere:** botão "Pedir ao PMO" na etapa 1, com o custo antes e o aviso de envio. A leitura parte do esqueleto do código, e o código confere cada citação, número e número R ("citação não conferida", "valor não conferido"). Sem a chave, a tela mostra o esqueleto com o aviso "leitura parcial por código". Demonstração também na etapa 1.
+- **Regras novas do esqueleto:** obrigações de quem executa por tema; cronograma de desembolso com a soma conferida e a condição de cada pagamento; glosa, contrapartida e "não obriga a contratar"; habilitação linha a linha da lista do edital e quem entrega; pontos de atenção com a premissa crítica (PC1 a PC8) e a pergunta; proteções da contratada; situação das datas × hoje e caixa concentrado nas últimas parcelas.
+- **Requisitos R = entregas e obrigações específicas de quem executa.** Saem dos R o número de projetos selecionados, o limite por proponente e o prazo de execução. Obrigação lida pelo PMO vira R só quando o GP inclui.
+- **Exportados:** checklist de habilitação linha a linha; perguntas com a premissa crítica de cada ponto; requisitos e prazos na lista nova.
+- **Gabaritos da SMPED e da OEI** na estrutura do método e **placar** antes e depois (`docs/estudos/placar-m1-etapa-1.md`): itens que não passam no teste caíram de 82 para 6 (SMPED) e de 102 para 2 (OEI); gabarito coberto de 15 para 28 e de 30 para 36 de 50; zero número sem fonte.
+
 ### Documentação — métodos das etapas
 - **Métodos das etapas 1 a 5** (`docs/estudos/metodo-etapa-1.md` a `metodo-etapa-5.md`), escritos pela responsável pelo projeto a partir da análise à mão de um caso real de parceria (fora do Git). Passam a valer pela decisão 0034: teste de cada item, saída na ordem da decisão do gerente e régua pelo tipo de contrato, de projeto e de plano. Aplicação em cinco fases, uma por etapa (M1 a M5).
 - **CLAUDE.md** aponta para os métodos; a etapa 1 também tem a leitura opcional do PMO (decisão 0032); a base do "ausente" da etapa 5 depende do tipo de plano.

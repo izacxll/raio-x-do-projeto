@@ -21,7 +21,7 @@ export interface RespostaDoPasso<T> {
 }
 
 export interface PedidoDoPasso<S extends z.ZodType> {
-  etapa: 3 | 4 | 5;
+  etapa: 1 | 3 | 4 | 5;
   passo: PassoComPmo;
   /** Nome do arquivo da resposta gravada (tests/fixtures/gerados/<etapa>-oei/<gravacao>.json). */
   gravacao?: string;

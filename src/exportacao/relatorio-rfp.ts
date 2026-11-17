@@ -1,9 +1,12 @@
-// Saídas da etapa 1: "Análise da RFP" (DOCX e PDF), lista de requisitos e quadro de prazos (XLSX), checklist
-// de habilitação (XLSX) e perguntas de esclarecimento (DOCX). Cabeçalho de minuta enquanto houver item pendente.
+// Saídas da etapa 1 pelo método (decisões 0034 e 0035): "Análise da RFP" (DOCX e PDF) nas 8 seções, requisitos e
+// prazos (XLSX), checklist de habilitação linha a linha (XLSX) e perguntas de esclarecimento (DOCX), estas com a
+// premissa crítica de cada ponto. Sem a leitura do PMO, o cabeçalho diz "leitura parcial por código". Cabeçalho de
+// minuta enquanto houver item pendente.
 import type { Dossie, RevisaoItem } from "../dossie/esquema";
-import { NOME_SECAO, ORDEM_SECOES, type AnaliseRfp } from "../etapas/1-rfp/analisar-rfp";
-import { contarPendentes, ehRevisavel, estadoDoItem, itensFinais, textoFinal } from "../etapas/1-rfp/revisao";
-import type { ItemAnalise } from "../extracao/rfp/item";
+import type { AnaliseRfp } from "../etapas/1-rfp/analisar-rfp";
+import { SECOES_LEITURA, type ItemLeitura, type LeituraRfp } from "../etapas/1-rfp/leitura";
+import { contarPendentesDaLeitura, leituraDoDossie, NOME_TRAVA } from "../etapas/1-rfp/leitura-pmo";
+import { estadoDoItem } from "../etapas/1-rfp/revisao";
 import { compactar } from "../texto/normalizar";
 import { camposDoDossie, type DocumentoExportavel, type Secao } from "./modelo";
 
@@ -25,13 +28,8 @@ const NOME_PARTICIPACAO = {
   "nao-participar": "não participar",
 } as const;
 
-function origem(i: ItemAnalise): string {
-  return i.origem ? `${i.origem.documento}, p. ${i.origem.pagina}` : "—";
-}
-
-function estado(i: ItemAnalise, revisoes: Record<string, RevisaoItem>): string {
-  return ehRevisavel(i) ? NOME_ESTADO[estadoDoItem(revisoes, i.id)] : "—";
-}
+export const AVISO_LEITURA_PARCIAL =
+  "Leitura parcial por código: o esqueleto que o código montou (páginas, números, datas, contas e o que as regras acham por padrão de texto), sem a leitura do PMO.";
 
 function base(dossie: Dossie, titulo: string, subtitulo: string, minuta: boolean, agora: Date) {
   return {
@@ -43,24 +41,31 @@ function base(dossie: Dossie, titulo: string, subtitulo: string, minuta: boolean
   };
 }
 
-function preparar(dossie: Dossie, analise: AnaliseRfp) {
+function preparar(dossie: Dossie, analise: AnaliseRfp, agora: Date) {
   const a = dossie.analiseRfp;
   if (!a) throw new Error("a análise da RFP ainda não foi feita");
-  const itens = itensFinais(analise, a);
-  return { a, itens, pendentes: contarPendentes(itens, a.revisoes) };
+  const leitura = leituraDoDossie(analise, a, dossie.documentos, agora);
+  return { a, leitura, pendentes: contarPendentesDaLeitura(leitura, a) };
+}
+
+function origem(i: ItemLeitura): string {
+  return i.origem ? `${i.origem.documento}, p. ${i.origem.pagina}` : "—";
 }
 
 /**
  * Origem e trecho numa célula só. O trecho que repete o conteúdo da linha, ou o trecho da linha anterior, não
  * é impresso de novo: fica a indicação de onde ele está.
  */
-export function origemETrecho(i: ItemAnalise, conteudo: string, anterior?: ItemAnalise): string {
+export function origemETrecho(
+  i: { origem?: ItemLeitura["origem"] },
+  conteudo: string,
+  anterior?: { origem?: ItemLeitura["origem"] },
+): string {
   if (!i.origem) return "—";
-  const onde = origem(i);
+  const onde = `${i.origem.documento}, p. ${i.origem.pagina}`;
   const trecho = compactar(i.origem.trecho);
   if (!trecho) return onde;
   const texto = compactar(conteudo);
-  // o trecho é o conteúdo, ou o conteúdo com pouco mais ("(A) " na frente do critério)
   if (
     texto.includes(trecho) ||
     (texto.length >= 30 && trecho.includes(texto) && trecho.length - texto.length <= 12)
@@ -75,28 +80,78 @@ export function origemETrecho(i: ItemAnalise, conteudo: string, anterior?: ItemA
   return `${onde}: ${i.origem.trecho}`;
 }
 
-function tabelaGeral(itens: ItemAnalise[], revisoes: Record<string, RevisaoItem>): Secao["tabela"] {
-  const extras = [...new Set(itens.flatMap((i) => Object.keys(i.campos ?? {})))].filter(
-    (c) => c !== "Trecho",
-  );
+/** O texto que vale: o editado pelo GP ou o do item. */
+function textoFinal(i: ItemLeitura, revisoes: Record<string, RevisaoItem>): string {
+  const r = revisoes[i.id];
+  if (r?.estado === "editado" && r.textoEditado?.trim() && !i.pergunta) return r.textoEditado;
+  return i.texto;
+}
+
+function perguntaFinal(i: ItemLeitura, revisoes: Record<string, RevisaoItem>): string {
+  const r = revisoes[i.id];
+  if (r?.estado === "editado" && r.textoEditado?.trim()) return r.textoEditado;
+  return i.pergunta ?? "";
+}
+
+function marcas(i: ItemLeitura): string {
+  return [
+    i.doPmo ? "leitura do PMO" : "",
+    i.doPmo && i.citacaoConferida && !i.trava ? "citação conferida" : "",
+    i.trava ? NOME_TRAVA[i.trava] : "",
+  ]
+    .filter(Boolean)
+    .join("; ");
+}
+
+function tabelaDaSecao(itens: ItemLeitura[], revisoes: Record<string, RevisaoItem>): Secao["tabela"] {
   return {
-    colunas: ["Item", "Conteúdo", ...extras, "Rótulo", "Origem e trecho", "Estado"],
-    larguras: [1.6, 3.4, ...extras.map(() => 1.1), 0.9, 3.6, 0.9],
+    colunas: ["Item", "Conteúdo", "Rótulo", "Origem e trecho", "Estado"],
+    larguras: [1.6, 4.2, 0.9, 3.4, 0.9],
     linhas: itens.map((i, k) => {
-      const anterior = itens[k - 1];
       const texto = textoFinal(i, revisoes);
-      // a mesma observação em várias linhas seguidas (a nota da legislação citada) sai só na primeira
-      const nota = i.nota && i.nota !== anterior?.nota ? `\n(${i.nota})` : "";
+      const extras = [
+        i.porquePesa ? `Por que pesa: ${i.porquePesa}` : "",
+        i.pergunta ? `Pergunta sugerida: ${perguntaFinal(i, revisoes)}` : "",
+        i.nota ?? "",
+        marcas(i) ? `(${marcas(i)})` : "",
+      ].filter(Boolean);
       return [
-        i.nome,
-        `${texto}${nota}`,
-        ...extras.map((c) => i.campos?.[c] ?? ""),
+        `${i.premissa ? `${i.premissa} · ` : ""}${i.nome}`,
+        [texto, ...extras].join("\n"),
         NOME_ROTULO[i.rotulo],
-        origemETrecho(i, texto, anterior),
-        estado(i, revisoes),
+        i.trava === "citacao-nao-conferida" && i.origem
+          ? `Trecho citado pelo PMO, não achado na p. ${i.origem.pagina}: ${i.origem.trecho}`
+          : origemETrecho(i, texto, itens[k - 1]),
+        NOME_ESTADO[estadoDoItem(revisoes, i.id)],
       ];
     }),
   };
+}
+
+function secoesDaLeitura(leitura: LeituraRfp, revisoes: Record<string, RevisaoItem>): Secao[] {
+  const out: Secao[] = [];
+  SECOES_LEITURA.forEach((s, n) => {
+    const itens = leitura.itens.filter((i) => i.secao === s.id);
+    const naoAchou = leitura.naoLocalizados[s.id];
+    if (!itens.length && !naoAchou?.length) return;
+    out.push({
+      titulo: `${n + 1}. ${s.titulo}`,
+      paragrafos: [
+        s.pergunta,
+        ...(naoAchou?.length
+          ? [`Não localizado pelo código — conferir no documento: ${naoAchou.join("; ")}.`]
+          : []),
+      ],
+      tabela: itens.length ? tabelaDaSecao(itens, revisoes) : undefined,
+    });
+    // o detalhe consolidado (parcelas, documentos, critérios, obrigações) vem logo depois, um quadro por item
+    for (const i of itens.filter((x) => x.tabela?.linhas.length && x.secao !== "habilitacao"))
+      out.push({
+        titulo: `${i.nome} — detalhe`,
+        tabela: { colunas: i.tabela?.colunas ?? [], linhas: i.tabela?.linhas ?? [] },
+      });
+  });
+  return out;
 }
 
 export function montarAnaliseRfp(
@@ -104,86 +159,37 @@ export function montarAnaliseRfp(
   analise: AnaliseRfp,
   agora = new Date(),
 ): DocumentoExportavel {
-  const { a, itens, pendentes } = preparar(dossie, analise);
+  const { a, leitura, pendentes } = preparar(dossie, analise, agora);
   const secoes: Secao[] = [
     {
       titulo: "Decisão do GP: participar ou não",
       paragrafos: [
         `Decisão: ${NOME_PARTICIPACAO[a.participacao.decisao]}.${a.participacao.justificativa ? ` Justificativa: ${a.participacao.justificativa}` : ""}`,
-        "Os pontos de atenção abaixo são insumo para a decisão, nunca a decisão.",
+        "Os pontos de atenção são insumo para a decisão, nunca a decisão.",
+        leitura.fonte === "codigo"
+          ? AVISO_LEITURA_PARCIAL
+          : `Leitura do PMO (${a.leituraPmo?.modelo ?? ""}), conferida pelo código: cada citação procurada na página e cada número no trecho citado. Tudo o que veio do PMO é sugestão.`,
         `${pendentes} itens ainda sem revisão do GP.`,
       ],
     },
+    ...secoesDaLeitura(leitura, a.revisoes),
   ];
-  for (const s of ORDEM_SECOES) {
-    const daSecao = itens.filter((i) => i.secao === s);
-    if (!daSecao.length) continue;
-    if (s === "brechas") {
-      secoes.push({
-        titulo: NOME_SECAO[s],
-        paragrafos: [
-          "Brechas do texto (o que está contraditório, em aberto ou transfere responsabilidade), não riscos do projeto. Cada uma traz uma pergunta de esclarecimento sugerida, por modelo de texto.",
-        ],
-        tabela: {
-          colunas: [
-            "Nº",
-            "Tipo",
-            "Brecha",
-            "O que o código viu",
-            "Origem e trecho",
-            "Pergunta sugerida",
-            "Estado",
-          ],
-          larguras: [0.5, 1.2, 2.4, 2.6, 2.8, 3.2, 0.9],
-          linhas: daSecao.map((i, k) => [
-            String(k + 1),
-            i.campos?.Tipo ?? "",
-            i.nome,
-            i.texto,
-            origemETrecho(i, i.texto, daSecao[k - 1]),
-            textoFinal(i, a.revisoes),
-            estado(i, a.revisoes),
-          ]),
-        },
-      });
-      continue;
-    }
-    secoes.push({ titulo: NOME_SECAO[s], tabela: tabelaGeral(daSecao, a.revisoes) });
-  }
-  secoes.push({
-    titulo: "O que o código não pôde conferir",
-    paragrafos: [
-      'Não achado não é ausente: o que aparece como "não localizado pelo código" pode estar no documento com outra redação. Página sem texto legível deixa o item "não verificável".',
-      ...analise.documentos
-        .filter((d) => d.ilegiveis.length)
-        .map((d) => `${d.rotulo}: páginas sem texto legível ${d.ilegiveis.join(", ")}.`),
-      `Itens não localizados: ${
-        itens
-          .filter((i) => i.situacao === "nao-localizado")
-          .map((i) => i.nome)
-          .join("; ") || "nenhum"
-      }.`,
-    ],
-    tabela: {
-      colunas: ["Regra", "O que procura", "Resultado", "Detalhe"],
-      larguras: [1.2, 3, 1.3, 4],
-      linhas: analise.regras.map((r) => [
-        r.regra,
-        r.nome,
-        r.estado === "achado"
-          ? "achado"
-          : r.estado === "nao-verificavel"
-            ? "não verificável"
-            : "não identificado",
-        r.motivo,
-      ]),
-    },
-  });
+  if (leitura.foraDaLeitura.length || leitura.ilegiveis.length)
+    secoes.push({
+      titulo: "Fora da leitura",
+      paragrafos: [
+        "Pelo método da etapa 1, fica fora o que não muda uma decisão do gerente nem algo que a FGV terá de fazer, entregar, cumprir ou pagar.",
+        ...leitura.foraDaLeitura.map((f) => `${f.motivo}: ${f.quantos}.`),
+        ...leitura.ilegiveis.map((x) => `Páginas sem texto legível (não lidas): ${x}.`),
+      ],
+    });
   return {
     ...base(
       dossie,
       "Análise da RFP",
-      "Leitura da solicitação de proposta feita por código, com a página de cada item. A ferramenta sugere; quem decide é o GP.",
+      leitura.fonte === "codigo"
+        ? "Leitura parcial por código, com a página de cada item. A ferramenta sugere; quem decide é o GP."
+        : "Leitura do PMO, conferida pelo código, com a página de cada item. A ferramenta sugere; quem decide é o GP.",
       pendentes > 0,
       agora,
     ),
@@ -196,15 +202,33 @@ export function montarRequisitosEPrazos(
   analise: AnaliseRfp,
   agora = new Date(),
 ): DocumentoExportavel {
-  const { a, itens } = preparar(dossie, analise);
-  const req = itens.filter((i) => i.secao === "requisitos");
-  const prazos = itens.filter((i) => i.secao === "prazos");
-  const pendentes = contarPendentes([...req, ...prazos], a.revisoes);
+  const { a, leitura } = preparar(dossie, analise, agora);
+  const req = leitura.itens.filter((i) => i.numero);
+  const prazos = leitura.itens.filter((i) => i.secao === "prazos");
+  const pendentes = [...req, ...prazos].filter((i) => estadoDoItem(a.revisoes, i.id) === "pendente").length;
+  const linhasDePrazo = prazos.flatMap((i) =>
+    i.tabela?.linhas.length
+      ? i.tabela.linhas.map((l) => [
+          i.nome,
+          ...l.slice(0, -1).filter(Boolean).slice(0, 2),
+          l.at(-1) ?? "",
+          NOME_ESTADO[estadoDoItem(a.revisoes, i.id)],
+        ])
+      : [
+          [
+            i.nome,
+            textoFinal(i, a.revisoes),
+            "",
+            String(i.origem?.pagina ?? "—"),
+            NOME_ESTADO[estadoDoItem(a.revisoes, i.id)],
+          ],
+        ],
+  );
   return {
     ...base(
       dossie,
       "Requisitos e prazos da RFP",
-      "Lista de requisitos numerados e quadro de prazos.",
+      "Requisitos numerados e prazos do certame e da execução.",
       pendentes > 0,
       agora,
     ),
@@ -212,45 +236,24 @@ export function montarRequisitosEPrazos(
       {
         titulo: "Requisitos",
         tabela: {
-          colunas: ["Número", "Tipo", "Requisito", "Descrição", "Origem", "Trecho", "Estado"],
-          larguras: [0.8, 1.3, 1.8, 3.5, 1.1, 3, 0.9],
+          colunas: ["Número", "Requisito", "Descrição", "Origem", "Trecho", "Estado"],
+          larguras: [0.8, 1.8, 3.8, 1.1, 3, 0.9],
           linhas: req.map((i) => [
-            i.campos?.Número ?? "",
-            i.campos?.Tipo ?? "",
+            i.numero ?? "",
             i.nome.replace(/^R\d+ · /, ""),
-            textoFinal(i, a.revisoes),
+            `${textoFinal(i, a.revisoes)}${i.nota ? `\n(${i.nota})` : ""}`,
             i.origem ? origem(i) : "incluído pelo GP",
             i.origem?.trecho ?? "",
-            estado(i, a.revisoes),
+            NOME_ESTADO[estadoDoItem(a.revisoes, i.id)],
           ]),
         },
       },
       {
         titulo: "Prazos",
         tabela: {
-          colunas: [
-            "Prazo",
-            "Data ou valor",
-            "Momento",
-            "Contagem",
-            "Alerta",
-            "Origem",
-            "Trecho",
-            "Observação",
-            "Estado",
-          ],
-          larguras: [1.8, 2, 0.8, 1.3, 1.4, 1.1, 3, 2.5, 0.9],
-          linhas: prazos.map((i) => [
-            i.nome,
-            textoFinal(i, a.revisoes),
-            i.campos?.Momento ?? "",
-            i.campos?.Contagem ?? "",
-            i.campos?.Alerta ?? "",
-            origem(i),
-            i.origem?.trecho ?? "",
-            i.nota ?? "",
-            estado(i, a.revisoes),
-          ]),
+          colunas: ["Grupo", "Prazo", "Quanto ou regra", "Página", "Estado"],
+          larguras: [1.4, 3, 2.6, 0.8, 0.9],
+          linhas: linhasDePrazo.map((l) => (l.length === 5 ? l : [...l, "", "", "", ""].slice(0, 5))),
         },
       },
     ],
@@ -262,29 +265,41 @@ export function montarChecklistHabilitacao(
   analise: AnaliseRfp,
   agora = new Date(),
 ): DocumentoExportavel {
-  const { a, itens } = preparar(dossie, analise);
-  const hab = itens.filter((i) => i.secao === "habilitacao");
+  const { a, leitura } = preparar(dossie, analise, agora);
+  const hab = leitura.itens.filter((i) => i.secao === "habilitacao");
+  const lista = hab.find((i) => i.tabela?.linhas.length && /documentos/i.test(i.nome));
+  const outros = hab.filter((i) => i !== lista);
   return {
     ...base(
       dossie,
       "Checklist de habilitação",
-      "Documentos de habilitação que o código localizou na RFP. Item que não aparece aqui pode estar no documento com outra redação: conferir a seção de habilitação.",
-      contarPendentes(hab, a.revisoes) > 0,
+      "Documentos de habilitação linha a linha da lista do edital, quem entrega e em que prazo. Conferir a seção de habilitação do documento.",
+      hab.some((i) => estadoDoItem(a.revisoes, i.id) === "pendente"),
       agora,
     ),
     secoes: [
+      ...(lista?.tabela
+        ? [
+            {
+              titulo: lista.nome,
+              tabela: {
+                colunas: lista.tabela.colunas,
+                linhas: lista.tabela.linhas,
+                larguras: lista.tabela.colunas.length === 5 ? [0.5, 4, 1.6, 0.7, 1.1] : [0.5, 5, 0.7, 1.1],
+              },
+            },
+          ]
+        : []),
       {
-        titulo: "Habilitação",
+        titulo: "Quem entrega, prazo e o que a FGV confere sobre si",
         tabela: {
-          colunas: ["Grupo", "Documento", "Trecho da RFP", "Origem", "Providenciado", "Estado da revisão"],
-          larguras: [1.4, 2.2, 3.6, 1.1, 1.1, 1],
-          linhas: hab.map((i) => [
-            i.campos?.Grupo ?? "",
+          colunas: ["Item", "Conteúdo", "Origem", "Estado"],
+          larguras: [1.8, 5, 1.2, 0.9],
+          linhas: outros.map((i) => [
             i.nome,
-            textoFinal(i, a.revisoes) === i.texto ? (i.origem?.trecho ?? i.texto) : textoFinal(i, a.revisoes),
+            textoFinal(i, a.revisoes),
             origem(i),
-            "",
-            estado(i, a.revisoes),
+            NOME_ESTADO[estadoDoItem(a.revisoes, i.id)],
           ]),
         },
       },
@@ -297,27 +312,35 @@ export function montarPerguntas(
   analise: AnaliseRfp,
   agora = new Date(),
 ): DocumentoExportavel {
-  const { a, itens } = preparar(dossie, analise);
-  const brechas = itens.filter((i) => i.secao === "brechas" && i.pergunta);
-  const validas = brechas.filter((i) => estadoDoItem(a.revisoes, i.id) !== "descartado");
-  const pendentes = contarPendentes(brechas, a.revisoes);
+  const { a, leitura } = preparar(dossie, analise, agora);
+  const pontos = leitura.itens.filter(
+    (i) => i.secao === "atencao" && estadoDoItem(a.revisoes, i.id) !== "descartado",
+  );
+  const perguntas: string[] = [];
+  for (const i of pontos) {
+    const pendente = estadoDoItem(a.revisoes, i.id) === "pendente" ? " [pendente de revisão do GP]" : "";
+    if (i.pergunta)
+      perguntas.push(
+        `${perguntas.length + 1}. ${perguntaFinal(i, a.revisoes)} (${i.premissa ? `${i.premissa}; ` : ""}referência: ${origem(i)}${i.trava ? `; ${NOME_TRAVA[i.trava]}` : ""}.)${pendente}`,
+      );
+    // os vagos juntos num item: uma pergunta por linha da tabela
+    else if (i.tabela?.colunas.includes("Pergunta sugerida"))
+      for (const l of i.tabela.linhas)
+        if (l[2])
+          perguntas.push(`${perguntas.length + 1}. ${l[2]} (referência: RFP, p. ${l[1]}.)${pendente}`);
+  }
   return {
     ...base(
       dossie,
       "Perguntas de esclarecimento",
-      "Perguntas sugeridas a partir dos vagos e das brechas da RFP. Quais enviar é decisão do GP.",
-      pendentes > 0,
+      "Perguntas sugeridas a partir dos pontos de atenção da RFP, com a premissa crítica de cada uma. Quais enviar é decisão do GP.",
+      pontos.some((i) => estadoDoItem(a.revisoes, i.id) === "pendente"),
       agora,
     ),
     secoes: [
       {
         titulo: "Perguntas",
-        paragrafos: validas.length
-          ? validas.map(
-              (i, k) =>
-                `${k + 1}. ${textoFinal(i, a.revisoes)} (Referência: ${origem(i)}.)${estadoDoItem(a.revisoes, i.id) === "pendente" ? " [pendente de revisão do GP]" : ""}`,
-            )
-          : ["Nenhuma pergunta mantida pelo GP."],
+        paragrafos: perguntas.length ? perguntas : ["Nenhuma pergunta mantida pelo GP."],
       },
     ],
   };

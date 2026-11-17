@@ -40,7 +40,8 @@ export const ETAPAS: Etapa[] = [
     nome: "Leitura da RFP",
     nomeCurto: "RFP",
     resumoEntrada: "entra: RFP em PDF",
-    usaPmo: false,
+    // decisão 0035: o PMO lê; sem a chave, a etapa mostra o esqueleto do código ("leitura parcial por código")
+    usaPmo: true,
     fase: "F1",
     documentos: [
       {
@@ -59,9 +60,9 @@ export const ETAPAS: Etapa[] = [
       },
     ],
     ferramentaFaz: [
-      "Desmembra requisitos, prazos e habilitação, sempre com a página",
-      "Aponta lacunas e trechos com mais de uma leitura",
-      "Sugere perguntas para o pedido de esclarecimento",
+      "Lê a RFP em 8 seções, na ordem da decisão: o que é, o que fazer, prazos, dinheiro, julgamento, habilitação, pontos de atenção",
+      "Liga cada ponto de atenção a uma premissa crítica e sugere a pergunta de esclarecimento",
+      "Confere cada citação e cada número na página; sem a chave, mostra o esqueleto do código",
     ],
     saidas: [
       { nome: "Análise da RFP", formatos: ["DOCX", "PDF"] },

@@ -6,6 +6,8 @@ import { readFileSync } from "node:fs";
 import { beforeAll, describe, expect, it } from "vitest";
 import type { DocumentoLido } from "../../src/dossie/esquema";
 import { analisarRfp, type AnaliseRfp } from "../../src/etapas/1-rfp/analisar-rfp";
+import { montarLeituraRfp, type LeituraRfp } from "../../src/etapas/1-rfp/leitura";
+import { analiseInicial } from "../../src/etapas/1-rfp/revisao";
 import type { ItemAnalise } from "../../src/extracao/rfp/item";
 import { citacaoValeComoFato, conferirCitacao } from "../../src/pmo/citacoes";
 import { lerRfpPublica } from "../ajudantes/rfp-publica";
@@ -24,9 +26,15 @@ const gabarito = JSON.parse(
 const HOJE = new Date(2026, 10, 13);
 let doc: DocumentoLido;
 let a: AnaliseRfp;
+let leitura: LeituraRfp;
+const lido = (id: string) => {
+  const i = leitura.itens.find((x) => x.id === id);
+  return i ? `${i.texto} ${i.origem?.trecho ?? ""}` : "";
+};
 beforeAll(async () => {
   doc = await lerRfpPublica("chamamento-publico-termo-fomento-smped-sp-2025.pdf", HOJE);
   a = analisarRfp([doc], HOJE);
+  leitura = montarLeituraRfp(a, analiseInicial(a, HOJE), HOJE);
 }, 120000);
 
 type Situacao = "acerto" | "parcial" | "falta";
@@ -117,8 +125,13 @@ const COMPARACAO: Record<
     origem: "ia",
     como: 'Conteúdo obrigatório das ações em texto corrido ("deverá contemplar ações…"): leitura.',
   },
-  "RQ-04": { situacao: () => s(Boolean(req(/^1\.4 /))), esperado: "acerto" },
-  "RQ-05": { situacao: () => s(Boolean(req(/^1\.5 /))), esperado: "acerto" },
+  // decisão 0034 (método da etapa 1): "até 15 projetos" e "um projeto por proponente" deixaram de ser requisito R;
+  // estão na seção 1 da leitura (tamanho e quem pode participar)
+  "RQ-04": { situacao: () => s(/15 \(quinze\) projetos/.test(lido("leitura:tamanho"))), esperado: "acerto" },
+  "RQ-05": {
+    situacao: () => s(/apenas 01 \(um\) único projeto/.test(lido("leitura:participacao"))),
+    esperado: "acerto",
+  },
   "RQ-06": {
     situacao: () => s(Boolean(req(/^1\.5\.1 /))),
     esperado: "falta",
@@ -131,7 +144,12 @@ const COMPARACAO: Record<
     origem: "ia",
     como: "Complementaridade com as ações do poder público: leitura.",
   },
-  "RQ-08": { situacao: () => s(Boolean(req(/^1\.9 /))), esperado: "acerto" },
+  // decisão 0034: o prazo de execução (1.9) deixou de ser requisito R; está no prazo da seção 1, com o trecho
+  "RQ-08": {
+    situacao: () =>
+      s(/^1\.9 /.test(leitura.itens.find((i) => i.id === "leitura:prazo")?.origem?.trecho ?? "")),
+    esperado: "acerto",
+  },
   "RQ-09": { situacao: () => s(Boolean(req(/^1\.10 /))), esperado: "acerto" },
   "RQ-10": {
     situacao: () => s(Boolean(req(/^2\.1 /))),
@@ -149,7 +167,7 @@ const COMPARACAO: Record<
   "RQ-13": {
     situacao: () =>
       s(Boolean(req(/Plano de Trabalho/)), it_("apresentacao:modelo-proposta")?.situacao === "localizado"),
-    esperado: "parcial",
+    esperado: "acerto", // M1: obrigação de quem executa virou R (decisão 0034)
     origem: "regra",
     como: "O modelo obrigatório (Anexo I) também vira requisito de apresentação, com os quadros do anexo.",
   },
@@ -167,13 +185,13 @@ const COMPARACAO: Record<
   },
   "RQ-16": {
     situacao: () => s(Boolean(req(/gratuita/))),
-    esperado: "falta",
+    esperado: "acerto", // M1: obrigação de quem executa virou R (decisão 0034)
     origem: "regra",
     como: 'Obrigações da parceira na minuta ("Compete à PARCEIRA") viram requisitos de execução.',
   },
   "RQ-17": {
     situacao: () => s(Boolean(req(/formato aberto/))),
-    esperado: "falta",
+    esperado: "acerto", // M1: obrigação de quem executa virou R (decisão 0034)
     origem: "regra",
     como: 'Mesmo caminho: obrigações da parceira na minuta; "disponibilizar… o conteúdo" é entrega.',
   },
