@@ -28,15 +28,20 @@ import {
 } from "./leitura";
 import { estadoDoItem } from "./revisao";
 
-export type TravaPmo =
-  "citacao-nao-conferida" | "citacao-fraca" | "citacao-nao-prova" | "valor-nao-conferido" | "conta-do-pmo";
+export type TravaPmo = "citacao-nao-conferida" | "citacao-fraca" | "valor-nao-conferido" | "conta-do-pmo";
+
+/** Aviso que não conta como erro (decisão 0058): o trecho pode não provar a frase. */
+export type AvisoPmo = "citacao-a-conferir";
+
+export const NOME_AVISO: Record<AvisoPmo, string> = {
+  "citacao-a-conferir":
+    "aviso: citação a conferir — os trechos podem não trazer o termo-chave do item (data, número ou periodicidade)",
+};
 
 export const NOME_TRAVA: Record<TravaPmo, string> = {
   "citacao-nao-conferida": "citação não conferida — não vale como fato",
   "citacao-fraca":
     "citação fraca — o trecho é curto demais para provar o que o item diz; conferir no documento",
-  "citacao-nao-prova":
-    "citação não prova — o trecho achado não traz o termo-chave do item; conferir no documento",
   "valor-nao-conferido": "valor não conferido — o número não está no trecho citado",
   "conta-do-pmo": "conta feita pelo PMO — conferir; as contas são do código",
 };
@@ -45,6 +50,8 @@ export interface ItemPmoConferido {
   item: ItemLeituraRfpPmo;
   citacoes: ResultadoCitacao[];
   trava?: TravaPmo;
+  /** Aviso que não conta como erro (decisão 0058). */
+  aviso?: AvisoPmo;
   /** Números do texto que o código não achou nos trechos conferidos nem no esqueleto da mesma seção. */
   numerosSemFonte: string[];
   /** Números R citados pelo PMO que não existem no dossiê (tirados do item). */
@@ -109,7 +116,8 @@ function temFonte(n: string, base: string): boolean {
 export function citacaoEhFraca(trecho: string): boolean {
   // datas e números contam como palavras: o princípio 3 manda trazer o número ou a data da afirmação
   // ("previsto para o período de 07/11/2026 a 06/01/2027" prova as datas)
-  return (normal(trecho).match(/[a-z]{2,}|\d[\d./,]*/gi) ?? []).length < 6;
+  // toda palavra conta, inclusive a de uma letra ("e", "a"): "mínimo e atribuída pontuação com base" tem 6
+  return (normal(trecho).match(/[a-z]+|\d[\d./,]*/gi) ?? []).length < 6;
 }
 
 /** Conta feita pelo PMO: soma, diferença, acumulado, "sobram", "no máximo X% até…". As contas são do código. */
@@ -218,20 +226,24 @@ export function conferirLeituraRfp(
               ? "conta-do-pmo"
               : numerosSemFonte.length
                 ? "valor-nao-conferido"
-                : // o número trocado já é "valor não conferido"; sem número, o trecho tem de trazer o termo-chave
-                  item.rotulo === "documento" &&
-                    !citacaoProvaOItem(
-                      item.texto,
-                      item.fontes
-                        .filter((_, k) => citacoes[k] && citacaoValeComoFato(citacoes[k]))
-                        .map((f) => f.trecho),
-                    )
-                  ? "citacao-nao-prova"
-                  : undefined;
+                : undefined;
+    // sem trava, o trecho tem de trazer o termo-chave: procurado em todos os trechos do item, sem os números e as
+    // datas que vêm do esqueleto do código; é aviso, não erro (decisão 0058)
+    const aviso: AvisoPmo | undefined =
+      !trava &&
+      item.rotulo === "documento" &&
+      !citacaoProvaOItem(
+        item.texto,
+        item.fontes.map((f) => f.trecho),
+        esqueletoInteiro,
+      )
+        ? "citacao-a-conferir"
+        : undefined;
     return {
       item: { ...item, requisitos: item.requisitos.filter((x) => numeros.has(x)) },
       citacoes,
       trava,
+      aviso,
       numerosSemFonte,
       requisitosInexistentes: item.requisitos.filter((x) => !numeros.has(x)),
     };
@@ -278,6 +290,7 @@ function comoItemDaLeitura(c: ItemPmoConferido): ItemLeitura {
     doPmo: true,
     citacaoConferida: Boolean(conferida),
     trava: c.trava,
+    aviso: c.aviso,
   };
 }
 

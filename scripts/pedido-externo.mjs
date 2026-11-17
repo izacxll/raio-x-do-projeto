@@ -33,6 +33,12 @@ if (!args.etapa || !args.passo) {
   process.exit(1);
 }
 const saida = args.saida ?? resolve(raiz, "../pedidos-raio-x");
+if (modo === "exportar" && String(args.passo).startsWith("segunda-") && !args.dossie) {
+  console.error(
+    "A segunda instância confere a resposta guardada no dossiê: passe --dossie <arquivo> (o mesmo da importação), não --rfp.",
+  );
+  process.exit(1);
+}
 if (modo === "exportar" && !args.rfp && !args.dossie) {
   console.error(
     "Falta --rfp <arquivo> (o nome de uma RFP pública de tests/fixtures/rfps-publicas/ ou um caminho).",

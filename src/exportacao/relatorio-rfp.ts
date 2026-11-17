@@ -5,7 +5,12 @@
 import type { Dossie, RevisaoItem } from "../dossie/esquema";
 import type { AnaliseRfp } from "../etapas/1-rfp/analisar-rfp";
 import { SECOES_LEITURA, type ItemLeitura, type LeituraRfp } from "../etapas/1-rfp/leitura";
-import { contarPendentesDaLeitura, leituraDoDossie, NOME_TRAVA } from "../etapas/1-rfp/leitura-pmo";
+import {
+  contarPendentesDaLeitura,
+  leituraDoDossie,
+  NOME_AVISO,
+  NOME_TRAVA,
+} from "../etapas/1-rfp/leitura-pmo";
 import { estadoDoItem } from "../etapas/1-rfp/revisao";
 import { compactar } from "../texto/normalizar";
 import { camposDoDossie, type DocumentoExportavel, type Secao } from "./modelo";
@@ -98,6 +103,7 @@ function marcas(i: ItemLeitura): string {
     i.doPmo ? "leitura do PMO" : "",
     i.doPmo && i.citacaoConferida && !i.trava ? "citação conferida" : "",
     i.trava ? NOME_TRAVA[i.trava] : "",
+    i.aviso ? NOME_AVISO[i.aviso] : "",
   ]
     .filter(Boolean)
     .join("; ");

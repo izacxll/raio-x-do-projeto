@@ -4,6 +4,7 @@
 // Dados inventados.
 import { describe, expect, it } from "vitest";
 import { analisarRfp } from "../../src/etapas/1-rfp/analisar-rfp";
+import { citacaoEhFraca } from "../../src/etapas/1-rfp/leitura-pmo";
 import { calcularCronograma, travasDaEap } from "../../src/etapas/2-proposta/cronograma";
 import { propostaAntesDoPasso, propostaInicial } from "../../src/etapas/2-proposta/proposta";
 import { conferirMarcosPelaConta } from "../../src/etapas/3-tap/conferencia-tap";
@@ -91,6 +92,40 @@ describe("citação não prova (item 10g)", () => {
         "Participar de reuniões periódicas",
       ]),
     ).toBe(false);
+  });
+
+  it("decisão 0058: data por extenso, e-mail, todos os trechos e números do esqueleto", () => {
+    // a data do item em dd/mm/aaaa vale escrita por extenso no trecho
+    expect(citacaoProvaOItem("O início é em 03/03/2027.", ["A execução começa em 3 de março de 2027."])).toBe(
+      true,
+    );
+    // o item fala de e-mail e o trecho traz o endereço
+    expect(
+      citacaoProvaOItem("Os dois e-mails diferem por uma letra.", [
+        "contato pelo endereço setor@orgao.gov.br",
+      ]),
+    ).toBe(true);
+    // o termo-chave pode estar em qualquer trecho do item (radical: "equipamento" em "serviços/equipamentos")
+    expect(
+      citacaoProvaOItem("O recebimento fala em equipamento num serviço de relatórios.", [
+        "Os itens/equipamentos entregues passam por vistoria",
+        "outro trecho",
+      ]),
+    ).toBe(true);
+    // número que vem do esqueleto do código, ou de uma frase "conta do código", não precisa estar no trecho
+    expect(
+      citacaoProvaOItem("Até o evento são 34 dias úteis (conta do código), e o prazo é de 30 dias.", [
+        "no prazo de 30 (trinta) dias",
+      ]),
+    ).toBe(true);
+    expect(
+      citacaoProvaOItem("Termina em 22/03/2027.", ["vigência de 6 meses"], "termina em 22/03/2027"),
+    ).toBe(true);
+  });
+
+  it("citação fraca conta toda palavra, inclusive a de uma letra", () => {
+    expect(citacaoEhFraca("mínimo e atribuída pontuação com base:")).toBe(false);
+    expect(citacaoEhFraca("conforme anexos")).toBe(true);
   });
 });
 

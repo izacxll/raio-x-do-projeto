@@ -18,6 +18,7 @@ import {
   contarPendentesDaLeitura,
   itensRevisaveis,
   leituraDoDossie,
+  NOME_AVISO,
   NOME_TRAVA,
   pedidoLeituraRfp,
 } from "../../etapas/1-rfp/leitura-pmo";
@@ -728,6 +729,7 @@ function ItemDaLeitura({
           )}
           {item.situacao !== "localizado" && <span className="lb">{NOME_SITUACAO[item.situacao]}</span>}
           {item.trava && <span className="lb aviso-item">{NOME_TRAVA[item.trava]}</span>}
+          {item.aviso && <span className="lb">{NOME_AVISO[item.aviso]}</span>}
         </div>
         <h3 className="achado__titulo">{item.nome}</h3>
         <p>{estado === "editado" && editado && !comPergunta ? editado : item.texto}</p>

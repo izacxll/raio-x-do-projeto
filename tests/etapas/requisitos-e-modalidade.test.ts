@@ -54,7 +54,7 @@ b) Experiência Prática: 5 anos em análise de riscos.
 SIGILO E PROPRIEDADE
 Os produtos serão do contratante, com cessão dos direitos patrimoniais sobre os produtos.
 A contratada guardará sigilo sobre dados e informações, entre outros, a que tiver acesso no contrato.
-Chefe do Departamento de Planejamento e Captação de Recursos
+Chefe do Departamento de Projetos e Recursos Externos
 Portaria nº 10 de março de 2026`,
 ];
 
@@ -100,7 +100,7 @@ describe("requisitos como entregas e obrigações (decisão 0054)", () => {
     expect(a.itens.find((i) => i.id === "habilitacao:registro-conselho")).toBeUndefined();
   });
 
-  it("a data da portaria do signatário ('Captação de Recursos') não é prazo de recurso", () => {
+  it("a data da portaria do signatário (departamento com 'Recursos' no nome) não é prazo de recurso", () => {
     const l = montarLeituraRfp(a, analiseInicial(a, HOJE), HOJE);
     expect(JSON.stringify(l.itens)).not.toMatch(/Recursos: 10\/03\/2026/);
   });

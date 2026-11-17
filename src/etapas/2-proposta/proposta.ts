@@ -230,8 +230,8 @@ export function avaliarItens(
     numerosSemFonte: itens.reduce((s, i) => s + i.conferencia.numerosSemFonte.length, 0),
     citacoes: citacoes.length,
     citacoesConferidas: citacoes.filter(citacaoValeComoFato).length,
-    fatosSemCitacao: itens.filter((i) => i.conferencia.citacaoNaoConferida || i.conferencia.citacaoNaoProva)
-      .length,
+    // a citação que pode não provar a frase é aviso, não fato sem citação (decisão 0058)
+    fatosSemCitacao: itens.filter((i) => i.conferencia.citacaoNaoConferida).length,
     cobertura: requisitos.length ? (requisitos.length - naoCobertos.length) / requisitos.length : 1,
     requisitosNaoCobertos: naoCobertos,
   };

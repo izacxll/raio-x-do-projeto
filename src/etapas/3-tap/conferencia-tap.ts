@@ -319,14 +319,15 @@ export function conferirTap(
   out.push({
     id: "citacoes",
     nome: "Citações conferidas na página",
-    situacao: naoConferidas.length || naoProvam.length ? "atencao" : "ok",
+    // a citação que pode não provar a frase é aviso, não erro (decisão 0058): não muda a situação
+    situacao: naoConferidas.length ? "atencao" : "ok",
     texto:
       [
         naoConferidas.length
           ? `${naoConferidas.length} item(ns) "do documento" com citação não conferida: não valem como fato.`
           : "",
         naoProvam.length
-          ? `${naoProvam.length} item(ns) "do documento" com citação que não prova a frase (o trecho não traz o termo-chave): ${naoProvam.map((i) => i.id).join(", ")}.`
+          ? `Aviso: ${naoProvam.length} item(ns) "do documento" com citação a conferir (o trecho pode não trazer o termo-chave): ${naoProvam.map((i) => i.id).join(", ")}.`
           : "",
       ]
         .filter(Boolean)

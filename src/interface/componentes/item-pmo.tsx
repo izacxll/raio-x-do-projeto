@@ -36,15 +36,15 @@ export function ItemNaTela({
         <div className="achado__cabeca">
           <EtiquetaRotulo
             rotulo={rotulo}
-            pagina={
-              rotulo === "documento" && !c.citacaoNaoConferida && !c.citacaoNaoProva ? pagina : undefined
-            }
+            pagina={rotulo === "documento" && !c.citacaoNaoConferida ? pagina : undefined}
           />
           {c.citacaoNaoConferida && (
             <span className="lb aviso-item">citação não conferida — não vale como fato</span>
           )}
           {c.citacaoNaoProva && (
-            <span className="lb aviso-item">citação não prova — o trecho não traz o termo-chave do item</span>
+            <span className="lb">
+              citação a conferir — o trecho pode não trazer o termo-chave do item (aviso)
+            </span>
           )}
           {c.redacaoAConferir && <span className="lb aviso-item">redação a conferir (afirmativa)</span>}
           {c.numerosSemFonte.length > 0 && (
