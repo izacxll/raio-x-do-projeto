@@ -40,6 +40,8 @@ import { montarEntradaTap } from "../../src/etapas/3-tap/entrada";
 import { pedidoPremissas, pedidoTap } from "../../src/etapas/3-tap/pedidos";
 import { itensDaEtapa3, tapInicial } from "../../src/etapas/3-tap/tap";
 import { conferirTap } from "../../src/etapas/3-tap/conferencia-tap";
+import { itensEsperadosDaEtapa3 } from "../../src/etapas/3-tap/autoconferencia";
+import { NOME_TIPO_COMPROMISSO, destinosNoTap } from "../../src/etapas/2-proposta/compromissos";
 import { inicioFixo } from "../../src/regras/cruzamentos-rfp";
 import { montarEntradaPgp } from "../../src/etapas/4-pgp/entrada";
 import {
@@ -572,15 +574,18 @@ describe.skipIf(MODO !== "importar")("importar a resposta do PMO (leitura indepe
           "2:estrategia": ["PROP-ESTRATEGIA."],
           "2:conteudo": ["PROP-ESTRUTURA.", "PROP-ENTENDIMENTO.", "PROP-METODOLOGIA.", "PROP-SOW."],
           "2:eap": ["PROP-EAP.", "PROP-EQUIPE.", "PROP-PRECO."],
-          "3:tap": ["TAP"],
         };
         const prefixos = FICHAS_DO_PASSO[`${etapa}:${passo}`];
-        const prefixo = prefixos?.join(", ");
-        const esperados = prefixos
-          ? FICHAS.flatMap((x) => x.itens.map((i) => i.codigo)).filter((c) =>
-              prefixos.some((pr) => (pr === "TAP" ? /^TAP(?:-DV|\d)/.test(c) : c.startsWith(pr))),
-            )
-          : [];
+        // etapa 3: os itens de cada passo vêm do mesmo lugar que o app usa (o TAP não cobra o registro, e vice-versa)
+        const doPasso3 = etapa === 3 && (passo === "tap" || passo === "premissas");
+        const prefixo = doPasso3 ? passo : prefixos?.join(", ");
+        const esperados = doPasso3
+          ? itensEsperadosDaEtapa3(passo)
+          : prefixos
+            ? FICHAS.flatMap((x) => x.itens.map((i) => i.codigo)).filter((c) =>
+                prefixos.some((pr) => c.startsWith(pr)),
+              )
+            : [];
         const r = conferirAutoconferencia(esperados, marcas);
         linhas.push(
           "",
@@ -716,6 +721,24 @@ describe.skipIf(MODO !== "importar")("importar a resposta do PMO (leitura indepe
           "## Contingência pelo código",
           `- riscos que pedem reserva: ${custos?.riscosComReserva.map((x) => x.id).join(", ") || "nenhum"}`,
           `- linha de base dos custos: ${custos?.linhaDeBase ?? "a definir pelo GP"}; falta: ${custos?.faltando.filter((x) => /reserva/.test(x)).join("; ") || "—"}`,
+        );
+      }
+      if (etapa === 3 && dossie.tap) {
+        // compromissos numerados da proposta (decisão 0047) e o destino de cada um no TAP e no registro
+        const et = montarEntradaTap(dossie, HOJE);
+        const cs = et.dados?.compromissos ?? [];
+        const destinos = destinosNoTap(
+          cs,
+          dossie.tap.tap?.resposta,
+          dossie.tap.premissas?.resposta.premissas,
+        );
+        linhas.push(
+          "",
+          `## Compromissos da proposta (C) e o destino no TAP: ${destinos.filter((d) => d.situacao === "citado").length} citados, ${destinos.filter((d) => d.situacao === "provavel").length} prováveis, ${destinos.filter((d) => d.situacao === "sem-destino").length} sem destino`,
+          ...destinos.map(
+            (d) =>
+              `- ${d.compromisso.numero} · ${NOME_TIPO_COMPROMISSO[d.compromisso.tipo]}: ${d.compromisso.texto.slice(0, 90)} → ${d.texto}`,
+          ),
         );
       }
       if (etapa === 3 && passo === "tap" && dossie.tap) {
