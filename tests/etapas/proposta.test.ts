@@ -52,7 +52,7 @@ describe("EAP com data fixa, horas a definir e o contratante na RACI (issue da M
     const c = calcularCronograma([atv("1", [], [5, 5, 5]), campo]);
     // 08/11/2025 (sábado) a 07/01/2026 (quarta): 15 em novembro, 23 em dezembro, 5 em janeiro = 43 dias úteis, sem feriados
     expect(c.atividades.find((a) => a.id === "2")?.duracao).toBe(43);
-    expect(c.problemas.join(" ")).toMatch(/data fixa.*43 dias úteis/);
+    expect(c.problemas.join(" ")).toMatch(/data fixa.*61 dias corridos \(43 úteis na rede\)/);
   });
 
   it("horas null não somam zero: viram pendência do GP", () => {
@@ -342,11 +342,14 @@ describe("data fixa com o início do projeto: o cronograma respeita o evento", (
       inicio: new Date(2025, 8, 22),
     });
     const c4 = c.atividades.find((a) => a.id === "c4");
-    expect(c4?.dataInicio?.toLocaleDateString("pt-BR")).toBe("10/11/2025");
+    expect(c4?.dataInicio?.toLocaleDateString("pt-BR")).toBe("08/11/2025");
     expect(c4?.dataFim?.toLocaleDateString("pt-BR")).toBe("07/01/2026");
     expect(c4?.folga).toBe(0);
     expect(c.atividades.find((a) => a.id === "m1")?.folga).toBeGreaterThan(0);
-    expect(c.problemas.join(" ")).toMatch(/presa à data fixa/);
+    expect(c.problemas.join(" ")).toMatch(
+      /presa à data fixa: de 08\/11\/2025 a 07\/01\/2026, 61 dias corridos.*folga de \d+ dia\(s\) corrido/,
+    );
+    expect(c4?.diasCorridos).toBe(61);
   });
 
   it("acusa quando as predecessoras terminam depois do início da janela", () => {
