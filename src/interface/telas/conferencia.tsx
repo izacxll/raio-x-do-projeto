@@ -22,15 +22,10 @@ import {
 } from "../../exportacao/relatorio-conformidade";
 import { procurarSinais } from "../../regras/busca";
 import { conferirPlano, resumirAchados } from "../../regras/conferencia";
-import {
-  aplicarTipoPlano,
-  confirmacaoInicial,
-  proporMapa,
-  sincronizarMapa,
-  type ParteNoMapa,
-} from "../../regras/mapa-pgp";
+import { aplicarTipoPlano, proporMapa, sincronizarMapa, type ParteNoMapa } from "../../regras/mapa-pgp";
 import { LeituraDoPmo } from "./leitura-pmo";
 import { conferirLeitura, type AchadoPmoConferido } from "../../etapas/5-conferencia/leitura-pmo";
+import { mapaInicialDaConferencia } from "../../etapas/5-conferencia/dispensas";
 import { EtiquetaRotulo, RotuloSecao } from "../componentes/basicos";
 
 const NOME_SITUACAO_PROPOSTA: Record<ParteNoMapa["situacao"], string> = {
@@ -79,20 +74,10 @@ function conferenciaInicial(
     : props.rfp
       ? extrairRequisitos(props.rfp.paginas)
       : [];
-  const justificativas = new Map(
-    (pgp?.adaptacao?.resposta.partes ?? []).map((s) => [s.codigo, s.justificativa]),
-  );
   return {
     caracteristicas: pgp?.caracteristicas ?? CARACTERISTICAS_PADRAO,
-    mapa: confirmacaoInicial(mapa).map((m) =>
-      pgp?.gerar[m.codigo] === false
-        ? {
-            codigo: m.codigo,
-            situacao: "dispensada" as const,
-            justificativa: `Dispensada pelo GP na etapa 4: ${justificativas.get(m.codigo) ?? ""}`.trim(),
-          }
-        : m,
-    ),
+    // as dispensas da etapa 4 e as que o próprio plano declara (mesma função do script de teste)
+    mapa: mapaInicialDaConferencia(mapa, props.pgp.paginas, PARTES_PGP, pgp),
     // na dúvida, a premissa "se aplica", para o GP decidir (decisão 0021)
     premissasAplicaveis:
       pgp?.premissasAplicaveis ?? Object.fromEntries(PREMISSAS_CRITICAS.map((p) => [p.codigo, true])),
@@ -190,6 +175,7 @@ export function ConferenciaPgp(props: Props) {
             conf.leituraPmo.resposta,
             { pgp: props.pgp, tap: props.tap, rfp: props.rfp },
             resultado.achados,
+            conf.mapa,
           )}
         />
       )}
