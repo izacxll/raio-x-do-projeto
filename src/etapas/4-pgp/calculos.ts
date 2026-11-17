@@ -1,6 +1,13 @@
 // Etapa 4 (código): o que sai de conta, nunca do modelo. Cronograma (rede, caminho crítico, datas), marcos com a
 // conferência contra a RFP e o TAP, custos com os valores do GP (linha de base com a contingência, orçamento com a
 // reserva gerencial) e a matriz de rastreabilidade RFP → TAP → PGP.
+import {
+  destinosNoPlano,
+  destinosNoTap,
+  type Compromisso,
+  type DestinoCompromisso,
+} from "../2-proposta/compromissos";
+import type { ItemConferido } from "../../pmo/itens";
 import type { ParametrosPgp, PgpDossie } from "../../dossie/esquema";
 import { formatarData, somarDiasUteis } from "../../texto/datas";
 import { calcularCronograma, primeiroDiaUtil, type Cronograma } from "../2-proposta/cronograma";
@@ -263,4 +270,26 @@ export function rastrear(p: PgpDossie, e: EntradaPgp): LinhaRastreabilidade[] {
 
 export function textoDaData(d?: Date): string {
   return d ? formatarData(d) : "—";
+}
+
+export interface LinhaCompromisso {
+  compromisso: Compromisso;
+  tap: DestinoCompromisso;
+  /** "B14, item b14-5": onde o plano cita o C. */
+  plano: string[];
+}
+
+/**
+ * Compromissos da proposta (decisão 0047) ao lado dos R na matriz (B23): o destino no TAP (citado, provável ou sem) e
+ * no plano (o item que cita o número). Os itens do plano são os válidos (sem os descartados pelo GP).
+ */
+export function rastrearCompromissos(e: EntradaPgp, itens: ItemConferido[]): LinhaCompromisso[] {
+  const cs = e.dadosProposta?.compromissos ?? [];
+  if (!cs.length) return [];
+  const tap = destinosNoTap(cs, e.respostaTap, e.premissasTap);
+  const plano = destinosNoPlano(
+    cs,
+    itens.map((i) => ({ parte: i.grupo.split(" — ")[0] ?? i.grupo, item: i.item })),
+  );
+  return cs.map((c, k) => ({ compromisso: c, tap: tap[k]!, plano: plano.get(c.numero) ?? [] }));
 }

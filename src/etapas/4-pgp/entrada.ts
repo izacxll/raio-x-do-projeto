@@ -1,5 +1,6 @@
 // Etapa 4: o que entra. A RFP (com a etapa 1), o TAP (o PDF aprovado pelo GP ou o TAP da etapa 3 no dossiê) e, se
 // houver, a proposta (PDF ou a da etapa 2). Documento da ferramenta vira documento "lido", uma página por seção.
+import type { RespostaTap } from "../../pmo/schemas/tap";
 import type { DocumentoLido, Dossie } from "../../dossie/esquema";
 import { montarTap } from "../../exportacao/relatorio-tap";
 import type { MarcoTap, PremissaRegistro } from "../../pmo/schemas/tap";
@@ -27,6 +28,8 @@ export interface EntradaPgp {
   requisitosTap: { texto: string; requisitos: string[] }[];
   /** Recursos financeiros do TAP (decisão do GP na etapa 3). */
   recursosTap?: string;
+  /** O TAP da etapa 3 como o PMO devolveu (para o destino dos compromissos), quando ele está no dossiê. */
+  respostaTap?: RespostaTap;
   dadosProposta?: DadosProposta;
   /** Premissas críticas confirmadas nas etapas anteriores. */
   premissasAnteriores: Record<string, boolean>;
@@ -69,6 +72,7 @@ export function montarEntradaPgp(dossie: Dossie, hoje = new Date()): EntradaPgp 
           .filter((_, k) => valido(`tap:requisitosAltoNivel:${k}`))
           .map((i) => ({ texto: i.texto, requisitos: i.requisitos })) ?? []),
     recursosTap: tapPdf ? undefined : t?.decisoes.recursos,
+    respostaTap: tapPdf ? undefined : t?.tap?.resposta,
     dadosProposta: propostaPdf ? undefined : dadosDaProposta(dossie, rfp, ponto),
     premissasAnteriores: t?.premissasAplicaveis ?? dossie.proposta?.premissasAplicaveis ?? {},
   };

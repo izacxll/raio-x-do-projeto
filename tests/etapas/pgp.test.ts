@@ -13,6 +13,7 @@ import {
   pgpComoDocumento,
 } from "../../src/etapas/4-pgp/autoconferencia";
 import {
+  rastrearCompromissos,
   conferirPacotes,
   conferirRaci,
   contratanteNaRaci,
@@ -38,6 +39,7 @@ import {
   conferirAutoconferenciaDaEtapa3,
   itensEsperadosDaEtapa3,
 } from "../../src/etapas/3-tap/autoconferencia";
+import { destinosNoPlano, type Compromisso } from "../../src/etapas/2-proposta/compromissos";
 import { lerRfpPublica } from "../ajudantes/rfp-publica";
 
 const ler = (n: string) =>
@@ -344,5 +346,43 @@ describe("pacote, parte não gerada, contingência e registro inicial (teste ext
     expect(tap).toContain("TAP1.1");
     const marcas = premissas.map((item) => ({ item, estado: "presente" as const, onde: "pr1", motivo: "" }));
     expect(conferirAutoconferenciaDaEtapa3("premissas", marcas).ok).toBe(true);
+  });
+});
+
+describe("compromissos no plano e partes dispensadas no pedido", () => {
+  it("o C tem destino no plano quando o item o cita, no campo de números ou no texto", () => {
+    const base = dossie.pgp!.escopo!.resposta.textos[0]!.itens[0]!;
+    const cs: Compromisso[] = [
+      { numero: "C10", tipo: "obrigacao", idItem: "a", texto: "Prestar informações" },
+      { numero: "C11", tipo: "obrigacao", idItem: "b", texto: "Emitir as ordens de serviço" },
+      { numero: "C01", tipo: "premissa", idItem: "c", texto: "Dados no prazo" },
+    ];
+    const itens = [
+      {
+        parte: "B14",
+        item: { ...base, id: "b14-5", texto: "Pendências: informações (C10), ordens (C11).", requisitos: [] },
+      },
+      { parte: "A11", item: { ...base, id: "a11-2", texto: "Reajuste de prazo.", requisitos: ["C01"] } },
+      { parte: "A7", item: { ...base, id: "a7-1", texto: "Canal com C100 e C1.", requisitos: [] } },
+    ];
+    const d = destinosNoPlano(cs, itens);
+    expect(d.get("C10")).toEqual(["B14, item b14-5"]);
+    expect(d.get("C11")).toEqual(["B14, item b14-5"]);
+    expect(d.get("C01")).toEqual(["A11, item a11-2"]);
+  });
+
+  it("a matriz do plano tem os C, com o destino no TAP e no plano", () => {
+    const linhas = rastrearCompromissos(
+      entrada,
+      itensDoPgp(dossie.pgp!, entrada.documentos, entrada.premissasTap),
+    );
+    expect(linhas.length).toBe(entrada.dadosProposta?.compromissos.length ?? 0);
+    expect(linhas.every((l) => Array.isArray(l.plano) && l.tap.compromisso === l.compromisso)).toBe(true);
+  });
+
+  it("o pedido lista as partes do passo que o GP dispensou, com o motivo", () => {
+    const p = { ...dossie.pgp!, gerar: { ...dossie.pgp!.gerar, A12: false } };
+    const pedido = PEDIDOS_PGP.planos(entrada, p);
+    expect(pedido).toMatch(/Dispensadas pelo GP neste passo[\s\S]*- A12 — /);
   });
 });

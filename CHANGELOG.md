@@ -29,6 +29,8 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 - **Autoconferência da etapa 3 por passo:** o TAP cobra os seus itens; o registro de premissas, só TAP-PR e B3.
 - **B3 da etapa 4 com o registro inicial:** o que o passo de riscos traz da RFP, da proposta ou do TAP sai; ficam as premissas de estimativa.
 - **Gestor e fiscal no pedido do TAP:** só o papel; o nome é do GP confirmar no contrato.
+- **Compromissos no plano:** a matriz (B23) mostra cada C com o destino no TAP e no plano (o item que cita o número, no campo ou no texto).
+- **Pedidos da etapa 4:** as partes do passo que o GP dispensou aparecem com o motivo.
 
 ### Fase M3 — etapa 3 pelo método (decisão 0041)
 - **Testar sem a chave:** `npm run exportar-pedido` grava, fora do Git, o pedido de um passo do PMO exatamente como iria à API (sistema, mensagem com os PDFs e o esqueleto, schema), para o Claude do claude.ai responder; `npm run importar-resposta` valida a resposta, grava no dossiê, roda as travas e mede contra o gabarito numa seção "leitura independente". Por ora, a etapa 1.

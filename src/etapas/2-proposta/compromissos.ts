@@ -175,3 +175,25 @@ export function destinosNoTap(
     };
   });
 }
+
+/** Item do plano (etapa 4) onde um C pode estar: a parte e o item, com o texto e os números citados. */
+export interface ItemDoPlano {
+  parte: string;
+  item: ItemPmo;
+}
+
+/**
+ * Destino de cada C no plano (decisão 0047): o item que cita o número, em "requisitos" ou no próprio texto ("dados
+ * (C08)"). C sem destino no plano é o que a etapa 5 cobra como ausente.
+ */
+export function destinosNoPlano(cs: Compromisso[], itens: ItemDoPlano[]): Map<string, string[]> {
+  const out = new Map<string, string[]>();
+  for (const c of cs) {
+    const re = new RegExp(`(?<![A-Za-z0-9])${c.numero}(?![0-9])`);
+    const onde = itens
+      .filter((x) => x.item.requisitos.some((n) => n.trim() === c.numero) || re.test(x.item.texto))
+      .map((x) => `${x.parte}, item ${x.item.id}`);
+    out.set(c.numero, [...new Set(onde)]);
+  }
+  return out;
+}

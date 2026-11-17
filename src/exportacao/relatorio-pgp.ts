@@ -1,8 +1,10 @@
 // Saídas da etapa 4: o plano (DOCX e PDF), os registros, o cronograma e as matrizes (XLSX). O mesmo plano, como
 // documento "lido", passa pelas regras da etapa 5 (autoconferência). Cada parte que o GP marcou sai com um título
 // próprio ("N. Nome da parte"), que o mapa do PGP reconhece; as tabelas das contas são do código.
+import { NOME_TIPO_COMPROMISSO } from "../etapas/2-proposta/compromissos";
 import type { Dossie, PgpDossie } from "../dossie/esquema";
 import {
+  rastrearCompromissos,
   conferirPacotes,
   conferirRaci,
   contratanteNaRaci,
@@ -129,6 +131,24 @@ function tabelasDoCodigo(codigo: string, c: Contexto): { paragrafos?: string[]; 
             : r.situacao === "sem-eap"
               ? "sem pacote na EAP"
               : "sem atividade",
+        ]),
+      },
+    });
+  const compromissos = codigo === "B23" ? rastrearCompromissos(e, c.itens) : [];
+  if (compromissos.length)
+    out.push({
+      paragrafos: [
+        "Compromissos da proposta (C, decisão 0047): o destino no TAP e no plano. No plano, vale o item que cita o número; C sem destino no plano é cobrado na conferência (etapa 5).",
+      ],
+      tabela: {
+        colunas: ["C", "Tipo", "Compromisso", "TAP", "Plano"],
+        larguras: [1, 2, 4, 3, 3],
+        linhas: compromissos.map((x) => [
+          x.compromisso.numero,
+          NOME_TIPO_COMPROMISSO[x.compromisso.tipo],
+          x.compromisso.texto,
+          x.tap.situacao === "citado" ? (x.tap.onde ?? "") : x.tap.texto,
+          x.plano.join("; ") || "sem destino no plano",
         ]),
       },
     });

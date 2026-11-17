@@ -45,10 +45,20 @@ function partesDoPasso(passo: PassoPgp, p: PgpDossie): string[] {
   return (PASSOS_PGP.find((x) => x.passo === passo)?.textos ?? []).filter((c) => gerar.has(c));
 }
 
-function listaDePartes(codigos: string[]): string {
-  return codigos.length
+/** Partes do passo que o GP marcou e, à parte, as que ele dispensou, com o motivo (não se escreve parte dispensada). */
+function listaDePartes(codigos: string[], passo: PassoPgp, p: PgpDossie): string {
+  const marcadas = codigos.length
     ? codigos.map((c) => `- ${c} — ${nomeDaParte(c)}`).join("\n")
     : "- nenhuma (o GP dispensou)";
+  const justificativas = new Map(
+    (p.adaptacao?.resposta.partes ?? []).map((x) => [x.codigo, x.justificativa]),
+  );
+  const dispensadas = (PASSOS_PGP.find((x) => x.passo === passo)?.textos ?? []).filter(
+    (c) => !codigos.includes(c),
+  );
+  return dispensadas.length
+    ? `${marcadas}\n\nDispensadas pelo GP neste passo (não escreva; o conteúdo que sobra vai para a parte indicada no motivo):\n${dispensadas.map((c) => `- ${c} — ${nomeDaParte(c)}: ${justificativas.get(c) || "sem motivo registrado"}`).join("\n")}`
+    : marcadas;
 }
 
 function resumoDoEscopo(p: PgpDossie): string {
@@ -126,7 +136,7 @@ Requisitos de alto nível do TAP:
 ${requisitosDoTapEmTexto(e) || "- (TAP em PDF ou sem TAP: ler no documento)"}
 
 Partes a escrever neste passo (o GP marcou):
-${listaDePartes(partes)}
+${listaDePartes(partes, "escopo", p)}
 
 ${fichasDasPartes(partes)}
 
@@ -152,7 +162,7 @@ ${marcos.join("\n") || "- (sem marcos do TAP no dossiê)"}
 ${e.ponto.prazoExecucao ? `Prazo de execução na RFP: ${e.ponto.prazoExecucao.texto}. O código confere o cronograma contra ele e contra os marcos do TAP.` : "O código não localizou o prazo de execução na RFP."}
 
 Partes a escrever neste passo (o GP marcou):
-${listaDePartes(partes)}
+${listaDePartes(partes, "cronograma", p)}
 
 ${fichasDasPartes(partes)}
 
@@ -195,7 +205,7 @@ ${brechas.join("\n") || "- nenhuma"}
 ${resumoDosRiscos(p, e)}
 
 Partes a escrever neste passo (o GP marcou):
-${listaDePartes(partes)}
+${listaDePartes(partes, "riscos", p)}
 
 ${fichasDasPartes([...partes, "B27", "B3"])}
 
@@ -215,7 +225,7 @@ export function pedidoPlanos(e: EntradaPgp, p: PgpDossie): string {
 ${resumoDosRiscos(p, e)}
 
 Partes a escrever neste passo (o GP marcou):
-${listaDePartes(partes)}
+${listaDePartes(partes, "planos", p)}
 
 ${fichasDasPartes(partes)}
 
@@ -234,7 +244,7 @@ Atividades (cronograma):
 ${resumoDoCronograma(p)}
 
 Partes a escrever neste passo (o GP marcou):
-${listaDePartes(partes)}
+${listaDePartes(partes, "execucao", p)}
 
 ${fichasDasPartes(partes)}
 
