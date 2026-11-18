@@ -1,15 +1,24 @@
-// Resultado de uma etapa para apresentação (decisão 0072): quando uma etapa fecha, um documento com o resultado final
-// de cada passo (os mesmos relatórios que a tela exporta), o placar resumido e as conferências da segunda instância
-// (achados e o que o GP decidiu). Gerado fora do Git, a partir do dossiê e dos arquivos do teste externo; o documento
-// sai sempre como minuta, porque o GP do teste não revisou item a item.
+// Resultado de uma etapa para apresentação (decisões 0072 e 0084): quando uma etapa fecha, um documento com o resultado
+// da etapa primeiro (os mesmos relatórios que a tela exporta, sem o prefixo do relatório em cada seção) e, no anexo, o
+// processo: as seções do código, o placar resumido e as conferências da segunda instância (achados e o que o GP
+// decidiu). Gerado fora do Git, a partir do dossiê e dos arquivos do teste externo; o documento sai sempre como minuta,
+// porque o GP do teste não revisou item a item.
 import type { Dossie } from "../dossie/esquema";
 import { analisarRfp } from "../etapas/1-rfp/analisar-rfp";
 import { montarPontoDePartida } from "../etapas/2-proposta/ponto-de-partida";
-import { camposDoDossie, type DocumentoExportavel, type Secao } from "./modelo";
+import {
+  camposDoDossie,
+  MARCA_PENDENTE,
+  type DocumentoExportavel,
+  type ParteDoDocumento,
+  type Secao,
+} from "./modelo";
 import { montarPgp } from "./relatorio-pgp";
 import { montarPropostaTecnica } from "./relatorio-proposta";
 import { montarAnaliseRfp } from "./relatorio-rfp";
 import { montarRegistroPremissas, montarTap } from "./relatorio-tap";
+import { montarRelatorioConformidade } from "./relatorio-conformidade";
+import { resultadoDaEtapa5 } from "../etapas/5-conferencia/resultado";
 
 export const NOME_DA_ETAPA: Record<number, string> = {
   1: "Leitura da RFP",
@@ -79,24 +88,73 @@ export function lerConferenciaEmBlocos(texto: string): {
   return out;
 }
 
-/** O resultado final do passo: os relatórios que a tela da etapa exporta, com o título de cada um nas seções. */
+/** As seções do código (título terminado em "(código)") são do processo: vão para o anexo (decisão 0084). */
+export function parteDaSecao(s: Secao): ParteDoDocumento {
+  return /\(código\)\s*$/.test(s.titulo) ? "anexo" : (s.parte ?? "corpo");
+}
+
+/**
+ * O resultado final da etapa: os relatórios que a tela exporta, sem o prefixo do relatório em cada seção (decisão
+ * 0084). Na etapa 3, as premissas ficam só no registro de premissas, não também no TAP. Na etapa 5, o relatório de
+ * conformidade, calculado como na tela.
+ */
 function resultadoFinal(dossie: Dossie, etapa: number, agora: Date): Secao[] {
   const docs = dossie.documentos.filter((d) => d.papel === "rfp" || d.papel === "anexo-rfp");
-  const comPrefixo = (d: DocumentoExportavel): Secao[] =>
-    d.secoes.map((s) => ({ ...s, titulo: `${d.titulo} — ${s.titulo}` }));
-  if (etapa === 1) return comPrefixo(montarAnaliseRfp(dossie, analisarRfp(docs, agora), agora));
+  const secoes = (d: DocumentoExportavel): Secao[] => d.secoes.map((x) => ({ ...x, parte: parteDaSecao(x) }));
+  if (etapa === 1) return secoes(montarAnaliseRfp(dossie, analisarRfp(docs, agora), agora));
   if (etapa === 2) {
     if (!dossie.proposta) return [];
-    return comPrefixo(
+    return secoes(
       montarPropostaTecnica(dossie, montarPontoDePartida(docs, dossie.analiseRfp, agora), docs, agora),
     );
   }
   if (etapa === 3) {
     if (!dossie.tap) return [];
-    return [...comPrefixo(montarTap(dossie, agora)), ...comPrefixo(montarRegistroPremissas(dossie, agora))];
+    // o registro de premissas no DOCX: a coluna da revisão do GP com a marca, como os outros itens
+    const registro = secoes(montarRegistroPremissas(dossie, agora)).map((x) =>
+      x.tabela
+        ? {
+            ...x,
+            tabela: {
+              ...x.tabela,
+              linhas: x.tabela.linhas.map((l) =>
+                l.map((c, k) => (k === l.length - 1 && c === "pendente" ? `${MARCA_PENDENTE} pendente` : c)),
+              ),
+            },
+          }
+        : x,
+    );
+    const linhasDoRegistro = registro.reduce((n, x) => n + (x.tabela?.linhas.length ?? 0), 0);
+    // as premissas ficam só no registro; do TAP fica a decisão do GP sobre as premissas críticas
+    const tap = secoes(montarTap(dossie, agora)).map((x) =>
+      linhasDoRegistro && /^Premissas e restrições/.test(x.titulo)
+        ? {
+            ...x,
+            paragrafos: [
+              `${linhasDoRegistro} premissas e restrições no registro de premissas, adiante.`,
+              ...(x.paragrafos ?? []).filter((p) => p.startsWith("Premissas críticas que se aplicam")),
+            ],
+          }
+        : x,
+    );
+    return linhasDoRegistro ? [...tap, ...registro] : tap;
   }
-  if (etapa === 4) return dossie.pgp ? comPrefixo(montarPgp(dossie, agora)) : [];
+  if (etapa === 4) return dossie.pgp ? secoes(montarPgp(dossie, agora)) : [];
+  if (etapa === 5) {
+    const r = resultadoDaEtapa5(dossie);
+    if (!r) return [];
+    return secoes(
+      montarRelatorioConformidade(dossie, r.vereditos.contam, r.verificacoes, agora, r.leitura, r.vereditos),
+    );
+  }
   return [];
+}
+
+/** A leitura do PMO da etapa 5 foi feita para outro plano (o id do plano guardado não é o do documento atual). */
+function leituraDeOutroPlano(dossie: Dossie): boolean {
+  const pgp = dossie.documentos.find((d) => d.papel === "pgp");
+  const conf = dossie.conferencia;
+  return Boolean(conf?.leituraPmo && pgp && conf.pgpId && conf.pgpId !== pgp.id);
 }
 
 /**
@@ -109,23 +167,29 @@ export function montarResultadoDaEtapa(
   passos: ArquivosDoPasso[],
   { caso, agora = new Date() }: { caso: string; agora?: Date },
 ): DocumentoExportavel {
-  const secoes: Secao[] = [
+  const processo: Secao[] = [
     {
       titulo: "Como ler este documento",
+      parte: "anexo",
       paragrafos: [
         `Resultado da etapa ${etapa} (${NOME_DA_ETAPA[etapa] ?? ""}) no teste externo, caso ${caso}, gerado quando todos os passos da etapa fecharam (com "seguir" do GP ou sem achado pendente).`,
-        "Para cada passo: o placar resumido (o que o código conferiu na resposta do PMO) e a conferência da segunda instância (achados, o que passou e a decisão do GP). Depois, o resultado final da etapa, como a tela o exporta.",
+        "O resultado da etapa vem primeiro, como a tela o exporta. Neste anexo, para cada passo: o placar resumido (o que o código conferiu na resposta do PMO) e a conferência da segunda instância (achados, o que passou e a decisão do GP).",
         "Os rótulos valem como na tela: Do documento (com página e trecho), Sugestão e Decisão do GP. Tudo do PMO e da segunda instância é Sugestão; quem decide é o GP.",
       ],
     },
   ];
   for (const p of passos) {
     if (p.placar)
-      secoes.push({ titulo: `Passo ${p.passo}: placar resumido`, paragrafos: placarResumido(p.placar) });
+      processo.push({
+        titulo: `Passo ${p.passo}: placar resumido`,
+        parte: "anexo",
+        paragrafos: placarResumido(p.placar),
+      });
     if (p.conferencia) {
       const c = lerConferenciaEmBlocos(p.conferencia);
-      secoes.push({
+      processo.push({
         titulo: `Passo ${p.passo}: segunda instância`,
+        parte: "anexo",
         paragrafos: [
           ...c.cabecalho,
           "Achados:",
@@ -137,21 +201,34 @@ export function montarResultadoDaEtapa(
       });
     }
     if (!p.placar && !p.conferencia)
-      secoes.push({
+      processo.push({
         titulo: `Passo ${p.passo}`,
+        parte: "anexo",
         paragrafos: ["Sem placar nem conferência na pasta do caso."],
       });
   }
   const final = resultadoFinal(dossie, etapa, agora);
-  secoes.push(
+  const secoes: Secao[] = [
     ...(final.length
       ? final
-      : [{ titulo: "Resultado final", paragrafos: ["O dossiê não tem o resultado desta etapa."] }]),
-  );
+      : [
+          {
+            titulo: "Resultado da etapa",
+            paragrafos: [
+              etapa !== 5
+                ? "O dossiê não tem o resultado desta etapa."
+                : leituraDeOutroPlano(dossie)
+                  ? "A leitura do PMO no dossiê é de outro plano (o documento do plano mudou depois dela): a tela a descarta, e a etapa 5 fica sem resultado até a leitura ser refeita (decisão 0037)."
+                  : "O dossiê não tem a leitura do PMO da conferência: sem ela, a etapa 5 não tem resultado (decisão 0037).",
+            ],
+          },
+        ]),
+    ...processo,
+  ];
   return {
     titulo: `Resultado da etapa ${etapa} — ${NOME_DA_ETAPA[etapa] ?? ""}`,
     subtitulo: `Teste externo, caso ${caso}`,
-    ...camposDoDossie(dossie),
+    ...camposDoDossie(dossie, etapa),
     minuta: true,
     geradoEm: agora,
     secoes,

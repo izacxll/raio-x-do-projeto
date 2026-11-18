@@ -31,6 +31,10 @@
   --laranja: #e29200;
   --laranja-claro: #fdf1d8;
   --laranja-txt: #633806;
+  /* Capa de decisão e semáforo (decisão 0084) */
+  --vinho-claro: #f7e1ec;
+  --verde: #2e7d4f;
+  --verde-claro: #e3f2e8;
 
   /* Gravidade (etapa 5) */
   --grave: var(--vinho);

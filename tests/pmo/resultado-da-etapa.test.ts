@@ -59,7 +59,7 @@ describe("resultado da etapa (decisão 0072)", () => {
     expect(c.decisoes.join(" ")).toMatch(/GP seguiu com correção/);
   });
 
-  it("documento: como ler, placar e conferência por passo; sempre minuta", () => {
+  it("documento: o resultado primeiro e o processo no anexo (decisão 0084); sempre minuta", () => {
     const d = montarResultadoDaEtapa(
       criarDossieVazio(HOJE),
       4,
@@ -68,13 +68,17 @@ describe("resultado da etapa (decisão 0072)", () => {
     );
     expect(d.minuta).toBe(true);
     expect(d.titulo).toBe("Resultado da etapa 4 — Plano de gerenciamento do projeto (PGP)");
-    expect(d.secoes.map((s) => s.titulo)).toEqual([
-      "Como ler este documento",
-      "Passo riscos: placar resumido",
-      "Passo riscos: segunda instância",
-      "Passo planos",
-      "Resultado final",
+    // o resultado vem antes; como ler, placar e conferência de cada passo vão para o anexo
+    expect(d.secoes.map((s) => [s.titulo, s.parte ?? "corpo"])).toEqual([
+      ["Resultado da etapa", "corpo"],
+      ["Como ler este documento", "anexo"],
+      ["Passo riscos: placar resumido", "anexo"],
+      ["Passo riscos: segunda instância", "anexo"],
+      ["Passo planos", "anexo"],
     ]);
+    // sem a leitura do PMO, a etapa 5 diz por que não há resultado
+    const e5 = montarResultadoDaEtapa(criarDossieVazio(HOJE), 5, [], { caso: "caso-inventado", agora: HOJE });
+    expect(e5.secoes[0]?.paragrafos?.[0]).toMatch(/leitura do PMO da conferência/);
   });
 });
 

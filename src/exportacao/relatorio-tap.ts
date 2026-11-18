@@ -211,7 +211,7 @@ export function montarTap(dossie: Dossie, agora = new Date()): DocumentoExportav
     titulo: "Termo de abertura do projeto",
     subtitulo:
       "Minuta preparada a partir da RFP e da proposta. Os 12 elementos do PMBOK 6 (processo 4.1); o detalhe fica no plano de gerenciamento.",
-    ...camposDoDossie(dossie),
+    ...camposDoDossie(dossie, 3),
     minuta: pendentes > 0 || !r,
     geradoEm: agora,
     secoes,
@@ -244,7 +244,7 @@ export function montarRegistroPremissas(dossie: Dossie, agora = new Date()): Doc
     titulo: "Registro de premissas inicial",
     subtitulo:
       "Premissas e restrições assumidas na proposta e no TAP (ficha B3). A etapa 4 parte deste registro.",
-    ...camposDoDossie(dossie),
+    ...camposDoDossie(dossie, 3),
     minuta: pendentes > 0 || !registro.length,
     geradoEm: agora,
     secoes: [

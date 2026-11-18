@@ -506,7 +506,7 @@ export function montarPgp(dossie: Dossie, agora = new Date()): DocumentoExportav
     titulo: "Plano de gerenciamento do projeto",
     subtitulo:
       "Minuta preparada a partir da RFP, do TAP e da proposta, adaptada ao porte do projeto (PMBOK 6, processo 4.2; PMBOK 7, adaptação).",
-    ...camposDoDossie(dossie),
+    ...camposDoDossie(dossie, 4),
     minuta: c.pendentes > 0 || !c.p.adaptacao,
     geradoEm: agora,
     secoes,
@@ -539,7 +539,7 @@ export function montarRegistrosPgp(dossie: Dossie, agora = new Date()): Document
   return {
     titulo: "Registros, cronograma e matrizes do plano",
     subtitulo: "Tabelas do plano de gerenciamento do projeto.",
-    ...camposDoDossie(dossie),
+    ...camposDoDossie(dossie, 4),
     minuta: c.pendentes > 0 || !c.p.adaptacao,
     geradoEm: agora,
     secoes,

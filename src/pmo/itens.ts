@@ -4,6 +4,7 @@ import type { EstadoItem, RevisaoItem, UsoPmo } from "../dossie/esquema";
 import type { RespostaPmo } from "./cliente";
 import type { ConferenciaItem } from "./redacao";
 import type { ItemPmo } from "./schemas/comum";
+import { marcasDoItem } from "../exportacao/marcas";
 
 export interface ItemConferido {
   /** "tap:objetivos:0", "premissas:2"… estável enquanto a resposta não muda. */
@@ -61,17 +62,16 @@ export function rotuloDoItem(i: ItemConferido): string {
 /** Parágrafo de um item no documento exportado: rótulo, texto final, complemento e avisos. */
 export function paragrafoDoItem(i: ItemConferido, revisoes: Record<string, RevisaoItem>): string {
   const avisos = [
-    i.conferencia.redacaoAConferir ? "redação a conferir" : "",
     i.item.rotulo === "documento" && i.conferencia.citacaoNaoProva
       ? "citação a conferir: o trecho pode não provar a frase"
       : "",
     i.conferencia.numerosSemFonte.length
       ? `número sem fonte — conferir: ${i.conferencia.numerosSemFonte.join(", ")}`
       : "",
-    estadoDe(revisoes, i.id) === "pendente" ? "pendente de revisão do GP" : "",
   ].filter(Boolean);
+  const marcas = marcasDoItem(estadoDe(revisoes, i.id) === "pendente", i.conferencia.redacaoAConferir);
   const requisitos = i.item.requisitos.length ? ` [${i.item.requisitos.join(", ")}]` : "";
-  return `${rotuloDoItem(i)} ${textoFinal(i, revisoes)}${i.complemento ? ` ${i.complemento}` : ""}${requisitos}${avisos.length ? ` (${avisos.join("; ")})` : ""}`;
+  return `${marcas}${rotuloDoItem(i)} ${textoFinal(i, revisoes)}${i.complemento ? ` ${i.complemento}` : ""}${requisitos}${avisos.length ? ` (${avisos.join("; ")})` : ""}`;
 }
 
 /** Uso de uma chamada, para o dossiê (tokens e valor, nunca a chave). */

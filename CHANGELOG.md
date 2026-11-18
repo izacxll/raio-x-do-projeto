@@ -4,6 +4,12 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 
 ## [Não publicado]
 
+### Formato do resultado de cada etapa (decisão 0084)
+- **Partes:** capa de decisão, quadros, corpo e anexo (o processo), cada uma numa página, no DOCX e no PDF.
+- **Marcas:** ○ pendente de revisão do GP e ◊ redação a conferir no lugar do texto repetido em cada item, com a legenda e a contagem.
+- **Resultado do teste externo:** o resultado primeiro e o processo no anexo, sem o prefixo em cada seção; premissas só no registro (etapa 3); a etapa 5 com o relatório de conformidade.
+- **Rodapé** com o modelo; nome sugerido sem "Contratar pessoa jurídica…".
+
 ### Skill PMO 0.3.6: núcleo e um arquivo por etapa (decisão 0083)
 - **Arquivos das etapas:** `.claude/skills/pmo/referencias/etapas/etapa-1.md` a `etapa-5.md`, com papel, entradas, saída, definição de pronto, armadilhas e rubrica da segunda instância. O `SKILL.md` fica com o que vale para todas as etapas.
 - **Pedido:** o núcleo recortado mais o arquivo da etapa; nenhum pedido cresce (etapa 2: de ~8.100 para ~7.900 tokens de skill).

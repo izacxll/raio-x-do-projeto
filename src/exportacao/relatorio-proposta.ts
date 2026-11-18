@@ -28,7 +28,7 @@ import {
   type ItemProposta,
 } from "../etapas/2-proposta/proposta";
 import { formatarData } from "../texto/datas";
-import { camposDoDossie, type DocumentoExportavel, type Secao } from "./modelo";
+import { camposDoDossie, marcasDoItem, type DocumentoExportavel, type Secao } from "./modelo";
 
 const ROTULO = { documento: "Do documento", sugestao: "Sugestão", decisao_gp: "Decisão do GP" } as const;
 const A_DEFINIR = "a definir pelo GP";
@@ -37,7 +37,7 @@ function base(dossie: Dossie, titulo: string, subtitulo: string, minuta: boolean
   return {
     titulo,
     subtitulo,
-    ...camposDoDossie(dossie),
+    ...camposDoDossie(dossie, 2),
     minuta,
     geradoEm: agora,
   };
@@ -58,13 +58,12 @@ export function rotuloDoItem(i: ItemProposta): string {
 
 function paragrafo(i: ItemProposta, p: PropostaDossie): string {
   const avisos = [
-    i.conferencia.redacaoAConferir ? "redação a conferir" : "",
     i.conferencia.numerosSemFonte.length
       ? `número sem fonte — conferir: ${i.conferencia.numerosSemFonte.join(", ")}`
       : "",
-    estadoDe(p.revisoes, i.id) === "pendente" ? "pendente de revisão do GP" : "",
   ].filter(Boolean);
-  return `${rotuloDoItem(i)} ${textoFinalProposta(i, p.revisoes)}${i.complemento ? ` ${i.complemento}` : ""}${avisos.length ? ` (${avisos.join("; ")})` : ""}`;
+  const marcas = marcasDoItem(estadoDe(p.revisoes, i.id) === "pendente", i.conferencia.redacaoAConferir);
+  return `${marcas}${rotuloDoItem(i)} ${textoFinalProposta(i, p.revisoes)}${i.complemento ? ` ${i.complemento}` : ""}${avisos.length ? ` (${avisos.join("; ")})` : ""}`;
 }
 
 function preparar(dossie: Dossie, docs: DocumentoLido[]) {
@@ -245,9 +244,8 @@ function linhaDaMinuta(i: ItemMinuta): string {
     i.conferencia?.numerosSemFonte.length
       ? `valor não conferido: ${i.conferencia.numerosSemFonte.join(", ")}`
       : "",
-    i.pendente ? "pendente de revisão do GP" : "",
   ].filter(Boolean);
-  return `${rotulo}${i.alerta ? " [Alerta]" : ""} ${i.nome}: ${i.texto}${i.nota ? ` ${i.nota}` : ""}${avisos.length ? ` (${avisos.join("; ")})` : ""}`;
+  return `${marcasDoItem(Boolean(i.pendente), Boolean(i.conferencia?.redacaoAConferir))}${rotulo}${i.alerta ? " [Alerta]" : ""} ${i.nome}: ${i.texto}${i.nota ? ` ${i.nota}` : ""}${avisos.length ? ` (${avisos.join("; ")})` : ""}`;
 }
 
 /** As seções 1 a 8 do método da etapa 2, como anexo da proposta técnica (o que o GP decide e as contas do código). */
