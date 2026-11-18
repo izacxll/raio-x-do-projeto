@@ -22,7 +22,7 @@ const NOME_ROTULO = {
   "decisao-gp": "Decisão do GP",
 } as const;
 const NOME_ESTADO = {
-  pendente: `${MARCA_PENDENTE} Pendente`,
+  pendente: "Pendente",
   aceito: "Aceito",
   editado: "Editado",
   descartado: "Descartado",
@@ -128,7 +128,9 @@ function tabelaDaSecao(itens: ItemLeitura[], revisoes: Record<string, RevisaoIte
         i.trava === "citacao-nao-conferida" && i.origem
           ? `Trecho citado pelo PMO, não achado na p. ${i.origem.pagina}: ${i.origem.trecho}`
           : origemETrecho(i, texto, itens[k - 1]),
-        NOME_ESTADO[estadoDoItem(revisoes, i.id)],
+        estadoDoItem(revisoes, i.id) === "pendente"
+          ? `${MARCA_PENDENTE} Pendente`
+          : NOME_ESTADO[estadoDoItem(revisoes, i.id)],
       ];
     }),
   };
@@ -324,16 +326,16 @@ export function montarPerguntas(
   );
   const perguntas: string[] = [];
   for (const i of pontos) {
-    const pendente = estadoDoItem(a.revisoes, i.id) === "pendente" ? ` ${MARCA_PENDENTE}` : "";
+    const pendente = estadoDoItem(a.revisoes, i.id) === "pendente" ? `${MARCA_PENDENTE} ` : "";
     if (i.pergunta)
       perguntas.push(
-        `${perguntas.length + 1}. ${perguntaFinal(i, a.revisoes)} (${i.premissa ? `${i.premissa}; ` : ""}referência: ${origem(i)}${i.trava ? `; ${NOME_TRAVA[i.trava]}` : ""}.)${pendente}`,
+        `${pendente}${perguntas.length + 1}. ${perguntaFinal(i, a.revisoes)} (${i.premissa ? `${i.premissa}; ` : ""}referência: ${origem(i)}${i.trava ? `; ${NOME_TRAVA[i.trava]}` : ""}.)`,
       );
     // os vagos juntos num item: uma pergunta por linha da tabela
     else if (i.tabela?.colunas.includes("Pergunta sugerida"))
       for (const l of i.tabela.linhas)
         if (l[2])
-          perguntas.push(`${perguntas.length + 1}. ${l[2]} (referência: RFP, p. ${l[1]}.)${pendente}`);
+          perguntas.push(`${pendente}${perguntas.length + 1}. ${l[2]} (referência: RFP, p. ${l[1]}.)`);
   }
   return {
     ...base(

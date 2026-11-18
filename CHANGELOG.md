@@ -6,7 +6,7 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 
 ### Formato do resultado de cada etapa (decisão 0084)
 - **Partes:** capa de decisão, quadros, corpo e anexo (o processo), cada uma numa página, no DOCX e no PDF.
-- **Marcas:** ○ pendente de revisão do GP e △ redação a conferir no lugar do texto repetido em cada item, com a legenda e a contagem.
+- **Marcas:** ○ pendente de revisão do GP e ◊ redação a conferir no lugar do texto repetido em cada item, com a legenda e a contagem.
 - **Resultado do teste externo:** o resultado primeiro e o processo no anexo, sem o prefixo em cada seção; premissas só no registro (etapa 3); a etapa 5 com o relatório de conformidade.
 - **Rodapé** com o modelo; nome sugerido sem "Contratar pessoa jurídica…".
 

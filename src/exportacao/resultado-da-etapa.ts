@@ -6,7 +6,13 @@
 import type { Dossie } from "../dossie/esquema";
 import { analisarRfp } from "../etapas/1-rfp/analisar-rfp";
 import { montarPontoDePartida } from "../etapas/2-proposta/ponto-de-partida";
-import { camposDoDossie, type DocumentoExportavel, type ParteDoDocumento, type Secao } from "./modelo";
+import {
+  camposDoDossie,
+  MARCA_PENDENTE,
+  type DocumentoExportavel,
+  type ParteDoDocumento,
+  type Secao,
+} from "./modelo";
 import { montarPgp } from "./relatorio-pgp";
 import { montarPropostaTecnica } from "./relatorio-proposta";
 import { montarAnaliseRfp } from "./relatorio-rfp";
@@ -83,8 +89,8 @@ export function lerConferenciaEmBlocos(texto: string): {
 }
 
 /** As seções do código (título terminado em "(código)") são do processo: vão para o anexo (decisão 0084). */
-function parteDaSecao(s: Secao): ParteDoDocumento {
-  return /(código)s*$/.test(s.titulo) ? "anexo" : (s.parte ?? "corpo");
+export function parteDaSecao(s: Secao): ParteDoDocumento {
+  return /\(código\)\s*$/.test(s.titulo) ? "anexo" : (s.parte ?? "corpo");
 }
 
 /**
@@ -104,11 +110,34 @@ function resultadoFinal(dossie: Dossie, etapa: number, agora: Date): Secao[] {
   }
   if (etapa === 3) {
     if (!dossie.tap) return [];
-    const registro = dossie.tap.premissas ? secoes(montarRegistroPremissas(dossie, agora)) : [];
-    const tap = secoes(montarTap(dossie, agora)).filter(
-      (x) => !(registro.length && /^Premissas e restrições/.test(x.titulo)),
+    // o registro de premissas no DOCX: a coluna da revisão do GP com a marca, como os outros itens
+    const registro = secoes(montarRegistroPremissas(dossie, agora)).map((x) =>
+      x.tabela
+        ? {
+            ...x,
+            tabela: {
+              ...x.tabela,
+              linhas: x.tabela.linhas.map((l) =>
+                l.map((c, k) => (k === l.length - 1 && c === "pendente" ? `${MARCA_PENDENTE} pendente` : c)),
+              ),
+            },
+          }
+        : x,
     );
-    return [...tap, ...registro];
+    const linhasDoRegistro = registro.reduce((n, x) => n + (x.tabela?.linhas.length ?? 0), 0);
+    // as premissas ficam só no registro; do TAP fica a decisão do GP sobre as premissas críticas
+    const tap = secoes(montarTap(dossie, agora)).map((x) =>
+      linhasDoRegistro && /^Premissas e restrições/.test(x.titulo)
+        ? {
+            ...x,
+            paragrafos: [
+              `${linhasDoRegistro} premissas e restrições no registro de premissas, adiante.`,
+              ...(x.paragrafos ?? []).filter((p) => p.startsWith("Premissas críticas que se aplicam")),
+            ],
+          }
+        : x,
+    );
+    return linhasDoRegistro ? [...tap, ...registro] : tap;
   }
   if (etapa === 4) return dossie.pgp ? secoes(montarPgp(dossie, agora)) : [];
   if (etapa === 5) {
@@ -119,6 +148,13 @@ function resultadoFinal(dossie: Dossie, etapa: number, agora: Date): Secao[] {
     );
   }
   return [];
+}
+
+/** A leitura do PMO da etapa 5 foi feita para outro plano (o id do plano guardado não é o do documento atual). */
+function leituraDeOutroPlano(dossie: Dossie): boolean {
+  const pgp = dossie.documentos.find((d) => d.papel === "pgp");
+  const conf = dossie.conferencia;
+  return Boolean(conf?.leituraPmo && pgp && conf.pgpId && conf.pgpId !== pgp.id);
 }
 
 /**
@@ -179,9 +215,11 @@ export function montarResultadoDaEtapa(
           {
             titulo: "Resultado da etapa",
             paragrafos: [
-              etapa === 5
-                ? "O dossiê não tem a leitura do PMO da conferência: sem ela, a etapa 5 não tem resultado (decisão 0037)."
-                : "O dossiê não tem o resultado desta etapa.",
+              etapa !== 5
+                ? "O dossiê não tem o resultado desta etapa."
+                : leituraDeOutroPlano(dossie)
+                  ? "A leitura do PMO no dossiê é de outro plano (o documento do plano mudou depois dela): a tela a descarta, e a etapa 5 fica sem resultado até a leitura ser refeita (decisão 0037)."
+                  : "O dossiê não tem a leitura do PMO da conferência: sem ela, a etapa 5 não tem resultado (decisão 0037).",
             ],
           },
         ]),

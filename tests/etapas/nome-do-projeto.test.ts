@@ -30,9 +30,16 @@ describe("partes do nome", () => {
     // decisão 0084: o verbo no infinitivo também sai do nome
     expect(
       objetoCurto(
-        "Contratar pessoa jurídica especializada para a elaboração do plano diretor de tecnologia.",
+        "Contratar uma pessoa jurídica especializada para o desenho do plano diretor de tecnologia.",
       ),
+    ).toBe("Desenho do plano diretor de tecnologia");
+    // a fórmula vai só até "especializada" e a preposição: não corta no primeiro "de" longe dela (revisão de código, 0084)
+    expect(
+      objetoCurto("Contratação de consultoria especializada na elaboração do plano diretor de tecnologia"),
     ).toBe("Elaboração do plano diretor de tecnologia");
+    expect(objetoCurto("Contratar empresa especializada na prestação de serviços de apoio")).toBe(
+      "Prestação de serviços de apoio",
+    );
     expect(objetoCurto("a".repeat(5) + " " + "palavra ".repeat(20)).endsWith("…")).toBe(true);
   });
 });

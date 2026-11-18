@@ -24,7 +24,7 @@ Páginas medidas no Word antes desta decisão (dois casos do teste externo, fora
    - o **corpo** (só o que é útil ao gestor);
    - o **anexo** (o processo: placar, segunda instância, rodadas, tokens e as seções do código), para auditoria.
    O modelo do documento (`src/exportacao/modelo.ts`) ganha a parte de cada seção, os alertas (alto e médio, em faixa colorida) e os números-chave; o DOCX e o PDF montam as partes nessa ordem.
-2. **Marcas no lugar do texto repetido:** ○ para o item pendente de revisão do GP e △ para a sugestão com redação a conferir, no começo do item. A legenda, com a contagem, sai uma vez, na capa (ou no começo, quando o documento não tem capa). Os avisos raros (número sem fonte, citação a conferir) continuam por extenso.
+2. **Marcas no lugar do texto repetido:** ○ para o item pendente de revisão do GP e ◊ para a sugestão com redação a conferir, no começo do item. A legenda, com a contagem, sai uma vez, na capa (ou no começo, quando o documento não tem capa). Os avisos raros (número sem fonte, citação a conferir) continuam por extenso.
 3. **Resultado da etapa no teste externo:** o resultado vem primeiro, sem o prefixo do relatório em cada seção; as seções "(código)" vão para o anexo; na etapa 3, as premissas ficam só no registro de premissas; na etapa 5, o relatório de conformidade é calculado como na tela (`src/etapas/5-conferencia/resultado.ts`). Sem a leitura do PMO, a etapa 5 diz isso (decisão 0037).
 4. **Rodapé:** versão do app, versão da skill, **modelo** da leitura da etapa e data, em todo documento exportado.
 5. **Nome sugerido:** sai também "Contratar pessoa jurídica (empresa, instituição, consultoria)… para".
@@ -34,4 +34,7 @@ A capa de decisão e os quadros de cada etapa vêm na decisão seguinte; a recom
 ## Consequências
 
 - A tela continua com as etiquetas de cada item (já são visuais); a mudança é nos documentos exportados.
-- O XLSX não muda: ele traz as tabelas, sem partes.
+- O XLSX não muda: ele traz as tabelas, sem partes nem marcas (a coluna de estado continua "Pendente").
+- A marca da redação a conferir é ◊, e não △: o △ não existe na fonte do PDF (Arimo).
+- O modelo do rodapé é o guardado em cada passo da etapa, não o do seletor (que vale para as próximas chamadas).
+- `resultadoDaEtapa5` repete o cálculo da tela da etapa 5; a tela continua com o dela, porque trabalha sobre o estado que o GP ainda não gravou. Mudança numa precisa ir à outra.

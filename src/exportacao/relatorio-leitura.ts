@@ -52,7 +52,7 @@ export function montarRelatorioLeitura(dossie: Dossie, agora = new Date()): Docu
     titulo: "Relatório de leitura dos documentos",
     subtitulo:
       "O que o código conseguiu ler de cada PDF. Página não verificável não quer dizer que o conteúdo não exista: conferir no documento.",
-    ...camposDoDossie(dossie, 5),
+    ...camposDoDossie(dossie),
     minuta: precisaDeMinuta(dossie.itens),
     geradoEm: agora,
     secoes: dossie.documentos.map(secaoDocumento),

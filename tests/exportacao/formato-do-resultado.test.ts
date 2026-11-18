@@ -3,13 +3,16 @@
 import { readFileSync } from "node:fs";
 import { strFromU8, unzipSync } from "fflate";
 import { describe, expect, it } from "vitest";
+import { criarDossieVazio } from "../../src/dossie/arquivo";
 import { gerarDocx } from "../../src/exportacao/docx";
+import { parteDaSecao } from "../../src/exportacao/resultado-da-etapa";
 import {
   contarMarcas,
   legendaDasMarcas,
   linhaDeVersoes,
   marcasDoDocumento,
   marcasDoItem,
+  modeloDaEtapa,
   secoesPorParte,
   TITULO_DO_ANEXO,
   type DocumentoExportavel,
@@ -61,13 +64,13 @@ describe("partes do documento", () => {
 });
 
 describe("marcas", () => {
-  it("○ para pendente e △ para redação a conferir, contadas no começo de cada texto", () => {
-    expect(marcasDoItem(true, true)).toBe("○△ ");
+  it("○ para pendente e ◊ para redação a conferir, contadas no começo de cada texto", () => {
+    expect(marcasDoItem(true, true)).toBe("○◊ ");
     expect(marcasDoItem(false, false)).toBe("");
-    expect(contarMarcas(["○ a", "○△ b", "c ○", "△ d"])).toEqual({ pendentes: 2, redacaoAConferir: 2 });
+    expect(contarMarcas(["○ a", "○◊ b", "c ○", "◊ d"])).toEqual({ pendentes: 2, redacaoAConferir: 2 });
     expect(marcasDoDocumento(documento())).toEqual({ pendentes: 2, redacaoAConferir: 1 });
     expect(legendaDasMarcas({ pendentes: 2, redacaoAConferir: 1 })).toBe(
-      "Marcas: ○ pendente de revisão do GP: 2 item(ns) · △ redação a conferir: 1 item(ns).",
+      "Marcas: ○ pendente de revisão do GP: 2 item(ns) · ◊ redação a conferir: 1 item(ns).",
     );
     expect(legendaDasMarcas({ pendentes: 0, redacaoAConferir: 0 })).toBe("");
   });
@@ -94,5 +97,26 @@ describe("DOCX no formato novo", () => {
       .map((n) => strFromU8(arquivos[n]!))
       .join("");
     expect(rodapes).toContain("modelo claude-opus-5-5");
+  });
+});
+
+describe("modelo no rodapé: o de cada passo guardado (revisão de código, 0084)", () => {
+  it("sem passo rodado, nenhum; com passos, os modelos deles, não o do seletor", () => {
+    const d = criarDossieVazio(new Date(2026, 10, 18));
+    expect(modeloDaEtapa(d, 4)).toBeUndefined();
+    const passo = (modelo: string) => ({ resposta: {}, modelo, em: "2026-11-18" });
+    const comPassos = {
+      ...d,
+      pgp: { modelo: "seletor", adaptacao: passo("modelo-a"), riscos: passo("modelo-b") },
+    } as unknown as typeof d;
+    expect(modeloDaEtapa(comPassos, 4)).toBe("modelo-a, modelo-b");
+  });
+});
+
+describe("resultado da etapa: seções do código no anexo", () => {
+  it("o título terminado em (código) vai para o anexo; o resto fica onde estava", () => {
+    expect(parteDaSecao({ titulo: "Conferência do TAP (código)" })).toBe("anexo");
+    expect(parteDaSecao({ titulo: "O código de conduta" })).toBe("corpo");
+    expect(parteDaSecao({ titulo: "Ficha", parte: "quadros" })).toBe("quadros");
   });
 });

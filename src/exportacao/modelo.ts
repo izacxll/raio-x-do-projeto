@@ -97,12 +97,23 @@ export function precisaDeMinuta(itens: ItemRotulado[]): boolean {
   return itens.length === 0 || itens.some((i) => i.estado === "pendente");
 }
 
-/** O modelo do Claude que fez a leitura da etapa, para o rodapé (decisão 0084); undefined sem leitura. */
+/**
+ * O modelo do Claude que fez a leitura da etapa, para o rodapé (decisão 0084): o guardado em cada passo (mais de um,
+ * separados por vírgula); undefined sem leitura. O modelo da etapa no dossiê é o do seletor, para as próximas chamadas.
+ */
 export function modeloDaEtapa(dossie: Dossie, etapa: number): string | undefined {
   if (etapa === 1) return dossie.analiseRfp?.leituraPmo?.modelo;
-  if (etapa === 2) return dossie.proposta?.modelo;
-  if (etapa === 3) return dossie.tap?.modelo;
-  if (etapa === 4) return dossie.pgp?.modelo;
+  const dosPassos = (passos: ({ modelo: string } | undefined)[]) => {
+    const modelos = [...new Set(passos.flatMap((x) => (x?.modelo ? [x.modelo] : [])))];
+    return modelos.length ? modelos.join(", ") : undefined;
+  };
+  const p = dossie.proposta;
+  if (etapa === 2) return dosPassos([p?.estrategia, p?.conteudo, p?.eap]);
+  const t = dossie.tap;
+  if (etapa === 3) return dosPassos([t?.tap, t?.premissas]);
+  const g = dossie.pgp;
+  if (etapa === 4)
+    return dosPassos([g?.adaptacao, g?.escopo, g?.cronograma, g?.riscos, g?.planos, g?.execucao]);
   if (etapa === 5) return dossie.conferencia?.leituraPmo?.modelo;
   return undefined;
 }

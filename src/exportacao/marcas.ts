@@ -2,10 +2,10 @@
 // src/pmo/itens.ts.
 /**
  * Marcas no lugar do texto repetido em cada item (decisão 0084): o item pendente de revisão do GP leva ○, e a sugestão
- * com redação a conferir leva △. A capa traz a legenda e a contagem.
+ * com redação a conferir leva ◊ (o △ não existe na fonte do PDF). A capa traz a legenda e a contagem.
  */
 export const MARCA_PENDENTE = "○";
-export const MARCA_REDACAO = "△";
+export const MARCA_REDACAO = "◊";
 export interface ContagemDeMarcas {
   pendentes: number;
   redacaoAConferir: number;
@@ -21,7 +21,7 @@ export function legendaDasMarcas(m?: ContagemDeMarcas): string {
   return `Marcas: ${partes.join(" · ")}.`;
 }
 
-/** O prefixo das marcas de um item ("○ ", "○△ " ou ""). */
+/** O prefixo das marcas de um item ("○ ", "○◊ " ou ""). */
 export function marcasDoItem(pendente: boolean, redacaoAConferir: boolean): string {
   const m = `${pendente ? MARCA_PENDENTE : ""}${redacaoAConferir ? MARCA_REDACAO : ""}`;
   return m ? `${m} ` : "";
@@ -31,7 +31,7 @@ export function marcasDoItem(pendente: boolean, redacaoAConferir: boolean): stri
 export function contarMarcas(textos: string[]): ContagemDeMarcas {
   const m = { pendentes: 0, redacaoAConferir: 0 };
   for (const t of textos) {
-    const prefixo = /^[○△]+/.exec(t.trimStart())?.[0] ?? "";
+    const prefixo = /^[○◊]+/.exec(t.trimStart())?.[0] ?? "";
     if (prefixo.includes(MARCA_PENDENTE)) m.pendentes++;
     if (prefixo.includes(MARCA_REDACAO)) m.redacaoAConferir++;
   }

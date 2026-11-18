@@ -245,7 +245,7 @@ function linhaDaMinuta(i: ItemMinuta): string {
       ? `valor não conferido: ${i.conferencia.numerosSemFonte.join(", ")}`
       : "",
   ].filter(Boolean);
-  return `${marcasDoItem(Boolean(i.pendente), false)}${rotulo}${i.alerta ? " [Alerta]" : ""} ${i.nome}: ${i.texto}${i.nota ? ` ${i.nota}` : ""}${avisos.length ? ` (${avisos.join("; ")})` : ""}`;
+  return `${marcasDoItem(Boolean(i.pendente), Boolean(i.conferencia?.redacaoAConferir))}${rotulo}${i.alerta ? " [Alerta]" : ""} ${i.nome}: ${i.texto}${i.nota ? ` ${i.nota}` : ""}${avisos.length ? ` (${avisos.join("; ")})` : ""}`;
 }
 
 /** As seções 1 a 8 do método da etapa 2, como anexo da proposta técnica (o que o GP decide e as contas do código). */
