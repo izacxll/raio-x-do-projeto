@@ -89,6 +89,7 @@ Uma decisão por arquivo, numerada em ordem. Cada uma registra o contexto, o que
 | [0083](0083-skill-em-nucleo-e-etapas.md) | Skill PMO 0.3.6: núcleo no `SKILL.md` e um arquivo por etapa (papel, entradas, saída, pronto, armadilhas, rubrica); saem os `07-regras` (migração da 0074) |
 | [0084](0084-formato-do-resultado.md) | Formato do resultado: capa, quadros, corpo e anexo, cada um numa página; marcas ○ e ◊ no lugar do texto repetido; modelo no rodapé; etapa 5 com resultado |
 | [0085](0085-capa-de-decisao.md) | Capa de decisão e quadros de cada etapa, por código, na tela e no resultado (fora da proposta, do TAP e do PGP); veredito sugerido do plano na etapa 5 |
+| [0086](0086-recomendacao-de-participar.md) | Etapa 1: recomendação de participar ou não, como sugestão do PMO, com motivo, condições e os itens conferidos; skill 0.3.7 |
 
 Modelo para uma nova decisão:
 
