@@ -4,6 +4,11 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 
 ## [Não publicado]
 
+### Uma lista de R só, do início ao fim (decisão 0080)
+- **Causa do R13 e R14 que sumiam:** o ponto de partida separava entregas e obrigações, e vários passos usavam só as entregas como "a lista de R". Agora há uma lista só (`listaDeR`) em todos os pedidos e conferências.
+- **O pedido diz quais R o GP descartou** na etapa 1.
+- **TAP:** a obrigação basta estar em qualquer item do TAP; a entrega, nos requisitos de alto nível.
+
 ### Segunda instância leve na etapa 5 (decisão 0077, aceita)
 - **Só com veredito "falso" ou "regra_errada"** de achado do código: confere se o trecho cobre o item inteiro da ficha e todas as premissas críticas que se aplicam. Uma rodada, Sonnet por padrão; só as páginas citadas.
 - **A revisão volta ao total:** veredito derrubado ou que cobre só em parte faz o achado contar, com a parte que falta.

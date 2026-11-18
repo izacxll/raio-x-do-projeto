@@ -97,7 +97,7 @@ Premissas críticas que se aplicam (decisão do GP): ${premissasEmTexto(premissa
 Depois, redija os 12 elementos do TAP, em alto nível (o detalhe é do plano), a partir do que foi assinado, seguindo a ficha TAP item a item:
 1. finalidade (TAP.1): o problema ou a necessidade e o resultado esperado, com a fonte.
 2. objetivos (TAP.2): cada um com o critério de sucesso (indicador e meta). Se a RFP não traz a métrica, origemDaMetrica "sugestao".
-3. requisitosAltoNivel (TAP.3): cada item com os números R que cobre; todos os R da RFP devem estar em algum item.
+3. requisitosAltoNivel (TAP.3): cada item com os números R que cobre; toda entrega da lista de R tem de estar em algum item. A obrigação (R do tipo obrigação) pode ir para os limites ou as premissas, com o número R.${e.ponto.rDescartados.length ? ` Descartados pelo GP na etapa 1 (não são R; se a proposta os cita, entram como restrição ou observação): ${e.ponto.rDescartados.join(", ")}.` : ""}
 4. descricao, entregas (os produtos) e limites (TAP.4): produto que a proposta acrescentou e a RFP não pedia é compromisso da proposta (assinado quando há contrato; prometido enquanto não há): entra como entrega-chave, com critério de aceite. Os limites incluem as exclusões e os limites de volume da proposta (cada um com o número C em "requisitos"), as vedações da RFP e o que é do contratante, com a fonte. Exclusão nunca tira requisito. Cada compromisso de método da proposta (sigilo, dados pessoais, revisão interna, régua metodológica, protocolo de campo) vai para a descrição, para a entrega que ele protege ou para o aceite (TAP.9), com o número C em "requisitos"; enquanto não há contrato, ele é compromisso prometido na proposta.
 5. riscoGeral (TAP.5): as fontes de incerteza do projeto, resumidas das brechas e das premissas críticas. Brecha não vira risco: diga a origem.
 6. marcos (TAP.6): cada marco é um resultado concluído (entrega, aprovação, decisão), com o prazo contado de um evento, como os documentos dizem, **dentro da vigência** (a do contrato, quando houver). Entram os marcos que dependem do contratante (dados recebidos, sistema liberado, plano aprovado). Use as entregas calculadas pelo código; não calcule datas.
@@ -131,7 +131,7 @@ export function pedidoPremissas(
   const risco = revisados("riscoGeral", "risco geral");
   return `# Etapa 3 — Termo de abertura · registro de premissas inicial (fichas B3 e TAP, bloco TAP-PR)
 
-Requisitos da RFP: ${e.ponto.requisitos.map((r) => r.numero).join(", ") || "nenhum"}.
+Requisitos da RFP (a lista de R da etapa 1, uma só do início ao fim): ${e.ponto.listaDeR.map((r) => r.numero).join(", ") || "nenhum"}.${e.ponto.rDescartados.length ? ` Descartados pelo GP na etapa 1 (não são R; se o documento os traz, entram como restrição ou observação): ${e.ponto.rDescartados.join(", ")}.` : ""}
 
 Limites do TAP:
 ${limites}

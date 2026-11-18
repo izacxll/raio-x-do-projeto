@@ -416,10 +416,22 @@ function Escopo({ p, e }: { p: PgpDossie; e: EntradaPgp }) {
         </thead>
         <tbody>
           {linhas.map((l) => (
-            <tr key={l.requisito} data-origem={l.situacao !== "rastreado" ? "nao-verificavel" : undefined}>
+            <tr
+              key={l.requisito}
+              data-origem={
+                l.situacao !== "rastreado" && l.situacao !== "obrigacao-no-plano"
+                  ? "nao-verificavel"
+                  : undefined
+              }
+            >
               <td title={l.descricao}>{l.requisito}</td>
               <td>{l.tap.length ? `${l.tap.length} item(ns)` : "—"}</td>
-              <td>{l.eap.join("; ") || "não localizado na EAP"}</td>
+              <td>
+                {l.eap.join("; ") ||
+                  (l.situacao === "obrigacao-no-plano"
+                    ? "obrigação no plano (sem pacote)"
+                    : "não localizado na EAP")}
+              </td>
               <td>{l.atividades.length ? `${l.atividades.length} atividade(s)` : "—"}</td>
             </tr>
           ))}

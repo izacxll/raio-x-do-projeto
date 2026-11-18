@@ -227,7 +227,7 @@ function conferirTodoOPlano(dossie: Dossie, e: EntradaPgp, agora: Date): Resulta
     mapa: mapaDoPgpGerado(dossie, pgp),
     caracteristicas: caracteristicasDoPgp(dossie, e),
     premissasAplicaveis: p.premissasAplicaveis ?? e.premissasAnteriores,
-    requisitos: e.ponto.requisitos,
+    requisitos: e.ponto.listaDeR,
   });
 }
 
