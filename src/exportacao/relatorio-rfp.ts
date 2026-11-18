@@ -213,7 +213,7 @@ export function capaDaRfp(
       ? [
           {
             nivel: "alto" as const,
-            texto: `${faltas.join(" e ").replace(/^./, (c) => c.toUpperCase())}: ${NAO_LOCALIZADO}${pmoSobre(/prazo|valor/i) ? `; o PMO leu: ${curto(pmoSobre(/prazo|valor/i)!.texto)}` : ""}. Se faltar mesmo, é a primeira pergunta antes do preço.`,
+            texto: `${faltas.join(" e ").replace(/^./, (c) => c.toUpperCase())}: ${NAO_LOCALIZADO}${pmoSobre(/prazo|valor/i) ? `; o PMO leu (sugestão): ${curto(pmoSobre(/prazo|valor/i)!.texto).replace(/\.$/, "")}` : ""}. Se faltar mesmo, é a primeira pergunta antes do preço.`,
           },
         ]
       : []),
