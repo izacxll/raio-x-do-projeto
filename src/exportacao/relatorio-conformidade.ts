@@ -58,7 +58,13 @@ export function montarRelatorioConformidade(
         "Ausente quer dizer não localizado pelo código no plano inteiro: conferir no documento antes de decidir.",
         ...(vereditos
           ? [
-              `Só contam os achados do código que o PMO confirmou (decisão 0052). ${vereditos.candidatos.length - vereditos.contam.length} ficaram à parte, com o veredito, na seção "Achados do código que o PMO não confirmou".`,
+              `Só contam os achados do código que o PMO confirmou (decisão 0052) ou que a segunda instância devolveu (decisão 0077). ${vereditos.candidatos.length - vereditos.contam.length} ficaram à parte, com o veredito, na seção "Achados do código que o PMO não confirmou".`,
+              ...vereditos.candidatos
+                .filter((c) => c.revisadoPelaSegunda)
+                .map(
+                  (c) =>
+                    `Voltou a contar pela segunda instância: ${c.achado.titulo}. ${c.revisadoPelaSegunda}`,
+                ),
             ]
           : []),
       ],

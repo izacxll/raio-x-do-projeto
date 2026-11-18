@@ -739,6 +739,13 @@ function Autoconferencia({
               No plano final, eles precisam do valor, do nome ou da cadência que só você define.
             </p>
             {resultado.verificacoes
+              .filter((v) => v.id === "reguas-que-mudaram")
+              .map((v) => (
+                <p key={v.id} className="aviso" role="status" data-testid="reguas-que-mudaram">
+                  <b>Aviso:</b> {v.descricao}. {v.detalhe}
+                </p>
+              ))}
+            {resultado.verificacoes
               .filter((v) => v.id === "presentes-pela-marca-do-pmo")
               .map((v) => (
                 <p key={v.id} className="envio__obs" data-testid="pela-marca-do-pmo">

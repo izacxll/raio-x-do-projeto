@@ -42,6 +42,14 @@ Saída em JSON: `{achados:[{id,tipo,gravidade,onde,texto,evidencias,sugestao}], 
 - Corrija na mesma etapa, numa versão nova (nome de arquivo novo), com as citações reverificadas por script.
 - Registre cada achado útil como lição (regra geral, sem dados do caso) e cada falso alarme na contagem da regra.
 
+### Etapa 5: a versão leve (decisão 0077)
+
+Na etapa 5, a segunda instância confere só os vereditos "falso" e "regra_errada" que o PMO deu a achados do código, e todas as premissas críticas que se aplicam. Vão só as páginas citadas; é uma rodada, no Sonnet por padrão.
+
+- **A régua:** o trecho citado cobre o **item inteiro** da ficha, não só o tema ("processo de auditoria" não cobre "conclusões das auditorias"). Cobre em parte → `em_parte`, com a parte que falta (o achado volta a contar). Não cobre → `derruba`.
+- **Na premissa crítica,** "tratada" só quando ela está escrita como premissa nos três lugares (B3, B27 com gatilho, A11 com reajuste).
+- **Erro que evita:** um veredito "falso" com um trecho que só tocava o tema tirou um achado real do total, e nenhuma camada viu.
+
 ## 5. Limite de rodadas
 
 - Rodada 1 → corrigir → rodada 2. Depois da rodada 2, quem decide é o GP: seguir (corrige e passa) ou mais uma rodada.
