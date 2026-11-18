@@ -511,6 +511,11 @@ describe("registro das questões (B9) montado pelo código", () => {
     const pedido = PEDIDOS_PGP.execucao(e, { ...dossie.pgp!, gerar: { ...dossie.pgp!.gerar, B9: true } });
     expect(pedido).toContain("- QU-01 (origem etapa-1:a6): Qual das duas datas vale?");
     expect(pedido).toContain('começando por "QU-nn —"');
+    // a regra vem no topo, antes da lista das partes (lição 188 da rodada 3)
+    const topo = pedido.indexOf("um item por QU-nn, com o mesmo número, sem renumerar");
+    expect(topo).toBeGreaterThan(0);
+    expect(topo).toBeLessThan(pedido.indexOf("Partes a escrever neste passo"));
+    expect(pedido).toMatch(/2 questões \(QU-01 a QU-02\)/);
   });
 
   it("a conferência aponta origem sem questão e questão sem origem nem fonte", () => {

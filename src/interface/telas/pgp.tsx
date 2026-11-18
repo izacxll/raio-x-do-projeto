@@ -23,6 +23,7 @@ import {
 } from "../../etapas/4-pgp/calculos";
 import { montarEntradaPgp, NOME_TAP_DO_DOSSIE, type EntradaPgp } from "../../etapas/4-pgp/entrada";
 import { conferirMarcosDoPmo, linhaDosDados } from "../../etapas/linha-do-tempo";
+import { NOME_SITUACAO_PRAZO } from "../../etapas/2-proposta/cronograma";
 import { PEDIDOS_PGP } from "../../etapas/4-pgp/pedidos";
 import { PASSOS_PGP } from "../../etapas/4-pgp/passos";
 import {
@@ -503,7 +504,7 @@ function Cronograma({
               <td>{m.dataEntrega ? textoDaData(m.dataEntrega) : `dia útil ${m.entrega}`}</td>
               <td>{m.dataAprovacao ? textoDaData(m.dataAprovacao) : `dia útil ${m.aprovacao}`}</td>
               <td>
-                {m.situacao === "cabe" ? "cabe. " : m.situacao === "nao-cabe" ? "não cabe. " : ""}
+                {m.situacao === "nao-conferido" ? "" : `${NOME_SITUACAO_PRAZO[m.situacao]}. `}
                 {m.texto}
               </td>
             </tr>

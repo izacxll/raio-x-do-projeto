@@ -11,6 +11,7 @@ import {
   datasDoProduto,
   type Cronograma,
   type DatasDoProduto,
+  type SituacaoPrazo,
 } from "../2-proposta/cronograma";
 import { lerValorEmReais } from "../2-proposta/preco";
 import { montarPontoDePartida, type PontoDePartida } from "../2-proposta/ponto-de-partida";
@@ -32,7 +33,7 @@ export interface MarcoDaProposta {
   dataFim?: Date;
   textoConferencia: string;
   /** Entrega dentro do prazo do produto na RFP (conta do código da etapa 2). */
-  situacao: "cabe" | "nao-cabe" | "nao-conferido";
+  situacao: SituacaoPrazo;
   /** Primeira entrega, fim da inspeção e termo definitivo (decisão 0062), em dias úteis e, com o início, em data. */
   datas?: DatasDoProduto & { dataPrimeiraEntrega?: Date; dataFimDaInspecao?: Date; dataTermo?: Date };
 }
@@ -93,6 +94,8 @@ export function dadosDaProposta(
   dossie: Dossie,
   rfp: DocumentoLido[],
   ponto?: PontoDePartida,
+  /** Hoje: o marco fixo que já passou sai "não confirmável" (lição 121). */
+  hoje?: Date,
 ): DadosProposta | undefined {
   const p = dossie.proposta;
   if (!p?.conteudo) return undefined;
@@ -110,6 +113,7 @@ export function dadosDaProposta(
         prazoRfp: ponto?.prazoExecucao,
         feriados: p.parametros.feriados,
         horas: eap.horas,
+        hoje,
       })
     : undefined;
   const marcos = cronograma
@@ -190,7 +194,7 @@ export function montarEntradaTap(dossie: Dossie, hoje = new Date()): EntradaTap 
     rfp,
     fonte: pdf ? "pdf" : doDossie ? "dossie" : "nenhuma",
     proposta,
-    dados: pdf ? undefined : dadosDaProposta(dossie, rfp, ponto),
+    dados: pdf ? undefined : dadosDaProposta(dossie, rfp, ponto, hoje),
     contrato,
     lidoDoContrato: contrato ? lerContrato(contrato) : undefined,
     documentos: [...rfp, ...(proposta ? [proposta] : []), ...(contrato ? [contrato] : [])],

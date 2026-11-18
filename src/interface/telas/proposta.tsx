@@ -7,7 +7,11 @@ import { MOEDA, PRECOS_CONSULTADOS_EM } from "../../config/precos";
 import type { DocumentoLido, PropostaDossie } from "../../dossie/esquema";
 import { useDossie } from "../../dossie/store";
 import { conferirMinuta } from "../../etapas/2-proposta/conferencia-final";
-import { calcularCronograma, conferirPrazosDosProdutos } from "../../etapas/2-proposta/cronograma";
+import {
+  calcularCronograma,
+  conferirPrazosDosProdutos,
+  NOME_SITUACAO_PRAZO,
+} from "../../etapas/2-proposta/cronograma";
 import { conferirMarcosDoPmo, linhaDaProposta } from "../../etapas/linha-do-tempo";
 import { pedidoConteudo, pedidoEap, pedidoEstrategia } from "../../etapas/2-proposta/pedidos";
 import { esqueletoEmTexto, montarMinuta } from "../../etapas/2-proposta/minuta";
@@ -130,7 +134,7 @@ export function PropostaDoFornecedor({ todos }: { todos: DocumentoLido[] }) {
           c,
           esqueleto,
           minuta.tipo.projeto,
-          linhaDaProposta(ponto, prop, docs),
+          linhaDaProposta(ponto, prop, docs, new Date()),
         )
       : null;
   }
@@ -690,6 +694,7 @@ function Eap({
     prazoRfp: ponto.prazoExecucao,
     feriados: par.feriados,
     horas: eap.horas,
+    hoje: new Date(),
   });
   const prazos = conferirPrazosDosProdutos(
     crono,
@@ -698,7 +703,7 @@ function Eap({
     par.inicio ? new Date(`${par.inicio}T00:00:00`) : undefined,
   );
   // conferência dos marcos do PMO contra a conta do código (decisão 0057)
-  const marcos = conferirMarcosDoPmo(eap.conferenciaDosMarcos, linhaDaProposta(ponto, p, docs));
+  const marcos = conferirMarcosDoPmo(eap.conferenciaDosMarcos, linhaDaProposta(ponto, p, docs, new Date()));
   const preco = calcularPreco(eap.perfis, eap.horas, par);
   const estimado = ponto.valorEstimado ? lerValorEmReais(ponto.valorEstimado.texto) : undefined;
   const conf = conferirValor(par.precoFinal ?? preco.precoCalculado, estimado);
@@ -807,13 +812,7 @@ function Eap({
                       {x.produto} — {x.nome}
                     </td>
                     <td>{x.texto}</td>
-                    <td>
-                      {x.situacao === "cabe"
-                        ? "cabe"
-                        : x.situacao === "nao-cabe"
-                          ? "não cabe"
-                          : "não conferido"}
-                    </td>
+                    <td>{NOME_SITUACAO_PRAZO[x.situacao]}</td>
                   </tr>
                 ))}
               </tbody>

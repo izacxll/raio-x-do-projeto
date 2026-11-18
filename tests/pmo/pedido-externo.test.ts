@@ -84,7 +84,13 @@ import { textoDasHoras, textoDasHorasTotais } from "../../src/etapas/2-proposta/
 import { PASSOS_PGP } from "../../src/etapas/4-pgp/passos";
 import { PEDIDOS_PGP, pgpAntesDoPasso } from "../../src/etapas/4-pgp/pedidos";
 import { linhaDaProposta } from "../../src/etapas/linha-do-tempo";
-import { itensDoPgp, passoAnterior, pgpInicial, repeteORegistroInicial } from "../../src/etapas/4-pgp/pgp";
+import {
+  itensDoPgp,
+  pareceRepetirORegistroInicial,
+  passoAnterior,
+  pgpInicial,
+  repeteORegistroInicial,
+} from "../../src/etapas/4-pgp/pgp";
 import { conferirLeitura, pedidoLeitura } from "../../src/etapas/5-conferencia/leitura-pmo";
 import { conferirAutoconferencia, partesARegenerar } from "../../src/pmo/autoconferencia";
 import { citacaoValeComoFato, conferirCitacao } from "../../src/pmo/citacoes";
@@ -138,6 +144,26 @@ function sugestaoDoCodigo(d: Dossie): Caracteristicas {
   const semAsDoGp: Dossie = d.pgp ? { ...d, pgp: { ...d.pgp, caracteristicas: undefined } } : d;
   const e = montarEntradaPgp(semAsDoGp, HOJE);
   return e.fonteTap === "nenhuma" ? CARACTERISTICAS_PADRAO : caracteristicasDoPgp(semAsDoGp, e);
+}
+
+/**
+ * Os tokens do pedido que gerou a resposta (lição da rodada 3, item 3e): lidos do pedido exportado ao lado da
+ * resposta, para comparar antes e depois de cada corte. Sem o pedido na pasta, diz isso.
+ */
+function tokensDoPedidoExportado(etapaDoPedido: number, passoDoPedido: string, base: string): string {
+  const arq = join(
+    dirname(resolve(env.RAIO_X_ARQUIVO ?? "")),
+    `etapa-${etapaDoPedido}-${passoDoPedido}-${base}.md`,
+  );
+  if (!existsSync(arq))
+    return `Tokens do pedido: não medidos (o pedido ${basename(arq)} não está ao lado da resposta).`;
+  const m =
+    /cerca de ([\d.]+) tokens de entrada\*\* \(4 caracteres por token; sistema ([\d.]+), documentos ([\d.]+), pedido ([\d.]+)\)/.exec(
+      readFileSync(arq, "utf8"),
+    );
+  return m
+    ? `Tokens do pedido (${basename(arq)}): cerca de ${m[1]} de entrada (sistema ${m[2]}, documentos ${m[3]}, pedido ${m[4]}; 4 caracteres por token).`
+    : `Tokens do pedido: não medidos (${basename(arq)} sem a linha da estimativa).`;
 }
 
 /** O passo que a segunda instância confere ("segunda-conteudo" → "conteudo"). */
@@ -303,7 +329,7 @@ function montarPasso(d: Dossie, passo: string = PASSO): Passo {
         c,
         esqueleto,
         minuta.tipo.projeto,
-        linhaDaProposta(ponto, p, docs),
+        linhaDaProposta(ponto, p, docs, HOJE),
       ),
       schema: SCHEMAS.eap,
     };
@@ -630,7 +656,10 @@ describe.skipIf(MODO !== "importar")("importar a resposta do PMO (leitura indepe
         dirname(resolve(env.RAIO_X_ARQUIVO ?? "")),
         `conferencia-etapa-${etapa}-${alvo}-${base}.md`,
       );
-      writeFileSync(arq, `${segundaInstanciaEmTexto(etapa, alvo, res, rodada)}\n`);
+      writeFileSync(
+        arq,
+        `${segundaInstanciaEmTexto(etapa, alvo, res, rodada)}\n\n${tokensDoPedidoExportado(etapa, passo, base)}\n`,
+      );
       console.log(
         `Conferência: ${arq}\nRodada ${rodada}. Achados: ${res.achados.length}; de gravidade alta: ${res.altas}`,
       );
@@ -901,6 +930,7 @@ describe.skipIf(MODO !== "importar")("importar a resposta do PMO (leitura indepe
             ? calcularCronograma(eap.atividades, {
                 inicio,
                 aprovacaoDias: dossie.proposta.parametros.aprovacaoDias,
+                hoje: HOJE,
               })
             : undefined;
           if (cron)
@@ -936,7 +966,7 @@ describe.skipIf(MODO !== "importar")("importar a resposta do PMO (leitura indepe
           ...crono.problemas.map((x) => `- ${x}`),
           ...crono.datasFixas.map(
             (f) =>
-              `- data fixa ${f.atividade}: ${dataBr(f.inicio)} a ${dataBr(f.fim)} (${f.diasCorridos} dias corridos); predecessoras até ${dataBr(f.fimPredecessoras)}; folga ${f.folgaCorrida ?? "—"} dia(s) corrido(s); ${f.cabe ? "cabe" : "NÃO CABE"}`,
+              `- data fixa ${f.atividade}: ${dataBr(f.inicio)} a ${dataBr(f.fim)} (${f.diasCorridos} dias corridos); predecessoras até ${dataBr(f.fimPredecessoras)}; folga ${f.folgaCorrida ?? "—"} dia(s) corrido(s); ${f.vencida ? `NÃO CONFIRMÁVEL: a data já passou (a conta ${f.cabe ? "caberia" : "não caberia"}, só como intervalo)` : f.cabe ? "cabe" : "NÃO CABE"}`,
           ),
           "",
           "| Atividade | Pacote | Duração | Início | Fim | Folga | Crítica |",
@@ -980,6 +1010,13 @@ describe.skipIf(MODO !== "importar")("importar a resposta do PMO (leitura indepe
           .map(([pc]) => pc)
           .sort();
         const repetidas = r.premissas.filter((x) => repeteORegistroInicial(x, ep.premissasTap));
+        // com outras palavras (lição 154): aviso, o PMO e o GP conferem o sentido
+        const parecidas = r.premissas.flatMap((x) => {
+          const p = pareceRepetirORegistroInicial(x, ep.premissasTap);
+          return p
+            ? [`${x.item.id} ≈ ${p.linha.item.id} (${Math.round(p.parcela * 100)}% das palavras-chave)`]
+            : [];
+        });
         linhas.push(
           "",
           "## Autoconferência do plano (regras da etapa 5)",
@@ -1006,6 +1043,7 @@ describe.skipIf(MODO !== "importar")("importar a resposta do PMO (leitura indepe
             .filter((v) => /^item:(B3\.9|B27\.13|A8\.12)$/.test(v.id) || /^premissa:PC\d/.test(v.id))
             .map((v) => `- conferência ${v.id}: ${v.estado} (${v.detalhe.slice(0, 120)})`),
           `- premissas do PMO que repetem o registro inicial e saem do B3: ${repetidas.length ? repetidas.map((x) => `${x.item.id} (${x.tipo === "restricao" ? "restrição" : "premissa"}, ${x.origem}${x.premissaCritica ? `, ${x.premissaCritica}` : ""})`).join("; ") : "nenhuma"}`,
+          `- AVISO, premissas novas que podem repetir o registro inicial com outras palavras (o código compara palavras; o PMO e o GP conferem o sentido): ${parecidas.join("; ") || "nenhuma"}`,
           "",
           "## Contingência pelo código",
           `- riscos que pedem reserva: ${custos?.riscosComReserva.map((x) => x.id).join(", ") || "nenhum"}`,
@@ -1188,6 +1226,16 @@ describe.skipIf(MODO !== "importar")("importar a resposta do PMO (leitura indepe
     );
     const notas = relatorio.replace(/\.placar\.md$/, ".notas.md");
     if (existsSync(notas)) linhas.splice(1, 0, "", `Notas à mão (a importação não toca): ${basename(notas)}`);
+    linhas.splice(
+      1,
+      0,
+      "",
+      tokensDoPedidoExportado(
+        etapa,
+        passo,
+        basename(dossie.documentos.find((x) => x.papel === "rfp")?.nomeArquivo ?? "rfp", ".pdf"),
+      ),
+    );
     writeFileSync(relatorio, `${linhas.join("\n")}\n`);
     console.log(`${linhas.join("\n")}\n\nDossiê atualizado: ${arqDossie}\nRelatório: ${relatorio}`);
   }, 120_000);

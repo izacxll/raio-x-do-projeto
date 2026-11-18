@@ -10,7 +10,12 @@ import {
 import type { ItemConferido } from "../../pmo/itens";
 import type { ParametrosPgp, PgpDossie } from "../../dossie/esquema";
 import { formatarData, somarDiasUteis } from "../../texto/datas";
-import { calcularCronograma, primeiroDiaUtil, type Cronograma } from "../2-proposta/cronograma";
+import {
+  calcularCronograma,
+  primeiroDiaUtil,
+  type Cronograma,
+  type SituacaoPrazo,
+} from "../2-proposta/cronograma";
 import { calcularPreco, lerValorEmReais, type Preco } from "../2-proposta/preco";
 import { diasDoTexto } from "../3-tap/divergencias";
 import type { EntradaPgp } from "./entrada";
@@ -43,6 +48,7 @@ export function cronogramaDoPgp(p: PgpDossie, e: EntradaPgp): Cronograma | undef
     prazoRfp: e.ponto.prazoExecucao,
     feriados: p.parametros.feriados,
     horas: c.horas,
+    hoje: e.hoje,
   });
 }
 
@@ -130,7 +136,7 @@ export interface MarcoCalculado {
   dataAprovacao?: Date;
   /** Prazo do marco no TAP, quando houver ("até 30 dias após a assinatura"). */
   prazoTap?: string;
-  situacao: "cabe" | "nao-cabe" | "nao-conferido";
+  situacao: SituacaoPrazo;
   texto: string;
 }
 

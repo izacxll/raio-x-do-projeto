@@ -311,6 +311,32 @@ function divergenciasDeMarcoFixo(e: EntradaTap): Divergencia[] {
     }));
 }
 
+/**
+ * Marco fixo cuja data já passou (lições 69 e 121): divergência à parte da conta. O "cabe" do código só mede o
+ * intervalo a partir do início informado; o marco não é executável como está.
+ */
+function divergenciasDeMarcoVencido(e: EntradaTap): Divergencia[] {
+  const c = e.dados?.cronograma;
+  if (!c) return [];
+  return c.datasFixas
+    .filter((f) => f.vencida)
+    .map((f) => ({
+      id: `marco-vencido:${f.atividade}`,
+      tema: "prazo" as const,
+      rfp: {
+        texto: `data fixa de ${formatarData(f.inicio)} a ${formatarData(f.fim)}, já passada em relação a hoje`,
+      },
+      proposta: {
+        texto: `a conta do código ${f.cabe ? "caberia" : "não caberia"} a partir do início informado, mas só como intervalo`,
+        onde: `${nomeProposta(e)}, EAP, atividade ${f.atividade}`,
+      },
+      situacao: "diferente" as const,
+      observacao:
+        "Marco não confirmável: a data do documento já passou. Sugere-se perguntar ao contratante a nova data (ou a nova edição) antes do preço e levar a pendência ao registro de riscos e ao plano de mudanças.",
+      oQueFazer: "Perguntar ao contratante por escrito, no prazo de esclarecimento ou antes da assinatura.",
+    }));
+}
+
 export function compararRfpEProposta(e: EntradaTap): Divergencia[] {
   if (e.fonte === "nenhuma") return divergenciasDoMetodo(e);
   const requisitos = e.ponto.requisitos.filter((r) => r.tipo === "produto" || r.tipo === "equipe" || !r.tipo);
@@ -320,6 +346,7 @@ export function compararRfpEProposta(e: EntradaTap): Divergencia[] {
     divergenciaDePrazo(e),
     divergenciaDeValor(e),
     ...divergenciasDeMarcoFixo(e),
+    ...divergenciasDeMarcoVencido(e),
     // método da etapa 3 (decisão 0041): contrato, parcelas, conformidade, duração, regra da equipe, produtividade
     ...divergenciasDoMetodo(e),
   ];

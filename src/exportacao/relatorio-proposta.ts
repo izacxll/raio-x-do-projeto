@@ -6,7 +6,11 @@ import { numerarCompromissos } from "../etapas/2-proposta/compromissos";
 import type { DocumentoLido, Dossie, PropostaDossie } from "../dossie/esquema";
 import { idsDaBrecha } from "../etapas/2-proposta/ponto-de-partida";
 import { conferirMinuta } from "../etapas/2-proposta/conferencia-final";
-import { calcularCronograma, conferirPrazosDosProdutos } from "../etapas/2-proposta/cronograma";
+import {
+  calcularCronograma,
+  conferirPrazosDosProdutos,
+  NOME_SITUACAO_PRAZO,
+} from "../etapas/2-proposta/cronograma";
 import {
   calcularPreco,
   conferirValor,
@@ -151,6 +155,7 @@ export function montarPropostaTecnica(
       prazoRfp: ponto.prazoExecucao,
       feriados: p.parametros.feriados,
       horas: eap.horas,
+      hoje: agora,
     });
     secoes.push({
       titulo: "Cronograma executivo (calculado pelo código)",
@@ -194,11 +199,7 @@ export function montarPropostaTecnica(
         tabela: {
           colunas: ["Produto", "Conferência", "Situação"],
           larguras: [2.5, 5, 1],
-          linhas: prazos.map((x) => [
-            `${x.produto} — ${x.nome}`,
-            x.texto,
-            x.situacao === "cabe" ? "cabe" : x.situacao === "nao-cabe" ? "não cabe" : "não conferido",
-          ]),
+          linhas: prazos.map((x) => [`${x.produto} — ${x.nome}`, x.texto, NOME_SITUACAO_PRAZO[x.situacao]]),
         },
       });
     secoes.push({

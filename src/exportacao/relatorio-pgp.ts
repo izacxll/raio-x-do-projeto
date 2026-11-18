@@ -26,7 +26,7 @@ import {
   partesAGerar,
   pgpInicial,
 } from "../etapas/4-pgp/pgp";
-import { duracaoEsperada, type Cronograma } from "../etapas/2-proposta/cronograma";
+import { duracaoEsperada, NOME_SITUACAO_PRAZO, type Cronograma } from "../etapas/2-proposta/cronograma";
 import { textoDasHoras, textoDasHorasTotais } from "../etapas/2-proposta/preco";
 import { itensValidos, paragrafoDoItem, type ItemConferido } from "../pmo/itens";
 import { camposDoDossie, type DocumentoExportavel, type Secao, type Tabela } from "./modelo";
@@ -59,9 +59,11 @@ function textoDoInicio(p: PgpDossie, e: EntradaPgp): string {
  */
 export function alertasDeDataFixa(crono?: Cronograma): string[] {
   return (crono?.datasFixas ?? []).map((f) =>
-    !f.cabe
-      ? `Alerta (conta do código): a atividade ${f.atividade} começa na data fixa de ${textoDaData(f.inicio)}, mas as predecessoras só terminam em ${textoDaData(f.fimPredecessoras)}, ${-(f.folgaCorrida ?? 0)} dia(s) corrido(s) depois. As premissas de aprovação no prazo (PC3) e de quem faz a sua parte antes do evento (PC6) não se sustentam com este cronograma: sugere-se rever durações, paralelismo ou o prazo de análise combinado com o contratante.`
-      : `Data fixa (conta do código): a atividade ${f.atividade} começa em ${textoDaData(f.inicio)}; as predecessoras terminam em ${textoDaData(f.fimPredecessoras)}, com folga de ${f.folgaCorrida ?? 0} dia(s) corrido(s). Atraso maior que isso na aprovação (PC3) ou em quem faz a sua parte (PC6) empurra a atividade para depois do evento.`,
+    f.vencida
+      ? `Não confirmável (conta do código): a atividade ${f.atividade} tem data fixa de ${textoDaData(f.inicio)}, que já passou em relação a hoje. O marco não é executável como está: a conta vale só como intervalo, e a nova data depende do contratante (registro de riscos e plano de mudanças).`
+      : !f.cabe
+        ? `Alerta (conta do código): a atividade ${f.atividade} começa na data fixa de ${textoDaData(f.inicio)}, mas as predecessoras só terminam em ${textoDaData(f.fimPredecessoras)}, ${-(f.folgaCorrida ?? 0)} dia(s) corrido(s) depois. As premissas de aprovação no prazo (PC3) e de quem faz a sua parte antes do evento (PC6) não se sustentam com este cronograma: sugere-se rever durações, paralelismo ou o prazo de análise combinado com o contratante.`
+        : `Data fixa (conta do código): a atividade ${f.atividade} começa em ${textoDaData(f.inicio)}; as predecessoras terminam em ${textoDaData(f.fimPredecessoras)}, com folga de ${f.folgaCorrida ?? 0} dia(s) corrido(s). Atraso maior que isso na aprovação (PC3) ou em quem faz a sua parte (PC6) empurra a atividade para depois do evento.`,
   );
 }
 
@@ -260,7 +262,7 @@ function tabelasDoCodigo(codigo: string, c: Contexto): { paragrafos?: string[]; 
             m.dataEntrega ? textoDaData(m.dataEntrega) : `dia útil ${m.entrega}`,
             m.dataAprovacao ? textoDaData(m.dataAprovacao) : `dia útil ${m.aprovacao}`,
             m.prazoTap ?? "—",
-            m.situacao === "cabe" ? "cabe" : m.situacao === "nao-cabe" ? "não cabe" : "não conferido",
+            NOME_SITUACAO_PRAZO[m.situacao],
             m.texto,
           ]),
         },

@@ -9,6 +9,7 @@ import type { ItemPmo } from "../../pmo/schemas/comum";
 import type { ParteGerada, PassoPgp, RespostaAdaptacao } from "../../pmo/schemas/pgp";
 import { PASSOS_PGP } from "./passos";
 import type { PremissaRegistro } from "../../pmo/schemas/tap";
+import { tirarAcentos } from "../../texto/normalizar";
 
 export function pgpInicial(modelo: string = MODELO_PADRAO): PgpDossie {
   return { modelo, gerar: {}, revisoes: {}, parametros: { valoresHora: {}, nomes: {} }, uso: [] };
@@ -80,6 +81,48 @@ export function repeteORegistroInicial(x: PremissaRegistro, registroInicial: Pre
       (!!x.premissaCritica && r.premissaCritica === x.premissaCritica) ||
       (r.origem === x.origem && r.tipo === x.tipo),
   );
+}
+
+const PALAVRAS_VAZIAS = new Set(
+  "para pelo pela pelos pelas como mais sobre entre desde cada todo toda todos todas este esta isso essa esse quando onde qual quais seja sejam pode podem deve devem sera serao antes depois ainda tambem outro outra outros outras mesmo mesma sem nos nas dos das com uma uns umas que nao sugere registrar".split(
+    " ",
+  ),
+);
+
+/** Radicais (5 primeiras letras) das palavras de 4 letras ou mais, sem acento e sem as palavras vazias. */
+function radicais(texto: string): Set<string> {
+  return new Set(
+    tirarAcentos(texto)
+      .toLowerCase()
+      .replace(/[^a-z0-9 ]+/g, " ")
+      .split(/\s+/)
+      .filter((w) => w.length >= 4 && !PALAVRAS_VAZIAS.has(w))
+      .map((w) => w.slice(0, 5)),
+  );
+}
+
+/**
+ * Premissa nova do passo de riscos que parece reescrever uma do registro inicial com outras palavras (lição 154 da
+ * rodada 3): a mesma premissa crítica (ou nenhuma nas duas) e metade ou mais das palavras-chave em comum (5 no
+ * mínimo). É aviso, não erro: o código compara palavras, o PMO e o GP conferem o sentido. Calibrado nos dois casos do
+ * teste externo (1 aviso em 2 registros finais). Devolve a linha do registro inicial parecida e a parcela em comum.
+ */
+export function pareceRepetirORegistroInicial(
+  x: PremissaRegistro,
+  registroInicial: PremissaRegistro[],
+): { linha: PremissaRegistro; parcela: number } | undefined {
+  if (repeteORegistroInicial(x, registroInicial)) return undefined;
+  const a = radicais(x.item.texto);
+  let melhor: { linha: PremissaRegistro; parcela: number } | undefined;
+  for (const r of registroInicial) {
+    if ((x.premissaCritica || "") !== (r.premissaCritica || "")) continue;
+    const b = radicais(r.item.texto);
+    const comuns = [...a].filter((w) => b.has(w)).length;
+    const parcela = comuns / Math.max(1, Math.min(a.size, b.size));
+    if (comuns >= 5 && parcela >= 0.5 && (!melhor || parcela > melhor.parcela))
+      melhor = { linha: r, parcela };
+  }
+  return melhor;
 }
 
 export function itensDoPgp(
