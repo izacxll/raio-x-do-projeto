@@ -356,7 +356,7 @@ const REGRAS = `Regras deste pedido (além da skill e do método):
 - Nas outras seções, premissa "", porquePesa "", pergunta "" e impacto 0.
 - Nada inventado: o que o documento não diz fica "não informado no documento — a definir pelo GP". Sem nomes de pessoas.
 - Cruzamentos (decisão 0046): registre X1 a X6 em "cruzamentos", cada um "feito" (resultado: "confere", "diverge: …" ou "em aberto: …") ou "nao_se_aplica" (com o motivo), partindo do que o código já contou (abaixo). O que diverge vira item da seção 7, e o id dele vai em "itens". Em X3, confira antes se o próprio documento já diz quem executa.
-- Autoconferência (decisão 0044): em "autoconferencia", marque cada uma das 8 seções do método ("etapa-1:secao-1" a "etapa-1:secao-8") como "presente" (onde: o id de um item), "dispensado" (motivo) ou "decisao_gp" (motivo). Nenhuma seção sem marca.
+- Autoconferência (decisão 0044): em "autoconferencia", marque cada uma das 8 seções do método ("etapa-1:secao-1" a "etapa-1:secao-8") como "presente" (onde: o id de um item), "dispensado" (motivo) ou "decisao_gp" (motivo). Nenhuma seção sem marca. Marca "decisao_gp" sempre com motivo: sem motivo, ela conta como incompleta.
 - O trecho citado tem de provar o que o item afirma (número, data ou termo-chave); trecho com menos de 6 palavras vira "citação fraca".`;
 
 function linhaDoEsqueleto(i: ItemLeitura): string {

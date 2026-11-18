@@ -15,7 +15,7 @@ const regras = (passo: PassoEtapa3) => `Regras deste pedido (além da skill):
 - Sugestão em redação condicional ("sugere-se", "uma opção é", "recomenda-se avaliar"). Nada de valores, prazos ou quantidades que não estejam nos documentos: escreva "não informado no documento — a definir pelo GP".
 - GP designado, nível de autoridade, patrocinador e recursos financeiros são decisao_gp: só redação sugerida, nunca nome, valor ou alçada como fato.
 - Use os números de requisito da RFP (R01, R02…). Requisito novo é sugestão, sem número.
-- Autoconferência (decisão 0044): em "autoconferencia", marque cada item ${passo === "tap" ? "dos blocos de divergências e dos elementos do TAP" : "do bloco TAP-PR e da ficha B3"} — ${itensDoPassoEmTexto(passo)} —, e só eles, como "presente" (onde: o id do item), "dispensado" (motivo) ou "decisao_gp" (motivo). ${passo === "premissas" ? "Este passo não gera o resto do TAP: não marque os outros itens da ficha." : "O registro de premissas é outro passo: não marque TAP-PR nem B3."} Divergência que muda escopo, custo ou quem executa fica pendente, com a versão que mais obriga a FGV.
+- Autoconferência (decisão 0044): em "autoconferencia", marque cada item ${passo === "tap" ? "dos blocos de divergências e dos elementos do TAP" : "do bloco TAP-PR e da ficha B3"} — ${itensDoPassoEmTexto(passo)} —, e só eles, como "presente" (onde: o id do item), "dispensado" (motivo) ou "decisao_gp" (motivo). Marca "decisao_gp" sempre com motivo: sem motivo, ela conta como incompleta. ${passo === "premissas" ? "Este passo não gera o resto do TAP: não marque os outros itens da ficha." : "O registro de premissas é outro passo: não marque TAP-PR nem B3."} Divergência que muda escopo, custo ou quem executa fica pendente, com a versão que mais obriga a FGV.
 - Campos de texto sem conteúdo ficam com "" e listas sem conteúdo ficam com [].`;
 
 function divergenciasEmTexto(divs: Divergencia[], decisoes: Record<string, DecisaoDivergencia>): string {
@@ -42,10 +42,11 @@ export function premissasEmTexto(pcs: Record<string, boolean>): string {
 
 /**
  * Compromissos numerados da proposta (decisão 0047) que o passo leva: o TAP, as exclusões e os limites de volume (nos
- * limites); o registro, as premissas e as obrigações do contratante. O PMO cita o C em "requisitos" do item.
+ * limites) e os compromissos de método (descrição, entregas ou aceite; decisão 0061); o registro, as premissas e as
+ * obrigações do contratante. O PMO cita o C em "requisitos" do item.
  */
 function compromissosDoPedido(e: EntradaTap, passo: "tap" | "premissas"): string {
-  const tipos = passo === "tap" ? ["exclusao", "limite"] : ["premissa", "obrigacao"];
+  const tipos = passo === "tap" ? ["exclusao", "limite", "metodo"] : ["premissa", "obrigacao"];
   const cs = (e.dados?.compromissos ?? []).filter((c) => tipos.includes(c.tipo));
   if (!cs.length) return "";
   return `
@@ -95,7 +96,7 @@ Depois, redija os 12 elementos do TAP, em alto nível (o detalhe é do plano), a
 1. finalidade (TAP.1): o problema ou a necessidade e o resultado esperado, com a fonte.
 2. objetivos (TAP.2): cada um com o critério de sucesso (indicador e meta). Se a RFP não traz a métrica, origemDaMetrica "sugestao".
 3. requisitosAltoNivel (TAP.3): cada item com os números R que cobre; todos os R da RFP devem estar em algum item.
-4. descricao, entregas (os produtos) e limites (TAP.4): produto que a proposta acrescentou e a RFP não pedia é compromisso assinado: entra como entrega-chave, com critério de aceite. Os limites incluem as exclusões e os limites de volume da proposta (cada um com o número C em "requisitos"), as vedações da RFP e o que é do contratante, com a fonte. Exclusão nunca tira requisito.
+4. descricao, entregas (os produtos) e limites (TAP.4): produto que a proposta acrescentou e a RFP não pedia é compromisso assinado: entra como entrega-chave, com critério de aceite. Os limites incluem as exclusões e os limites de volume da proposta (cada um com o número C em "requisitos"), as vedações da RFP e o que é do contratante, com a fonte. Exclusão nunca tira requisito. Cada compromisso de método da proposta (sigilo, dados pessoais, revisão interna, régua metodológica, protocolo de campo) vai para a descrição, para a entrega que ele protege ou para o aceite (TAP.9), com o número C em "requisitos"; enquanto não há contrato, ele é compromisso prometido na proposta.
 5. riscoGeral (TAP.5): as fontes de incerteza do projeto, resumidas das brechas e das premissas críticas. Brecha não vira risco: diga a origem.
 6. marcos (TAP.6): cada marco é um resultado concluído (entrega, aprovação, decisão), com o prazo contado de um evento, como os documentos dizem, **dentro da vigência** (a do contrato, quando houver). Entram os marcos que dependem do contratante (dados recebidos, sistema liberado, plano aprovado). Use as entregas calculadas pelo código; não calcule datas.
 7. recursosFinanceiros (TAP.7), gerente (TAP.11) e patrocinador (TAP.12): decisao_gp, só a redação sugerida.

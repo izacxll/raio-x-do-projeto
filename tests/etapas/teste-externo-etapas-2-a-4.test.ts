@@ -4,7 +4,12 @@
 import { describe, expect, it } from "vitest";
 import { analisarRfp } from "../../src/etapas/1-rfp/analisar-rfp";
 import { numerosQuePedemFonte } from "../../src/etapas/1-rfp/leitura-pmo";
-import { numerarCompromissos } from "../../src/etapas/2-proposta/compromissos";
+import { readFileSync } from "node:fs";
+import {
+  faixasDosCompromissos,
+  faixasErradasNoTexto,
+  numerarCompromissos,
+} from "../../src/etapas/2-proposta/compromissos";
 import { conferirMinuta } from "../../src/etapas/2-proposta/conferencia-final";
 import type { PontoDePartida } from "../../src/etapas/2-proposta/ponto-de-partida";
 import {
@@ -192,5 +197,103 @@ describe("matriz: uma seção para vários critérios", () => {
     } as unknown as RespostaConteudo;
     const m = conferirMinuta(ponto, so, c, undefined);
     expect(m.matriz.filter((x) => x.tipo === "criterio").map((x) => x.chave)).toEqual(["Analista Contábil"]);
+  });
+});
+
+describe("compromissos de método no TAP e faixas certas (decisão 0061)", () => {
+  const item = (texto: string, ficha = "") => ({
+    id: "x",
+    texto,
+    rotulo: "sugestao" as const,
+    motivo: "",
+    fontes: [],
+    alternativas: [],
+    requisitos: [],
+    ficha,
+  });
+  // dados inventados: 2 premissas, 1 obrigação, 1 exclusão, 4 compromissos de método e 2 limites
+  const c = {
+    estrutura: [
+      {
+        codigo: "3",
+        titulo: "Metodologia",
+        criterio: "",
+        itens: [
+          item(
+            "Compromissos numerados: premissas C01 a C02, obrigações C03, exclusões C04 e limites C05 a C06.",
+          ),
+          item(
+            "Compromisso de método, protocolo de campo: pontos e turnos combinados com a área.",
+            "PROP-METODOLOGIA.7",
+          ),
+          item(
+            "Compromisso de método, dados pessoais: questionário sem identificação.",
+            "PROP-METODOLOGIA.9",
+          ),
+          item(
+            "Compromisso de método, revisão interna: revisão por quem não redigiu.",
+            "PROP-METODOLOGIA.10",
+          ),
+          item(
+            "Compromisso de método, régua: o método aceito é o critério do aceite.",
+            "PROP-METODOLOGIA.11",
+          ),
+          item("Quantidades do campo antes do preço.", "PROP-METODOLOGIA.12"),
+        ],
+      },
+    ],
+    premissas: [
+      { item: item("Os dados chegam no prazo."), premissaCritica: "PC1" },
+      { item: item("O evento ocorre na data."), premissaCritica: "PC5" },
+    ],
+    obrigacoesContratante: [{ item: item("Fornecer os dados do ano anterior.") }],
+    exclusoes: [item("Implementar as melhorias.")],
+    limitesVolume: [item("Até 400 questionários válidos."), item("Uma rodada de ajuste por produto.")],
+  } as unknown as RespostaConteudo;
+
+  it("todo compromisso de método recebe C, inclusive o protocolo de campo com a ficha do campo", () => {
+    const cs = numerarCompromissos(c);
+    const metodo = cs.filter((x) => x.tipo === "metodo");
+    // antes: 3 de 4 numerados (o protocolo de campo ficava sem C); agora, 4 de 4
+    expect(metodo).toHaveLength(4);
+    expect(metodo.map((x) => x.texto)).toContain(
+      "Compromisso de método, protocolo de campo: pontos e turnos combinados com a área.",
+    );
+    // a quantidade do campo (PROP-METODOLOGIA.12) não é compromisso de método
+    expect(cs.some((x) => /Quantidades do campo/.test(x.texto))).toBe(false);
+  });
+
+  it("a faixa de cada tipo sai da numeração do código", () => {
+    expect(faixasDosCompromissos(numerarCompromissos(c))).toBe(
+      "premissas C01 a C02; obrigações do contratante C03; exclusões C04; compromissos de método C05 a C08; limites de volume C09 a C10",
+    );
+  });
+
+  it("faixa do texto do PMO com o tipo errado é apontada; a certa, não (1 acerto, 0 alarme falso)", () => {
+    const cs = numerarCompromissos(c);
+    const erradas = faixasErradasNoTexto(
+      "Compromissos numerados: premissas C01 a C02, obrigações C03, exclusões C04 e limites C05 a C06.",
+      cs,
+    );
+    expect(erradas).toHaveLength(1);
+    expect(erradas[0]).toMatch(/limites de volume C05 a C06.*C05 é compromisso de método/);
+    expect(
+      faixasErradasNoTexto("Premissas C01 a C02; compromissos de método C05 a C08; limites C09 a C10.", cs),
+    ).toEqual([]);
+    // premissa crítica (PC1) e número de requisito não são faixa de C
+    expect(faixasErradasNoTexto("As premissas críticas PC1 e PC5 valem para R01 a R03.", cs)).toEqual([]);
+  });
+
+  it("decisao_gp sempre com motivo, no pedido das quatro etapas com autoconferência", () => {
+    const fontes = [
+      "src/etapas/1-rfp/leitura-pmo.ts",
+      "src/etapas/2-proposta/pedidos.ts",
+      "src/etapas/3-tap/pedidos.ts",
+      "src/etapas/4-pgp/pedidos.ts",
+    ];
+    for (const f of fontes)
+      expect(readFileSync(new URL(`../../${f}`, import.meta.url), "utf8")).toMatch(
+        /Marca "decisao_gp" sempre com motivo/,
+      );
   });
 });

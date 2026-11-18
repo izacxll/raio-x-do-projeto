@@ -1,5 +1,6 @@
 // Compromissos da proposta numerados (decisão 0047): premissas, obrigações do contratante, exclusões, compromissos de
-// método (sigilo, revisão interna, régua metodológica: os itens da minuta com ficha PROP-METODOLOGIA.9 a .11) e limites
+// método (sigilo, revisão interna, régua metodológica, protocolo de campo: os itens da minuta com ficha PROP-METODOLOGIA.9
+// a .11 ou que começam por "Compromisso de método"; decisão 0061) e limites
 // de volume recebem um número C (C01, C02…), como os R. O número que o PMO escreveu no começo do item ("C20 — Sigilo:")
 // vale; os outros recebem os números livres, na ordem da resposta, para não colidir com os do texto da minuta. Cada C tem destino no TAP:
 // premissa e obrigação do contratante vão para o registro de premissas; exclusão e limite de volume, para os limites
@@ -34,7 +35,7 @@ export const DESTINO_NO_TAP: Record<TipoCompromisso, string> = {
   premissa: "registro de premissas",
   obrigacao: "registro de premissas (depende do contratante)",
   exclusao: "limites (TAP.4)",
-  metodo: "descrição, entregas ou critérios de aceite (TAP.3 e TAP.5)",
+  metodo: "descrição, entregas ou aceite (TAP4.1, TAP4.2 ou TAP.9)",
   limite: "limites (TAP.4)",
 };
 
@@ -45,14 +46,20 @@ export function ehNumeroDeCompromisso(n: string): boolean {
   return RE_NUMERO_C.test(n.trim());
 }
 
-/** Item da minuta que é compromisso de método: a ficha PROP-METODOLOGIA.9 a .11, ou o número C que o PMO lhe deu. */
+/**
+ * Item da minuta que é compromisso de método: a ficha PROP-METODOLOGIA.9 a .11, o número C que o PMO lhe deu ou o texto
+ * que começa por "Compromisso de método" (o protocolo de campo vem com a ficha do campo, PROP-METODOLOGIA.7; decisão 0061).
+ */
 const RE_FICHA_METODO = /^PROP-METODOLOGIA\.(?:9|10|11)$/;
 const RE_C_NO_INICIO = /^\s*(C\d{2,})\s*[—–:-]\s*/;
+const RE_TEXTO_METODO = /^\s*(?:C\d{2,}\s*[—–:-]\s*)?compromisso de m[eé]todo\b/i;
 
 export function numerarCompromissos(c: RespostaConteudo): Compromisso[] {
   const metodo = c.estrutura.flatMap((secao, si) =>
     secao.itens.flatMap((item, ii) =>
-      RE_FICHA_METODO.test((item.ficha ?? "").trim()) || RE_C_NO_INICIO.test(item.texto)
+      RE_FICHA_METODO.test((item.ficha ?? "").trim()) ||
+      RE_C_NO_INICIO.test(item.texto) ||
+      RE_TEXTO_METODO.test(item.texto)
         ? [
             {
               tipo: "metodo" as const,
@@ -127,6 +134,72 @@ export function compromissosEmTexto(cs: Compromisso[]): string {
     .join("\n");
 }
 
+/** Nome de cada tipo no plural, para as faixas ("premissas C01 a C08"). */
+export const NOME_TIPO_PLURAL: Record<TipoCompromisso, string> = {
+  premissa: "premissas",
+  obrigacao: "obrigações do contratante",
+  exclusao: "exclusões",
+  metodo: "compromissos de método",
+  limite: "limites de volume",
+};
+
+const ORDEM_TIPOS: TipoCompromisso[] = ["premissa", "obrigacao", "exclusao", "metodo", "limite"];
+
+/** Números em faixas: C01, C02, C03, C05 → "C01 a C03, C05". */
+function emFaixas(numeros: string[]): string {
+  const ns = numeros.map((n) => Number(n.slice(1))).sort((a, b) => a - b);
+  const c = (n: number) => `C${String(n).padStart(2, "0")}`;
+  const out: string[] = [];
+  for (let i = 0; i < ns.length;) {
+    let j = i;
+    while (j + 1 < ns.length && ns[j + 1] === (ns[j] as number) + 1) j++;
+    out.push(i === j ? c(ns[i] as number) : `${c(ns[i] as number)} a ${c(ns[j] as number)}`);
+    i = j + 1;
+  }
+  return out.join(", ");
+}
+
+/** A faixa de cada tipo, pela numeração do código: "premissas C01 a C08; …; compromissos de método C20 a C23; …". */
+export function faixasDosCompromissos(cs: Compromisso[]): string {
+  return ORDEM_TIPOS.flatMap((t) => {
+    const ns = cs.filter((x) => x.tipo === t).map((x) => x.numero);
+    return ns.length ? [`${NOME_TIPO_PLURAL[t]} ${emFaixas(ns)}`] : [];
+  }).join("; ");
+}
+
+const RE_TIPO_NO_TEXTO: [TipoCompromisso, RegExp][] = [
+  ["premissa", /\bpremissas?\b/],
+  ["obrigacao", /\bobrigac(?:ao|oes)\b/],
+  ["exclusao", /\bexclus(?:ao|oes)\b/],
+  ["metodo", /\bcompromissos? de metodo\b/],
+  ["limite", /\blimites?\b/],
+];
+
+/**
+ * Faixa de C escrita no texto com o nome de um tipo ("limites C20 a C24") que, pela numeração do código, tem número de
+ * outro tipo: devolve cada uma, com o tipo certo dos números. Vale só a faixa logo depois do nome do tipo.
+ */
+export function faixasErradasNoTexto(texto: string, cs: Compromisso[]): string[] {
+  const porNumero = new Map(cs.map((x) => [x.numero, x.tipo]));
+  const t = normalizarTermo(texto).toLowerCase();
+  const out: string[] = [];
+  for (const [tipo, re] of RE_TIPO_NO_TEXTO) {
+    const g = new RegExp(`${re.source}[^.;()]{0,40}?\\b(c\\d{2,}(?:\\s*(?:a|ate|-|–)\\s*c\\d{2,})?)`, "g");
+    for (const m of t.matchAll(g)) {
+      const faixa = (m[1] ?? "")
+        .toUpperCase()
+        .replace(/\bA\b/, "a")
+        .replace(/\bATE\b/, "até");
+      const outros = [...numerosCitados(faixa)].filter((n) => porNumero.has(n) && porNumero.get(n) !== tipo);
+      if (outros.length)
+        out.push(
+          `"${NOME_TIPO_PLURAL[tipo]} ${faixa}": pelo código, ${outros.map((n) => `${n} é ${NOME_TIPO_COMPROMISSO[porNumero.get(n) as TipoCompromisso]}`).join("; ")}`,
+        );
+    }
+  }
+  return out;
+}
+
 export interface DestinoCompromisso {
   compromisso: Compromisso;
   /** citado: o PMO pôs o número no item; provavel: o código achou pela premissa crítica ou pelo texto; sem-destino. */
@@ -173,6 +246,7 @@ function lugaresDoTap(tap?: RespostaTap, registro: PremissaRegistro[] = []): Lug
     ...(tap?.limites ?? []).map((item) => ({ onde: `limites, item ${item.id}`, item })),
     ...(tap?.entregas ?? []).map((item) => ({ onde: `entregas, item ${item.id}`, item })),
     ...(tap?.descricao ?? []).map((item) => ({ onde: `descrição, item ${item.id}`, item })),
+    ...(tap?.aprovacao ?? []).map((item) => ({ onde: `aprovação, item ${item.id}`, item })),
     ...(tap?.divergenciasTexto ?? []).map((d) => ({ onde: `divergências, item ${d.item.id}`, item: d.item })),
     ...registro.map((p) => ({
       onde: `registro de premissas, item ${p.item.id}`,
