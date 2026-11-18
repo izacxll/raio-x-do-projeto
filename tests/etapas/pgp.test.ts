@@ -193,6 +193,20 @@ describe("pedidos da etapa 4", () => {
     expect(PEDIDOS_PGP.cronograma(entrada, p)).toContain("P1.1 Alinhamento e plano de trabalho");
   });
 
+  it("riscos, planos e execução levam o cronograma do plano, com as predecessoras (decisão 0081)", () => {
+    const p = dossie.pgp!;
+    const a = p.cronograma!.resposta.atividades.find((x) => x.predecessoras.length)!;
+    for (const passo of ["riscos", "planos", "execucao"] as const) {
+      const pedido = PEDIDOS_PGP[passo](entrada, p);
+      expect(pedido).toContain(
+        "Cronograma do plano (passo cronograma; é este que vale, não o da proposta; durações pela conta do código):",
+      );
+      expect(pedido).toContain(`- ${a.id} ${a.nome} (produto ${a.produto}`);
+      expect(pedido).not.toContain("Atividades (cronograma):");
+      expect(pedido).toContain(`depois de: ${a.predecessoras.join(", ")}`);
+    }
+  });
+
   it("requisito do TAP com R fora da lista da etapa 1 vai marcado no pedido do escopo", () => {
     const e: EntradaPgp = {
       ...entrada,

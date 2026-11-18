@@ -4,6 +4,9 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 
 ## [Não publicado]
 
+### O cronograma do plano nos passos seguintes da etapa 4 (decisão 0081)
+- **Riscos, planos e execução** levam o cronograma do plano (pacote, predecessoras, duração, análise do contratante, data fixa), e a segunda instância desses passos passa a vê-lo; antes, o de planos não o levava, e o revisor só via a EAP da proposta.
+
 ### Uma lista de R só, do início ao fim (decisão 0080)
 - **Causa do R13 e R14 que sumiam:** o ponto de partida separava entregas e obrigações, e vários passos usavam só as entregas como "a lista de R". Agora há uma lista só (`listaDeR`) em todos os pedidos e conferências.
 - **O pedido diz quais R o GP descartou** na etapa 1.
