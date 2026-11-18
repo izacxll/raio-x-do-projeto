@@ -12,6 +12,17 @@ export interface ConteudoDoPedido {
 const tam = (s: string) =>
   `${s.length.toLocaleString("pt-BR")} caracteres, ~${estimarTokens(s).toLocaleString("pt-BR")} tokens`;
 
+/** O SKILL.md vai inteiro ("SKILL.md") ou recortado para a etapa ("SKILL.md (etapa N)", decisão 0064). */
+const ehSkill = (nome: string) => nome === "SKILL.md" || /^SKILL\.md \(etapa \d\)$/.test(nome);
+/** O recorte é o da etapa certa: traz a seção dela e nenhuma outra. */
+const skillDaEtapaCerta = (arquivos: { nome: string; texto: string }[], etapa: number) => {
+  const s = arquivos.find((a) => ehSkill(a.nome));
+  if (!s) return false;
+  if (s.nome === "SKILL.md") return true;
+  const secoes = [...s.texto.matchAll(/^### Etapa (\d) —/gm)].map((m) => Number(m[1]));
+  return secoes.length === 1 && secoes[0] === etapa;
+};
+
 /** Blocos `<arquivo nome="…">` do texto de sistema. */
 function arquivosDoSistema(sistema: string): { nome: string; texto: string }[] {
   return [...sistema.matchAll(/<arquivo nome="([^"]+)">\n([\s\S]*?)\n<\/arquivo>/g)].map((m) => ({
@@ -62,7 +73,8 @@ export function conteudoDoPedido(opcoes: {
       conferencias.push(`- ${ok ? "ok" : "**FALTA**"} · ${oQue}`);
       if (!ok) faltas.push(oQue);
     };
-    confere("só a SKILL.md no texto de sistema", nomes.length === 1 && nomes[0] === "SKILL.md");
+    confere("só a SKILL.md no texto de sistema", nomes.length === 1 && ehSkill(nomes[0] ?? ""));
+    confere(`SKILL.md da etapa ${etapa}`, skillDaEtapaCerta(arquivos, etapa));
     confere("documentos do passo", /^=== Página /m.test(documentos));
     confere("resposta a conferir no pedido", /## Resposta a conferir/.test(pedido));
     confere("pedido do passo conferido, com o esqueleto do código", /<pedido-do-passo>/.test(pedido));
@@ -118,7 +130,8 @@ export function conteudoDoPedido(opcoes: {
   const temArquivo = (n: string) =>
     nomes.some((x) => x === `referencias/${n}` || x.startsWith(`referencias/${n} `));
   const temFicha = (prefixo: string) => nomes.some((x) => x.startsWith(`referencias/artefatos/${prefixo}`));
-  confere("SKILL.md", nomes.includes("SKILL.md"));
+  confere("SKILL.md", nomes.some(ehSkill));
+  confere(`SKILL.md da etapa ${etapa}`, skillDaEtapaCerta(arquivos, etapa));
   for (const ref of [...linha.matchAll(/`([a-z0-9-]+\.md)`/g)].map((m) => m[1] ?? ""))
     confere(ref, temArquivo(ref));
   if (etapa === 1) confere("método da etapa 1 no pedido", metodo);

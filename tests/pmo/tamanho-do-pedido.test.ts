@@ -1,12 +1,18 @@
 // Tamanho do pedido (decisão 0064): SKILL.md recortado por etapa, checklist só com as premissas críticas confirmadas
 // a partir da etapa 2, fichas sem as linhas de fonte. Nenhum corte tira o que a etapa usa.
+import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
+import { conteudoDoPedido } from "./conteudo-do-pedido";
 import {
   checklistDasPremissas,
   estimarTokens,
   fichasDasPartes,
   pcsConfirmadas,
+  referenciasEtapa1,
   referenciasEtapa2,
+  referenciasEtapa3,
+  referenciasEtapa4,
+  referenciasEtapa5,
   semFonte,
   skillDaEtapa,
   textoDeSistema,
@@ -91,5 +97,52 @@ describe("fichas sem as linhas de fonte", () => {
     const inteiro = textoDeSistema(referenciasEtapa2());
     expect(estimarTokens(comPcs)).toBeLessThan(estimarTokens(inteiro));
     expect(comPcs).toMatch(/PROP-SOW\.13/);
+  });
+});
+
+describe("a conferência do pedido externo aceita o SKILL.md da etapa (decisão 0064)", () => {
+  const skill = readFileSync(new URL("../../.claude/skills/pmo/SKILL.md", import.meta.url), "utf8");
+  const referencias = [
+    referenciasEtapa1(),
+    referenciasEtapa2({ pcs: ["PC1"] }),
+    referenciasEtapa3({ pcs: ["PC1"] }),
+    referenciasEtapa4({ pcs: ["PC1"] }),
+    referenciasEtapa5({ pcs: ["PC1"] }),
+  ];
+  it.each([1, 2, 3, 4, 5])("etapa %i: o recorte da etapa conta como SKILL.md", (etapa) => {
+    const c = conteudoDoPedido({
+      etapa,
+      passo: "x",
+      sistema: textoDeSistema(referencias[etapa - 1]!),
+      documentos: "=== Página 1 ===\ntexto",
+      pedido: "",
+      schema: "{}",
+      skill,
+    });
+    expect(c.faltas.filter((f) => /SKILL/.test(f))).toEqual([]);
+  });
+
+  it("segunda instância: o recorte da etapa conferida, e só ele", () => {
+    const c = conteudoDoPedido({
+      etapa: 3,
+      passo: "segunda-tap",
+      sistema: sistemaDaSegundaInstancia(3),
+      documentos: "=== Página 1 ===\ntexto",
+      pedido: "## Resposta a conferir\n<pedido-do-passo>\nx\n</pedido-do-passo>",
+      schema: "{}",
+      skill,
+    });
+    expect(c.faltas).toEqual([]);
+    // o recorte de outra etapa é apontado
+    const errado = conteudoDoPedido({
+      etapa: 2,
+      passo: "segunda-eap",
+      sistema: sistemaDaSegundaInstancia(3),
+      documentos: "=== Página 1 ===\ntexto",
+      pedido: "## Resposta a conferir\n<pedido-do-passo>\nx\n</pedido-do-passo>",
+      schema: "{}",
+      skill,
+    });
+    expect(errado.faltas).toEqual(["SKILL.md da etapa 2"]);
   });
 });
