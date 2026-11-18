@@ -63,6 +63,7 @@ Uma decisão por arquivo, numerada em ordem. Cada uma registra o contexto, o que
 | [0057](0057-travas-linha-do-tempo-e-segunda-instancia.md) | Travas do teste externo (EAP, TAP, critério pontuado, citação que não prova, data de ato), passo refeito sem a resposta anterior, linha do tempo com a conferência dos marcos e segunda instância depois de cada resposta | aceita |
 | [0058](0058-citacao-a-conferir-como-aviso.md) | "Citação não prova" vira o aviso "citação a conferir", com data por extenso, todos os trechos do item e sem os números do código; citação fraca conta toda palavra | aceita |
 | [0059](0059-segunda-instancia-com-o-pedido-do-passo-e-rodadas.md) | Segunda instância com o pedido do passo (esqueleto e o que o passo exige, nem mais nem menos), rodadas por passo e decisão do GP da rodada 2 em diante | aceita |
+| [0060](0060-rodadas-com-achado-medio.md) | Achado médio também espera a decisão do GP; da rodada 2 em diante, a reentrega com "seguir" ou "corrigir" vai direto ao próximo passo, sem rodada nova | aceita |
 
 Modelo para uma nova decisão:
 
