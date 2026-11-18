@@ -67,6 +67,7 @@ Uma decisão por arquivo, numerada em ordem. Cada uma registra o contexto, o que
 | [0061](0061-compromissos-de-metodo-no-tap.md) | Todo compromisso de método recebe C e vai no pedido do TAP com o destino; faixas de C pelo código; decisao_gp sempre com motivo | aceita |
 | [0062](0062-tres-datas-por-produto-e-marco-pela-atividade.md) | Três datas por produto (primeira entrega, fim da inspeção, termo definitivo) e marco do TAP conferido pela atividade da EAP que ele representa | aceita |
 | [0063](0063-skill-pmo-0-3-3-e-revisao-em-camadas.md) | Skill PMO 0.3.3 com as lições do teste ponta a ponta; revisão em camadas (gabarito → segunda instância com rubrica → GP) e gabarito na CI | aceita |
+| [0064](0064-tamanho-do-pedido.md) | Tamanho do pedido: SKILL.md por etapa, checklist só com as premissas críticas confirmadas, fichas sem as linhas de fonte; cache como estava | aceita |
 
 Modelo para uma nova decisão:
 

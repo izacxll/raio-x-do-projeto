@@ -4,6 +4,12 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 
 ## [Não publicado]
 
+### Tamanho do pedido sem perder conteúdo (decisão 0064)
+- **SKILL.md por etapa:** o núcleo e só a seção da etapa; a segunda instância leva o recorte da etapa conferida.
+- **Checklist:** depois da confirmação do GP, só as premissas críticas confirmadas e a tabela de onde aparecem.
+- **Fichas sem as linhas de fonte** (ficam no repositório para auditoria).
+- **Resultado:** de 14% a 55% menos tokens na instrução de sistema, conforme a etapa; o gabarito passou antes e depois.
+
 ### Skill PMO 0.3.3, revisão em camadas e gabarito (decisão 0063)
 - **Revisão em camadas:** testes e gabarito → segunda instância com rubrica fixa → GP, com os limites escritos (o revisor erra; no máximo 2 rodadas; trava nova com contagem de alarmes falsos). Em `docs/papeis.md` e no SKILL.md.
 - **Gabarito** (`tests/pmo/gabarito/`): achados confirmados por caso e etapa, na CI e sem a API; dois casos disfarçados.

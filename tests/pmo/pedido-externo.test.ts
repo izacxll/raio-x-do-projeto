@@ -35,6 +35,7 @@ import {
 import { analiseInicial } from "../../src/etapas/1-rfp/revisao";
 import {
   estimarTokens,
+  pcsConfirmadas,
   referenciasEtapa1,
   referenciasEtapa2,
   referenciasEtapa3,
@@ -159,7 +160,7 @@ function montarSegunda(d: Dossie, passo: string): Passo {
   const r = respostaDoPasso(d, alvo);
   precisa(r, `importe a resposta do passo "${alvo}" antes de conferir`);
   return {
-    sistema: sistemaDaSegundaInstancia(),
+    sistema: sistemaDaSegundaInstancia(etapa),
     documentos: textoDosDocumentos(documentosDoPasso(d)),
     // o pedido do passo conferido, como foi ao PMO (esqueleto e o que o passo exige; decisão 0059)
     pedido: pedidoSegundaInstancia(etapa, alvo, r.resposta, montarPasso(d, alvo).pedido),
@@ -237,7 +238,13 @@ function montarPasso(d: Dossie, passo: string = PASSO): Passo {
     );
     const minuta = montarMinuta(ponto, p, docs, d.analiseRfp);
     const esqueleto = esqueletoEmTexto(minuta);
-    const base = { sistema: textoDeSistema(referenciasEtapa2()), documentos: textoDosDocumentos(docs) };
+    // a estratégia leva o checklist inteiro; os passos seguintes, só as premissas críticas confirmadas (decisão 0064)
+    const base = {
+      sistema: textoDeSistema(
+        referenciasEtapa2(passo === "estrategia" ? {} : { pcs: pcsConfirmadas(p.premissasAplicaveis) }),
+      ),
+      documentos: textoDosDocumentos(docs),
+    };
     if (passo === "estrategia")
       return { ...base, pedido: pedidoEstrategia(ponto, esqueleto), schema: SCHEMAS.estrategia };
     const e = p.estrategia?.resposta;
@@ -280,7 +287,7 @@ function montarPasso(d: Dossie, passo: string = PASSO): Passo {
     const t = d.tap ?? tapInicial();
     const premissas = t.premissasAplicaveis ?? d.proposta?.premissasAplicaveis ?? {};
     const base = {
-      sistema: textoDeSistema(referenciasEtapa3()),
+      sistema: textoDeSistema(referenciasEtapa3({ pcs: pcsConfirmadas(premissas) })),
       documentos: textoDosDocumentos(entrada.documentos),
     };
     if (passo === "tap")
@@ -309,7 +316,9 @@ function montarPasso(d: Dossie, passo: string = PASSO): Passo {
     const anterior = passoAnterior(passo as PassoPgp);
     precisa(!anterior || p[anterior], `importe o passo "${anterior}"`);
     return {
-      sistema: textoDeSistema(referenciasEtapa4()),
+      sistema: textoDeSistema(
+        referenciasEtapa4({ pcs: pcsConfirmadas(p.premissasAplicaveis ?? entrada.premissasAnteriores) }),
+      ),
       documentos: textoDosDocumentos(entrada.documentos),
       pedido: PEDIDOS_PGP[passo as PassoPgp](entrada, p),
       schema: SCHEMAS_PGP[passo as PassoPgp],
@@ -318,7 +327,7 @@ function montarPasso(d: Dossie, passo: string = PASSO): Passo {
   if (etapa === 5) {
     const c = entradaDaConferencia(d);
     return {
-      sistema: textoDeSistema(referenciasEtapa5()),
+      sistema: textoDeSistema(referenciasEtapa5({ pcs: pcsConfirmadas(c.premissasAplicaveis) })),
       documentos: textoDosDocumentos([c.pgp, ...(c.tap ? [c.tap] : []), ...(c.rfp ? [c.rfp] : [])]),
       pedido: pedidoLeitura({
         partesPresentes: c.mapa.filter((m) => m.situacao === "presente").map((m) => m.codigo),

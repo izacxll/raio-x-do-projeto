@@ -37,7 +37,13 @@ import {
 import { exportar, exportarPacotePgp, exportarTexto } from "../../exportacao/exportar";
 import { montarPgp, montarRegistrosPgp } from "../../exportacao/relatorio-pgp";
 import { estimarCusto, formatarDolar } from "../../pmo/custo";
-import { estimarTokens, referenciasEtapa4, textoDeSistema, textoDosDocumentos } from "../../pmo/montagem";
+import {
+  estimarTokens,
+  pcsConfirmadas,
+  referenciasEtapa4,
+  textoDeSistema,
+  textoDosDocumentos,
+} from "../../pmo/montagem";
 import { SCHEMAS_PGP, type PassoPgp } from "../../pmo/schemas/pgp";
 import type { ResultadoConferencia } from "../../regras/conferencia";
 import { resumirAchados } from "../../regras/conferencia";
@@ -87,10 +93,15 @@ export function PlanoDeGerenciamento() {
   const p = dossie.pgp ?? pgpInicial(dossie.tap?.modelo ?? dossie.proposta?.modelo);
   const chave = useChave();
   const entrada = useMemo(() => montarEntradaPgp(dossie), [dossie]);
-  const sistema = useMemo(() => textoDeSistema(referenciasEtapa4()), []);
   const textoDocs = useMemo(() => textoDosDocumentos(entrada.documentos), [entrada]);
   const itens = useMemo(() => itensDoPgp(p, entrada.documentos, entrada.premissasTap), [p, entrada]);
   const premissas = p.premissasAplicaveis ?? entrada.premissasAnteriores;
+  // só as premissas críticas confirmadas pelo GP vão no checklist (decisão 0064)
+  const chavePcs = pcsConfirmadas(premissas)?.join(",") ?? "";
+  const sistema = useMemo(
+    () => textoDeSistema(referenciasEtapa4({ pcs: chavePcs ? chavePcs.split(",") : undefined })),
+    [chavePcs],
+  );
   const { rodando, erro, chamar, cancelar } = useChamadaPmo();
 
   const atualizar = (np: PgpDossie) => guardarPgp(np);

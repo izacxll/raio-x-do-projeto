@@ -1,4 +1,4 @@
-// Segunda instância (decisão 0057; SKILL.md, seção 3, "Conferência por uma segunda instância"): depois de cada
+// Segunda instância (decisão 0057; SKILL.md, seção 3, "Revisão em camadas"): depois de cada
 // resposta do PMO, uma chamada separada, com só a skill, os documentos e a resposta, devolve os achados. O GP vê antes
 // de aprovar. Achado é sempre Sugestão: quem decide é o GP.
 import { z } from "zod";

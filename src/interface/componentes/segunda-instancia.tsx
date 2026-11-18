@@ -45,7 +45,7 @@ export function SegundaInstancia({
   const [rodando, setRodando] = useState(false);
   const [erro, setErro] = useState<ErroPmo | null>(null);
   const cancelar = useRef<AbortController | null>(null);
-  const sistema = useMemo(() => sistemaDaSegundaInstancia(), []);
+  const sistema = useMemo(() => sistemaDaSegundaInstancia(etapa), [etapa]);
   const textoDocs = useMemo(() => textoDosDocumentos(documentos), [documentos]);
   const pedido = useMemo(
     () => pedidoSegundaInstancia(etapa, passo, resposta, pedidoDoPasso),

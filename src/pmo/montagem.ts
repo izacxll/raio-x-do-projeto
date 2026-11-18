@@ -15,6 +15,100 @@ const fichas = import.meta.glob("../../.claude/skills/pmo/referencias/artefatos/
   eager: true,
 }) as Record<string, string>;
 
+/**
+ * A ficha sem as linhas de fonte (decisão 0064): elas ficam no repositório, para a auditoria, e não vão no pedido. O
+ * resto (o item, os sinais, quem confere, a dispensa) vai inteiro.
+ */
+export function semFonte(texto: string): string {
+  return texto.replace(/^[ \t]*- fonte:.*(?:\r?\n|$)/gm, "");
+}
+
+/** Etapas a que uma subseção da seção 3 do SKILL.md se aplica, pelo título; undefined quando vale para todas. */
+function etapasDoTitulo(titulo: string): number[] | undefined {
+  const dentro = /\(etapas? ([^)]*)\)/i.exec(titulo)?.[1];
+  if (!dentro) return undefined;
+  const faixa = /(\d)\s*a\s*(\d)/.exec(dentro);
+  if (faixa) {
+    const [a, b] = [Number(faixa[1]), Number(faixa[2])];
+    return Array.from({ length: b - a + 1 }, (_, k) => a + k);
+  }
+  return [...dentro.matchAll(/\d/g)].map((x) => Number(x[0]));
+}
+
+/**
+ * O SKILL.md da etapa (decisão 0064): o núcleo (papel, princípios, as regras gerais da seção 3 que valem para a etapa e
+ * o formato de saída) e só a seção da etapa em curso. Saem o histórico das versões, a lista do que carregar, o uso no
+ * Claude Code e o mapa das referências, que o app não usa. O arquivo inteiro continua na skill.
+ */
+export function skillDaEtapa(etapa: number, texto: string = textoSkill): string {
+  const versao = /^versao:\s*(\S+)/m.exec(texto)?.[1] ?? "";
+  const out: string[] = [];
+  let secao = true;
+  let subsecao = true;
+  for (const l of texto.replace(/^---[\s\S]*?---\s*/, "").split("\n")) {
+    if (l.startsWith("## ")) {
+      secao = !/^## [567]\./.test(l);
+      subsecao = true;
+    } else if (l.startsWith("### ")) {
+      const daEtapa = /^### Etapa (\d)\b/.exec(l)?.[1];
+      const etapas = daEtapa ? [Number(daEtapa)] : etapasDoTitulo(l);
+      subsecao = !etapas || etapas.includes(etapa);
+    }
+    if (secao && subsecao) out.push(l);
+  }
+  return out
+    .join("\n")
+    .replace(
+      /^Versão \d[^\n]*$/m,
+      `Versão ${versao}, recortada para a etapa ${etapa}: o núcleo e a seção da etapa (o arquivo inteiro está na skill).`,
+    )
+    .trim();
+}
+
+/**
+ * O checklist.md com só as premissas críticas que o GP confirmou (decisão 0064): a introdução, a tabela de onde cada uma
+ * aparece e a ficha de cada PC da lista. Sem a lista (etapa 1 e estratégia da etapa 2, em que o PMO sugere quais se
+ * aplicam), vai inteiro.
+ */
+export function checklistDasPremissas(pcs?: string[], texto: string = textoChecklist): string {
+  if (!pcs) return texto;
+  const MANTER = ["## Onde cada premissa crítica aparece", "## As 8 premissas críticas"];
+  const out: string[] = [];
+  let secao = true;
+  let subsecao = true;
+  for (const l of texto.split("\n")) {
+    if (l.startsWith("## ")) {
+      secao = MANTER.some((m) => l.startsWith(m));
+      subsecao = true;
+    } else if (l.startsWith("### ")) {
+      const pc = /^### (PC\d)\b/.exec(l)?.[1];
+      subsecao = !pc || pcs.includes(pc);
+    }
+    if (secao && subsecao) out.push(l);
+  }
+  const nota = pcs.length
+    ? `Premissas críticas confirmadas pelo GP: ${pcs.join(", ")}. As outras não vão neste pedido.`
+    : "Nenhuma premissa crítica confirmada pelo GP: só a tabela de onde cada uma aparece.";
+  return `${out.join("\n").trim()}\n\n${nota}`;
+}
+
+/**
+ * As premissas críticas confirmadas pelo GP, em ordem; undefined quando nenhuma foi confirmada (aí o checklist vai
+ * inteiro, para o PMO não ficar sem a ficha de uma que ainda vai confirmar).
+ */
+export function pcsConfirmadas(r?: Record<string, boolean>): string[] | undefined {
+  const sim = Object.entries(r ?? {})
+    .filter(([, v]) => v)
+    .map(([k]) => k)
+    .sort();
+  return sim.length ? sim : undefined;
+}
+
+/** Opções das referências de uma etapa: as premissas críticas confirmadas pelo GP (sem elas, o checklist vai inteiro). */
+export interface OpcoesReferencias {
+  pcs?: string[];
+}
+
 function ficha(nomeArquivoSemExtensao: string): string {
   const achada = Object.entries(fichas).find(([c]) => c.endsWith(`/${nomeArquivoSemExtensao}.md`));
   if (!achada) throw new Error(`Ficha da skill não encontrada: ${nomeArquivoSemExtensao}`);
@@ -101,7 +195,7 @@ export interface BlocoTexto {
 }
 
 /** O que vai como instrução de sistema na etapa 2: o SKILL.md e as referências da etapa. */
-export function referenciasEtapa2(): BlocoTexto[] {
+export function referenciasEtapa2(opcoes: OpcoesReferencias = {}): BlocoTexto[] {
   const fichasDaEtapa = FICHAS_ETAPA_2.map((f) => ({
     titulo: `referencias/artefatos/${f}.md`,
     texto: ficha(f),
@@ -110,15 +204,16 @@ export function referenciasEtapa2(): BlocoTexto[] {
   // os artigos que as fichas citam e a seção 4 não resume vão com o tema deles (SKILL.md, seção 5)
   const outros = reworkDosArtigos(artigosCitados(fichasDaEtapa.map((f) => f.texto).join("\n")), secao4);
   return [
-    { titulo: "SKILL.md", texto: textoSkill },
+    { titulo: "SKILL.md (etapa 2)", texto: skillDaEtapa(2) },
     { titulo: "referencias/licitacoes.md", texto: textoLicitacoes },
-    { titulo: "referencias/checklist.md", texto: textoChecklist },
+    { titulo: "referencias/checklist.md", texto: checklistDasPremissas(opcoes.pcs) },
     { titulo: "referencias/experiencia.md", texto: textoExperiencia },
     { titulo: "referencias/rework.md (seção 4, proposta)", texto: secao4 },
     ...(outros
       ? [{ titulo: "referencias/rework.md (temas dos artigos citados nas fichas)", texto: outros }]
       : []),
-    ...fichasDaEtapa,
+    // os temas do Rework saem da ficha inteira; a ficha vai sem as linhas de fonte
+    ...fichasDaEtapa.map((f) => ({ ...f, texto: semFonte(f.texto) })),
   ];
 }
 
@@ -126,7 +221,7 @@ export function referenciasEtapa2(): BlocoTexto[] {
 export const FICHAS_ETAPA_3 = ["tap", "b03-registro-premissas", "b31-registro-partes-interessadas"];
 
 /** O que vai como instrução de sistema na etapa 3. */
-export function referenciasEtapa3(): BlocoTexto[] {
+export function referenciasEtapa3(opcoes: OpcoesReferencias = {}): BlocoTexto[] {
   const fichasDaEtapa = FICHAS_ETAPA_3.map((f) => ({
     titulo: `referencias/artefatos/${f}.md`,
     texto: ficha(f),
@@ -134,13 +229,13 @@ export function referenciasEtapa3(): BlocoTexto[] {
   // os temas do rework.md que resumem os artigos citados nas fichas (SKILL.md, seção 5)
   const rework = reworkDosArtigos(artigosCitados(fichasDaEtapa.map((f) => f.texto).join("\n")));
   return [
-    { titulo: "SKILL.md", texto: textoSkill },
-    { titulo: "referencias/checklist.md", texto: textoChecklist },
+    { titulo: "SKILL.md (etapa 3)", texto: skillDaEtapa(3) },
+    { titulo: "referencias/checklist.md", texto: checklistDasPremissas(opcoes.pcs) },
     { titulo: "referencias/experiencia.md", texto: textoExperiencia },
     ...(rework
       ? [{ titulo: "referencias/rework.md (temas dos artigos citados nas fichas)", texto: rework }]
       : []),
-    ...fichasDaEtapa,
+    ...fichasDaEtapa.map((f) => ({ ...f, texto: semFonte(f.texto) })),
   ];
 }
 
@@ -148,7 +243,7 @@ export function referenciasEtapa3(): BlocoTexto[] {
  * O que vai como instrução de sistema na etapa 4 (SKILL.md, seção 5). As fichas das partes vão no pedido de cada
  * passo, e não aqui: assim o prefixo (skill + documentos) é o mesmo nos seis passos e fica no cache.
  */
-export function referenciasEtapa4(): BlocoTexto[] {
+export function referenciasEtapa4(opcoes: OpcoesReferencias = {}): BlocoTexto[] {
   // os temas do rework.md citados nas fichas do PGP (A1…B33), todos de uma vez: assim o prefixo é o mesmo nos seis
   // passos e fica no cache (SKILL.md, seção 5)
   const doPgp = Object.entries(fichas)
@@ -157,9 +252,9 @@ export function referenciasEtapa4(): BlocoTexto[] {
     .join("\n");
   const rework = reworkDosArtigos(artigosCitados(doPgp));
   return [
-    { titulo: "SKILL.md", texto: textoSkill },
+    { titulo: "SKILL.md (etapa 4)", texto: skillDaEtapa(4) },
     { titulo: "referencias/pmbok7.md", texto: textoPmbok7 },
-    { titulo: "referencias/checklist.md", texto: textoChecklist },
+    { titulo: "referencias/checklist.md", texto: checklistDasPremissas(opcoes.pcs) },
     { titulo: "referencias/experiencia.md", texto: textoExperiencia },
     { titulo: "referencias/licitacoes.md", texto: textoLicitacoes },
     ...(rework
@@ -181,7 +276,9 @@ export function fichasDasPartes(codigos: string[]): string {
   return codigos
     .map((c) => {
       const f = fichaDaParte(c);
-      return f ? `<ficha parte="${c}">\n${f.replace(/^---[\s\S]*?---\s*/, "").trim()}\n</ficha>` : "";
+      return f
+        ? `<ficha parte="${c}">\n${semFonte(f.replace(/^---[\s\S]*?---\s*/, "")).trim()}\n</ficha>`
+        : "";
     })
     .filter(Boolean)
     .join("\n\n");
@@ -210,7 +307,7 @@ export function dispensaDasFichas(codigos: string[]): string {
 /** O que vai como instrução de sistema na leitura do PMO da etapa 1 (decisões 0032 e 0035). */
 export function referenciasEtapa1(): BlocoTexto[] {
   return [
-    { titulo: "SKILL.md", texto: textoSkill },
+    { titulo: "SKILL.md (etapa 1)", texto: skillDaEtapa(1) },
     { titulo: "referencias/licitacoes.md", texto: textoLicitacoes },
     { titulo: "referencias/checklist.md", texto: textoChecklist },
     { titulo: "referencias/experiencia.md", texto: textoExperiencia },
@@ -218,10 +315,10 @@ export function referenciasEtapa1(): BlocoTexto[] {
 }
 
 /** O que vai como instrução de sistema na leitura do PMO da etapa 5 (SKILL.md, seção 5). */
-export function referenciasEtapa5(): BlocoTexto[] {
+export function referenciasEtapa5(opcoes: OpcoesReferencias = {}): BlocoTexto[] {
   return [
-    { titulo: "SKILL.md", texto: textoSkill },
-    { titulo: "referencias/checklist.md", texto: textoChecklist },
+    { titulo: "SKILL.md (etapa 5)", texto: skillDaEtapa(5) },
+    { titulo: "referencias/checklist.md", texto: checklistDasPremissas(opcoes.pcs) },
     { titulo: "referencias/experiencia.md", texto: textoExperiencia },
   ];
 }
@@ -239,7 +336,7 @@ export function conteudoMinimoDasFichas(codigos: string[]): string {
       const f = fichaDaParte(c);
       if (!f) return "";
       const nome = /^nome:\s*(.+)$/m.exec(f)?.[1] ?? c;
-      return [`### ${c} — ${nome}`, secao(f, "Conteúdo mínimo"), secao(f, "Perguntas de qualidade")]
+      return [`### ${c} — ${nome}`, semFonte(secao(f, "Conteúdo mínimo")), secao(f, "Perguntas de qualidade")]
         .filter(Boolean)
         .join("\n");
     })

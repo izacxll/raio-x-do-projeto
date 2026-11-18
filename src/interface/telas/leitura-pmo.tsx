@@ -7,7 +7,13 @@ import type { Conferencia, DecisaoAchado, DocumentoLido } from "../../dossie/esq
 import { conferirLeitura, NOME_SITUACAO_PMO, pedidoLeitura } from "../../etapas/5-conferencia/leitura-pmo";
 import { NOME_ESTADO_CITACAO } from "../../pmo/citacoes";
 import { estimarCusto, formatarDolar } from "../../pmo/custo";
-import { estimarTokens, referenciasEtapa5, textoDeSistema, textoDosDocumentos } from "../../pmo/montagem";
+import {
+  estimarTokens,
+  pcsConfirmadas,
+  referenciasEtapa5,
+  textoDeSistema,
+  textoDosDocumentos,
+} from "../../pmo/montagem";
 import { semRevisoesDoPmo } from "../../pmo/itens";
 import { RespostaLeitura } from "../../pmo/schemas/leitura";
 import type { Achado } from "../../regras/achado";
@@ -40,7 +46,12 @@ export function LeituraDoPmo({
   const chave = useChave();
   const modelo = conf.modeloPmo ?? MODELO_PADRAO;
   const { rodando, erro, chamar, cancelar } = useChamadaPmo();
-  const sistema = useMemo(() => textoDeSistema(referenciasEtapa5()), []);
+  // só as premissas críticas confirmadas pelo GP vão no checklist (decisão 0064)
+  const chavePcs = pcsConfirmadas(conf.premissasAplicaveis)?.join(",") ?? "";
+  const sistema = useMemo(
+    () => textoDeSistema(referenciasEtapa5({ pcs: chavePcs ? chavePcs.split(",") : undefined })),
+    [chavePcs],
+  );
   const documentos = useMemo(() => [pgp, ...(tap ? [tap] : []), ...(rfp ? [rfp] : [])], [pgp, tap, rfp]);
   const textoDocs = useMemo(() => textoDosDocumentos(documentos), [documentos]);
   const pedido = pedidoLeitura({

@@ -4,7 +4,7 @@
 import textoSkill from "../../.claude/skills/pmo/SKILL.md?raw";
 import type { DocumentoLido } from "../dossie/esquema";
 import { citacaoValeComoFato, conferirCitacao } from "./citacoes";
-import { textoDeSistema } from "./montagem";
+import { skillDaEtapa, textoDeSistema } from "./montagem";
 import type {
   AchadoSegundaInstancia,
   GravidadeSegunda,
@@ -44,8 +44,13 @@ export function chaveDaSegundaInstancia(etapa: number, passo: string): string {
 }
 
 /** Texto de sistema da segunda instância: só a skill, sem as referências da etapa. */
-export function sistemaDaSegundaInstancia(): string {
-  return textoDeSistema([{ titulo: "SKILL.md", texto: textoSkill }]);
+export function sistemaDaSegundaInstancia(etapa?: number): string {
+  // com a etapa, o SKILL.md recortado para ela (decisão 0064), como no pedido do passo conferido
+  return textoDeSistema([
+    etapa
+      ? { titulo: `SKILL.md (etapa ${etapa})`, texto: skillDaEtapa(etapa) }
+      : { titulo: "SKILL.md", texto: textoSkill },
+  ]);
 }
 
 /**
@@ -60,7 +65,7 @@ export function pedidoSegundaInstancia(
 ): string {
   return `# Segunda instância — conferência da resposta da etapa ${etapa}, passo ${passo}
 
-Você é a segunda instância (SKILL.md, seção 3, "Conferência por uma segunda instância"). Outra chamada produziu a resposta abaixo a partir do pedido do passo, que também vai abaixo, com o esqueleto do código. Confira a resposta contra os documentos acima, contra o esqueleto e contra o que o pedido do passo exige, **antes** de o GP aprovar e de a próxima etapa começar. Você não reescreve a resposta: aponta o que precisa mudar.
+Você é a segunda instância (SKILL.md, seção 3, "Revisão em camadas", com a rubrica fixa). Outra chamada produziu a resposta abaixo a partir do pedido do passo, que também vai abaixo, com o esqueleto do código. Confira a resposta contra os documentos acima, contra o esqueleto e contra o que o pedido do passo exige, **antes** de o GP aprovar e de a próxima etapa começar. Você não reescreve a resposta: aponta o que precisa mudar.
 
 ## Pedido do passo conferido (como foi ao PMO, com o esqueleto do código)
 ${pedidoDoPasso.trim() ? `<pedido-do-passo>\n${pedidoDoPasso.trim()}\n</pedido-do-passo>` : "(o pedido do passo não veio: confira só contra os documentos e a skill, e diga isso em conferido)"}
