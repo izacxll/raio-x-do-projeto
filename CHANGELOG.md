@@ -4,6 +4,11 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 
 ## [Não publicado]
 
+### Rodadas da segunda instância com achado médio (decisão 0060)
+- **Achado médio espera o GP:** com achado alto ou médio, o próximo passo só sai depois de "corrigir" ou "seguir".
+- **Da rodada 2 em diante:** a reentrega com "seguir" ou "corrigir" segue direto para o próximo passo, com a versão nova, sem rodada nova, e fica registrada ("GP seguiu com correção").
+- **Regra no Git, com teste:** `scripts/rodadas-da-segunda-instancia.mjs`; o resumo da conferência conta os médios.
+
 ### Segunda instância com o pedido do passo e rodadas (decisão 0059)
 - **Pedido da segunda instância:** leva o pedido do passo conferido, com o esqueleto do código (números R e C, contas e datas). A régua é o que esse pedido exige, nem mais nem menos.
 - **Rodadas:** cada conferência do passo é uma rodada, que fica no dossiê e aparece na tela e no `conferencia-*.md` do teste externo.

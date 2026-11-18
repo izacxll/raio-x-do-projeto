@@ -120,7 +120,7 @@ export function segundaInstanciaEmTexto(
   return [
     `# Segunda instância — etapa ${etapa}, passo ${passo}, rodada ${rodada}`,
     "",
-    `Achados: ${res.achados.length} (alta: ${res.altas}). Todo achado é Sugestão: quem decide é o GP.`,
+    `Achados: ${res.achados.length} (alta: ${res.altas}, média: ${res.achados.filter((a) => a.gravidade === "media").length}). Todo achado é Sugestão: quem decide é o GP.`,
     "",
     "## Achados",
     ...(res.achados.length
