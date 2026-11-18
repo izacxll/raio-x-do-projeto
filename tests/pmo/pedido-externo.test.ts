@@ -18,7 +18,7 @@ import { criarDossieVazio, lerDossie, serializarDossie } from "../../src/dossie/
 import type { Dossie, DocumentoLido } from "../../src/dossie/esquema";
 import { RespostaSegundaInstancia } from "../../src/pmo/schemas/segunda-instancia";
 import { identidadeDoCaso } from "../../src/pmo/identidade-do-caso";
-import { passoAnteriorFinal, respostaGuardada } from "../../src/pmo/passo-anterior";
+import { passoAnteriorFinal } from "../../src/pmo/passo-anterior";
 import {
   chaveDaSegundaInstancia,
   conferirSegundaInstancia,
@@ -145,8 +145,16 @@ const alvoDaSegunda = (x: string) => x.replace(/^segunda-/, "");
 
 /** A resposta guardada do passo, com o "em" (a segunda instância confere esta). */
 function respostaDoPasso(d: Dossie, alvo: string): { resposta: unknown; em: string } | undefined {
-  if (etapa >= 2 && etapa <= 4) return respostaGuardada(d, etapa, alvo);
-  const g = etapa === 1 ? d.analiseRfp?.leituraPmo : d.conferencia?.leituraPmo;
+  const g =
+    etapa === 1
+      ? d.analiseRfp?.leituraPmo
+      : etapa === 2
+        ? d.proposta?.[alvo as "estrategia" | "conteudo" | "eap"]
+        : etapa === 3
+          ? d.tap?.[alvo as "tap" | "premissas"]
+          : etapa === 4
+            ? d.pgp?.[alvo as PassoPgp]
+            : d.conferencia?.leituraPmo;
   return g ? { resposta: g.resposta, em: g.em } : undefined;
 }
 
@@ -171,8 +179,8 @@ function montarSegunda(d: Dossie, passo: string): Passo {
     sistema: sistemaDaSegundaInstancia(etapa),
     documentos: textoDosDocumentos(documentosDoPasso(d)),
     // o pedido do passo conferido, como foi ao PMO (esqueleto e o que o passo exige; decisão 0059)
-    // com a identidade do caso no topo (decisão 0066): com dois casos lado a lado, o revisor confere que é este; e a
-    // versão final do passo anterior (decisão 0068), para ele não buscar uma versão velha em outro arquivo
+    // com a identidade do caso no topo (decisão 0066): com dois casos lado a lado, o revisor confere que é este; nas
+    // premissas, o TAP revisado (decisão 0068), para ele não buscar uma versão velha em outro arquivo
     pedido: pedidoSegundaInstancia(etapa, alvo, r.resposta, montarPasso(d, alvo).pedido, {
       identidade: identidadeDoCaso(d.documentos, d.projeto.nome),
       anterior: passoAnteriorFinal(d, etapa, alvo),

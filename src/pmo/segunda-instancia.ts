@@ -58,8 +58,8 @@ export function sistemaDaSegundaInstancia(etapa?: number): string {
 /**
  * Pedido da segunda instância (decisões 0057 e 0059). Leva o pedido do passo conferido, como foi ao PMO: o esqueleto do
  * código (números R e C, contas e datas) e a lista do que o passo exige. A rubrica é essa lista, nem mais nem menos.
- * No topo, a identidade do caso (decisão 0066): o revisor confere que tudo é deste caso antes de achar. Depois do pedido
- * do passo, a versão final do passo anterior da etapa (decisão 0068), a que seguiu: é com ela que se confere a coerência.
+ * No topo, a identidade do caso (decisão 0066): o revisor confere que tudo é deste caso antes de achar. Nas premissas,
+ * depois do pedido do passo, o TAP revisado pelo GP (decisão 0068): é com ele que se confere a coerência.
  */
 export function pedidoSegundaInstancia(
   etapa: number,
@@ -84,7 +84,7 @@ ${JSON.stringify(resposta, null, 2)}
 A régua é o pedido do passo: o que ele exige, nem mais nem menos. Item do método ou das fichas que o pedido não pediu não é falta.
 1. erro_de_fato: o que a resposta afirma e o documento não diz, ou diz diferente (número, prazo, data, quem faz, o que se entrega); número, R, C, conta ou data que não bate com o esqueleto do código; citação que não prova a frase.
 2. faltou: o que o pedido do passo exige (as seções, os campos e a autoconferência da lista "O que fazer" e das regras dele) e a resposta não trouxe.
-3. incoerencia_entre_etapas: a resposta contradiz o esqueleto e as contas do código, ou o que veio das etapas anteriores e está nos documentos (proposta, TAP), ou contradiz a si mesma.
+3. incoerencia_entre_etapas: a resposta contradiz o esqueleto e as contas do código, ou o que veio das etapas anteriores e está nos documentos (proposta, TAP)${anterior ? " ou no TAP revisado acima" : ""}, ou contradiz a si mesma. Só conta o que está neste pedido: não aponte incoerência com versão que não veio nele.
 4. rotulo_errado: rótulo ou premissa errados: "documento" sem trecho que prove a frase; sugestão escrita como fato; decisão do GP preenchida como fato; premissa crítica no lugar errado; nome de pessoa.
 
 # Como responder

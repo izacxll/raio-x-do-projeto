@@ -1,52 +1,70 @@
-// Versão final do passo anterior no pedido da segunda instância (decisão 0068).
-import { describe, expect, it } from "vitest";
+// TAP revisado no pedido da segunda instância do registro de premissas (decisão 0068).
+import { describe, expect, it, vi } from "vitest";
 import { criarDossieVazio } from "../../src/dossie/arquivo";
 import type { Dossie } from "../../src/dossie/esquema";
-import { passoAnteriorFinal, respostaGuardada } from "../../src/pmo/passo-anterior";
+import { passoAnteriorEmTexto, passoAnteriorFinal } from "../../src/pmo/passo-anterior";
 import { pedidoSegundaInstancia } from "../../src/pmo/segunda-instancia";
+
+// o TAP como o app o exporta: aqui, um texto que mostra o que entrou (o código de montagem tem testes próprios)
+vi.mock("../../src/etapas/4-pgp/entrada", () => ({
+  tapDoDossieComoDocumento: (d: Dossie) =>
+    d.tap?.tap
+      ? {
+          paginas: [
+            {
+              numero: 1,
+              texto: `limites: ${JSON.stringify((d.tap.tap.resposta as unknown as { l: string }).l)}`,
+            },
+            { numero: 2, texto: `premissas no TAP: ${d.tap.premissas ? "sim" : "não"}` },
+          ],
+        }
+      : undefined,
+}));
 
 const guardado = (resposta: unknown, em: string) => ({ resposta, modelo: "m", em });
 
-function dossie(): Dossie {
+function dossie(l = "versão final"): Dossie {
   const d = criarDossieVazio(new Date(2026, 10, 18));
   return {
     ...d,
-    proposta: { estrategia: guardado({ e: 1 }, "t1"), conteudo: guardado({ c: 1 }, "t2") },
-    // o TAP corrigido depois da conferência: é este que está no dossiê e que seguiu com o "seguir" do GP
-    tap: { tap: guardado({ limites: ["versão final"] }, "t4") },
-    pgp: { adaptacao: guardado({ a: 1 }, "t5") },
+    tap: { tap: guardado({ l }, "t4"), premissas: guardado({ p: 1 }, "t5") },
   } as unknown as Dossie;
 }
 
-describe("passo anterior", () => {
-  it("é o passo de antes na mesma etapa, como está no dossiê", () => {
-    const d = dossie();
-    expect(passoAnteriorFinal(d, 3, "premissas")).toEqual({
-      passo: "tap",
-      resposta: { limites: ["versão final"] },
-      em: "t4",
-    });
-    expect(passoAnteriorFinal(d, 2, "conteudo")?.passo).toBe("estrategia");
-    expect(passoAnteriorFinal(d, 4, "escopo")?.passo).toBe("adaptacao");
+describe("TAP revisado nas premissas", () => {
+  it("vai só na segunda instância das premissas, sem o registro que está sendo conferido", () => {
+    const a = passoAnteriorFinal(dossie(), 3, "premissas");
+    expect(a?.passo).toBe("tap");
+    expect(a?.em).toBe("t4");
+    expect(a?.texto).toContain('limites: "versão final"');
+    expect(a?.texto).toContain("premissas no TAP: não");
+    expect(passoAnteriorFinal(dossie(), 3, "tap")).toBeUndefined();
+    expect(passoAnteriorFinal(dossie(), 2, "conteudo")).toBeUndefined();
+    expect(passoAnteriorFinal(dossie(), 4, "escopo")).toBeUndefined();
+    expect(passoAnteriorFinal(criarDossieVazio(), 3, "premissas")).toBeUndefined();
   });
 
-  it("não há no primeiro passo da etapa, nas etapas de um passo só nem sem resposta guardada", () => {
-    const d = dossie();
-    expect(passoAnteriorFinal(d, 3, "tap")).toBeUndefined();
-    expect(passoAnteriorFinal(d, 1, "leitura-rfp")).toBeUndefined();
-    expect(passoAnteriorFinal(d, 5, "leitura")).toBeUndefined();
-    expect(passoAnteriorFinal(d, 4, "cronograma")).toBeUndefined();
-    expect(respostaGuardada(d, 2, "eap")).toBeUndefined();
+  it("a versão muda quando o texto revisado muda, mesmo com o mesmo em", () => {
+    const a = passoAnteriorFinal(dossie("um"), 3, "premissas");
+    const b = passoAnteriorFinal(dossie("outro"), 3, "premissas");
+    expect(a?.em).toBe(b?.em);
+    expect(a?.versao).not.toBe(b?.versao);
+    expect(passoAnteriorFinal(dossie("um"), 3, "premissas")?.versao).toBe(a?.versao);
   });
 
-  it("vai no pedido depois do pedido do passo, compacto e com o aviso de que é a que vale", () => {
+  it("vai no pedido depois do pedido do passo, com a data, e a rubrica manda usar só o que veio", () => {
     const anterior = passoAnteriorFinal(dossie(), 3, "premissas");
     const p = pedidoSegundaInstancia(3, "premissas", { r: 1 }, "pedido do passo", { anterior });
-    const bloco = p.indexOf("## Versão final do passo anterior (tap), a que seguiu");
+    const bloco = p.indexOf("## TAP revisado pelo GP (a versão que seguiu, de t4)");
     expect(bloco).toBeGreaterThan(p.indexOf("</pedido-do-passo>"));
     expect(bloco).toBeLessThan(p.indexOf("## Resposta a conferir"));
-    expect(p).toContain('{"limites":["versão final"]}');
-    expect(p).toMatch(/Versões anteriores, conferências antigas e outros arquivos não valem/);
-    expect(pedidoSegundaInstancia(3, "tap", {}, "pedido")).not.toMatch(/Versão final do passo anterior/);
+    expect(p).toMatch(/<tap-revisado>\n=== Página 1 ===/);
+    expect(p).toMatch(/ou no TAP revisado acima/);
+    expect(p).toMatch(/não aponte incoerência com versão que não veio nele/);
+    const sem = pedidoSegundaInstancia(3, "tap", {}, "pedido");
+    expect(sem).not.toMatch(/TAP revisado/);
+    expect(passoAnteriorEmTexto(anterior!)).toMatch(
+      /Versões anteriores do TAP e conferências antigas não valem/,
+    );
   });
 });

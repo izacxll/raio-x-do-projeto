@@ -43,7 +43,19 @@ export function SegundaInstancia({
   const chave = useChave();
   const id = chaveDaSegundaInstancia(etapa, passo);
   const guardada = dossie.segundaInstancia?.[id];
-  const atual = guardada && guardada.deResposta === respostaEm ? guardada : undefined;
+  // nas premissas, o TAP revisado vai no pedido (decisão 0068); o memo só olha o dossiê nesse passo
+  const dossieDoAnterior = etapa === 3 && passo === "premissas" ? dossie : null;
+  const anterior = useMemo(
+    () => (dossieDoAnterior ? passoAnteriorFinal(dossieDoAnterior, etapa, passo) : undefined),
+    [dossieDoAnterior, etapa, passo],
+  );
+  // a conferência guardada vale para esta resposta e para o mesmo TAP revisado (sem registro: conferência antiga, vale)
+  const atual =
+    guardada &&
+    guardada.deResposta === respostaEm &&
+    (guardada.deAnterior === undefined || guardada.deAnterior === anterior?.versao)
+      ? guardada
+      : undefined;
   const [rodando, setRodando] = useState(false);
   const [erro, setErro] = useState<ErroPmo | null>(null);
   const cancelar = useRef<AbortController | null>(null);
@@ -54,8 +66,6 @@ export function SegundaInstancia({
     () => identidadeDoCaso(dossie.documentos, dossie.projeto.nome),
     [dossie.documentos, dossie.projeto.nome],
   );
-  // a versão final do passo anterior da etapa (decisão 0068): a que está no dossiê
-  const anterior = useMemo(() => passoAnteriorFinal(dossie, etapa, passo), [dossie, etapa, passo]);
   const pedido = useMemo(
     () => pedidoSegundaInstancia(etapa, passo, resposta, pedidoDoPasso, { identidade, anterior }),
     [etapa, passo, resposta, pedidoDoPasso, identidade, anterior],
@@ -94,6 +104,7 @@ export function SegundaInstancia({
         modelo: r.modelo,
         em: r.em,
         deResposta: respostaEm,
+        ...(anterior ? { deAnterior: anterior.versao } : {}),
         rodada: proximaRodada(guardada, respostaEm),
       });
     } catch (e) {

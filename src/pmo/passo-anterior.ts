@@ -1,49 +1,49 @@
-// Versão final do passo anterior no pedido da segunda instância (decisão 0068). O pedido de um passo leva só parte do
-// anterior (no registro de premissas, só os limites e o risco geral do TAP). Para conferir a coerência, o revisor ia
-// buscar o anterior em outro arquivo e achava uma versão velha (a da última conferência, antes do "seguir" do GP). Com
-// a versão guardada no dossiê (a que seguiu) no pedido, ele não precisa procurar.
+// TAP revisado no pedido da segunda instância do registro de premissas (decisão 0068). O pedido das premissas leva do
+// TAP só os limites e o risco geral; para conferir a coerência, o revisor ia buscar o TAP em outro arquivo e achava uma
+// versão velha (a da última conferência, antes do "seguir" do GP). Vai o TAP como o app o exporta: com o texto que o
+// GP editou e sem o que ele descartou. Só neste passo: os outros já levam resumos do anterior, e o custo de mandar o
+// passo anterior inteiro em todos (+5 a +21 mil tokens por chamada) não se paga.
 import type { Dossie } from "../dossie/esquema";
-import { PASSOS_PGP } from "../etapas/4-pgp/passos";
-
-/** Os passos das etapas 2 a 4, na ordem do app (as etapas 1 e 5 têm um passo só). */
-const PASSOS: Record<number, readonly string[]> = {
-  2: ["estrategia", "conteudo", "eap"],
-  3: ["tap", "premissas"],
-  4: PASSOS_PGP.map((x) => x.passo),
-};
+import { tapDoDossieComoDocumento } from "../etapas/4-pgp/entrada";
 
 export interface PassoAnterior {
+  /** O passo de onde veio ("tap"). */
   passo: string;
-  resposta: unknown;
+  /** O "em" da resposta do passo anterior que foi usada. */
   em: string;
+  /**
+   * A versão que o revisor recebeu: o "em" e uma impressão do texto revisado (editar ou descartar um item do TAP muda
+   * o texto e não o "em"). A conferência guardada com outra versão fica velha.
+   */
+  versao: string;
+  /** O texto revisado, página por página, como o app o exporta. */
+  texto: string;
 }
 
-/** A resposta guardada no dossiê para o passo (a última importada ou recebida, a que vale). */
-export function respostaGuardada(d: Dossie, etapa: number, passo: string): PassoAnterior | undefined {
-  const g =
-    etapa === 2
-      ? d.proposta?.[passo as "estrategia" | "conteudo" | "eap"]
-      : etapa === 3
-        ? d.tap?.[passo as "tap" | "premissas"]
-        : etapa === 4
-          ? d.pgp?.[passo as (typeof PASSOS_PGP)[number]["passo"]]
-          : undefined;
-  return g ? { passo, resposta: g.resposta, em: g.em } : undefined;
+/** Impressão curta do texto (djb2): só para saber se mudou, não é segurança. */
+function impressao(texto: string): string {
+  let h = 5381;
+  for (let i = 0; i < texto.length; i++) h = ((h * 33) ^ texto.charCodeAt(i)) >>> 0;
+  return h.toString(36);
 }
 
-/** O passo anterior da mesma etapa, como está no dossiê; undefined no primeiro passo ou sem resposta guardada. */
+/**
+ * O TAP revisado para a segunda instância das premissas, sem o registro de premissas (é ele que está sendo conferido).
+ * undefined nos outros passos ou sem o TAP no dossiê.
+ */
 export function passoAnteriorFinal(d: Dossie, etapa: number, passo: string): PassoAnterior | undefined {
-  const passos = PASSOS[etapa] ?? [];
-  const k = passos.indexOf(passo);
-  const anterior = k > 0 ? passos[k - 1] : undefined;
-  return anterior ? respostaGuardada(d, etapa, anterior) : undefined;
+  if (etapa !== 3 || passo !== "premissas" || !d.tap?.tap) return undefined;
+  const doc = tapDoDossieComoDocumento({ ...d, tap: { ...d.tap, premissas: undefined } });
+  if (!doc) return undefined;
+  const texto = doc.paginas.map((p) => `=== Página ${p.numero} ===\n${p.texto.trim()}`).join("\n");
+  return { passo: "tap", em: d.tap.tap.em, versao: `${d.tap.tap.em}#${impressao(texto)}`, texto };
 }
 
-/** O bloco do pedido: a resposta do passo anterior em JSON compacto, com o aviso de que é a que vale. */
+/** O bloco do pedido: o TAP revisado, com a versão e o aviso de que é o que vale. */
 export function passoAnteriorEmTexto(a: PassoAnterior): string {
-  return `## Versão final do passo anterior (${a.passo}), a que seguiu
-É esta que vale para conferir a coerência com o passo anterior. Versões anteriores, conferências antigas e outros arquivos não valem: não os procure.
-\`\`\`json
-${JSON.stringify(a.resposta)}
-\`\`\``;
+  return `## TAP revisado pelo GP (a versão que seguiu, de ${a.em})
+É com este TAP que se confere a coerência do registro de premissas: com o texto que o GP editou e sem os itens que ele descartou. Versões anteriores do TAP e conferências antigas não valem.
+<tap-revisado>
+${a.texto}
+</tap-revisado>`;
 }

@@ -4,9 +4,9 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 
 ## [Não publicado]
 
-### Segunda instância com a versão final do passo anterior (decisão 0068)
-- **Pedido da segunda instância** com a resposta do passo anterior da etapa, como está no dossiê (a que seguiu), em JSON compacto e com o aviso de que é a que vale.
-- **Skill de revisão:** o passo anterior vai na versão final e o revisor não procura outra.
+### TAP revisado na segunda instância das premissas (decisão 0068)
+- **Pedido da segunda instância do registro de premissas** com o TAP como o app o exporta (texto editado pelo GP, sem os descartados e sem o registro conferido), com a data da versão; a conferência guardada fica velha se o TAP revisado mudar.
+- **Rubrica e skill de revisão:** incoerência só com o que está no pedido.
 
 ### Características e reexportação no teste externo (decisão 0069)
 - **`--caracteristicas`** na exportação das etapas 4 e 5 (ex.: `"campo=não,beneficiarios=não"`), com os mesmos valores da tela.
