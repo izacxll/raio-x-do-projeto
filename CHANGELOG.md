@@ -4,6 +4,11 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 
 ## [Não publicado]
 
+### Características e reexportação no teste externo (decisão 0069)
+- **`--caracteristicas`** na exportação das etapas 4 e 5 (ex.: `"campo=não,beneficiarios=não"`), com os mesmos valores da tela.
+- **A correção parte da sugestão do código**, como na tela da etapa 4, e não mais do padrão conservador.
+- **Regra de reexportação** (`scripts/decisoes-do-pedido.mjs`): quais decisões do GP cada pedido usa, para o vigia reexportar o passo atual quando uma delas muda.
+
 ### Revisores em paralelo e lista de R (decisão 0067)
 - **Skill de revisão:** R e C só os da lista do pedido (R fora dela vira restrição ou observação); revisores em paralelo com pasta de trabalho própria.
 

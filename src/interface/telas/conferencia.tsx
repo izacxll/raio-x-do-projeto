@@ -1,7 +1,11 @@
 // Etapa 5 na tela: mapa do PGP, características, premissas críticas e requisitos (confirmados pelo GP),
 // depois os achados, com a decisão do GP em cada um, e a exportação.
 import { useMemo, useState } from "react";
-import { CARACTERISTICAS_PADRAO, type Caracteristicas } from "../../dominio/caracteristicas";
+import {
+  CARACTERISTICAS_PADRAO,
+  type Caracteristicas,
+  VALORES_CARACTERISTICAS,
+} from "../../dominio/caracteristicas";
 import { PARTES_PGP, PREMISSAS_CRITICAS } from "../../dominio/skill";
 import type {
   AnaliseRfpDossie,
@@ -40,18 +44,22 @@ const NOME_SITUACAO_PROPOSTA: Record<ParteNoMapa["situacao"], string> = {
   "nao-localizada": "não localizada pelo código",
 };
 
-export const OPCOES: { [K in keyof Caracteristicas]: { rotulo: string; valores: Caracteristicas[K][] } } = {
-  porte: { rotulo: "Porte", valores: ["pequeno", "médio", "grande"] },
-  abordagem: { rotulo: "Abordagem", valores: ["preditiva", "adaptativa", "híbrida"] },
-  fases: { rotulo: "Fases", valores: ["uma", "várias"] },
-  campo: { rotulo: "Trabalho de campo", valores: [true, false] },
-  beneficiarios: { rotulo: "Beneficiários ou participantes", valores: [true, false] },
-  subcontratacao: { rotulo: "Subcontratação", valores: ["permitida", "vedada", "não informada"] },
-  dadosPessoais: { rotulo: "Dados pessoais", valores: [true, false] },
-  frentes: { rotulo: "Frentes de trabalho", valores: ["uma", "várias"] },
-  contratante: { rotulo: "Contratante", valores: ["público", "privado"] },
-  pagamento: { rotulo: "Pagamento", valores: ["por produto", "por medição", "de outra forma"] },
-  exposicao: { rotulo: "Estudo sensível (CPI, comissão, órgão de controle)", valores: ["sensível", "comum"] },
+// os valores vêm do domínio: a exportação do teste externo aceita os mesmos (decisão 0069)
+const V = VALORES_CARACTERISTICAS;
+export const OPCOES: {
+  [K in keyof Caracteristicas]: { rotulo: string; valores: readonly Caracteristicas[K][] };
+} = {
+  porte: { rotulo: "Porte", valores: V.porte },
+  abordagem: { rotulo: "Abordagem", valores: V.abordagem },
+  fases: { rotulo: "Fases", valores: V.fases },
+  campo: { rotulo: "Trabalho de campo", valores: V.campo },
+  beneficiarios: { rotulo: "Beneficiários ou participantes", valores: V.beneficiarios },
+  subcontratacao: { rotulo: "Subcontratação", valores: V.subcontratacao },
+  dadosPessoais: { rotulo: "Dados pessoais", valores: V.dadosPessoais },
+  frentes: { rotulo: "Frentes de trabalho", valores: V.frentes },
+  contratante: { rotulo: "Contratante", valores: V.contratante },
+  pagamento: { rotulo: "Pagamento", valores: V.pagamento },
+  exposicao: { rotulo: "Estudo sensível (CPI, comissão, órgão de controle)", valores: V.exposicao },
 };
 
 export function rotuloValor(v: string | boolean): string {

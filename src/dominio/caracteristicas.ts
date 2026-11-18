@@ -1,5 +1,6 @@
 // Características do projeto, confirmadas pelo GP na tela do mapa do PGP (decisão 0013).
 // São o vocabulário das condições de dispensa das fichas (_modelo.md da skill).
+import { tirarAcentos } from "../texto/normalizar";
 
 export interface Caracteristicas {
   porte: "pequeno" | "médio" | "grande";
@@ -30,6 +31,52 @@ export const CARACTERISTICAS_PADRAO: Caracteristicas = {
   pagamento: "por produto",
   exposicao: "sensível",
 };
+
+/** Os valores que cada característica aceita (a tela e a exportação do teste externo usam os mesmos). */
+export const VALORES_CARACTERISTICAS: { [K in keyof Caracteristicas]: readonly Caracteristicas[K][] } = {
+  porte: ["pequeno", "médio", "grande"],
+  abordagem: ["preditiva", "adaptativa", "híbrida"],
+  fases: ["uma", "várias"],
+  campo: [true, false],
+  beneficiarios: [true, false],
+  subcontratacao: ["permitida", "vedada", "não informada"],
+  dadosPessoais: [true, false],
+  frentes: ["uma", "várias"],
+  contratante: ["público", "privado"],
+  pagamento: ["por produto", "por medição", "de outra forma"],
+  exposicao: ["sensível", "comum"],
+};
+
+const semAcento = (t: string) => tirarAcentos(t).trim();
+
+/**
+ * Características corrigidas pelo GP fora da tela (teste externo; decisão 0069): "campo=não, beneficiarios=nao,
+ * porte=medio". Separadas por vírgula ou ponto e vírgula; chave e valor sem acento também valem; sim e não para as
+ * de sim ou não. Chave ou valor fora da lista é erro, com a lista no texto.
+ */
+export function lerCaracteristicas(texto: string): Partial<Caracteristicas> {
+  const chaves = Object.keys(VALORES_CARACTERISTICAS) as (keyof Caracteristicas)[];
+  const lidas: Partial<Record<keyof Caracteristicas, unknown>> = {};
+  for (const par of texto
+    .split(/[,;]/)
+    .map((x) => x.trim())
+    .filter(Boolean)) {
+    const [k = "", v = ""] = par.split("=").map((x) => x.trim());
+    const chave = chaves.find((c) => semAcento(c) === semAcento(k));
+    if (!chave) throw new Error(`Característica "${k}" não existe. Use: ${chaves.join(", ")}.`);
+    const valores = VALORES_CARACTERISTICAS[chave] as readonly (string | boolean)[];
+    const alvo = semAcento(v);
+    const valor = valores.find((x) =>
+      typeof x === "boolean" ? alvo === (x ? "sim" : "nao") || alvo === String(x) : semAcento(x) === alvo,
+    );
+    if (valor === undefined)
+      throw new Error(
+        `Valor "${v}" não vale para ${chave}. Use: ${valores.map((x) => (x === true ? "sim" : x === false ? "não" : x)).join(", ")}.`,
+      );
+    lidas[chave] = valor;
+  }
+  return lidas as Partial<Caracteristicas>;
+}
 
 /** As expressões permitidas em "dispensa" e se cada uma vale para o projeto. */
 export function expressoes(c: Caracteristicas): Record<string, boolean> {
