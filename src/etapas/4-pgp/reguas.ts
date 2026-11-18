@@ -30,15 +30,24 @@ export interface ReguaQueMudou {
 const QUANTIDADE = /\b(\d+(?:[.,]\d+)?)\s*(meses|mes|dias uteis|dias corridos|dias|semanas|anos)\b/g;
 const TETO =
   /\bteto\b|\blimite\b|\bprazo maximo\b|\bno maximo\b|\bnao pode passar\b|\bnao pode ultrapassar\b/;
-const REFERENCIA = /\breferencia\b|\bnao (?:e|sao|serve como) teto\b|\bindicativ\w*\b/;
+const REFERENCIA = /\breferencia\b|\bindicativ\w*\b/;
+/** "não teto", "não são mais teto", "deixam de ser teto", "sem teto": negar o teto é dizer que é referência. */
+const TETO_NEGADO =
+  /\bnao (?:\w+ ){0,3}(?:um |o )?(?:teto|limite)\b|\bdeixa\w* de ser (?:um |o )?(?:teto|limite)\b|\bsem teto\b/g;
+/** "referência" que não qualifica duração: o documento ("Termo de Referência"), uma data ou um preço. */
+const OUTRA_REFERENCIA =
+  /\btermos? de referencia\b|\b(?:data|mes|valor|preco|ano|periodo|base|cenario)s? de referencia\b/g;
 
 /** As menções de duração com qualificador ("teto" ou "referência") na mesma oração. */
 export function mencoesDeRegua(texto: string, passo: PassoPgp, onde: string): MencaoDeRegua[] {
   const out: MencaoDeRegua[] = [];
   for (const oracao of texto.split(/(?<=[.;])\s+/)) {
-    const t = tirarAcentos(oracao).toLowerCase();
-    const referencia = REFERENCIA.test(t);
-    const teto = TETO.test(t) && !/\bnao (?:e|sao|serve como) teto\b/.test(t);
+    const bruto = tirarAcentos(oracao).toLowerCase();
+    const negado = new RegExp(TETO_NEGADO.source).test(bruto);
+    // tira o teto negado e as "referências" que não são régua antes de classificar (revisão de código, 0078)
+    const t = bruto.replace(TETO_NEGADO, " ").replace(OUTRA_REFERENCIA, " ");
+    const referencia = negado || REFERENCIA.test(t);
+    const teto = TETO.test(t);
     // as duas palavras na mesma oração: ambígua, não conta
     if (referencia === teto) continue;
     for (const m of t.matchAll(QUANTIDADE))
@@ -83,7 +92,14 @@ function mencoesDoPgp(p: PgpDossie): MencaoDeRegua[] {
  * linha por duração e passo antigo.
  */
 export function reguasQueMudaram(p: PgpDossie): ReguaQueMudou[] {
-  const ordem = (x: PassoPgp) => PASSOS_PGP.findIndex((y) => y.passo === x);
+  // "mais novo" é a resposta salva por último (o passo refeito depois vale mais); a posição do passo só desempata
+  // (revisão de código, 0078)
+  const posicao = (x: PassoPgp) => PASSOS_PGP.findIndex((y) => y.passo === x);
+  const salvoEm = (x: PassoPgp) => Date.parse(p[x]?.em ?? "") || 0;
+  const passosEmOrdem = [...PASSOS_PGP.map((x) => x.passo)].sort(
+    (a, b) => salvoEm(a) - salvoEm(b) || posicao(a) - posicao(b),
+  );
+  const ordem = (x: PassoPgp) => passosEmOrdem.indexOf(x);
   const porQuantidade = new Map<string, MencaoDeRegua[]>();
   for (const m of mencoesDoPgp(p))
     porQuantidade.set(m.quantidade, [...(porQuantidade.get(m.quantidade) ?? []), m]);

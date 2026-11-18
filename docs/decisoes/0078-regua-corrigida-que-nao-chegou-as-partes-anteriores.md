@@ -18,3 +18,4 @@ No teste externo, o passo de cronograma da etapa 4 corrigiu a régua da duraçã
 
 - Calibrado nos dois casos do teste (fora do Git): 1 aviso no caso fiscal (a régua de 8 meses, A17 × cronograma, o caso da lição) e nenhum no caso de contratação direta.
 - A skill PMO (decisão 0079) diz ao PMO que varra as partes geradas antes quando corrige uma régua.
+- Revisão de código: a negação do teto ("não são mais teto", "deixam de ser teto", "não são um limite") conta como referência; "Termo de Referência", "data de referência" e afins não contam como régua; o passo "mais novo" é o de resposta salva por último (o passo refeito depois vale mais), e a posição do passo só desempata.

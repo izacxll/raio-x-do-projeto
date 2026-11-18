@@ -21,6 +21,32 @@ describe("menções de régua", () => {
     expect(mencoesDeRegua("Os 6 meses são referência e teto.", "cronograma", "")).toEqual([]);
     expect(mencoesDeRegua("A fase dura 6 meses.", "cronograma", "")).toEqual([]);
   });
+
+  it("negação do teto é referência; Termo de Referência não é régua (revisão de código)", () => {
+    for (const t of [
+      "Os 6 meses são referência, não teto.",
+      "Os 6 meses não são mais teto.",
+      "Os 6 meses deixam de ser teto.",
+      "Os 6 meses não são um limite.",
+    ])
+      expect(mencoesDeRegua(t, "cronograma", "")[0]?.classe).toBe("referencia");
+    expect(
+      mencoesDeRegua("Execução em 6 meses, conforme o Termo de Referência (p. 3).", "cronograma", ""),
+    ).toEqual([]);
+  });
+});
+
+describe("o mais novo é a resposta salva por último", () => {
+  it("adaptação refeita depois do cronograma: a correção dela vale, e o aviso aponta o cronograma", () => {
+    const p = {
+      adaptacao: { resposta: texto("A17", "Os 6 meses são só referência."), em: "2026-11-18T12:00:00Z" },
+      cronograma: { resposta: texto("A14", "Os 6 meses são teto."), em: "2026-11-18T10:00:00Z" },
+    } as unknown as PgpDossie;
+    const r = reguasQueMudaram(p);
+    expect(r).toHaveLength(1);
+    expect(r[0]!.antes.passo).toBe("cronograma");
+    expect(r[0]!.depois.passo).toBe("adaptacao");
+  });
 });
 
 describe("régua que mudou entre os passos", () => {
