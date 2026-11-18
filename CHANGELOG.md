@@ -4,6 +4,10 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 
 ## [Não publicado]
 
+### Correção: conferência do pedido externo com o SKILL.md por etapa (decisão 0064)
+- A conferência do conteúdo do pedido (teste externo) aceita o SKILL.md recortado ("SKILL.md (etapa N)") e confere que ele é o da etapa certa; antes, recusava a exportação com "FALTA: SKILL.md".
+- Teste na CI com a montagem real das cinco etapas e da segunda instância.
+
 ### Skill de revisão por segunda instância (decisão 0065)
 - **Nova skill** `.claude/skills/revisao-segunda-instancia/`: pedido isolado, rubrica fixa, como lançar o revisor, aplicar os achados com checagem, limite de rodadas e confidencialidade.
 - **A PMO e o `docs/papeis.md` apontam para ela**, sem repetir a rubrica; o pedido da segunda instância no app continua com a rubrica.
