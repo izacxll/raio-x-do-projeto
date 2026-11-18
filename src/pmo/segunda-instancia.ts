@@ -39,8 +39,7 @@ export function proximaRodada(
 ): number {
   if (!anterior) return 1;
   const r = anterior.rodada ?? 1;
-  const tapMudou = anterior.deAnterior !== undefined && anterior.deAnterior !== versaoDoTap;
-  return anterior.deResposta === respostaEm && !tapMudou ? r : r + 1;
+  return conferenciaVelha(anterior, respostaEm, versaoDoTap) ? r + 1 : r;
 }
 
 /**

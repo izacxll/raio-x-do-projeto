@@ -18,7 +18,7 @@ import { criarDossieVazio, lerDossie, serializarDossie } from "../../src/dossie/
 import type { Dossie, DocumentoLido } from "../../src/dossie/esquema";
 import { RespostaSegundaInstancia } from "../../src/pmo/schemas/segunda-instancia";
 import { identidadeDoCaso } from "../../src/pmo/identidade-do-caso";
-import { montarTapRevisado } from "../../src/pmo/tap-revisado";
+import { lerVersaoDoTapNoPedido, montarTapRevisado } from "../../src/pmo/tap-revisado";
 import {
   chaveDaSegundaInstancia,
   conferirSegundaInstancia,
@@ -585,9 +585,21 @@ describe.skipIf(MODO !== "importar")("importar a resposta do PMO (leitura indepe
       const r = respostaDoPasso(dossie, alvo)!;
       const resposta = v.data as z.infer<typeof RespostaSegundaInstancia>;
       const chave = chaveDaSegundaInstancia(etapa, alvo);
-      // nas premissas, a versão do TAP revisado que foi no pedido (decisão 0068), como na tela
-      const tapRevisado = tapRevisadoDoPasso(dossie, alvo);
-      const rodada = proximaRodada(dossie.segundaInstancia?.[chave], r.em, tapRevisado?.versao);
+      // nas premissas, a versão do TAP revisado que foi no pedido (decisão 0068): a do pedido exportado, ao lado da
+      // resposta; sem ele, a do dossiê agora
+      const baseDoPedido = basename(
+        dossie.documentos.find((x) => x.papel === "rfp")?.nomeArquivo ?? "rfp",
+        ".pdf",
+      );
+      const pedidoExportado = join(
+        dirname(resolve(env.RAIO_X_ARQUIVO ?? "")),
+        `etapa-${etapa}-${passo}-${baseDoPedido}.md`,
+      );
+      const versaoNoPedido = existsSync(pedidoExportado)
+        ? lerVersaoDoTapNoPedido(readFileSync(pedidoExportado, "utf8"))
+        : undefined;
+      const versaoDoTap = versaoNoPedido ?? tapRevisadoDoPasso(dossie, alvo)?.versao;
+      const rodada = proximaRodada(dossie.segundaInstancia?.[chave], r.em, versaoDoTap);
       dossie = {
         ...dossie,
         segundaInstancia: {
@@ -597,7 +609,7 @@ describe.skipIf(MODO !== "importar")("importar a resposta do PMO (leitura indepe
             modelo: "claude.ai (segunda instância)",
             em: HOJE.toISOString(),
             deResposta: r.em,
-            ...(tapRevisado ? { deAnterior: tapRevisado.versao } : {}),
+            ...(versaoDoTap ? { deAnterior: versaoDoTap } : {}),
             rodada,
           },
         },

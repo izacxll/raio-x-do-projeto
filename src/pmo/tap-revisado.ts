@@ -5,7 +5,11 @@
 // Só neste passo: os outros já levam resumos do anterior, e mandar o passo anterior em todos não se paga.
 import type { TapDossie } from "../dossie/esquema";
 import { itensDoTap } from "../etapas/3-tap/tap";
-import { itensValidos, textoFinal } from "./itens";
+import { estadoDe, itensValidos, textoFinal } from "./itens";
+
+const ROTULO = { documento: "Do documento", sugestao: "Sugestão", decisao_gp: "Decisão do GP" } as const;
+const VALE = { rfp: "vale a RFP", proposta: "vale a proposta", contrato: "vale o contrato" } as const;
+const decisaoDoGp = (v?: string) => `[Decisão do GP] ${v?.trim() || "a definir pelo GP"}`;
 
 export interface TapRevisado {
   /** O "em" da resposta do TAP usada. */
@@ -33,17 +37,46 @@ export function montarTapRevisado(t: TapDossie | undefined): TapRevisado | undef
   const itens = itensValidos(t.revisoes, itensDoTap(t.tap.resposta, []));
   const grupos = new Map<string, string[]>();
   for (const i of itens) {
-    const linha = `- ${textoFinal(i, t.revisoes)}${i.complemento ? ` ${i.complemento}` : ""}`;
+    // o rótulo de cada item (os três do princípio) e, se o GP ainda não revisou, a marca de pendente
+    const pendente = estadoDe(t.revisoes, i.id) === "pendente" ? " (pendente de revisão do GP)" : "";
+    const linha = `- [${ROTULO[i.item.rotulo]}] ${textoFinal(i, t.revisoes)}${i.complemento ? ` ${i.complemento}` : ""}${pendente}`;
     grupos.set(i.grupo, [...(grupos.get(i.grupo) ?? []), linha]);
   }
-  const texto = [...grupos].map(([g, linhas]) => `### ${g}\n${linhas.join("\n")}`).join("\n\n");
+  // as decisões do GP no TAP (campos que só ele preenche e o que vale em cada divergência); a aprovação não entra
+  const d = t.decisoes;
+  const decisoes = [
+    `- Recursos financeiros pré-aprovados: ${decisaoDoGp(d.recursos)}`,
+    `- Gerente do projeto: ${decisaoDoGp(d.gerente)}`,
+    `- Responsabilidade e nível de autoridade: ${decisaoDoGp(d.autoridade)}`,
+    `- Patrocinador: ${decisaoDoGp(d.patrocinador)}`,
+    `- Autoridade do patrocinador e escalonamento: ${decisaoDoGp(d.autoridadePatrocinador)}`,
+    ...Object.entries(t.divergencias).map(
+      ([id, x]) =>
+        `- Divergência ${id}: [Decisão do GP] ${x.vale === "outra" ? x.texto?.trim() || "outra redação, a definir" : VALE[x.vale]}`,
+    ),
+  ];
+  const texto = [
+    ...[...grupos].map(([g, linhas]) => `### ${g}\n${linhas.join("\n")}`),
+    `### Decisões do GP no TAP\n${decisoes.join("\n")}`,
+  ].join("\n\n");
   return { em: t.tap.em, versao: `${t.tap.em}#${calcularImpressao(texto)}`, texto };
+}
+
+/** O título do bloco traz a versão: a importação da resposta do revisor lê de lá qual TAP foi no pedido. */
+const TITULO = "## TAP revisado pelo GP (versão ";
+
+/** A versão do TAP revisado que foi num pedido já exportado; undefined se o pedido não traz o bloco. */
+export function lerVersaoDoTapNoPedido(pedido: string): string | undefined {
+  const k = pedido.indexOf(TITULO);
+  if (k < 0) return undefined;
+  const fim = pedido.indexOf(",", k + TITULO.length);
+  return fim < 0 ? undefined : pedido.slice(k + TITULO.length, fim);
 }
 
 /** O bloco do pedido: o TAP revisado, com a versão e o aviso de que é o que vale. */
 export function formatarTapRevisado(a: TapRevisado): string {
-  return `## TAP revisado pelo GP (a versão que seguiu, de ${a.em})
-É com este TAP que se confere a coerência do registro de premissas: com o texto que o GP editou e sem os itens que ele descartou. Versões anteriores do TAP e conferências antigas não valem.
+  return `${TITULO}${a.versao}, a que seguiu)
+É com este TAP que se confere a coerência do registro de premissas: com o texto que o GP editou, sem os itens que ele descartou e com as decisões dele. Item marcado "pendente de revisão do GP" ainda não foi decidido: não o trate como definitivo. Versões anteriores do TAP e conferências antigas não valem.
 <tap-revisado>
 ${a.texto}
 </tap-revisado>`;

@@ -8,6 +8,8 @@ import { dadosEmTexto, type DadoDoDocumento } from "./do-documento";
 import type { EntradaTap } from "./entrada";
 import { itensDoPassoEmTexto, type PassoEtapa3 } from "./autoconferencia";
 import { INSTRUCAO_MARCOS, linhaDoTempoEmTexto, linhaDosDados } from "../linha-do-tempo";
+import { estadoDe, textoRevisado } from "../../pmo/itens";
+import { idDoItemTap } from "./tap";
 
 const regras = (passo: PassoEtapa3) => `Regras deste pedido (além da skill):
 - Responda só com o objeto JSON do passo, no schema enviado.
@@ -116,14 +118,17 @@ export function pedidoPremissas(
   revisoes: Record<string, RevisaoItem> = {},
 ): string {
   // os limites e o risco geral como o GP os deixou: com o texto editado e sem os descartados (decisão 0068)
-  const revisados = (campo: "limites" | "riscoGeral") =>
-    (tap?.[campo] ?? []).flatMap((i, k) => {
-      const r = revisoes[`tap:${campo}:${k}`];
-      if (r?.estado === "descartado") return [];
-      return [`- ${r?.estado === "editado" && r.textoEditado?.trim() ? r.textoEditado : i.texto}`];
+  const revisados = (campo: "limites" | "riscoGeral", nome: string) => {
+    const itens = tap?.[campo] ?? [];
+    if (!itens.length) return `- (TAP ainda sem ${nome})`;
+    const validos = itens.flatMap((i, k) => {
+      const id = idDoItemTap(campo, k);
+      return estadoDe(revisoes, id) === "descartado" ? [] : [`- ${textoRevisado(id, i.texto, revisoes)}`];
     });
-  const limites = revisados("limites").join("\n") || "- (TAP ainda sem limites)";
-  const risco = revisados("riscoGeral").join("\n") || "- (TAP ainda sem risco geral)";
+    return validos.join("\n") || `- (o GP descartou todos os itens de ${nome} do TAP)`;
+  };
+  const limites = revisados("limites", "limites");
+  const risco = revisados("riscoGeral", "risco geral");
   return `# Etapa 3 — Termo de abertura · registro de premissas inicial (fichas B3 e TAP, bloco TAP-PR)
 
 Requisitos da RFP: ${e.ponto.requisitos.map((r) => r.numero).join(", ") || "nenhum"}.

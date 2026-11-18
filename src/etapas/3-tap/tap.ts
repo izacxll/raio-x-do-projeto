@@ -66,6 +66,11 @@ export function grupoDoElemento(codigo: string, campo?: keyof RespostaTap): stri
   return `${codigo} — ${e?.nome ?? codigo}${sub ? ` · ${sub}` : ""}`;
 }
 
+/** Id estável de um item do TAP ("tap:limites:0"): a revisão do GP fica guardada por ele. */
+export function idDoItemTap(campo: keyof RespostaTap, k: number): string {
+  return `tap:${campo}:${k}`;
+}
+
 export function itensDoTap(r: RespostaTap, docs: DocumentoLido[]): ItemConferido[] {
   const out: ItemConferido[] = [];
   const add = (id: string, grupo: string, item: ItemPmo, complemento?: string) =>
@@ -104,7 +109,7 @@ export function itensDoTap(r: RespostaTap, docs: DocumentoLido[]): ItemConferido
             `Papel: ${p.papel || "a definir pelo GP"}. Decide: ${p.decide || "a definir pelo GP"}.`,
           ),
         );
-      else (r[campo] as ItemPmo[]).forEach((item, k) => add(`tap:${campo}:${k}`, grupo, item));
+      else (r[campo] as ItemPmo[]).forEach((item, k) => add(idDoItemTap(campo, k), grupo, item));
     }
   r.observacoes.forEach((item, k) => add(`tap:observacoes:${k}`, "Observações do PMO", item));
   return out;
