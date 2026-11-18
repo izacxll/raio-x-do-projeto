@@ -260,7 +260,7 @@ export interface LinhaRastreabilidade {
 export function rastrear(p: PgpDossie, e: EntradaPgp): LinhaRastreabilidade[] {
   const eap = p.escopo?.resposta.eap ?? [];
   const atividades = p.cronograma?.resposta.atividades ?? [];
-  return e.ponto.requisitos.map((r) => {
+  return e.ponto.listaDeR.map((r) => {
     const tap = e.requisitosTap.filter((t) => t.requisitos.includes(r.numero)).map((t) => t.texto);
     const pacotes = eap.filter((x) => x.requisitos.includes(r.numero)).map((x) => `${x.id} ${x.nome}`);
     const ativ = atividades.filter((a) => a.requisitos.includes(r.numero)).map((a) => `${a.id} ${a.nome}`);

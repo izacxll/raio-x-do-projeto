@@ -234,9 +234,17 @@ export function conferirTap(
   const altoNivel = itens.filter((i) => i.id.startsWith("tap:requisitosAltoNivel:") && valido(i));
   const semNumero = altoNivel.filter((i) => !i.item.requisitos.length);
   const citados = new Set(altoNivel.flatMap((i) => i.item.requisitos));
-  const faltando = e.ponto.requisitos.map((r) => r.numero).filter((n) => !citados.has(n));
+  // a lista de R é uma só (decisão 0080): a entrega tem de estar no TAP.3; a obrigação, em qualquer item do TAP
+  // (limite, premissa, requisito), porque ela costuma ir para os limites
+  const citadosNoTap = new Set(itens.filter(valido).flatMap((i) => i.item.requisitos));
+  const faltando = e.ponto.listaDeR
+    .filter((r) => (r.tipo === "obrigacao" ? !citadosNoTap.has(r.numero) : !citados.has(r.numero)))
+    .map((r) => r.numero);
+  const ehObrigacao = new Set(e.ponto.obrigacoes.map((r) => r.numero));
+  const faltandoEntregas = faltando.filter((n) => !ehObrigacao.has(n));
+  const faltandoObrigacoes = faltando.filter((n) => ehObrigacao.has(n));
   // R que saiu da lista na etapa 1 (descartado pelo GP) ou que não existe: não é requisito do TAP
-  const daLista = new Set(e.ponto.requisitos.map((r) => r.numero));
+  const daLista = new Set(e.ponto.listaDeR.map((r) => r.numero));
   const foraDaLista = [...citados].filter((n) => !daLista.has(n) && !ehNumeroDeCompromisso(n)).sort();
   out.push({
     id: "requisitos",
@@ -244,12 +252,17 @@ export function conferirTap(
     situacao: semNumero.length || faltando.length || foraDaLista.length ? "atencao" : "ok",
     texto: [
       semNumero.length ? `${semNumero.length} requisito(s) de alto nível sem número R.` : "",
-      faltando.length ? `Requisitos da RFP não citados no TAP.3: ${faltando.join(", ")}.` : "",
+      faltandoEntregas.length
+        ? `Requisitos da RFP não citados no TAP.3: ${faltandoEntregas.join(", ")}.`
+        : "",
+      faltandoObrigacoes.length
+        ? `Obrigações da RFP (R) sem destino em nenhum item do TAP: ${faltandoObrigacoes.join(", ")}; sugere-se levá-las aos limites, às premissas ou aos requisitos.`
+        : "",
       foraDaLista.length
         ? `${foraDaLista.join(", ")} no TAP.3 não está na lista de requisitos da etapa 1 (descartado pelo GP ou inexistente): sugere-se tratá-lo como restrição ou observação, não como requisito de alto nível.`
         : "",
       !semNumero.length && !faltando.length && !foraDaLista.length
-        ? `Os ${e.ponto.requisitos.length} requisitos da RFP estão ligados.`
+        ? `Os ${e.ponto.listaDeR.length} requisitos da RFP estão ligados.`
         : "",
     ]
       .filter(Boolean)

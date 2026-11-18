@@ -81,6 +81,7 @@ Uma decisão por arquivo, numerada em ordem. Cada uma registra o contexto, o que
 | [0075](0075-remocao-de-documentos-obsoletos.md) | Remoção da engenharia reversa (menos o rastro 07-regras), do estudo da etapa 1 antigo e dos placares M1 e M2; links para o histórico no Git | aceita |
 | [0076](0076-etapa-5-sem-falso-ausente-no-plano-do-app.md) | Etapa 5: marca "presente" da etapa 4 conferida pelo texto, formatos do app, A14.10 em plano preditivo e "a definir" com quando ou onde | aceita |
 | [0077](0077-segunda-instancia-leve-na-etapa-5.md) | Etapa 5: segunda instância leve (vereditos "falso" e "regra_errada" contra a página citada, amostra das premissas críticas), no modelo mais barato | pendente |
+| [0080](0080-lista-unica-de-requisitos.md) | Uma lista de R só, do início ao fim (entregas e obrigações), com os descartados pelo GP no pedido | aceita |
 
 Modelo para uma nova decisão:
 

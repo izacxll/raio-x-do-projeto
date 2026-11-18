@@ -37,7 +37,7 @@ function cabecalho(e: EntradaPgp, p: PgpDossie, titulo: string): string {
 
 ${tap} ${e.fonteProposta === "nenhuma" ? "Não há proposta." : "A proposta também vai (doc: proposta)."}
 
-Requisitos da RFP (use estes números): ${e.ponto.requisitos.map((r) => `${r.numero} (${r.rotulo})`).join("; ") || "nenhum"}.
+Requisitos da RFP (a lista de R da etapa 1, uma só do início ao fim; use estes números): ${e.ponto.listaDeR.map((r) => `${r.numero} (${r.rotulo})`).join("; ") || "nenhum"}.${e.ponto.rDescartados.length ? ` Descartados pelo GP na etapa 1 (não são R; se o documento os traz, entram como restrição ou observação): ${e.ponto.rDescartados.join(", ")}.` : ""}
 Premissas críticas que se aplicam (decisão do GP): ${premissasEmTexto(premissas)}.
 ${p.abordagem ? `Abordagem escolhida pelo GP: ${p.abordagem}.` : ""}`;
 }
@@ -135,7 +135,7 @@ Cada um num item da B17 (B17.5 para as exclusões, B17.7 para os limites de volu
 
 /** Requisitos de alto nível do TAP; o R que saiu da lista na etapa 1 vai marcado, para não virar requisito do plano. */
 function requisitosDoTapEmTexto(e: EntradaPgp): string {
-  const daLista = new Set(e.ponto.requisitos.map((r) => r.numero));
+  const daLista = new Set(e.ponto.listaDeR.map((r) => r.numero));
   return e.requisitosTap
     .map((r) => {
       const fora = r.requisitos.filter((n) => !daLista.has(n) && !ehNumeroDeCompromisso(n));

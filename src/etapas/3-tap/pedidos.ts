@@ -131,7 +131,7 @@ export function pedidoPremissas(
   const risco = revisados("riscoGeral", "risco geral");
   return `# Etapa 3 — Termo de abertura · registro de premissas inicial (fichas B3 e TAP, bloco TAP-PR)
 
-Requisitos da RFP: ${e.ponto.requisitos.map((r) => r.numero).join(", ") || "nenhum"}.
+Requisitos da RFP (a lista de R da etapa 1, uma só do início ao fim): ${e.ponto.listaDeR.map((r) => r.numero).join(", ") || "nenhum"}.${e.ponto.rDescartados.length ? ` Descartados pelo GP na etapa 1 (não são R; se o documento os traz, entram como restrição ou observação): ${e.ponto.rDescartados.join(", ")}.` : ""}
 
 Limites do TAP:
 ${limites}
