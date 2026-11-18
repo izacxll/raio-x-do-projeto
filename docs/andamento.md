@@ -1,8 +1,17 @@
 # Andamento
 
-Atualizado em 17/11/2026. Na `main`: v0.8.3. Em revisão: PRs #44 (métodos e decisão 0035), #45 (fase M1) e #46 (métodos revisados, chave em arquivo e documentação). Em andamento: fase M2.
+Atualizado em 18/11/2026. Teste externo da rodada 3: etapas 1 a 4 fechadas nos dois casos; etapa 5 exportada. Em revisão: PRs da decisão 0070 a 0074 (abaixo).
 
 ## Onde estamos
+
+**Rodada 3 do teste externo, etapa 4 fechada (18/11/2026).** Os dois casos (o TR fiscal e o TR de contratação direta) passaram por adaptação, escopo, cronograma, riscos, planos e execução, cada passo com duas rodadas de segunda instância e "seguir". As lições ficam fora do Git. O fechamento virou cinco PRs:
+- **0070, placar e pedidos:** data fixa vencida "não confirmável"; aviso de encerramento antes do último aceite; vago que só reproduz o documento sai; premissa nova parecida com o registro inicial vira aviso; regra das QU no topo do pedido de execução; A2.8 era regra estreita; tokens de cada pedido no placar.
+- **0071, segunda instância mais barata e igual nas duas pontas:** rodada 2 só com os achados anteriores, o que mudou e as páginas citadas (no caso fiscal, de ~55 mil para ~15 mil tokens); sem rodada 2 quando a 1 só tem achados baixos; modelo da rodada 2 à escolha do GP; o app passa a mandar os achados da rodada anterior.
+- **0072, resultado da etapa para apresentação:** um DOCX por etapa e por caso, fora do Git (gerados os das etapas 1 a 4 dos dois casos).
+- **0073, skill PMO 0.3.4** (espera o ok da responsável): as lições da etapa 4.
+- **0074, proposta de arquitetura** (espera o ok): skill base + um arquivo por etapa; subagente só na segunda instância e na revisão de código alta (`.claude/agents/revisor-codigo.md`).
+
+A pasta do teste foi atualizada para a `main` com o vigia novo (linha de estado no `STATUS.md`, resultado da etapa quando ela fecha, terceiro caso esperando o TR na pasta `tr-terceiro`).
 
 **Os métodos das etapas valem (decisão 0034).** A responsável escreveu um método por etapa (`docs/estudos/metodo-etapa-1.md` a `metodo-etapa-5.md`), a partir da análise à mão de um caso real de parceria (fora do Git). O rastro de cada regra está em `docs/estudos/engenharia-reversa/`. O método prevalece sobre o que a etapa faz hoje: leitura e decisão para o gerente, não inventário, com a régua pelo tipo de contrato, de projeto e de plano.
 
@@ -76,6 +85,8 @@ O que cada fase M ainda precisa cobrir está nas issues de cada uma (rótulos `e
 - **Gravidade dos conflitos que envolvem mais de uma parte** do plano (etapa 5) e **gatilhos com número** como campos obrigatórios da etapa 4: a validar na M4 e na M5.
 
 ## Próximo passo
+
+0. **Rodada 3, depois do fechamento (18/11/2026):** a responsável grava as características do caso fiscal no arquivo de decisões (a guarda não deixa o Claude Code gravar), revisa os PRs das decisões 0070 a 0074 (a 0073 e a 0074 esperam o ok dela) e põe o terceiro TR na pasta `tr-terceiro`. Depois do merge, a pasta do teste é atualizada de novo para a `main` (com a autorização dela) para o vigia usar a rodada 2 compacta e o resultado da etapa.
 
 1. **Claude Code:** merge da decisão 0057 (autorizado, com CI verde e varredura limpa); religar o vigia e reexportar a etapa 1 dos dois TRs, do zero.
 2. **Responsável pelo projeto:** conduzir o teste externo a partir da etapa 1 (pedidos do PMO e da segunda instância).
