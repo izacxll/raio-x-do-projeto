@@ -4,6 +4,10 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 
 ## [Não publicado]
 
+### Revisor no caso certo (decisão 0066)
+- **Skill de revisão:** o prompt do revisor diz o caso, o arquivo exato e dois ou três termos, e manda parar sem achados se o conteúdo for de outro caso; antes de aplicar, conferir se os achados falam do caso certo e descartar a revisão de outro caso.
+- **Pedido da segunda instância** com a identidade do caso no topo: documentos, objeto da RFP com a página e termos do objeto.
+
 ### Correção: conferência do pedido externo com o SKILL.md por etapa (decisão 0064)
 - A conferência do conteúdo do pedido (teste externo) aceita o SKILL.md recortado ("SKILL.md (etapa N)") e confere que ele é o da etapa certa; antes, recusava a exportação com "FALTA: SKILL.md".
 - Teste na CI com a montagem real das cinco etapas e da segunda instância.

@@ -28,11 +28,13 @@ Saída em JSON: `{achados:[{id,tipo,gravidade,onde,texto,evidencias,sugestao}], 
 ## 3. Lançar o agente
 
 - Um agente por saída, em segundo plano. O prompt traz: papel (revisor independente), onde está o pedido, a rubrica resumida, as regras (não inventar números, não citar nomes de pessoas, gravidade alta só quando muda escopo, prazo, preço, caixa, aceite ou quem executa) e o caminho exato do JSON de saída, com o comando de validação.
+- **Diga o caso certo e prenda o revisor a ele.** O prompt diz o caso pelo nome, manda ler só o arquivo do pedido (caminho exato), sem abrir pastas de outros casos, e dá dois ou três termos que a resposta certa deve conter (tirados do documento do caso). Se o conteúdo for de outro caso, o revisor para e avisa, sem gravar achados. No Raio-X, o topo do pedido da segunda instância já traz a identidade do caso (arquivos, objeto com página e termos): use esses termos. Erro que evita: com vários casos lado a lado, o revisor ler o pedido de outro TR e trazer achados que não são deste.
 - Peça para conferir no placar ou na conta do código antes de afirmar algo sobre ela.
 - Enquanto roda, siga com outro trabalho; não preveja o resultado.
 
 ## 4. Aplicar os achados (com checagem)
 
+- **Antes de tudo, confira se os achados falam do caso certo:** os termos dados no prompt aparecem e as páginas citadas existem no documento do caso. Revisão de outro caso é descartada inteira e refeita; nenhum achado dela é aproveitado. Erro que evita: corrigir um caso com achados de outro TR.
 - Antes de corrigir, confira cada achado sobre números ou contas na fonte (placar, caminho crítico, página). O revisor é o mesmo modelo e também erra: achado errado não vira correção.
 - Corrija na mesma etapa, numa versão nova (nome de arquivo novo), com as citações reverificadas por script.
 - Registre cada achado útil como lição (regra geral, sem dados do caso) e cada falso alarme na contagem da regra.

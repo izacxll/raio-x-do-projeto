@@ -4,6 +4,7 @@
 import textoSkill from "../../.claude/skills/pmo/SKILL.md?raw";
 import type { DocumentoLido } from "../dossie/esquema";
 import { citacaoValeComoFato, conferirCitacao } from "./citacoes";
+import { type IdentidadeDoCaso, identidadeEmTexto } from "./identidade-do-caso";
 import { skillDaEtapa, textoDeSistema } from "./montagem";
 import type {
   AchadoSegundaInstancia,
@@ -56,15 +57,17 @@ export function sistemaDaSegundaInstancia(etapa?: number): string {
 /**
  * Pedido da segunda instância (decisões 0057 e 0059). Leva o pedido do passo conferido, como foi ao PMO: o esqueleto do
  * código (números R e C, contas e datas) e a lista do que o passo exige. A rubrica é essa lista, nem mais nem menos.
+ * No topo, a identidade do caso (decisão 0066): o revisor confere que tudo é deste caso antes de achar.
  */
 export function pedidoSegundaInstancia(
   etapa: number,
   passo: string,
   resposta: unknown,
   pedidoDoPasso = "",
+  identidade?: IdentidadeDoCaso,
 ): string {
   return `# Segunda instância — conferência da resposta da etapa ${etapa}, passo ${passo}
-
+${identidade ? `\n${identidadeEmTexto(identidade)}\n` : ""}
 Você é a segunda instância (revisão em camadas; a rubrica fixa vai abaixo, em "O que procurar"). Outra chamada produziu a resposta abaixo a partir do pedido do passo, que também vai abaixo, com o esqueleto do código. Confira a resposta contra os documentos acima, contra o esqueleto e contra o que o pedido do passo exige, **antes** de o GP aprovar e de a próxima etapa começar. Você não reescreve a resposta: aponta o que precisa mudar.
 
 ## Pedido do passo conferido (como foi ao PMO, com o esqueleto do código)
