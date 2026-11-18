@@ -19,7 +19,13 @@ import { contarPendentesTap, itensDaEtapa3, tapInicial, type PassoTap } from "..
 import { exportar, type FormatoExportacao } from "../../exportacao/exportar";
 import { montarRegistroPremissas, montarTap } from "../../exportacao/relatorio-tap";
 import { estimarCusto, formatarDolar } from "../../pmo/custo";
-import { estimarTokens, referenciasEtapa3, textoDeSistema, textoDosDocumentos } from "../../pmo/montagem";
+import {
+  estimarTokens,
+  pcsConfirmadas,
+  referenciasEtapa3,
+  textoDeSistema,
+  textoDosDocumentos,
+} from "../../pmo/montagem";
 import { SCHEMAS_TAP } from "../../pmo/schemas/tap";
 import { EtiquetaRotulo, RotuloSecao } from "../componentes/basicos";
 import { SegundaInstancia } from "../componentes/segunda-instancia";
@@ -42,10 +48,15 @@ export function TermoDeAbertura() {
   const entrada = useMemo(() => montarEntradaTap(dossie), [dossie]);
   const divergencias = useMemo(() => compararRfpEProposta(entrada), [entrada]);
   const dados = useMemo(() => dadosDosDocumentos(entrada), [entrada]);
-  const sistema = useMemo(() => textoDeSistema(referenciasEtapa3()), []);
   const textoDocs = useMemo(() => textoDosDocumentos(entrada.documentos), [entrada]);
   const itens = useMemo(() => itensDaEtapa3(t, entrada.documentos), [t, entrada]);
   const premissas = t.premissasAplicaveis ?? dossie.proposta?.premissasAplicaveis ?? {};
+  // só as premissas críticas confirmadas pelo GP vão no checklist (decisão 0064)
+  const chavePcs = pcsConfirmadas(premissas)?.join(",") ?? "";
+  const sistema = useMemo(
+    () => textoDeSistema(referenciasEtapa3({ pcs: chavePcs ? chavePcs.split(",") : undefined })),
+    [chavePcs],
+  );
   const { rodando, erro, chamar, cancelar } = useChamadaPmo();
 
   const atualizar = (nt: TapDossie) => guardarTap(nt);

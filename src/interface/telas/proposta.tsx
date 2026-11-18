@@ -32,7 +32,13 @@ import {
 } from "../../exportacao/relatorio-proposta";
 import type { ErroPmo } from "../../pmo/cliente";
 import { estimarCusto, formatarDolar, formatarTokens } from "../../pmo/custo";
-import { estimarTokens, referenciasEtapa2, textoDeSistema, textoDosDocumentos } from "../../pmo/montagem";
+import {
+  estimarTokens,
+  pcsConfirmadas,
+  referenciasEtapa2,
+  textoDeSistema,
+  textoDosDocumentos,
+} from "../../pmo/montagem";
 import { SCHEMAS } from "../../pmo/schemas/proposta";
 import { formatarData } from "../../texto/datas";
 import { PREMISSAS_CRITICAS } from "../../dominio/skill";
@@ -71,7 +77,15 @@ export function PropostaDoFornecedor({ todos }: { todos: DocumentoLido[] }) {
   const ponto = useMemo(() => montarPontoDePartida(docs, dossie.analiseRfp), [docs, dossie.analiseRfp]);
   const p = dossie.proposta ?? propostaInicial();
   const chave = useChave();
-  const sistema = useMemo(() => textoDeSistema(referenciasEtapa2()), []);
+  // a estratégia leva o checklist inteiro (o PMO sugere quais premissas críticas se aplicam); os passos seguintes, só
+  // as confirmadas pelo GP (decisão 0064)
+  const sistemaDaEstrategia = useMemo(() => textoDeSistema(referenciasEtapa2()), []);
+  const chavePcs = pcsConfirmadas(p.premissasAplicaveis)?.join(",") ?? "";
+  const sistemaComPcs = useMemo(
+    () => textoDeSistema(referenciasEtapa2({ pcs: chavePcs ? chavePcs.split(",") : undefined })),
+    [chavePcs],
+  );
+  const sistemaDo = (passo: PassoProposta) => (passo === "estrategia" ? sistemaDaEstrategia : sistemaComPcs);
   const textoDocs = useMemo(() => textoDosDocumentos(docs), [docs]);
   const itens = useMemo(() => itensDaProposta(p, docs), [p, docs]);
   // a minuta pelo método (decisão 0038): o esqueleto do código vai em cada pedido ao PMO, montado no pedido de cada
@@ -84,7 +98,6 @@ export function PropostaDoFornecedor({ todos }: { todos: DocumentoLido[] }) {
   const [erro, setErro] = useState<ErroPmo | null>(null);
   const cancelar = useRef<AbortController | null>(null);
 
-  const tokensSistema = estimarTokens(sistema);
   const tokensDocs = estimarTokens(textoDocs);
   const grandeDemais = tokensDocs > LIMITE_DOCUMENTO_TOKENS;
   // sem modalidade no documento, a proposta não segue sem a escolha do GP na etapa 1 (ou o tipo confirmado aqui)
@@ -136,7 +149,7 @@ export function PropostaDoFornecedor({ todos }: { todos: DocumentoLido[] }) {
         chave,
         modelo: p.modelo,
         passo,
-        sistema,
+        sistema: sistemaDo(passo),
         documentos: textoDocs,
         pedido,
         schema: SCHEMAS[passo],
@@ -164,7 +177,7 @@ export function PropostaDoFornecedor({ todos }: { todos: DocumentoLido[] }) {
   const pendentes = contarPendentesProposta(p, itens);
   const estimativa = (passo: PassoProposta) => {
     const pedido = pedidoDo(passo, p) ?? "";
-    return estimarCusto(p.modelo, passo, tokensSistema + tokensDocs, estimarTokens(pedido));
+    return estimarCusto(p.modelo, passo, estimarTokens(sistemaDo(passo)) + tokensDocs, estimarTokens(pedido));
   };
   const totalUso = p.uso.reduce((s, u) => s + (u.custoUsd ?? 0), 0);
 
