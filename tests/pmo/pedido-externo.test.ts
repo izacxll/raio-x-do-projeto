@@ -7,7 +7,7 @@
 import { tapDoDossieComoDocumento } from "../../src/etapas/4-pgp/entrada";
 import { conferirQuestoes, questoesDoCodigo, referenciasDoPlano } from "../../src/etapas/4-pgp/questoes";
 import { montarPgp } from "../../src/exportacao/relatorio-pgp";
-import { pgpComoDocumento } from "../../src/etapas/4-pgp/autoconferencia";
+import { caracteristicasDoPgp, pgpComoDocumento } from "../../src/etapas/4-pgp/autoconferencia";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { conteudoDoPedido } from "./conteudo-do-pedido";
 import { basename, dirname, join, resolve } from "node:path";
@@ -46,7 +46,11 @@ import {
   textoDosDocumentos,
 } from "../../src/pmo/montagem";
 import { RespostaLeituraRfp } from "../../src/pmo/schemas/leitura-rfp";
-import { CARACTERISTICAS_PADRAO } from "../../src/dominio/caracteristicas";
+import {
+  CARACTERISTICAS_PADRAO,
+  type Caracteristicas,
+  lerCaracteristicas,
+} from "../../src/dominio/caracteristicas";
 import { FICHAS, PARTES_PGP, PREMISSAS_CRITICAS } from "../../src/dominio/skill";
 import type { PgpDossie } from "../../src/dossie/esquema";
 import { autoconferenciaDaLeitura, citacaoEhFraca } from "../../src/etapas/1-rfp/leitura-pmo";
@@ -123,6 +127,16 @@ interface Passo {
   documentos: string;
   pedido: string;
   schema: z.ZodType;
+}
+
+/**
+ * A sugestão do código para as características (decisão 0069), a mesma que a tela da etapa 4 mostra antes de o GP
+ * mexer: a partir da RFP e da adaptação, sem olhar as do GP no dossiê. Sem a etapa 3 no dossiê, o padrão conservador.
+ */
+function sugestaoDoCodigo(d: Dossie): Caracteristicas {
+  const semAsDoGp: Dossie = d.pgp ? { ...d, pgp: { ...d.pgp, caracteristicas: undefined } } : d;
+  const e = montarEntradaPgp(semAsDoGp, HOJE);
+  return e.fonteTap === "nenhuma" ? CARACTERISTICAS_PADRAO : caracteristicasDoPgp(semAsDoGp, e);
 }
 
 /** O passo que a segunda instância confere ("segunda-conteudo" → "conteudo"). */
@@ -389,23 +403,28 @@ describe.skipIf(MODO !== "exportar")("exportar o pedido de um passo do PMO", () 
       dossie = { ...dossie, analiseRfp: { ...dossie.analiseRfp, modalidade: m } };
       if (env.RAIO_X_DOSSIE) writeFileSync(env.RAIO_X_DOSSIE, serializarDossie(dossie, HOJE));
     }
-    // decisões do GP para as etapas 4 e 5: --porte e --pcs ("PC1,PC3,PC4"), guardadas no dossiê para a importação
-    // usar as mesmas; sem elas, valem as do dossiê
-    if (env.RAIO_X_PORTE || env.RAIO_X_PCS) {
+    // decisões do GP para as etapas 4 e 5: --porte, --caracteristicas ("campo=não,beneficiarios=não"; decisão 0069)
+    // e --pcs ("PC1,PC3,PC4"), guardadas no dossiê para a importação usar as mesmas; sem elas, valem as do dossiê.
+    if (env.RAIO_X_PORTE || env.RAIO_X_PCS || env.RAIO_X_CARACTERISTICAS) {
       const atual = dossie.pgp ?? pgpInicial();
-      // "medio" sem acento também vale
-      const porte = (env.RAIO_X_PORTE === "medio" ? "médio" : env.RAIO_X_PORTE) as
-        "pequeno" | "médio" | "grande" | undefined;
-      if (porte && !["pequeno", "médio", "grande"].includes(porte))
-        throw new Error("--porte deve ser pequeno, médio ou grande.");
+      const porte = env.RAIO_X_PORTE ? lerCaracteristicas(`porte=${env.RAIO_X_PORTE}`).porte : undefined;
+      const corrigidas = env.RAIO_X_CARACTERISTICAS ? lerCaracteristicas(env.RAIO_X_CARACTERISTICAS) : {};
+      // só --pcs não mexe nas características. Com porte ou características, a base é refeita a cada exportação: na
+      // etapa 4, a sugestão do código de agora (ela muda com a adaptação), como a tela; na 5, as do dossiê ou o
+      // padrão conservador, como a tela da conferência
+      const caracteristicas =
+        porte || env.RAIO_X_CARACTERISTICAS
+          ? {
+              ...(etapa === 4 ? sugestaoDoCodigo(dossie) : (atual.caracteristicas ?? CARACTERISTICAS_PADRAO)),
+              ...corrigidas,
+              ...(porte ? { porte } : {}),
+            }
+          : atual.caracteristicas;
       dossie = {
         ...dossie,
         pgp: {
           ...atual,
-          caracteristicas: {
-            ...(atual.caracteristicas ?? CARACTERISTICAS_PADRAO),
-            ...(porte ? { porte } : {}),
-          },
+          caracteristicas,
           premissasAplicaveis: env.RAIO_X_PCS
             ? Object.fromEntries(env.RAIO_X_PCS.split(",").map((x) => [x.trim().toUpperCase(), true]))
             : atual.premissasAplicaveis,
@@ -448,10 +467,17 @@ describe.skipIf(MODO !== "exportar")("exportar o pedido de um passo do PMO", () 
       etapa >= 4
         ? `
 - **Características do projeto usadas:** ${Object.entries(
-            dossie.pgp?.caracteristicas ?? CARACTERISTICAS_PADRAO,
+            // etapa 4: as do GP ou a sugestão do código, como a tela; etapa 5: as do GP ou o padrão, como a conferência
+            dossie.pgp?.caracteristicas ?? (etapa === 4 ? sugestaoDoCodigo(dossie) : CARACTERISTICAS_PADRAO),
           )
             .map(([k, x]) => `${k} ${String(x)}`)
-            .join("; ")}${dossie.pgp?.caracteristicas ? "" : " (padrão conservador: passe --porte)"}
+            .join("; ")}${
+            dossie.pgp?.caracteristicas
+              ? ""
+              : etapa === 4
+                ? " (sugestão do código: corrija com --porte e --caracteristicas)"
+                : " (padrão conservador: corrija com --porte e --caracteristicas)"
+          }
 - **Premissas críticas que se aplicam:** ${
             Object.entries(
               dossie.pgp?.premissasAplicaveis ??
