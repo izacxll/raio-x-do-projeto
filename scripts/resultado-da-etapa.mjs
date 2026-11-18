@@ -21,6 +21,11 @@ for (const k of ["etapa", "pasta", "base", "caso", "saida"])
     console.error(`Falta --${k}.`);
     process.exit(1);
   }
+// o nome do caso vira nome de arquivo: sem barra nem "..", para o arquivo não sair da pasta de saída
+if (/[\\/]|\.\./.test(args.caso)) {
+  console.error("--caso não pode ter barra nem '..': ele vira o nome do arquivo.");
+  process.exit(1);
+}
 const raiz = resolve(fileURLToPath(new URL("../", import.meta.url)));
 const rel = relative(raiz, resolve(args.saida));
 const dentro = !(rel === ".." || rel.startsWith(`..${sep}`) || isAbsolute(rel));

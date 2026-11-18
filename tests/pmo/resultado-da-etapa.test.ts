@@ -1,7 +1,8 @@
 // Resultado de uma etapa para apresentação (decisão 0072). Os testes de sempre usam texto inventado; o modo
 // "resultado" (npm run resultado-da-etapa) gera o DOCX de um caso do teste externo, fora do Git.
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
-import { join } from "node:path";
+import { isAbsolute, join, relative, resolve, sep } from "node:path";
+import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 import { criarDossieVazio, lerDossie } from "../../src/dossie/arquivo";
 import {
@@ -108,6 +109,13 @@ describe.skipIf(env.RAIO_X_MODO !== "resultado")("gerar o resultado de uma etapa
     const { gerarDocx } = await import("../../src/exportacao/docx");
     const logo = readFileSync(new URL("../../src/interface/ativos/logo-fgv-projetos.jpg", import.meta.url));
     const docx = await gerarDocx(doc, logo.buffer.slice(logo.byteOffset, logo.byteOffset + logo.byteLength));
+    // a mesma trava do script (decisão 0072), para quem rodar o modo direto pelo Vitest: o arquivo fica na pasta de
+    // saída, e a pasta de saída fora do projeto (salvo referencias/)
+    const raiz = resolve(fileURLToPath(new URL("../../", import.meta.url)));
+    const rel = relative(raiz, resolve(saida));
+    const dentro = !(rel === ".." || rel.startsWith(`..${sep}`) || isAbsolute(rel));
+    if (!saida || /[\\/]|\.\./.test(caso) || (dentro && !rel.startsWith(`referencias${sep}`)))
+      throw new Error("Saída dentro do projeto (fora de referencias/) ou nome do caso com barra ou '..'.");
     mkdirSync(saida, { recursive: true });
     const arq = join(saida, `resultado-etapa-${etapa}-${caso}.docx`);
     writeFileSync(arq, Buffer.from(await docx.arrayBuffer()));
