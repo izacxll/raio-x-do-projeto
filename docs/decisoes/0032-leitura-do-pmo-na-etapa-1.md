@@ -6,7 +6,7 @@
 
 ## Contexto
 
-A engenharia reversa com o chamamento da SMPED (`docs/estudos/engenharia-reversa-etapa-1-smped.md`) mostrou o seguinte:
+A engenharia reversa com o chamamento da SMPED (`docs/estudos/engenharia-reversa-etapa-1-smped.md`, removido pela decisão 0075; histórico no Git, commit `2ac4708`) mostrou o seguinte:
 
 - 59 dos 70 erros do app são de regra de código;
 - 11 só uma leitura resolve: requisitos em texto corrido e brechas que pedem cruzar trechos distantes, como a contradição do repasse ou a originalidade.

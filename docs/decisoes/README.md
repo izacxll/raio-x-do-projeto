@@ -78,6 +78,7 @@ Uma decisão por arquivo, numerada em ordem. Cada uma registra o contexto, o que
 | [0072](0072-resultado-da-etapa-para-apresentacao.md) | Teste externo: DOCX de resultado por etapa e por caso (placar resumido, segunda instância e resultado final), fora do Git | aceita |
 | [0073](0073-skill-pmo-0-3-4.md) | Skill PMO 0.3.4: regras da etapa 4 da rodada 3, rótulo sugestão quando o item mistura documento e sugestão, cadência do GP | aceita |
 | [0074](0074-skill-base-e-arquivo-por-etapa.md) | Arquitetura: uma skill PMO base e um arquivo por etapa (papel, entradas, saída, pronto, armadilhas, rubrica); subagente só na segunda instância e na revisão de código | aceita |
+| [0075](0075-remocao-de-documentos-obsoletos.md) | Remoção da engenharia reversa (menos o rastro 07-regras), do estudo da etapa 1 antigo e dos placares M1 e M2; links para o histórico no Git | aceita |
 
 Modelo para uma nova decisão:
 

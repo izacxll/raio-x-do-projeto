@@ -4,6 +4,9 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 
 ## [Não publicado]
 
+### Remoção da documentação obsoleta (decisão 0075)
+- **Removidos de `docs/estudos/`:** a engenharia reversa da análise à mão (menos o rastro `07-regras-etapa-N.md`, que fica até a migração da decisão 0074), o estudo da etapa 1 do app antigo e os placares das fases M1 e M2. Os links apontam para o histórico no Git (commit `2ac4708`) ou para o documento que substituiu.
+
 ### Revisor de código e proposta de arquitetura da skill (decisão 0074)
 - **Subagente `revisor-codigo`:** code-review `low` em todo commit de código e `high` antes do merge de PR que mexe em exportação, importação, vigia, segurança ou pedidos; só lê e reporta.
 - **Decisão 0074 (aceita, migração depois do teste):** skill PMO base e um arquivo por etapa, com papel, entradas, saída, definição de pronto, armadilhas e rubrica da segunda instância.

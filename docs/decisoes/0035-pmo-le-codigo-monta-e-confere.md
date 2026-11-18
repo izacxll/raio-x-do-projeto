@@ -7,7 +7,7 @@
 
 ## Contexto
 
-Na fase M1 (etapa 1 pelo método, decisão 0034), as regras de código foram refeitas na estrutura do método e medidas contra gabaritos de dois editais públicos, feitos pelo Claude Code seguindo a skill PMO (não são uma leitura independente; ver a seção "Como se testa sem a chave"). Números do placar final da M1 (`docs/estudos/placar-m1-etapa-1.md`, a fonte deles):
+Na fase M1 (etapa 1 pelo método, decisão 0034), as regras de código foram refeitas na estrutura do método e medidas contra gabaritos de dois editais públicos, feitos pelo Claude Code seguindo a skill PMO (não são uma leitura independente; ver a seção "Como se testa sem a chave"). Números do placar final da M1 (`docs/estudos/placar-m1-etapa-1.md` (removido pela decisão 0075; histórico no Git, commit `2ac4708`), a fonte deles):
 
 | | SMPED (parceria) | OEI (licitação) |
 |---|---|---|

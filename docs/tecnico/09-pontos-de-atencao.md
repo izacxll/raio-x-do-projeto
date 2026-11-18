@@ -22,7 +22,7 @@ Dívidas técnicas, riscos e itens a validar, cada um com a evidência no códig
 
 5. **Extração por expressões regulares.** A cobertura depende da redação do edital. No gabarito da etapa 1 do chamamento da SMPED, o app acerta 34 de 104 itens. Dos 70 que não acerta:
    - 59 uma regra resolveria;
-   - 11 só uma leitura com IA (`docs/estudos/engenharia-reversa-etapa-1-smped.md`, PR #14).
+   - 11 só uma leitura com IA (PR #14; o estudo foi substituído pelos gabaritos do método da etapa 1, em `tests/fixtures/gerados/rfp-*/gabarito-metodo-etapa-1.json`).
 6. **Dias úteis sem feriados.** Os prazos calculados descontam só sábados e domingos, e a nota pede para conferir feriados (`src/extracao/rfp/prazos.ts`).
 7. **Etapa 5 com base única.** Todo plano é medido contra as 51 partes do PGP. A premissa crítica conta como tratada com um sinal em qualquer lugar do plano. A checagem nos lugares B3, B27 e A11 é pulada quando a parte não existe no plano (`src/regras/conferencia.ts`, bloco "premissas críticas"). O teste da responsável com um plano de trabalho real teve 13 de 84 achados sustentados. A proposta de correção é a decisão 0033, no PR #14, que aguarda o ok.
 8. **Larguras do PDF estimadas.** A largura de cada palavra é estimada por classe de caractere, não medida na fonte (`src/exportacao/larguras.ts`). Palavra acima do teto (endereço de site, nome de arquivo) ainda pode quebrar.

@@ -38,4 +38,6 @@ Descreve o sistema como ele está no código (v0.8.1). Cada documento termina co
 
 | Documento | Conteúdo |
 |---|---|
-| `estudos/engenharia-reversa-etapa-1-smped.md` | Gabarito do PMO × saída do app na etapa 1 e a origem de cada erro (no PR #14) |
+| [`estudos/metodo-etapa-1.md`](estudos/metodo-etapa-1.md) a [`metodo-etapa-5.md`](estudos/metodo-etapa-5.md) | O método de cada etapa (decisão 0034): prevalece sobre o que a etapa faz hoje |
+| [`estudos/engenharia-reversa/`](estudos/engenharia-reversa/) | O rastro de cada saída por etapa (`07-regras-etapa-N.md`), até a migração da decisão 0074 |
+| [`estudos/roteiro-etapa-5-plano-real.md`](estudos/roteiro-etapa-5-plano-real.md) | Roteiro da etapa 5 sobre um plano real (`npm run conferir-plano-real`) |

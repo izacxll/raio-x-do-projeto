@@ -73,6 +73,6 @@ A fase M2 aplica o método da etapa 2 (`docs/estudos/metodo-etapa-2.md`, revisad
 
 ## Consequências
 
-- Placar em `docs/estudos/placar-m2-etapa-2.md`, com 10 itens para a responsável conferir antes do merge.
+- Placar em `docs/estudos/placar-m2-etapa-2.md` (removido pela decisão 0075; histórico no Git, commit `2ac4708`), com 10 itens para a responsável conferir antes do merge.
 - A skill PMO 0.3.0 (PR próprio) leva à skill a ficha da proposta de parceria e o caso de operação contínua em `prop-preco`. Até ela, as instruções novas vão nos pedidos.
 - A etapa 3 (fase M3) passa a receber o tipo confirmado e a minuta na estrutura nova.

@@ -59,5 +59,5 @@ A fase M1 aplica o método da etapa 1 (`docs/estudos/metodo-etapa-1.md`) com o d
 
 ## Consequências
 
-- Placar em `docs/estudos/placar-m1-etapa-1.md`.
+- Placar em `docs/estudos/placar-m1-etapa-1.md` (removido pela decisão 0075; histórico no Git, commit `2ac4708`).
 - A qualidade da leitura do PMO de verdade só se mede com a chave (decisão 0035): a leitura gravada vem do gabarito.
