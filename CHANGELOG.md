@@ -4,6 +4,12 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 
 ## [Não publicado]
 
+### Skill PMO 0.3.3, revisão em camadas e gabarito (decisão 0063)
+- **Revisão em camadas:** testes e gabarito → segunda instância com rubrica fixa → GP, com os limites escritos (o revisor erra; no máximo 2 rodadas; trava nova com contagem de alarmes falsos). Em `docs/papeis.md` e no SKILL.md.
+- **Gabarito** (`tests/pmo/gabarito/`): achados confirmados por caso e etapa, na CI e sem a API; dois casos disfarçados.
+- **Skill 0.3.3:** as lições do teste nas etapas 1, 2 e 3, cada uma com o erro que evita; compromisso da proposta "prometido" enquanto não há contrato.
+- **Rubrica do pedido da segunda instância** alinhada à da skill.
+
 ### Três datas por produto e marco pela atividade da EAP (decisão 0062)
 - **Linha do tempo e marcos do TAP:** primeira entrega, fim da inspeção do contratante e termo definitivo de cada produto; a conta não muda.
 - **"Sem a aprovação do cliente"** só quando a EAP não tem as análises do contratante.

@@ -1,0 +1,301 @@
+{
+  "caso": "estudo-de-evento-disfarcado",
+  "publico": false,
+  "fonte": null,
+  "data": null,
+  "descricao": "TR de contratação direta para um estudo de impacto de um evento com data fixa: pesquisa de campo durante o evento, dados do contratante de antes e de depois dele, três relatórios. Disfarçado: entradas inventadas, sem órgão, lugar, evento, pessoa ou trecho do documento real. Achados confirmados no teste ponta a ponta da rodada 3 (skill 0.3.2, etapas 1 a 3).",
+  "achados": [
+    {
+      "id": "EV-2-01",
+      "etapa": 2,
+      "camada": "codigo",
+      "o_que": "o campo preso à data do evento não cabe depois das predecessoras",
+      "padrao": "Não cabe antes do marco",
+      "aparece": true,
+      "secao": "problemas do cronograma (EAP)",
+      "gravidade": "alta",
+      "pagina": null,
+      "verificador": "cronograma",
+      "entrada": {
+        "inicio": "2026-03-02",
+        "atividades": [
+          { "id": "m1", "nome": "Desenhar a amostra e o questionário", "pred": [], "dur": [20, 20, 20] },
+          {
+            "id": "c1",
+            "nome": "Pesquisa de campo durante a feira",
+            "pred": ["m1"],
+            "dur": [0, 0, 0],
+            "fixa": ["10/03/2026", "12/03/2026"]
+          }
+        ]
+      }
+    },
+    {
+      "id": "EV-2-02",
+      "etapa": 2,
+      "camada": "codigo",
+      "o_que": "todo compromisso de método recebe C, inclusive o protocolo de campo que vem com a ficha do campo",
+      "padrao": "compromissos de método: 4",
+      "aparece": true,
+      "secao": "compromissos numerados da minuta",
+      "gravidade": "media",
+      "pagina": null,
+      "verificador": "compromissos",
+      "entrada": {
+        "premissas": 2,
+        "obrigacoes": 1,
+        "exclusoes": 1,
+        "limites": 2,
+        "metodo": [
+          {
+            "texto": "Compromisso de método, protocolo de campo: pontos e turnos combinados com a área.",
+            "ficha": "PROP-METODOLOGIA.7"
+          },
+          {
+            "texto": "Compromisso de método, dados pessoais: questionário sem identificação.",
+            "ficha": "PROP-METODOLOGIA.9"
+          },
+          {
+            "texto": "Compromisso de método, revisão interna: revisão por quem não redigiu.",
+            "ficha": "PROP-METODOLOGIA.10"
+          },
+          {
+            "texto": "Compromisso de método, régua: o método aceito é o critério do aceite.",
+            "ficha": "PROP-METODOLOGIA.11"
+          }
+        ]
+      }
+    },
+    {
+      "id": "EV-2-03",
+      "etapa": 2,
+      "camada": "codigo",
+      "o_que": "a minuta chamou de limites números que, pelo código, são de compromissos de método",
+      "padrao": "limites de volume C05 a C06",
+      "aparece": true,
+      "secao": "compromissos numerados (faixas pelo código)",
+      "gravidade": "baixa",
+      "pagina": null,
+      "verificador": "compromissos",
+      "entrada": {
+        "premissas": 2,
+        "obrigacoes": 1,
+        "exclusoes": 1,
+        "limites": 2,
+        "metodo": [
+          {
+            "texto": "Compromisso de método, protocolo de campo: pontos e turnos combinados com a área.",
+            "ficha": "PROP-METODOLOGIA.7"
+          },
+          {
+            "texto": "Compromisso de método, dados pessoais: questionário sem identificação.",
+            "ficha": "PROP-METODOLOGIA.9"
+          },
+          {
+            "texto": "Compromisso de método, revisão interna: revisão por quem não redigiu.",
+            "ficha": "PROP-METODOLOGIA.10"
+          },
+          {
+            "texto": "Compromisso de método, régua: o método aceito é o critério do aceite.",
+            "ficha": "PROP-METODOLOGIA.11"
+          }
+        ],
+        "texto": "Compromissos numerados: premissas C01 a C02, obrigações C03, exclusões C04 e limites C05 a C06."
+      }
+    },
+    {
+      "id": "EV-3-01",
+      "etapa": 3,
+      "camada": "codigo",
+      "o_que": "a autorização antes do campo, que a rede já põe antes, não é divergência obrigatória",
+      "padrao": "Divergência obrigatória",
+      "aparece": false,
+      "secao": "marcos com data ou vigência confirmados pela conta",
+      "gravidade": "alta",
+      "pagina": null,
+      "verificador": "marcos-tap",
+      "entrada": {
+        "inicio": "2026-03-02",
+        "atividades": [
+          {
+            "id": "a1",
+            "nome": "Pedir à área a autorização da pesquisa",
+            "pred": [],
+            "dur": [5, 5, 5],
+            "produto": "P3"
+          },
+          {
+            "id": "a2",
+            "nome": "Marco externo: autorização da pesquisa concedida pela área",
+            "pred": ["a1"],
+            "dur": [0, 0, 0],
+            "produto": "P3"
+          },
+          { "id": "c1", "nome": "Treinar os aplicadores", "pred": ["a2"], "dur": [5, 5, 5], "produto": "P3" },
+          {
+            "id": "c2",
+            "nome": "Pesquisa de campo durante a feira",
+            "pred": ["c1"],
+            "dur": [5, 5, 5],
+            "produto": "P3"
+          },
+          {
+            "id": "r1",
+            "nome": "Redigir e entregar o relatório final",
+            "pred": ["c2", "a2"],
+            "dur": [10, 10, 10],
+            "produto": "P3"
+          }
+        ],
+        "marcos": [
+          {
+            "produto": "P3",
+            "prazo": "Antes do início do campo; prazo sem termo inicial (pergunta).",
+            "texto": "Autorização da pesquisa concedida pela área (marco do contratante, antes do campo)."
+          }
+        ]
+      }
+    },
+    {
+      "id": "EV-3-02",
+      "etapa": 3,
+      "camada": "codigo",
+      "o_que": "a rede que põe a autorização depois do campo continua divergência obrigatória",
+      "padrao": "Divergência obrigatória",
+      "aparece": true,
+      "secao": "marcos com data ou vigência confirmados pela conta",
+      "gravidade": "alta",
+      "pagina": null,
+      "verificador": "marcos-tap",
+      "entrada": {
+        "inicio": "2026-03-02",
+        "atividades": [
+          {
+            "id": "a1",
+            "nome": "Pedir à área a autorização da pesquisa",
+            "pred": [],
+            "dur": [5, 5, 5],
+            "produto": "P3"
+          },
+          { "id": "c1", "nome": "Treinar os aplicadores", "pred": ["a1"], "dur": [5, 5, 5], "produto": "P3" },
+          {
+            "id": "c2",
+            "nome": "Pesquisa de campo durante a feira",
+            "pred": ["c1"],
+            "dur": [5, 5, 5],
+            "produto": "P3"
+          },
+          {
+            "id": "a2",
+            "nome": "Marco externo: autorização da pesquisa concedida pela área",
+            "pred": ["c2"],
+            "dur": [0, 0, 0],
+            "produto": "P3"
+          },
+          {
+            "id": "r1",
+            "nome": "Redigir e entregar o relatório final",
+            "pred": ["c2", "a2"],
+            "dur": [10, 10, 10],
+            "produto": "P3"
+          }
+        ],
+        "marcos": [
+          {
+            "produto": "P3",
+            "prazo": "Antes do início do campo; prazo sem termo inicial (pergunta).",
+            "texto": "Autorização da pesquisa concedida pela área (marco do contratante, antes do campo)."
+          }
+        ]
+      }
+    },
+    {
+      "id": "EV-1-P01",
+      "etapa": 1,
+      "camada": "pmo",
+      "o_que": "'deverão ser N válidos' é obrigação exata, não 'até N'",
+      "padrao": "exat",
+      "aparece": true,
+      "secao": "2 — o que a contratada teria de fazer",
+      "gravidade": "alta",
+      "pagina": null
+    },
+    {
+      "id": "EV-1-P02",
+      "etapa": 1,
+      "camada": "pmo",
+      "o_que": "dado que só existe depois do evento, dito por produto, com origem e período",
+      "padrao": "depois do (fim do )?evento",
+      "aparece": true,
+      "secao": "2 e 7",
+      "gravidade": "alta",
+      "pagina": null
+    },
+    {
+      "id": "EV-1-P03",
+      "etapa": 1,
+      "camada": "pmo",
+      "o_que": "janela depois do evento até o fim da vigência (dados, tratamento, relatório, aprovação)",
+      "padrao": "fim da vig[eê]ncia",
+      "aparece": true,
+      "secao": "3 — prazos e marcos",
+      "gravidade": "alta",
+      "pagina": null
+    },
+    {
+      "id": "EV-1-P04",
+      "etapa": 1,
+      "camada": "pmo",
+      "o_que": "dois nomes para o mesmo evento: pergunta sobre o alcance do campo e do estudo",
+      "padrao": "alcance",
+      "aparece": true,
+      "secao": "7 — pontos de atenção",
+      "gravidade": "media",
+      "pagina": null
+    },
+    {
+      "id": "EV-2-P01",
+      "etapa": 2,
+      "camada": "pmo",
+      "o_que": "pergunta que muda o preço vai como ajuste da minuta antes do comunicado de assinatura, não para a reunião inicial",
+      "padrao": "antes d[ao] (pre[cç]o|assinatura)",
+      "aparece": true,
+      "secao": "estratégia — perguntas",
+      "gravidade": "alta",
+      "pagina": null
+    },
+    {
+      "id": "EV-3-P01",
+      "etapa": 3,
+      "camada": "pmo",
+      "o_que": "as rodadas pedidas na proposta não são a versão adotada no TAP",
+      "padrao": "pedid",
+      "aparece": true,
+      "secao": "divergências",
+      "gravidade": "alta",
+      "pagina": null
+    },
+    {
+      "id": "EV-3-P02",
+      "etapa": 3,
+      "camada": "pmo",
+      "o_que": "o produto que define o método (cotas, critério de válido) é aprovado antes do campo",
+      "padrao": "antes do (in[ií]cio do )?campo",
+      "aparece": true,
+      "secao": "marcos e divergências",
+      "gravidade": "alta",
+      "pagina": null
+    },
+    {
+      "id": "EV-3-P03",
+      "etapa": 3,
+      "camada": "pmo",
+      "o_que": "documento antigo: a primeira pergunta é se o contrato já foi assinado ou divulgado",
+      "padrao": "contrato",
+      "aparece": true,
+      "secao": "divergências",
+      "gravidade": "media",
+      "pagina": null
+    }
+  ]
+}

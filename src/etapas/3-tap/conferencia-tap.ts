@@ -392,7 +392,7 @@ export function conferirTap(
             ? `Entrega(s) sem critério de aceite: ${semAceite.map((x) => `${x.id} — ${x.nome}`).join("; ")}.`
             : `As ${produtos.length} entregas têm critério de aceite.`,
           acrescentados.length
-            ? `Produto(s) que a proposta acrescentou e a RFP não pedia: compromisso assinado, entra como entrega-chave com aceite (${acrescentados.map((d) => d.proposta.texto).join("; ")}).`
+            ? `Produto(s) que a proposta acrescentou e a RFP não pedia: compromisso da proposta (${e.contrato ? "assinado" : "prometido, enquanto não há contrato"}), entra como entrega-chave com aceite (${acrescentados.map((d) => d.proposta.texto).join("; ")}).`
             : "",
         ]
           .filter(Boolean)

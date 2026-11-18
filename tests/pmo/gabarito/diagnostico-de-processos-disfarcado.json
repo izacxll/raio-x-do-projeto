@@ -1,0 +1,260 @@
+{
+  "caso": "diagnostico-de-processos-disfarcado",
+  "publico": false,
+  "fonte": null,
+  "data": null,
+  "descricao": "TR de um diagnóstico de processos e de contas de um órgão público, com vários relatórios, inspeção do contratante e substituição do produto recusado. Disfarçado: entradas inventadas, sem órgão, lugar, pessoa ou trecho do documento real. Achados confirmados no teste ponta a ponta da rodada 3 (skill 0.3.2, etapas 1 a 3).",
+  "achados": [
+    {
+      "id": "DP-1-01",
+      "etapa": 1,
+      "camada": "codigo",
+      "o_que": "trecho de 6 palavras (contando as de uma letra) não é citação fraca",
+      "padrao": "citação fraca",
+      "aparece": false,
+      "secao": "travas da leitura do PMO",
+      "gravidade": "baixa",
+      "pagina": null,
+      "verificador": "citacao-fraca",
+      "entrada": { "trecho": "exigido e com nota pela tabela:" }
+    },
+    {
+      "id": "DP-1-02",
+      "etapa": 1,
+      "camada": "codigo",
+      "o_que": "data por extenso no trecho prova a data numérica do item",
+      "padrao": "citação a conferir",
+      "aparece": false,
+      "secao": "avisos da leitura do PMO",
+      "gravidade": "baixa",
+      "pagina": null,
+      "verificador": "citacao-prova",
+      "entrada": {
+        "texto": "O relatório final sai até 15/03/2027.",
+        "trechos": ["o relatório final será entregue até 15 de março de 2027"]
+      }
+    },
+    {
+      "id": "DP-1-03",
+      "etapa": 1,
+      "camada": "codigo",
+      "o_que": "a data da portaria de quem assina é data de ato, não prazo nem situação",
+      "padrao": "data de ato",
+      "aparece": true,
+      "secao": "situação e prazos do certame (a data fica de fora)",
+      "gravidade": "media",
+      "pagina": null,
+      "verificador": "data-de-ato",
+      "entrada": { "texto": "Coordenadora de Planejamento\nPortaria nº 7 de abril de 2026" }
+    },
+    {
+      "id": "DP-2-01",
+      "etapa": 2,
+      "camada": "codigo",
+      "o_que": "ajuste depois da inspeção sem nova inspeção é reentrega sem nova conferência",
+      "padrao": "Reentrega sem nova conferência",
+      "aparece": true,
+      "secao": "travas da EAP",
+      "gravidade": "alta",
+      "pagina": null,
+      "verificador": "travas-eap",
+      "entrada": {
+        "atividades": [
+          { "id": "e1", "nome": "Redigir e entregar o relatório", "pred": [], "dur": [5, 5, 5] },
+          {
+            "id": "i1",
+            "nome": "Inspeção do contratante",
+            "pred": ["e1"],
+            "dur": [10, 10, 10],
+            "analise": true
+          },
+          { "id": "a1", "nome": "Ajustar o relatório", "pred": ["i1"], "dur": [3, 3, 3] }
+        ]
+      }
+    },
+    {
+      "id": "DP-2-02",
+      "etapa": 2,
+      "camada": "codigo",
+      "o_que": "com nova inspeção e termo definitivo depois do ajuste, a trava não dispara",
+      "padrao": "Reentrega sem nova conferência",
+      "aparece": false,
+      "secao": "travas da EAP",
+      "gravidade": "alta",
+      "pagina": null,
+      "verificador": "travas-eap",
+      "entrada": {
+        "atividades": [
+          { "id": "e1", "nome": "Redigir e entregar o relatório", "pred": [], "dur": [5, 5, 5] },
+          {
+            "id": "i1",
+            "nome": "Inspeção do contratante",
+            "pred": ["e1"],
+            "dur": [10, 10, 10],
+            "analise": true
+          },
+          { "id": "a1", "nome": "Ajustar o relatório", "pred": ["i1"], "dur": [3, 3, 3] },
+          {
+            "id": "n1",
+            "nome": "Nova inspeção e termo definitivo",
+            "pred": ["a1"],
+            "dur": [5, 5, 5],
+            "analise": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "DP-3-01",
+      "etapa": 3,
+      "camada": "codigo",
+      "o_que": "linha do tempo com primeira entrega, fim da inspeção e termo definitivo do ciclo de aceite",
+      "padrao": "primeira entrega no dia útil 5; fim da inspeção do contratante no dia útil 15; termo definitivo \\(aprovação\\) no dia útil 23",
+      "aparece": true,
+      "secao": "linha do tempo do pedido do TAP",
+      "gravidade": "media",
+      "pagina": null,
+      "verificador": "linha-do-tempo",
+      "entrada": {
+        "atividades": [
+          { "id": "e1", "nome": "Redigir e entregar o relatório", "pred": [], "dur": [5, 5, 5] },
+          {
+            "id": "i1",
+            "nome": "Inspeção do contratante",
+            "pred": ["e1"],
+            "dur": [10, 10, 10],
+            "analise": true
+          },
+          { "id": "a1", "nome": "Ajustar o relatório", "pred": ["i1"], "dur": [3, 3, 3] },
+          {
+            "id": "n1",
+            "nome": "Nova inspeção e termo definitivo",
+            "pred": ["a1"],
+            "dur": [5, 5, 5],
+            "analise": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "DP-3-02",
+      "etapa": 3,
+      "camada": "codigo",
+      "o_que": "a 'entrega' não é o fim do ajuste, e a conta com as análises não diz que está sem a aprovação",
+      "padrao": "entrega no dia útil 18|a conta está sem ele|sem a análise do cliente",
+      "aparece": false,
+      "secao": "linha do tempo do pedido do TAP",
+      "gravidade": "media",
+      "pagina": null,
+      "verificador": "linha-do-tempo",
+      "entrada": {
+        "atividades": [
+          { "id": "e1", "nome": "Redigir e entregar o relatório", "pred": [], "dur": [5, 5, 5] },
+          {
+            "id": "i1",
+            "nome": "Inspeção do contratante",
+            "pred": ["e1"],
+            "dur": [10, 10, 10],
+            "analise": true
+          },
+          { "id": "a1", "nome": "Ajustar o relatório", "pred": ["i1"], "dur": [3, 3, 3] },
+          {
+            "id": "n1",
+            "nome": "Nova inspeção e termo definitivo",
+            "pred": ["a1"],
+            "dur": [5, 5, 5],
+            "analise": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "DP-1-P01",
+      "etapa": 1,
+      "camada": "pmo",
+      "o_que": "lista de conteúdo mínimo de um relatório com as duas leituras (relatório único × vários produtos) e a pergunta",
+      "padrao": "relat[oó]rio [uú]nico",
+      "aparece": true,
+      "secao": "7 — pontos de atenção",
+      "gravidade": "alta",
+      "pagina": null
+    },
+    {
+      "id": "DP-1-P02",
+      "etapa": 1,
+      "camada": "pmo",
+      "o_que": "documento com todas as datas vencidas é o primeiro ponto de atenção",
+      "padrao": "vencid",
+      "aparece": true,
+      "secao": "1 — em uma página; 7 — pontos de atenção",
+      "gravidade": "alta",
+      "pagina": null
+    },
+    {
+      "id": "DP-1-P03",
+      "etapa": 1,
+      "camada": "pmo",
+      "o_que": "regra de substituição de equipamento num TR de estudo é conflito (CP8), não premissa crítica",
+      "padrao": "CP8|conflit",
+      "aparece": true,
+      "secao": "7 — pontos de atenção",
+      "gravidade": "media",
+      "pagina": null
+    },
+    {
+      "id": "DP-1-P04",
+      "etapa": 1,
+      "camada": "pmo",
+      "o_que": "local de trabalho e agenda com as áreas do contratante como ponto de atenção",
+      "padrao": "agenda",
+      "aparece": true,
+      "secao": "7 — pontos de atenção",
+      "gravidade": "media",
+      "pagina": null
+    },
+    {
+      "id": "DP-1-P05",
+      "etapa": 1,
+      "camada": "pmo",
+      "o_que": "a substituição reabre a inspeção: ciclo análise, ajuste, nova análise e termo já na etapa 1",
+      "padrao": "nova (an[aá]lise|inspe[cç])",
+      "aparece": true,
+      "secao": "3 — prazos e marcos",
+      "gravidade": "alta",
+      "pagina": null
+    },
+    {
+      "id": "DP-2-P01",
+      "etapa": 2,
+      "camada": "pmo",
+      "o_que": "qualificação mínima com leitura cumulativa: vale a que mais obriga, e a dúvida vira pergunta",
+      "padrao": "mais obriga|cumulativ",
+      "aparece": true,
+      "secao": "EAP — perfis",
+      "gravidade": "alta",
+      "pagina": null
+    },
+    {
+      "id": "DP-2-P02",
+      "etapa": 2,
+      "camada": "pmo",
+      "o_que": "uma ordem só para os produtos na metodologia, no cronograma, nas premissas e na EAP",
+      "padrao": "sequenc",
+      "aparece": true,
+      "secao": "minuta — metodologia; EAP — predecessoras",
+      "gravidade": "media",
+      "pagina": null
+    },
+    {
+      "id": "DP-2-P03",
+      "etapa": 2,
+      "camada": "pmo",
+      "o_que": "nova inspeção estimada como a primeira, não mais curta sem base",
+      "padrao": "nova inspe[cç][aã]o",
+      "aparece": true,
+      "secao": "EAP — durações",
+      "gravidade": "alta",
+      "pagina": null
+    }
+  ]
+}
