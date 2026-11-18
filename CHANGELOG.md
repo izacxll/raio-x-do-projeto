@@ -4,6 +4,12 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 
 ## [Não publicado]
 
+### Compromissos de método no TAP, numeração e faixas (decisão 0061)
+- **Todo compromisso de método recebe C,** inclusive o que vem com a ficha do campo e começa por "Compromisso de método".
+- **Pedido do TAP:** leva os compromissos de método, com o destino esperado (descrição, entregas ou aceite); o destino é procurado também na aprovação.
+- **Faixas pelo código:** a minuta mostra a faixa de cada tipo e aponta a faixa errada escrita pelo PMO; o pedido do conteúdo diz a ordem da numeração.
+- **decisao_gp sempre com motivo,** escrito no pedido das quatro etapas.
+
 ### Rodadas da segunda instância com achado médio (decisão 0060)
 - **Achado médio espera o GP:** com achado alto ou médio, o próximo passo só sai depois de "corrigir" ou "seguir".
 - **Da rodada 2 em diante:** a reentrega com "seguir" ou "corrigir" segue direto para o próximo passo, com a versão nova, sem rodada nova, e fica registrada ("GP seguiu com correção").

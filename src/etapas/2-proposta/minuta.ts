@@ -6,7 +6,7 @@
 //   descrita ("nesta seção, descrever…") ou vazia é alerta.
 // O código monta e confere (pontos, preço pelo tipo de contrato, caixa, produtividade, duração × vigência, matriz);
 // o PMO redige. Nenhum número é inventado: o que o edital não dá fica "a definir pelo GP".
-import { numerarCompromissos } from "./compromissos";
+import { faixasDosCompromissos, faixasErradasNoTexto, numerarCompromissos } from "./compromissos";
 import type {
   AnaliseRfpDossie,
   DocumentoLido,
@@ -567,6 +567,24 @@ export function montarMinuta(
     const n = compromissos.find((x) => x.idItem === id)?.numero;
     return n ? `${n} — ${nome}` : nome;
   };
+  // a faixa de cada tipo sai da numeração do código (decisão 0061); faixa diferente no texto do PMO é alerta
+  if (compromissos.length) {
+    const textosDoPmo = c
+      ? [...c.estrutura.flatMap((s) => s.itens.map((i) => i.texto)), ...c.premissas.map((x) => x.item.texto)]
+      : [];
+    const erradas = textosDoPmo.flatMap((t) => faixasErradasNoTexto(t, compromissos));
+    add({
+      id: "minuta:premissas:faixas-c",
+      secao: "premissas",
+      rotulo: "sugestao",
+      nome: "Compromissos numerados (faixas pelo código)",
+      texto: `${faixasDosCompromissos(compromissos)}. Numeração do código (decisões 0047 e 0061), a que o TAP e o plano citam.`,
+      alerta: erradas.length > 0,
+      nota: erradas.length
+        ? `O texto do PMO dá outra faixa: ${erradas.join("; ")}. Sugere-se corrigir o texto pela faixa do código.`
+        : undefined,
+    });
+  }
   c?.exclusoes.forEach((x, k) =>
     add(
       itemDoPmo(

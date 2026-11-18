@@ -404,6 +404,31 @@ describe("compromissos numerados da proposta e o destino no TAP (decisão 0047)"
     expect(pTap).toContain("O registro de premissas é outro passo: não marque TAP-PR nem B3.");
   });
 
+  it("o pedido do TAP leva os compromissos de método, com o destino; o destino vale também no aceite (decisão 0061)", () => {
+    const metodo: Compromisso = {
+      numero: "C30",
+      tipo: "metodo",
+      idItem: "conteudo:estrutura:3:8",
+      texto: "Compromisso de método, revisão interna: cada produto passa por revisão de quem não o redigiu.",
+    };
+    const e = {
+      ...entrada,
+      dados: { ...entrada.dados!, compromissos: [...entrada.dados!.compromissos, metodo] },
+    };
+    const pTap = pedidoTap(e, dadosDosDocumentos(e), [], {}, {});
+    expect(pTap).toContain(
+      "- C30 (compromisso de método; vai para descrição, entregas ou aceite (TAP4.1, TAP4.2 ou TAP.9))",
+    );
+    expect(pedidoPremissas(e, tap, {})).not.toContain("- C30 (");
+    const t = {
+      ...tap,
+      aprovacao: [
+        { ...tap.limites[0]!, id: "ap1", texto: "Aceite após revisão interna.", requisitos: ["C30"] },
+      ],
+    };
+    expect(destinosNoTap([metodo], t)[0]).toMatchObject({ situacao: "citado", onde: "aprovação, item ap1" });
+  });
+
   it("a conferência do TAP mostra os compromissos sem destino; C em requisitos não é R fora da lista", () => {
     const t: TapDossie = {
       ...tapInicial(),
