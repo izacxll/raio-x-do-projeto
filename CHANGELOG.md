@@ -4,6 +4,9 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 
 ## [Não publicado]
 
+### O cronograma do plano nos passos seguintes da etapa 4 (decisão 0081)
+- **Riscos, planos e execução** levam o cronograma do plano (pacote, predecessoras, duração, análise do contratante, data fixa), e a segunda instância desses passos passa a vê-lo; antes, o de planos não o levava, e o revisor só via a EAP da proposta.
+
 ### Decisão pendente: segunda instância leve na etapa 5 (decisão 0077)
 - A pergunta, o custo medido nos dois casos do teste e os prós e contras, para a responsável decidir. Nada implementado.
 

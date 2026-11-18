@@ -70,11 +70,20 @@ function resumoDoEscopo(p: PgpDossie): string {
     : "- (EAP ainda não feita)";
 }
 
-function resumoDoCronograma(p: PgpDossie): string {
+/**
+ * O cronograma do plano (passo cronograma da etapa 4), com o pacote, as predecessoras e a duração de cada atividade:
+ * é ele que vale daqui em diante, não o da proposta. Sem as predecessoras, quem confere não vê, por exemplo, se o
+ * encerramento vem depois do aceite (decisão 0081).
+ */
+export function resumoDoCronograma(p: PgpDossie): string {
   const c = p.cronograma?.resposta;
   if (!c) return "- (cronograma ainda não feito)";
   return [
-    ...c.atividades.map((a) => `- ${a.id} ${a.nome} (produto ${a.produto})`),
+    "Cronograma do plano (passo cronograma; é este que vale, não o da proposta):",
+    ...c.atividades.map(
+      (a) =>
+        `- ${a.id} ${a.nome} (produto ${a.produto}${a.pacote ? `, pacote ${a.pacote}` : ""}; depois de: ${a.predecessoras.join(", ") || "início"}; ${a.duracao.mais_provavel} dias úteis${a.analiseDoContratante ? "; análise do contratante" : ""}${a.restricaoData ? `; data fixa ${a.restricaoData.inicio} a ${a.restricaoData.fim}` : ""})`,
+    ),
     `Perfis: ${c.perfis.map((x) => `${x.id} ${x.nome}`).join("; ")}`,
   ].join("\n");
 }
@@ -244,6 +253,8 @@ ${REGRAS}`;
 export function pedidoPlanos(e: EntradaPgp, p: PgpDossie): string {
   const partes = partesDoPasso("planos", p);
   return `${cabecalho(e, p, "passo 10: demais planos e documentos (as partes marcadas abaixo)")}
+
+${resumoDoCronograma(p)}
 
 ${resumoDosRiscos(p, e)}
 
