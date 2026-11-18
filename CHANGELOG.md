@@ -4,6 +4,11 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 
 ## [Não publicado]
 
+### Segunda instância leve na etapa 5 (decisão 0077, aceita)
+- **Só com veredito "falso" ou "regra_errada"** de achado do código: confere se o trecho cobre o item inteiro da ficha e todas as premissas críticas que se aplicam. Uma rodada, Sonnet por padrão; só as páginas citadas.
+- **A revisão volta ao total:** veredito derrubado ou que cobre só em parte faz o achado contar, com a parte que falta.
+- **Substitui a segunda instância genérica** da tela da etapa 5 (pedido inteiro); no teste externo, o passo `segunda-leitura`.
+
 ### Decisão pendente: segunda instância leve na etapa 5 (decisão 0077)
 - A pergunta, o custo medido nos dois casos do teste e os prós e contras, para a responsável decidir. Nada implementado.
 

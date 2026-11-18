@@ -21,6 +21,14 @@ import type { z } from "zod";
 import { criarDossieVazio, lerDossie, serializarDossie } from "../../src/dossie/arquivo";
 import type { Dossie, DocumentoLido } from "../../src/dossie/esquema";
 import { RespostaSegundaInstancia } from "../../src/pmo/schemas/segunda-instancia";
+import { RespostaSegundaEtapa5 } from "../../src/pmo/schemas/segunda-etapa-5";
+import {
+  deveConferirEtapa5,
+  documentosDaSegundaEtapa5,
+  pedidoSegundaEtapa5,
+  segundaEtapa5EmTexto,
+  vereditosAConferir,
+} from "../../src/pmo/segunda-etapa-5";
 import { identidadeDoCaso } from "../../src/pmo/identidade-do-caso";
 import { lerVersaoDoTapNoPedido, montarTapRevisado } from "../../src/pmo/tap-revisado";
 import {
@@ -202,11 +210,50 @@ function documentosDoPasso(d: Dossie): DocumentoLido[] {
 }
 
 /** Segunda instância (decisão 0057): só a skill, os documentos e a resposta do passo. */
+/**
+ * Etapa 5 (decisão 0077): a segunda instância leve, como na tela. Só os vereditos "falso" e "regra_errada", as páginas
+ * que eles e os achados citam e as premissas críticas que se aplicam; uma rodada, no modelo mais barato por padrão.
+ */
+function montarSegundaEtapa5(d: Dossie, leitura: z.infer<typeof RespostaLeitura>): Passo {
+  const c = entradaDaConferencia(d);
+  const documentos = [c.pgp, ...(c.tap ? [c.tap] : []), ...(c.rfp ? [c.rfp] : [])];
+  const vd = conferirVereditos(leitura, c.achados, c.condicionais, c.mapa, documentos);
+  precisa(
+    deveConferirEtapa5(leitura, vd.candidatos),
+    'a leitura do PMO não tem veredito "falso" nem "regra_errada" de achado do código: a segunda instância leve não roda (decisão 0077)',
+  );
+  return {
+    sistema: sistemaDaSegundaInstancia(5),
+    documentos: textoDosDocumentos(
+      documentosDaSegundaEtapa5(
+        documentos,
+        vereditosAConferir(leitura, vd.candidatos),
+        vd.candidatos.map((x) => x.achado),
+      ),
+    ),
+    pedido: pedidoSegundaEtapa5({
+      leitura,
+      candidatos: vd.candidatos,
+      partes: PARTES_PGP,
+      premissas: PREMISSAS_CRITICAS,
+      premissasAplicaveis: c.premissasAplicaveis,
+      pgp: c.pgp.paginas,
+      identidade: identidadeDoCaso(d.documentos, d.projeto.nome),
+    }),
+    schema: RespostaSegundaEtapa5,
+    nota: [
+      '- **Segunda instância leve da etapa 5, rodada única** (decisão 0077): os vereditos "falso" e "regra_errada", as páginas citadas e as premissas críticas que se aplicam.',
+      `- **Modelo desta rodada (decisão do GP):** ${env.RAIO_X_MODELO_SEGUNDA || "claude-sonnet-5-5 (padrão da decisão 0077)"}. Quem lança o revisor usa este modelo.`,
+    ].join("\n"),
+  };
+}
+
 function montarSegunda(d: Dossie, passo: string): Passo {
   const alvo = alvoDaSegunda(passo);
   precisa(PASSOS[etapa]?.includes(alvo), `o passo "${alvo}" não existe na etapa ${etapa}`);
   const r = respostaDoPasso(d, alvo);
   precisa(r, `importe a resposta do passo "${alvo}" antes de conferir`);
+  if (etapa === 5) return montarSegundaEtapa5(d, r.resposta as z.infer<typeof RespostaLeitura>);
   // a mesma montagem do app (decisão 0071): o pedido do passo conferido, como foi ao PMO (esqueleto e o que o passo
   // exige; decisão 0059), com a identidade do caso no topo (decisão 0066) e, nas premissas, o TAP revisado (decisão
   // 0068). Na rodada seguinte, só os achados anteriores, o que mudou e as páginas citadas; --completa pede tudo.
@@ -639,6 +686,39 @@ describe.skipIf(MODO !== "importar")("importar a resposta do PMO (leitura indepe
       const erros = v.error.issues.slice(0, 15).map((i) => `- ${i.path.join(".")}: ${i.message}`);
       console.log(`A resposta não segue o schema do passo:\n${erros.join("\n")}`);
       throw new Error("resposta fora do schema");
+    }
+    if (passo.startsWith("segunda-") && etapa === 5) {
+      // segunda instância leve (decisão 0077): guarda a revisão no dossiê e grava conferencia-etapa-5-leitura-*.md
+      const leitura = dossie.conferencia?.leituraPmo;
+      precisa(leitura, "importe a leitura da etapa 5 antes da segunda instância");
+      const resposta = v.data as z.infer<typeof RespostaSegundaEtapa5>;
+      dossie = {
+        ...dossie,
+        conferencia: {
+          ...dossie.conferencia!,
+          segundaLeve: {
+            resposta,
+            modelo: "claude.ai (segunda instância leve)",
+            em: HOJE.toISOString(),
+            deLeitura: leitura.em,
+          },
+        },
+      };
+      writeFileSync(arqDossie, serializarDossie(dossie, HOJE));
+      const c = entradaDaConferencia(dossie);
+      const vd = conferirVereditos(leitura.resposta, c.achados, c.condicionais, c.mapa, [
+        c.pgp,
+        ...(c.tap ? [c.tap] : []),
+        ...(c.rfp ? [c.rfp] : []),
+      ]);
+      const base = basename(dossie.documentos.find((x) => x.papel === "rfp")?.nomeArquivo ?? "rfp", ".pdf");
+      const arq = join(dirname(resolve(env.RAIO_X_ARQUIVO ?? "")), `conferencia-etapa-5-leitura-${base}.md`);
+      writeFileSync(
+        arq,
+        `${segundaEtapa5EmTexto(resposta, vd)}\n\n${tokensDoPedidoExportado(5, passo, base)}\n`,
+      );
+      console.log(`Conferência: ${arq}`);
+      return;
     }
     if (passo.startsWith("segunda-")) {
       // segunda instância (decisão 0057): guarda no dossiê e grava conferencia-*.md ao lado da resposta
@@ -1188,6 +1268,33 @@ describe.skipIf(MODO !== "importar")("importar a resposta do PMO (leitura indepe
       if (etapa === 5) {
         const c = entradaDaConferencia(dossie);
         const resposta = v.data as z.infer<typeof RespostaLeitura>;
+        // a leitura fica no dossiê, como na tela: a segunda instância leve parte dela (decisão 0077); a revisão
+        // anterior fica velha com a leitura nova
+        dossie = {
+          ...dossie,
+          conferencia: {
+            ...(dossie.conferencia ?? {
+              caracteristicas: c.caracteristicas,
+              mapa: c.mapa,
+              premissasAplicaveis: c.premissasAplicaveis,
+              requisitos: [],
+              proximoRequisito: 1,
+              decisoes: {},
+            }),
+            leituraPmo: { resposta, modelo: "claude.ai (leitura independente)", em: HOJE.toISOString() },
+          },
+        };
+        const candidatosAgora = conferirVereditos(resposta, c.achados, c.condicionais, c.mapa, [
+          c.pgp,
+          ...(c.tap ? [c.tap] : []),
+          ...(c.rfp ? [c.rfp] : []),
+        ]).candidatos;
+        linhas.push(
+          "",
+          deveConferirEtapa5(resposta, candidatosAgora)
+            ? `Segunda instância leve (decisão 0077): ${vereditosAConferir(resposta, candidatosAgora).length} veredito(s) "falso" ou "regra_errada" a conferir; o pedido é o passo segunda-leitura.`
+            : 'Segunda instância leve (decisão 0077): sem veredito "falso" nem "regra_errada"; não roda.',
+        );
         const conferidos = conferirLeitura(resposta, c, c.achados, c.mapa);
         const porSituacao = (s: string) => conferidos.filter((x) => x.situacao === s).length;
         const vd = conferirVereditos(resposta, c.achados, c.condicionais, c.mapa, [

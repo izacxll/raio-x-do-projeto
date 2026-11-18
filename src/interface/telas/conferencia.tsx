@@ -1,6 +1,7 @@
 // Etapa 5 na tela: mapa do PGP, características, premissas críticas e requisitos (confirmados pelo GP),
 // depois os achados, com a decisão do GP em cada um, e a exportação.
 import { useMemo, useState } from "react";
+import { aplicarSegundaEtapa5 } from "../../pmo/segunda-etapa-5";
 import {
   CARACTERISTICAS_PADRAO,
   type Caracteristicas,
@@ -199,12 +200,16 @@ export function ConferenciaPgp(props: Props) {
           verificacoes={resultado.verificacoes}
           conf={conf}
           atualizar={atualizar}
-          vereditos={conferirVereditos(
-            conf.leituraPmo.resposta,
-            resultado.achados,
-            comCandidatos.condicionais,
-            conf.mapa,
-            documentos,
+          vereditos={aplicarSegundaEtapa5(
+            conferirVereditos(
+              conf.leituraPmo.resposta,
+              resultado.achados,
+              comCandidatos.condicionais,
+              conf.mapa,
+              documentos,
+            ),
+            // a revisão da segunda instância leve, se é desta leitura (decisão 0077)
+            conf.segundaLeve?.deLeitura === conf.leituraPmo.em ? conf.segundaLeve.resposta : undefined,
           )}
           leitura={conferirLeitura(
             conf.leituraPmo.resposta,

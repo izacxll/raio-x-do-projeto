@@ -6,6 +6,7 @@ import { z } from "zod";
 import { comCamposNovos, RespostaConteudo, RespostaEap, RespostaEstrategia } from "../pmo/schemas/proposta";
 import { RespostaPremissas, RespostaTap, comCamposNovosTap } from "../pmo/schemas/tap";
 import { RespostaLeitura } from "../pmo/schemas/leitura";
+import { RespostaSegundaEtapa5 } from "../pmo/schemas/segunda-etapa-5";
 import { RespostaLeituraRfp } from "../pmo/schemas/leitura-rfp";
 import { RespostaSegundaInstancia } from "../pmo/schemas/segunda-instancia";
 import {
@@ -192,6 +193,13 @@ export const Conferencia = z.object({
   executadaEm: z.string().optional(),
   /** Leitura opcional do PMO (F5b, decisão 0013): a resposta, o modelo e o uso. As decisões ficam em "pmo:…". */
   leituraPmo: z.object({ resposta: RespostaLeitura, modelo: z.string(), em: z.string() }).optional(),
+  /**
+   * Segunda instância leve (decisão 0077): a revisão dos vereditos "falso" e "regra_errada" e das premissas críticas.
+   * Vale para a leitura cujo "em" está em deLeitura; com outra leitura, fica velha.
+   */
+  segundaLeve: z
+    .object({ resposta: RespostaSegundaEtapa5, modelo: z.string(), em: z.string(), deLeitura: z.string() })
+    .optional(),
   modeloPmo: z.string().optional(),
   usoPmo: z
     .array(

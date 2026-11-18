@@ -1,7 +1,7 @@
 # 0077 — Segunda instância leve na etapa 5
 
 - **Data:** 18/11/2026
-- **Status:** pendente (pergunta da responsável; nada implementado)
+- **Status:** aceita (ok da responsável em 18/11/2026, com ajustes; ver "Decisão da responsável" no fim)
 - **Quem decide:** responsável pelo projeto
 
 ## Pergunta
@@ -57,3 +57,25 @@ Se aprovar:
 - na amostra, as premissas críticas que o PMO deu como tratadas com menos evidência.
 
 Medir no primeiro plano real: quantos vereditos a revisão derruba e quantos alarmes falsos ela traz.
+
+## Decisão da responsável (18/11/2026)
+
+Aprovada como sugerido, com um ajuste e a régua do revisor:
+
+1. **Quando roda:** só com ao menos um veredito "falso" ou "regra_errada" de um achado que a conferência de agora ainda aponta. Veredito de achado que o código não aponta mais não tira nada do total e não vai.
+2. **Uma rodada, Sonnet como padrão.** O GP pode escolher outro modelo na tela; no teste externo, `"modeloEtapa5"` nas decisões do GP.
+3. **Ajuste:** em vez de uma amostra de 3, **todas as premissas críticas que se aplicam** (~1 mil tokens cada: o que se assume e os trechos do plano que a citam).
+4. **Régua do revisor:** o trecho citado cobre o **item inteiro** da ficha, não só o tema. Quando cobre em parte, o veredito vira "sustenta", e o achado volta a contar com a parte que falta. Derrubado, também volta. Confirmado, fica como estava.
+5. **Efeito:** a revisão volta ao resultado da etapa 5 (o total do que conta muda) e fica no dossiê, ligada à leitura que conferiu. Com uma leitura nova, ela fica velha.
+
+## Implementação
+
+- A tela da etapa 5 já tinha a segunda instância genérica (o pedido inteiro, ~115 mil tokens, no modelo da etapa). Ela foi **substituída** pela versão leve. No teste externo, o vigia passa a exportar o passo `segunda-leitura` da etapa 5 quando há o que conferir, com a mesma montagem da tela (`pedidoSegundaEtapa5`).
+- Só vão as páginas que os vereditos e os achados citam.
+
+## Resultado no teste externo (18/11/2026)
+
+- Feita à mão, antes da implementação, sobre os 31 vereditos "falso" e "regra_errada" dos dois casos, ela **derrubou 2 vereditos e confirmou 1 achado do PMO**.
+- Custou cerca de 85 a 90 mil tokens por caso. Foi lida por agentes, com mais contexto que o pedido do app; a estimativa do pedido do app é de 28 a 36 mil por plano.
+- Depois da decisão 0076, os planos gerados pelo app não têm mais candidatos falsos, e a revisão não roda neles.
+- **Medir de novo no primeiro plano de fora:** quantos vereditos ela derruba, quantos alarmes falsos traz e o custo real do pedido (o placar registra os tokens, decisão 0070).
