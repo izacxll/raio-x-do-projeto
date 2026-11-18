@@ -16,6 +16,7 @@ import { dadosDosDocumentos } from "../../etapas/3-tap/do-documento";
 import { montarEntradaTap, NOME_PROPOSTA_DO_DOSSIE } from "../../etapas/3-tap/entrada";
 import { pedidoPremissas, pedidoTap } from "../../etapas/3-tap/pedidos";
 import { contarPendentesTap, itensDaEtapa3, tapInicial, type PassoTap } from "../../etapas/3-tap/tap";
+import { montarTapRevisado } from "../../pmo/tap-revisado";
 import { exportar, type FormatoExportacao } from "../../exportacao/exportar";
 import { montarRegistroPremissas, montarTap } from "../../exportacao/relatorio-tap";
 import { estimarCusto, formatarDolar } from "../../pmo/custo";
@@ -50,6 +51,8 @@ export function TermoDeAbertura() {
   const dados = useMemo(() => dadosDosDocumentos(entrada), [entrada]);
   const textoDocs = useMemo(() => textoDosDocumentos(entrada.documentos), [entrada]);
   const itens = useMemo(() => itensDaEtapa3(t, entrada.documentos), [t, entrada]);
+  // o TAP revisado vai na segunda instância das premissas (decisão 0068), com os itens já conferidos desta tela
+  const tapRevisado = useMemo(() => montarTapRevisado(t, itens), [t, itens]);
   const premissas = t.premissasAplicaveis ?? dossie.proposta?.premissasAplicaveis ?? {};
   // só as premissas críticas confirmadas pelo GP vão no checklist (decisão 0064)
   const chavePcs = pcsConfirmadas(premissas)?.join(",") ?? "";
@@ -65,7 +68,7 @@ export function TermoDeAbertura() {
   function pedidoDo(passo: PassoTap): string | null {
     if (entrada.fonte === "nenhuma") return null;
     if (passo === "tap") return pedidoTap(entrada, dados, divergencias, t.divergencias, premissas);
-    return t.tap ? pedidoPremissas(entrada, t.tap.resposta, premissas) : null;
+    return t.tap ? pedidoPremissas(entrada, t.tap.resposta, premissas, t.revisoes) : null;
   }
 
   async function executar(passo: PassoTap) {
@@ -340,6 +343,7 @@ export function TermoDeAbertura() {
                 documentos={entrada.documentos}
                 modelo={t.modelo}
                 pedidoDoPasso={pedido ?? ""}
+                tapRevisado={passo === "premissas" ? tapRevisado : undefined}
               />
             )}
             {t[passo] && (

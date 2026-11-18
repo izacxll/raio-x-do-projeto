@@ -383,6 +383,11 @@ export const Dossie = z.object({
         modelo: z.string(),
         em: z.string(),
         deResposta: z.string(),
+        /**
+         * Versão do passo anterior que foi no pedido (decisão 0068; hoje só o TAP revisado nas premissas). Com outra
+         * versão, a conferência fica velha. Sem o campo (conferência antiga), vale.
+         */
+        deAnterior: z.string().optional(),
         /** Rodada da conferência deste passo: sobe a cada resposta nova do passo conferida (decisão 0059). */
         rodada: z.number().int().positive().optional(),
       }),

@@ -8,8 +8,10 @@ import { estimarCusto, formatarDolar, formatarTokens } from "../../pmo/custo";
 import { identidadeDoCaso } from "../../pmo/identidade-do-caso";
 import { estimarTokens, textoDosDocumentos } from "../../pmo/montagem";
 import { RespostaSegundaInstancia } from "../../pmo/schemas/segunda-instancia";
+import type { TapRevisado } from "../../pmo/tap-revisado";
 import {
   chaveDaSegundaInstancia,
+  conferenciaVelha,
   conferirSegundaInstancia,
   NOME_GRAVIDADE_SEGUNDA,
   NOME_TIPO_SEGUNDA,
@@ -27,6 +29,7 @@ export function SegundaInstancia({
   documentos,
   modelo,
   pedidoDoPasso,
+  tapRevisado,
 }: {
   etapa: number;
   passo: string;
@@ -37,12 +40,16 @@ export function SegundaInstancia({
   modelo: string;
   /** O pedido do passo conferido, como foi ao PMO: o esqueleto e o que o passo exige (decisão 0059). */
   pedidoDoPasso: string;
+  /** Só nas premissas: o TAP revisado pelo GP, montado na tela do TAP com os itens já conferidos (decisão 0068). */
+  tapRevisado?: TapRevisado;
 }) {
   const { dossie, guardarSegundaInstancia } = useDossie();
   const chave = useChave();
   const id = chaveDaSegundaInstancia(etapa, passo);
   const guardada = dossie.segundaInstancia?.[id];
-  const atual = guardada && guardada.deResposta === respostaEm ? guardada : undefined;
+  // a conferência guardada vale para esta resposta e para o mesmo TAP revisado
+  const velha = conferenciaVelha(guardada, respostaEm, tapRevisado?.versao);
+  const atual = velha ? undefined : guardada;
   const [rodando, setRodando] = useState(false);
   const [erro, setErro] = useState<ErroPmo | null>(null);
   const cancelar = useRef<AbortController | null>(null);
@@ -54,8 +61,8 @@ export function SegundaInstancia({
     [dossie.documentos, dossie.projeto.nome],
   );
   const pedido = useMemo(
-    () => pedidoSegundaInstancia(etapa, passo, resposta, pedidoDoPasso, identidade),
-    [etapa, passo, resposta, pedidoDoPasso, identidade],
+    () => pedidoSegundaInstancia(etapa, passo, resposta, pedidoDoPasso, { identidade, tapRevisado }),
+    [etapa, passo, resposta, pedidoDoPasso, identidade, tapRevisado],
   );
   const est = estimarCusto(
     modelo,
@@ -91,7 +98,8 @@ export function SegundaInstancia({
         modelo: r.modelo,
         em: r.em,
         deResposta: respostaEm,
-        rodada: proximaRodada(guardada, respostaEm),
+        ...(tapRevisado ? { deAnterior: tapRevisado.versao } : {}),
+        rodada: proximaRodada(guardada, respostaEm, tapRevisado?.versao),
       });
     } catch (e) {
       setErro(e as ErroPmo);
@@ -146,8 +154,17 @@ export function SegundaInstancia({
           </p>
         </div>
       )}
-      {guardada && !atual && (
+      {velha === "resposta-mudou" && (
         <p className="envio__obs">A resposta mudou depois da última conferência: confira de novo.</p>
+      )}
+      {velha === "tap-mudou" && (
+        <p className="envio__obs">
+          O TAP revisado mudou depois da última conferência (item editado ou descartado, ou campo do GP):
+          confira de novo.
+        </p>
+      )}
+      {velha === "tap-ausente" && (
+        <p className="envio__obs">O TAP não está mais no dossiê: refaça o TAP antes de conferir de novo.</p>
       )}
       {resultado && (
         <>

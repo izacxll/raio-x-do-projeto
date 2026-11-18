@@ -18,6 +18,7 @@ import { criarDossieVazio, lerDossie, serializarDossie } from "../../src/dossie/
 import type { Dossie, DocumentoLido } from "../../src/dossie/esquema";
 import { RespostaSegundaInstancia } from "../../src/pmo/schemas/segunda-instancia";
 import { identidadeDoCaso } from "../../src/pmo/identidade-do-caso";
+import { lerVersaoDoTapNoPedido, montarTapRevisado } from "../../src/pmo/tap-revisado";
 import {
   chaveDaSegundaInstancia,
   conferirSegundaInstancia,
@@ -178,16 +179,23 @@ function montarSegunda(d: Dossie, passo: string): Passo {
     sistema: sistemaDaSegundaInstancia(etapa),
     documentos: textoDosDocumentos(documentosDoPasso(d)),
     // o pedido do passo conferido, como foi ao PMO (esqueleto e o que o passo exige; decisão 0059)
-    // com a identidade do caso no topo (decisão 0066): com dois casos lado a lado, o revisor confere que é este
-    pedido: pedidoSegundaInstancia(
-      etapa,
-      alvo,
-      r.resposta,
-      montarPasso(d, alvo).pedido,
-      identidadeDoCaso(d.documentos, d.projeto.nome),
-    ),
+    // com a identidade do caso no topo (decisão 0066): com dois casos lado a lado, o revisor confere que é este; nas
+    // premissas, o TAP revisado (decisão 0068), para ele não buscar uma versão velha em outro arquivo
+    pedido: pedidoSegundaInstancia(etapa, alvo, r.resposta, montarPasso(d, alvo).pedido, {
+      identidade: identidadeDoCaso(d.documentos, d.projeto.nome),
+      tapRevisado: tapRevisadoDoPasso(d, alvo),
+    }),
     schema: RespostaSegundaInstancia,
   };
+}
+
+/**
+ * O TAP revisado só vai na segunda instância das premissas (decisão 0068), com os itens conferidos contra os mesmos
+ * documentos da tela do TAP.
+ */
+function tapRevisadoDoPasso(d: Dossie, alvo: string) {
+  if (etapa !== 3 || alvo !== "premissas" || !d.tap) return undefined;
+  return montarTapRevisado(d.tap, itensDaEtapa3(d.tap, montarEntradaTap(d, HOJE).documentos));
 }
 
 /** Passos de cada etapa, na ordem: o seguinte só sai depois de importar a resposta do anterior. */
@@ -327,7 +335,7 @@ function montarPasso(d: Dossie, passo: string = PASSO): Passo {
     precisa(t.tap, "importe o TAP");
     return {
       ...base,
-      pedido: pedidoPremissas(entrada, t.tap.resposta, premissas),
+      pedido: pedidoPremissas(entrada, t.tap.resposta, premissas, t.revisoes),
       schema: SCHEMAS_TAP.premissas,
     };
   }
@@ -581,7 +589,26 @@ describe.skipIf(MODO !== "importar")("importar a resposta do PMO (leitura indepe
       const r = respostaDoPasso(dossie, alvo)!;
       const resposta = v.data as z.infer<typeof RespostaSegundaInstancia>;
       const chave = chaveDaSegundaInstancia(etapa, alvo);
-      const rodada = proximaRodada(dossie.segundaInstancia?.[chave], r.em);
+      // nas premissas, a versão do TAP revisado que foi no pedido (decisão 0068): a do pedido exportado, ao lado da
+      // resposta; sem ele, a do dossiê agora
+      const baseDoPedido = basename(
+        dossie.documentos.find((x) => x.papel === "rfp")?.nomeArquivo ?? "rfp",
+        ".pdf",
+      );
+      const pedidoExportado = join(
+        dirname(resolve(env.RAIO_X_ARQUIVO ?? "")),
+        `etapa-${etapa}-${passo}-${baseDoPedido}.md`,
+      );
+      const versaoNoPedido = existsSync(pedidoExportado)
+        ? lerVersaoDoTapNoPedido(readFileSync(pedidoExportado, "utf8"))
+        : undefined;
+      const versaoAgora = tapRevisadoDoPasso(dossie, alvo)?.versao;
+      if (versaoAgora && !versaoNoPedido)
+        console.warn(
+          `Aviso: não achei o pedido exportado (${pedidoExportado}) ao lado da resposta; a conferência fica com o TAP revisado do dossiê agora, que pode não ser o que o revisor recebeu.`,
+        );
+      const versaoDoTap = versaoNoPedido ?? versaoAgora;
+      const rodada = proximaRodada(dossie.segundaInstancia?.[chave], r.em, versaoDoTap);
       dossie = {
         ...dossie,
         segundaInstancia: {
@@ -591,6 +618,7 @@ describe.skipIf(MODO !== "importar")("importar a resposta do PMO (leitura indepe
             modelo: "claude.ai (segunda instância)",
             em: HOJE.toISOString(),
             deResposta: r.em,
+            ...(versaoDoTap ? { deAnterior: versaoDoTap } : {}),
             rodada,
           },
         },

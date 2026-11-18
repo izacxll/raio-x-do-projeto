@@ -10,6 +10,7 @@ Revisão em camadas, do mais barato ao mais caro: teste (código ou gabarito) �
 ## 1. Montar o pedido isolado
 
 - O revisor recebe só: o documento-fonte (com páginas), as decisões já tomadas, a saída a conferir, o esqueleto do código (números R e C, contas) e a rubrica. Nunca o raciocínio de quem fez nem conversas anteriores.
+- **O passo anterior, quando vai, vai na versão final**, a que seguiu (depois do "seguir" ou da correção do GP, com os itens editados e sem os descartados), e o revisor não procura outra. Incoerência só com o que está no pedido. No Raio-X, o pedido da segunda instância do registro de premissas traz o TAP revisado (decisão 0068); os outros passos levam resumos do anterior no próprio pedido. Erro que evita: o revisor ler uma versão velha do passo anterior (a da última conferência) e apontar contradições já corrigidas.
 - No Raio-X, o pedido já vem pronto do vigia (`etapa-N-segunda-<passo>-*.md`, na pasta `pedidos/` do caso, fora do Git): use-o, não escreva outro. No app, a chamada da segunda instância monta o mesmo pedido (`src/pmo/segunda-instancia.ts`).
 - Diga a rodada (1, 2, 3…) e, a partir da 2, peça para não repetir o que já está tratado de forma razoável nem abrir questão de estilo.
 

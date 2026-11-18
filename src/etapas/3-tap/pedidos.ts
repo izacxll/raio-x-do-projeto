@@ -1,6 +1,6 @@
 // Pedido de cada passo do PMO na etapa 3. Vai depois da skill e dos documentos (RFP e proposta, com cache).
 import { compromissosEmTexto } from "../2-proposta/compromissos";
-import type { DecisaoDivergencia } from "../../dossie/esquema";
+import type { DecisaoDivergencia, RevisaoItem } from "../../dossie/esquema";
 import type { RespostaTap } from "../../pmo/schemas/tap";
 import { pontoDePartidaEmTexto } from "../2-proposta/ponto-de-partida";
 import { NOME_SITUACAO_DIVERGENCIA, type Divergencia } from "./divergencias";
@@ -8,6 +8,8 @@ import { dadosEmTexto, type DadoDoDocumento } from "./do-documento";
 import type { EntradaTap } from "./entrada";
 import { itensDoPassoEmTexto, type PassoEtapa3 } from "./autoconferencia";
 import { INSTRUCAO_MARCOS, linhaDoTempoEmTexto, linhaDosDados } from "../linha-do-tempo";
+import { estadoDe, textoRevisado } from "../../pmo/itens";
+import { idDoItemTap } from "./tap";
 
 const regras = (passo: PassoEtapa3) => `Regras deste pedido (além da skill):
 - Responda só com o objeto JSON do passo, no schema enviado.
@@ -113,9 +115,20 @@ export function pedidoPremissas(
   e: EntradaTap,
   tap: RespostaTap | undefined,
   premissas: Record<string, boolean>,
+  revisoes: Record<string, RevisaoItem> = {},
 ): string {
-  const limites = tap?.limites.map((i) => `- ${i.texto}`).join("\n") || "- (TAP ainda sem limites)";
-  const risco = tap?.riscoGeral.map((i) => `- ${i.texto}`).join("\n") || "- (TAP ainda sem risco geral)";
+  // os limites e o risco geral como o GP os deixou: com o texto editado e sem os descartados (decisão 0068)
+  const revisados = (campo: "limites" | "riscoGeral", nome: string) => {
+    const itens = tap?.[campo] ?? [];
+    if (!itens.length) return `- (TAP ainda sem ${nome})`;
+    const validos = itens.flatMap((i, k) => {
+      const id = idDoItemTap(campo, k);
+      return estadoDe(revisoes, id) === "descartado" ? [] : [`- ${textoRevisado(id, i.texto, revisoes)}`];
+    });
+    return validos.join("\n") || `- (o GP descartou todos os itens de ${nome} do TAP)`;
+  };
+  const limites = revisados("limites", "limites");
+  const risco = revisados("riscoGeral", "risco geral");
   return `# Etapa 3 — Termo de abertura · registro de premissas inicial (fichas B3 e TAP, bloco TAP-PR)
 
 Requisitos da RFP: ${e.ponto.requisitos.map((r) => r.numero).join(", ") || "nenhum"}.

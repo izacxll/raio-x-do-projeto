@@ -23,8 +23,13 @@ export function estadoDe(revisoes: Record<string, RevisaoItem>, id: string): Est
 
 /** O texto que vale: o editado pelo GP, ou o do PMO. */
 export function textoFinal(i: ItemConferido, revisoes: Record<string, RevisaoItem>): string {
-  const r = revisoes[i.id];
-  return r?.estado === "editado" && r.textoEditado?.trim() ? r.textoEditado : i.item.texto;
+  return textoRevisado(i.id, i.item.texto, revisoes);
+}
+
+/** O mesmo, pelo id e pelo texto do PMO, para quem não tem o item conferido (o pedido das premissas). */
+export function textoRevisado(id: string, texto: string, revisoes: Record<string, RevisaoItem>): string {
+  const r = revisoes[id];
+  return r?.estado === "editado" && r.textoEditado?.trim() ? r.textoEditado : texto;
 }
 
 export function contarPendentes(revisoes: Record<string, RevisaoItem>, itens: ItemConferido[]): number {
