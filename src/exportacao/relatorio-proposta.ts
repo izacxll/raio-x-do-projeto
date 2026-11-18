@@ -155,6 +155,7 @@ export function montarPropostaTecnica(
       prazoRfp: ponto.prazoExecucao,
       feriados: p.parametros.feriados,
       horas: eap.horas,
+      hoje: agora,
     });
     secoes.push({
       titulo: "Cronograma executivo (calculado pelo código)",

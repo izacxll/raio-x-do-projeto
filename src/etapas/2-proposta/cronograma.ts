@@ -189,6 +189,7 @@ export function encerramentoAntesDoAceite(
   );
   const fimDoUltimo = calc.get(ultimo.id)?.fimMaisCedo ?? 0;
   return atividades
+    .filter((a) => !a.analiseDoContratante && !a.aprovacaoCliente)
     .filter((a) => ENCERRAMENTO.test(nome(a)) && !NAO_E_ENCERRAMENTO.test(nome(a)))
     .filter((a) => (calc.get(a.id)?.inicioMaisCedo ?? 0) < fimDoUltimo)
     .map(

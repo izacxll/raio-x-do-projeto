@@ -694,6 +694,7 @@ function Eap({
     prazoRfp: ponto.prazoExecucao,
     feriados: par.feriados,
     horas: eap.horas,
+    hoje: new Date(),
   });
   const prazos = conferirPrazosDosProdutos(
     crono,

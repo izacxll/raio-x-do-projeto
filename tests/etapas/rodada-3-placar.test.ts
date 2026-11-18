@@ -100,6 +100,17 @@ describe("encerramento antes do aceite do último produto (lição 136)", () => 
     expect(c.problemas.join(" ")).toMatch(/Aviso: a atividade z1 .* antes do aceite do último produto \(a2/);
   });
 
+  it("o aceite do relatório de encerramento não avisa contra si mesmo (revisão de código)", () => {
+    const xs = [
+      atv("p1", [], 10),
+      atv("a9", ["p1"], 5, {
+        nome: "Análise do contratante do relatório de encerramento do projeto",
+        analiseDoContratante: true,
+      }),
+    ];
+    expect(calcularCronograma(xs).problemas.join(" ")).not.toMatch(/Aviso: a atividade a9/);
+  });
+
   it("encerramento depois do último termo, ou encerramento do campo: sem aviso", () => {
     const calc = new Map([
       ["a1", { inicioMaisCedo: 10, fimMaisCedo: 15 }],
