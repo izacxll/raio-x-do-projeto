@@ -558,13 +558,14 @@ export function conferirPlano(e: EntradaConferencia): ResultadoConferencia {
       if (vagoQueNaoPesa(padrao.id, { frase: fraseEmVolta(texto, o.posicao) })) continue;
       // a expressão entre aspas é citação do documento (o plano a questiona), não vago do plano
       if (entreAspas(texto, o.posicao, o.termo.length)) continue;
-      // o plano reproduz o trecho do edital ou do TAP sem aspas: o vago é do documento, não do plano
-      if (citaODocumento(texto, o.posicao, o.termo.length, fontes)) continue;
       const parte = parteDaPosicao(o.pagina, o.posicao, e.mapa) ?? SEM_PARTE;
       if (padrao.id === "a-definir" && ehDecisaoDoGp(texto, o.posicao)) {
         decisoesPendentes.set(parte, (decisoesPendentes.get(parte) ?? 0) + 1);
         continue;
       }
+      // o plano reproduz o trecho do edital ou do TAP sem aspas: o vago é do documento, não do plano. Não vale para
+      // "a definir", que é curto e comum demais para provar que o trecho veio do documento
+      if (padrao.id !== "a-definir" && citaODocumento(texto, o.posicao, o.termo.length, fontes)) continue;
       registrar({
         tipo: "vago",
         regra: `vago:${padrao.id}`,
