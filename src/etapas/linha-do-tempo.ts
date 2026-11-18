@@ -9,8 +9,10 @@ import { formatarData, somarDiasCorridos, somarDiasUteis } from "../texto/datas"
 import {
   calcularCronograma,
   conferirPrazosDosProdutos,
+  datasDoProduto,
   primeiroDiaUtil,
   type Cronograma,
+  type DatasDoProduto,
   type SituacaoPrazo,
 } from "./2-proposta/cronograma";
 import type { PontoDePartida, PrazoEmDias } from "./2-proposta/ponto-de-partida";
@@ -49,6 +51,27 @@ const NOME_SITUACAO: Record<SituacaoPrazo, string> = {
   "nao-conferido": "não conferido pelo código",
 };
 
+/**
+ * As três datas do produto com o nome certo (decisão 0062): primeira entrega, fim da inspeção do contratante e termo
+ * definitivo. Com o ciclo de aceite na EAP, a conta já tem as análises; sem ele, diz se falta o tempo de aprovação.
+ */
+export function datasEmTexto(
+  d: DatasDoProduto,
+  data: (diaUtil: number) => string,
+  aprovacaoDias?: number,
+): string {
+  const dia = (n: number) => `dia útil ${n}${data(n)}`;
+  if (d.cicloDaEap)
+    return `primeira entrega no ${dia(d.primeiraEntrega)}; fim da inspeção do contratante no ${dia(d.fimDaInspecao ?? d.termo)}; termo definitivo (aprovação) no ${dia(d.termo)}, pelo ciclo de aceite da EAP (análise, ajuste e nova análise${
+      aprovacaoDias === undefined
+        ? ", com as durações da EAP"
+        : `, cada análise com o tempo de aprovação do GP, ${aprovacaoDias} dia(s) útil(eis)`
+    })`;
+  return aprovacaoDias === undefined
+    ? `primeira entrega no ${dia(d.primeiraEntrega)}; aprovação sem data: a EAP não tem a análise do contratante e o GP não informou o tempo de aprovação`
+    : `primeira entrega no ${dia(d.primeiraEntrega)}; aprovação no ${dia(d.termo)}, com ${aprovacaoDias} dia(s) útil(eis) de aprovação (decisão do GP)`;
+}
+
 export function linhaDoTempo(x: EntradaLinha): MarcoDaLinha[] {
   const crono = x.cronograma;
   const cal = crono?.calendario;
@@ -79,11 +102,8 @@ export function linhaDoTempo(x: EntradaLinha): MarcoDaLinha[] {
       });
       continue;
     }
-    const entregas = atividades.filter((a) => !a.analise);
-    const semAnalise = Math.max(
-      ...(entregas.length ? entregas : atividades).map((a) => a.fimMaisCedo - a.aprovacao),
-    );
-    const comAnalise = Math.max(...atividades.map((a) => a.fimMaisCedo));
+    const datas = datasDoProduto(crono as Cronograma, p.id) as NonNullable<ReturnType<typeof datasDoProduto>>;
+    const comAnalise = datas.termo;
     const depoisDaVigencia =
       fimVigencia && inicio && comAnalise > 0
         ? somarDiasUteis(inicio, comAnalise - 1, cal) > fimVigencia
@@ -97,11 +117,7 @@ export function linhaDoTempo(x: EntradaLinha): MarcoDaLinha[] {
     out.push({
       id: p.id,
       situacao,
-      texto: `${p.id} ${p.nome}: entrega no dia útil ${semAnalise}${data(semAnalise)} sem a análise do cliente; aprovado no dia útil ${comAnalise}${data(comAnalise)} com a análise${
-        x.aprovacaoDias === undefined
-          ? " (tempo de aprovação não informado pelo GP: a conta está sem ele)"
-          : ""
-      }${p.texto ? `. Prazo do produto: ${p.texto}` : ""}${depoisDaVigencia ? ". Passa do fim da vigência" : ""}.`,
+      texto: `${p.id} ${p.nome}: ${datasEmTexto(datas, data, x.aprovacaoDias)}${p.texto ? `. Prazo do produto: ${p.texto}` : ""}${depoisDaVigencia ? ". Passa do fim da vigência" : ""}.`,
     });
   }
   for (const f of crono?.datasFixas ?? [])

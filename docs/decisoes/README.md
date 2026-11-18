@@ -65,6 +65,7 @@ Uma decisão por arquivo, numerada em ordem. Cada uma registra o contexto, o que
 | [0059](0059-segunda-instancia-com-o-pedido-do-passo-e-rodadas.md) | Segunda instância com o pedido do passo (esqueleto e o que o passo exige, nem mais nem menos), rodadas por passo e decisão do GP da rodada 2 em diante | aceita |
 | [0060](0060-rodadas-com-achado-medio.md) | Achado médio também espera a decisão do GP; da rodada 2 em diante, a reentrega com "seguir" ou "corrigir" vai direto ao próximo passo, sem rodada nova | aceita |
 | [0061](0061-compromissos-de-metodo-no-tap.md) | Todo compromisso de método recebe C e vai no pedido do TAP com o destino; faixas de C pelo código; decisao_gp sempre com motivo | aceita |
+| [0062](0062-tres-datas-por-produto-e-marco-pela-atividade.md) | Três datas por produto (primeira entrega, fim da inspeção, termo definitivo) e marco do TAP conferido pela atividade da EAP que ele representa | aceita |
 
 Modelo para uma nova decisão:
 

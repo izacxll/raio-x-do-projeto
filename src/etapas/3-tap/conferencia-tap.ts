@@ -8,6 +8,7 @@ import { estadoDe, type ItemConferido } from "../../pmo/itens";
 import { encontrarDatas, formatarData, somarDiasCorridos } from "../../texto/datas";
 import { tirarAcentos } from "../../texto/normalizar";
 import type { RespostaTap } from "../../pmo/schemas/tap";
+import type { AtividadeCalculada } from "../2-proposta/cronograma";
 import { conferirMarcosDoPmo, linhaDosDados } from "../linha-do-tempo";
 import { lerValorEmReais } from "../2-proposta/preco";
 import { diasDoTexto, pedeDecisao, type Divergencia } from "./divergencias";
@@ -38,10 +39,58 @@ const CAMPO_DECISAO: Record<string, (keyof TapDossie["decisoes"])[]> = {
 const RE_ANTES_DE = /\bantes d[aeo]s?\b/i;
 const RE_DENTRO_DA_VIGENCIA = /dentro d[ao] (?:vigencia|prazo)/i;
 
+const VAZIAS_DO_MARCO = new Set(
+  "marco marcos externo externa contratante contratada produto produtos prazo prazos dias inicio antes depois durante pela pelo pelas pelos para como com sem dentro conta codigo data datas apos ate entre cada concluido concluida".split(
+    " ",
+  ),
+);
+
+/** Radicais (6 letras) das palavras de um texto, sem as palavras vazias e as genéricas de marco. */
+function radicais(t: string): Set<string> {
+  return new Set(
+    tirarAcentos(t)
+      .toLowerCase()
+      .split(/[^a-z0-9]+/)
+      .filter((w) => w.length > 3 && !VAZIAS_DO_MARCO.has(w))
+      .map((w) => w.slice(0, 6)),
+  );
+}
+
 /**
- * Marcos do TAP que prometem uma data ("antes de 21/09/2026", "antes do evento") ou caber na vigência: o código
- * confere pela conta do cronograma da proposta (a entrega com a aprovação do cliente). O que a conta não confirma é
- * divergência obrigatória; se o TAP já a registrou (TAP-DV), fica registrado.
+ * A atividade da EAP que um texto representa, pelas palavras em comum (o mínimo dado). No empate, a primeira ou a
+ * última, conforme o caso: o marco é o resultado concluído (a que termina por último); o evento de "antes de" é o
+ * começo dele (a que começa primeiro).
+ */
+function atividadeDoTexto(
+  texto: string,
+  atividades: AtividadeCalculada[],
+  minimo: number,
+  desempate: "ultima" | "primeira",
+): AtividadeCalculada | undefined {
+  const r = radicais(texto);
+  const pontuadas = atividades
+    .map((a) => ({ a, n: [...radicais(a.nome)].filter((w) => r.has(w)).length }))
+    .filter((x) => x.n >= minimo);
+  const max = Math.max(0, ...pontuadas.map((x) => x.n));
+  const empatadas = pontuadas.filter((x) => x.n === max).map((x) => x.a);
+  if (!empatadas.length) return undefined;
+  return desempate === "ultima"
+    ? empatadas.sort((a, b) => b.fimMaisCedo - a.fimMaisCedo)[0]
+    : empatadas.sort((a, b) => a.inicioMaisCedo - b.inicioMaisCedo)[0];
+}
+
+/** O evento de "antes de …" num texto: o que vem depois de "antes do", até a pontuação. */
+function eventoDoAntes(texto: string): string | undefined {
+  const m = /\bantes d[aeo]s?\s+([^,;.()]+)/i.exec(tirarAcentos(texto));
+  return m?.[1]?.trim() || undefined;
+}
+
+/**
+ * Marcos do TAP que prometem uma data ("antes de 21/09/2026", "antes do campo") ou caber na vigência: o código
+ * confere pela conta do cronograma da proposta, comparando a atividade da EAP que o marco representa (decisão 0062),
+ * e não a entrega do produto, com a data, com a atividade do evento ("antes do campo") ou com o fim da vigência. Sem a
+ * atividade do marco na EAP, vale a do produto; sem nenhuma das duas, ou sem a atividade do evento, o marco fica "não
+ * conferido". O que a conta não confirma é divergência obrigatória; se o TAP já a registrou (TAP-DV), fica registrado.
  */
 export function conferirMarcosPelaConta(
   e: EntradaTap,
@@ -58,13 +107,54 @@ export function conferirMarcosPelaConta(
   });
   const naoConfirmados: string[] = [];
   const registrados: string[] = [];
+  const naoConferidos: string[] = [];
+  const confirmadosPelaRede: string[] = [];
+  const atividades = crono?.atividades ?? [];
   for (const m of promessas) {
     const t = tirarAcentos(`${m.prazo} ${m.item.texto}`);
-    const doProduto = (crono?.atividades ?? []).filter((a) => a.produto === m.produto && a.dataFim);
-    const fim = doProduto.length
-      ? new Date(Math.max(...doProduto.map((a) => (a.dataFim as Date).getTime())))
-      : undefined;
+    const nome = `${m.produto || "marco"} ("${m.prazo || m.item.texto}")`;
+    // a atividade que o marco representa: pelo texto do marco, sem a parte do "antes de …"
+    const doMarco = atividadeDoTexto(
+      m.item.texto.split(/\bantes d[aeo]s?\b/i)[0] ?? "",
+      atividades,
+      2,
+      "ultima",
+    );
+    const doProduto = atividades.filter((a) => a.produto === m.produto && a.dataFim);
+    const fim = doMarco?.dataFim
+      ? doMarco.dataFim
+      : doProduto.length
+        ? new Date(Math.max(...doProduto.map((a) => (a.dataFim as Date).getTime())))
+        : undefined;
     const limite = RE_ANTES_DE.test(t) ? encontrarDatas(`${m.prazo} ${m.item.texto}`)[0]?.data : undefined;
+    // "antes do campo", sem data: a atividade do marco termina antes de a do evento começar, pela rede
+    if (RE_ANTES_DE.test(t) && !limite) {
+      const evento = eventoDoAntes(m.prazo) ?? eventoDoAntes(m.item.texto);
+      const doEvento = evento
+        ? atividadeDoTexto(
+            evento,
+            atividades.filter((a) => a !== doMarco),
+            1,
+            "primeira",
+          )
+        : undefined;
+      if (!doMarco || !doEvento) {
+        naoConferidos.push(
+          `${nome}: ${!doMarco ? "a atividade da EAP que o marco representa" : `a atividade do evento ("${evento}")`} não foi localizada pelo código — conferir`,
+        );
+        continue;
+      }
+      if (doMarco.fimMaisCedo <= doEvento.inicioMaisCedo) {
+        confirmadosPelaRede.push(`${nome}: ${doMarco.id} termina antes de ${doEvento.id} começar`);
+        continue;
+      }
+      const conta = `na rede, ${doMarco.id} (${doMarco.nome}) termina no dia útil ${doMarco.fimMaisCedo} e ${doEvento.id} (${doEvento.nome}) começa no dia útil ${doEvento.inicioMaisCedo}`;
+      const jaNoTap = divergencias.some((d) =>
+        [m.produto, doEvento.id].some((k) => k && k.length > 1 && `${d.ponto} ${d.item.texto}`.includes(k)),
+      );
+      (jaNoTap ? registrados : naoConfirmados).push(`${nome}: ${conta}`);
+      continue;
+    }
     const confirmado = limite
       ? Boolean(fim && fim < limite)
       : RE_DENTRO_DA_VIGENCIA.test(t)
@@ -73,9 +163,8 @@ export function conferirMarcosPelaConta(
           : crono?.conferenciaPrazo.situacao === "cabe"
         : false;
     if (confirmado) continue;
-    const nome = `${m.produto || "marco"} ("${m.prazo || m.item.texto}")`;
     const conta = fim
-      ? `a conta dá ${formatarData(fim)}`
+      ? `a conta dá ${formatarData(fim)}${doMarco ? ` (fim de ${doMarco.id}, a atividade do marco)` : ""}`
       : "a conta do cronograma não tem a data deste marco";
     const chaves = [m.produto, limite ? formatarData(limite) : ""].filter((x) => x && x.length > 1);
     const jaNoTap = divergencias.some((d) => chaves.some((k) => `${d.ponto} ${d.item.texto}`.includes(k)));
@@ -84,7 +173,11 @@ export function conferirMarcosPelaConta(
   return {
     id: "marcos-pela-conta",
     nome: "Marcos com data ou vigência confirmados pela conta do cronograma",
-    situacao: naoConfirmados.length ? "atencao" : promessas.length ? "ok" : "nao-conferido",
+    situacao: naoConfirmados.length
+      ? "atencao"
+      : promessas.length && naoConferidos.length < promessas.length
+        ? "ok"
+        : "nao-conferido",
     texto: !promessas.length
       ? 'Nenhum marco promete data ("antes de …") ou caber na vigência.'
       : [
@@ -92,7 +185,13 @@ export function conferirMarcosPelaConta(
             ? `Divergência obrigatória — a conta do cronograma não confirma: ${naoConfirmados.join("; ")}. Sugere-se registrar cada um no TAP como divergência (TAP-DV), com a conta do código.`
             : "",
           registrados.length ? `Já registrados como divergência no TAP: ${registrados.join("; ")}.` : "",
-          !naoConfirmados.length && !registrados.length ? "A conta do cronograma confirma os marcos." : "",
+          confirmadosPelaRede.length
+            ? `Confirmados pela ordem da rede: ${confirmadosPelaRede.join("; ")}.`
+            : "",
+          naoConferidos.length ? `Não conferidos pelo código: ${naoConferidos.join("; ")}.` : "",
+          !naoConfirmados.length && !registrados.length && !naoConferidos.length
+            ? "A conta do cronograma confirma os marcos."
+            : "",
         ]
           .filter(Boolean)
           .join(" "),
