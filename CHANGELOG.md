@@ -4,6 +4,9 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 
 ## [Não publicado]
 
+### Decisão pendente: segunda instância leve na etapa 5 (decisão 0077)
+- A pergunta, o custo medido nos dois casos do teste e os prós e contras, para a responsável decidir. Nada implementado.
+
 ### Etapa 5 sem falso ausente nem falso vago no plano do app (decisão 0076)
 - **Marca "presente" da etapa 4:** antes do ausente, o código procura no plano o texto do item que a autoconferência apontou.
 - **Formatos do app:** identificador de risco "xx01 · categoria" (B27.1); quem decide, com o comitê dispensado (A11.1); A14.10 dispensável em plano preditivo.
