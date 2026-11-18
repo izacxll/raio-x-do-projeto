@@ -65,7 +65,7 @@ export function TermoDeAbertura() {
   function pedidoDo(passo: PassoTap): string | null {
     if (entrada.fonte === "nenhuma") return null;
     if (passo === "tap") return pedidoTap(entrada, dados, divergencias, t.divergencias, premissas);
-    return t.tap ? pedidoPremissas(entrada, t.tap.resposta, premissas) : null;
+    return t.tap ? pedidoPremissas(entrada, t.tap.resposta, premissas, t.revisoes) : null;
   }
 
   async function executar(passo: PassoTap) {

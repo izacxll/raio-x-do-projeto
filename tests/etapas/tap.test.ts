@@ -330,6 +330,23 @@ describe("respostas gravadas do PMO na etapa 3 (OEI)", () => {
     expect(p).toContain("cada página é uma seção da minuta");
     expect(pedidoPremissas(entrada, tap, { PC6: true })).toContain("PC6");
   });
+
+  it("o pedido das premissas leva os limites e o risco como o GP os deixou (decisão 0068)", () => {
+    const p = pedidoPremissas(
+      entrada,
+      tap,
+      {},
+      {
+        "tap:limites:0": { estado: "descartado" },
+        "tap:limites:1": { estado: "editado", textoEditado: "Limite reescrito pelo GP." },
+        "tap:riscoGeral:0": { estado: "aceito" },
+      },
+    );
+    expect(p).not.toContain(`- ${tap.limites[0]!.texto}`);
+    expect(p).not.toContain(`- ${tap.limites[1]!.texto}`);
+    expect(p).toContain("- Limite reescrito pelo GP.");
+    expect(p).toContain(`- ${tap.riscoGeral[0]!.texto}`);
+  });
 });
 
 describe("compromissos numerados da proposta e o destino no TAP (decisão 0047)", () => {

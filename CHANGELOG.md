@@ -5,7 +5,8 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 ## [Não publicado]
 
 ### TAP revisado na segunda instância das premissas (decisão 0068)
-- **Pedido da segunda instância do registro de premissas** com o TAP como o app o exporta (texto editado pelo GP, sem os descartados e sem o registro conferido), com a data da versão; a conferência guardada fica velha se o TAP revisado mudar.
+- **Pedido da segunda instância do registro de premissas** com os itens do TAP como o GP os deixou (texto editado, sem os descartados), com a data da versão (~5 mil tokens a mais, só neste passo); a conferência guardada fica velha, e a rodada sobe, se o TAP revisado mudar.
+- **Pedido das premissas** com os limites e o risco geral revisados pelo GP.
 - **Rubrica e skill de revisão:** incoerência só com o que está no pedido.
 
 ### Características e reexportação no teste externo (decisão 0069)

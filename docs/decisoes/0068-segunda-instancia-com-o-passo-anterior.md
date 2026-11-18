@@ -12,12 +12,13 @@ Mandar o passo anterior inteiro em todas as segundas instâncias custaria de 5 m
 
 ## Decisão
 
-1. **Só a segunda instância do registro de premissas recebe o TAP**, como o app o exporta: com o texto que o GP editou, sem os itens descartados e sem o próprio registro de premissas, que é o que está sendo conferido. O bloco traz a data da versão e avisa que versões anteriores e conferências antigas não valem.
-2. **A rubrica diz que só conta o que está no pedido:** incoerência com uma versão que não veio nele não é achado.
-3. **A conferência guardada fica velha quando o TAP revisado muda.** Ela guarda a versão do TAP que recebeu: a data e uma impressão do texto, porque editar ou descartar um item não muda a data. A conferência guardada antes desta decisão continua valendo.
-4. **Skill de revisão, seção 1:** o passo anterior, quando vai, vai na versão final; incoerência só com o que está no pedido.
+1. **Só a segunda instância do registro de premissas recebe o TAP**, como o GP o deixou: os itens do TAP, por elemento, com o texto que o GP editou e sem os descartados. Vão só os itens, sem pendências, aprovação ou o próprio registro de premissas, que é o que está sendo conferido. O bloco traz a data da versão e avisa que versões anteriores e conferências antigas não valem.
+2. **O pedido das premissas também leva os limites e o risco geral revisados**, e não os da resposta bruta. Assim o pedido do passo e o bloco não mostram dois TAPs diferentes.
+3. **A rubrica diz que só conta o que está no pedido:** incoerência com uma versão que não veio nele não é achado.
+4. **A conferência guardada fica velha quando o TAP revisado muda**, e a nova conferência sobe de rodada. A conferência guarda a versão do TAP que recebeu: a data e uma impressão do texto dos itens. Editar ou descartar um item muda a versão, mas aceitar sem editar ou aprovar o TAP não muda. A tela diz se o que mudou foi a resposta ou o TAP. Vale na tela e na importação do teste externo. A conferência guardada antes desta decisão continua valendo.
+5. **Skill de revisão, seção 1:** o passo anterior, quando vai, vai na versão final; incoerência só com o que está no pedido.
 
 ## Consequências
 
-- Nos casos do teste externo, o pedido da segunda instância das premissas passa de ~8,8 mil para ~18,4 mil tokens (o total da chamada, de ~29,8 mil para ~39,4 mil). Os outros passos não mudam.
+- Nos dois casos do teste externo, o pedido da segunda instância das premissas sobe ~5 mil tokens (de ~8,8 mil para ~13,5 mil e de ~10,3 mil para ~15,3 mil). Os outros passos não mudam.
 - Os outros passos continuam levando resumos do anterior no próprio pedido. Se aparecer o mesmo falso alarme em outro passo, a regra se estende a ele.

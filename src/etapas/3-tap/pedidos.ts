@@ -1,6 +1,6 @@
 // Pedido de cada passo do PMO na etapa 3. Vai depois da skill e dos documentos (RFP e proposta, com cache).
 import { compromissosEmTexto } from "../2-proposta/compromissos";
-import type { DecisaoDivergencia } from "../../dossie/esquema";
+import type { DecisaoDivergencia, RevisaoItem } from "../../dossie/esquema";
 import type { RespostaTap } from "../../pmo/schemas/tap";
 import { pontoDePartidaEmTexto } from "../2-proposta/ponto-de-partida";
 import { NOME_SITUACAO_DIVERGENCIA, type Divergencia } from "./divergencias";
@@ -113,9 +113,17 @@ export function pedidoPremissas(
   e: EntradaTap,
   tap: RespostaTap | undefined,
   premissas: Record<string, boolean>,
+  revisoes: Record<string, RevisaoItem> = {},
 ): string {
-  const limites = tap?.limites.map((i) => `- ${i.texto}`).join("\n") || "- (TAP ainda sem limites)";
-  const risco = tap?.riscoGeral.map((i) => `- ${i.texto}`).join("\n") || "- (TAP ainda sem risco geral)";
+  // os limites e o risco geral como o GP os deixou: com o texto editado e sem os descartados (decisão 0068)
+  const revisados = (campo: "limites" | "riscoGeral") =>
+    (tap?.[campo] ?? []).flatMap((i, k) => {
+      const r = revisoes[`tap:${campo}:${k}`];
+      if (r?.estado === "descartado") return [];
+      return [`- ${r?.estado === "editado" && r.textoEditado?.trim() ? r.textoEditado : i.texto}`];
+    });
+  const limites = revisados("limites").join("\n") || "- (TAP ainda sem limites)";
+  const risco = revisados("riscoGeral").join("\n") || "- (TAP ainda sem risco geral)";
   return `# Etapa 3 — Termo de abertura · registro de premissas inicial (fichas B3 e TAP, bloco TAP-PR)
 
 Requisitos da RFP: ${e.ponto.requisitos.map((r) => r.numero).join(", ") || "nenhum"}.

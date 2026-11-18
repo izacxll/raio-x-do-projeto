@@ -7,10 +7,11 @@ import type { ErroPmo } from "../../pmo/cliente";
 import { estimarCusto, formatarDolar, formatarTokens } from "../../pmo/custo";
 import { identidadeDoCaso } from "../../pmo/identidade-do-caso";
 import { estimarTokens, textoDosDocumentos } from "../../pmo/montagem";
-import { passoAnteriorFinal } from "../../pmo/passo-anterior";
 import { RespostaSegundaInstancia } from "../../pmo/schemas/segunda-instancia";
+import { montarTapRevisado } from "../../pmo/tap-revisado";
 import {
   chaveDaSegundaInstancia,
+  conferenciaVelha,
   conferirSegundaInstancia,
   NOME_GRAVIDADE_SEGUNDA,
   NOME_TIPO_SEGUNDA,
@@ -43,19 +44,12 @@ export function SegundaInstancia({
   const chave = useChave();
   const id = chaveDaSegundaInstancia(etapa, passo);
   const guardada = dossie.segundaInstancia?.[id];
-  // nas premissas, o TAP revisado vai no pedido (decisão 0068); o memo só olha o dossiê nesse passo
-  const dossieDoAnterior = etapa === 3 && passo === "premissas" ? dossie : null;
-  const anterior = useMemo(
-    () => (dossieDoAnterior ? passoAnteriorFinal(dossieDoAnterior, etapa, passo) : undefined),
-    [dossieDoAnterior, etapa, passo],
-  );
-  // a conferência guardada vale para esta resposta e para o mesmo TAP revisado (sem registro: conferência antiga, vale)
-  const atual =
-    guardada &&
-    guardada.deResposta === respostaEm &&
-    (guardada.deAnterior === undefined || guardada.deAnterior === anterior?.versao)
-      ? guardada
-      : undefined;
+  // nas premissas, o TAP revisado vai no pedido (decisão 0068); o memo só olha o TAP do dossiê, e só nesse passo
+  const tapDoDossie = etapa === 3 && passo === "premissas" ? dossie.tap : undefined;
+  const tapRevisado = useMemo(() => montarTapRevisado(tapDoDossie), [tapDoDossie]);
+  // a conferência guardada vale para esta resposta e para o mesmo TAP revisado
+  const velha = conferenciaVelha(guardada, respostaEm, tapRevisado?.versao);
+  const atual = velha ? undefined : guardada;
   const [rodando, setRodando] = useState(false);
   const [erro, setErro] = useState<ErroPmo | null>(null);
   const cancelar = useRef<AbortController | null>(null);
@@ -67,8 +61,8 @@ export function SegundaInstancia({
     [dossie.documentos, dossie.projeto.nome],
   );
   const pedido = useMemo(
-    () => pedidoSegundaInstancia(etapa, passo, resposta, pedidoDoPasso, { identidade, anterior }),
-    [etapa, passo, resposta, pedidoDoPasso, identidade, anterior],
+    () => pedidoSegundaInstancia(etapa, passo, resposta, pedidoDoPasso, { identidade, tapRevisado }),
+    [etapa, passo, resposta, pedidoDoPasso, identidade, tapRevisado],
   );
   const est = estimarCusto(
     modelo,
@@ -104,8 +98,8 @@ export function SegundaInstancia({
         modelo: r.modelo,
         em: r.em,
         deResposta: respostaEm,
-        ...(anterior ? { deAnterior: anterior.versao } : {}),
-        rodada: proximaRodada(guardada, respostaEm),
+        ...(tapRevisado ? { deAnterior: tapRevisado.versao } : {}),
+        rodada: proximaRodada(guardada, respostaEm, tapRevisado?.versao),
       });
     } catch (e) {
       setErro(e as ErroPmo);
@@ -160,8 +154,13 @@ export function SegundaInstancia({
           </p>
         </div>
       )}
-      {guardada && !atual && (
+      {velha === "resposta-mudou" && (
         <p className="envio__obs">A resposta mudou depois da última conferência: confira de novo.</p>
+      )}
+      {velha === "tap-mudou" && (
+        <p className="envio__obs">
+          O TAP revisado mudou depois da última conferência (item editado ou descartado): confira de novo.
+        </p>
       )}
       {resultado && (
         <>

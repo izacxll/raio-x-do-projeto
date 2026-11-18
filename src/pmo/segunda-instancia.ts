@@ -5,7 +5,7 @@ import textoSkill from "../../.claude/skills/pmo/SKILL.md?raw";
 import type { DocumentoLido } from "../dossie/esquema";
 import { citacaoValeComoFato, conferirCitacao } from "./citacoes";
 import { type IdentidadeDoCaso, identidadeEmTexto } from "./identidade-do-caso";
-import { type PassoAnterior, passoAnteriorEmTexto } from "./passo-anterior";
+import { formatarTapRevisado, type TapRevisado } from "./tap-revisado";
 import { skillDaEtapa, textoDeSistema } from "./montagem";
 import type {
   AchadoSegundaInstancia,
@@ -29,15 +29,33 @@ export const NOME_GRAVIDADE_SEGUNDA: Record<GravidadeSegunda, string> = {
 
 /**
  * Rodada da próxima conferência do passo (decisão 0059): a mesma, se a resposta conferida é a mesma; a seguinte, se a
- * resposta do passo mudou desde a última conferência.
+ * resposta do passo mudou desde a última conferência. Nas premissas, também a seguinte se o TAP revisado que foi no
+ * pedido mudou (decisão 0068; conferência antiga, sem a versão do TAP, não conta como mudança).
  */
 export function proximaRodada(
-  anterior: { deResposta: string; rodada?: number } | undefined,
+  anterior: { deResposta: string; deAnterior?: string; rodada?: number } | undefined,
   respostaEm: string,
+  versaoDoTap?: string,
 ): number {
   if (!anterior) return 1;
   const r = anterior.rodada ?? 1;
-  return anterior.deResposta === respostaEm ? r : r + 1;
+  const tapMudou = anterior.deAnterior !== undefined && anterior.deAnterior !== versaoDoTap;
+  return anterior.deResposta === respostaEm && !tapMudou ? r : r + 1;
+}
+
+/**
+ * A conferência guardada ainda vale? Vale para a mesma resposta do passo e, nas premissas, para o mesmo TAP revisado.
+ * Devolve o motivo quando não vale.
+ */
+export function conferenciaVelha(
+  guardada: { deResposta: string; deAnterior?: string } | undefined,
+  respostaEm: string,
+  versaoDoTap?: string,
+): "sem-conferencia" | "resposta-mudou" | "tap-mudou" | undefined {
+  if (!guardada) return "sem-conferencia";
+  if (guardada.deResposta !== respostaEm) return "resposta-mudou";
+  if (guardada.deAnterior !== undefined && guardada.deAnterior !== versaoDoTap) return "tap-mudou";
+  return undefined;
 }
 
 /** Chave da conferência no dossiê: "2:conteudo", "4:cronograma". */
@@ -66,7 +84,7 @@ export function pedidoSegundaInstancia(
   passo: string,
   resposta: unknown,
   pedidoDoPasso = "",
-  { identidade, anterior }: { identidade?: IdentidadeDoCaso; anterior?: PassoAnterior } = {},
+  { identidade, tapRevisado }: { identidade?: IdentidadeDoCaso; tapRevisado?: TapRevisado } = {},
 ): string {
   return `# Segunda instância — conferência da resposta da etapa ${etapa}, passo ${passo}
 ${identidade ? `\n${identidadeEmTexto(identidade)}\n` : ""}
@@ -74,7 +92,7 @@ Você é a segunda instância (revisão em camadas; a rubrica fixa vai abaixo, e
 
 ## Pedido do passo conferido (como foi ao PMO, com o esqueleto do código)
 ${pedidoDoPasso.trim() ? `<pedido-do-passo>\n${pedidoDoPasso.trim()}\n</pedido-do-passo>` : "(o pedido do passo não veio: confira só contra os documentos e a skill, e diga isso em conferido)"}
-${anterior ? `\n${passoAnteriorEmTexto(anterior)}\n` : ""}
+${tapRevisado ? `\n${formatarTapRevisado(tapRevisado)}\n` : ""}
 ## Resposta a conferir (JSON)
 \`\`\`json
 ${JSON.stringify(resposta, null, 2)}
@@ -84,7 +102,7 @@ ${JSON.stringify(resposta, null, 2)}
 A régua é o pedido do passo: o que ele exige, nem mais nem menos. Item do método ou das fichas que o pedido não pediu não é falta.
 1. erro_de_fato: o que a resposta afirma e o documento não diz, ou diz diferente (número, prazo, data, quem faz, o que se entrega); número, R, C, conta ou data que não bate com o esqueleto do código; citação que não prova a frase.
 2. faltou: o que o pedido do passo exige (as seções, os campos e a autoconferência da lista "O que fazer" e das regras dele) e a resposta não trouxe.
-3. incoerencia_entre_etapas: a resposta contradiz o esqueleto e as contas do código, ou o que veio das etapas anteriores e está nos documentos (proposta, TAP)${anterior ? " ou no TAP revisado acima" : ""}, ou contradiz a si mesma. Só conta o que está neste pedido: não aponte incoerência com versão que não veio nele.
+3. incoerencia_entre_etapas: a resposta contradiz o esqueleto e as contas do código, ou o que veio das etapas anteriores e está nos documentos (proposta, TAP)${tapRevisado ? " ou no TAP revisado acima" : ""}, ou contradiz a si mesma. Só conta o que está neste pedido: não aponte incoerência com versão que não veio nele.
 4. rotulo_errado: rótulo ou premissa errados: "documento" sem trecho que prove a frase; sugestão escrita como fato; decisão do GP preenchida como fato; premissa crítica no lugar errado; nome de pessoa.
 
 # Como responder

@@ -18,7 +18,7 @@ import { criarDossieVazio, lerDossie, serializarDossie } from "../../src/dossie/
 import type { Dossie, DocumentoLido } from "../../src/dossie/esquema";
 import { RespostaSegundaInstancia } from "../../src/pmo/schemas/segunda-instancia";
 import { identidadeDoCaso } from "../../src/pmo/identidade-do-caso";
-import { passoAnteriorFinal } from "../../src/pmo/passo-anterior";
+import { montarTapRevisado } from "../../src/pmo/tap-revisado";
 import {
   chaveDaSegundaInstancia,
   conferirSegundaInstancia,
@@ -183,10 +183,15 @@ function montarSegunda(d: Dossie, passo: string): Passo {
     // premissas, o TAP revisado (decisão 0068), para ele não buscar uma versão velha em outro arquivo
     pedido: pedidoSegundaInstancia(etapa, alvo, r.resposta, montarPasso(d, alvo).pedido, {
       identidade: identidadeDoCaso(d.documentos, d.projeto.nome),
-      anterior: passoAnteriorFinal(d, etapa, alvo),
+      tapRevisado: tapRevisadoDoPasso(d, alvo),
     }),
     schema: RespostaSegundaInstancia,
   };
+}
+
+/** O TAP revisado só vai na segunda instância das premissas (decisão 0068). */
+function tapRevisadoDoPasso(d: Dossie, alvo: string) {
+  return etapa === 3 && alvo === "premissas" ? montarTapRevisado(d.tap) : undefined;
 }
 
 /** Passos de cada etapa, na ordem: o seguinte só sai depois de importar a resposta do anterior. */
@@ -326,7 +331,7 @@ function montarPasso(d: Dossie, passo: string = PASSO): Passo {
     precisa(t.tap, "importe o TAP");
     return {
       ...base,
-      pedido: pedidoPremissas(entrada, t.tap.resposta, premissas),
+      pedido: pedidoPremissas(entrada, t.tap.resposta, premissas, t.revisoes),
       schema: SCHEMAS_TAP.premissas,
     };
   }
@@ -580,7 +585,9 @@ describe.skipIf(MODO !== "importar")("importar a resposta do PMO (leitura indepe
       const r = respostaDoPasso(dossie, alvo)!;
       const resposta = v.data as z.infer<typeof RespostaSegundaInstancia>;
       const chave = chaveDaSegundaInstancia(etapa, alvo);
-      const rodada = proximaRodada(dossie.segundaInstancia?.[chave], r.em);
+      // nas premissas, a versão do TAP revisado que foi no pedido (decisão 0068), como na tela
+      const tapRevisado = tapRevisadoDoPasso(dossie, alvo);
+      const rodada = proximaRodada(dossie.segundaInstancia?.[chave], r.em, tapRevisado?.versao);
       dossie = {
         ...dossie,
         segundaInstancia: {
@@ -590,6 +597,7 @@ describe.skipIf(MODO !== "importar")("importar a resposta do PMO (leitura indepe
             modelo: "claude.ai (segunda instância)",
             em: HOJE.toISOString(),
             deResposta: r.em,
+            ...(tapRevisado ? { deAnterior: tapRevisado.versao } : {}),
             rodada,
           },
         },
