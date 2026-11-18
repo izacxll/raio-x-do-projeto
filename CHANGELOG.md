@@ -4,6 +4,9 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 
 ## [Não publicado]
 
+### Revisores em paralelo e lista de R (decisão 0067)
+- **Skill de revisão:** R e C só os da lista do pedido (R fora dela vira restrição ou observação); revisores em paralelo com pasta de trabalho própria.
+
 ### Revisor no caso certo (decisão 0066)
 - **Skill de revisão:** o prompt do revisor diz o caso, o arquivo exato e dois ou três termos, e manda parar sem achados se o conteúdo for de outro caso; antes de aplicar, conferir se os achados falam do caso certo e descartar a revisão de outro caso.
 - **Pedido da segunda instância** com a identidade do caso no topo: documentos, objeto da RFP com a página e termos do objeto.

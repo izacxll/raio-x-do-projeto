@@ -15,7 +15,7 @@ Revisão em camadas, do mais barato ao mais caro: teste (código ou gabarito) �
 
 ## 2. Rubrica (fixa)
 
-No Raio-X, a régua é o pedido do passo, nem mais nem menos: item do método ou das fichas que o pedido não pediu não é falta (decisão 0059).
+No Raio-X, a régua é o pedido do passo, nem mais nem menos: item do método ou das fichas que o pedido não pediu não é falta (decisão 0059). Vale também para os números: R e C só os da lista que o pedido traz. Um R fora dela (descartado ou inexistente) não é cobrado como falta nem como erro de número: na resposta, ele vira restrição ou observação. Erro que evita: dois revisores do mesmo passo divergirem sobre o mesmo R.
 
 1. **Erro de fato:** afirmação que o documento não diz; número ou data sem fonte; trecho que não prova o item; rótulo "documento" em leitura ambígua.
 2. **O que faltou:** obrigação, prazo, dependência do contratante ou de terceiros, conflito entre trechos distantes, premissa crítica não tratada, origem e período dos dados.
@@ -29,6 +29,7 @@ Saída em JSON: `{achados:[{id,tipo,gravidade,onde,texto,evidencias,sugestao}], 
 
 - Um agente por saída, em segundo plano. O prompt traz: papel (revisor independente), onde está o pedido, a rubrica resumida, as regras (não inventar números, não citar nomes de pessoas, gravidade alta só quando muda escopo, prazo, preço, caixa, aceite ou quem executa) e o caminho exato do JSON de saída, com o comando de validação.
 - **Diga o caso certo e prenda o revisor a ele.** O prompt diz o caso pelo nome, manda ler só o arquivo do pedido (caminho exato), sem abrir pastas de outros casos, e dá dois ou três termos que a resposta certa deve conter (tirados do documento do caso). Se o conteúdo for de outro caso, o revisor para e avisa, sem gravar achados. No Raio-X, o topo do pedido da segunda instância já traz a identidade do caso (arquivos, objeto com página e termos): use esses termos. Erro que evita: com vários casos lado a lado, o revisor ler o pedido de outro TR e trazer achados que não são deste.
+- **Revisores em paralelo, cada um na sua pasta.** Com mais de um revisor ao mesmo tempo, cada um grava os arquivos temporários numa pasta de trabalho própria, com o nome do caso, nunca numa pasta comum. Só o JSON de saída vai para o caminho exato do caso. Erro que evita: um revisor sobrescrever o arquivo temporário do outro e entregar a revisão de outro caso.
 - Peça para conferir no placar ou na conta do código antes de afirmar algo sobre ela.
 - Enquanto roda, siga com outro trabalho; não preveja o resultado.
 
