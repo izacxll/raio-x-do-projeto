@@ -190,7 +190,7 @@ describe("premissa nova que repete o registro inicial com outras palavras (liç�
 });
 
 describe("mensagem do tempo de aprovação (decisão 0082)", () => {
-  it("diz que as análises da rede já estão na conta e que o tempo depois das entregas é extra", () => {
+  it("diz que a análise da rede já está na conta e que o tempo depois da entrega é extra", () => {
     const xs = [
       atv("p1", [], 10),
       atv("a1", ["p1"], 5, { analiseDoContratante: true }),
@@ -198,11 +198,32 @@ describe("mensagem do tempo de aprovação (decisão 0082)", () => {
     ];
     const m = mensagemDoTempoDeAprovacao(xs);
     expect(m).toMatch(/^Tempo de aprovação do cliente não informado pelo GP/);
-    expect(m).toMatch(/As 1 análise\(s\) do contratante que já são atividades da rede \(a1\) estão na conta/);
+    expect(m).toMatch(/A análise do contratante que já é atividade da rede \(a1\) está na conta/);
     expect(m).toMatch(/troca essa duração \(não soma\)/);
     expect(m).toMatch(
-      /Depois de 1 entrega\(s\) marcada\(s\) com aprovação do cliente \(p2\), o tempo de aprovação é um tempo extra/,
+      /Depois da entrega marcada com aprovação do cliente \(p2\).*pode ficar mais longo \(se a entrega estiver no caminho crítico\)/,
     );
     expect(calcularCronograma(xs).problemas.join(" ")).toContain(m);
+  });
+
+  it("análise com data fixa não promete a troca; duas análises no plural", () => {
+    const fixa = atv("a9", [], 0, {
+      analiseDoContratante: true,
+      restricaoData: {
+        inicio: "10/03/2026",
+        fim: "10/03/2026",
+        fonte: { doc: "rfp", pagina: 1, trecho: "x" },
+      },
+    });
+    expect(mensagemDoTempoDeAprovacao([fixa, atv("p1", [], 3, { aprovacaoCliente: true })])).not.toMatch(
+      /a9/,
+    );
+    const duas = [
+      atv("a1", [], 5, { analiseDoContratante: true }),
+      atv("a2", [], 5, { analiseDoContratante: true }),
+    ];
+    expect(mensagemDoTempoDeAprovacao(duas)).toMatch(
+      /As 2 análises do contratante que já são atividades da rede \(a1, a2\)/,
+    );
   });
 });

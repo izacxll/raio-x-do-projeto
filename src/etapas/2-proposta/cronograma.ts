@@ -295,18 +295,22 @@ export function travasDaEap(atividades: AtividadeEap[], horas?: HorasPerfil[]): 
  * ainda não tem.
  */
 export function mensagemDoTempoDeAprovacao(atividades: AtividadeEap[]): string {
-  const analises = atividades.filter((a) => a.analiseDoContratante);
+  // a análise com data fixa não troca pelo tempo do GP: a janela manda
+  const analises = atividades.filter((a) => a.analiseDoContratante && !a.restricaoData);
   const aprovacoes = atividades.filter((a) => a.aprovacaoCliente && !a.analiseDoContratante);
+  const ids = (xs: AtividadeEap[]) => xs.map((a) => a.id).join(", ");
   const partes: string[] = [];
   if (analises.length)
     partes.push(
-      `As ${analises.length} análise(s) do contratante que já são atividades da rede (${analises.map((a) => a.id).join(", ")}) estão na conta, com a duração estimada; o tempo informado pelo GP, quando vier, troca essa duração (não soma).`,
+      analises.length === 1
+        ? `A análise do contratante que já é atividade da rede (${ids(analises)}) está na conta, com a duração estimada; o tempo informado pelo GP, quando vier, troca essa duração (não soma).`
+        : `As ${analises.length} análises do contratante que já são atividades da rede (${ids(analises)}) estão na conta, com a duração estimada; o tempo informado pelo GP, quando vier, troca essa duração (não soma).`,
     );
   if (aprovacoes.length)
     partes.push(
-      `Depois de ${aprovacoes.length} entrega(s) marcada(s) com aprovação do cliente (${aprovacoes.map((a) => a.id).join(", ")}), o tempo de aprovação é um tempo extra que a conta ainda não tem: com ele, o cronograma fica mais longo.`,
+      `Depois ${aprovacoes.length === 1 ? "da entrega marcada" : `das ${aprovacoes.length} entregas marcadas`} com aprovação do cliente (${ids(aprovacoes)}), o tempo de aprovação é um tempo extra que a conta ainda não tem: com ele, o cronograma pode ficar mais longo (se a entrega estiver no caminho crítico).`,
     );
-  return `Tempo de aprovação do cliente não informado pelo GP (decisão do GP ou prazo do documento). ${partes.join(" ")}`;
+  return `Tempo de aprovação do cliente não informado pelo GP (decisão do GP ou prazo do documento). ${partes.join(" ")}`.trim();
 }
 
 export function calcularCronograma(atividades: AtividadeEap[], par: ParametrosCronograma = {}): Cronograma {
@@ -389,7 +393,7 @@ export function calcularCronograma(atividades: AtividadeEap[], par: ParametrosCr
       const porAncestral = [...(ancestrais.get(a.id) ?? [])].map((id) => porIdEap.get(id));
       const semAprovacao =
         par.aprovacaoDias === undefined &&
-        porAncestral.some((x) => x?.aprovacaoCliente || x?.analiseDoContratante);
+        porAncestral.some((x) => x?.aprovacaoCliente && !x?.analiseDoContratante);
       const vencida = par.hoje !== undefined && dia(iniFixo) < dia(par.hoje);
       datasFixas.push({
         atividade: a.id,
