@@ -4,6 +4,8 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 
 ## [Não publicado]
 
+### Resultado da etapa para apresentação (decisão 0072)
+- **`npm run resultado-da-etapa`:** um DOCX por etapa e por caso do teste externo, com o placar resumido e a segunda instância de cada passo (achados e o que o GP decidiu) e o resultado final da etapa, pelo exportador do app. Fora do Git; sempre minuta.
 ### Segunda instância mais barata e igual nas duas pontas (decisão 0071)
 - **Rodada 2 compacta:** os achados da rodada anterior, só os itens que mudaram e só as páginas citadas (no caso fiscal, de ~55 mil para ~15 mil tokens). A resposta inteira só a pedido do GP.
 - **Rodada 1 só com achados baixos:** segue com a correção, sem rodada 2 (configurável).
