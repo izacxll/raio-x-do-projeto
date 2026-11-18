@@ -4,6 +4,9 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 
 ## [Não publicado]
 
+### Revisor de código e proposta de arquitetura da skill (decisão 0074)
+- **Subagente `revisor-codigo`:** code-review `low` em todo commit de código e `high` antes do merge de PR que mexe em exportação, importação, vigia, segurança ou pedidos; só lê e reporta.
+- **Decisão 0074 (aceita, migração depois do teste):** skill PMO base e um arquivo por etapa, com papel, entradas, saída, definição de pronto, armadilhas e rubrica da segunda instância.
 ### Skill PMO 0.3.4 (decisão 0073)
 - **Etapa 4:** regras da rodada 3 do teste (cronograma, riscos, planos e execução), cada uma com o erro que evita e exemplo inventado.
 - **Rótulos:** item que mistura documento e sugestão é sugestão; cadência sempre do GP.
