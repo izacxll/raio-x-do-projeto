@@ -41,6 +41,11 @@ Os gabaritos e as leituras gravadas foram feitos pelo Claude Code seguindo a ski
 
 **Teste externo novo:** TR de um diagnóstico fiscal estadual e, como controle, um TR de contratação direta, fora do Git em `referencias/estudos-externos/` (decisão 0049). Ele recomeça do zero com a skill 0.3.2 e a decisão 0057; as respostas antigas das etapas 1 a 3 ficam em `rodada-2/`. O vigia exporta um passo de cada vez, na ordem do app, com a segunda instância depois de cada resposta.
 
+**Teste externo atualizado para a main em 18/11/2026 (autorizado pela GP):** a pasta do teste passou para a main com os #65 a #71 (skill 0.3.3, pedido menor). Só o passo atual dos dois casos foi reexportado (etapa 3, premissas); as respostas já gravadas ficaram como estavam. O pedido das premissas caiu de ~50,8 mil para ~41,6 mil tokens no TR fiscal e de ~57,7 mil para ~47,4 mil no TR de contratação direta. **Falso alarme conhecido, não corrigir:**
+- no TR de contratação direta, o protocolo de campo passou a ter número C (decisão 0061), e os compromissos de método e os limites de volume mudaram de número;
+- o TAP já respondido cita os números antigos, então o placar do TAP pode mostrar um C sem destino e Cs citados com o sentido trocado nessa faixa.
+O #71 corrigiu a conferência do pedido externo, que recusava o SKILL.md recortado por etapa.
+
 **Fase M2 (etapa 2 pelo método), PR aberto em cima do #46, aguarda o teste e o ok da responsável** (decisão 0038): a minuta redigida por inteiro na ordem do modelo do edital, preço pelo tipo de contrato, pontos por preço, caixa, quadro de equipe × produtividade e duração × vigência por código. Placar em `docs/estudos/placar-m2-etapa-2.md`: o esqueleto do código cobre todos os itens do gabarito que são do código (28 de 28 na SMPED, 31 de 31 na OEI); com a leitura gravada, 40 de 40 e a minuta redigida por inteiro (17 e 14 seções). **Skill 0.3.0 no PR #51 (rascunho), sem publicar antes do ok.**
 
 ## Fases
