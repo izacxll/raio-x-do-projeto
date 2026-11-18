@@ -1,7 +1,7 @@
 # 0073 — Skill PMO 0.3.4
 
 - **Data:** 18/11/2026
-- **Status:** proposta (espera o ok da responsável para entrar na `main`)
+- **Status:** aceita (ok da responsável em 18/11/2026)
 - **Quem decidiu:** Claude Code, em nome da responsável (pedido do fechamento da rodada 3, item 1)
 
 ## Contexto
@@ -26,4 +26,4 @@ As regras que eram do código (data vencida, encerramento antes do aceite, vago 
 
 - O `SKILL.md` cresce cerca de 8,7 mil caracteres (~2,2 mil tokens), quase tudo na seção da etapa 4: entra só nos pedidos da etapa 4 e da segunda instância dela, pelo recorte por etapa (decisão 0064).
 - O gabarito passou antes e depois.
-- Como as outras versões da skill, entra na `main` só com o ok da responsável.
+- Entrou na `main` com o ok da responsável (18/11/2026).
