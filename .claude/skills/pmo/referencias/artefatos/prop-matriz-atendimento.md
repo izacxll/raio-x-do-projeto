@@ -101,4 +101,4 @@ Linha para a tela: "Matriz curta, requisitos com página e checklist: porte pequ
 ## Fontes
 - PMBOK 6: 5.2.3.2, p. 148–149 (PDF 184–185); 12.1, p. 470 (PDF 506); 12.2, p. 486–487 (PDF 522–523).
 - Rework: RW-072 (https://resources.rework.com/libraries/deal-closing/proposal-design); RW-076 (https://resources.rework.com/libraries/deal-closing/quote-generation).
-- `licitacoes.md` 2.2, 2.3 e 2.6; `checklist.md` (onde cada premissa crítica aparece); ficha B23; etapas/etapa-2.md e princípio 9; especificação da etapa 2, passo 9 e saída.
+- `licitacoes.md` 2.2, 2.3 e 2.6; `checklist.md` (onde cada premissa crítica aparece); ficha B23; etapas/etapa-2.md; SKILL.md, princípio 9; especificação da etapa 2, passo 9 e saída.

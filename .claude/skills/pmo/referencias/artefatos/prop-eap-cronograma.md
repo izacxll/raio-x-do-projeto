@@ -147,4 +147,4 @@ Folgas: | Atividade | Motivo (brecha ou premissa crítica PCn) |   Datas e camin
 ## Fontes
 - PMBOK 6: 5.4, p. 157–161 (PDF 193–197); 6.3, p. 187 (PDF 223); 6.4, p. 196–202 (PDF 232–238); bases das estimativas, p. 204 (PDF 240); 11.5, p. 443 (PDF 479); 12.1, p. 478 (PDF 514).
 - Rework: RW-014 (https://resources.rework.com/libraries/project-management/project-cost-estimation); RW-033 (https://resources.rework.com/libraries/project-management/statement-of-work); RW-036 (https://resources.rework.com/libraries/project-management/project-deliverables); RW-057 (https://resources.rework.com/libraries/project-management/three-point-estimation).
-- `checklist.md` PC1, PC3, PC4, PC5 e PC6; `experiencia.md` §1, §2, §5; ficha A13; etapas/etapa-2.md e princípio 6.
+- `checklist.md` PC1, PC3, PC4, PC5 e PC6; `experiencia.md` §1, §2, §5; ficha A13; etapas/etapa-2.md; SKILL.md, princípio 6.

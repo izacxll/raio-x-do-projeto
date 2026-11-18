@@ -23,7 +23,7 @@ Documento "que autoriza formalmente a existência de um projeto" e dá ao GP aut
   - confere: código
   - dispensa: nunca
 - **TAP-DV.2** Divergências de número e de data, uma por linha, com o que diz cada documento e a página: valor; parcelas ou medições (ordem, percentual, prazo); contagem dos meses (mês 1 da proposta × mês 1 da vigência; soma dos períodos do cronograma × vigência); equipe (quantidade e regra: mínimo, referência ou limite); dimensionamento × produtividade (a comparação é do código)
-  - fonte: método da etapa 3, 4.1; etapas/etapa-3.md e princípio 6
+  - fonte: método da etapa 3, 4.1; etapas/etapa-3.md; SKILL.md, princípio 6
   - sinais: "divergência" | tabela ponto × RFP × proposta × contrato
   - confere: código
   - dispensa: nunca
@@ -118,7 +118,7 @@ Documento "que autoriza formalmente a existência de um projeto" e dá ao GP aut
   - confere: código
   - dispensa: nunca
 - **TAP5.2** Resume as brechas da etapa 1 e as premissas críticas que se aplicam (PC1 a PC8), com a origem; brecha não vira risco
-  - fonte: etapas/etapa-3.md e princípio 8; `checklist.md` (PC1 a PC8)
+  - fonte: etapas/etapa-3.md; SKILL.md, princípio 8; `checklist.md` (PC1 a PC8)
   - sinais: "brecha" | "premissa crítica" | página da RFP
   - confere: só PMO
   - dispensa: nunca
@@ -130,7 +130,7 @@ Documento "que autoriza formalmente a existência de um projeto" e dá ao GP aut
   - confere: código
   - dispensa: nunca
 - **TAP6.2** Marcos dentro dos prazos da RFP e da vigência do contrato e iguais aos do cronograma da proposta (a conta é do código)
-  - fonte: etapas/etapa-3.md e princípio 6; `checklist.md` PC4; Rework RW-025 (https://resources.rework.com/libraries/project-management/milestone-chart)
+  - fonte: etapas/etapa-3.md; SKILL.md, princípio 6; `checklist.md` PC4; Rework RW-025 (https://resources.rework.com/libraries/project-management/milestone-chart)
   - sinais: datas ou prazos com página da RFP e da proposta
   - confere: código
   - dispensa: nunca

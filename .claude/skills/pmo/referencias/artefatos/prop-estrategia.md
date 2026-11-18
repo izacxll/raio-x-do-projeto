@@ -130,4 +130,4 @@ Linha para a tela: "Estratégia curta, com uma alternativa e a tabela de destino
 ## Fontes
 - PMBOK 6: 5.3, p. 150–155 (PDF 186–191); 11.5, p. 439 e 442–443 (PDF 475 e 478–479); 12.1, p. 468, 473–474 e 478–479 (PDF 504, 509–510 e 514–515); 12.2, p. 487 (PDF 523).
 - Rework: RW-071 (https://resources.rework.com/libraries/deal-closing/proposal-development); RW-073 (https://resources.rework.com/libraries/deal-closing/pricing-strategies); RW-074 (https://resources.rework.com/libraries/deal-closing/pricing-negotiation); RW-077 (https://resources.rework.com/libraries/deal-closing/terms-negotiation).
-- `licitacoes.md` 2.2 e 2.3; `checklist.md` (onde cada premissa crítica aparece; o que não é premissa crítica; PC1, PC3, PC6); etapas/etapa-2.md e princípios 1, 2, 6 e 8.
+- `licitacoes.md` 2.2 e 2.3; `checklist.md` (onde cada premissa crítica aparece; o que não é premissa crítica; PC1, PC3, PC6); etapas/etapa-2.md; SKILL.md, princípios 1, 2, 6 e 8.
