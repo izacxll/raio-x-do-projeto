@@ -62,6 +62,25 @@ describe("chamada ao PMO", () => {
     expect(p?.headers["anthropic-dangerous-direct-browser-access"]).toBe("true");
   });
 
+  it("sem documentos (rodada compacta sem página citada), o bloco vazio não vai à API", async () => {
+    const api = fetchSimulado([{ texto: JSON.stringify({ ok: true, itens: [] }) }]);
+    await chamarPmo(
+      {
+        chave: CHAVE,
+        modelo: "claude-opus-5-5",
+        passo: "segunda-instancia",
+        sistema: "SKILL",
+        documentos: "",
+        pedido: "confira a rodada 2",
+        schema: Schema,
+      },
+      { fetch: api.fetch },
+    );
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- corpo da requisição lido como JSON livre
+    const corpo = api.pedidos[0]?.corpo as Record<string, any>;
+    expect(corpo.messages[0].content).toEqual([{ type: "text", text: "confira a rodada 2" }]);
+  });
+
   it("chave recusada vira mensagem em português, sem a chave no texto", async () => {
     const api = fetchSimulado([
       { status: 401, corpo: corpoErro("authentication_error", `invalid x-api-key ${CHAVE}`) },

@@ -223,8 +223,12 @@ export async function chamarPmo<S extends z.ZodType>(
     messages: [
       {
         role: "user" as const,
+        // sem documentos (rodada compacta da segunda instância sem página citada, decisão 0071), o bloco não vai:
+        // a API recusa bloco de texto vazio
         content: [
-          { type: "text" as const, text: p.documentos, cache_control: { type: "ephemeral" as const } },
+          ...(p.documentos.trim()
+            ? [{ type: "text" as const, text: p.documentos, cache_control: { type: "ephemeral" as const } }]
+            : []),
           { type: "text" as const, text: p.pedido },
         ],
       },
