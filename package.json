@@ -22,7 +22,8 @@
     "comparar-modelos": "node scripts/comparar-modelos.mjs",
     "conferir-plano-real": "node scripts/conferir-plano-real.mjs",
     "exportar-pedido": "node scripts/pedido-externo.mjs exportar",
-    "importar-resposta": "node scripts/pedido-externo.mjs importar"
+    "importar-resposta": "node scripts/pedido-externo.mjs importar",
+    "resultado-da-etapa": "node scripts/resultado-da-etapa.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "1.6.0",

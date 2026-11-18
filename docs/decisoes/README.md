@@ -75,6 +75,7 @@ Uma decisão por arquivo, numerada em ordem. Cada uma registra o contexto, o que
 | [0069](0069-caracteristicas-e-reexportacao-no-teste-externo.md) | Teste externo: --caracteristicas a partir da sugestão do código; o vigia reexporta o passo atual quando muda uma decisão que o pedido usa | aceita |
 | [0070](0070-placar-e-pedidos-da-rodada-3.md) | Data fixa vencida "não confirmável", encerramento antes do aceite, vago que reproduz o documento, premissa parecida, QU no topo, A2.8 e tokens no placar | aceita |
 | [0071](0071-segunda-instancia-mais-barata-e-paridade.md) | Segunda instância: rodada 2 só com o que mudou, sem rodada 2 com só achados baixos, modelo da rodada 2 à escolha do GP e a mesma montagem no app e no teste externo | aceita |
+| [0072](0072-resultado-da-etapa-para-apresentacao.md) | Teste externo: DOCX de resultado por etapa e por caso (placar resumido, segunda instância e resultado final), fora do Git | aceita |
 
 Modelo para uma nova decisão:
 
