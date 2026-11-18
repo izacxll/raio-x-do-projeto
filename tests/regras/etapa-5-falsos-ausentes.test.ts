@@ -85,10 +85,20 @@ describe("formatos que o próprio app usa", () => {
     );
   });
 
-  it("A11.1: quem decide as mudanças, com o comitê formal dispensado pelo porte", () => {
+  it("A11.1: quem decide as mudanças, com o comitê formal dispensado pelo porte (só no plano do app)", () => {
     const t =
       "Plano de gerenciamento das mudanças\nSem comitê formal (porte pequeno): o GP decide os ajustes internos; preço ou prazo, a coordenação.";
-    expect(ausentes(entrada("A11", t))).not.toContain("conteudo-minimo:A11:A11.1");
+    expect(ausentes(entrada("A11", t, { planoDaFerramenta: true }))).not.toContain(
+      "conteudo-minimo:A11:A11.1",
+    );
+    // plano de fora: a regra do formato do app não vale
+    expect(ausentes(entrada("A11", t))).toContain("conteudo-minimo:A11:A11.1");
+    // as duas condições em linhas diferentes não bastam (revisão de código)
+    const separadas =
+      "Plano de gerenciamento das mudanças\nNão há comitê de controle.\nO contratante aprova os produtos entregues.";
+    expect(ausentes(entrada("A11", separadas, { planoDaFerramenta: true }))).toContain(
+      "conteudo-minimo:A11:A11.1",
+    );
     expect(
       ausentes(entrada("A11", "Plano de gerenciamento das mudanças\nAs mudanças são registradas.")),
     ).toContain("conteudo-minimo:A11:A11.1");
@@ -114,6 +124,24 @@ describe('"a definir" com quando ou onde se define', () => {
       aDefinirComQuandoOuOnde("ficam a definir; a lição se confirma quando o esclarecimento for respondido"),
     ).toBe(true);
     expect(aDefinirComQuandoOuOnde("O formato do relatório é a definir.")).toBe(false);
+  });
+
+  it("preposição sem marco nomeado continua vaga (revisão de código)", () => {
+    for (const t of [
+      "Os indicadores serão a definir em conjunto com o contratante.",
+      "O cronograma fino é a ser definido em momento oportuno.",
+      "A forma de acompanhamento é a definir no decorrer do projeto.",
+      "O responsável é a definir durante a execução.",
+    ])
+      expect(aDefinirComQuandoOuOnde(t)).toBe(false);
+    expect(aDefinirComQuandoOuOnde("O roteiro é a definir até a reunião inicial.")).toBe(true);
+  });
+
+  it("palavras genéricas de projeto não ligam o vago a uma questão (revisão de código)", () => {
+    const questoes = ["QU-02 — O cliente aprovará o relatório do produto P2 no prazo?"];
+    expect(
+      ligadoAQuestaoAberta("O formato do relatório do produto entregue ao cliente é a definir.", questoes),
+    ).toBe(false);
   });
 
   it('"data a definir" ligada a uma questão aberta do B9 pelas palavras-chave', () => {

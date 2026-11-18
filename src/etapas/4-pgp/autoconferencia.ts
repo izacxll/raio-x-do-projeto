@@ -254,22 +254,25 @@ export function conferirAutoconferenciaDoPgp(
  */
 export function presentesPelaMarcaDoDossie(p: PgpDossie | undefined): Record<string, string[]> | undefined {
   if (!p) return undefined;
-  const textoDe = new Map<string, string>();
+  // o texto e a parte de cada item: a marca só vale com ids da parte do item, como no ligarPeloId da etapa 4
+  const textoDe = new Map<string, { texto: string; parte: string }>();
   for (const i of itensValidos(p.revisoes, itensDoPgp(p, []))) {
     const texto = textoFinal(i, p.revisoes);
-    textoDe.set(i.item.id, texto);
+    textoDe.set(i.item.id, { texto, parte: i.grupo.split(" — ")[0] ?? "" });
     // risco: o PMO aponta pelo id do risco (rk9), não pelo id do item
     const k = /^riscos:B27:(\d+)$/.exec(i.id)?.[1];
     const risco = k !== undefined ? p.riscos?.resposta.riscos[Number(k)] : undefined;
-    if (risco) textoDe.set(risco.id, texto);
+    if (risco) textoDe.set(risco.id, { texto, parte: "B27" });
   }
   const out: Record<string, string[]> = {};
   for (const m of marcasDoPgp(p)) {
     if (m.estado !== "presente") continue;
+    const parte = m.item.trim().split(".")[0];
     const textos = (m.onde ?? "")
       .split(/[\s,;]+|\ba\b/)
       .map((x) => textoDe.get(x.trim()))
-      .filter((x): x is string => Boolean(x));
+      .filter((x) => x?.parte === parte)
+      .map((x) => x!.texto);
     if (textos.length) out[m.item.trim()] = [...(out[m.item.trim()] ?? []), ...textos];
   }
   return out;

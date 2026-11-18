@@ -180,8 +180,13 @@ export function ehDecisaoDoGp(texto: string, posicao: number): boolean {
  * treinamento", "a definir até a reunião inicial"; ou a mesma frase traz a questão aberta (QU-09) ou o acontecimento
  * que a resolve ("quando o esclarecimento for respondido"). É pendência rastreada, não vago do plano.
  */
-const A_DEFINIR_COM_QUANDO_OU_ONDE =
-  /\ba (?:ser )?definid?[oa]?s?r? (?:antes d[oa]s?|depois d[oa]s?|apos [oa]s?|ate [oa]s?|n[oa]s? |em |durante )/;
+// só com um marco nomeado depois da preposição: "em conjunto com", "em momento oportuno", "no decorrer do projeto"
+// e "durante a execução" continuam vagos (revisão de código da decisão 0076)
+const MARCO_NOMEADO =
+  "(?:p\\d+|produto \\w+|reuniao|campo|treinamento|coleta|piloto|oficina|assinatura|ordem de servico|evento|inicio|entrega|aceite|questionario|validacao|esclarecimento|qu-\\d+)";
+const A_DEFINIR_COM_QUANDO_OU_ONDE = new RegExp(
+  `\\ba (?:ser )?definid?[oa]?s?r? (?:antes d[oa]s?|depois d[oa]s?|apos [oa]s?|ate [oa]s?|n[oa]s?|em|durante (?:[oa]s?)?) ?(?:primeir[oa]s? |ultim[oa]s? )?${MARCO_NOMEADO}\\b`,
+);
 const QUANDO_SE_RESOLVE =
   /\bquando (?:o|a|os|as) [a-z]+ (?:for|forem|estiver|estiverem|chegar|chegarem|sair|sairem)\b|\bqu-\d+/;
 
@@ -191,7 +196,7 @@ export function aDefinirComQuandoOuOnde(frase: string): boolean {
 }
 
 const PALAVRAS_VAZIAS_DA_QUESTAO = new Set(
-  "para pelo pela pelos pelas como mais sobre entre cada este esta isso essa esse quando onde qual quais antes depois ainda tambem outro outra sem nos nas dos das com uma que nao definir sugestao".split(
+  "para pelo pela pelos pelas como mais sobre entre cada este esta isso essa esse quando onde qual quais antes depois ainda tambem outro outra sem nos nas dos das com uma que nao definir sugestao cliente clientes contratante relatorio relatorios produto produtos prazo prazos entrega entregas projeto plano equipe atividade atividades dados documento resposta".split(
     " ",
   ),
 );
@@ -223,16 +228,26 @@ export function ligadoAQuestaoAberta(frase: string, questoes: string[]): boolean
 function presentePeloFormatoDoApp(
   codigo: string,
   paginas: PaginaLida[],
-  faixa?: Set<number>,
+  faixa: Set<number> | undefined,
+  planoDoApp: boolean,
 ): number | undefined {
   const naFaixa = paginas.filter((p) => !faixa || faixa.has(p.numero));
   for (const p of naFaixa) {
     const t = normalizarTermo(p.texto).toLowerCase();
     if (codigo === "B27.1" && /\b[a-z]{1,4}-?\d{2,3} ?· ?[a-z]/.test(t)) return p.numero;
+    // A11.1: só no plano do app, e "sem comitê" e "quem decide" na mesma linha (o mesmo item)
     if (
       codigo === "A11.1" &&
-      /\b(?:sem|dispensa\w*|nao ha)\s+(?:o\s+|de\s+|um\s+)?comite\b/.test(t) &&
-      /\b(?:decide|decidem|aprova|aprovam|autoriza|autorizam)\b/.test(t)
+      planoDoApp &&
+      // as linhas do texto original: a normalização junta as quebras de linha
+      p.texto
+        .split("\n")
+        .map((l) => normalizarTermo(l).toLowerCase())
+        .some(
+          (l) =>
+            /\b(?:sem|dispensa\w*|nao ha)\s+(?:o\s+|de\s+|um\s+)?comite\b/.test(l) &&
+            /\b(?:decide|decidem|aprova|aprovam|autoriza|autorizam)\b/.test(l),
+        )
     )
       return p.numero;
   }
@@ -457,7 +472,12 @@ export function conferirPlano(e: EntradaConferencia): ResultadoConferencia {
         continue;
       }
       // antes do ausente (decisão 0076): o formato que o próprio app usa e a marca "presente" da etapa 4
-      const peloFormato = presentePeloFormatoDoApp(item.codigo, e.pgp, faixa);
+      const peloFormato = presentePeloFormatoDoApp(
+        item.codigo,
+        e.pgp,
+        faixa,
+        Boolean(e.planoDaFerramenta || e.presentesPelaMarca),
+      );
       if (peloFormato) {
         verificacoes.push({
           ...base,
@@ -466,7 +486,10 @@ export function conferirPlano(e: EntradaConferencia): ResultadoConferencia {
         });
         continue;
       }
-      const pelaMarca = localizarPelaMarca(e.presentesPelaMarca?.[item.codigo], e.pgp);
+      const pelaMarca = localizarPelaMarca(
+        e.presentesPelaMarca?.[item.codigo],
+        e.pgp.filter((p) => !faixa || faixa.has(p.numero)),
+      );
       if (pelaMarca) {
         verificacoes.push({
           ...base,
