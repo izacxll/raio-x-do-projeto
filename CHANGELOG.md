@@ -7,6 +7,8 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 ### Skill PMO 0.3.5 (decisão 0079)
 - **Etapa 5:** "falso" só com a evidência cobrindo o item inteiro (em parte é "sustenta", com o que falta); "a definir" com marco nomeado não é vago; a regra procurada no plano inteiro antes do "conflituoso".
 - **Etapa 4:** a correção de régua vai às partes geradas antes.
+### Aviso de régua corrigida que não chegou às partes anteriores (decisão 0078)
+- **Etapa 4:** a mesma duração chamada de "teto" num passo e de "referência" num passo seguinte vira aviso na autoconferência e no placar, apontando a parte que ficou para trás.
 
 ### Decisão pendente: segunda instância leve na etapa 5 (decisão 0077)
 - A pergunta, o custo medido nos dois casos do teste e os prós e contras, para a responsável decidir. Nada implementado.
