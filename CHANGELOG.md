@@ -4,6 +4,15 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 
 ## [Não publicado]
 
+### Placar e pedidos da rodada 3 (decisão 0070)
+- **Data fixa já vencida** sai "não confirmável", e não "cabe"; com o início do documento vencido, a vigência também. No TAP, o marco vencido vira divergência própria.
+- **Aviso** quando o encerramento, a devolução ou o descarte de dados começa antes do último aceite.
+- **Vago que só reproduz o edital ou o TAP** deixa de ser marcado como vago do plano.
+- **Premissa nova parecida com o registro inicial** (mesma PC e metade das palavras-chave): aviso no placar.
+- **Pedido de execução:** a regra "um item por QU-nn, sem renumerar" vai para o topo.
+- **A2.8:** sinônimos que faltavam; o ausente era regra estreita.
+- **Tokens de cada pedido** na primeira linha do placar e da conferência.
+
 ### TAP revisado na segunda instância das premissas (decisão 0068)
 - **Pedido da segunda instância do registro de premissas** com o TAP como o GP o deixou: itens com o rótulo da tela (página ou "citação não conferida"), texto editado, sem os descartados, e os campos do GP (~5 mil tokens a mais, só neste passo). A conferência guardada fica velha, e a rodada sobe, se o TAP revisado mudar.
 - **Pedido das premissas** com os limites e o risco geral revisados pelo GP.

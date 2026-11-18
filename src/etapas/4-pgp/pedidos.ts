@@ -293,10 +293,23 @@ No B9, escreva um item para cada QU, começando por "QU-nn —", com tipo, prior
 `;
 }
 
+/**
+ * A regra das questões no topo do pedido de execução (lição 188 da rodada 3): no fim, ela se perdia. Um item por
+ * QU-nn, com o mesmo número, sem renumerar nem juntar.
+ */
+function regraDasQuestoesNoTopo(e: EntradaPgp, partes: string[]): string {
+  if (!partes.includes("B9")) return "";
+  const qs = questoesDoCodigo(e);
+  if (!qs.length) return "";
+  return `
+**Antes de escrever, leia o pedido inteiro.** O código já montou o registro das questões (B9), com ${qs.length} questões (${qs[0]?.numero} a ${qs[qs.length - 1]?.numero}), mais abaixo. No B9: **um item por QU-nn, com o mesmo número, sem renumerar, sem juntar e sem resumir**. Questão ligada a outra fica com o próprio número, e cada uma fecha com a sua resposta. Marca "presente" na autoconferência só com o conteúdo escrito (situação, data de revisão, responsável).
+`;
+}
+
 export function pedidoExecucao(e: EntradaPgp, p: PgpDossie): string {
   const partes = partesDoPasso("execucao", p);
   return `${cabecalho(e, p, "passos 11 e 12: linha de base da medição e documentos de execução (as partes marcadas abaixo)")}
-
+${regraDasQuestoesNoTopo(e, partes)}
 Atividades (cronograma):
 ${resumoDoCronograma(p)}
 

@@ -28,6 +28,8 @@ export function tapDoDossieComoDocumento(dossie: Dossie): DocumentoLido | undefi
 
 export interface EntradaPgp {
   ponto: PontoDePartida;
+  /** Hoje (da tela ou da exportação): as contas com data o usam (marco fixo vencido, lição 121). */
+  hoje: Date;
   rfp: DocumentoLido[];
   fonteTap: FonteDocumento;
   tap?: DocumentoLido;
@@ -64,6 +66,7 @@ export function montarEntradaPgp(dossie: Dossie, hoje = new Date()): EntradaPgp 
   const valido = (id: string) => t?.revisoes[id]?.estado !== "descartado";
   return {
     ponto,
+    hoje,
     rfp,
     fonteTap: tapPdf ? "pdf" : tapDoDossie ? "dossie" : "nenhuma",
     tap,
@@ -89,7 +92,7 @@ export function montarEntradaPgp(dossie: Dossie, hoje = new Date()): EntradaPgp 
             id: d.item.id,
             texto: `${d.item.texto}${d.oQueFazer ? ` O que fazer: ${d.oQueFazer}` : ""}`,
           })),
-    dadosProposta: propostaPdf ? undefined : dadosDaProposta(dossie, rfp, ponto),
+    dadosProposta: propostaPdf ? undefined : dadosDaProposta(dossie, rfp, ponto, hoje),
     premissasAnteriores: t?.premissasAplicaveis ?? dossie.proposta?.premissasAplicaveis ?? {},
   };
 }

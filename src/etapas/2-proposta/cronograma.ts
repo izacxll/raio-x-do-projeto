@@ -43,7 +43,8 @@ export interface AtividadeCalculada {
   analise?: boolean;
 }
 
-export type SituacaoPrazo = "cabe" | "nao-cabe" | "nao-conferido";
+/** "nao-confirmavel": a conta parte de uma data que já passou (lição 121 da rodada 3); vale só como intervalo. */
+export type SituacaoPrazo = "cabe" | "nao-cabe" | "nao-conferido" | "nao-confirmavel";
 
 export interface Cronograma {
   atividades: AtividadeCalculada[];
@@ -71,6 +72,11 @@ export interface DataFixa {
   /** Dias corridos entre o fim das predecessoras e o início da janela; negativo quando não cabe. */
   folgaCorrida?: number;
   cabe: boolean;
+  /**
+   * A janela fixa já começou antes de hoje (lição 121 da rodada 3): a conta não confirma nada, só mede o intervalo a
+   * partir do início informado. Sai como "não confirmável", nunca como "cabe".
+   */
+  vencida?: boolean;
   /** Há aprovação do cliente antes do marco, mas o tempo dela não foi informado: a conta está sem ele. */
   semAprovacao?: boolean;
 }
@@ -145,6 +151,60 @@ export interface ParametrosCronograma {
   feriados?: string[];
   /** Horas por perfil e atividade (consultoria): para avisar a atividade de campo ou de produto sem esforço. */
   horas?: HorasPerfil[];
+  /**
+   * Hoje (a data da tela ou da exportação). Com ele, a data fixa que já passou sai como "não confirmável", e o início
+   * do documento que já passou deixa a vigência "não confirmável" (lições 121 e 137 da rodada 3). Sem ele, a conta
+   * não olha o calendário de hoje.
+   */
+  hoje?: Date;
+}
+
+/** Nome de cada situação na tela e nos documentos. */
+export const NOME_SITUACAO_PRAZO: Record<SituacaoPrazo, string> = {
+  cabe: "cabe",
+  "nao-cabe": "não cabe",
+  "nao-conferido": "não conferido",
+  "nao-confirmavel": "não confirmável (data já passou)",
+};
+
+/** Encerramento do contrato, devolução, guarda ou descarte de dados (lição 136 da rodada 3). */
+const ENCERRAMENTO =
+  /^encerramento\b|\bencerramento (?:do projeto|do contrato|administrativo)\b|\bdescart\w*|\b(?:devolu\w*|elimina\w*|guarda)\b.{0,40}\b(?:dados|bases?|microdados)\b/;
+const NAO_E_ENCERRAMENTO = /\bencerramento d[oa]s? (?:campo|coleta|evento|oficinas?|fase)\b/;
+
+/**
+ * Atividade de encerramento ou de descarte de dados que começa antes do aceite do último produto (lição 136): a
+ * devolução e o descarte de dados só vêm depois do termo definitivo. O aceite é a atividade que é a análise do
+ * contratante ou que termina em aprovação do cliente; a conta é a do código (dias úteis desde o início). Aviso.
+ */
+export function encerramentoAntesDoAceite(
+  atividades: AtividadeEap[],
+  calc: Map<string, { inicioMaisCedo: number; fimMaisCedo: number }>,
+): string[] {
+  const nome = (a: AtividadeEap) => tirarAcentos(a.nome).toLowerCase();
+  const aceites = atividades.filter((a) => a.analiseDoContratante || a.aprovacaoCliente);
+  if (!aceites.length) return [];
+  const ultimo = aceites.reduce((x, y) =>
+    (calc.get(y.id)?.fimMaisCedo ?? 0) > (calc.get(x.id)?.fimMaisCedo ?? 0) ? y : x,
+  );
+  const fimDoUltimo = calc.get(ultimo.id)?.fimMaisCedo ?? 0;
+  return atividades
+    .filter((a) => ENCERRAMENTO.test(nome(a)) && !NAO_E_ENCERRAMENTO.test(nome(a)))
+    .filter((a) => (calc.get(a.id)?.inicioMaisCedo ?? 0) < fimDoUltimo)
+    .map(
+      (a) =>
+        `Aviso: a atividade ${a.id} (${a.nome.slice(0, 80)}) começa no dia útil ${(calc.get(a.id)?.inicioMaisCedo ?? 0) + 1}, antes do aceite do último produto (${ultimo.id}, ${ultimo.produto}, termina no dia útil ${fimDoUltimo}). Encerramento, devolução e descarte de dados vêm depois do termo definitivo: sugere-se pôr ${ultimo.id} entre as predecessoras de ${a.id}.`,
+    );
+}
+
+/** Situação de um marco fixo: vencido antes de "cabe" (lição 121). */
+export function situacaoDaDataFixa(f: DataFixa): SituacaoPrazo {
+  return f.vencida ? "nao-confirmavel" : f.cabe ? "cabe" : "nao-cabe";
+}
+
+/** Meia-noite do dia: compara datas sem a hora. */
+function dia(d: Date): number {
+  return new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
 }
 
 /** Todas as atividades de que cada uma depende, direta ou indiretamente. */
@@ -310,6 +370,7 @@ export function calcularCronograma(atividades: AtividadeEap[], par: ParametrosCr
       const semAprovacao =
         par.aprovacaoDias === undefined &&
         porAncestral.some((x) => x?.aprovacaoCliente || x?.analiseDoContratante);
+      const vencida = par.hoje !== undefined && dia(iniFixo) < dia(par.hoje);
       datasFixas.push({
         atividade: a.id,
         inicio: iniFixo,
@@ -318,17 +379,20 @@ export function calcularCronograma(atividades: AtividadeEap[], par: ParametrosCr
         fimPredecessoras: fimPred,
         folgaCorrida,
         cabe,
+        ...(vencida ? { vencida } : {}),
         semAprovacao,
       });
       const janela = `${formatarDataCurta(iniFixo)} a ${formatarDataCurta(fimFixo ?? iniFixo)}`;
       problemas.push(
-        !cabe && fimPred
-          ? `Não cabe antes do marco: a atividade ${a.id} tem data fixa (${janela}, ${corridos} dias corridos), mas as predecessoras${par.aprovacaoDias !== undefined ? ", com a aprovação do cliente," : ""} só terminam em ${formatarDataCurta(fimPred)}, ${-(folgaCorrida ?? 0)} dia(s) corrido(s) depois do início da janela (conta do código, ${cal.descricao}). Sugere-se levar ao TAP como divergência.`
-          : `Atividade ${a.id} presa à data fixa: de ${janela}, ${corridos} dias corridos (campo em dias corridos).${
-              fimPred && folgaCorrida !== undefined
-                ? ` As predecessoras terminam em ${formatarDataCurta(fimPred)}: folga de ${folgaCorrida} dia(s) corrido(s) (${deslocamento - depoisDasPredecessoras} útil(eis)) até ${formatarDataCurta(iniFixo)} (conta do código, ${cal.descricao}).${semAprovacao ? " A conta está sem o tempo de aprovação do cliente, ainda não informado pelo GP: com ele, a folga diminui." : ""}`
-                : ""
-            }`,
+        vencida
+          ? `Não confirmável: a atividade ${a.id} tem data fixa (${janela}), que já passou em relação a hoje (${formatarDataCurta(par.hoje as Date)}). A conta do código (${cabe ? "caberia" : "não caberia"} a partir do início informado) vale só como intervalo; o marco não é executável como está e pede a decisão do contratante (nova data ou nova edição). Sugere-se levar ao TAP como divergência, ao registro de riscos e ao plano de mudanças.`
+          : !cabe && fimPred
+            ? `Não cabe antes do marco: a atividade ${a.id} tem data fixa (${janela}, ${corridos} dias corridos), mas as predecessoras${par.aprovacaoDias !== undefined ? ", com a aprovação do cliente," : ""} só terminam em ${formatarDataCurta(fimPred)}, ${-(folgaCorrida ?? 0)} dia(s) corrido(s) depois do início da janela (conta do código, ${cal.descricao}). Sugere-se levar ao TAP como divergência.`
+            : `Atividade ${a.id} presa à data fixa: de ${janela}, ${corridos} dias corridos (campo em dias corridos).${
+                fimPred && folgaCorrida !== undefined
+                  ? ` As predecessoras terminam em ${formatarDataCurta(fimPred)}: folga de ${folgaCorrida} dia(s) corrido(s) (${deslocamento - depoisDasPredecessoras} útil(eis)) até ${formatarDataCurta(iniFixo)} (conta do código, ${cal.descricao}).${semAprovacao ? " A conta está sem o tempo de aprovação do cliente, ainda não informado pelo GP: com ele, a folga diminui." : ""}`
+                  : ""
+              }`,
       );
     } else if (fixa !== undefined)
       problemas.push(
@@ -364,6 +428,7 @@ export function calcularCronograma(atividades: AtividadeEap[], par: ParametrosCr
     c.critica = c.folga === 0;
   }
   const lista = ordem.map((a) => calc.get(a.id) as AtividadeCalculada);
+  problemas.push(...encerramentoAntesDoAceite(atividades, calc));
   const criticas = lista.filter((a) => a.critica).sort((a, b) => a.inicioMaisCedo - b.inicioMaisCedo);
   const desvioTotal = Math.sqrt(criticas.reduce((s, a) => s + a.desvio ** 2, 0));
 
@@ -387,9 +452,34 @@ export function calcularCronograma(atividades: AtividadeEap[], par: ParametrosCr
     caminhoCritico: criticas.map((a) => a.id),
     dataFim,
     problemas,
-    conferenciaPrazo: conferirPrazo(total, par, dataFim, cal),
+    conferenciaPrazo: comDatasVencidas(
+      conferirPrazo(total, par, dataFim, cal),
+      par,
+      datasFixas.filter((f) => f.vencida && criticas.some((c) => c.id === f.atividade)),
+    ),
     datasFixas,
     calendario: cal,
+  };
+}
+
+/**
+ * A vigência herda o vencimento (lição 137): com o início do documento já passado, ou com um marco fixo vencido no
+ * caminho crítico, o "cabe" vira "não confirmável" e a conta vale só como intervalo.
+ */
+function comDatasVencidas(
+  c: Cronograma["conferenciaPrazo"],
+  par: ParametrosCronograma,
+  fixasVencidasNoCaminho: DataFixa[],
+): Cronograma["conferenciaPrazo"] {
+  if (!par.hoje || c.situacao === "nao-conferido") return c;
+  const inicioVencido = Boolean(par.inicio && par.inicioDoDocumento && dia(par.inicio) < dia(par.hoje));
+  if (!inicioVencido && !fixasVencidasNoCaminho.length) return c;
+  const motivo = inicioVencido
+    ? `o início do documento (${formatarDataCurta(par.inicio as Date)}) já passou`
+    : `o caminho crítico passa por marco fixo que já passou (${fixasVencidasNoCaminho.map((f) => `${f.atividade}, ${formatarDataCurta(f.inicio)}`).join("; ")})`;
+  return {
+    situacao: "nao-confirmavel",
+    texto: `${c.texto} Não confirmável: ${motivo} em relação a hoje (${formatarDataCurta(par.hoje)}); a conta vale só como intervalo até o contratante confirmar as datas.`,
   };
 }
 

@@ -73,6 +73,7 @@ Uma decisão por arquivo, numerada em ordem. Cada uma registra o contexto, o que
 | [0067](0067-revisores-em-paralelo-e-lista-r.md) | Skill de revisão: R e C só os da lista do pedido; revisores em paralelo com pasta de trabalho própria | aceita |
 | [0068](0068-segunda-instancia-com-o-passo-anterior.md) | TAP revisado na segunda instância das premissas; incoerência só com o que está no pedido; conferência velha quando o TAP revisado muda | aceita |
 | [0069](0069-caracteristicas-e-reexportacao-no-teste-externo.md) | Teste externo: --caracteristicas a partir da sugestão do código; o vigia reexporta o passo atual quando muda uma decisão que o pedido usa | aceita |
+| [0070](0070-placar-e-pedidos-da-rodada-3.md) | Data fixa vencida "não confirmável", encerramento antes do aceite, vago que reproduz o documento, premissa parecida, QU no topo, A2.8 e tokens no placar | aceita |
 
 Modelo para uma nova decisão:
 

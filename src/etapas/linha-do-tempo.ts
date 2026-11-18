@@ -14,6 +14,7 @@ import {
   type Cronograma,
   type DatasDoProduto,
   type SituacaoPrazo,
+  situacaoDaDataFixa,
 } from "./2-proposta/cronograma";
 import type { PontoDePartida, PrazoEmDias } from "./2-proposta/ponto-de-partida";
 import type { DadosProposta } from "./3-tap/entrada";
@@ -49,6 +50,7 @@ const NOME_SITUACAO: Record<SituacaoPrazo, string> = {
   cabe: "cabe",
   "nao-cabe": "não cabe",
   "nao-conferido": "não conferido pelo código",
+  "nao-confirmavel": "não confirmável (data já passou)",
 };
 
 /**
@@ -123,10 +125,14 @@ export function linhaDoTempo(x: EntradaLinha): MarcoDaLinha[] {
   for (const f of crono?.datasFixas ?? [])
     out.push({
       id: `fixa:${f.atividade}`,
-      situacao: f.cabe ? "cabe" : "nao-cabe",
+      situacao: situacaoDaDataFixa(f),
       texto: `Marco fixo da atividade ${f.atividade}: ${formatarData(f.inicio)} a ${formatarData(f.fim)}; as atividades anteriores terminam ${
         f.fimPredecessoras ? `em ${formatarData(f.fimPredecessoras)}` : "sem data (falta o início)"
-      }${f.folgaCorrida !== undefined ? `, folga de ${f.folgaCorrida} dia(s) corrido(s)` : ""}${f.semAprovacao ? " (sem o tempo de aprovação do cliente)" : ""}.`,
+      }${f.folgaCorrida !== undefined ? `, folga de ${f.folgaCorrida} dia(s) corrido(s)` : ""}${f.semAprovacao ? " (sem o tempo de aprovação do cliente)" : ""}.${
+        f.vencida
+          ? " A data já passou em relação a hoje: o marco não é executável como está; a conta vale só como intervalo (decisão do contratante: nova data ou nova edição)."
+          : ""
+      }`,
     });
   out.push({
     id: "vigencia",
@@ -150,6 +156,8 @@ export function linhaDaProposta(
   ponto: PontoDePartida,
   prop: PropostaDossie,
   rfp: DocumentoLido[],
+  /** Hoje: com ele, o marco fixo que já passou sai "não confirmável" (lição 121). */
+  hoje?: Date,
 ): MarcoDaLinha[] {
   const doGp = prop.parametros.inicio ? new Date(`${prop.parametros.inicio}T00:00:00`) : undefined;
   const fixo = doGp ? undefined : inicioFixo(ponto.analise.documentos);
@@ -160,8 +168,10 @@ export function linhaDaProposta(
     ? calcularCronograma(eap.atividades, {
         aprovacaoDias: prop.parametros.aprovacaoDias,
         inicio,
+        inicioDoDocumento: fixo ? `${fixo.origem.documento}, p. ${fixo.origem.pagina}` : undefined,
         prazoRfp: ponto.prazoExecucao,
         feriados: prop.parametros.feriados,
+        hoje,
       })
     : undefined;
   const conferidos = cronograma && c ? conferirPrazosDosProdutos(cronograma, c.produtos, rfp, inicio) : [];

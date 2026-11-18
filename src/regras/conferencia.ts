@@ -83,6 +83,9 @@ const SINONIMOS_DO_ITEM: Record<string, string[]> = {
   "B20.1": ["quadro de metas e indicadores", "metas e indicadores", "meios de aferição"],
   "B6.1": ["composição do custo", "composição dos custos", "memória de cálculo"],
   "B6.2": ["composição do custo", "composição dos custos", "memória de cálculo"],
+  // a redação do próprio app ("O GP responde pelos requisitos e relata o andamento"): o ausente era regra estreita,
+  // não falta (lição da rodada 3, item 2f)
+  "A2.8": ["responde pelos requisitos", "andamento dos requisitos", "relata o andamento"],
 };
 
 /** Texto padrão de proteção de dados e sigilo: cláusula de modelo, não compromisso vago do plano. */
@@ -120,6 +123,40 @@ export function entreAspas(texto: string, posicao: number, tamanho: number): boo
   const retas = (linhaAntes.match(/"/g) ?? []).length % 2 === 1 && linhaDepois.includes('"');
   const curvas = linhaAntes.lastIndexOf("“") > linhaAntes.lastIndexOf("”") && linhaDepois.includes("”");
   return retas || curvas;
+}
+
+/** Texto comparável: minúsculo, sem acento, só letras e números separados por um espaço. */
+function soPalavras(texto: string): string {
+  return normalizarTermo(texto)
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim();
+}
+
+/** Texto do edital e do TAP, comparável, para saber se o plano repete um trecho deles. */
+export function textoDasFontes(paginas: { texto: string }[]): string {
+  return ` ${soPalavras(paginas.map((p) => p.texto).join(" "))} `;
+}
+
+/**
+ * A expressão vaga, com as duas palavras vizinhas (antes ou depois), está no edital ou no TAP (lição da rodada 3,
+ * item 2c): o plano reproduz o documento ("prevê multa pela falta de entrega em tempo hábil"), e o vago é do
+ * documento, não do plano. Fica para a leitura do PMO e para a pergunta ao contratante.
+ */
+export function citaODocumento(texto: string, posicao: number, tamanho: number, fontes: string): boolean {
+  if (fontes.trim() === "") return false;
+  const termo = soPalavras(texto.slice(posicao, posicao + tamanho));
+  const antes = soPalavras(texto.slice(Math.max(0, posicao - 80), posicao))
+    .split(" ")
+    .filter(Boolean)
+    .slice(-2);
+  const depois = soPalavras(texto.slice(posicao + tamanho, posicao + tamanho + 80))
+    .split(" ")
+    .filter(Boolean)
+    .slice(0, 2);
+  const comAntes = antes.length === 2 ? ` ${[...antes, termo].join(" ")} ` : "";
+  const comDepois = depois.length === 2 ? ` ${[termo, ...depois].join(" ")} ` : "";
+  return Boolean((comAntes && fontes.includes(comAntes)) || (comDepois && fontes.includes(comDepois)));
 }
 
 /** "a definir pelo GP", "a ser definido pelo GP", "a definir: decisão do GP": pendência do GP, convenção do app. */
@@ -514,12 +551,15 @@ export function conferirPlano(e: EntradaConferencia): ResultadoConferencia {
   // ---------- vago ----------
   // "a definir pelo GP" é a convenção do app para decisão pendente do GP: não é vago; vai para a verificação própria
   const decisoesPendentes = new Map<string, number>();
+  const fontes = textoDasFontes([...(e.rfp ?? []), ...(e.tap ?? [])]);
   for (const padrao of PADROES_VAGO) {
     for (const o of procurarPadrao(e.pgp, padrao.re)) {
       const texto = e.pgp.find((p) => p.numero === o.pagina)?.texto ?? "";
       if (vagoQueNaoPesa(padrao.id, { frase: fraseEmVolta(texto, o.posicao) })) continue;
       // a expressão entre aspas é citação do documento (o plano a questiona), não vago do plano
       if (entreAspas(texto, o.posicao, o.termo.length)) continue;
+      // o plano reproduz o trecho do edital ou do TAP sem aspas: o vago é do documento, não do plano
+      if (citaODocumento(texto, o.posicao, o.termo.length, fontes)) continue;
       const parte = parteDaPosicao(o.pagina, o.posicao, e.mapa) ?? SEM_PARTE;
       if (padrao.id === "a-definir" && ehDecisaoDoGp(texto, o.posicao)) {
         decisoesPendentes.set(parte, (decisoesPendentes.get(parte) ?? 0) + 1);
