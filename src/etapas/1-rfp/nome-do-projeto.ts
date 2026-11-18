@@ -54,7 +54,8 @@ export function objetoCurto(objeto: string): string {
       "",
     )
     .replace(
-      /^contrata[cç][aã]o de (?:empresa|pessoa jur[ií]dica|institui[cç][aã]o)[^,]*?\s+(?:para|de|em)\s+(?:a |o |as |os )?/i,
+      // "Contratação de empresa…" e "Contratar pessoa jurídica especializada para…" (decisão 0084)
+      /^(?:contrata[cç][aã]o d[eao]s?|contratar)\s+(?:uma?\s+)?(?:empresa|pessoa jur[ií]dica|institui[cç][aã]o|consultoria)[^,]*?\s+(?:para|de|em)\s+(?:a |o |as |os )?/i,
       "",
     );
   t = t.split(/[;.](?:\s|$)/)[0] ?? t;

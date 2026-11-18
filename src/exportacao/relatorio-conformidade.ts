@@ -133,7 +133,7 @@ export function montarRelatorioConformidade(
     titulo: "Relatório de conformidade do plano",
     subtitulo:
       "Conferência do PGP feita por código, contra o TAP, a RFP e o conteúdo mínimo das fichas da skill PMO. Cada achado é sugestão: quem decide se procede é o GP.",
-    ...camposDoDossie(dossie),
+    ...camposDoDossie(dossie, 5),
     minuta: pendentes > 0 || finais.length === 0,
     geradoEm: agora,
     secoes,

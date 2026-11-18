@@ -13,7 +13,7 @@ import {
 } from "../etapas/1-rfp/leitura-pmo";
 import { estadoDoItem } from "../etapas/1-rfp/revisao";
 import { compactar } from "../texto/normalizar";
-import { camposDoDossie, type DocumentoExportavel, type Secao } from "./modelo";
+import { camposDoDossie, MARCA_PENDENTE, type DocumentoExportavel, type Secao } from "./modelo";
 
 /** Rótulos curtos, para caber na coluna sem quebrar a palavra. */
 const NOME_ROTULO = {
@@ -22,7 +22,7 @@ const NOME_ROTULO = {
   "decisao-gp": "Decisão do GP",
 } as const;
 const NOME_ESTADO = {
-  pendente: "Pendente",
+  pendente: `${MARCA_PENDENTE} Pendente`,
   aceito: "Aceito",
   editado: "Editado",
   descartado: "Descartado",
@@ -40,7 +40,7 @@ function base(dossie: Dossie, titulo: string, subtitulo: string, minuta: boolean
   return {
     titulo,
     subtitulo,
-    ...camposDoDossie(dossie),
+    ...camposDoDossie(dossie, 1),
     minuta,
     geradoEm: agora,
   };
@@ -324,7 +324,7 @@ export function montarPerguntas(
   );
   const perguntas: string[] = [];
   for (const i of pontos) {
-    const pendente = estadoDoItem(a.revisoes, i.id) === "pendente" ? " [pendente de revisão do GP]" : "";
+    const pendente = estadoDoItem(a.revisoes, i.id) === "pendente" ? ` ${MARCA_PENDENTE}` : "";
     if (i.pergunta)
       perguntas.push(
         `${perguntas.length + 1}. ${perguntaFinal(i, a.revisoes)} (${i.premissa ? `${i.premissa}; ` : ""}referência: ${origem(i)}${i.trava ? `; ${NOME_TRAVA[i.trava]}` : ""}.)${pendente}`,

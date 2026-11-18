@@ -27,6 +27,12 @@ describe("partes do nome", () => {
     expect(objetoCurto("Prestação de serviços de desenvolvi- mento de subsídios técnicos.")).toBe(
       "Prestação de serviços de desenvolvimento de subsídios técnicos",
     );
+    // decisão 0084: o verbo no infinitivo também sai do nome
+    expect(
+      objetoCurto(
+        "Contratar pessoa jurídica especializada para a elaboração do plano diretor de tecnologia.",
+      ),
+    ).toBe("Elaboração do plano diretor de tecnologia");
     expect(objetoCurto("a".repeat(5) + " " + "palavra ".repeat(20)).endsWith("…")).toBe(true);
   });
 });
