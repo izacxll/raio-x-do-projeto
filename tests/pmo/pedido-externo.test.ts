@@ -22,7 +22,7 @@ import { lerVersaoDoTapNoPedido, montarTapRevisado } from "../../src/pmo/tap-rev
 import {
   chaveDaSegundaInstancia,
   conferirSegundaInstancia,
-  pedidoSegundaInstancia,
+  montarPedidoDaSegunda,
   proximaRodada,
   segundaInstanciaEmTexto,
   sistemaDaSegundaInstancia,
@@ -134,6 +134,8 @@ interface Passo {
   documentos: string;
   pedido: string;
   schema: z.ZodType;
+  /** Linhas a mais no cabeçalho do pedido exportado (a rodada e o modelo da segunda instância). */
+  nota?: string;
 }
 
 /**
@@ -201,17 +203,40 @@ function montarSegunda(d: Dossie, passo: string): Passo {
   precisa(PASSOS[etapa]?.includes(alvo), `o passo "${alvo}" não existe na etapa ${etapa}`);
   const r = respostaDoPasso(d, alvo);
   precisa(r, `importe a resposta do passo "${alvo}" antes de conferir`);
+  // a mesma montagem do app (decisão 0071): o pedido do passo conferido, como foi ao PMO (esqueleto e o que o passo
+  // exige; decisão 0059), com a identidade do caso no topo (decisão 0066) e, nas premissas, o TAP revisado (decisão
+  // 0068). Na rodada seguinte, só os achados anteriores, o que mudou e as páginas citadas; --completa pede tudo.
+  const m = montarPedidoDaSegunda({
+    etapa,
+    passo: alvo,
+    resposta: r.resposta,
+    respostaEm: r.em,
+    pedidoDoPasso: montarPasso(d, alvo).pedido,
+    documentos: documentosDoPasso(d),
+    identidade: identidadeDoCaso(d.documentos, d.projeto.nome),
+    tapRevisado: tapRevisadoDoPasso(d, alvo),
+    guardada: d.segundaInstancia?.[chaveDaSegundaInstancia(etapa, alvo)],
+    completa: env.RAIO_X_SEGUNDA_COMPLETA === "sim",
+  });
   return {
     sistema: sistemaDaSegundaInstancia(etapa),
-    documentos: textoDosDocumentos(documentosDoPasso(d)),
-    // o pedido do passo conferido, como foi ao PMO (esqueleto e o que o passo exige; decisão 0059)
-    // com a identidade do caso no topo (decisão 0066): com dois casos lado a lado, o revisor confere que é este; nas
-    // premissas, o TAP revisado (decisão 0068), para ele não buscar uma versão velha em outro arquivo
-    pedido: pedidoSegundaInstancia(etapa, alvo, r.resposta, montarPasso(d, alvo).pedido, {
-      identidade: identidadeDoCaso(d.documentos, d.projeto.nome),
-      tapRevisado: tapRevisadoDoPasso(d, alvo),
-    }),
+    documentos: textoDosDocumentos(m.documentos),
+    pedido: m.pedido,
     schema: RespostaSegundaInstancia,
+    nota: [
+      `- **Rodada ${m.rodada} da segunda instância**${
+        m.compacta
+          ? `: pedido compacto (decisão 0071), com os achados da rodada anterior, os ${m.itensQueMudaram ?? 0} item(ns) que mudaram e só as páginas citadas (${m.documentos.reduce((n, x) => n + x.paginas.length, 0)}).`
+          : m.rodada > 1
+            ? ": pedido completo, com os achados da rodada anterior."
+            : "."
+      }`,
+      env.RAIO_X_MODELO_SEGUNDA
+        ? `- **Modelo desta rodada (decisão do GP):** ${env.RAIO_X_MODELO_SEGUNDA}. Quem lança o revisor usa este modelo.`
+        : "",
+    ]
+      .filter(Boolean)
+      .join("\n"),
   };
 }
 
@@ -525,7 +550,7 @@ describe.skipIf(MODO !== "exportar")("exportar o pedido de um passo do PMO", () 
           }`
         : ""
     }
-- Gerado em ${HOJE.toLocaleString("pt-BR")} pelo app (npm run exportar-pedido), com exatamente o que iria à API.
+${p.nota ? `${p.nota}\n` : ""}- Gerado em ${HOJE.toLocaleString("pt-BR")} pelo app (npm run exportar-pedido), com exatamente o que iria à API.
 - **Estimativa: cerca de ${tokens.toLocaleString("pt-BR")} tokens de entrada** (4 caracteres por token; sistema ${estimarTokens(p.sistema).toLocaleString("pt-BR")}, documentos ${estimarTokens(p.documentos).toLocaleString("pt-BR")}, pedido ${estimarTokens(p.pedido).toLocaleString("pt-BR")}).
 
 ## Como usar no claude.ai
@@ -644,6 +669,8 @@ describe.skipIf(MODO !== "importar")("importar a resposta do PMO (leitura indepe
             modelo: "claude.ai (segunda instância)",
             em: HOJE.toISOString(),
             deResposta: r.em,
+            // a resposta que esta conferência leu: a rodada seguinte manda só o que mudou (decisão 0071)
+            conferiu: r.resposta,
             ...(versaoDoTap ? { deAnterior: versaoDoTap } : {}),
             rodada,
           },

@@ -5,7 +5,9 @@
 // Regras:
 // - Achado alto ou médio na rodada: o vigia não exporta o próximo passo sem a decisão do GP. Com achado alto, "seguir"
 //   (segue com os achados) ou corrigir (salvar a resposta corrigida); com achado médio, "corrigir" ou "seguir".
-// - Rodada 1: a resposta corrigida vai a uma nova conferência (rodada 2).
+// - Rodada 1: a resposta corrigida vai a uma nova conferência (rodada 2), salvo quando a rodada 1 só teve achados
+//   baixos (ou nenhum): aí o padrão é "seguir com correção", sem rodada 2 (decisão 0071). Para conferir de novo
+//   mesmo assim, "rodada2ComBaixos" (true, ou a lista dos passos) no decisoes-do-gp.json.
 // - Da rodada 2 em diante, a reentrega não abre rodada nova: com o passo em "seguir" ou "corrigir", ela segue direto
 //   para o próximo passo, que sai com a versão nova, e o conferencia-*.md registra "GP seguiu com correção". Com achado
 //   ainda pendente e sem decisão, o vigia para; "maisUmaRodada" (salvo depois da última conferência) abre outra.
@@ -43,8 +45,9 @@ export function depoisDaConferencia(conf, decisao, nomes) {
 
 /**
  * Depois de importar uma resposta do passo (etapas 1 a 4). conf: a última conferência do passo, ou undefined;
- * mudou: a resposta é diferente da que foi conferida; decisao: { seguir, corrigir, maisUmaRodada, decisaoNova }
- * (decisaoNova: o decisoes-do-gp.json foi salvo depois da última conferência). Devolve { acao: "conferir" } (exporta a
+ * mudou: a resposta é diferente da que foi conferida; decisao: { seguir, corrigir, maisUmaRodada, decisaoNova,
+ * rodada2ComBaixos } (decisaoNova: o decisoes-do-gp.json foi salvo depois da última conferência; rodada2ComBaixos: o
+ * GP quer a rodada 2 mesmo com só achados baixos na rodada 1). Devolve { acao: "conferir" } (exporta a
  * segunda instância), { acao: "proximo", registro } ou { acao: "parar", motivo }.
  */
 export function depoisDaResposta(conf, mudou, decisao, nomes) {
@@ -66,6 +69,12 @@ export function depoisDaResposta(conf, mudou, decisao, nomes) {
       return {
         acao: "proximo",
         registro: `GP seguiu com correção: resposta corrigida depois da rodada ${conf.rodada} (${achadosEmTexto(conf)}), sem nova conferência.`,
+      };
+    // só achados baixos (ou nenhum) na rodada 1: segue com a correção, sem rodada 2 (decisão 0071)
+    if (!pendente(conf) && !decisao.rodada2ComBaixos)
+      return {
+        acao: "proximo",
+        registro: `GP seguiu com correção: a rodada ${conf.rodada} só teve achados de gravidade baixa (ou nenhum), e o padrão é seguir sem rodada 2 (decisão 0071; para conferir de novo, "rodada2ComBaixos" no decisoes-do-gp.json).`,
       };
     return { acao: "conferir" };
   }

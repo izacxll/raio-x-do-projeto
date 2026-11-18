@@ -75,9 +75,22 @@ export function conteudoDoPedido(opcoes: {
     };
     confere("só a SKILL.md no texto de sistema", nomes.length === 1 && ehSkill(nomes[0] ?? ""));
     confere(`SKILL.md da etapa ${etapa}`, skillDaEtapaCerta(arquivos, etapa));
-    confere("documentos do passo", /^=== Página /m.test(documentos));
-    confere("resposta a conferir no pedido", /## Resposta a conferir/.test(pedido));
-    confere("pedido do passo conferido, com o esqueleto do código", /<pedido-do-passo>/.test(pedido));
+    // rodada seguinte compacta (decisão 0071): os achados anteriores, o que mudou e só as páginas citadas (pode não
+    // haver nenhuma, quando nenhum achado nem item mudado cita o documento)
+    if (/## O que mudou na resposta desde a rodada/.test(pedido)) {
+      confere("achados da rodada anterior", /## Achados da rodada \d+/.test(pedido));
+      confere(
+        "o que mudou na resposta (antes e depois)",
+        /## O que mudou na resposta desde a rodada/.test(pedido),
+      );
+      conferencias.push(
+        `- ${/^=== Página /m.test(documentos) ? "ok" : "aviso"} · páginas citadas: ${(documentos.match(/^=== Página /gm) ?? []).length}`,
+      );
+    } else {
+      confere("documentos do passo", /^=== Página /m.test(documentos));
+      confere("resposta a conferir no pedido", /## Resposta a conferir/.test(pedido));
+      confere("pedido do passo conferido, com o esqueleto do código", /<pedido-do-passo>/.test(pedido));
+    }
     const texto = [
       `# O que foi no pedido — etapa ${etapa}, passo ${passo} (segunda instância)`,
       "",

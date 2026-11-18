@@ -13,6 +13,7 @@ Revisão em camadas, do mais barato ao mais caro: teste (código ou gabarito) �
 - **O passo anterior, quando vai, vai na versão final**, a que seguiu (depois do "seguir" ou da correção do GP, com os itens editados e sem os descartados), e o revisor não procura outra. Incoerência só com o que está no pedido. No Raio-X, o pedido da segunda instância do registro de premissas traz o TAP revisado (decisão 0068); os outros passos levam resumos do anterior no próprio pedido. Erro que evita: o revisor ler uma versão velha do passo anterior (a da última conferência) e apontar contradições já corrigidas.
 - No Raio-X, o pedido já vem pronto do vigia (`etapa-N-segunda-<passo>-*.md`, na pasta `pedidos/` do caso, fora do Git): use-o, não escreva outro. No app, a chamada da segunda instância monta o mesmo pedido (`src/pmo/segunda-instancia.ts`).
 - Diga a rodada (1, 2, 3…) e, a partir da 2, peça para não repetir o que já está tratado de forma razoável nem abrir questão de estilo.
+- **Da rodada 2 em diante, o pedido é compacto** (decisão 0071): os achados da rodada anterior, o que ela conferiu e passou, só os itens que mudaram (antes e depois) e só as páginas citadas nesses achados e itens. O revisor diz se cada achado foi resolvido, procura erro novo só no que mudou e não reconfere o resto. A resposta inteira de novo só quando o GP pede (`--completa` na exportação; "conferir a resposta inteira" no app). Erro que evita: cada revisor reler 230 a 320 mil caracteres por rodada para conferir meia dúzia de correções.
 
 ## 2. Rubrica (fixa)
 
@@ -28,7 +29,7 @@ Saída em JSON: `{achados:[{id,tipo,gravidade,onde,texto,evidencias,sugestao}], 
 
 ## 3. Lançar o agente
 
-- Um agente por saída, em segundo plano. O prompt traz: papel (revisor independente), onde está o pedido, a rubrica resumida, as regras (não inventar números, não citar nomes de pessoas, gravidade alta só quando muda escopo, prazo, preço, caixa, aceite ou quem executa) e o caminho exato do JSON de saída, com o comando de validação.
+- Um agente por saída, em segundo plano. **Modelo:** o da etapa; da rodada 2 em diante, o que o cabeçalho do pedido disser em "Modelo desta rodada (decisão do GP)" (no Agent, `model: "sonnet"` para o Sonnet). Sem essa linha, o mesmo da etapa. O prompt traz: papel (revisor independente), onde está o pedido, a rubrica resumida, as regras (não inventar números, não citar nomes de pessoas, gravidade alta só quando muda escopo, prazo, preço, caixa, aceite ou quem executa) e o caminho exato do JSON de saída, com o comando de validação.
 - **Diga o caso certo e prenda o revisor a ele.** O prompt diz o caso pelo nome, manda ler só o arquivo do pedido (caminho exato), sem abrir pastas de outros casos, e dá dois ou três termos que a resposta certa deve conter (tirados do documento do caso). Se o conteúdo for de outro caso, o revisor para e avisa, sem gravar achados. No Raio-X, o topo do pedido da segunda instância já traz a identidade do caso (arquivos, objeto com página e termos): use esses termos. Erro que evita: com vários casos lado a lado, o revisor ler o pedido de outro TR e trazer achados que não são deste.
 - **Revisores em paralelo, cada um na sua pasta.** Com mais de um revisor ao mesmo tempo, cada um grava os arquivos temporários numa pasta de trabalho própria, com o nome do caso, nunca numa pasta comum. Só o JSON de saída vai para o caminho exato do caso. Erro que evita: um revisor sobrescrever o arquivo temporário do outro e entregar a revisão de outro caso.
 - Peça para conferir no placar ou na conta do código antes de afirmar algo sobre ela.
@@ -44,6 +45,7 @@ Saída em JSON: `{achados:[{id,tipo,gravidade,onde,texto,evidencias,sugestao}], 
 ## 5. Limite de rodadas
 
 - Rodada 1 → corrigir → rodada 2. Depois da rodada 2, quem decide é o GP: seguir (corrige e passa) ou mais uma rodada.
+- **Rodada 1 só com achados baixos (ou nenhum):** o padrão é seguir com a correção, sem rodada 2 (decisão 0071). O GP pede a rodada 2 mesmo assim com "rodada2ComBaixos" (true, ou a lista dos passos) nas decisões do GP.
 - Achado alto não segue sem correção ou sem "seguir" explícito do GP.
 - No Raio-X, o vigia aplica este limite (decisões 0059 e 0060): achado médio também espera "corrigir" ou "seguir".
 

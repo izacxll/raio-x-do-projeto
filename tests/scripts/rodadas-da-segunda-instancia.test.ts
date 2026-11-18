@@ -133,6 +133,14 @@ describe("rodadas da segunda instância no teste externo (decisão 0060)", () =>
     ).toBe("conferir");
     // rodada 1 corrigida vai à rodada 2
     expect(depoisDaResposta({ rodada: 1, altas: 0, medias: 2 }, true, nada, nomes).acao).toBe("conferir");
+    // rodada 1 só com achados baixos: o padrão é seguir com a correção, sem rodada 2 (decisão 0071); configurável
+    const baixos = depoisDaResposta({ rodada: 1, altas: 0, medias: 0 }, true, nada, nomes);
+    expect(baixos.acao).toBe("proximo");
+    expect(baixos.registro).toMatch(/só teve achados de gravidade baixa.*sem rodada 2/);
+    expect(
+      depoisDaResposta({ rodada: 1, altas: 0, medias: 0 }, true, { ...nada, rodada2ComBaixos: true }, nomes)
+        .acao,
+    ).toBe("conferir");
     // seguir sem mudar a resposta: segue com a versão conferida
     const sem = depoisDaResposta({ rodada: 1, altas: 0, medias: 2 }, false, { ...nada, seguir: true }, nomes);
     expect(sem.acao).toBe("proximo");

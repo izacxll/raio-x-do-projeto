@@ -10,6 +10,9 @@
 //   grava também o PGP inteiro em DOCX na pasta de saída)
 //   etapas 4 e 5: --porte pequeno|médio|grande, --caracteristicas "campo=não,beneficiarios=não" e --pcs
 //   "PC1,PC3,…" na exportação (ficam no dossiê; sem eles, a sugestão do código, como na tela)
+// Segunda instância (passo segunda-<passo>), decisão 0071: a rodada seguinte sai compacta (achados da anterior, o que
+//   mudou e as páginas citadas); --completa pede a resposta inteira de novo; --modelo-segunda <id> grava no cabeçalho
+//   o modelo que o GP escolheu para a rodada (ex.: claude-sonnet-5-5).
 // Decisões do GP simuladas: a abordagem (padrão: a primeira sugerida) e as partes do PGP (padrão: as não dispensáveis).
 // A pasta de saída padrão é ../pedidos-raio-x/, fora do repositório. Pedido de plano real nunca vai para o Git.
 import { spawnSync } from "node:child_process";
@@ -68,6 +71,8 @@ const env = {
   RAIO_X_PCS: args.pcs ?? "",
   RAIO_X_MODALIDADE: args.modalidade ?? "",
   RAIO_X_CARACTERISTICAS: args.caracteristicas ?? "",
+  RAIO_X_SEGUNDA_COMPLETA: args.completa ? "sim" : "",
+  RAIO_X_MODELO_SEGUNDA: args["modelo-segunda"] ?? "",
 };
 delete env.ANTHROPIC_API_KEY;
 const r = spawnSync("npx", ["vitest", "run", "tests/pmo/pedido-externo.test.ts", "--silent=false"], {

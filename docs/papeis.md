@@ -21,6 +21,22 @@ Cada passo passa por três camadas, nesta ordem. Cada camada só recebe o que a 
 2. **Segunda instância, com a rubrica fixa:** a skill `revisao-segunda-instancia` (`.claude/skills/revisao-segunda-instancia/SKILL.md`) diz como montar o pedido isolado, a rubrica, a gravidade, como aplicar os achados e o limite de rodadas.
 3. **GP.** Decide o que corrigir e o que seguir.
 
+## Paridade entre o app e o teste externo
+
+O teste externo só vale como calibração se as duas pontas fizerem a mesma coisa. Conferido no código em 18/11/2026 (decisão 0071):
+
+| | App | Teste externo (vigia) |
+|---|---|---|
+| Chamada separada | sim: `chamarPmo` com o passo "segunda-instancia", sem o histórico do passo conferido | sim: um agente novo por pedido, que lê só o arquivo do pedido |
+| O que recebe | a skill recortada da etapa (`sistemaDaSegundaInstancia`), os documentos e o pedido; nunca o raciocínio de quem fez | o mesmo, exportado pelo mesmo código (`montarPedidoDaSegunda`) |
+| Rubrica | a do pedido (`pedidoSegundaInstancia`), a mesma da skill `revisao-segunda-instancia` | a mesma (é o mesmo pedido) |
+| Identidade do caso | no topo do pedido (decisão 0066) | a mesma |
+| Rodada 2 em diante | achados da rodada anterior, o que mudou e as páginas citadas (`pedidoDaRodadaSeguinte`); "conferir a resposta inteira" manda tudo, com os achados anteriores | o mesmo; `--completa` manda tudo |
+| Modelo da rodada 2 | o GP escolhe na tela (o da etapa ou o Sonnet, mais barato) | o GP grava "modeloRodada2" nas decisões; o cabeçalho do pedido diz o modelo |
+| Rodada 1 só com baixos | a tela sugere seguir com a correção; o GP decide | o vigia segue com a correção, sem rodada 2 (configurável com "rodada2ComBaixos") |
+
+Antes da decisão 0071, o app não mandava ao revisor os achados da rodada 1; no teste externo, eles iam à mão. Agora vão nas duas pontas.
+
 ## Protocolo de teste
 
 O teste ponta a ponta passa pelas 5 etapas, com a segunda instância em cada passo e no máximo 2 rodadas por passo; depois, decide o GP (seguir ou mais uma rodada). Os casos ficam fora do Git (`referencias/estudos-externos/`, decisão 0049); no Git, só o que é público ou disfarçado (gabarito, testes, decisões).

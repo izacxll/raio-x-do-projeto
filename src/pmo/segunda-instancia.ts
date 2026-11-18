@@ -2,8 +2,9 @@
 // Vai só a skill (sem as referências da etapa), os documentos e a resposta. O código confere as evidências que ela
 // cita, como faz com toda citação; achado com evidência não conferida continua visível, marcado.
 import textoSkill from "../../.claude/skills/pmo/SKILL.md?raw";
-import type { DocumentoLido } from "../dossie/esquema";
+import type { DocumentoLido, SegundaInstanciaDossie } from "../dossie/esquema";
 import { citacaoValeComoFato, conferirCitacao } from "./citacoes";
+import { diferencasDaResposta, documentosCitados, pedidoDaRodadaSeguinte } from "./segunda-rodada";
 import { type IdentidadeDoCaso, identidadeEmTexto } from "./identidade-do-caso";
 import { formatarTapRevisado, type TapRevisado } from "./tap-revisado";
 import { skillDaEtapa, textoDeSistema } from "./montagem";
@@ -83,7 +84,16 @@ export function pedidoSegundaInstancia(
   passo: string,
   resposta: unknown,
   pedidoDoPasso = "",
-  { identidade, tapRevisado }: { identidade?: IdentidadeDoCaso; tapRevisado?: TapRevisado } = {},
+  {
+    identidade,
+    tapRevisado,
+    anterior,
+  }: {
+    identidade?: IdentidadeDoCaso;
+    tapRevisado?: TapRevisado;
+    /** A conferência da rodada anterior (decisão 0071): os achados dela vão no pedido, para o revisor ver se saíram. */
+    anterior?: { rodada: number; resposta: RespostaSegundaInstancia };
+  } = {},
 ): string {
   return `# Segunda instância — conferência da resposta da etapa ${etapa}, passo ${passo}
 ${identidade ? `\n${identidadeEmTexto(identidade)}\n` : ""}
@@ -91,7 +101,7 @@ Você é a segunda instância (revisão em camadas; a rubrica fixa vai abaixo, e
 
 ## Pedido do passo conferido (como foi ao PMO, com o esqueleto do código)
 ${pedidoDoPasso.trim() ? `<pedido-do-passo>\n${pedidoDoPasso.trim()}\n</pedido-do-passo>` : "(o pedido do passo não veio: confira só contra os documentos e a skill, e diga isso em conferido)"}
-${tapRevisado ? `\n${formatarTapRevisado(tapRevisado)}\n` : ""}
+${tapRevisado ? `\n${formatarTapRevisado(tapRevisado)}\n` : ""}${anterior ? `\n${achadosDaRodadaAnterior(anterior)}\n` : ""}
 ## Resposta a conferir (JSON)
 \`\`\`json
 ${JSON.stringify(resposta, null, 2)}
@@ -109,6 +119,81 @@ A régua é o pedido do passo: o que ele exige, nem mais nem menos. Item do mét
 - conferido: o que você conferiu e passou, em frases curtas (inclusive os números R e C e as contas do esqueleto). Aparece sempre.
 - Precisão antes de cobertura: só aponte o que muda uma decisão do GP ou o que a FGV terá de fazer, entregar, cumprir ou pagar. Não refaça as contas do código: use as do esqueleto. Achado sobre número ou conta diz em que linha do esqueleto ele se apoia, porque o GP o confere no placar antes de corrigir.
 - Responda só com o objeto JSON, no schema enviado. Listas sem conteúdo ficam com [].`;
+}
+
+/** Os achados da rodada anterior no pedido completo (decisão 0071): o revisor diz se cada um foi resolvido. */
+function achadosDaRodadaAnterior(a: { rodada: number; resposta: RespostaSegundaInstancia }): string {
+  return [
+    `## Achados da rodada ${a.rodada} (a resposta abaixo foi corrigida depois deles)`,
+    ...(a.resposta.achados.length
+      ? a.resposta.achados.map(
+          (x) =>
+            `- ${x.id} · ${NOME_GRAVIDADE_SEGUNDA[x.gravidade]} · ${NOME_TIPO_SEGUNDA[x.tipo]} · ${x.onde}: ${x.texto}${x.sugestao ? ` Sugestão: ${x.sugestao}` : ""}`,
+        )
+      : ["- nenhum"]),
+    `Diga em "conferido" quais deles foram resolvidos; o não resolvido volta como achado, com o id dele no começo do "onde".`,
+  ].join("\n");
+}
+
+/** O pedido da segunda instância e os documentos que vão com ele. */
+export interface PedidoDaSegunda {
+  pedido: string;
+  documentos: DocumentoLido[];
+  rodada: number;
+  /** Rodada seguinte só com o diff, os achados anteriores e as páginas citadas (decisão 0071). */
+  compacta: boolean;
+  /** Quantos itens mudaram desde a rodada anterior (só na compacta). */
+  itensQueMudaram?: number;
+}
+
+/**
+ * Monta o pedido da segunda instância, igual no app e no teste externo (decisões 0057, 0059 e 0071):
+ * - rodada 1, ou sem a resposta conferida guardada: o pedido completo (pedido do passo, esqueleto, documentos);
+ * - rodada seguinte com a resposta mudada (e, nas premissas, o mesmo TAP revisado): o pedido compacto, com os achados
+ *   da rodada anterior, o que mudou na resposta e só as páginas citadas;
+ * - "completa": o pedido completo, com os achados da rodada anterior.
+ */
+export function montarPedidoDaSegunda(o: {
+  etapa: number;
+  passo: string;
+  resposta: unknown;
+  respostaEm: string;
+  pedidoDoPasso: string;
+  documentos: DocumentoLido[];
+  identidade?: IdentidadeDoCaso;
+  tapRevisado?: TapRevisado;
+  guardada?: SegundaInstanciaDossie;
+  completa?: boolean;
+}): PedidoDaSegunda {
+  const { etapa, passo, resposta, respostaEm, guardada, tapRevisado, identidade } = o;
+  const rodada = proximaRodada(guardada, respostaEm, tapRevisado?.versao);
+  const velha = conferenciaVelha(guardada, respostaEm, tapRevisado?.versao);
+  const mesmoTap =
+    !tapRevisado || guardada?.deAnterior === undefined || guardada.deAnterior === tapRevisado.versao;
+  if (!o.completa && guardada && velha === "resposta-mudou" && guardada.conferiu !== undefined && mesmoTap) {
+    const dif = diferencasDaResposta(guardada.conferiu, resposta);
+    return {
+      pedido: pedidoDaRodadaSeguinte(etapa, passo, rodada, guardada.resposta, dif, { identidade }),
+      documentos: documentosCitados(o.documentos, guardada.resposta.achados, dif),
+      rodada,
+      compacta: true,
+      itensQueMudaram: dif.length,
+    };
+  }
+  const anterior =
+    guardada && velha && velha !== "sem-conferencia"
+      ? { rodada: guardada.rodada ?? 1, resposta: guardada.resposta }
+      : undefined;
+  return {
+    pedido: pedidoSegundaInstancia(etapa, passo, resposta, o.pedidoDoPasso, {
+      identidade,
+      tapRevisado,
+      anterior,
+    }),
+    documentos: o.documentos,
+    rodada,
+    compacta: false,
+  };
 }
 
 export interface AchadoConferido extends AchadoSegundaInstancia {
