@@ -1,6 +1,7 @@
 // Etapa 5 na tela: mapa do PGP, características, premissas críticas e requisitos (confirmados pelo GP),
 // depois os achados, com a decisão do GP em cada um, e a exportação.
 import { useMemo, useState } from "react";
+import { aplicarSegundaEtapa5 } from "../../pmo/segunda-etapa-5";
 import {
   CARACTERISTICAS_PADRAO,
   type Caracteristicas,
@@ -199,12 +200,17 @@ export function ConferenciaPgp(props: Props) {
           verificacoes={resultado.verificacoes}
           conf={conf}
           atualizar={atualizar}
-          vereditos={conferirVereditos(
+          vereditos={aplicarSegundaEtapa5(
+            conferirVereditos(
+              conf.leituraPmo.resposta,
+              resultado.achados,
+              comCandidatos.condicionais,
+              conf.mapa,
+              documentos,
+            ),
+            // a revisão da segunda instância leve, se é desta leitura (decisão 0077)
+            conf.segundaLeve?.deLeitura === conf.leituraPmo.em ? conf.segundaLeve.resposta : undefined,
             conf.leituraPmo.resposta,
-            resultado.achados,
-            comCandidatos.condicionais,
-            conf.mapa,
-            documentos,
           )}
           leitura={conferirLeitura(
             conf.leituraPmo.resposta,
@@ -639,14 +645,25 @@ function Resultado({
           </tbody>
         </table>
         <p className="envio__obs">
-          Só contam os achados do código que o PMO confirmou ({confirmados.length} de{" "}
-          {vereditos.candidatos.length}); os outros estão abaixo, com o veredito. "Ausente" quer dizer não
-          localizado pelo código no plano: conferir no documento antes de decidir.
+          Só contam os achados do código que o PMO confirmou ou que a segunda instância devolveu (
+          {confirmados.length} de {vereditos.candidatos.length}); os outros estão abaixo, com o veredito.
+          "Ausente" quer dizer não localizado pelo código no plano: conferir no documento antes de decidir.
           {naoConferidos > 0 &&
             ` ${naoConferidos} itens dependem de interpretação e não foram conferidos pelo código.`}
           {naoVerificaveis > 0 &&
             ` ${naoVerificaveis} verificações ficaram não verificáveis por páginas sem texto legível.`}
         </p>
+        {vereditos.candidatos.some((c) => c.revisadoPelaSegunda) && (
+          <ul className="envio__obs" data-testid="devolvidos-pela-segunda">
+            {vereditos.candidatos
+              .filter((c) => c.revisadoPelaSegunda)
+              .map((c) => (
+                <li key={c.achado.id}>
+                  Voltou a contar pela segunda instância: {c.achado.titulo}. {c.revisadoPelaSegunda}
+                </li>
+              ))}
+          </ul>
+        )}
         <div className="acoes-exportar">
           <button className="botao" type="button" onClick={() => void baixar("docx")}>
             Relatório DOCX

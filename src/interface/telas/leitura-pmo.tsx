@@ -18,7 +18,7 @@ import { semRevisoesDoPmo } from "../../pmo/itens";
 import { RespostaLeitura } from "../../pmo/schemas/leitura";
 import type { Achado } from "../../regras/achado";
 import { EtiquetaRotulo, RotuloSecao } from "../componentes/basicos";
-import { SegundaInstancia } from "../componentes/segunda-instancia";
+import { SegundaInstanciaEtapa5 } from "../componentes/segunda-instancia-etapa-5";
 import { ConectarClaude, useChave } from "../componentes/conectar-claude";
 import { PassoPmoNaTela, UsoNaTela, useChamadaPmo } from "../componentes/passo-pmo";
 
@@ -144,15 +144,14 @@ export function LeituraDoPmo({
         aoCancelar={cancelar}
         envio="Ao clicar, o texto do plano, do TAP e da RFP vai para a API do Claude, pela sua chave, na organização da FGV, junto com os achados do código."
       >
+        {/* segunda instância leve (decisão 0077): só os vereditos "falso" e "regra_errada" e as premissas críticas */}
         {conf.leituraPmo && (
-          <SegundaInstancia
-            etapa={5}
-            passo="leitura"
-            resposta={conf.leituraPmo.resposta}
-            respostaEm={conf.leituraPmo.em}
+          <SegundaInstanciaEtapa5
+            conf={conf}
+            atualizar={atualizar}
             documentos={documentos}
-            modelo={modelo}
-            pedidoDoPasso={pedido ?? ""}
+            achadosDoCodigo={achadosDoCodigo}
+            condicionais={condicionais}
           />
         )}
         {conferidos.length > 0 && (

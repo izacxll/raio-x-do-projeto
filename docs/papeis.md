@@ -34,6 +34,7 @@ O teste externo só vale como calibração se as duas pontas fizerem a mesma coi
 | Rodada 2 em diante | achados da rodada anterior, o que mudou e as páginas citadas (`pedidoDaRodadaSeguinte`); "conferir a resposta inteira" manda tudo, com os achados anteriores | o mesmo; `--completa` manda tudo |
 | Modelo da rodada 2 | o GP escolhe na tela (o da etapa ou o Sonnet, mais barato) | o GP grava "modeloRodada2" nas decisões; o cabeçalho do pedido diz o modelo |
 | Rodada 1 só com baixos | a tela sugere seguir com a correção; o GP decide | o vigia segue com a correção, sem rodada 2 (configurável com "rodada2ComBaixos") |
+| Etapa 5 | segunda instância leve (decisão 0077): só os vereditos "falso" e "regra_errada" de achados do código, as páginas citadas e todas as premissas críticas que se aplicam; uma rodada, Sonnet por padrão; a revisão volta ao total | o mesmo pedido (`pedidoSegundaEtapa5`), no passo `segunda-leitura`, só quando há o que conferir |
 
 Antes da decisão 0071, o app não mandava ao revisor os achados da rodada 1; no teste externo, eles iam à mão. Agora vão nas duas pontas.
 

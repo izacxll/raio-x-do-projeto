@@ -154,7 +154,7 @@ function divergenciaDoRequisito(r: Requisito, e: EntradaTap): Divergencia {
 /** Produtos da proposta do dossiê que não se ligam a nenhum requisito da RFP. */
 function produtosSoNaProposta(e: EntradaTap): Divergencia[] {
   if (!e.dados) return [];
-  const numeros = new Set(e.ponto.requisitos.map((r) => r.numero));
+  const numeros = new Set(e.ponto.listaDeR.map((r) => r.numero));
   return e.dados.produtos
     .filter((x) => !x.requisitos.some((n) => numeros.has(n)))
     .map((x) => ({

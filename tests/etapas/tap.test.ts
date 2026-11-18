@@ -237,7 +237,10 @@ describe("respostas gravadas do PMO na etapa 3 (OEI)", () => {
     const v = conferirTap(entrada, t, itens, dossie.proposta!.premissasAplicaveis);
     const de = (id: string) => v.find((x) => x.id === id)!;
     expect(v.filter((x) => x.id.startsWith("elemento:")).every((x) => x.situacao === "ok")).toBe(true);
-    expect(de("requisitos").situacao).toBe("ok");
+    // lista única de R (decisão 0080): as entregas estão no TAP.3; as obrigações da OEI, que a resposta gravada (anterior
+    // à decisão) não cita, aparecem como sem destino no TAP
+    expect(de("requisitos").texto).not.toMatch(/não citados no TAP\.3/);
+    expect(de("requisitos").texto).toMatch(/Obrigações da RFP \(R\) sem destino em nenhum item do TAP: R\d+/);
     // o termo-chave é procurado em todos os trechos do item, inclusive os do contrato (decisão 0058)
     expect(de("citacoes").situacao).toBe("ok");
     expect(de("citacoes").texto).not.toMatch(/premissas:7/);

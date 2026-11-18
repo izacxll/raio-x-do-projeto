@@ -253,14 +253,20 @@ export interface LinhaRastreabilidade {
   tap: string[];
   eap: string[];
   atividades: string[];
-  situacao: "rastreado" | "sem-eap" | "sem-atividade";
+  situacao: "rastreado" | "sem-eap" | "sem-atividade" | "obrigacao-no-plano";
 }
 
 /** Matriz de rastreabilidade (B23): cada requisito da RFP até o TAP, a EAP e o cronograma. */
 export function rastrear(p: PgpDossie, e: EntradaPgp): LinhaRastreabilidade[] {
   const eap = p.escopo?.resposta.eap ?? [];
   const atividades = p.cronograma?.resposta.atividades ?? [];
-  return e.ponto.requisitos.map((r) => {
+  // os itens do plano que citam cada R (sem as observações do PMO): a obrigação costuma ir para a B17 ou os limites
+  const noPlano = new Set(
+    (["adaptacao", "escopo", "cronograma", "riscos", "planos", "execucao"] as const).flatMap((passo) =>
+      (p[passo]?.resposta.textos ?? []).flatMap((t) => t.itens.flatMap((i) => i.requisitos)),
+    ),
+  );
+  return e.ponto.listaDeR.map((r) => {
     const tap = e.requisitosTap.filter((t) => t.requisitos.includes(r.numero)).map((t) => t.texto);
     const pacotes = eap.filter((x) => x.requisitos.includes(r.numero)).map((x) => `${x.id} ${x.nome}`);
     const ativ = atividades.filter((a) => a.requisitos.includes(r.numero)).map((a) => `${a.id} ${a.nome}`);
@@ -270,7 +276,14 @@ export function rastrear(p: PgpDossie, e: EntradaPgp): LinhaRastreabilidade[] {
       tap,
       eap: pacotes,
       atividades: ativ,
-      situacao: !pacotes.length ? "sem-eap" : !ativ.length ? "sem-atividade" : "rastreado",
+      situacao:
+        r.tipo === "obrigacao" && !pacotes.length && noPlano.has(r.numero)
+          ? "obrigacao-no-plano"
+          : !pacotes.length
+            ? "sem-eap"
+            : !ativ.length
+              ? "sem-atividade"
+              : "rastreado",
     };
   });
 }

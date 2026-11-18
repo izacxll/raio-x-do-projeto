@@ -161,9 +161,24 @@ describe("contas do código na etapa 4", () => {
 
   it("rastreabilidade: todo requisito da RFP chega ao TAP, à EAP e ao cronograma", () => {
     const r = rastrear(dossie.pgp!, entrada);
-    expect(r.map((x) => x.requisito)).toEqual(entrada.ponto.requisitos.map((x) => x.numero));
-    expect(r.filter((x) => x.situacao !== "rastreado")).toEqual([]);
+    // a lista única de R (decisão 0080): entregas e obrigações; as entregas chegam ao TAP, à EAP e ao cronograma
+    expect(r.map((x) => x.requisito)).toEqual(entrada.ponto.listaDeR.map((x) => x.numero));
+    const entregas = new Set(entrada.ponto.requisitos.map((x) => x.numero));
+    expect(r.filter((x) => entregas.has(x.requisito) && x.situacao !== "rastreado")).toEqual([]);
     expect(r.find((x) => x.requisito === "R01")?.tap.length).toBeGreaterThan(0);
+  });
+});
+
+describe("lista única de R (decisão 0080)", () => {
+  it("o pedido traz entregas e obrigações numa lista só e diz quais R o GP descartou", () => {
+    const e: EntradaPgp = { ...entrada, ponto: { ...entrada.ponto, rDescartados: ["R99"] } };
+    const pedido = PEDIDOS_PGP.escopo(e, dossie.pgp!);
+    expect(pedido).toContain("a lista de R da etapa 1, uma só do início ao fim");
+    for (const r of entrada.ponto.listaDeR) expect(pedido).toContain(`${r.numero} (`);
+    expect(pedido).toMatch(/Descartados pelo GP na etapa 1 \(não são R[^)]*\): R99\./);
+    expect(entrada.ponto.listaDeR.length).toBe(
+      entrada.ponto.requisitos.length + entrada.ponto.obrigacoes.length,
+    );
   });
 });
 

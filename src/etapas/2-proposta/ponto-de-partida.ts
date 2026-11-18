@@ -28,6 +28,13 @@ export interface PontoDePartida {
    * o plano ainda trabalham com as entregas (as fases M2 a M4 levam as obrigações a cada um).
    */
   obrigacoes: Requisito[];
+  /**
+   * A lista de R, uma só do início ao fim (decisão 0080): todos os requisitos válidos da etapa 1, entregas e
+   * obrigações, na ordem do número. É a régua de "R da lista" em todos os pedidos e conferências.
+   */
+  listaDeR: Requisito[];
+  /** Os números R que o GP descartou na etapa 1: o pedido diz que eles saíram, para ninguém os tratar como R. */
+  rDescartados: string[];
   identificacao: ItemAnalise[];
   julgamento: ItemAnalise[];
   apresentacao: ItemAnalise[];
@@ -87,6 +94,12 @@ export function montarPontoDePartida(
     analise,
     requisitos: requisitosValidos(salva).filter((r) => r.tipo !== "obrigacao"),
     obrigacoes: requisitosValidos(salva).filter((r) => r.tipo === "obrigacao"),
+    listaDeR: [...requisitosValidos(salva)].sort((a, b) =>
+      a.numero.localeCompare(b.numero, "pt-BR", { numeric: true }),
+    ),
+    rDescartados: salva.requisitos
+      .map((r) => r.numero)
+      .filter((n) => !requisitosValidos(salva).some((r) => r.numero === n)),
     identificacao: daSecao("identificacao"),
     julgamento: daSecao("julgamento"),
     apresentacao,
