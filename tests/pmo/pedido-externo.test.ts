@@ -94,6 +94,7 @@ import {
 import { autoconferir } from "../../src/etapas/4-pgp/autoconferencia";
 import { textoDasHoras, textoDasHorasTotais } from "../../src/etapas/2-proposta/preco";
 import { PASSOS_PGP } from "../../src/etapas/4-pgp/passos";
+import { reguaQueMudouEmTexto, reguasQueMudaram } from "../../src/etapas/4-pgp/reguas";
 import { PEDIDOS_PGP, pgpAntesDoPasso } from "../../src/etapas/4-pgp/pedidos";
 import { linhaDaProposta } from "../../src/etapas/linha-do-tempo";
 import {
@@ -1071,6 +1072,15 @@ describe.skipIf(MODO !== "importar")("importar a resposta do PMO (leitura indepe
               ...cron.problemas.map((x) => `- ${x}`),
             );
         }
+      }
+      if (etapa === 4 && dossie.pgp) {
+        // régua corrigida num passo que não chegou às partes geradas antes (decisão 0078)
+        const mudaram = reguasQueMudaram(dossie.pgp);
+        linhas.push(
+          "",
+          `## Réguas que mudaram entre os passos (aviso): ${mudaram.length || "nenhuma"}`,
+          ...mudaram.map((r) => `- ${reguaQueMudouEmTexto(r)}`),
+        );
       }
       if (etapa === 4 && passo === "cronograma" && dossie.pgp?.cronograma) {
         // as contas do código do passo: início, rede com a data fixa, RACI, horas e o pacote de cada atividade

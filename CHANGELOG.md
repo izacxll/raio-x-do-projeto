@@ -9,6 +9,13 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 - **A revisão volta ao total:** veredito derrubado ou que cobre só em parte faz o achado contar, com a parte que falta.
 - **Substitui a segunda instância genérica** da tela da etapa 5 (pedido inteiro); no teste externo, o passo `segunda-leitura`.
 
+### Skill PMO 0.3.5 (decisão 0079)
+- **Etapa 5:** "falso" só com a evidência cobrindo o item inteiro (em parte é "sustenta", com o que falta); "a definir" com marco nomeado não é vago; a regra procurada no plano inteiro antes do "conflituoso".
+- **Etapa 4:** a correção de régua vai às partes geradas antes.
+
+### Aviso de régua corrigida que não chegou às partes anteriores (decisão 0078)
+- **Etapa 4:** a mesma duração chamada de "teto" num passo e de "referência" num passo seguinte vira aviso na autoconferência e no placar, apontando a parte que ficou para trás.
+
 ### Decisão pendente: segunda instância leve na etapa 5 (decisão 0077)
 - A pergunta, o custo medido nos dois casos do teste e os prós e contras, para a responsável decidir. Nada implementado.
 
@@ -17,22 +24,27 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 - **Formatos do app:** identificador de risco "xx01 · categoria" (B27.1); quem decide, com o comitê dispensado (A11.1); A14.10 dispensável em plano preditivo.
 - **"a definir"** com quando ou onde se define, ou ligado a uma questão aberta, deixa de ser vago.
 - Nos dois planos do teste externo, os 32 candidatos falsos não reaparecem.
+
 ### Remoção da documentação obsoleta (decisão 0075)
 - **Removidos de `docs/estudos/`:** a engenharia reversa da análise à mão (menos o rastro `07-regras-etapa-N.md`, que fica até a migração da decisão 0074), o estudo da etapa 1 do app antigo e os placares das fases M1 e M2. Os links apontam para o histórico no Git (commit `2ac4708`) ou para o documento que substituiu.
 
 ### Revisor de código e proposta de arquitetura da skill (decisão 0074)
 - **Subagente `revisor-codigo`:** code-review `low` em todo commit de código e `high` antes do merge de PR que mexe em exportação, importação, vigia, segurança ou pedidos; só lê e reporta.
 - **Decisão 0074 (aceita, migração depois do teste):** skill PMO base e um arquivo por etapa, com papel, entradas, saída, definição de pronto, armadilhas e rubrica da segunda instância.
+
 ### Skill PMO 0.3.4 (decisão 0073)
 - **Etapa 4:** regras da rodada 3 do teste (cronograma, riscos, planos e execução), cada uma com o erro que evita e exemplo inventado.
 - **Rótulos:** item que mistura documento e sugestão é sugestão; cadência sempre do GP.
+
 ### Resultado da etapa para apresentação (decisão 0072)
 - **`npm run resultado-da-etapa`:** um DOCX por etapa e por caso do teste externo, com o placar resumido e a segunda instância de cada passo (achados e o que o GP decidiu) e o resultado final da etapa, pelo exportador do app. Fora do Git; sempre minuta.
+
 ### Segunda instância mais barata e igual nas duas pontas (decisão 0071)
 - **Rodada 2 compacta:** os achados da rodada anterior, só os itens que mudaram e só as páginas citadas (no caso fiscal, de ~55 mil para ~15 mil tokens). A resposta inteira só a pedido do GP.
 - **Rodada 1 só com achados baixos:** segue com a correção, sem rodada 2 (configurável).
 - **Modelo da rodada 2** à escolha do GP (o da etapa ou o Sonnet, mais barato).
 - **Paridade:** o app passa a mandar os achados da rodada anterior; app e teste externo montam o pedido pela mesma função. Tabela em `docs/papeis.md`.
+
 ### Placar e pedidos da rodada 3 (decisão 0070)
 - **Data fixa já vencida** sai "não confirmável", e não "cabe"; com o início do documento vencido, a vigência também. No TAP, o marco vencido vira divergência própria.
 - **Aviso** quando o encerramento, a devolução ou o descarte de dados começa antes do último aceite.
