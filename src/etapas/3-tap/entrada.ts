@@ -4,7 +4,14 @@
 import type { DocumentoLido, Dossie } from "../../dossie/esquema";
 import { montarPropostaTecnica } from "../../exportacao/relatorio-proposta";
 import { documentoDeExportavel } from "../documento-virtual";
-import { calcularCronograma, conferirPrazosDosProdutos, type Cronograma } from "../2-proposta/cronograma";
+import {
+  calcularCronograma,
+  conferirPrazosDosProdutos,
+  dataDoDiaUtil,
+  datasDoProduto,
+  type Cronograma,
+  type DatasDoProduto,
+} from "../2-proposta/cronograma";
 import { lerValorEmReais } from "../2-proposta/preco";
 import { montarPontoDePartida, type PontoDePartida } from "../2-proposta/ponto-de-partida";
 import { lerContrato, type LidoDoContrato } from "./contrato";
@@ -26,6 +33,8 @@ export interface MarcoDaProposta {
   textoConferencia: string;
   /** Entrega dentro do prazo do produto na RFP (conta do código da etapa 2). */
   situacao: "cabe" | "nao-cabe" | "nao-conferido";
+  /** Primeira entrega, fim da inspeção e termo definitivo (decisão 0062), em dias úteis e, com o início, em data. */
+  datas?: DatasDoProduto & { dataPrimeiraEntrega?: Date; dataFimDaInspecao?: Date; dataTermo?: Date };
 }
 
 /** O que o código tira da proposta da etapa 2, quando ela está no dossiê. */
@@ -111,6 +120,22 @@ export function dadosDaProposta(
         dataFim: x.dataFim,
         textoConferencia: x.texto,
         situacao: x.situacao,
+        ...(() => {
+          const d = datasDoProduto(cronograma, x.produto);
+          return d
+            ? {
+                datas: {
+                  ...d,
+                  dataPrimeiraEntrega: dataDoDiaUtil(cronograma, inicio, d.primeiraEntrega),
+                  dataFimDaInspecao:
+                    d.fimDaInspecao !== undefined
+                      ? dataDoDiaUtil(cronograma, inicio, d.fimDaInspecao)
+                      : undefined,
+                  dataTermo: dataDoDiaUtil(cronograma, inicio, d.termo),
+                },
+              }
+            : {};
+        })(),
       }))
     : [];
   return {

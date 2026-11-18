@@ -50,13 +50,32 @@ function apenasPapel(d: DadoDoDocumento, papel: string): DadoDoDocumento {
 
 /** Entrega em data quando o início é conhecido; sem ele, o marco fica sem data e o texto avisa. */
 function quandoEntrega(m: MarcoDaProposta, d?: DadosProposta): string {
-  const dia = `dia útil ${m.fim} do cronograma`;
-  if (!m.dataFim || !d?.inicio)
+  return quando(m.fim, m.dataFim, d);
+}
+
+function quando(diaUtil: number, data: Date | undefined, d?: DadosProposta): string {
+  const dia = `dia útil ${diaUtil} do cronograma`;
+  if (!data || !d?.inicio)
     return `${dia}; sem o início do projeto informado, o marco não tem data (o início é decisão do GP na etapa 2)`;
   const base = d.inicioDoDocumento
     ? `início em ${formatarData(d.inicio)}, data do documento (${d.inicioDoDocumento}), a confirmar pelo GP`
     : `início em ${formatarData(d.inicio)}, informado pelo GP`;
-  return `${formatarData(m.dataFim)} (${dia}; ${base})`;
+  return `${formatarData(data)} (${dia}; ${base})`;
+}
+
+/**
+ * As três datas do marco (decisão 0062): primeira entrega, fim da inspeção e termo definitivo, quando a EAP tem o ciclo
+ * de aceite; sem ele, a entrega e o aviso sobre o tempo de aprovação. Nunca "sem a aprovação do cliente" quando a conta
+ * já tem as análises do contratante.
+ */
+function datasDoMarco(m: MarcoDaProposta, d?: DadosProposta): string {
+  const x = m.datas;
+  if (!x) return `${quandoEntrega(m, d)}, sem a aprovação do cliente`;
+  if (x.cicloDaEap)
+    return `primeira entrega: ${quando(x.primeiraEntrega, x.dataPrimeiraEntrega, d)}; fim da inspeção do contratante: ${quando(x.fimDaInspecao ?? x.termo, x.dataFimDaInspecao, d)}; termo definitivo (aprovação): ${quando(x.termo, x.dataTermo, d)}. As análises do contratante já estão na conta (ciclo de aceite da EAP)`;
+  return d?.aprovacaoDias === undefined
+    ? `primeira entrega: ${quando(x.primeiraEntrega, x.dataPrimeiraEntrega, d)}. Aprovação sem data: a EAP não tem a análise do contratante e o GP não informou o tempo de aprovação`
+    : `primeira entrega: ${quando(x.primeiraEntrega, x.dataPrimeiraEntrega, d)}; aprovação: ${quando(x.termo, x.dataTermo, d)}, com ${d.aprovacaoDias} dia(s) útil(eis) de aprovação (decisão do GP)`;
 }
 
 const reais = (v: number) => v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
@@ -186,8 +205,8 @@ export function dadosDosDocumentos(e: EntradaTap): DadoDoDocumento[] {
     out.push({
       id: `marco:${m.produto}`,
       elemento: "TAP.6",
-      nome: `Entrega de ${m.produto}`,
-      texto: `${m.nome}: ${quandoEntrega(m, e.dados)}, sem a aprovação do cliente. ${m.textoConferencia}`,
+      nome: `Entrega e aprovação de ${m.produto}`,
+      texto: `${m.nome}: ${datasDoMarco(m, e.dados)}. ${m.textoConferencia}`,
       onde: "proposta (dossiê), EAP",
       origem: "calculado",
     });

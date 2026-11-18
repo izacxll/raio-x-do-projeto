@@ -452,6 +452,48 @@ export interface ConferenciaProduto {
  * for achada pelo código e o número estiver no trecho. Contagem não informada é tratada como dias corridos (a
  * leitura mais apertada), e a tela diz isso.
  */
+/**
+ * As três datas de um produto na rede (decisão 0062), em dias úteis desde o início: a primeira entrega (o fim do que vem
+ * antes da primeira análise do contratante), o fim dessa análise (inspeção) e o termo definitivo ou aprovação (o fim do
+ * ciclo de aceite: ajuste, nova análise, termo). Sem análise do contratante na EAP, não há fim de inspeção, e o termo
+ * é a entrega mais o tempo de aprovação do GP (quando ele informa).
+ */
+export interface DatasDoProduto {
+  primeiraEntrega: number;
+  fimDaInspecao?: number;
+  termo: number;
+  /** A EAP tem a análise do contratante deste produto: as datas já contam o ciclo de aceite. */
+  cicloDaEap: boolean;
+}
+
+export function datasDoProduto(crono: Cronograma, produto: string): DatasDoProduto | undefined {
+  const as = crono.atividades.filter((a) => a.produto === produto);
+  if (!as.length) return undefined;
+  const termo = Math.max(...as.map((a) => a.fimMaisCedo));
+  const primeira = as.filter((a) => a.analise).sort((a, b) => a.inicioMaisCedo - b.inicioMaisCedo)[0];
+  if (!primeira)
+    return {
+      primeiraEntrega: Math.max(...as.map((a) => a.fimMaisCedo - a.aprovacao)),
+      termo,
+      cicloDaEap: false,
+    };
+  const antes = as.filter((a) => !a.analise && a.fimMaisCedo <= primeira.inicioMaisCedo);
+  return {
+    primeiraEntrega: antes.length
+      ? Math.max(...antes.map((a) => a.fimMaisCedo - a.aprovacao))
+      : primeira.inicioMaisCedo,
+    fimDaInspecao: primeira.fimMaisCedo,
+    termo,
+    cicloDaEap: true,
+  };
+}
+
+/** A data do dia útil n (1 = o início), quando o início é conhecido. */
+export function dataDoDiaUtil(crono: Cronograma, inicio: Date | undefined, n: number): Date | undefined {
+  if (!inicio || n <= 0) return undefined;
+  return somarDiasUteis(primeiroDiaUtil(inicio, crono.calendario), n - 1, crono.calendario);
+}
+
 export function conferirPrazosDosProdutos(
   crono: Cronograma,
   produtos: ProdutoSow[],

@@ -5,7 +5,7 @@
 import { describe, expect, it } from "vitest";
 import { analisarRfp } from "../../src/etapas/1-rfp/analisar-rfp";
 import { citacaoEhFraca } from "../../src/etapas/1-rfp/leitura-pmo";
-import { calcularCronograma, travasDaEap } from "../../src/etapas/2-proposta/cronograma";
+import { calcularCronograma, datasDoProduto, travasDaEap } from "../../src/etapas/2-proposta/cronograma";
 import { propostaAntesDoPasso, propostaInicial } from "../../src/etapas/2-proposta/proposta";
 import { conferirMarcosPelaConta } from "../../src/etapas/3-tap/conferencia-tap";
 import type { EntradaTap } from "../../src/etapas/3-tap/entrada";
@@ -190,7 +190,16 @@ describe("marco do TAP sem confirmação da conta (item 10e)", () => {
     dados: {
       inicio: new Date(2026, 9, 1),
       cronograma: {
-        atividades: [{ produto: "P1", dataFim: new Date(2026, 10, 20) }],
+        atividades: [
+          {
+            id: "1",
+            nome: "Relatório final",
+            produto: "P1",
+            dataFim: new Date(2026, 10, 20),
+            fimMaisCedo: 30,
+            inicioMaisCedo: 0,
+          },
+        ],
         conferenciaPrazo: { situacao: "cabe" },
       },
     },
@@ -269,10 +278,10 @@ describe("linha do tempo e conferência dos marcos (item 12b)", () => {
     produtos: [{ id: "P1", nome: "Relatório" }],
   });
 
-  it("início, entrega sem e com a análise do cliente e a vigência", () => {
+  it("início, primeira entrega, fim da inspeção, termo definitivo e a vigência (decisão 0062)", () => {
     expect(linha.map((m) => m.id)).toEqual(["inicio", "P1", "vigencia"]);
     expect(linha[1]?.texto).toMatch(
-      /entrega no dia útil 5 .* sem a análise do cliente; aprovado no dia útil 15/,
+      /primeira entrega no dia útil 5 .*; fim da inspeção do contratante no dia útil 15 .*; termo definitivo \(aprovação\) no dia útil 15/,
     );
   });
 
@@ -351,5 +360,94 @@ describe("segunda instância (item 12c)", () => {
     expect(r.altas).toBe(1);
     expect(r.achados[0]?.evidenciaConferida).toBe(false);
     expect(r.achados[1]?.evidenciaConferida).toBe(true);
+  });
+});
+
+describe("três datas por produto e marco pela atividade da EAP (decisão 0062)", () => {
+  // dados inventados: entrega, inspeção (até 10 dias úteis), ajuste e nova inspeção com termo definitivo
+  const ciclo = [
+    atv("1", "Elaborar o relatório", []),
+    atv("2", "Inspeção do contratante", ["1"], { analiseDoContratante: true, duracao: est(10, 10, 10) }),
+    atv("3", "Ajustar o relatório", ["2"], { duracao: est(3, 3, 3) }),
+    atv("4", "Nova inspeção e termo definitivo", ["3"], {
+      analiseDoContratante: true,
+      duracao: est(5, 5, 5),
+    }),
+  ];
+
+  it("o rótulo segue o ciclo de aceite: a 'entrega' não é mais o fim do ajuste", () => {
+    const crono = calcularCronograma(ciclo, {});
+    expect(datasDoProduto(crono, "P1")).toEqual({
+      primeiraEntrega: 5,
+      fimDaInspecao: 15,
+      termo: 23,
+      cicloDaEap: true,
+    });
+    const texto = linhaDoTempo({ cronograma: crono, produtos: [{ id: "P1", nome: "Relatório" }] })[1]!.texto;
+    expect(texto).toMatch(
+      /primeira entrega no dia útil 5; fim da inspeção do contratante no dia útil 15; termo definitivo \(aprovação\) no dia útil 23, pelo ciclo de aceite da EAP/,
+    );
+    // antes: "entrega no dia útil 18" (o fim do ajuste) e "a conta está sem ele" — 2 leituras enganosas por produto
+    expect(texto).not.toMatch(/dia útil 18|a conta está sem ele|sem a análise/);
+  });
+
+  it("sem a análise do contratante na EAP, diz que a aprovação fica sem data", () => {
+    const crono = calcularCronograma([atv("1", "Elaborar o relatório", [])], {});
+    const texto = linhaDoTempo({ cronograma: crono, produtos: [{ id: "P1", nome: "Relatório" }] })[1]!.texto;
+    expect(texto).toMatch(
+      /primeira entrega no dia útil 5; aprovação sem data: a EAP não tem a análise do contratante/,
+    );
+  });
+
+  const rede = (autorizacaoDepoisDoCampo: boolean) =>
+    calcularCronograma(
+      [
+        atv("a1", "Pedir à área a autorização da pesquisa", []),
+        atv(
+          "a2",
+          "Marco externo: autorização da pesquisa concedida pela área",
+          autorizacaoDepoisDoCampo ? ["c2"] : ["a1"],
+          {
+            duracao: est(0, 0, 0),
+          },
+        ),
+        atv("c1", "Treinar os aplicadores", autorizacaoDepoisDoCampo ? ["a1"] : ["a2"]),
+        atv("c2", "Pesquisa de campo durante a feira", ["c1"]),
+        atv("r1", "Redigir e entregar o relatório final", ["c2", "a2"], { duracao: est(10, 10, 10) }),
+      ].map((a) => ({ ...a, produto: "P3" })),
+      { inicio: new Date(2026, 2, 2) },
+    );
+  const entrada = (crono: ReturnType<typeof calcularCronograma>) =>
+    ({ dados: { inicio: new Date(2026, 2, 2), cronograma: crono } }) as unknown as EntradaTap;
+  const autorizacao = {
+    produto: "P3",
+    prazo: "Antes do início do campo; prazo sem termo inicial (pergunta).",
+    item: { texto: "Autorização da pesquisa concedida pela área (marco do contratante, antes do campo)." },
+  } as unknown as RespostaTap["marcos"][number];
+
+  it("autorização antes do campo: confere pela atividade do marco na rede, não pela entrega do produto final", () => {
+    const v = conferirMarcosPelaConta(entrada(rede(false)), [autorizacao], [], 180);
+    // antes: divergência obrigatória (comparava com a entrega do relatório final) — 1 alarme falso evitado
+    expect(v.situacao).toBe("ok");
+    expect(v.texto).toMatch(/Confirmados pela ordem da rede: .*a2 termina antes de c2 começar/);
+  });
+
+  it("a rede que põe a autorização depois do campo continua divergência obrigatória (0 alarme perdido)", () => {
+    const v = conferirMarcosPelaConta(entrada(rede(true)), [autorizacao], [], 180);
+    expect(v.situacao).toBe("atencao");
+    expect(v.texto).toMatch(
+      /Divergência obrigatória .*na rede, a2 .* termina no dia útil \d+ e c2 .* começa no dia útil \d+/,
+    );
+  });
+
+  it("marco sem atividade na EAP fica não conferido, sem alarme", () => {
+    const licenca = {
+      produto: "",
+      prazo: "Antes da obra.",
+      item: { texto: "Licença ambiental emitida antes da obra." },
+    } as unknown as RespostaTap["marcos"][number];
+    const v = conferirMarcosPelaConta(entrada(rede(false)), [licenca], [], 180);
+    expect(v.situacao).toBe("nao-conferido");
+    expect(v.texto).toMatch(/Não conferidos pelo código: .*não foi localizada pelo código — conferir/);
   });
 });

@@ -4,6 +4,11 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 
 ## [Não publicado]
 
+### Três datas por produto e marco pela atividade da EAP (decisão 0062)
+- **Linha do tempo e marcos do TAP:** primeira entrega, fim da inspeção do contratante e termo definitivo de cada produto; a conta não muda.
+- **"Sem a aprovação do cliente"** só quando a EAP não tem as análises do contratante.
+- **Marco do TAP:** conferido pela atividade da EAP que ele representa; "antes do campo" pela ordem da rede; sem a atividade, "não conferido".
+
 ### Compromissos de método no TAP, numeração e faixas (decisão 0061)
 - **Todo compromisso de método recebe C,** inclusive o que vem com a ficha do campo e começa por "Compromisso de método".
 - **Pedido do TAP:** leva os compromissos de método, com o destino esperado (descrição, entregas ou aceite); o destino é procurado também na aprovação.
@@ -128,6 +133,7 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 - **Contas novas do código:** pontos de texto × de documento ("a FGV tem?"), regra do preço e tabela de pontos por preço (com a equivalência em pontos técnicos), caixa pelo acumulado com a folga de cada parcela, quadro de equipe × produtividade (volume ÷ pessoas ÷ 21 dias úteis × teto escrito) e duração × vigência.
 - **Pedidos ao PMO** com o esqueleto do código e o teste de cada item; campos novos nos schemas (abordagem que muda o resultado, metodologia por fase, metas, riscos com gatilho, premissa com dependência, prazo e reajuste, quadro de equipe e volumes). Dossiês antigos abrem com os campos vazios.
 - **Gabaritos e leituras gravadas** da SMPED e da OEI na estrutura do método, e placar (`docs/estudos/placar-m2-etapa-2.md`).
+
 ### Skill PMO 0.3.1 (sobre a 0.3.0, ainda não publicada; mostrada à responsável antes de publicar)
 - **Etapa 5, veredito do PMO** (decisão 0052): achado do código é candidato até o veredito (sustenta, falso com o trecho, não se aplica, regra errada com a causa); a dispensa que só o plano declara é candidata (cabe ou não cabe); a busca do ausente do PMO vale na parte apontada, sem a evidência do achado.
 - **Etapa 4, cronograma:** dado que só existe depois de um evento entra depois do fim do evento, numa atividade própria de recebimento, ligada à premissa crítica de quem fornece.
