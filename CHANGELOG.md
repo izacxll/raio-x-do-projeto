@@ -4,6 +4,11 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 
 ## [Não publicado]
 
+### Etapa 5 sem falso ausente nem falso vago no plano do app (decisão 0076)
+- **Marca "presente" da etapa 4:** antes do ausente, o código procura no plano o texto do item que a autoconferência apontou.
+- **Formatos do app:** identificador de risco "xx01 · categoria" (B27.1); quem decide, com o comitê dispensado (A11.1); A14.10 dispensável em plano preditivo.
+- **"a definir"** com quando ou onde se define, ou ligado a uma questão aberta, deixa de ser vago.
+- Nos dois planos do teste externo, os 32 candidatos falsos não reaparecem.
 ### Remoção da documentação obsoleta (decisão 0075)
 - **Removidos de `docs/estudos/`:** a engenharia reversa da análise à mão (menos o rastro `07-regras-etapa-N.md`, que fica até a migração da decisão 0074), o estudo da etapa 1 do app antigo e os placares das fases M1 e M2. Os links apontam para o histórico no Git (commit `2ac4708`) ou para o documento que substituiu.
 

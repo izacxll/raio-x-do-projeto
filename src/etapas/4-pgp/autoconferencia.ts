@@ -21,7 +21,7 @@ import { confirmacaoInicial, proporMapa, type ParteConfirmada } from "../../regr
 import { documentoDeExportavel } from "../documento-virtual";
 import type { EntradaPgp } from "./entrada";
 import { itensDoPgp, pgpInicial } from "./pgp";
-import { itensValidos } from "../../pmo/itens";
+import { itensValidos, textoFinal } from "../../pmo/itens";
 import { NOME_PASSO_PGP, passoDaParte } from "./passos";
 
 export const NOME_PGP_GERADO = "Plano gerado na etapa 4";
@@ -245,4 +245,35 @@ export function conferirAutoconferenciaDoPgp(
 ): ResultadoAutoconferencia & { regenerar: string[] } {
   const r = conferirAutoconferencia(itensEsperadosDoPgp(p.gerar), marcasDoPgp(p));
   return { ...r, regenerar: partesARegenerar(r) };
+}
+
+/**
+ * Para a etapa 5 (decisão 0076): os itens do conteúdo mínimo que a autoconferência da etapa 4 marcou "presente", com
+ * o texto final (editado pelo GP, sem os descartados) de cada item apontado em "onde". O código procura esse texto no
+ * plano antes de dar o item como ausente. Sem a etapa 4 no dossiê, undefined.
+ */
+export function presentesPelaMarcaDoDossie(p: PgpDossie | undefined): Record<string, string[]> | undefined {
+  if (!p) return undefined;
+  // o texto e a parte de cada item: a marca só vale com ids da parte do item, como no ligarPeloId da etapa 4
+  const textoDe = new Map<string, { texto: string; parte: string }>();
+  for (const i of itensValidos(p.revisoes, itensDoPgp(p, []))) {
+    const texto = textoFinal(i, p.revisoes);
+    textoDe.set(i.item.id, { texto, parte: i.grupo.split(" — ")[0] ?? "" });
+    // risco: o PMO aponta pelo id do risco (rk9), não pelo id do item
+    const k = /^riscos:B27:(\d+)$/.exec(i.id)?.[1];
+    const risco = k !== undefined ? p.riscos?.resposta.riscos[Number(k)] : undefined;
+    if (risco) textoDe.set(risco.id, { texto, parte: "B27" });
+  }
+  const out: Record<string, string[]> = {};
+  for (const m of marcasDoPgp(p)) {
+    if (m.estado !== "presente") continue;
+    const parte = m.item.trim().split(".")[0];
+    const textos = (m.onde ?? "")
+      .split(/[\s,;]+|\ba\b/)
+      .map((x) => textoDe.get(x.trim()))
+      .filter((x) => x?.parte === parte)
+      .map((x) => x!.texto);
+    if (textos.length) out[m.item.trim()] = [...(out[m.item.trim()] ?? []), ...textos];
+  }
+  return out;
 }

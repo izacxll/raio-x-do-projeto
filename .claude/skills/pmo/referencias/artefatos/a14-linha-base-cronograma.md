@@ -64,7 +64,7 @@ versao: 0.3.2
   - fonte: PMBOK 6, 6.2, p. 185 (PDF 221); glossário, pacote de planejamento, p. 717 (PDF 753); Rework RW-037 (https://resources.rework.com/libraries/project-management/rolling-wave-planning)
   - sinais: "onda" | "ondas sucessivas" | "pacote de planejamento" | "detalhamento posterior"
   - confere: código
-  - dispensa: porte pequeno ou uma fase
+  - dispensa: porte pequeno ou uma fase ou abordagem preditiva
 
 ## Perguntas de qualidade
 - A linha de base tem data e aprovação, ou é um rascunho com o nome de linha de base? (Rework RW-029)

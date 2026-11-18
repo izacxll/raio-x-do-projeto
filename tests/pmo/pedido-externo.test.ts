@@ -7,7 +7,11 @@
 import { tapDoDossieComoDocumento } from "../../src/etapas/4-pgp/entrada";
 import { conferirQuestoes, questoesDoCodigo, referenciasDoPlano } from "../../src/etapas/4-pgp/questoes";
 import { montarPgp } from "../../src/exportacao/relatorio-pgp";
-import { caracteristicasDoPgp, pgpComoDocumento } from "../../src/etapas/4-pgp/autoconferencia";
+import {
+  caracteristicasDoPgp,
+  pgpComoDocumento,
+  presentesPelaMarcaDoDossie,
+} from "../../src/etapas/4-pgp/autoconferencia";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { conteudoDoPedido } from "./conteudo-do-pedido";
 import { basename, dirname, join, resolve } from "node:path";
@@ -287,6 +291,8 @@ function entradaDaConferencia(d: Dossie) {
       caracteristicas,
       premissasAplicaveis,
       requisitos: [],
+      // como na tela: o que a autoconferência da etapa 4 marcou "presente" (decisão 0076)
+      presentesPelaMarca: presentesPelaMarcaDoDossie(d.pgp),
     },
     proposta,
   );
