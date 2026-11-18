@@ -24,11 +24,11 @@ import { RespostaSegundaInstancia } from "../../src/pmo/schemas/segunda-instanci
 import { RespostaSegundaEtapa5 } from "../../src/pmo/schemas/segunda-etapa-5";
 import {
   deveConferirEtapa5,
-  documentosDaSegundaEtapa5,
-  pedidoSegundaEtapa5,
+  montarSegundaEtapa5,
   segundaEtapa5EmTexto,
   vereditosAConferir,
 } from "../../src/pmo/segunda-etapa-5";
+import { semRevisoesDoPmo } from "../../src/pmo/itens";
 import { identidadeDoCaso } from "../../src/pmo/identidade-do-caso";
 import { lerVersaoDoTapNoPedido, montarTapRevisado } from "../../src/pmo/tap-revisado";
 import {
@@ -214,36 +214,35 @@ function documentosDoPasso(d: Dossie): DocumentoLido[] {
  * Etapa 5 (decisão 0077): a segunda instância leve, como na tela. Só os vereditos "falso" e "regra_errada", as páginas
  * que eles e os achados citam e as premissas críticas que se aplicam; uma rodada, no modelo mais barato por padrão.
  */
-function montarSegundaEtapa5(d: Dossie, leitura: z.infer<typeof RespostaLeitura>): Passo {
+function segundaDaEtapa5(d: Dossie, leitura: z.infer<typeof RespostaLeitura>): Passo {
   const c = entradaDaConferencia(d);
   const documentos = [c.pgp, ...(c.tap ? [c.tap] : []), ...(c.rfp ? [c.rfp] : [])];
   const vd = conferirVereditos(leitura, c.achados, c.condicionais, c.mapa, documentos);
+  // a mesma montagem da tela (paridade): o pedido, as páginas e a identidade pelos documentos do dossiê
+  const m = montarSegundaEtapa5({
+    leitura,
+    candidatos: vd.candidatos,
+    partes: PARTES_PGP,
+    premissas: PREMISSAS_CRITICAS,
+    premissasAplicaveis: c.premissasAplicaveis,
+    documentos,
+    mapa: c.mapa,
+    identidade: identidadeDoCaso(d.documentos, d.projeto.nome),
+  });
   precisa(
-    deveConferirEtapa5(leitura, vd.candidatos),
+    m.quantos > 0,
     'a leitura do PMO não tem veredito "falso" nem "regra_errada" de achado do código: a segunda instância leve não roda (decisão 0077)',
   );
   return {
     sistema: sistemaDaSegundaInstancia(5),
-    documentos: textoDosDocumentos(
-      documentosDaSegundaEtapa5(
-        documentos,
-        vereditosAConferir(leitura, vd.candidatos),
-        vd.candidatos.map((x) => x.achado),
-      ),
-    ),
-    pedido: pedidoSegundaEtapa5({
-      leitura,
-      candidatos: vd.candidatos,
-      partes: PARTES_PGP,
-      premissas: PREMISSAS_CRITICAS,
-      premissasAplicaveis: c.premissasAplicaveis,
-      pgp: c.pgp.paginas,
-      identidade: identidadeDoCaso(d.documentos, d.projeto.nome),
-    }),
+    documentos: textoDosDocumentos(m.documentos),
+    pedido: m.pedido,
     schema: RespostaSegundaEtapa5,
     nota: [
       '- **Segunda instância leve da etapa 5, rodada única** (decisão 0077): os vereditos "falso" e "regra_errada", as páginas citadas e as premissas críticas que se aplicam.',
       `- **Modelo desta rodada (decisão do GP):** ${env.RAIO_X_MODELO_SEGUNDA || "claude-sonnet-5-5 (padrão da decisão 0077)"}. Quem lança o revisor usa este modelo.`,
+      // a leitura que foi conferida: a importação confere que é a mesma (revisão high, 0077)
+      `- Leitura conferida: ${d.conferencia?.leituraPmo?.em ?? "—"}`,
     ].join("\n"),
   };
 }
@@ -253,7 +252,7 @@ function montarSegunda(d: Dossie, passo: string): Passo {
   precisa(PASSOS[etapa]?.includes(alvo), `o passo "${alvo}" não existe na etapa ${etapa}`);
   const r = respostaDoPasso(d, alvo);
   precisa(r, `importe a resposta do passo "${alvo}" antes de conferir`);
-  if (etapa === 5) return montarSegundaEtapa5(d, r.resposta as z.infer<typeof RespostaLeitura>);
+  if (etapa === 5) return segundaDaEtapa5(d, r.resposta as z.infer<typeof RespostaLeitura>);
   // a mesma montagem do app (decisão 0071): o pedido do passo conferido, como foi ao PMO (esqueleto e o que o passo
   // exige; decisão 0059), com a identidade do caso no topo (decisão 0066) e, nas premissas, o TAP revisado (decisão
   // 0068). Na rodada seguinte, só os achados anteriores, o que mudou e as páginas citadas; --completa pede tudo.
@@ -691,6 +690,18 @@ describe.skipIf(MODO !== "importar")("importar a resposta do PMO (leitura indepe
       // segunda instância leve (decisão 0077): guarda a revisão no dossiê e grava conferencia-etapa-5-leitura-*.md
       const leitura = dossie.conferencia?.leituraPmo;
       precisa(leitura, "importe a leitura da etapa 5 antes da segunda instância");
+      // a revisão vale para a leitura que foi no pedido: com outra leitura no dossiê, ela não se aplica
+      const pedidoExportado = join(
+        dirname(resolve(env.RAIO_X_ARQUIVO ?? "")),
+        `etapa-5-${passo}-${basename(dossie.documentos.find((x) => x.papel === "rfp")?.nomeArquivo ?? "rfp", ".pdf")}.md`,
+      );
+      const daLeitura = existsSync(pedidoExportado)
+        ? /- Leitura conferida: (\S+)/.exec(readFileSync(pedidoExportado, "utf8"))?.[1]
+        : undefined;
+      precisa(
+        !daLeitura || daLeitura === leitura.em,
+        `a leitura do PMO mudou depois do pedido da segunda instância (pedido: ${daLeitura}; dossiê: ${leitura.em}): exporte a segunda instância de novo`,
+      );
       const resposta = v.data as z.infer<typeof RespostaSegundaEtapa5>;
       dossie = {
         ...dossie,
@@ -715,7 +726,7 @@ describe.skipIf(MODO !== "importar")("importar a resposta do PMO (leitura indepe
       const arq = join(dirname(resolve(env.RAIO_X_ARQUIVO ?? "")), `conferencia-etapa-5-leitura-${base}.md`);
       writeFileSync(
         arq,
-        `${segundaEtapa5EmTexto(resposta, vd)}\n\n${tokensDoPedidoExportado(5, passo, base)}\n`,
+        `${segundaEtapa5EmTexto(resposta, vd, leitura.resposta, [c.pgp, ...(c.tap ? [c.tap] : []), ...(c.rfp ? [c.rfp] : [])])}\n\n${tokensDoPedidoExportado(5, passo, base)}\n`,
       );
       console.log(`Conferência: ${arq}`);
       return;
@@ -1281,6 +1292,10 @@ describe.skipIf(MODO !== "importar")("importar a resposta do PMO (leitura indepe
               proximoRequisito: 1,
               decisoes: {},
             }),
+            // como a tela (leitura-pmo.tsx): as decisões do GP sobre a leitura anterior saem, o plano fica ligado
+            pgpId: c.pgp.id,
+            decisoes: semRevisoesDoPmo(dossie.conferencia?.decisoes ?? {}),
+            executadaEm: HOJE.toISOString(),
             leituraPmo: { resposta, modelo: "claude.ai (leitura independente)", em: HOJE.toISOString() },
           },
         };

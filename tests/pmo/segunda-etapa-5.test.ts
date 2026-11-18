@@ -8,15 +8,14 @@ import type { RespostaSegundaEtapa5 } from "../../src/pmo/schemas/segunda-etapa-
 import {
   aplicarSegundaEtapa5,
   deveConferirEtapa5,
-  documentosDaSegundaEtapa5,
-  pedidoSegundaEtapa5,
+  montarSegundaEtapa5,
   segundaEtapa5EmTexto,
   trechosDaPremissa,
   vereditosAConferir,
 } from "../../src/pmo/segunda-etapa-5";
 import type { Achado } from "../../src/regras/achado";
 
-const achado = (id: string, pagina = 4): Achado =>
+const achado = (id: string, pagina?: number): Achado =>
   ({
     id,
     tipo: "ausente",
@@ -28,7 +27,9 @@ const achado = (id: string, pagina = 4): Achado =>
     origemCategoria: "parte",
     titulo: `${id} não localizado pelo código`,
     descricao: "O conteúdo mínimo não foi localizado.",
-    evidencias: [{ documento: "pgp", pagina, trecho: "x", rotulo: `PGP, p. ${pagina}` }],
+    evidencias: pagina
+      ? [{ documento: "pgp", pagina, trecho: "x", rotulo: `PGP, p. ${pagina}` }]
+      : [{ documento: "ficha", trecho: "item", rotulo: "Ficha" }],
     sugestao: "",
   }) as unknown as Achado;
 
@@ -55,6 +56,7 @@ const leitura = {
       motivo: "O plano diz quem decide.",
     },
     { achado: "conteudo-minimo:B27:B27.1", veredito: "sustenta", evidencias: [], motivo: "" },
+    { achado: "conteudo-minimo:B13:B13.7", veredito: "nao_se_aplica", evidencias: [], motivo: "Sem campo." },
     { achado: "id-que-nao-existe-mais", veredito: "falso", evidencias: [], motivo: "" },
   ],
   dispensas: [],
@@ -62,11 +64,29 @@ const leitura = {
 
 const candidatos = [
   candidato(achado("conteudo-minimo:A8:A8.2"), "falso"),
-  candidato(achado("conteudo-minimo:A11:A11.1", 12), "regra-errada"),
-  candidato(achado("conteudo-minimo:B27:B27.1"), "sustenta"),
+  candidato(achado("conteudo-minimo:A11:A11.1"), "regra-errada"),
+  candidato(achado("conteudo-minimo:B27:B27.1", 30), "sustenta"),
+  candidato(achado("conteudo-minimo:B13:B13.7", 31), "nao-se-aplica"),
 ];
 
-describe("quando roda e o que confere", () => {
+const mapa = [
+  { codigo: "A8", situacao: "presente", paginaInicial: 8, paginaFinal: 9 },
+  { codigo: "A11", situacao: "presente", paginaInicial: 12, paginaFinal: 15 },
+  { codigo: "B3", situacao: "presente", paginaInicial: 20, paginaFinal: 20 },
+  { codigo: "B27", situacao: "presente", paginaInicial: 30, paginaFinal: 30 },
+];
+
+const doc = (papel: DocumentoLido["papel"], n: number, texto = (k: number) => `p${k}`) =>
+  ({
+    id: papel,
+    papel,
+    nomeArquivo: `${papel}.pdf`,
+    totalPaginas: n,
+    lidoEm: "x",
+    paginas: Array.from({ length: n }, (_, k) => ({ numero: k + 1, texto: texto(k + 1), origem: "texto" })),
+  }) as unknown as DocumentoLido;
+
+describe("quando roda e o que vai ao revisor", () => {
   it('só os "falso" e "regra_errada" de achados que ainda são candidatos', () => {
     expect(vereditosAConferir(leitura, candidatos).map((v) => v.achado)).toEqual([
       "conteudo-minimo:A8:A8.2",
@@ -74,56 +94,40 @@ describe("quando roda e o que confere", () => {
     ]);
     expect(deveConferirEtapa5(leitura, candidatos)).toBe(true);
     expect(deveConferirEtapa5(leitura, [])).toBe(false);
-    expect(deveConferirEtapa5(undefined, candidatos)).toBe(false);
   });
 
-  it("só as páginas citadas pelos vereditos e pelos achados", () => {
-    const doc = (papel: DocumentoLido["papel"], n: number) =>
-      ({
-        id: papel,
-        papel,
-        nomeArquivo: `${papel}.pdf`,
-        totalPaginas: n,
-        lidoEm: "x",
-        paginas: Array.from({ length: n }, (_, k) => ({
-          numero: k + 1,
-          texto: `p${k + 1}`,
-          origem: "texto",
-        })),
-      }) as unknown as DocumentoLido;
-    const docs = documentosDaSegundaEtapa5(
-      [doc("pgp", 20), doc("tap", 5)],
-      vereditosAConferir(leitura, candidatos),
-      candidatos.slice(0, 2).map((c) => c.achado),
-    );
-    expect(docs.map((d) => [d.papel, d.paginas.map((p) => p.numero)])).toEqual([["pgp", [4, 9, 12]]]);
-  });
-
-  it("o pedido traz o item da ficha, a evidência, a régua do item inteiro e cada premissa crítica que se aplica", () => {
-    const pc = PREMISSAS_CRITICAS[0]!;
-    const pgp = [
-      {
-        numero: 3,
-        origem: "texto" as const,
-        texto: `${pc.codigo}: premissa escrita no registro.`,
-        caracteres: 40,
-      },
-    ];
-    const p = pedidoSegundaEtapa5({
+  it("as páginas citadas e as da parte de cada achado conferido; nada dos outros candidatos", () => {
+    const m = montarSegundaEtapa5({
       leitura,
       candidatos,
       partes: PARTES_PGP,
       premissas: PREMISSAS_CRITICAS,
-      premissasAplicaveis: { [pc.codigo]: true },
-      pgp,
+      premissasAplicaveis: {},
+      documentos: [doc("pgp", 40), doc("tap", 5)],
+      mapa,
     });
-    expect(p).toMatch(/## Vereditos a conferir\n- \*\*conteudo-minimo:A8:A8\.2\*\* · veredito do PMO: falso/);
-    expect(p).toMatch(/item da ficha: A8\.2 /);
-    expect(p).toContain('evidência do PMO: pgp, p. 9: "Papéis: o GP conduz o processo de riscos"');
-    expect(p).toContain("cobre o **item inteiro** da ficha, não só o tema");
-    expect(p).toMatch(new RegExp(`## Premissas críticas que se aplicam \\(1\\)\\n- \\*\\*${pc.codigo} — `));
-    expect(p).not.toContain("B27.1");
-    expect(trechosDaPremissa(pc, pgp)).toEqual([`p. 3: ${pc.codigo}: premissa escrita no registro.`]);
+    expect(m.quantos).toBe(2);
+    // A8: p. 8-9 (parte) e 9 (citada); A11: p. 12-14 (parte, até 3); nada do B27 (p. 30) nem do B13 (p. 31)
+    expect(m.documentos.map((d) => [d.papel, d.paginas.map((p) => p.numero)])).toEqual([
+      ["pgp", [8, 9, 12, 13, 14]],
+    ]);
+    expect(m.pedido).toMatch(/item da ficha: A8\.2 /);
+    expect(m.pedido).toContain("cobre o **item inteiro** da ficha, não só o tema");
+    expect(m.pedido).toContain("sem_base");
+    expect(m.pedido).not.toContain("B27.1");
+  });
+
+  it("premissa crítica por lugar (B3, B27, A11); o lugar sem trecho é não localizado, não ausente", () => {
+    const pc = PREMISSAS_CRITICAS[0]!;
+    const pgp = doc("pgp", 40, (k) =>
+      k === 20 ? `${pc.codigo}: a premissa escrita no registro.` : `p${k}`,
+    ).paginas;
+    const t = trechosDaPremissa(pc, pgp, mapa);
+    expect(t[0]).toBe(`B3, p. 20: ${pc.codigo}: a premissa escrita no registro.`);
+    expect(t.slice(1)).toEqual([
+      "B27: não localizado pelo código — conferir no documento",
+      "A11: não localizado pelo código — conferir no documento",
+    ]);
   });
 });
 
@@ -135,47 +139,70 @@ describe("a revisão volta ao resultado", () => {
     partesDevolvidas: [],
     desconhecidos: [],
   };
+  const rev = (
+    achado: string,
+    revisao: RespostaSegundaEtapa5["vereditos"][number]["revisao"],
+    motivo = "Motivo.",
+    parteQueFalta = "",
+  ) => ({ achado, revisao, motivo, parteQueFalta, evidencias: [] });
   const revisao: RespostaSegundaEtapa5 = {
     vereditos: [
-      {
-        achado: "conteudo-minimo:A8:A8.2",
-        revisao: "em_parte",
-        parteQueFalta: "quem decide sobre as reservas",
-        motivo: "O trecho fala de papéis, não da decisão sobre reservas.",
-        evidencias: [],
-      },
-      {
-        achado: "conteudo-minimo:A11:A11.1",
-        revisao: "confirma",
-        parteQueFalta: "",
-        motivo: "Ok.",
-        evidencias: [],
-      },
+      rev("conteudo-minimo:A8:A8.2", "em_parte", "O trecho fala de papéis.", "quem decide sobre as reservas"),
+      rev("conteudo-minimo:A11:A11.1", "sem_base"),
+      // não foi pedida (o veredito era "não se aplica"): não conta
+      rev("conteudo-minimo:B13:B13.7", "derruba"),
     ],
     premissas: [
       { codigo: "PC1", situacao: "so_citada", falta: "A11", motivo: "Sem reajuste.", evidencias: [] },
     ],
-    conferido: ["Vereditos lidos contra as páginas citadas."],
+    conferido: ["Vereditos lidos contra as páginas."],
   };
 
-  it("em parte ou derrubado: o achado volta a contar, com o que falta; confirmado fica", () => {
-    const r = aplicarSegundaEtapa5(vd, revisao);
+  it("em parte: volta a contar, marcado; sem base e revisão não pedida: nada muda", () => {
+    const r = aplicarSegundaEtapa5(vd, revisao, leitura);
     expect(r.contam.map((a) => a.id)).toEqual(["conteudo-minimo:A8:A8.2", "conteudo-minimo:B27:B27.1"]);
     const a8 = r.candidatos.find((c) => c.achado.id === "conteudo-minimo:A8:A8.2")!;
-    expect(a8.situacao).toBe("sustenta");
-    expect(a8.avisos.join(" ")).toMatch(
-      /cobre só parte do item \(falso\).*Falta: quem decide sobre as reservas/,
+    expect(a8.revisadoPelaSegunda).toMatch(
+      /cobre só parte do item \(o PMO tinha dito "falso"\).*Falta: quem decide/,
     );
     expect(r.candidatos.find((c) => c.achado.id === "conteudo-minimo:A11:A11.1")!.situacao).toBe(
       "regra-errada",
     );
-    expect(aplicarSegundaEtapa5(vd, undefined)).toBe(vd);
+    expect(r.candidatos.find((c) => c.achado.id === "conteudo-minimo:B13:B13.7")!.situacao).toBe(
+      "nao-se-aplica",
+    );
+    expect(aplicarSegundaEtapa5(vd, undefined, leitura)).toBe(vd);
   });
 
-  it("o resumo diz o que mudou no total", () => {
-    const t = segundaEtapa5EmTexto(revisao, vd);
-    expect(t).toMatch(/derrubados ou cobertos só em parte: 1/);
+  it("derruba sem motivo é ignorada, com aviso", () => {
+    const r = aplicarSegundaEtapa5(
+      vd,
+      { ...revisao, vereditos: [rev("conteudo-minimo:A8:A8.2", "derruba", "", "")] },
+      leitura,
+    );
+    const a8 = r.candidatos.find((c) => c.achado.id === "conteudo-minimo:A8:A8.2")!;
+    expect(a8.situacao).toBe("falso");
+    expect(a8.avisos.join(" ")).toMatch(/sem motivo: a revisão foi ignorada/);
+  });
+
+  it("o resumo diz o que voltou a contar e marca citação não conferida", () => {
+    const t = segundaEtapa5EmTexto(
+      {
+        ...revisao,
+        vereditos: [
+          {
+            ...revisao.vereditos[0]!,
+            evidencias: [{ doc: "pgp", pagina: 9, trecho: "um trecho que não está na página" }],
+          },
+        ],
+      },
+      vd,
+      leitura,
+      [doc("pgp", 40)],
+    );
+    expect(t).toMatch(/achados que voltaram a contar: 1/);
     expect(t).toMatch(/Achados do código que contam agora: 2 \(antes: 1\)/);
+    expect(t).toMatch(/pgp, p\. 9, citação não conferida/);
     expect(t).toMatch(/\*\*so_citada\*\* · PC1: Sem reajuste\. Falta em: A11/);
   });
 });

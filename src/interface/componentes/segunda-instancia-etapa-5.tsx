@@ -12,12 +12,8 @@ import { estimarCusto, formatarDolar, formatarTokens } from "../../pmo/custo";
 import { identidadeDoCaso } from "../../pmo/identidade-do-caso";
 import { estimarTokens, textoDosDocumentos } from "../../pmo/montagem";
 import { RespostaSegundaEtapa5 } from "../../pmo/schemas/segunda-etapa-5";
-import {
-  deveConferirEtapa5,
-  documentosDaSegundaEtapa5,
-  pedidoSegundaEtapa5,
-  vereditosAConferir,
-} from "../../pmo/segunda-etapa-5";
+import { aplicarSegundaEtapa5, evidenciaConferida, montarSegundaEtapa5 } from "../../pmo/segunda-etapa-5";
+import { EtiquetaRotulo } from "./basicos";
 import { sistemaDaSegundaInstancia } from "../../pmo/segunda-instancia";
 import type { Achado } from "../../regras/achado";
 import { useDossie } from "../../dossie/store";
@@ -27,8 +23,13 @@ const NOME_REVISAO = {
   confirma: "confirma o veredito",
   derruba: "derruba o veredito",
   em_parte: "cobre só em parte",
+  sem_base: "sem base para julgar (o veredito fica)",
 };
-const NOME_SITUACAO_PC = { tratada: "tratada", so_citada: "só citada", ausente: "ausente" };
+const NOME_SITUACAO_PC = {
+  tratada: "tratada",
+  so_citada: "só citada",
+  nao_localizada: "não localizada nas linhas enviadas — conferir no documento",
+};
 
 export function SegundaInstanciaEtapa5({
   conf,
@@ -44,6 +45,8 @@ export function SegundaInstanciaEtapa5({
   condicionais: Map<string, Achado[]>;
 }) {
   const chave = useChave();
+  // a identidade do caso pelos documentos do dossiê, como no teste externo (paridade)
+  const dossieDocs = useDossie((s) => s.dossie.documentos);
   const nomeProjeto = useDossie((s) => s.dossie.projeto.nome);
   const leitura = conf.leituraPmo;
   const [modelo, setModelo] = useState<string>(MODELO_COMPARACAO);
@@ -54,29 +57,28 @@ export function SegundaInstanciaEtapa5({
   const montagem = useMemo(() => {
     if (!leitura) return undefined;
     const vd = conferirVereditos(leitura.resposta, achadosDoCodigo, condicionais, conf.mapa, documentos);
-    if (!deveConferirEtapa5(leitura.resposta, vd.candidatos)) return undefined;
-    const pgp = documentos.find((d) => d.papel === "pgp");
-    const pedido = pedidoSegundaEtapa5({
+    const m = montarSegundaEtapa5({
       leitura: leitura.resposta,
       candidatos: vd.candidatos,
       partes: PARTES_PGP,
       premissas: PREMISSAS_CRITICAS,
       premissasAplicaveis: conf.premissasAplicaveis,
-      pgp: pgp?.paginas ?? [],
-      identidade: identidadeDoCaso(documentos, nomeProjeto),
-    });
-    const docs = documentosDaSegundaEtapa5(
       documentos,
-      vereditosAConferir(leitura.resposta, vd.candidatos),
-      vd.candidatos.map((c) => c.achado),
-    );
-    return {
-      pedido,
-      textoDocs: textoDosDocumentos(docs),
-      sistema: sistemaDaSegundaInstancia(5),
-      quantos: vereditosAConferir(leitura.resposta, vd.candidatos).length,
-    };
-  }, [leitura, achadosDoCodigo, condicionais, conf.mapa, conf.premissasAplicaveis, documentos, nomeProjeto]);
+      mapa: conf.mapa,
+      identidade: identidadeDoCaso(dossieDocs, nomeProjeto),
+    });
+    if (!m.quantos) return undefined;
+    return { ...m, vd, textoDocs: textoDosDocumentos(m.documentos), sistema: sistemaDaSegundaInstancia(5) };
+  }, [
+    leitura,
+    achadosDoCodigo,
+    condicionais,
+    conf.mapa,
+    conf.premissasAplicaveis,
+    documentos,
+    dossieDocs,
+    nomeProjeto,
+  ]);
   if (!leitura) return null;
   if (!montagem)
     return (
@@ -172,21 +174,29 @@ export function SegundaInstanciaEtapa5({
       {atual && (
         <>
           <p className="aviso" role="status">
-            {atual.resposta.vereditos.filter((v) => v.revisao !== "confirma").length} veredito(s) derrubado(s)
-            ou cobertos só em parte: os achados voltam a contar no resultado. Todo achado é Sugestão: quem
-            decide é o GP. ({MODELOS[atual.modelo as IdModelo]?.nome ?? atual.modelo})
+            {aplicarSegundaEtapa5(montagem.vd, atual.resposta, leitura.resposta).contam.length -
+              montagem.vd.contam.length}{" "}
+            achado(s) voltaram a contar no resultado. Todo achado é Sugestão: quem decide é o GP. (
+            {MODELOS[atual.modelo as IdModelo]?.nome ?? atual.modelo})
           </p>
           <ul>
             {atual.resposta.vereditos.map((v) => (
               <li key={v.achado}>
-                <b>{NOME_REVISAO[v.revisao]}</b> · {v.achado}: {v.motivo}
+                <EtiquetaRotulo rotulo="sugestao" /> <b>{NOME_REVISAO[v.revisao]}</b> · {v.achado}: {v.motivo}
                 {v.parteQueFalta ? ` Falta: ${v.parteQueFalta}` : ""}
+                {v.evidencias.some((e) => !evidenciaConferida(e, documentos))
+                  ? " (citação não conferida)"
+                  : ""}
               </li>
             ))}
             {atual.resposta.premissas.map((p) => (
               <li key={p.codigo}>
-                <b>{p.codigo}</b> · {NOME_SITUACAO_PC[p.situacao]}: {p.motivo}
+                <EtiquetaRotulo rotulo="sugestao" /> <b>{p.codigo}</b> · {NOME_SITUACAO_PC[p.situacao]}:{" "}
+                {p.motivo}
                 {p.falta ? ` Falta em: ${p.falta}` : ""}
+                {p.evidencias.some((e) => !evidenciaConferida(e, documentos))
+                  ? " (citação não conferida)"
+                  : ""}
               </li>
             ))}
           </ul>

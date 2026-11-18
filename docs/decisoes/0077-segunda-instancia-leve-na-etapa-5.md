@@ -79,3 +79,12 @@ Aprovada como sugerido, com um ajuste e a régua do revisor:
 - Custou cerca de 85 a 90 mil tokens por caso. Foi lida por agentes, com mais contexto que o pedido do app; a estimativa do pedido do app é de 28 a 36 mil por plano.
 - Depois da decisão 0076, os planos gerados pelo app não têm mais candidatos falsos, e a revisão não roda neles.
 - **Medir de novo no primeiro plano de fora:** quantos vereditos ela derruba, quantos alarmes falsos traz e o custo real do pedido (o placar registra os tokens, decisão 0070).
+
+## Revisão de código (nível alto, antes do merge)
+
+- Vão também as primeiras páginas da parte de cada achado conferido (sem elas, o "regra_errada" de um ausente ia sem nenhuma página do plano), e nada dos outros candidatos.
+- A revisão "sem_base" deixa o veredito do PMO como está; "derruba" ou "em_parte" sem motivo é ignorada, com aviso; só vale para os vereditos que foram pedidos.
+- O achado que volta a contar fica marcado ("voltou a contar pela segunda instância", com o motivo) na tela e no relatório.
+- As premissas críticas são procuradas por lugar (B3, B27, A11); o lugar sem trecho sai "não localizado pelo código", e a situação do revisor é "não localizada", nunca "ausente".
+- As citações do revisor são conferidas na página, e cada item leva o rótulo Sugestão.
+- A tela e o teste externo montam pelo mesmo `montarSegundaEtapa5`, com a identidade pelos documentos do dossiê. A importação confere que a leitura é a mesma do pedido, limpa as decisões do GP da leitura anterior e liga o plano, como a tela.

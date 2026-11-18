@@ -210,6 +210,7 @@ export function ConferenciaPgp(props: Props) {
             ),
             // a revisão da segunda instância leve, se é desta leitura (decisão 0077)
             conf.segundaLeve?.deLeitura === conf.leituraPmo.em ? conf.segundaLeve.resposta : undefined,
+            conf.leituraPmo.resposta,
           )}
           leitura={conferirLeitura(
             conf.leituraPmo.resposta,
@@ -644,14 +645,25 @@ function Resultado({
           </tbody>
         </table>
         <p className="envio__obs">
-          Só contam os achados do código que o PMO confirmou ({confirmados.length} de{" "}
-          {vereditos.candidatos.length}); os outros estão abaixo, com o veredito. "Ausente" quer dizer não
-          localizado pelo código no plano: conferir no documento antes de decidir.
+          Só contam os achados do código que o PMO confirmou ou que a segunda instância devolveu (
+          {confirmados.length} de {vereditos.candidatos.length}); os outros estão abaixo, com o veredito.
+          "Ausente" quer dizer não localizado pelo código no plano: conferir no documento antes de decidir.
           {naoConferidos > 0 &&
             ` ${naoConferidos} itens dependem de interpretação e não foram conferidos pelo código.`}
           {naoVerificaveis > 0 &&
             ` ${naoVerificaveis} verificações ficaram não verificáveis por páginas sem texto legível.`}
         </p>
+        {vereditos.candidatos.some((c) => c.revisadoPelaSegunda) && (
+          <ul className="envio__obs" data-testid="devolvidos-pela-segunda">
+            {vereditos.candidatos
+              .filter((c) => c.revisadoPelaSegunda)
+              .map((c) => (
+                <li key={c.achado.id}>
+                  Voltou a contar pela segunda instância: {c.achado.titulo}. {c.revisadoPelaSegunda}
+                </li>
+              ))}
+          </ul>
+        )}
         <div className="acoes-exportar">
           <button className="botao" type="button" onClick={() => void baixar("docx")}>
             Relatório DOCX
