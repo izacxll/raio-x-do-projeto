@@ -64,7 +64,7 @@ A `main` é publicada no GitHub Pages a cada merge (`.github/workflows/publicar.
 | [`docs/decisoes/`](docs/decisoes/) | Uma decisão por arquivo |
 | `.claude/skills/pmo/` | Skill PMO: a leitura do PMO em todas as etapas |
 | [`docs/guia-do-gerente.md`](docs/guia-do-gerente.md) | Como usar, com e sem chave |
-| [`docs/estudos/`](docs/estudos/) | Métodos das etapas, engenharia reversa (rastro de cada regra) e placares das fases |
+| [`docs/estudos/`](docs/estudos/) | Métodos das etapas, o rastro das regras de cada etapa e o roteiro da etapa 5 com um plano real |
 | [`docs/arquitetura.md`](docs/arquitetura.md) | Código × PMO, pastas, fluxo das etapas, dossiê, segurança e testes |
 | [`docs/tecnico/`](docs/README.md) | Documentação técnica com diagramas: arquitetura, dependências, integrações, modelo de dados, fluxos, configuração, build e pontos de atenção |
 | [`docs/identidade-visual.md`](docs/identidade-visual.md) | Cores, fonte, componentes e etiquetas |

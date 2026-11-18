@@ -17,16 +17,7 @@ A pasta do teste foi atualizada para a `main` com o vigia novo (linha de estado 
 
 **O PMO lê; o código monta e confere (decisão 0035).** Em todas as etapas, o PMO lê a partir do esqueleto do código, e o código confere cada citação, número e prazo. **Nenhuma etapa analisa sem a conexão com o Claude (decisão 0037):** sem a chave, as opções são conectar ou ver a demonstração, que existe em todas as etapas (na 5, com um plano inventado com erros plantados). O esqueleto do código vai no pedido e não aparece sozinho.
 
-**Fase M1 (etapa 1 pelo método), PR #45, aguarda o teste e o ok da responsável** (decisão 0036). Leitura em 8 seções, "Pedir ao PMO" com as travas, R = entregas e obrigações específicas. Placar (`docs/estudos/placar-m1-etapa-1.md`, a fonte dos números):
-
-| | SMPED (parceria) | OEI (licitação) |
-|---|---|---|
-| Itens na tela | 122 → 40 cartões + 16 R | 183 → 39 cartões + 16 R |
-| Cartões que não passam no teste do método | 82 → 6 | 102 → 3 |
-| Gabarito coberto (maioria das chaves) | 15 → 28 de 50 | 30 → 35 de 50 |
-| Números sem fonte | 0 | 0 |
-
-Os gabaritos e as leituras gravadas foram feitos pelo Claude Code seguindo a skill: o placar mede o esqueleto do código e as travas, não a qualidade da leitura do PMO. Essa só se mede com a chave e com um gabarito da responsável (roteiro em `docs/estudos/roteiro-etapa-5-plano-real.md`).
+**Fases M1 e M2 (etapas 1 e 2 pelo método)** estão na `main` (decisões 0036 e 0038). Os placares delas ficam no histórico do Git (commit `2ac4708`; decisão 0075).
 
 **PR #46:** métodos revisados (sem os detalhes que identificavam o caso real) e a engenharia reversa das cinco etapas; a chave dos scripts lida de um arquivo fora do repositório (`RAIO_X_ARQUIVO_CHAVE`, nunca `ANTHROPIC_API_KEY`); documentação coerente com a 0035 e a M1; o roteiro da etapa 5 com um plano real; a decisão 0037 (conexão antes de analisar, demonstração da etapa 5).
 
@@ -55,8 +46,6 @@ Os gabaritos e as leituras gravadas foram feitos pelo Claude Code seguindo a ski
 - o TAP já respondido cita os números antigos, então o placar do TAP pode mostrar um C sem destino e Cs citados com o sentido trocado nessa faixa.
 O #71 corrigiu a conferência do pedido externo, que recusava o SKILL.md recortado por etapa.
 
-**Fase M2 (etapa 2 pelo método), PR aberto em cima do #46, aguarda o teste e o ok da responsável** (decisão 0038): a minuta redigida por inteiro na ordem do modelo do edital, preço pelo tipo de contrato, pontos por preço, caixa, quadro de equipe × produtividade e duração × vigência por código. Placar em `docs/estudos/placar-m2-etapa-2.md`: o esqueleto do código cobre todos os itens do gabarito que são do código (28 de 28 na SMPED, 31 de 31 na OEI); com a leitura gravada, 40 de 40 e a minuta redigida por inteiro (17 e 14 seções). **Skill 0.3.0 no PR #51 (rascunho), sem publicar antes do ok.**
-
 ## Fases
 
 | Fase | O que é | Situação | Tag |
@@ -81,8 +70,9 @@ O que cada fase M ainda precisa cobrir está nas issues de cada uma (rótulos `e
 ## Decisões pendentes
 
 - **Modelo padrão da API:** Opus 5.5 é provisório; a escolha sai da comparação (`npm run comparar-modelos`, decisões 0002 e 0025), que espera a chave.
-- **Ordem de impacto dos pontos de atenção** (caixa > dependência do contratante > preço > prazo): julgamento da análise, a confirmar pela responsável (engenharia reversa, `09-pontos-de-atencao.md`).
+- **Ordem de impacto dos pontos de atenção** (caixa > dependência do contratante > preço > prazo): julgamento da análise, a confirmar pela responsável. Veio da engenharia reversa (o arquivo foi removido pela decisão 0075).
 - **Gravidade dos conflitos que envolvem mais de uma parte** do plano (etapa 5) e **gatilhos com número** como campos obrigatórios da etapa 4: a validar na M4 e na M5.
+- **A camada "tipo" (tipo de projeto, de contrato e de plano) vira um módulo comum às cinco etapas?** Hoje cada etapa reconhece o tipo por conta própria. Veio da engenharia reversa (decisão 0075).
 
 ## Próximo passo
 

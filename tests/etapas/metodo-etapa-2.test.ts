@@ -2,7 +2,8 @@
 // operação contínua) e da OEI (licitação, consultoria por produtos). Os gabaritos e as leituras gravadas foram feitos
 // pelo Claude Code seguindo a skill: o placar mede o esqueleto do código (o que vai no pedido ao PMO) e as travas do
 // código sobre a leitura gravada, não a qualidade da leitura do PMO de verdade (decisão 0035).
-// O placar sai no console (npx vitest run tests/etapas/metodo-etapa-2.test.ts) e em docs/estudos/placar-m2-etapa-2.md.
+// O placar sai no console (npx vitest run tests/etapas/metodo-etapa-2.test.ts). O placar da fase M2 em Markdown foi
+// removido pela decisão 0075 (histórico no Git, commit 2ac4708).
 import { existsSync, readFileSync } from "node:fs";
 import { beforeAll, describe, expect, it } from "vitest";
 import type { DocumentoLido, PropostaDossie } from "../../src/dossie/esquema";
