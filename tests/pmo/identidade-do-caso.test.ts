@@ -74,7 +74,7 @@ describe("identidade do caso", () => {
 
   it("vai no topo do pedido, antes do papel do revisor, com a ordem de parar se for outro caso", () => {
     const id = identidadeDoCaso([documentoLido(["1. OBJETO\nRecuperação de nascentes no território."])]);
-    const p = pedidoSegundaInstancia(3, "tap", {}, "pedido", id);
+    const p = pedidoSegundaInstancia(3, "tap", {}, "pedido", { identidade: id });
     const topo = p.indexOf("## Caso desta conferência");
     expect(topo).toBeGreaterThan(0);
     expect(topo).toBeLessThan(p.indexOf("Você é a segunda instância"));

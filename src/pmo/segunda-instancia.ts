@@ -5,6 +5,7 @@ import textoSkill from "../../.claude/skills/pmo/SKILL.md?raw";
 import type { DocumentoLido } from "../dossie/esquema";
 import { citacaoValeComoFato, conferirCitacao } from "./citacoes";
 import { type IdentidadeDoCaso, identidadeEmTexto } from "./identidade-do-caso";
+import { type PassoAnterior, passoAnteriorEmTexto } from "./passo-anterior";
 import { skillDaEtapa, textoDeSistema } from "./montagem";
 import type {
   AchadoSegundaInstancia,
@@ -57,14 +58,15 @@ export function sistemaDaSegundaInstancia(etapa?: number): string {
 /**
  * Pedido da segunda instância (decisões 0057 e 0059). Leva o pedido do passo conferido, como foi ao PMO: o esqueleto do
  * código (números R e C, contas e datas) e a lista do que o passo exige. A rubrica é essa lista, nem mais nem menos.
- * No topo, a identidade do caso (decisão 0066): o revisor confere que tudo é deste caso antes de achar.
+ * No topo, a identidade do caso (decisão 0066): o revisor confere que tudo é deste caso antes de achar. Depois do pedido
+ * do passo, a versão final do passo anterior da etapa (decisão 0068), a que seguiu: é com ela que se confere a coerência.
  */
 export function pedidoSegundaInstancia(
   etapa: number,
   passo: string,
   resposta: unknown,
   pedidoDoPasso = "",
-  identidade?: IdentidadeDoCaso,
+  { identidade, anterior }: { identidade?: IdentidadeDoCaso; anterior?: PassoAnterior } = {},
 ): string {
   return `# Segunda instância — conferência da resposta da etapa ${etapa}, passo ${passo}
 ${identidade ? `\n${identidadeEmTexto(identidade)}\n` : ""}
@@ -72,7 +74,7 @@ Você é a segunda instância (revisão em camadas; a rubrica fixa vai abaixo, e
 
 ## Pedido do passo conferido (como foi ao PMO, com o esqueleto do código)
 ${pedidoDoPasso.trim() ? `<pedido-do-passo>\n${pedidoDoPasso.trim()}\n</pedido-do-passo>` : "(o pedido do passo não veio: confira só contra os documentos e a skill, e diga isso em conferido)"}
-
+${anterior ? `\n${passoAnteriorEmTexto(anterior)}\n` : ""}
 ## Resposta a conferir (JSON)
 \`\`\`json
 ${JSON.stringify(resposta, null, 2)}

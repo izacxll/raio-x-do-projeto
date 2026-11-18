@@ -7,6 +7,7 @@ import type { ErroPmo } from "../../pmo/cliente";
 import { estimarCusto, formatarDolar, formatarTokens } from "../../pmo/custo";
 import { identidadeDoCaso } from "../../pmo/identidade-do-caso";
 import { estimarTokens, textoDosDocumentos } from "../../pmo/montagem";
+import { passoAnteriorFinal } from "../../pmo/passo-anterior";
 import { RespostaSegundaInstancia } from "../../pmo/schemas/segunda-instancia";
 import {
   chaveDaSegundaInstancia,
@@ -53,9 +54,11 @@ export function SegundaInstancia({
     () => identidadeDoCaso(dossie.documentos, dossie.projeto.nome),
     [dossie.documentos, dossie.projeto.nome],
   );
+  // a versão final do passo anterior da etapa (decisão 0068): a que está no dossiê
+  const anterior = useMemo(() => passoAnteriorFinal(dossie, etapa, passo), [dossie, etapa, passo]);
   const pedido = useMemo(
-    () => pedidoSegundaInstancia(etapa, passo, resposta, pedidoDoPasso, identidade),
-    [etapa, passo, resposta, pedidoDoPasso, identidade],
+    () => pedidoSegundaInstancia(etapa, passo, resposta, pedidoDoPasso, { identidade, anterior }),
+    [etapa, passo, resposta, pedidoDoPasso, identidade, anterior],
   );
   const est = estimarCusto(
     modelo,

@@ -4,6 +4,10 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 
 ## [Não publicado]
 
+### Segunda instância com a versão final do passo anterior (decisão 0068)
+- **Pedido da segunda instância** com a resposta do passo anterior da etapa, como está no dossiê (a que seguiu), em JSON compacto e com o aviso de que é a que vale.
+- **Skill de revisão:** o passo anterior vai na versão final e o revisor não procura outra.
+
 ### Características e reexportação no teste externo (decisão 0069)
 - **`--caracteristicas`** na exportação das etapas 4 e 5 (ex.: `"campo=não,beneficiarios=não"`), com os mesmos valores da tela.
 - **A correção parte da sugestão do código**, como na tela da etapa 4, e não mais do padrão conservador.
