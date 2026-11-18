@@ -77,7 +77,7 @@ Uma decisão por arquivo, numerada em ordem. Cada uma registra o contexto, o que
 | [0071](0071-segunda-instancia-mais-barata-e-paridade.md) | Segunda instância: rodada 2 só com o que mudou, sem rodada 2 com só achados baixos, modelo da rodada 2 à escolha do GP e a mesma montagem no app e no teste externo | aceita |
 | [0072](0072-resultado-da-etapa-para-apresentacao.md) | Teste externo: DOCX de resultado por etapa e por caso (placar resumido, segunda instância e resultado final), fora do Git | aceita |
 | [0073](0073-skill-pmo-0-3-4.md) | Skill PMO 0.3.4: regras da etapa 4 da rodada 3, rótulo sugestão quando o item mistura documento e sugestão, cadência do GP | aceita |
-| [0074](0074-skill-base-e-arquivo-por-etapa.md) | Arquitetura: uma skill PMO base e um arquivo por etapa (papel, entradas, saída, pronto, armadilhas, rubrica); subagente só na segunda instância e na revisão de código | proposta |
+| [0074](0074-skill-base-e-arquivo-por-etapa.md) | Arquitetura: uma skill PMO base e um arquivo por etapa (papel, entradas, saída, pronto, armadilhas, rubrica); subagente só na segunda instância e na revisão de código | aceita |
 
 Modelo para uma nova decisão:
 

@@ -1,6 +1,6 @@
 # Andamento
 
-Atualizado em 18/11/2026. Teste externo da rodada 3: etapas 1 a 4 fechadas nos dois casos; etapa 5 exportada. Em revisão: PRs da decisão 0070 a 0074 (abaixo).
+Atualizado em 18/11/2026. Teste externo da rodada 3: etapas 1 a 4 fechadas nos dois casos; etapa 5 exportada. Na `main` (18/11/2026, por squash): as decisões 0070 a 0074 (#77 a #81).
 
 ## Onde estamos
 
@@ -8,8 +8,8 @@ Atualizado em 18/11/2026. Teste externo da rodada 3: etapas 1 a 4 fechadas nos d
 - **0070, placar e pedidos:** data fixa vencida "não confirmável"; aviso de encerramento antes do último aceite; vago que só reproduz o documento sai; premissa nova parecida com o registro inicial vira aviso; regra das QU no topo do pedido de execução; A2.8 era regra estreita; tokens de cada pedido no placar.
 - **0071, segunda instância mais barata e igual nas duas pontas:** rodada 2 só com os achados anteriores, o que mudou e as páginas citadas (no caso fiscal, de ~55 mil para ~15 mil tokens); sem rodada 2 quando a 1 só tem achados baixos; modelo da rodada 2 à escolha do GP; o app passa a mandar os achados da rodada anterior.
 - **0072, resultado da etapa para apresentação:** um DOCX por etapa e por caso, fora do Git (gerados os das etapas 1 a 4 dos dois casos).
-- **0073, skill PMO 0.3.4** (espera o ok da responsável): as lições da etapa 4.
-- **0074, proposta de arquitetura** (espera o ok): skill base + um arquivo por etapa; subagente só na segunda instância e na revisão de código alta (`.claude/agents/revisor-codigo.md`).
+- **0073, skill PMO 0.3.4** (aceita): as lições da etapa 4.
+- **0074, arquitetura** (aceita; a migração vem em PRs pequenos depois do teste): skill base + um arquivo por etapa; subagente só na segunda instância e na revisão de código alta (`.claude/agents/revisor-codigo.md`).
 
 A pasta do teste foi atualizada para a `main` com o vigia novo (linha de estado no `STATUS.md`, resultado da etapa quando ela fecha, terceiro caso esperando o TR na pasta `tr-terceiro`).
 
@@ -86,7 +86,7 @@ O que cada fase M ainda precisa cobrir está nas issues de cada uma (rótulos `e
 
 ## Próximo passo
 
-0. **Rodada 3, depois do fechamento (18/11/2026):** a responsável grava as características do caso fiscal no arquivo de decisões (a guarda não deixa o Claude Code gravar), revisa os PRs das decisões 0070 a 0074 (a 0073 e a 0074 esperam o ok dela) e põe o terceiro TR na pasta `tr-terceiro`. Depois do merge, a pasta do teste é atualizada de novo para a `main` (com a autorização dela) para o vigia usar a rodada 2 compacta e o resultado da etapa.
+0. **Rodada 3, depois do fechamento (18/11/2026):** os PRs #77 a #81 estão na `main`, e a pasta do teste foi atualizada para ela (vigia com a rodada 2 compacta e o resultado da etapa). A responsável conduz a etapa 5 dos dois casos e põe o terceiro TR na pasta `tr-terceiro`. Depois do teste: a migração da decisão 0074 (skill base + `etapa-N.md`), em PRs pequenos.
 
 1. **Claude Code:** merge da decisão 0057 (autorizado, com CI verde e varredura limpa); religar o vigia e reexportar a etapa 1 dos dois TRs, do zero.
 2. **Responsável pelo projeto:** conduzir o teste externo a partir da etapa 1 (pedidos do PMO e da segunda instância).

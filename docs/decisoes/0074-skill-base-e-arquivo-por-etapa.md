@@ -1,7 +1,7 @@
 # 0074 — Uma skill PMO base e um arquivo por etapa
 
 - **Data:** 18/11/2026
-- **Status:** proposta (espera o ok da responsável; nada implementado)
+- **Status:** aceita (ok da responsável em 18/11/2026; a migração vem em PRs pequenos depois do teste)
 - **Quem decidiu:** Claude Code, a pedido da responsável (fechamento da rodada 3, item 8)
 
 ## Contexto
@@ -46,4 +46,4 @@ O `SKILL.md` da PMO junta princípios, regras gerais e as cinco etapas. Desde a 
 
 - O pedido de cada etapa não cresce; deve diminuir no passo 2.
 - Um lugar para cada coisa: princípio no núcleo, regra da etapa no arquivo dela, lição em "armadilhas".
-- Até o ok, nada muda: a 0.3.4 (decisão 0073) segue no formato atual.
+- Até a migração, nada muda: a 0.3.4 (decisão 0073) segue no formato atual.
