@@ -31,7 +31,7 @@ Organiza o preço de baixo para cima, a partir das horas da EAP e das despesas, 
   - confere: código
   - dispensa: nunca
 - **PROP-PRECO.4** Despesas de campo por território, com a base de quantidade (deslocamentos, dias, equipe)
-  - fonte: `experiencia.md` §5; SKILL.md, etapa 2, passo 7
+  - fonte: `experiencia.md` §5; etapas/etapa-2.md, passo 7
   - sinais: nome do território ou município | "por território" | "deslocamentos" | "dias de campo"
   - confere: código
   - dispensa: sem campo
@@ -66,7 +66,7 @@ Organiza o preço de baixo para cima, a partir das horas da EAP e das despesas, 
   - confere: código
   - dispensa: nunca
 - **PROP-PRECO.11** Estratégias de preço só como sugestão, sem âncora, desconto ou opções; preço final como Decisão do GP
-  - fonte: Rework RW-073 e RW-074, adaptação; SKILL.md, etapa 2, passo 7
+  - fonte: Rework RW-073 e RW-074, adaptação; etapas/etapa-2.md, passo 7
   - sinais: "sugere-se" | "decisão do GP" | "preço final"
   - confere: só PMO
   - dispensa: nunca

@@ -19,7 +19,8 @@ const skillDaEtapaCerta = (arquivos: { nome: string; texto: string }[], etapa: n
   const s = arquivos.find((a) => ehSkill(a.nome));
   if (!s) return false;
   if (s.nome === "SKILL.md") return true;
-  const secoes = [...s.texto.matchAll(/^### Etapa (\d) —/gm)].map((m) => Number(m[1]));
+  // o arquivo da etapa começa por "# Etapa N —" (decisão 0074); antes, a seção "### Etapa N —" do SKILL.md
+  const secoes = [...s.texto.matchAll(/^#{1,3} Etapa (\d) —/gm)].map((m) => Number(m[1]));
   return secoes.length === 1 && secoes[0] === etapa;
 };
 
@@ -225,7 +226,7 @@ export function conteudoDoPedido(opcoes: {
       ? [`- Fichas só com "Quando dispensar": ${fichasSoDispensa.join(", ")}`]
       : []),
     `- Artigos do Rework citados nas fichas: ${citadosRework.join(", ") || "nenhum"}${reworkFaltando.length ? ` (sem o resumo no trecho do rework.md que foi junto: ${reworkFaltando.join(", ")})` : ""}`,
-    `- Método da etapa no pedido: ${metodo ? "sim" : etapa === 1 ? "não" : "não (esperado: a tabela da seção 5 só manda o da etapa 1; nas etapas 2 a 5, o método está na seção da etapa na SKILL.md)"}`,
+    `- Método da etapa no pedido: ${metodo ? "sim" : etapa === 1 ? "não" : "não (esperado: a tabela da seção 5 só manda o da etapa 1; nas etapas 2 a 5, o critério de aceite do método está no arquivo da etapa, referencias/etapas/etapa-N.md)"}`,
     "",
     "## Comparação com a tabela da seção 5 da SKILL.md",
     `Linha da tabela: ${linha.replace(/^\| /, "").replace(/ \|$/, "") || "(não achada)"}`,

@@ -46,7 +46,7 @@ Reúne as questões de qualidade, as ações corretivas recomendadas e o resumo 
   - confere: código
   - dispensa: nunca
 - **B21.7** No PGP, modelo sem acontecimentos inventados
-  - fonte: decisão 0007, passo 12; SKILL.md, etapa 4
+  - fonte: decisão 0007, passo 12; etapas/etapa-4.md
   - sinais: "a preencher" | "modelo" | campos em branco
   - confere: só PMO
   - dispensa: nunca

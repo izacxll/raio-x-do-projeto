@@ -6,7 +6,7 @@
 
 ## Contexto
 
-A fase M2 aplica o método da etapa 2 (`docs/estudos/metodo-etapa-2.md`, revisado em 16/11/2026) e o rastro de `docs/estudos/engenharia-reversa/07-regras-etapa-2.md`. A saída é a minuta redigida por inteiro, e não um resumo. O PMO redige; o código monta o esqueleto e confere.
+A fase M2 aplica o método da etapa 2 (`docs/estudos/metodo-etapa-2.md`, revisado em 16/11/2026) e o rastro de `docs/estudos/engenharia-reversa/07-regras-etapa-2.md` (removido pela decisão 0083; histórico no Git, commit `4054c80`). A saída é a minuta redigida por inteiro, e não um resumo. O PMO redige; o código monta o esqueleto e confere.
 
 ## Decisão
 

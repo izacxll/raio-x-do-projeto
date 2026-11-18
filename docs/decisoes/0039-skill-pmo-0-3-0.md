@@ -6,7 +6,7 @@
 
 ## Contexto
 
-Os métodos das etapas (decisão 0034) e a engenharia reversa (`docs/estudos/engenharia-reversa/`) pediram mudanças na skill que o código sozinho não leva ao PMO: os tipos de projeto e de plano, a proposta de parceria, a premissa crítica com gatilho e reajuste, o contrato como entrada da etapa 3, o caixa e as leituras das etapas 1 e 5.
+Os métodos das etapas (decisão 0034) e a engenharia reversa (`docs/estudos/engenharia-reversa/`, removida pelas decisões 0075 e 0083; histórico no Git) pediram mudanças na skill que o código sozinho não leva ao PMO: os tipos de projeto e de plano, a proposta de parceria, a premissa crítica com gatilho e reajuste, o contrato como entrada da etapa 3, o caixa e as leituras das etapas 1 e 5.
 
 ## Decisão
 

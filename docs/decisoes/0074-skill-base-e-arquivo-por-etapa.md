@@ -1,7 +1,7 @@
 # 0074 — Uma skill PMO base e um arquivo por etapa
 
 - **Data:** 18/11/2026
-- **Status:** aceita (ok da responsável em 18/11/2026; a migração vem em PRs pequenos depois do teste)
+- **Status:** aceita e implementada (ok da responsável em 18/11/2026; a migração da skill está na decisão 0083)
 - **Quem decidiu:** Claude Code, a pedido da responsável (fechamento da rodada 3, item 8)
 
 ## Contexto

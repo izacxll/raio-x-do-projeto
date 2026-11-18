@@ -12,7 +12,7 @@ versao: 0.3.2
 # B28 — Relatório de riscos
 
 ## Para que serve
-Resume os riscos individuais e o nível de **risco geral** do projeto, isto é, o efeito do conjunto das incertezas sobre os objetivos (PMBOK 6, 11.2.3.2, p. 418, PDF 454; glossário, p. 722, PDF 758). É desenvolvido progressivamente, a cada análise e revisão. No PGP sai como modelo, com a estrutura e só o que os documentos sustentam, sem inventar acontecimentos (SKILL.md, etapa 4).
+Resume os riscos individuais e o nível de **risco geral** do projeto, isto é, o efeito do conjunto das incertezas sobre os objetivos (PMBOK 6, 11.2.3.2, p. 418, PDF 454; glossário, p. 722, PDF 758). É desenvolvido progressivamente, a cada análise e revisão. No PGP sai como modelo, com a estrutura e só o que os documentos sustentam, sem inventar acontecimentos (etapas/etapa-4.md).
 
 ## Conteúdo mínimo
 - **B28.1** Avaliação do risco geral e de suas principais fontes
@@ -78,7 +78,7 @@ Resume os riscos individuais e o nível de **risco geral** do projeto, isto é, 
 - Chamar de relatório a cópia do registro, sem avaliação do risco geral (PMBOK 6, p. 418, PDF 454).
 - "Teatro de status": tudo verde até o projeto desabar; relatório sem pedidos de decisão; formato que muda a cada edição (Rework RW-022).
 - Tratar o P50 como seguro ou ler o P80 como pior caso (Rework RW-013).
-- Na etapa 4, preencher tendências ou ocorrências que ainda não existem (SKILL.md, etapa 4).
+- Na etapa 4, preencher tendências ou ocorrências que ainda não existem (etapas/etapa-4.md).
 
 ## Quando dispensar a parte inteira
 O PMBOK não fala em dispensa, mas trata as listas de documentos como exemplos, não requisitos (PMBOK 6, p. 558, PDF 594). Em porte pequeno, o relatório pode ser uma seção "Riscos" do relatório de status (comunicações do projeto, B14), com o risco geral e os 3 a 5 principais riscos (Rework RW-022). Sem análise quantitativa, os itens probabilísticos não se aplicam.
@@ -104,4 +104,4 @@ Relatório de riscos — [período ou fase]
 - PMBOK 6: 11.2.3.2, p. 418 (PDF 454); 11.3, p. 427 (PDF 463); 11.4, p. 436 (PDF 472); 11.5, p. 442–448 (PDF 478–484); 11.7, p. 456–458 (PDF 492–494); 4.7, p. 124–125 (PDF 160–161); Padrão, p. 558 (PDF 594); glossário, p. 722 (PDF 758).
 - PMBOK 7: 4.6.7, relatório de riscos, p. 190 (PDF 285).
 - Rework: RW-022 e RW-013 (links nos itens).
-- SKILL.md, etapa 4.
+- etapas/etapa-4.md.

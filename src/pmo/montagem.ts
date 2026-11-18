@@ -7,6 +7,11 @@ import textoExperiencia from "../../.claude/skills/pmo/referencias/experiencia.m
 import textoLicitacoes from "../../.claude/skills/pmo/referencias/licitacoes.md?raw";
 import textoPmbok7 from "../../.claude/skills/pmo/referencias/pmbok7.md?raw";
 import textoRework from "../../.claude/skills/pmo/referencias/rework.md?raw";
+import textoEtapa1 from "../../.claude/skills/pmo/referencias/etapas/etapa-1.md?raw";
+import textoEtapa2 from "../../.claude/skills/pmo/referencias/etapas/etapa-2.md?raw";
+import textoEtapa3 from "../../.claude/skills/pmo/referencias/etapas/etapa-3.md?raw";
+import textoEtapa4 from "../../.claude/skills/pmo/referencias/etapas/etapa-4.md?raw";
+import textoEtapa5 from "../../.claude/skills/pmo/referencias/etapas/etapa-5.md?raw";
 import type { DocumentoLido } from "../dossie/esquema";
 
 const fichas = import.meta.glob("../../.claude/skills/pmo/referencias/artefatos/*.md", {
@@ -35,12 +40,30 @@ function etapasDoTitulo(titulo: string): number[] | undefined {
   return [...dentro.matchAll(/\d/g)].map((x) => Number(x[0]));
 }
 
+/** Os arquivos das etapas (decisão 0074): papel, entradas, saída, definição de pronto, armadilhas e rubrica. */
+export const TEXTOS_DAS_ETAPAS: Record<number, string> = {
+  1: textoEtapa1,
+  2: textoEtapa2,
+  3: textoEtapa3,
+  4: textoEtapa4,
+  5: textoEtapa5,
+};
+
 /**
- * O SKILL.md da etapa (decisão 0064): o núcleo (papel, princípios, as regras gerais da seção 3 que valem para a etapa e
- * o formato de saída) e só a seção da etapa em curso. Saem o histórico das versões, a lista do que carregar, o uso no
- * Claude Code e o mapa das referências, que o app não usa. O arquivo inteiro continua na skill.
+ * O SKILL.md da etapa (decisões 0064 e 0074): o núcleo do SKILL.md (papel, princípios, as regras gerais da seção 3 que
+ * valem para a etapa e o formato de saída) e o arquivo da etapa em curso (`referencias/etapas/etapa-N.md`). Saem o
+ * histórico das versões, a lista do que carregar, o uso no Claude Code e o mapa das referências, que o app não usa.
  */
-export function skillDaEtapa(etapa: number, texto: string = textoSkill): string {
+export function skillDaEtapa(
+  etapa: number,
+  texto: string = textoSkill,
+  etapas: Record<number, string> = TEXTOS_DAS_ETAPAS,
+): string {
+  return `${nucleoDaSkill(etapa, texto)}\n\n${(etapas[etapa] ?? "").trim()}`;
+}
+
+/** O núcleo do SKILL.md recortado para a etapa (as subseções gerais da seção 3 pelo título). */
+function nucleoDaSkill(etapa: number, texto: string): string {
   const versao = /^versao:\s*(\S+)/m.exec(texto)?.[1] ?? "";
   const out: string[] = [];
   let secao = true;
@@ -50,8 +73,7 @@ export function skillDaEtapa(etapa: number, texto: string = textoSkill): string 
       secao = !/^## [567]\./.test(l);
       subsecao = true;
     } else if (l.startsWith("### ")) {
-      const daEtapa = /^### Etapa (\d)\b/.exec(l)?.[1];
-      const etapas = daEtapa ? [Number(daEtapa)] : etapasDoTitulo(l);
+      const etapas = etapasDoTitulo(l);
       subsecao = !etapas || etapas.includes(etapa);
     }
     if (secao && subsecao) out.push(l);
@@ -60,7 +82,7 @@ export function skillDaEtapa(etapa: number, texto: string = textoSkill): string 
     .join("\n")
     .replace(
       /^Versão \d[^\n]*$/m,
-      `Versão ${versao}, recortada para a etapa ${etapa}: o núcleo e a seção da etapa (o arquivo inteiro está na skill).`,
+      `Versão ${versao}, recortada para a etapa ${etapa}: o núcleo e o arquivo da etapa (a skill inteira está no repositório).`,
     )
     .trim();
 }

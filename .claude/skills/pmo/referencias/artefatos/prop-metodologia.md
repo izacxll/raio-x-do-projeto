@@ -16,7 +16,7 @@ Descreve **como** a FGV vai executar a abordagem que o GP escolheu (PROP-ESTRATE
 
 ## Conteúdo mínimo
 - **PROP-METODOLOGIA.1** Parte da abordagem escolhida pelo GP e diz qual é
-  - fonte: SKILL.md, etapa 2, passo 2; especificação da etapa 2 (decisões do GP)
+  - fonte: etapas/etapa-2.md, passo 2; especificação da etapa 2 (decisões do GP)
   - sinais: "abordagem" | nome da abordagem escolhida em PROP-ESTRATEGIA
   - confere: código
   - dispensa: nunca
@@ -112,4 +112,4 @@ Linha para a tela: "Metodologia junto com os produtos: porte pequeno."
 ## Fontes
 - PMBOK 6: 1.2.4.1, p. 18–19 (PDF 54–55); 4.1.3.1, p. 81 (PDF 117); 12.1, p. 470, 478–479 (PDF 506, 514–515); 12.2, p. 487 (PDF 523).
 - Rework: RW-036 (https://resources.rework.com/libraries/project-management/project-deliverables); RW-071 (https://resources.rework.com/libraries/deal-closing/proposal-development); RW-075 (https://resources.rework.com/libraries/deal-closing/sow-creation).
-- `licitacoes.md` 2.2; `checklist.md` (PC1, PC3, PC6; vago, CP9; conflituoso, CP8; CTR3; CP14); `experiencia.md` §5 e §6; SKILL.md, etapa 2 e princípio 9.
+- `licitacoes.md` 2.2; `checklist.md` (PC1, PC3, PC6; vago, CP9; conflituoso, CP8; CTR3; CP14); `experiencia.md` §5 e §6; etapas/etapa-2.md e princípio 9.

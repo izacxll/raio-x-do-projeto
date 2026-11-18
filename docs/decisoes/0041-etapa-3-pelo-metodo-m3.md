@@ -6,7 +6,7 @@
 
 ## Contexto
 
-A fase M3 aplica o método da etapa 3 (`docs/estudos/metodo-etapa-3.md`) e o rastro de `docs/estudos/engenharia-reversa/07-regras-etapa-3.md`. O TAP parte do que foi **assinado**. As divergências entre a RFP, a proposta e o contrato vêm primeiro, porque o resto depende de qual versão vale.
+A fase M3 aplica o método da etapa 3 (`docs/estudos/metodo-etapa-3.md`) e o rastro de `docs/estudos/engenharia-reversa/07-regras-etapa-3.md` (removido pela decisão 0083; histórico no Git, commit `4054c80`). O TAP parte do que foi **assinado**. As divergências entre a RFP, a proposta e o contrato vêm primeiro, porque o resto depende de qual versão vale.
 
 ## Decisão
 

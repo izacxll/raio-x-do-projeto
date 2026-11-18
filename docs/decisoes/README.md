@@ -82,6 +82,7 @@ Uma decisão por arquivo, numerada em ordem. Cada uma registra o contexto, o que
 | [0076](0076-etapa-5-sem-falso-ausente-no-plano-do-app.md) | Etapa 5: marca "presente" da etapa 4 conferida pelo texto, formatos do app, A14.10 em plano preditivo e "a definir" com quando ou onde | aceita |
 | [0077](0077-segunda-instancia-leve-na-etapa-5.md) | Etapa 5: segunda instância leve (vereditos "falso" e "regra_errada" contra a página citada, amostra das premissas críticas), no modelo mais barato | pendente |
 | [0079](0079-skill-pmo-0-3-5.md) | Skill PMO 0.3.5: lições 201 a 206 (vereditos pelo item inteiro, "a definir" com marco, conflituoso só depois de procurar, régua corrigida nas partes anteriores) | aceita |
+| [0083](0083-skill-em-nucleo-e-etapas.md) | Skill PMO 0.3.6: núcleo no `SKILL.md` e um arquivo por etapa (papel, entradas, saída, pronto, armadilhas, rubrica); saem os `07-regras` (migração da 0074) |
 
 Modelo para uma nova decisão:
 

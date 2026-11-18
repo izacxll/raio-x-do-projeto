@@ -4,6 +4,12 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 
 ## [Não publicado]
 
+### Skill PMO 0.3.6: núcleo e um arquivo por etapa (decisão 0083)
+- **Arquivos das etapas:** `.claude/skills/pmo/referencias/etapas/etapa-1.md` a `etapa-5.md`, com papel, entradas, saída, definição de pronto, armadilhas e rubrica da segunda instância. O `SKILL.md` fica com o que vale para todas as etapas.
+- **Pedido:** o núcleo recortado mais o arquivo da etapa; nenhum pedido cresce (etapa 2: de ~8.100 para ~7.900 tokens de skill).
+- **Segunda instância:** o pedido e a skill de revisão usam a rubrica da etapa.
+- **Removidos:** os `docs/estudos/engenharia-reversa/07-regras-etapa-N.md`, com o que ainda valia levado às armadilhas e à definição de pronto, e a linha do `CLAUDE.md` que mandava lê-los.
+
 ### Skill PMO 0.3.5 (decisão 0079)
 - **Etapa 5:** "falso" só com a evidência cobrindo o item inteiro (em parte é "sustenta", com o que falta); "a definir" com marco nomeado não é vago; a regra procurada no plano inteiro antes do "conflituoso".
 - **Etapa 4:** a correção de régua vai às partes geradas antes.
