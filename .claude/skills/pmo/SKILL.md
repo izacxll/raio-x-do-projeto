@@ -123,26 +123,10 @@ Antes de fechar a EAP (etapa 2), os marcos do TAP (etapa 3) ou o cronograma do p
 Cada passo passa por três camadas, nesta ordem, antes do próximo (`docs/papeis.md`, no repositório do app). **Cada camada só recebe o que a anterior deixou passar:**
 
 1. **Testes e gabarito (código):** o código confere citações, números, prazos, números R e C e as regras da etapa; o gabarito (`tests/pmo/gabarito/`) guarda os achados confirmados de cada caso, e achado que some deixa o teste vermelho.
-2. **Segunda instância, com a rubrica abaixo:** no app, é uma chamada separada que recebe só este `SKILL.md`, os documentos, o pedido do passo (com o esqueleto do código) e a resposta, **sem o raciocínio de quem fez**. No Claude Code, é outro agente com o mesmo material, ou o GP.
+2. **Segunda instância:** um revisor que não viu o raciocínio de quem fez confere a resposta por uma rubrica fixa. Como montar o pedido isolado, a rubrica, a gravidade, os limites (o revisor também erra; no máximo 2 rodadas) e como aplicar os achados estão na skill `revisao-segunda-instancia` (`.claude/skills/revisao-segunda-instancia/SKILL.md`). No app, a chamada da segunda instância recebe só este `SKILL.md`, os documentos, o pedido do passo (com o esqueleto do código) e a resposta, e o pedido já traz a rubrica.
 3. **GP:** decide o que corrigir, o que seguir e quando parar.
 
 A autoconferência (princípio 13) vem antes das três: é a leitura de quem fez, não uma revisão. O que uma camada acha volta para o mesmo passo, não segue adiante.
-
-**Rubrica fixa da segunda instância.** A régua é o pedido do passo, nem mais nem menos: item do método ou das fichas que o pedido não pediu não é falta.
-
-| Tipo | O que é |
-|---|---|
-| `erro_de_fato` | o que a resposta afirma e o documento não diz, ou diz diferente (número, prazo, data, quem faz, o que se entrega); citação que não prova a frase |
-| `faltou` | o que o pedido do passo exige e a resposta não trouxe |
-| `incoerencia_entre_etapas` | contradição com o esqueleto e as contas do código, com o que veio das etapas anteriores ou dentro da própria resposta |
-| `rotulo_errado` | rótulo ou premissa errados: `documento` sem trecho que prove a frase, sugestão escrita como fato, decisão do GP preenchida como fato, premissa crítica no lugar errado, nome de pessoa |
-
-Gravidade: **alta** só quando muda escopo, prazo, preço, caixa, aceite ou quem executa; **média** quando o GP precisa corrigir antes de aprovar; **baixa** para redação e rastreabilidade. A saída está na seção 4.
-
-**Limites escritos:**
-- **O revisor é o mesmo modelo e também erra.** Achado sobre número ou conta é conferido no placar do código antes de virar correção.
-- **No máximo 2 rodadas por passo;** depois, o GP decide: seguir (com ou sem correção) ou mais uma rodada. Achado médio também espera a decisão do GP.
-- **Trava nova do código entra com a contagem** de alarmes falsos e de acertos num caso. Se der mais alarme falso que acerto, ela vira aviso, não erro.
 
 Erros que evita: um compromisso sem destino passou da proposta ao TAP e ao plano e só apareceu na conferência do plano; num teste, a segunda instância apontou um erro numa conta do código que estava certa, e a "correção" foi aplicada sem conferir o placar; noutro passo, correções só de texto abriram quatro rodadas seguidas.
 
@@ -392,7 +376,7 @@ Toda resposta é **um objeto JSON** que segue o schema do passo, enviado pelo ap
 - **Cruzamentos** (etapas 1 e 5): `"cruzamentos": [{ "codigo": "X1", "estado": "feito" | "nao_se_aplica", "resultado": "confere | diverge: ... | em aberto: ...", "itens": ["id do item gerado, se houver"] }]`.
 - **Compromissos** (etapas 2 a 4): `"compromissos": [{ "codigo": "C01", "tipo": "premissa" | "exclusao" | "obrigacao_contratante" | "metodo", "texto": "...", "destino": "TAP-PR | TAP4.3 | A5.12 ..." }]`.
 - **Vereditos** (etapa 5, decisão 0052): `"vereditos": [{ "achado": "id do achado do código", "veredito": "sustenta" | "falso" | "nao_se_aplica" | "regra_errada", "evidencias": [{ "doc": "pgp", "pagina": n, "trecho": "..." }], "motivo": "..." }]` e `"dispensas": [{ "parte": "B28", "veredito": "cabe" | "nao_cabe", "motivo": "..." }]`. `evidencias` é obrigatório no `falso`; `motivo`, no `nao_se_aplica`, no `regra_errada` e no `nao_cabe`.
-- **Segunda instância** (todas as etapas, seção 3, "Revisão em camadas"): `{ "achados": [{ "id": "a1", "tipo": "erro_de_fato" | "faltou" | "incoerencia_entre_etapas" | "rotulo_errado", "gravidade": "alta" | "media" | "baixa", "onde": "id do item, parte ou seção", "texto": "...", "evidencias": [{ "doc": "rfp", "pagina": n, "trecho": "..." }], "sugestao": "..." }], "conferido": ["o que foi conferido e passou"] }`. `evidencias` fica `[]` quando o problema é a falta.
+- **Segunda instância** (todas as etapas; skill `revisao-segunda-instancia` (`.claude/skills/revisao-segunda-instancia/SKILL.md`)): `{ "achados": [{ "id": "a1", "tipo": "erro_de_fato" | "faltou" | "incoerencia_entre_etapas" | "rotulo_errado", "gravidade": "alta" | "media" | "baixa", "onde": "id do item, parte ou seção", "texto": "...", "evidencias": [{ "doc": "rfp", "pagina": n, "trecho": "..." }], "sugestao": "..." }], "conferido": ["o que foi conferido e passou"] }`. `evidencias` fica `[]` quando o problema é a falta.
 - Os campos acima entram nos schemas conforme cada etapa é atualizada no app; até lá, o app ignora o que o schema não pede.
 
 ## 5. O que carregar em cada etapa

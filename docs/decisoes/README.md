@@ -68,6 +68,7 @@ Uma decisão por arquivo, numerada em ordem. Cada uma registra o contexto, o que
 | [0062](0062-tres-datas-por-produto-e-marco-pela-atividade.md) | Três datas por produto (primeira entrega, fim da inspeção, termo definitivo) e marco do TAP conferido pela atividade da EAP que ele representa | aceita |
 | [0063](0063-skill-pmo-0-3-3-e-revisao-em-camadas.md) | Skill PMO 0.3.3 com as lições do teste ponta a ponta; revisão em camadas (gabarito → segunda instância com rubrica → GP) e gabarito na CI | aceita |
 | [0064](0064-tamanho-do-pedido.md) | Tamanho do pedido: SKILL.md por etapa, checklist só com as premissas críticas confirmadas, fichas sem as linhas de fonte; cache como estava | aceita |
+| [0065](0065-skill-de-revisao-por-segunda-instancia.md) | Skill de revisão por segunda instância no repositório; a PMO e o docs/papeis.md apontam para ela, sem repetir a rubrica | aceita |
 
 Modelo para uma nova decisão:
 
