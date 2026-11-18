@@ -135,7 +135,10 @@ export function montarPropostaTecnica(
     const numeros = new Map(numerarCompromissos(conteudo).map((x) => [x.idItem, x.numero]));
     const comNumero = (i: ItemProposta) => {
       const n = numeros.get(i.id);
-      return n ? `${n} — ${paragrafo(i, p)}` : paragrafo(i, p);
+      // as marcas (○ ◊) ficam no começo, antes do número C, para a contagem da legenda (decisão 0084)
+      const texto = paragrafo(i, p);
+      const marcas = /^[○◊]+ /.exec(texto)?.[0] ?? "";
+      return n ? `${marcas}${n} — ${texto.slice(marcas.length)}` : texto;
     };
     // a ordem das páginas não muda (o TAP cita a proposta do dossiê pela página): os limites de volume entram na
     // página das exclusões

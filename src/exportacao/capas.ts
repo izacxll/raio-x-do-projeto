@@ -21,9 +21,9 @@ import { reguaQueMudouEmTexto, reguasQueMudaram } from "../etapas/4-pgp/reguas";
 import { resultadoDaEtapa5 } from "../etapas/5-conferencia/resultado";
 import type { ResultadoVereditos } from "../etapas/5-conferencia/candidatos";
 import type { AchadoPmoConferido } from "../etapas/5-conferencia/leitura-pmo";
-import { itensValidos, textoFinal } from "../pmo/itens";
+import { itensValidos, rotuloDoItem, textoFinal } from "../pmo/itens";
 import { ordenarAchados } from "../regras/conferencia";
-import { curto, NAO_LOCALIZADO, type CapaDeDecisao } from "./capa-de-decisao";
+import { comPrefixo, curto, limitar, NAO_LOCALIZADO, type CapaDeDecisao } from "./capa-de-decisao";
 import type { Alerta, NumeroChave } from "./modelo";
 import { capaDaRfp } from "./relatorio-rfp";
 
@@ -66,7 +66,9 @@ export function capaDaProposta(dossie: Dossie, agora = new Date()): CapaDeDecisa
   const eap = p.eap?.resposta;
   const preco = eap ? calcularPreco(eap.perfis, eap.horas, p.parametros) : undefined;
   const estimado = ponto.valorEstimado ? lerValorEmReais(ponto.valorEstimado.texto) : undefined;
-  const valor = conferirValor(preco?.precoCalculado, estimado);
+  // como na tela: o preço final do GP, se houver; senão, o calculado
+  const precoQueVale = p.parametros.precoFinal ?? preco?.precoCalculado;
+  const valor = conferirValor(precoQueVale, estimado);
   const compromissos = numerarCompromissos(conteudo);
   const metodo = compromissos.filter((c) => c.tipo === "metodo");
   const abordagem = p.estrategia?.resposta.abordagens.find((a) => a.id === p.abordagem?.id);
@@ -77,7 +79,7 @@ export function capaDaProposta(dossie: Dossie, agora = new Date()): CapaDeDecisa
 
   const alertas: Alerta[] = [
     ...(prazo?.situacao === "nao-cabe"
-      ? [{ nivel: "alto" as const, texto: `Cronograma: ${curto(prazo.texto, 200)}` }]
+      ? [{ nivel: "alto" as const, texto: comPrefixo("Cronograma", limitar(prazo.texto, 240)) }]
       : []),
     ...marcosForaDoPrazo.map((m) => ({
       nivel: "alto" as const,
@@ -134,12 +136,15 @@ export function capaDaProposta(dossie: Dossie, agora = new Date()): CapaDeDecisa
     {
       rotulo: "Horas",
       valor: preco
-        ? `${Math.round(preco.horasTotais).toLocaleString("pt-BR")} h esperadas${preco.linhas.some((l) => l.horasADefinir) ? " (+ horas a definir pelo GP)" : ""}`
+        ? `${Math.round(preco.horasTotais).toLocaleString("pt-BR")} h esperadas${preco.linhas.some((l) => l.horasADefinir.length) ? " (+ horas a definir pelo GP)" : ""}`
         : NAO_LOCALIZADO,
     },
     { rotulo: "Perfis da equipe", valor: String(eap?.perfis.length ?? 0) },
-    { rotulo: "Preço calculado", valor: reais(preco?.precoCalculado) },
-    { rotulo: "Cronograma × prazo", valor: prazo ? curto(prazo.texto, 120) : "não conferido" },
+    {
+      rotulo: p.parametros.precoFinal !== undefined ? "Preço final (decisão do GP)" : "Preço calculado",
+      valor: reais(precoQueVale),
+    },
+    { rotulo: "Cronograma × prazo", valor: prazo ? limitar(prazo.texto, 160) : "não conferido" },
     {
       rotulo: "Compromissos (C)",
       valor: `${compromissos.length}, dos quais ${metodo.length} de método`,
@@ -222,7 +227,9 @@ export function capaDoTap(dossie: Dossie, agora = new Date()): CapaDeDecisao | u
     /^(marcos|marcos-pela-conta|valor|aceite|contrato|premissas-criticas)$/.test(id);
   const validos = itensValidos(t.revisoes, todos);
   const doCampo = (prefixo: string) =>
-    validos.filter((i) => i.id.startsWith(`tap:${prefixo}:`)).map((i) => textoFinal(i, t.revisoes));
+    validos
+      .filter((i) => i.id.startsWith(`tap:${prefixo}:`))
+      .map((i) => `${rotuloDoItem(i)} ${curto(textoFinal(i, t.revisoes), 200)}`);
   const registro = t.premissas?.resposta.premissas ?? [];
 
   const alertas: Alerta[] = atencao.map((v) => ({
@@ -272,10 +279,7 @@ export function capaDoTap(dossie: Dossie, agora = new Date()): CapaDeDecisao | u
       : "Sem o contrato assinado: o TAP parte da proposta e da RFP.",
     `${divergencias.filter(pedeDecisao).length} diferença(s) entre o que a RFP pediu, a proposta prometeu e o contrato assinou.`,
   ];
-  const linha = (campo: string, textos: string[]) => [
-    campo,
-    textos.length ? textos.map((x) => curto(x, 220)).join("\n") : A_DEFINIR,
-  ];
+  const linha = (campo: string, textos: string[]) => [campo, textos.length ? textos.join("\n") : A_DEFINIR];
   return {
     etapa: 3,
     oQueE:
@@ -324,7 +328,7 @@ export function capaDoTap(dossie: Dossie, agora = new Date()): CapaDeDecisao | u
                   curto(d.contrato?.texto || "—", 140),
                   [
                     d.versaoSugerida
-                      ? `sugere-se a versão da ${d.versaoSugerida === "rfp" ? "RFP" : d.versaoSugerida}`
+                      ? `sugere-se a versão ${d.versaoSugerida === "rfp" ? "da RFP" : d.versaoSugerida === "proposta" ? "da proposta" : "do contrato"}`
                       : "",
                     d.oQueFazer ? curto(d.oQueFazer, 120) : "",
                   ]
@@ -368,7 +372,12 @@ export function capaDoPgp(dossie: Dossie, agora = new Date()): CapaDeDecisao | u
 
   const alertas: Alerta[] = [
     ...(crono?.conferenciaPrazo.situacao === "nao-cabe"
-      ? [{ nivel: "alto" as const, texto: `Cronograma: ${curto(crono.conferenciaPrazo.texto, 200)}` }]
+      ? [
+          {
+            nivel: "alto" as const,
+            texto: comPrefixo("Cronograma", limitar(crono.conferenciaPrazo.texto, 240)),
+          },
+        ]
       : []),
     ...foraDoPrazo.map((m) => ({ nivel: "alto" as const, texto: `${m.produto}: ${curto(m.texto, 180)}` })),
     ...(crono?.datasFixas ?? [])
@@ -454,7 +463,7 @@ export function capaDoPgp(dossie: Dossie, agora = new Date()): CapaDeDecisao | u
       {
         titulo: "Os 5 riscos principais",
         paragrafos: [
-          "Ordenados por probabilidade × impacto (qualitativos, do registro). O valor da reserva é do GP.",
+          "Sugestões do PMO, ordenadas pelo código por probabilidade × impacto (qualitativos, do registro). O valor da reserva é do GP.",
         ],
         tabela: {
           colunas: ["Risco", "P × I", "Resposta", "Gatilho", "Reserva"],
@@ -539,18 +548,18 @@ export function capaDosVereditos(
     id: a.id,
     parte: a.parte,
     partes: a.partes ?? [],
-    gravidade: a.gravidade,
+    gravidade: conf.decisoes[a.id]?.gravidade ?? a.gravidade,
     titulo: a.titulo,
     sugestao: a.sugestao,
     daLeitura: false,
   }));
   const daLeitura: AchadoDaCapa[] = leitura
-    .filter((a) => a.situacao === "valido")
+    .filter((a) => a.situacao === "valido" && !a.jaApontadoPeloCodigo)
     .map((a) => ({
       id: `pmo:${a.id}`,
       parte: a.parte,
       partes: [],
-      gravidade: a.gravidade,
+      gravidade: conf.decisoes[`pmo:${a.id}`]?.gravidade ?? a.gravidade,
       titulo: a.titulo,
       sugestao: a.sugestao,
       daLeitura: true,
@@ -599,7 +608,7 @@ export function capaDosVereditos(
     { rotulo: "Veredito sugerido", valor: veredito },
     {
       rotulo: "Achados que se sustentam",
-      valor: `${sustentados.length} (grave ${conta("grave")}, média ${conta("média")}, baixa ${conta("baixa")}); ${daLeitura.length} da leitura do PMO`,
+      valor: `${sustentados.length} (grave ${conta("grave")}, média ${conta("média")}, baixa ${conta("baixa")}); ${sustentados.filter((a) => a.daLeitura).length} da leitura do PMO`,
     },
     { rotulo: "Candidatos do código derrubados pelo PMO", valor: String(derrubados.length) },
     {

@@ -218,7 +218,7 @@ export function capaDaRfp(
       .filter((i) => i.impacto !== undefined && i.impacto <= 4 && !mesmoAssunto(i))
       .map((i) => ({
         nivel: ((i.impacto ?? 9) <= 2 ? "alto" : "medio") as Alerta["nivel"],
-        texto: `${i.nome}${i.premissa ? ` (${i.premissa})` : ""}: ${curto(i.porquePesa ?? i.texto)}`,
+        texto: `${i.nome}${i.premissa ? ` (${i.premissa})` : ""}: ${curto(i.porquePesa ?? i.texto)}${i.doPmo ? " (sugestão do PMO)" : ""}`,
       })),
   ];
 

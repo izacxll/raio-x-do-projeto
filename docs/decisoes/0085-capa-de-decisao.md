@@ -39,10 +39,15 @@ Com as partes da decisão 0084 (capa, quadros, corpo e anexo), faltava o conteú
 | 1 | 14 e 14 | 16 e 16 | 13 e 13 |
 | 2 | 17 e 20 | 20 e 22 | 13 e 14 |
 | 3 | 24 e 24 | 25 e 25 | 17 e 15 |
-| 4 | 66 e 72 | 66 e 73 | 56 e 62 |
+| 4 | 66 e 72 | 66 e 73 | 15 e 16 |
 | 5 | 1 e 1 | 5 e 5 | 4 e 4 |
 
-O total quase não muda, porque o formato reorganiza e não corta. O que muda é a leitura: o gerente decide pela página 1, vê o resultado nas páginas 2 e 3, e o processo e os registros completos estão no anexo. A etapa 5 passa a ter resultado. O volume da etapa 4 vem dos próprios planos (partes A) e só cai com o PGP enxuto por porte (bloco 3 do pente fino).
+O total quase não muda, porque o formato reorganiza e não corta. O que muda é a leitura:
+- o gerente decide pela página 1 e vê o resultado nas páginas 2 e 3;
+- na etapa 4, o que vem antes do anexo cai de cerca de 70 para 15 páginas, porque os registros completos (partes B) vão para o anexo;
+- a etapa 5 passa a ter resultado.
+
+O total da etapa 4 só cai com o PGP enxuto por porte (bloco 3 do pente fino).
 
 ## Consequências
 

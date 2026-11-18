@@ -9,7 +9,9 @@ import { criarDossieVazio } from "../../src/dossie/arquivo";
 import { Dossie as EsquemaDossie, type Dossie, type PgpDossie } from "../../src/dossie/esquema";
 import { gerarSugerido, pgpInicial } from "../../src/etapas/4-pgp/pgp";
 import {
+  comPrefixo,
   curto,
+  limitar,
   escolherAlertas,
   MAXIMO_DE_ALERTAS,
   MAXIMO_DE_DECISOES,
@@ -24,6 +26,7 @@ import {
   vereditoDoPlano,
 } from "../../src/exportacao/capas";
 import { montarPgp } from "../../src/exportacao/relatorio-pgp";
+import { registrosNoAnexo } from "../../src/exportacao/resultado-da-etapa";
 import { montarTap } from "../../src/exportacao/relatorio-tap";
 import { SCHEMAS_PGP, type PassoPgp } from "../../src/pmo/schemas/pgp";
 
@@ -116,6 +119,26 @@ describe("capa de cada etapa, com a RFP pública da OEI", () => {
   });
 });
 
+describe("registros do PGP no anexo do resultado", () => {
+  it("a parte B e as continuações dela vão ao anexo; a parte A seguinte volta ao corpo", () => {
+    const r = registrosNoAnexo([
+      { titulo: "1. Plano do escopo", paragrafos: ["Parte A1 do plano."] },
+      { titulo: "2. Registro dos riscos", paragrafos: ["Parte B27 do plano."] },
+      { titulo: "2. Registro dos riscos (continuação)" },
+      { titulo: "3. Plano dos riscos", paragrafos: ["Parte A8 do plano."] },
+      { titulo: "Partes dispensadas pelo GP" },
+    ]);
+    expect(r.map((x) => x.parte ?? "corpo")).toEqual(["corpo", "anexo", "anexo", "corpo", "corpo"]);
+  });
+
+  it("com o PGP da OEI, as partes B vão todas ao anexo", () => {
+    const r = registrosNoAnexo(montarPgp(dossie, HOJE).secoes);
+    const bs = r.filter((x) => /^Parte B\d+ do plano\.$/.test(x.paragrafos?.[0] ?? ""));
+    expect(bs.length).toBeGreaterThan(0);
+    expect(bs.every((x) => x.parte === "anexo")).toBe(true);
+  });
+});
+
 describe("regras da capa", () => {
   it("veredito do plano por regra fixa: grave = não apto; média = com ressalvas; só baixa = apto", () => {
     expect(vereditoDoPlano(["baixa", "grave"])).toBe("não apto");
@@ -132,6 +155,15 @@ describe("regras da capa", () => {
       ...["a2", "a3", "a4", "a5", "a6"].map((t) => ({ nivel: "alto" as const, texto: t })),
     ]);
     expect(a.map((x) => x.texto)).toEqual(["a1", "a2", "a3", "a4", "a5"]);
+  });
+
+  it("texto curto não corta em abreviatura (p. 14); o limitado não corta frase", () => {
+    expect(
+      curto("Cronograma: 280 dias úteis; prazo da RFP: 12 meses (Edital, p. 14). Passa 20 dias úteis."),
+    ).toBe("Cronograma: 280 dias úteis; prazo da RFP: 12 meses (Edital, p. 14).");
+    expect(limitar("Um. Dois. Três.", 100)).toBe("Um. Dois. Três.");
+    expect(comPrefixo("Cronograma", "Cronograma: 280 dias")).toBe("Cronograma: 280 dias");
+    expect(comPrefixo("Caixa", "fica negativo")).toBe("Caixa: fica negativo");
   });
 
   it("texto curto: a primeira frase, sem cortar no ponto e vírgula nem no meio da palavra", () => {

@@ -1,21 +1,36 @@
 // A capa de decisão da etapa na tela (decisão 0085): a mesma que vai no resultado da etapa, montada por código a partir
 // do dossiê. O que é, o que decidir agora, os números-chave, os alertas, o que mudou e os quadros.
-import { useMemo } from "react";
+import { useDeferredValue, useMemo } from "react";
 import type { Dossie } from "../../dossie/esquema";
-import { escolherAlertas, MAXIMO_DE_DECISOES } from "../../exportacao/capa-de-decisao";
+import {
+  escolherAlertas,
+  MAXIMO_DE_DECISOES,
+  type CapaDeDecisao as Capa,
+} from "../../exportacao/capa-de-decisao";
 import { capaDaEtapa } from "../../exportacao/capas";
 import { RotuloSecao } from "./basicos";
 
+/**
+ * A capa das etapas 1 a 4, calculada do dossiê. Na etapa 5, a tela da conferência mostra a dela com os vereditos que já
+ * calculou (para não refazer a conferência). O cálculo usa o dossiê adiado: enquanto o GP digita, a tela não espera a
+ * capa.
+ */
 export function CapaDeDecisao({ dossie, etapa }: { dossie: Dossie; etapa: number }) {
+  const adiado = useDeferredValue(dossie);
   // a capa é só leitura do dossiê; se uma conta falhar, a tela segue sem ela
   const capa = useMemo(() => {
+    if (etapa === 5) return undefined;
     try {
-      return capaDaEtapa(dossie, etapa);
+      return capaDaEtapa(adiado, etapa);
     } catch {
       return undefined;
     }
-  }, [dossie, etapa]);
-  if (!capa) return null;
+  }, [adiado, etapa]);
+  return capa ? <CapaNaTela capa={capa} /> : null;
+}
+
+/** O desenho da capa (a mesma para todas as etapas). */
+export function CapaNaTela({ capa }: { capa: Capa }) {
   const alertas = escolherAlertas(capa.alertas);
   return (
     <section className="bloco capa-decisao" aria-label="Capa de decisão">

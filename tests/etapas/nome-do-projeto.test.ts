@@ -43,6 +43,9 @@ describe("partes do nome", () => {
         "Contratação dos serviços da Fundação Getulio Vargas para a avaliação do programa de merenda",
       ),
     ).toBe("Avaliação do programa de merenda");
+    expect(
+      objetoCurto("Contratação da Fundação Getulio Vargas (FGV) para a revisão do plano de carreiras"),
+    ).toBe("Revisão do plano de carreiras");
     expect(objetoCurto("Contratar empresa especializada na prestação de serviços de apoio")).toBe(
       "Prestação de serviços de apoio",
     );

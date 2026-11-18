@@ -55,7 +55,7 @@ export function objetoCurto(objeto: string): string {
     )
     .replace(
       // na contratação direta da FGV, a fórmula de abertura com o nome da Fundação também sai (decisão 0085)
-      /^contrata[cç][aã]o (?:de presta[cç][aã]o de servi[cç]os |dos servi[cç]os )?d[ao] funda[cç][aã]o get[uú]lio vargas(?:\s*[–-]\s*fgv)?\s*,?\s*(?:para (?:a |o |as |os )?)?/i,
+      /^contrata[cç][aã]o (?:de presta[cç][aã]o de servi[cç]os |dos servi[cç]os )?d[ao] funda[cç][aã]o get[uú]lio vargas(?:\s*(?:[–-]\s*fgv|\(fgv\)))?\s*,?\s*(?:para (?:a |o |as |os )?)?/i,
       "",
     )
     .replace(

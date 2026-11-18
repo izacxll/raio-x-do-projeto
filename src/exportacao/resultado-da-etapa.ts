@@ -165,9 +165,9 @@ function resultadoFinal(dossie: Dossie, etapa: number, agora: Date): Secao[] {
 export function registrosNoAnexo(secoes: Secao[]): Secao[] {
   let doRegistro = false;
   return secoes.map((x) => {
-    const parte = /^Parte ([AB])d+ do plano.$/.exec(x.paragrafos?.[0] ?? "")?.[1];
+    const parte = /^Parte ([AB])\d+ do plano\.$/.exec(x.paragrafos?.[0] ?? "")?.[1];
     if (parte) doRegistro = parte === "B";
-    else if (!/(continuação)$/.test(x.titulo)) doRegistro = false;
+    else if (!/\(continuação\)$/.test(x.titulo)) doRegistro = false;
     return doRegistro ? { ...x, parte: "anexo" as const } : x;
   });
 }

@@ -53,10 +53,24 @@ export function secoesDaCapa(c: CapaDeDecisao): Secao[] {
   ];
 }
 
-/** Texto curto para a capa: a primeira frase, até um limite, sem cortar palavra. */
+/** O texto até um limite, sem cortar palavra (sem cortar frase: para as contas, que dizem o resultado no fim). */
+export function limitar(texto: string, limite = 220): string {
+  const t = texto.replace(/\s+/g, " ").trim();
+  return t.length > limite ? `${t.slice(0, limite).replace(/[\s,]+\S*$/, "")}…` : t;
+}
+
+/**
+ * Texto curto para a capa: a primeira frase, até um limite, sem cortar palavra. A frase termina em ponto seguido de
+ * maiúscula ou do fim: "p. 14" e "art. 75" não cortam.
+ */
 export function curto(texto: string, limite = 160): string {
   const t = texto.replace(/\s+/g, " ").trim();
-  const frase = (/^.*?\.(?:\s|$)/.exec(t)?.[0] ?? t).trim().replace(/[;,:]$/, ".");
+  const frase = (/^.*?\.(?=\s+[A-ZÀ-Ý"“(]|$)/.exec(t)?.[0] ?? t).trim().replace(/[;,:]$/, ".");
   const base = frase.length >= 20 ? frase : t;
-  return base.length > limite ? `${base.slice(0, limite).replace(/[\s,]+\S*$/, "")}…` : base;
+  return limitar(base, limite);
+}
+
+/** "Rótulo: texto", sem repetir o rótulo quando o texto já começa com ele ("Cronograma: Cronograma: …"). */
+export function comPrefixo(rotulo: string, texto: string): string {
+  return texto.toLowerCase().startsWith(rotulo.toLowerCase()) ? texto : `${rotulo}: ${texto}`;
 }

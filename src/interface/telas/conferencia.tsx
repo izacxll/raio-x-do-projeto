@@ -29,6 +29,8 @@ import { procurarSinais } from "../../regras/busca";
 import { conferirPlano, resumirAchados } from "../../regras/conferencia";
 import { aplicarTipoPlano, proporMapa, sincronizarMapa, type ParteNoMapa } from "../../regras/mapa-pgp";
 import { LeituraDoPmo } from "./leitura-pmo";
+import { CapaNaTela } from "../componentes/capa-de-decisao";
+import { capaDosVereditos } from "../../exportacao/capas";
 import { conferirLeitura, type AchadoPmoConferido } from "../../etapas/5-conferencia/leitura-pmo";
 import { mapaInicialDaConferencia } from "../../etapas/5-conferencia/dispensas";
 import { presentesPelaMarcaDoDossie } from "../../etapas/4-pgp/autoconferencia";
@@ -618,146 +620,161 @@ function Resultado({
     }
   }
 
-  return (
-    <section className="bloco">
-      <RotuloSecao>Resultado</RotuloSecao>
-      <div className="cartao cartao__corpo bloco">
-        <table className="tabela resumo-achados" aria-label="Resumo dos achados">
-          <thead>
-            <tr>
-              <th>Gravidade</th>
-              <th>Vago</th>
-              <th>Conflituoso</th>
-              <th>Ausente</th>
-            </tr>
-          </thead>
-          <tbody>
-            {(["grave", "média", "baixa"] as const).map((g) => (
-              <tr key={g}>
-                <td>
-                  <i className={`etiqueta etiqueta--${g === "média" ? "media" : g}`}>{g}</i>
-                </td>
-                <td>{resumo[g].vago}</td>
-                <td>{resumo[g].conflituoso}</td>
-                <td>{resumo[g].ausente}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        <p className="envio__obs">
-          Só contam os achados do código que o PMO confirmou ou que a segunda instância devolveu (
-          {confirmados.length} de {vereditos.candidatos.length}); os outros estão abaixo, com o veredito.
-          "Ausente" quer dizer não localizado pelo código no plano: conferir no documento antes de decidir.
-          {naoConferidos > 0 &&
-            ` ${naoConferidos} itens dependem de interpretação e não foram conferidos pelo código.`}
-          {naoVerificaveis > 0 &&
-            ` ${naoVerificaveis} verificações ficaram não verificáveis por páginas sem texto legível.`}
-        </p>
-        {vereditos.candidatos.some((c) => c.revisadoPelaSegunda) && (
-          <ul className="envio__obs" data-testid="devolvidos-pela-segunda">
-            {vereditos.candidatos
-              .filter((c) => c.revisadoPelaSegunda)
-              .map((c) => (
-                <li key={c.achado.id}>
-                  Voltou a contar pela segunda instância: {c.achado.titulo}. {c.revisadoPelaSegunda}
-                </li>
-              ))}
-          </ul>
-        )}
-        <div className="acoes-exportar">
-          <button className="botao" type="button" onClick={() => void baixar("docx")}>
-            Relatório DOCX
-          </button>
-          <button className="botao" type="button" onClick={() => void baixar("pdf")}>
-            Relatório PDF
-          </button>
-          <button className="botao" type="button" onClick={() => void baixar("xlsx")}>
-            Lista de achados XLSX
-          </button>
-          {mensagem && <span className="envio__obs">{mensagem}</span>}
-        </div>
-      </div>
+  // a capa de decisão com os vereditos já calculados aqui (decisão 0085), sem refazer a conferência
+  const capa = useMemo(
+    () =>
+      capaDosVereditos(
+        { ...dossie, conferencia: conf },
+        vereditos,
+        leitura,
+        dossie.documentos.find((d) => d.papel === "pgp")?.nomeArquivo ?? "o plano",
+      ),
+    [dossie, conf, vereditos, leitura],
+  );
 
-      {finais.length === 0 && (
-        <p className="texto-apoio">
-          {achados.length
-            ? "Nenhum achado do código confirmado pelo PMO."
-            : "Nenhum achado nas regras do código."}
-        </p>
-      )}
-      {finais.map((a) => (
-        <article
-          key={a.id}
-          className={`cartao cartao--borda achado achado--${a.tipo} bloco`}
-          data-gravidade={a.gravidade}
-        >
-          <div className="cartao__corpo">
-            <div className="achado__cabeca">
-              <i className={`etiqueta etiqueta--${a.gravidade === "média" ? "media" : a.gravidade}`}>
-                {a.gravidade}
-              </i>
-              <i className={`etiqueta etiqueta--tipo-${a.tipo}`}>{NOME_TIPO[a.tipo]}</i>
-              <span className="lb">{a.categoria}</span>
-              <span className="lb">parte {a.parte}</span>
-            </div>
-            <h3 className="achado__titulo">{a.titulo}</h3>
-            <p>{a.descricao}</p>
-            <ul className="evidencias">
-              {a.evidencias.map((e, i) => (
-                <li key={i}>
-                  {e.documento === "ficha" ? (
-                    <span className="lb">{e.rotulo}</span>
-                  ) : (
-                    <EtiquetaRotulo rotulo="documento" pagina={e.pagina} />
-                  )}{" "}
-                  <span>
-                    {e.documento !== "ficha" && `${e.documento.toUpperCase()}: `}“{e.trecho}”
-                  </span>
-                </li>
+  return (
+    <>
+      {capa && <CapaNaTela capa={capa} />}
+      <section className="bloco">
+        <RotuloSecao>Resultado</RotuloSecao>
+        <div className="cartao cartao__corpo bloco">
+          <table className="tabela resumo-achados" aria-label="Resumo dos achados">
+            <thead>
+              <tr>
+                <th>Gravidade</th>
+                <th>Vago</th>
+                <th>Conflituoso</th>
+                <th>Ausente</th>
+              </tr>
+            </thead>
+            <tbody>
+              {(["grave", "média", "baixa"] as const).map((g) => (
+                <tr key={g}>
+                  <td>
+                    <i className={`etiqueta etiqueta--${g === "média" ? "media" : g}`}>{g}</i>
+                  </td>
+                  <td>{resumo[g].vago}</td>
+                  <td>{resumo[g].conflituoso}</td>
+                  <td>{resumo[g].ausente}</td>
+                </tr>
               ))}
+            </tbody>
+          </table>
+          <p className="envio__obs">
+            Só contam os achados do código que o PMO confirmou ou que a segunda instância devolveu (
+            {confirmados.length} de {vereditos.candidatos.length}); os outros estão abaixo, com o veredito.
+            "Ausente" quer dizer não localizado pelo código no plano: conferir no documento antes de decidir.
+            {naoConferidos > 0 &&
+              ` ${naoConferidos} itens dependem de interpretação e não foram conferidos pelo código.`}
+            {naoVerificaveis > 0 &&
+              ` ${naoVerificaveis} verificações ficaram não verificáveis por páginas sem texto legível.`}
+          </p>
+          {vereditos.candidatos.some((c) => c.revisadoPelaSegunda) && (
+            <ul className="envio__obs" data-testid="devolvidos-pela-segunda">
+              {vereditos.candidatos
+                .filter((c) => c.revisadoPelaSegunda)
+                .map((c) => (
+                  <li key={c.achado.id}>
+                    Voltou a contar pela segunda instância: {c.achado.titulo}. {c.revisadoPelaSegunda}
+                  </li>
+                ))}
             </ul>
-            <p>
-              <EtiquetaRotulo rotulo="sugestao" /> {a.sugestao}
-            </p>
-            <div className="decisao">
-              <EtiquetaRotulo rotulo="decisao-gp" />
-              <select
-                aria-label="O achado procede?"
-                value={a.decisao?.procede ?? ""}
-                onChange={(e) =>
-                  decidir(a.id, { procede: (e.target.value || undefined) as DecisaoAchado["procede"] })
-                }
-              >
-                <option value="">pendente</option>
-                <option value="sim">procede</option>
-                <option value="nao">não procede</option>
-              </select>
-              <select
-                aria-label="Gravidade"
-                value={a.decisao?.gravidade ?? ""}
-                onChange={(e) =>
-                  decidir(a.id, { gravidade: (e.target.value || undefined) as DecisaoAchado["gravidade"] })
-                }
-              >
-                <option value="">gravidade do código</option>
-                <option value="grave">grave</option>
-                <option value="média">média</option>
-                <option value="baixa">baixa</option>
-              </select>
-              <input
-                aria-label="Justificativa"
-                placeholder="Justificativa (obrigatória se não procede ou se a gravidade mudar)"
-                value={a.decisao?.justificativa ?? ""}
-                onChange={(e) => decidir(a.id, { justificativa: e.target.value })}
-              />
-            </div>
+          )}
+          <div className="acoes-exportar">
+            <button className="botao" type="button" onClick={() => void baixar("docx")}>
+              Relatório DOCX
+            </button>
+            <button className="botao" type="button" onClick={() => void baixar("pdf")}>
+              Relatório PDF
+            </button>
+            <button className="botao" type="button" onClick={() => void baixar("xlsx")}>
+              Lista de achados XLSX
+            </button>
+            {mensagem && <span className="envio__obs">{mensagem}</span>}
           </div>
-        </article>
-      ))}
-      {(aParte.length > 0 || vereditos.dispensas.length > 0) && (
-        <NaoConfirmados aParte={aParte} vereditos={vereditos} />
-      )}
-    </section>
+        </div>
+
+        {finais.length === 0 && (
+          <p className="texto-apoio">
+            {achados.length
+              ? "Nenhum achado do código confirmado pelo PMO."
+              : "Nenhum achado nas regras do código."}
+          </p>
+        )}
+        {finais.map((a) => (
+          <article
+            key={a.id}
+            className={`cartao cartao--borda achado achado--${a.tipo} bloco`}
+            data-gravidade={a.gravidade}
+          >
+            <div className="cartao__corpo">
+              <div className="achado__cabeca">
+                <i className={`etiqueta etiqueta--${a.gravidade === "média" ? "media" : a.gravidade}`}>
+                  {a.gravidade}
+                </i>
+                <i className={`etiqueta etiqueta--tipo-${a.tipo}`}>{NOME_TIPO[a.tipo]}</i>
+                <span className="lb">{a.categoria}</span>
+                <span className="lb">parte {a.parte}</span>
+              </div>
+              <h3 className="achado__titulo">{a.titulo}</h3>
+              <p>{a.descricao}</p>
+              <ul className="evidencias">
+                {a.evidencias.map((e, i) => (
+                  <li key={i}>
+                    {e.documento === "ficha" ? (
+                      <span className="lb">{e.rotulo}</span>
+                    ) : (
+                      <EtiquetaRotulo rotulo="documento" pagina={e.pagina} />
+                    )}{" "}
+                    <span>
+                      {e.documento !== "ficha" && `${e.documento.toUpperCase()}: `}“{e.trecho}”
+                    </span>
+                  </li>
+                ))}
+              </ul>
+              <p>
+                <EtiquetaRotulo rotulo="sugestao" /> {a.sugestao}
+              </p>
+              <div className="decisao">
+                <EtiquetaRotulo rotulo="decisao-gp" />
+                <select
+                  aria-label="O achado procede?"
+                  value={a.decisao?.procede ?? ""}
+                  onChange={(e) =>
+                    decidir(a.id, { procede: (e.target.value || undefined) as DecisaoAchado["procede"] })
+                  }
+                >
+                  <option value="">pendente</option>
+                  <option value="sim">procede</option>
+                  <option value="nao">não procede</option>
+                </select>
+                <select
+                  aria-label="Gravidade"
+                  value={a.decisao?.gravidade ?? ""}
+                  onChange={(e) =>
+                    decidir(a.id, { gravidade: (e.target.value || undefined) as DecisaoAchado["gravidade"] })
+                  }
+                >
+                  <option value="">gravidade do código</option>
+                  <option value="grave">grave</option>
+                  <option value="média">média</option>
+                  <option value="baixa">baixa</option>
+                </select>
+                <input
+                  aria-label="Justificativa"
+                  placeholder="Justificativa (obrigatória se não procede ou se a gravidade mudar)"
+                  value={a.decisao?.justificativa ?? ""}
+                  onChange={(e) => decidir(a.id, { justificativa: e.target.value })}
+                />
+              </div>
+            </div>
+          </article>
+        ))}
+        {(aParte.length > 0 || vereditos.dispensas.length > 0) && (
+          <NaoConfirmados aParte={aParte} vereditos={vereditos} />
+        )}
+      </section>
+    </>
   );
 }
 
