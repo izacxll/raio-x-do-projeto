@@ -20,3 +20,4 @@ No caso fiscal do teste externo, a proposta falava em 14 requisitos, e a lista q
 
 - Na cópia do caso fiscal (fora do Git), o pedido do escopo passou a listar R13 e R14, e o falso "descartado" sumiu da conferência do TAP.
 - As respostas gravadas da OEI, anteriores a esta decisão, não citam as obrigações em nenhum item do TAP. A conferência agora aponta isso, e os testes foram ajustados ao comportamento novo.
+- Revisão de código (nível alto): a observação do PMO não conta como destino da obrigação no TAP; na matriz B23, a obrigação citada em algum item do plano, sem pacote, fica "obrigação no plano" (e não "sem pacote na EAP"); o pedido principal do TAP também diz quais R o GP descartou, e os pedidos do TAP e do escopo dizem que a obrigação pode ir para os limites ou a B17, com o número R. Testes com o caso que motivou a decisão (`tests/etapas/lista-unica-de-r.test.ts`).

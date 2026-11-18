@@ -161,7 +161,7 @@ ${fichasDasPartes(partes)}
 
 # O que fazer
 1. textos: o texto de cada parte acima, item a item do conteúdo mínimo da ficha.
-2. eap: os pacotes de trabalho por produto, com o dicionário (descrição e critério de aceite) e os números R de cada pacote. Todo requisito da RFP deve estar em algum pacote. O código monta a matriz de rastreabilidade (B23) com isto.
+2. eap: os pacotes de trabalho por produto, com o dicionário (descrição e critério de aceite) e os números R de cada pacote. Toda entrega da lista de R deve estar em algum pacote; a obrigação (R do tipo obrigação) pode ficar só na especificação do escopo (B17) ou nos limites, com o número R. O código monta a matriz de rastreabilidade (B23) com isto.
 3. observacoes: o que você achou e o código não, com fonte.
 
 ${REGRAS}`;

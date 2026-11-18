@@ -131,9 +131,11 @@ function tabelasDoCodigo(codigo: string, c: Contexto): { paragrafos?: string[]; 
           r.atividades.join("; ") || "—",
           r.situacao === "rastreado"
             ? "rastreado"
-            : r.situacao === "sem-eap"
-              ? "sem pacote na EAP"
-              : "sem atividade",
+            : r.situacao === "obrigacao-no-plano"
+              ? "obrigação no plano (sem pacote)"
+              : r.situacao === "sem-eap"
+                ? "sem pacote na EAP"
+                : "sem atividade",
         ]),
       },
     });
