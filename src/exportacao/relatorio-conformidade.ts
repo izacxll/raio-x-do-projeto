@@ -6,6 +6,8 @@ import { resumirAchados } from "../regras/conferencia";
 import { NOME_SITUACAO_PMO, type AchadoPmoConferido } from "../etapas/5-conferencia/leitura-pmo";
 import { NOME_SITUACAO_CANDIDATO, type ResultadoVereditos } from "../etapas/5-conferencia/candidatos";
 import { camposDoDossie, type DocumentoExportavel, type Secao } from "./modelo";
+import { capaDosVereditos } from "./capas";
+import { secoesDaCapa } from "./capa-de-decisao";
 
 export const NOME_TIPO = { vago: "Vago", conflituoso: "Conflituoso", ausente: "Ausente" } as const;
 
@@ -50,7 +52,11 @@ export function montarRelatorioConformidade(
   const conta = (estado: Verificacao["estado"]) => verificacoes.filter((v) => v.estado === estado).length;
   const dispensadas = (dossie.conferencia?.mapa ?? []).filter((p) => p.situacao === "dispensada");
 
+  // a capa de decisão (decisão 0085), com os vereditos que a tela calculou; sem eles, não há capa
+  const nomeDoPlano = dossie.documentos.find((d) => d.papel === "pgp")?.nomeArquivo ?? "o plano";
+  const capa = vereditos ? capaDosVereditos(dossie, vereditos, leitura, nomeDoPlano) : undefined;
   const secoes: Secao[] = [
+    ...(capa ? secoesDaCapa(capa) : []),
     {
       titulo: "Resumo",
       paragrafos: [

@@ -16,6 +16,7 @@ import {
 import { resumirLeitura, type Progresso } from "../../leitura/ler-documento";
 import { caixaParece } from "../../leitura/tipo-documento";
 import { LegendaRotulos, RotuloSecao, Titulo } from "../componentes/basicos";
+import { CapaDeDecisao } from "../componentes/capa-de-decisao";
 import { AnaliseDaRfp } from "./analise-rfp";
 import { ConferenciaPgp } from "./conferencia";
 import { PropostaDoFornecedor } from "./proposta";
@@ -295,6 +296,8 @@ export function TelaEtapa() {
             ))}
           </div>
         </section>
+
+        <CapaDeDecisao dossie={dossie} etapa={etapa.numero} />
 
         {etapa.numero === 1 &&
           (rfp ? (

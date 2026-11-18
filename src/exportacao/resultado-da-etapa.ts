@@ -19,6 +19,8 @@ import { montarAnaliseRfp } from "./relatorio-rfp";
 import { montarRegistroPremissas, montarTap } from "./relatorio-tap";
 import { montarRelatorioConformidade } from "./relatorio-conformidade";
 import { resultadoDaEtapa5 } from "../etapas/5-conferencia/resultado";
+import { capaDaEtapa } from "./capas";
+import { secoesDaCapa } from "./capa-de-decisao";
 
 export const NOME_DA_ETAPA: Record<number, string> = {
   1: "Leitura da RFP",
@@ -102,10 +104,15 @@ function resultadoFinal(dossie: Dossie, etapa: number, agora: Date): Secao[] {
   const docs = dossie.documentos.filter((d) => d.papel === "rfp" || d.papel === "anexo-rfp");
   const secoes = (d: DocumentoExportavel): Secao[] => d.secoes.map((x) => ({ ...x, parte: parteDaSecao(x) }));
   if (etapa === 1) return secoes(montarAnaliseRfp(dossie, analisarRfp(docs, agora), agora));
+  // a proposta, o TAP e o PGP são as peças em si: a capa do GP vai antes delas só aqui (decisão 0085)
+  const capa = etapa >= 2 && etapa <= 4 ? capaDaEtapa(dossie, etapa, agora) : undefined;
+  const comCapa = (s: Secao[]) => (capa && s.length ? [...secoesDaCapa(capa), ...s] : s);
   if (etapa === 2) {
     if (!dossie.proposta) return [];
-    return secoes(
-      montarPropostaTecnica(dossie, montarPontoDePartida(docs, dossie.analiseRfp, agora), docs, agora),
+    return comCapa(
+      secoes(
+        montarPropostaTecnica(dossie, montarPontoDePartida(docs, dossie.analiseRfp, agora), docs, agora),
+      ),
     );
   }
   if (etapa === 3) {
@@ -137,9 +144,9 @@ function resultadoFinal(dossie: Dossie, etapa: number, agora: Date): Secao[] {
           }
         : x,
     );
-    return linhasDoRegistro ? [...tap, ...registro] : tap;
+    return comCapa(linhasDoRegistro ? [...tap, ...registro] : tap);
   }
-  if (etapa === 4) return dossie.pgp ? secoes(montarPgp(dossie, agora)) : [];
+  if (etapa === 4) return dossie.pgp ? comCapa(registrosNoAnexo(secoes(montarPgp(dossie, agora)))) : [];
   if (etapa === 5) {
     const r = resultadoDaEtapa5(dossie);
     if (!r) return [];
@@ -148,6 +155,21 @@ function resultadoFinal(dossie: Dossie, etapa: number, agora: Date): Secao[] {
     );
   }
   return [];
+}
+
+/**
+ * Etapa 4: as partes B do plano (os documentos do projeto: registros, listas, matrizes) vão inteiras para o anexo; o
+ * corpo fica com os planos (partes A) e o que os resume está nos quadros (decisão 0085). A seção da parte começa com
+ * "Parte Bn do plano."; as continuações herdam.
+ */
+export function registrosNoAnexo(secoes: Secao[]): Secao[] {
+  let doRegistro = false;
+  return secoes.map((x) => {
+    const parte = /^Parte ([AB])\d+ do plano\.$/.exec(x.paragrafos?.[0] ?? "")?.[1];
+    if (parte) doRegistro = parte === "B";
+    else if (!/\(continuação\)$/.test(x.titulo)) doRegistro = false;
+    return doRegistro ? { ...x, parte: "anexo" as const } : x;
+  });
 }
 
 /** A leitura do PMO da etapa 5 foi feita para outro plano (o id do plano guardado não é o do documento atual). */

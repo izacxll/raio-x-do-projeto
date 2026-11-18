@@ -4,6 +4,11 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 
 ## [Não publicado]
 
+### Capa de decisão de cada etapa (decisão 0085)
+- **Página 1:** o que é, o que o GP decide agora (até 5), números-chave, alertas (os altos primeiro) e o que mudou; montada por código, na tela e no resultado.
+- **Quadros:** ficha da RFP e perguntas antes do preço; produtos × equipe × horas; TAP em uma página e divergências; marcos, 5 riscos principais e RACI; veredito sugerido, semáforo e o que corrigir antes de assinar.
+- **Etapa 4:** os registros (partes B) vão para o anexo do resultado.
+
 ### Formato do resultado de cada etapa (decisão 0084)
 - **Partes:** capa de decisão, quadros, corpo e anexo (o processo), cada uma numa página, no DOCX e no PDF.
 - **Marcas:** ○ pendente de revisão do GP e ◊ redação a conferir no lugar do texto repetido em cada item, com a legenda e a contagem.
