@@ -20,29 +20,32 @@ const decisoes = {
 
 describe("decisões do pedido", () => {
   it("cada etapa usa só as decisões que a exportação dela lê", () => {
-    expect(decisoesDoPedido(1, "leitura-rfp", decisoes)).toEqual({});
+    expect(decisoesDoPedido(1, "leitura-rfp", decisoes)).toEqual({ modalidade: "licitacao" });
     expect(decisoesDoPedido(3, "tap", decisoes)).toEqual({ modalidade: "licitacao" });
     expect(decisoesDoPedido(4, "escopo", decisoes)).toEqual({
       modalidade: "licitacao",
       porte: "pequeno",
-      caracteristicas: "campo=não,beneficiarios=não",
+      caracteristicas: "beneficiarios=nao,campo=nao",
       pcs: "PC1,PC3",
-      gerar: "A1,A3",
     });
-    expect(decisoesDoPedido(5, "leitura", decisoes)).not.toHaveProperty("gerar");
     expect(decisoesDoPedido(4, "segunda-escopo", decisoes)).toEqual({});
   });
 
-  it("a abordagem não entra: vale na importação da estratégia", () => {
-    expect(Object.values(decisoesDoPedido(4, "escopo", decisoes))).not.toContain("B");
+  it("a etapa pode vir em texto (do nome do arquivo)", () => {
+    expect(decisoesDoPedido("4", "escopo", decisoes)).toEqual(decisoesDoPedido(4, "escopo", decisoes));
   });
 
-  it("as características em texto são as que a exportação aceita", () => {
-    expect(lerCaracteristicas(caracteristicasEmTexto(decisoes.caracteristicas))).toEqual({
-      campo: false,
-      beneficiarios: false,
-    });
-    expect(caracteristicasEmTexto("campo=sim")).toBe("campo=sim");
+  it("abordagem e partes a gerar não entram: valem na importação", () => {
+    const usadas = decisoesDoPedido(4, "escopo", decisoes);
+    expect(usadas).not.toHaveProperty("gerar");
+    expect(Object.values(usadas)).not.toContain("B");
+  });
+
+  it("as características em texto são as que a exportação aceita, sem acento e em ordem", () => {
+    const texto = caracteristicasEmTexto(decisoes.caracteristicas);
+    expect(texto).toBe("beneficiarios=nao,campo=nao");
+    expect(lerCaracteristicas(texto)).toEqual({ campo: false, beneficiarios: false });
+    expect(caracteristicasEmTexto("subcontratacao=Não informada")).toBe("subcontratacao=nao informada");
     expect(caracteristicasEmTexto(undefined)).toBe("");
   });
 
@@ -57,18 +60,13 @@ describe("decisões do pedido", () => {
 
   it("o pedido fica velho só quando muda uma decisão que ele usa", () => {
     const antes = decisoesDoPedido(4, "escopo", decisoes);
-    expect(decisoesQueMudaram(antes, decisoesDoPedido(4, "escopo", { ...decisoes, abordagem: "A" }))).toEqual(
-      [],
-    );
-    expect(decisoesQueMudaram(antes, decisoesDoPedido(4, "escopo", { ...decisoes, porte: "médio" }))).toEqual(
-      ["porte"],
-    );
-    const semCaracteristicas = { ...decisoes, caracteristicas: undefined };
-    expect(decisoesQueMudaram(antes, decisoesDoPedido(4, "escopo", semCaracteristicas))).toEqual([
-      "caracteristicas",
-    ]);
-    expect(
-      decisoesQueMudaram(decisoesDoPedido(3, "tap", {}), decisoesDoPedido(3, "tap", { porte: "x" })),
-    ).toEqual([]);
+    const com = (mudanca: object) =>
+      decisoesQueMudaram(antes, decisoesDoPedido(4, "escopo", { ...decisoes, ...mudanca }));
+    expect(com({ abordagem: "A", gerar: "A1" })).toEqual([]);
+    expect(com({ porte: "médio" })).toEqual(["porte"]);
+    expect(com({ caracteristicas: undefined })).toEqual(["caracteristicas"]);
+    // a mesma decisão escrita de outro jeito não conta como mudança
+    expect(com({ caracteristicas: { beneficiarios: false, campo: false } })).toEqual([]);
+    expect(com({ caracteristicas: "campo=não; beneficiarios=nao" })).toEqual([]);
   });
 });

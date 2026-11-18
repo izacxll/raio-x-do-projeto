@@ -130,18 +130,13 @@ interface Passo {
 }
 
 /**
- * As características que valem na etapa 4 (decisão 0069): as do GP no dossiê; sem elas, a sugestão do código a partir
- * da RFP e da adaptação, a mesma que a tela da etapa 4 mostra. Sem a etapa 3 no dossiê, o padrão conservador.
+ * A sugestão do código para as características (decisão 0069), a mesma que a tela da etapa 4 mostra antes de o GP
+ * mexer: a partir da RFP e da adaptação, sem olhar as do GP no dossiê. Sem a etapa 3 no dossiê, o padrão conservador.
  */
-function caracteristicasQueValem(d: Dossie): Caracteristicas {
-  if (d.pgp?.caracteristicas) return d.pgp.caracteristicas;
-  try {
-    const e = montarEntradaPgp(d, HOJE);
-    if (e.fonteTap !== "nenhuma") return caracteristicasDoPgp(d, e);
-  } catch {
-    // sem a etapa 3 no dossiê: o padrão conservador
-  }
-  return CARACTERISTICAS_PADRAO;
+function sugestaoDoCodigo(d: Dossie): Caracteristicas {
+  const semAsDoGp: Dossie = d.pgp ? { ...d, pgp: { ...d.pgp, caracteristicas: undefined } } : d;
+  const e = montarEntradaPgp(semAsDoGp, HOJE);
+  return e.fonteTap === "nenhuma" ? CARACTERISTICAS_PADRAO : caracteristicasDoPgp(semAsDoGp, e);
 }
 
 /** O passo que a segunda instância confere ("segunda-conteudo" → "conteudo"). */
@@ -410,20 +405,26 @@ describe.skipIf(MODO !== "exportar")("exportar o pedido de um passo do PMO", () 
     }
     // decisões do GP para as etapas 4 e 5: --porte, --caracteristicas ("campo=não,beneficiarios=não"; decisão 0069)
     // e --pcs ("PC1,PC3,PC4"), guardadas no dossiê para a importação usar as mesmas; sem elas, valem as do dossiê.
-    // A correção parte do que a tela da etapa 4 mostra: as do GP no dossiê ou, sem elas, a sugestão do código.
     if (env.RAIO_X_PORTE || env.RAIO_X_PCS || env.RAIO_X_CARACTERISTICAS) {
       const atual = dossie.pgp ?? pgpInicial();
       const porte = env.RAIO_X_PORTE ? lerCaracteristicas(`porte=${env.RAIO_X_PORTE}`).porte : undefined;
       const corrigidas = env.RAIO_X_CARACTERISTICAS ? lerCaracteristicas(env.RAIO_X_CARACTERISTICAS) : {};
+      // só --pcs não mexe nas características. Com porte ou características, a base é refeita a cada exportação: na
+      // etapa 4, a sugestão do código de agora (ela muda com a adaptação), como a tela; na 5, as do dossiê ou o
+      // padrão conservador, como a tela da conferência
+      const caracteristicas =
+        porte || env.RAIO_X_CARACTERISTICAS
+          ? {
+              ...(etapa === 4 ? sugestaoDoCodigo(dossie) : (atual.caracteristicas ?? CARACTERISTICAS_PADRAO)),
+              ...corrigidas,
+              ...(porte ? { porte } : {}),
+            }
+          : atual.caracteristicas;
       dossie = {
         ...dossie,
         pgp: {
           ...atual,
-          caracteristicas: {
-            ...caracteristicasQueValem(dossie),
-            ...corrigidas,
-            ...(porte ? { porte } : {}),
-          },
+          caracteristicas,
           premissasAplicaveis: env.RAIO_X_PCS
             ? Object.fromEntries(env.RAIO_X_PCS.split(",").map((x) => [x.trim().toUpperCase(), true]))
             : atual.premissasAplicaveis,
@@ -467,9 +468,7 @@ describe.skipIf(MODO !== "exportar")("exportar o pedido de um passo do PMO", () 
         ? `
 - **Características do projeto usadas:** ${Object.entries(
             // etapa 4: as do GP ou a sugestão do código, como a tela; etapa 5: as do GP ou o padrão, como a conferência
-            etapa === 4
-              ? caracteristicasQueValem(dossie)
-              : (dossie.pgp?.caracteristicas ?? CARACTERISTICAS_PADRAO),
+            dossie.pgp?.caracteristicas ?? (etapa === 4 ? sugestaoDoCodigo(dossie) : CARACTERISTICAS_PADRAO),
           )
             .map(([k, x]) => `${k} ${String(x)}`)
             .join("; ")}${

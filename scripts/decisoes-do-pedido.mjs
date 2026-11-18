@@ -1,37 +1,54 @@
 // Decisões do GP que entram na exportação de um passo do teste externo (decisão 0069). O vigia (fora do Git) usa este
 // módulo para montar os argumentos da exportação e para saber quando o pedido já exportado ficou velho: o GP mudou no
-// decisoes-do-gp.json uma decisão que o pedido usa (porte, características, premissas críticas, partes, modalidade).
-// A abordagem não entra: ela vale na importação da estratégia, não na exportação de um passo.
+// decisoes-do-gp.json uma decisão que o pedido usa (modalidade, porte, características, premissas críticas).
+// A abordagem e as partes a gerar não entram: valem na importação (da estratégia e da adaptação), não na exportação.
 
-/** "campo": false → "campo=não"; texto passa como está. */
+/** Minúsculas, sem acento e sem espaço nas pontas: "Não" e "nao" são o mesmo valor. */
+const simples = (t) => String(t).normalize("NFD").replace(/\p{M}/gu, "").toLowerCase().trim();
+
+/**
+ * As características em texto, como a exportação aceita ("beneficiarios=nao,campo=nao"): sem acento (vai na linha de
+ * comando), com as chaves em ordem, para que a mesma decisão escrita de outro jeito (objeto ou texto, outra ordem) dê o
+ * mesmo texto.
+ */
 export function caracteristicasEmTexto(c) {
   if (!c) return "";
-  if (typeof c === "string") return c;
-  return Object.entries(c)
-    .map(([k, v]) => `${k}=${v === true ? "sim" : v === false ? "não" : v}`)
+  const pares =
+    typeof c === "string"
+      ? c
+          .split(/[,;]/)
+          .map((x) => x.split("=").map(simples))
+          .filter(([k]) => k)
+      : Object.entries(c).map(([k, v]) => [
+          simples(k),
+          v === true ? "sim" : v === false ? "nao" : simples(v),
+        ]);
+  return pares
+    .map(([k, v = ""]) => `${k}=${v}`)
+    .sort()
     .join(",");
 }
 
 /**
- * As decisões que a exportação do passo usa, do decisoes-do-gp.json: a modalidade da etapa 2 em diante; porte,
- * características e premissas críticas nas etapas 4 e 5; as partes a gerar na etapa 4. A segunda instância confere a
- * resposta guardada e não usa nenhuma.
+ * As decisões que a exportação do passo usa, do decisoes-do-gp.json: a modalidade em todas as etapas (na 1, quando o
+ * documento não a diz; decisão 0054); porte, características e premissas críticas nas etapas 4 e 5. A segunda
+ * instância confere a resposta guardada e não usa nenhuma.
  */
 export function decisoesDoPedido(etapa, passo, d = {}) {
+  const n = Number(etapa);
   const usadas = {};
   if (String(passo).startsWith("segunda-")) return usadas;
-  if (etapa >= 2 && d.modalidade) usadas.modalidade = String(d.modalidade);
-  if (etapa >= 4) {
+  if (d.modalidade) usadas.modalidade = String(d.modalidade);
+  if (n >= 4) {
     if (d.porte) usadas.porte = String(d.porte);
     const c = caracteristicasEmTexto(d.caracteristicas);
     if (c) usadas.caracteristicas = c;
     if (d.pcs) usadas.pcs = String(d.pcs);
   }
-  if (etapa === 4 && d.gerar) usadas.gerar = String(d.gerar);
   return usadas;
 }
 
-/** Os argumentos da exportação para as decisões usadas (--modalidade, --porte, --caracteristicas, --pcs, --gerar). */
+/** Os argumentos da exportação para as decisões usadas (--modalidade, --porte, --caracteristicas, --pcs). */
 export function argumentosDasDecisoes(usadas) {
   return Object.entries(usadas).flatMap(([k, v]) => [`--${k}`, v]);
 }
