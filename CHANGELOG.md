@@ -4,6 +4,9 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 
 ## [Não publicado]
 
+### A mensagem do tempo de aprovação do cliente (decisão 0082)
+- **Placar do cronograma:** as análises do contratante que já são atividades da EAP estão na conta; o tempo de aprovação do GP troca a duração delas e é um tempo extra só depois das entregas marcadas com aprovação.
+
 ### O cronograma do plano nos passos seguintes da etapa 4 (decisão 0081)
 - **Riscos, planos e execução** levam o cronograma do plano (pacote, predecessoras, duração, análise do contratante, data fixa), e a segunda instância desses passos passa a vê-lo; antes, o de planos não o levava, e o revisor só via a EAP da proposta.
 

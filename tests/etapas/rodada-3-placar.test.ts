@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import {
   calcularCronograma,
   encerramentoAntesDoAceite,
+  mensagemDoTempoDeAprovacao,
   situacaoDaDataFixa,
 } from "../../src/etapas/2-proposta/cronograma";
 import { pareceRepetirORegistroInicial, repeteORegistroInicial } from "../../src/etapas/4-pgp/pgp";
@@ -185,5 +186,44 @@ describe("premissa nova que repete o registro inicial com outras palavras (liç�
       { premissaCritica: "PC6" },
     );
     expect(pareceRepetirORegistroInicial(outraPc, inicial)).toBeUndefined();
+  });
+});
+
+describe("mensagem do tempo de aprovação (decisão 0082)", () => {
+  it("diz que a análise da rede já está na conta e que o tempo depois da entrega é extra", () => {
+    const xs = [
+      atv("p1", [], 10),
+      atv("a1", ["p1"], 5, { analiseDoContratante: true }),
+      atv("p2", ["a1"], 10, { aprovacaoCliente: true }),
+    ];
+    const m = mensagemDoTempoDeAprovacao(xs);
+    expect(m).toMatch(/^Tempo de aprovação do cliente não informado pelo GP/);
+    expect(m).toMatch(/A análise do contratante que já é atividade da rede \(a1\) está na conta/);
+    expect(m).toMatch(/troca essa duração \(não soma\)/);
+    expect(m).toMatch(
+      /Depois da entrega marcada com aprovação do cliente \(p2\).*pode ficar mais longo \(se a entrega estiver no caminho crítico\)/,
+    );
+    expect(calcularCronograma(xs).problemas.join(" ")).toContain(m);
+  });
+
+  it("análise com data fixa não promete a troca; duas análises no plural", () => {
+    const fixa = atv("a9", [], 0, {
+      analiseDoContratante: true,
+      restricaoData: {
+        inicio: "10/03/2026",
+        fim: "10/03/2026",
+        fonte: { doc: "rfp", pagina: 1, trecho: "x" },
+      },
+    });
+    expect(mensagemDoTempoDeAprovacao([fixa, atv("p1", [], 3, { aprovacaoCliente: true })])).not.toMatch(
+      /a9/,
+    );
+    const duas = [
+      atv("a1", [], 5, { analiseDoContratante: true }),
+      atv("a2", [], 5, { analiseDoContratante: true }),
+    ];
+    expect(mensagemDoTempoDeAprovacao(duas)).toMatch(
+      /As 2 análises do contratante que já são atividades da rede \(a1, a2\)/,
+    );
   });
 });

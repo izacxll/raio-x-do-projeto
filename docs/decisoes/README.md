@@ -85,6 +85,7 @@ Uma decisão por arquivo, numerada em ordem. Cada uma registra o contexto, o que
 | [0079](0079-skill-pmo-0-3-5.md) | Skill PMO 0.3.5: lições 201 a 206 (vereditos pelo item inteiro, "a definir" com marco, conflituoso só depois de procurar, régua corrigida nas partes anteriores) | aceita |
 | [0080](0080-lista-unica-de-requisitos.md) | Uma lista de R só, do início ao fim (entregas e obrigações), com os descartados pelo GP no pedido | aceita |
 | [0081](0081-cronograma-do-plano-nos-passos-seguintes.md) | Etapa 4: o cronograma do plano (com predecessoras) nos pedidos de riscos, planos e execução e na segunda instância deles | aceita |
+| [0082](0082-mensagem-do-tempo-de-aprovacao.md) | Placar do cronograma: as análises da rede já estão na conta; o tempo de aprovação é extra só depois das entregas com aprovação | aceita |
 
 Modelo para uma nova decisão:
 

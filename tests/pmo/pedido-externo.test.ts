@@ -1061,7 +1061,7 @@ describe.skipIf(MODO !== "importar")("importar a resposta do PMO (leitura indepe
           if (cron)
             linhas.push(
               "",
-              `## Cronograma (conta do código, sem a aprovação do cliente se o GP não a informou): ${cron.total} dias úteis; caminho crítico: ${cron.caminhoCritico.join(" → ") || "—"}`,
+              `## Cronograma (conta do código; as análises do contratante que são atividades da EAP já estão nela; sem o tempo extra de aprovação depois das entregas, se o GP não o informou): ${cron.total} dias úteis; caminho crítico: ${cron.caminhoCritico.join(" → ") || "—"}`,
               `- início usado: ${inicio ? `${inicio.toLocaleDateString("pt-BR")} (${doGp ? "decisão do GP" : `data fixa do documento, p. ${fixo?.origem.pagina}; o GP confirma`})` : "nenhum (sem datas)"}${cron.dataFim ? `; fim: ${cron.dataFim.toLocaleDateString("pt-BR")}` : ""}`,
               ...cron.atividades
                 .filter((a) => eap?.atividades.find((x) => x.id === a.id)?.restricaoData)
