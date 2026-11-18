@@ -4,6 +4,9 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 
 ## [Não publicado]
 
+### Skill PMO 0.3.4 (decisão 0073)
+- **Etapa 4:** regras da rodada 3 do teste (cronograma, riscos, planos e execução), cada uma com o erro que evita e exemplo inventado.
+- **Rótulos:** item que mistura documento e sugestão é sugestão; cadência sempre do GP.
 ### Resultado da etapa para apresentação (decisão 0072)
 - **`npm run resultado-da-etapa`:** um DOCX por etapa e por caso do teste externo, com o placar resumido e a segunda instância de cada passo (achados e o que o GP decidiu) e o resultado final da etapa, pelo exportador do app. Fora do Git; sempre minuta.
 ### Segunda instância mais barata e igual nas duas pontas (decisão 0071)

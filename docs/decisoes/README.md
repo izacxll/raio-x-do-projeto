@@ -76,6 +76,7 @@ Uma decisão por arquivo, numerada em ordem. Cada uma registra o contexto, o que
 | [0070](0070-placar-e-pedidos-da-rodada-3.md) | Data fixa vencida "não confirmável", encerramento antes do aceite, vago que reproduz o documento, premissa parecida, QU no topo, A2.8 e tokens no placar | aceita |
 | [0071](0071-segunda-instancia-mais-barata-e-paridade.md) | Segunda instância: rodada 2 só com o que mudou, sem rodada 2 com só achados baixos, modelo da rodada 2 à escolha do GP e a mesma montagem no app e no teste externo | aceita |
 | [0072](0072-resultado-da-etapa-para-apresentacao.md) | Teste externo: DOCX de resultado por etapa e por caso (placar resumido, segunda instância e resultado final), fora do Git | aceita |
+| [0073](0073-skill-pmo-0-3-4.md) | Skill PMO 0.3.4: regras da etapa 4 da rodada 3, rótulo sugestão quando o item mistura documento e sugestão, cadência do GP | proposta |
 
 Modelo para uma nova decisão:
 
