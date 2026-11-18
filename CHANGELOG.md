@@ -4,6 +4,11 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 
 ## [Não publicado]
 
+### Segunda instância mais barata e igual nas duas pontas (decisão 0071)
+- **Rodada 2 compacta:** os achados da rodada anterior, só os itens que mudaram e só as páginas citadas (no caso fiscal, de ~55 mil para ~15 mil tokens). A resposta inteira só a pedido do GP.
+- **Rodada 1 só com achados baixos:** segue com a correção, sem rodada 2 (configurável).
+- **Modelo da rodada 2** à escolha do GP (o da etapa ou o Sonnet, mais barato).
+- **Paridade:** o app passa a mandar os achados da rodada anterior; app e teste externo montam o pedido pela mesma função. Tabela em `docs/papeis.md`.
 ### Placar e pedidos da rodada 3 (decisão 0070)
 - **Data fixa já vencida** sai "não confirmável", e não "cabe"; com o início do documento vencido, a vigência também. No TAP, o marco vencido vira divergência própria.
 - **Aviso** quando o encerramento, a devolução ou o descarte de dados começa antes do último aceite.

@@ -4,6 +4,7 @@ import { useMemo, useRef, useState } from "react";
 import type { DocumentoLido } from "../../dossie/esquema";
 import { useDossie } from "../../dossie/store";
 import type { ErroPmo } from "../../pmo/cliente";
+import { MODELO_COMPARACAO, MODELOS, type IdModelo } from "../../config/modelo";
 import { estimarCusto, formatarDolar, formatarTokens } from "../../pmo/custo";
 import { identidadeDoCaso } from "../../pmo/identidade-do-caso";
 import { estimarTokens, textoDosDocumentos } from "../../pmo/montagem";
@@ -13,10 +14,9 @@ import {
   chaveDaSegundaInstancia,
   conferenciaVelha,
   conferirSegundaInstancia,
+  montarPedidoDaSegunda,
   NOME_GRAVIDADE_SEGUNDA,
   NOME_TIPO_SEGUNDA,
-  pedidoSegundaInstancia,
-  proximaRodada,
   sistemaDaSegundaInstancia,
 } from "../../pmo/segunda-instancia";
 import { useChave } from "./conectar-claude";
@@ -54,18 +54,48 @@ export function SegundaInstancia({
   const [erro, setErro] = useState<ErroPmo | null>(null);
   const cancelar = useRef<AbortController | null>(null);
   const sistema = useMemo(() => sistemaDaSegundaInstancia(etapa), [etapa]);
-  const textoDocs = useMemo(() => textoDosDocumentos(documentos), [documentos]);
+  // rodada seguinte (decisão 0071): o GP pode pedir a resposta inteira de novo e escolher um modelo mais barato
+  const [completa, setCompleta] = useState(false);
+  const [modeloDaRodada, setModeloDaRodada] = useState<string>(modelo);
   // a identidade do caso no topo do pedido (decisão 0066): os documentos do dossiê, não só os do passo
   const identidade = useMemo(
     () => identidadeDoCaso(dossie.documentos, dossie.projeto.nome),
     [dossie.documentos, dossie.projeto.nome],
   );
-  const pedido = useMemo(
-    () => pedidoSegundaInstancia(etapa, passo, resposta, pedidoDoPasso, { identidade, tapRevisado }),
-    [etapa, passo, resposta, pedidoDoPasso, identidade, tapRevisado],
+  // o mesmo pedido do teste externo: completo na rodada 1; na seguinte, só os achados, o diff e as páginas citadas
+  const montagem = useMemo(
+    () =>
+      montarPedidoDaSegunda({
+        etapa,
+        passo,
+        resposta,
+        respostaEm,
+        pedidoDoPasso,
+        documentos,
+        identidade,
+        tapRevisado,
+        guardada,
+        completa,
+      }),
+    [
+      etapa,
+      passo,
+      resposta,
+      respostaEm,
+      pedidoDoPasso,
+      documentos,
+      identidade,
+      tapRevisado,
+      guardada,
+      completa,
+    ],
   );
+  const pedido = montagem.pedido;
+  const textoDocs = useMemo(() => textoDosDocumentos(montagem.documentos), [montagem.documentos]);
+  const rodadaSeguinte = montagem.rodada > 1;
+  const modeloDaChamada = rodadaSeguinte ? modeloDaRodada : modelo;
   const est = estimarCusto(
-    modelo,
+    modeloDaChamada,
     "segunda-instancia",
     estimarTokens(sistema) + estimarTokens(textoDocs),
     estimarTokens(pedido),
@@ -85,7 +115,7 @@ export function SegundaInstancia({
       const { chamarPmo } = await import("../../pmo/cliente");
       const r = await chamarPmo({
         chave,
-        modelo,
+        modelo: modeloDaChamada,
         passo: "segunda-instancia",
         sistema,
         documentos: textoDocs,
@@ -99,7 +129,9 @@ export function SegundaInstancia({
         em: r.em,
         deResposta: respostaEm,
         ...(tapRevisado ? { deAnterior: tapRevisado.versao } : {}),
-        rodada: proximaRodada(guardada, respostaEm, tapRevisado?.versao),
+        rodada: montagem.rodada,
+        // a resposta que esta conferência leu: a rodada seguinte manda só o que mudou desde ela (decisão 0071)
+        conferiu: resposta,
       });
     } catch (e) {
       setErro(e as ErroPmo);
@@ -118,6 +150,29 @@ export function SegundaInstancia({
           e de seguir para a próxima etapa: uma chamada separada, com só a skill, os documentos e a resposta,
           aponta erros de fato, o que faltou, incoerências entre etapas e rótulos errados.
         </p>
+      )}
+      {rodadaSeguinte && (
+        <div className="envio__obs" data-testid={`rodada-seguinte-${etapa}-${passo}`}>
+          <p>
+            Rodada {montagem.rodada}:{" "}
+            {montagem.compacta
+              ? `vão só os achados da rodada anterior, os ${montagem.itensQueMudaram ?? 0} item(ns) que mudaram e as páginas citadas.`
+              : "vai a resposta inteira, com os achados da rodada anterior."}
+          </p>
+          <label>
+            <input type="checkbox" checked={completa} onChange={(ev) => setCompleta(ev.target.checked)} />{" "}
+            Conferir a resposta inteira de novo (pedido completo, mais caro)
+          </label>{" "}
+          <label>
+            Modelo desta rodada (decisão do GP):{" "}
+            <select value={modeloDaRodada} onChange={(ev) => setModeloDaRodada(ev.target.value)}>
+              <option value={modelo}>{MODELOS[modelo as IdModelo]?.nome ?? modelo} (o mesmo da etapa)</option>
+              {modelo !== MODELO_COMPARACAO && (
+                <option value={MODELO_COMPARACAO}>{MODELOS[MODELO_COMPARACAO].nome} (mais barato)</option>
+              )}
+            </select>
+          </label>
+        </div>
       )}
       {est && (
         <p className="envio__obs">
@@ -172,6 +227,12 @@ export function SegundaInstancia({
             Rodada {atual?.rodada ?? 1}: {resultado.achados.length} achado(s), {resultado.altas} de gravidade
             alta. Todo achado é Sugestão: quem decide é o GP.
           </p>
+          {resultado.achados.length > 0 && resultado.achados.every((a) => a.gravidade === "baixa") && (
+            <p className="envio__obs">
+              Só achados de gravidade baixa: sugere-se corrigir e seguir, sem nova rodada (uma nova
+              conferência continua possível, se o GP quiser).
+            </p>
+          )}
           {resultado.achados.length > 0 && (
             <table className="tabela tabela--texto">
               <thead>

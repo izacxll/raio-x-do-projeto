@@ -390,6 +390,11 @@ export const Dossie = z.object({
         deAnterior: z.string().optional(),
         /** Rodada da conferência deste passo: sobe a cada resposta nova do passo conferida (decisão 0059). */
         rodada: z.number().int().positive().optional(),
+        /**
+         * A resposta do passo que esta conferência leu (decisão 0071): a rodada seguinte manda só o que mudou desde
+         * ela. Sem o campo (conferência antiga), a rodada seguinte vai com o pedido completo.
+         */
+        conferiu: z.unknown().optional(),
       }),
     )
     .optional(),
