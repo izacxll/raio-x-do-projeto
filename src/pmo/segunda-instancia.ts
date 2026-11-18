@@ -7,7 +7,7 @@ import { citacaoValeComoFato, conferirCitacao } from "./citacoes";
 import { diferencasDaResposta, documentosCitados, pedidoDaRodadaSeguinte } from "./segunda-rodada";
 import { type IdentidadeDoCaso, identidadeEmTexto } from "./identidade-do-caso";
 import { formatarTapRevisado, type TapRevisado } from "./tap-revisado";
-import { skillDaEtapa, textoDeSistema } from "./montagem";
+import { skillDaEtapa, TEXTOS_DAS_ETAPAS, textoDeSistema } from "./montagem";
 import type {
   AchadoSegundaInstancia,
   GravidadeSegunda,
@@ -69,7 +69,11 @@ export function sistemaDaSegundaInstancia(etapa?: number): string {
   return textoDeSistema([
     etapa
       ? { titulo: `SKILL.md (etapa ${etapa})`, texto: skillDaEtapa(etapa) }
-      : { titulo: "SKILL.md", texto: textoSkill },
+      : {
+          // sem a etapa: o SKILL.md e os cinco arquivos das etapas (decisão 0074)
+          titulo: "SKILL.md",
+          texto: [textoSkill, ...Object.values(TEXTOS_DAS_ETAPAS)].join("\n\n"),
+        },
   ]);
 }
 
@@ -108,7 +112,7 @@ ${JSON.stringify(resposta, null, 2)}
 \`\`\`
 
 # O que procurar
-A régua é o pedido do passo: o que ele exige, nem mais nem menos. Item do método ou das fichas que o pedido não pediu não é falta.
+A régua é o pedido do passo: o que ele exige, nem mais nem menos. Item do método ou das fichas que o pedido não pediu não é falta. Confira com mais cuidado o que a seção "Rubrica da segunda instância" da etapa (no texto de sistema) lista, sempre dentro do que o pedido exige.
 1. erro_de_fato: o que a resposta afirma e o documento não diz, ou diz diferente (número, prazo, data, quem faz, o que se entrega); número, R, C, conta ou data que não bate com o esqueleto do código; citação que não prova a frase.
 2. faltou: o que o pedido do passo exige (as seções, os campos e a autoconferência da lista "O que fazer" e das regras dele) e a resposta não trouxe.
 3. incoerencia_entre_etapas: a resposta contradiz o esqueleto e as contas do código, ou o que veio das etapas anteriores e está nos documentos (proposta, TAP)${tapRevisado ? " ou no TAP revisado acima" : ""}, ou contradiz a si mesma. Só conta o que está neste pedido: não aponte incoerência com versão que não veio nele.

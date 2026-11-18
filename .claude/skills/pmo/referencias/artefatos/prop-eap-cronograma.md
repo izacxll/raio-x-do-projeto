@@ -12,7 +12,7 @@ versao: 0.3.2
 # PROP-EAP — EAP e estimativas de duração da proposta
 
 ## Para que serve
-O PMO monta a EAP por produto e estima as durações em três pontos, com a base de cada estimativa. **O código** monta as datas e o caminho crítico, inclui os tempos de aprovação do cliente e confere tudo contra os prazos da RFP (SKILL.md, etapa 2, passo 5; princípio 6). A EAP decompõe entregas, não atividades (PMBOK 6, 5.4, p. 157, PDF 193); as durações saem do esforço e dos recursos (6.4, p. 196–197, PDF 232–233).
+O PMO monta a EAP por produto e estima as durações em três pontos, com a base de cada estimativa. **O código** monta as datas e o caminho crítico, inclui os tempos de aprovação do cliente e confere tudo contra os prazos da RFP (etapas/etapa-2.md, passo 5; princípio 6). A EAP decompõe entregas, não atividades (PMBOK 6, 5.4, p. 157, PDF 193); as durações saem do esforço e dos recursos (6.4, p. 196–197, PDF 232–233).
 
 ## Conteúdo mínimo
 - **PROP-EAP.1** EAP hierárquica com código único, com o segundo nível espelhando os produtos do TR e um ramo de gerenciamento do projeto
@@ -147,4 +147,4 @@ Folgas: | Atividade | Motivo (brecha ou premissa crítica PCn) |   Datas e camin
 ## Fontes
 - PMBOK 6: 5.4, p. 157–161 (PDF 193–197); 6.3, p. 187 (PDF 223); 6.4, p. 196–202 (PDF 232–238); bases das estimativas, p. 204 (PDF 240); 11.5, p. 443 (PDF 479); 12.1, p. 478 (PDF 514).
 - Rework: RW-014 (https://resources.rework.com/libraries/project-management/project-cost-estimation); RW-033 (https://resources.rework.com/libraries/project-management/statement-of-work); RW-036 (https://resources.rework.com/libraries/project-management/project-deliverables); RW-057 (https://resources.rework.com/libraries/project-management/three-point-estimation).
-- `checklist.md` PC1, PC3, PC4, PC5 e PC6; `experiencia.md` §1, §2, §5; ficha A13; SKILL.md, etapa 2 e princípio 6.
+- `checklist.md` PC1, PC3, PC4, PC5 e PC6; `experiencia.md` §1, §2, §5; ficha A13; etapas/etapa-2.md; SKILL.md, princípio 6.

@@ -56,7 +56,7 @@ Registra a estimativa no término (ENT), feita de baixo para cima ou por fórmul
   - confere: código
   - dispensa: nunca
 - **B7.9** No PGP, modelo sem dados inventados: campos vazios ou "a preencher na execução"
-  - fonte: decisão 0007, passo 12; SKILL.md, etapa 4
+  - fonte: decisão 0007, passo 12; etapas/etapa-4.md
   - sinais: "a preencher" | "modelo" | campos em branco
   - confere: só PMO
   - dispensa: nunca

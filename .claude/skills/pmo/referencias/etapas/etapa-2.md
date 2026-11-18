@@ -1,0 +1,70 @@
+# Etapa 2 — Proposta (minuta técnica e de preço)
+
+## Papel
+**A saída é a minuta inteira**, redigida seção por seção no texto que vai para o cliente, na ordem do modelo do edital: o gerente revisa e completa os campos de decisão, não escreve do zero. O resumo (estratégia, preço, riscos, decisões do GP) é só a capa. Teste de cada item: "isto ajuda a ganhar pontos, a cumprir uma exigência ou a proteger a FGV na execução?" Texto genérico sobre o tema, sem ligação com um critério ou uma exigência, não entra.
+
+## Entradas
+- A RFP e os anexos, em texto página a página.
+- O dossiê da etapa 1 revisado pelo GP: pontos de atenção, números R, premissas críticas.
+- As decisões do GP: a abordagem escolhida e as premissas críticas confirmadas.
+- O esqueleto do código (minuta, contas, compromissos C) e o passo anterior: estratégia → conteúdo → EAP.
+
+## Saída
+1. **Ponto de partida (código, já vem pronto):** requisitos numerados, critério de julgamento e pontuação técnica, modelo obrigatório, planilha de preços, limites de páginas e formato, valor estimado e prazos.
+2. **Estratégia:** como o contratante vai avaliar e onde estão os pontos (ficha `prop-estrategia`), separando os pontos de **texto** (o avaliador lê) dos pontos de **documento** (atestados, tempo de experiência), que viram pergunta ao GP: "a FGV tem?". **Na contratação direta** não há pontos: a estratégia é sustentar o que o art. 72 exige (notória especialização no objeto, com os estudos e a equipe que a provam; justificativa de preço; documentos). **Na parceria**, os critérios de seleção do chamamento e o plano de trabalho (`prop-parceria`). Depois, **2 ou 3 abordagens técnicas que mudam o resultado**, não só a redação (equipe de referência × produtividade superior; desconto pequeno × desconto pelo custo real; executar tudo × subcontratar parte), cada uma com prós, contras, requisitos atendidos, riscos (inclusive o de eliminação) e impacto em prazo e custo. **Abordagem que contraria a RFP** (quem executa, escopo, formato, prazo, local) sai marcada como tal, com o trecho que ela contraria, e vira pergunta de esclarecimento ou, na contratação direta, ajuste da minuta antes da assinatura; nunca aparece como opção equivalente (PROP-ESTRATEGIA.12, decisão 0050). Antes de propor, confira se a RFP já responde (ex.: "levantados pela equipe da contratada"). **O GP escolhe uma**; o resto parte dela. Abordagem que reduz o que um R pede também contraria a RFP: diga o que continua dentro do R (PROP-ESTRATEGIA.12). Só é critério pontuado o que o TR diz que pontua; o resto é perfil mínimo (PROP-ESTRATEGIA.13). Pergunta que muda o preço vai no esclarecimento, antes da proposta (PROP-ESTRATEGIA.14).
+3. **Estrutura:** se o edital tem modelo obrigatório, siga-o à risca. Cada critério de pontuação ganha uma seção que responde a ele de forma explícita.
+4. **Conteúdo técnico, redigido e não descrito** (fichas `prop-*`): entendimento do contexto e do problema, com as palavras do edital; objetivos e metas do edital, sem acrescentar metas; metodologia da abordagem escolhida, por fase, com objetivo, atividades, quem faz, entrega e duração; SOW (produtos ou metas, critérios de aceite, exclusões **próprias deste objeto**, premissas e restrições, limites de volume); obrigações do contratante, com prazo (dados, listas, acessos, aprovações). Numere como C (C01, C02…) cada premissa, exclusão, obrigação do contratante e compromisso de método (seção 3, "Compromissos numerados"), e confira cada exclusão contra os R: exclusão nunca tira requisito (PROP-SOW.12 e .13).
+5. **EAP e estimativas:** EAP por produto e, na operação contínua, por frente de trabalho; durações em três pontos (otimista, mais provável, pessimista) só onde há incerteza, cada uma com a base. O código monta datas e caminho crítico, inclui os tempos de aprovação do cliente e confere se o cronograma cabe na vigência e na janela até cada marco externo fixo (PROP-EAP.11). **Premissa que muda a origem de um dado muda a predecessora** da atividade que usa o dado (PROP-EAP.12): se o produto de um ano usa a pesquisa de outro, ele depende dela no cronograma. Antes de fechar, a linha do tempo da seção 3 (PROP-EAP.13); aceite em análise → ajuste → nova análise → termo definitivo (PROP-EAP.15); fonte externa de dados com atividade própria (PROP-EAP.16); restrição com prazo do TR na EAP e nas premissas (PROP-EAP.17); prazos de terceiros e horas como sugestão, com a base (PROP-EAP.18).
+6. **Equipe:** perfis mínimos exigidos e perfis sugeridos; numa consultoria, horas de cada perfil por atividade da EAP; numa operação contínua, o **quadro por função e faixa de meses**; RACI com o contratante, um só "A" por linha. Nomes, currículos e curva de contratação são `decisao_gp`. Campo com horas e quantidades estimadas ou marcadas como decisão do GP antes do preço, e amostra por cotas em estudo sensível (PROP-EQUIPE.12, PROP-METODOLOGIA.12); o mesmo perfil responsável por atividades paralelas é PC7 (PROP-EQUIPE.13); cada produto com um responsável da competência certa (PROP-EQUIPE.14); horas são estimativa, com a base (PROP-EQUIPE.15).
+7. **Preço:** você não calcula. A estrutura segue o tipo de projeto (seção 3): horas × valor-hora na consultoria (`prop-preco`); folha mês a mês e despesas por natureza na operação contínua, sem valor-hora e, na parceria, sem taxa de administração (`prop-parceria`); a planilha do edital, item a item, no preço por posto ou item. Indique as despesas a considerar (viagens, campo e logística, por território), os riscos que pedem reserva e as estratégias de preço possíveis, como sugestão, partindo do custo para o desconto, nunca o contrário. O código faz as contas: totais, **tabela de pontos por preço** pela regra do edital, alerta de inexequibilidade pela regra do edital ou da lei e **caixa** (parcelas × custo acumulado).
+8. **Premissas críticas e brechas que viram proposta:**
+   - cada premissa crítica que se aplica ao projeto (PC1 a PC8) sai escrita no SOW **com a consequência** se não se confirmar e o **reajuste** (aditivo, prorrogação, revisão de metas) (PROP-SOW.11), e, quando depende do contratante, também como obrigação dele com prazo (PROP-SOW.8). Use as proteções que o próprio edital dá, com a página;
+   - para cada brecha da etapa 1, sugira um destino: premissa ou exclusão escrita; obrigação do contratante; folga no cronograma; reserva no preço; pergunta de esclarecimento a mandar antes do prazo. O que o edital empurra para a FGV (CTR2, CTR3) vai para pergunta de esclarecimento e para exclusão ou obrigação do contratante.
+9. **Conferência final:** é do código (matriz de atendimento, limites, anexos, validade, checklist de envio).
+10. **Quadro de equipe × produtividade (código):** o código confere se o volume previsto cabe na equipe: volume do mês ÷ pessoas da função ÷ 21 dias úteis, contra o teto de produtividade escrito (por exemplo, visitas por dia por agente). Para ele conseguir, escreva:
+    - o **quadro por função e faixa de meses**: função, quantidade e mês inicial e final, contados do mesmo marco da vigência;
+    - o **volume previsto** de cada frente (visitas, atendimentos, entrevistas), com a fonte (doc, página e trecho) ou "a definir pelo GP";
+    - o **teto de produtividade** escrito no edital ou na proposta, com a fonte, ou "a definir pelo GP".
+
+    Se a conta passar do teto, é premissa crítica (PC7) e decisão do GP antes de enviar. Você não faz a divisão.
+- **Formato dos compromissos:** `"compromissos": [{ "codigo": "C01", "tipo": "premissa" | "exclusao" | "obrigacao_contratante" | "metodo", "texto": "...", "destino": "TAP-PR | TAP4.3 | A5.12 ..." }]`.
+- **Estudo sensível** (núcleo, seção 3): a régua metodológica (PROP-METODOLOGIA.11) e a exclusão de participar de audiências e comissões como serviço não previsto.
+
+## Definição de pronto
+Critério de aceite do método (`docs/estudos/metodo-etapa-2.md`, que prevalece):
+- A minuta redigida em todas as seções do modelo; nenhuma seção só descrita; o gerente lê a capa e sabe como ganhar pontos e o que decidir.
+- O quadro de equipe fecha com a produtividade escrita, e o cronograma cabe na vigência.
+- Todo critério e toda exigência do conteúdo mínimo têm seção na matriz; toda premissa crítica da etapa 1 que se aplica está escrita na proposta.
+- O preço na estrutura do tipo de contrato, com a tabela de pontos e o caixa calculados pelo código; nenhum número inventado.
+- Nenhuma exclusão tira requisito; todo compromisso tem número C; a autoconferência marca cada item das fichas usadas.
+- **Antes de sair:** a autoconferência dos itens das fichas `prop-*` que você usou (princípio 13), com a lista dos C e o destino que você sugere para cada um.
+
+## Armadilhas
+- **Estratégia:**
+  - **Pergunta sem data-limite de resposta:** escreva a premissa que vale até a resposta. **Pergunta que muda o preço vai antes do preço** (licitação: esclarecimento no prazo; contratação direta: ajuste da minuta antes do comunicado de assinatura), nunca para a reunião inicial. Erro que evita: a quantidade de idas a campo ficou "para a reunião inicial", com o preço já fechado.
+  - **Documento vencido:** toda abordagem diz "vale para a edição a confirmar" e o que continua dentro de cada R ligado à data. Erro que evita: as abordagens prometiam o campo numa edição do evento que já tinha passado.
+  - **Proteção do próprio documento antes do aditivo:** use a prorrogação por apostila quando o documento a prevê; a apostila só vale para o que o documento diz (impedimento, suspensão). **A proteção citada precisa proteger de fato.** Erro que evita: a minuta citou uma cláusula de prorrogação que só valia para suspensão pelo contratante como se cobrisse atraso na entrega de dados.
+  - **Rodadas de ajuste** são sempre "a definir pelo GP". Erro que evita: a proposta prometeu um número de rodadas como fato, e ele virou limite de escopo no TAP.
+- **Minuta:**
+  - **Fases sequenciais nunca com 0 meses;** paralelo só se as fases não usam o mesmo responsável. **Uma regra só para a ordem dos produtos**, a mesma na metodologia, no cronograma, nas premissas e na EAP. Erro que evita: a metodologia dizia "em paralelo", a fase dizia "sequencial" e a EAP encadeava os produtos pelo mesmo analista.
+  - **Campo preso a evento fixo:** diga o que acontece com o R, o produto e a parcela se o evento não ocorrer. Dado que o documento põe com o contratante não passa à contratada sem preço. Erro que evita: a minuta assumiu levantar ela mesma um dado que o TR punha com o contratante, sem horas nem preço.
+  - **Responsabilidades de perfis além do objeto** (perfil exigido "implantar", "operar o sistema" num estudo): liste o que fica fora e o que continua dentro. Erro que evita: o perfil copiado de outro edital trazia atividades de implantação que entraram no escopo sem preço.
+  - **Todo compromisso de método recebe número C, na faixa certa:** comece-o por "Compromisso de método, <nome>:"; o app numera e escreve a faixa de cada tipo (seção 3, "Compromissos numerados"). Erro que evita: o protocolo de campo ficou sem número, e a minuta chamou de "limites" números que eram de compromissos de método.
+- **EAP** (com PROP-EAP.13 a .18):
+  - **sem prazo no documento, a régua do "cabe" é o que a proposta promete** (a duração das fases e o prazo total que a minuta escreveu). Erro que evita: "cabe" medido contra o total, com produtos que passavam do fim da própria fase;
+  - **gargalo "em sequência" está nas predecessoras**, não só no texto. Erro que evita: a minuta dizia que o mesmo analista faria um produto depois do outro, e a rede os punha em paralelo;
+  - **promessa da abordagem vira atividade com horas** (conversa de validação, quem faz cada fase, responsável do consolidado). Erro que evita: a validação com as áreas prometida na abordagem não estava na EAP nem no preço;
+  - **requisito com duas partes** (selecionar e analisar) vira duas atividades. Erro que evita: a seleção das experiências comparadas sumiu dentro da análise;
+  - **dependência do contratante é marco próprio**, e **o consolidado parte das entregas** dos produtos que ele junta. Erro que evita: o consolidado começava antes dos relatórios que consolidava;
+  - **a mesma ocorrência não está na reserva e no aditivo**. Erro que evita: a rodada extra de ajuste estava na reserva de contingência e também como caso de aditivo;
+  - **quem é R tem horas;** na análise do contratante, o fiscal é R e o gestor é A. Erro que evita: perfil responsável por atividade com zero hora;
+  - **acompanhamento é esforço contínuo, não marco;** atividade antes da assinatura fica fora da rede; a ordem de serviço é o marco de início. Erro que evita: a reunião "antes da assinatura" dependia de uma atividade posterior ao início;
+  - **qualificação mínima com leitura cumulativa:** vale a que mais obriga (as duas exigências), e a dúvida vira pergunta. Erro que evita: a nova versão do perfil tirou a formação exigida na primeira linha do TR;
+  - **horas de campo:** separe a coleta efetiva (válidos ÷ produtividade) da presença em turnos; o treino é com a mesma quantidade de pesquisadores. Erro que evita: as horas de campo contaram só as entrevistas, sem os turnos de presença, e o treino previa metade da equipe.
+
+## Rubrica da segunda instância
+Além da rubrica geral, nesta etapa o revisor confere:
+- a abordagem escolhida em todas as seções, e uma regra só para a ordem dos produtos (metodologia, cronograma, premissas, EAP);
+- cada exclusão contra os R (nenhuma tira requisito) e os compromissos C na faixa certa;
+- na EAP: "em sequência" nas predecessoras, quem é R tem horas, cada marco conferido contra a régua (a duração prometida, quando o documento não tem prazo);
+- a pergunta que muda o preço vai antes do preço (esclarecimento ou ajuste da minuta), nunca para a reunião inicial.

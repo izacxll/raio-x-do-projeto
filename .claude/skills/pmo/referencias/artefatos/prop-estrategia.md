@@ -36,7 +36,7 @@ Documento interno de decisão, que não vai ao contratante. Lê o edital do lado
   - confere: código
   - dispensa: nunca
 - **PROP-ESTRATEGIA.5** Para cada abordagem: prós, contras, requisitos atendidos (números R), riscos e impacto em prazo e custo
-  - fonte: SKILL.md, etapa 2, passo 2; PMBOK 6, 5.3, análise de decisão com critérios múltiplos, p. 150–155 (PDF 186–191)
+  - fonte: etapas/etapa-2.md, passo 2; PMBOK 6, 5.3, análise de decisão com critérios múltiplos, p. 150–155 (PDF 186–191)
   - sinais: "prós" | "contras" | "R01" | "riscos" | "impacto em prazo" | "impacto em custo" | tabela abordagem × colunas
   - confere: código
   - dispensa: nunca
@@ -51,7 +51,7 @@ Documento interno de decisão, que não vai ao contratante. Lê o edital do lado
   - confere: código
   - dispensa: nunca
 - **PROP-ESTRATEGIA.8** Cada brecha da etapa 1 com um destino: premissa ou exclusão, folga, reserva ou pergunta de esclarecimento; as premissas críticas que se aplicam (PC1 a PC8) saem escritas com a consequência no SOW (PROP-SOW.11)
-  - fonte: SKILL.md, etapa 2, passo 8; `checklist.md` (onde cada premissa crítica aparece; o que não é premissa crítica); PMBOK 6, 11.5, p. 442–443 (PDF 478–479)
+  - fonte: etapas/etapa-2.md, passo 8; `checklist.md` (onde cada premissa crítica aparece; o que não é premissa crítica); PMBOK 6, 11.5, p. 442–443 (PDF 478–479)
   - sinais: "brecha" | "premissa crítica" | "premissa" | "exclusão" | "folga" | "reserva" | "pergunta de esclarecimento" | tabela origem × destino
   - confere: código
   - dispensa: nunca
@@ -71,7 +71,7 @@ Documento interno de decisão, que não vai ao contratante. Lê o edital do lado
   - confere: só PMO
   - dispensa: nunca
 - **PROP-ESTRATEGIA.12** Abordagem que contraria a RFP (quem executa, escopo, formato do produto, prazo, local) sai marcada como tal, com o trecho da RFP que ela contraria, e vira pergunta de esclarecimento (na contratação direta, ajuste da minuta do contrato antes da assinatura); nunca é apresentada como opção equivalente às outras; abordagem que reduz o que um R pede (menos períodos, menos cobertura, menos produtos) também contraria a RFP: diz o que continua dentro do R e leva a diferença a pergunta e, na etapa 3, a divergência no TAP
-  - fonte: decisão 0050; SKILL.md, etapa 2, passo 2; `licitacoes.md`, "Como usar" (o edital manda)
+  - fonte: decisão 0050; etapas/etapa-2.md, passo 2; `licitacoes.md`, "Como usar" (o edital manda)
   - sinais: "contraria a RFP" | "contraria o TR" | "depende de ajuste" | "pergunta de esclarecimento" junto de "abordagem"
   - confere: só PMO
   - dispensa: nunca
@@ -130,4 +130,4 @@ Linha para a tela: "Estratégia curta, com uma alternativa e a tabela de destino
 ## Fontes
 - PMBOK 6: 5.3, p. 150–155 (PDF 186–191); 11.5, p. 439 e 442–443 (PDF 475 e 478–479); 12.1, p. 468, 473–474 e 478–479 (PDF 504, 509–510 e 514–515); 12.2, p. 487 (PDF 523).
 - Rework: RW-071 (https://resources.rework.com/libraries/deal-closing/proposal-development); RW-073 (https://resources.rework.com/libraries/deal-closing/pricing-strategies); RW-074 (https://resources.rework.com/libraries/deal-closing/pricing-negotiation); RW-077 (https://resources.rework.com/libraries/deal-closing/terms-negotiation).
-- `licitacoes.md` 2.2 e 2.3; `checklist.md` (onde cada premissa crítica aparece; o que não é premissa crítica; PC1, PC3, PC6); SKILL.md, etapa 2 e princípios 1, 2, 6 e 8.
+- `licitacoes.md` 2.2 e 2.3; `checklist.md` (onde cada premissa crítica aparece; o que não é premissa crítica; PC1, PC3, PC6); etapas/etapa-2.md; SKILL.md, princípios 1, 2, 6 e 8.

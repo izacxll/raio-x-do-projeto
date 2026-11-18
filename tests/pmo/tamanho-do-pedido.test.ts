@@ -28,9 +28,9 @@ describe("SKILL.md por etapa", () => {
       expect(s, `etapa ${etapa}`).toMatch(/### Revisão em camadas/);
       expect(s, `etapa ${etapa}`).toMatch(/### Tipo de projeto e tipo de plano/);
       expect(s, `etapa ${etapa}`).toMatch(/## 4\. Formato de saída/);
-      expect(s, `etapa ${etapa}`).toMatch(new RegExp(`### Etapa ${etapa} —`));
+      expect(s, `etapa ${etapa}`).toMatch(new RegExp(`^# Etapa ${etapa} —`, "m"));
       for (const outra of [1, 2, 3, 4, 5].filter((x) => x !== etapa))
-        expect(s, `etapa ${etapa}`).not.toMatch(new RegExp(`### Etapa ${outra} —`));
+        expect(s, `etapa ${etapa}`).not.toMatch(new RegExp(`^# Etapa ${outra} —`, "m"));
       // o que o app não usa
       expect(s).not.toMatch(/## 5\. O que carregar|## 6\. Uso no Claude Code|## 7\. Referências/);
       expect(s).toMatch(/recortada para a etapa/);
@@ -49,9 +49,9 @@ describe("SKILL.md por etapa", () => {
   });
 
   it("a segunda instância leva o SKILL.md da etapa conferida", () => {
-    expect(sistemaDaSegundaInstancia(3)).toMatch(/### Etapa 3 —/);
-    expect(sistemaDaSegundaInstancia(3)).not.toMatch(/### Etapa 2 —/);
-    expect(sistemaDaSegundaInstancia()).toMatch(/### Etapa 2 —[\s\S]*### Etapa 3 —/);
+    expect(sistemaDaSegundaInstancia(3)).toMatch(/^# Etapa 3 —/m);
+    expect(sistemaDaSegundaInstancia(3)).not.toMatch(/^# Etapa 2 —/m);
+    expect(sistemaDaSegundaInstancia()).toMatch(/^# Etapa 2 —[\s\S]*^# Etapa 3 —/m);
   });
 });
 

@@ -12,7 +12,7 @@ versao: 0.3.2
 # PROP-MATRIZ — Matriz de atendimento e checklist de envio
 
 ## Para que serve
-Liga cada requisito (R01…) e cada critério de pontuação à página da proposta que o atende, e lista o que precisa ir junto: declarações, anexos, validade e envio no prazo. A avaliação confere se a proposta está completa e responde a todos os documentos da licitação e aos critérios (PMBOK 6, 12.2, p. 487, PDF 523). É a versão da proposta da matriz de rastreabilidade (PMBOK 6, 5.2.3.2, p. 148, PDF 184; ficha B23). A conferência final é do **código** (SKILL.md, etapa 2, passo 9).
+Liga cada requisito (R01…) e cada critério de pontuação à página da proposta que o atende, e lista o que precisa ir junto: declarações, anexos, validade e envio no prazo. A avaliação confere se a proposta está completa e responde a todos os documentos da licitação e aos critérios (PMBOK 6, 12.2, p. 487, PDF 523). É a versão da proposta da matriz de rastreabilidade (PMBOK 6, 5.2.3.2, p. 148, PDF 184; ficha B23). A conferência final é do **código** (etapas/etapa-2.md, passo 9).
 
 ## Conteúdo mínimo
 - **PROP-MATRIZ.1** Uma linha por requisito R da etapa 1, com o mesmo número, ligada à seção e à página da proposta que o atende
@@ -101,4 +101,4 @@ Linha para a tela: "Matriz curta, requisitos com página e checklist: porte pequ
 ## Fontes
 - PMBOK 6: 5.2.3.2, p. 148–149 (PDF 184–185); 12.1, p. 470 (PDF 506); 12.2, p. 486–487 (PDF 522–523).
 - Rework: RW-072 (https://resources.rework.com/libraries/deal-closing/proposal-design); RW-076 (https://resources.rework.com/libraries/deal-closing/quote-generation).
-- `licitacoes.md` 2.2, 2.3 e 2.6; `checklist.md` (onde cada premissa crítica aparece); ficha B23; SKILL.md, etapa 2 e princípio 9; especificação da etapa 2, passo 9 e saída.
+- `licitacoes.md` 2.2, 2.3 e 2.6; `checklist.md` (onde cada premissa crítica aparece); ficha B23; etapas/etapa-2.md; SKILL.md, princípio 9; especificação da etapa 2, passo 9 e saída.

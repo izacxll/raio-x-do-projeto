@@ -12,7 +12,7 @@ versao: 0.3.2
 # B30 — Previsões do cronograma
 
 ## Para que serve
-Estimativas de datas e condições futuras feitas com o que se sabe na data do status, a partir do desempenho passado e do esperado, considerando as ações corretivas; podem trazer indicadores de valor agregado e a situação das reservas (PMBOK 6, 6.6, p. 228, PDF 264; glossário, p. 720, PDF 756). **Só nasce na execução** (6.6; Padrão, cap. 5, p. 613–632, PDF 649–668). Na etapa 4 sai como modelo vazio, sem acontecimentos inventados (SKILL.md, etapa 4).
+Estimativas de datas e condições futuras feitas com o que se sabe na data do status, a partir do desempenho passado e do esperado, considerando as ações corretivas; podem trazer indicadores de valor agregado e a situação das reservas (PMBOK 6, 6.6, p. 228, PDF 264; glossário, p. 720, PDF 756). **Só nasce na execução** (6.6; Padrão, cap. 5, p. 613–632, PDF 649–668). Na etapa 4 sai como modelo vazio, sem acontecimentos inventados (etapas/etapa-4.md).
 
 ## Conteúdo mínimo
 - **B30.1** Data de status (data dos dados) e versão da previsão
@@ -56,7 +56,7 @@ Estimativas de datas e condições futuras feitas com o que se sabe na data do s
   - confere: código
   - dispensa: porte pequeno
 - **B30.9** Na etapa 4, só a estrutura (campos, periodicidade, onde se publica); nenhum valor de desempenho preenchido
-  - fonte: SKILL.md, etapa 4; PMBOK 6, Padrão, cap. 5, p. 613–632 (PDF 649–668) (as previsões nascem no monitoramento)
+  - fonte: etapas/etapa-4.md; PMBOK 6, Padrão, cap. 5, p. 613–632 (PDF 649–668) (as previsões nascem no monitoramento)
   - sinais: datas previstas, variações ou índices preenchidos num plano ainda não executado
   - confere: só PMO
   - dispensa: nunca
@@ -68,7 +68,7 @@ Estimativas de datas e condições futuras feitas com o que se sabe na data do s
 - Na etapa 4: algum campo traz número ou acontecimento que só a execução poderia dar? (SKILL.md, princípio 2)
 
 ## Erros comuns
-- Inventar andamento no plano; o modelo inicial é só estrutura (SKILL.md, etapa 4).
+- Inventar andamento no plano; o modelo inicial é só estrutura (etapas/etapa-4.md).
 - Ler a variação de prazos do valor agregado como dias; ela vem em dinheiro ou horas (Rework RW-015).
 - Olhar só o IDP e esquecer o caminho crítico: atraso pequeno em atividade crítica pesa mais que atraso grande fora dela (PMBOK 6, p. 227, PDF 263).
 - Tomar o P50 como data segura ou o P80 como pior caso (Rework RW-013).

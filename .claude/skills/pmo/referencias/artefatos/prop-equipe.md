@@ -21,7 +21,7 @@ Mostra quem faz o trabalho, com que perfil, quantas horas em cada atividade da E
   - confere: código
   - dispensa: nunca
 - **PROP-EQUIPE.2** Perfis sugeridos além do mínimo, como sugestão, com o motivo (frente, técnica, território)
-  - fonte: PMBOK 6, 9.2, p. 320 e 324 (PDF 356 e 360); SKILL.md, etapa 2, passo 6
+  - fonte: PMBOK 6, 9.2, p. 320 e 324 (PDF 356 e 360); etapas/etapa-2.md, passo 6
   - sinais: "perfil sugerido" | "sugere-se" | motivo ao lado do perfil
   - confere: código
   - dispensa: nunca
@@ -66,7 +66,7 @@ Mostra quem faz o trabalho, com que perfil, quantas horas em cada atividade da E
   - confere: só PMO
   - dispensa: sem campo
 - **PROP-EQUIPE.11** Quadro de equipe por função e faixa de meses (função, quantidade, mês inicial e final, contados do marco da vigência), com o volume previsto de cada frente e o teto de produtividade escritos com a fonte, para o código conferir volume ÷ pessoas ÷ 21 dias úteis contra o teto
-  - fonte: método da etapa 2, 2.1; método da etapa 4, 4.7; `checklist.md` PC7 (CP11); SKILL.md, etapa 2, passo 10
+  - fonte: método da etapa 2, 2.1; método da etapa 4, 4.7; `checklist.md` PC7 (CP11); etapas/etapa-2.md, passo 10
   - sinais: "quadro de equipe" | "por mês" | "por trimestre" | "por dia" | "teto" | tabela função × meses
   - confere: código
   - dispensa: nunca

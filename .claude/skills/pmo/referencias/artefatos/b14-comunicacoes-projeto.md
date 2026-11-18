@@ -61,7 +61,7 @@ São os artefatos de comunicação produzidos conforme o A7: relatórios de dese
   - confere: código
   - dispensa: sem beneficiários
 - **B14.10** Modelo inicial sem acontecimentos inventados: só estrutura e primeiras entradas tiradas dos documentos
-  - fonte: SKILL.md, etapa 4; decisão 0007
+  - fonte: etapas/etapa-4.md; decisão 0007
   - sinais: campos "a preencher na execução" | primeiras entradas com documento e página
   - confere: só PMO
   - dispensa: nunca

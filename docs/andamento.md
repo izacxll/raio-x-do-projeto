@@ -13,7 +13,7 @@ Atualizado em 18/11/2026. Teste externo da rodada 3: etapas 1 a 4 fechadas nos d
 
 A pasta do teste foi atualizada para a `main` com o vigia novo (linha de estado no `STATUS.md`, resultado da etapa quando ela fecha, terceiro caso esperando o TR na pasta `tr-terceiro`).
 
-**Os métodos das etapas valem (decisão 0034).** A responsável escreveu um método por etapa (`docs/estudos/metodo-etapa-1.md` a `metodo-etapa-5.md`), a partir da análise à mão de um caso real de parceria (fora do Git). O rastro de cada regra está em `docs/estudos/engenharia-reversa/`. O método prevalece sobre o que a etapa faz hoje: leitura e decisão para o gerente, não inventário, com a régua pelo tipo de contrato, de projeto e de plano.
+**Os métodos das etapas valem (decisão 0034).** A responsável escreveu um método por etapa (`docs/estudos/metodo-etapa-1.md` a `metodo-etapa-5.md`), a partir da análise à mão de um caso real de parceria (fora do Git). O que vale de cada etapa para o PMO está em `.claude/skills/pmo/referencias/etapas/etapa-N.md` (decisão 0083; o rastro antigo, `07-regras`, fica no histórico do Git, commit `4054c80`). O método prevalece sobre o que a etapa faz hoje: leitura e decisão para o gerente, não inventário, com a régua pelo tipo de contrato, de projeto e de plano.
 
 **O PMO lê; o código monta e confere (decisão 0035).** Em todas as etapas, o PMO lê a partir do esqueleto do código, e o código confere cada citação, número e prazo. **Nenhuma etapa analisa sem a conexão com o Claude (decisão 0037):** sem a chave, as opções são conectar ou ver a demonstração, que existe em todas as etapas (na 5, com um plano inventado com erros plantados). O esqueleto do código vai no pedido e não aparece sozinho.
 

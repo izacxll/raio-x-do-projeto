@@ -86,6 +86,7 @@ Uma decisão por arquivo, numerada em ordem. Cada uma registra o contexto, o que
 | [0080](0080-lista-unica-de-requisitos.md) | Uma lista de R só, do início ao fim (entregas e obrigações), com os descartados pelo GP no pedido | aceita |
 | [0081](0081-cronograma-do-plano-nos-passos-seguintes.md) | Etapa 4: o cronograma do plano (com predecessoras) nos pedidos de riscos, planos e execução e na segunda instância deles | aceita |
 | [0082](0082-mensagem-do-tempo-de-aprovacao.md) | Placar do cronograma: as análises da rede já estão na conta; o tempo de aprovação é extra só depois das entregas com aprovação | aceita |
+| [0083](0083-skill-em-nucleo-e-etapas.md) | Skill PMO 0.3.6: núcleo no `SKILL.md` e um arquivo por etapa (papel, entradas, saída, pronto, armadilhas, rubrica); saem os `07-regras` (migração da 0074) |
 
 Modelo para uma nova decisão:
 

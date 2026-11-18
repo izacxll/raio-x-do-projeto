@@ -41,7 +41,7 @@ Mostra ao avaliador que a FGV entendeu o problema do contratante, suas causas e 
   - confere: código
   - dispensa: nunca
 - **PROP-ENTENDIMENTO.6** Objetivos verificáveis; métrica que o TR não traz aparece como sugestão
-  - fonte: PMBOK 6, 1.2.6.4, p. 35 (PDF 71); Rework RW-075 (meta mensurável); SKILL.md, etapa 3
+  - fonte: PMBOK 6, 1.2.6.4, p. 35 (PDF 71); Rework RW-075 (meta mensurável); etapas/etapa-3.md
   - sinais: indicador, quantidade ou condição observável junto do objetivo | "sugestão"
   - confere: só PMO
   - dispensa: nunca

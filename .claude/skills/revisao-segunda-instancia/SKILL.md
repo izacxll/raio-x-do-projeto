@@ -25,6 +25,8 @@ No Raio-X, a régua é o pedido do passo, nem mais nem menos: item do método ou
 4. **Rótulo e premissa errados;** decisão do GP preenchida como fato; nome de pessoa.
 5. **Gravidade:** alta só se muda escopo, prazo, preço, caixa, aceite ou quem executa; média; baixa.
 
+**Rubrica da etapa** (decisões 0074 e 0083): além dos cinco itens acima, o revisor confere o que a seção "Rubrica da segunda instância" de `.claude/skills/pmo/referencias/etapas/etapa-N.md` lista para a etapa, sempre dentro do que o pedido exige. No Raio-X, ela já vai no texto de sistema do pedido; fora dele, ponha-a no prompt do revisor. Na etapa 5, a conferência é a versão leve (seção "Etapa 5: a versão leve", abaixo).
+
 Saída em JSON: `{achados:[{id,tipo,gravidade,onde,texto,evidencias,sugestao}], conferido:[...]}`. No Raio-X, `tipo` é `erro_de_fato`, `faltou`, `incoerencia_entre_etapas` ou `rotulo_errado` (itens 1 a 4), como no schema do app (`src/pmo/schemas/segunda-instancia.ts`). Cada achado com evidência (página + trecho literal, ou id do item). "conferido" lista o que está certo. Sem elogio.
 
 ## 3. Lançar o agente

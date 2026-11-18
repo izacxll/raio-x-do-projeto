@@ -61,7 +61,7 @@ Explica como cada estimativa de duração (B8) e de custo (B6) foi obtida: méto
   - confere: código
   - dispensa: sem campo
 - **B4.10** Custos: o que entra e o que fica de fora (indiretos, despesas, impostos), conforme a planilha do edital
-  - fonte: PMBOK 6, 7.3, p. 250 (PDF 286); 7.2.3.2, p. 247 (PDF 283); SKILL.md, etapa 2 (planilha de preços); Rework RW-014 (observação do leitor)
+  - fonte: PMBOK 6, 7.3, p. 250 (PDF 286); 7.2.3.2, p. 247 (PDF 283); etapas/etapa-2.md (planilha de preços); Rework RW-014 (observação do leitor)
   - sinais: "custos indiretos" | "incluído" | "excluído" | "despesas reembolsáveis" | "BDI" | "encargos"
   - confere: código
   - dispensa: nunca
@@ -109,4 +109,4 @@ O que o documento não informa: "não informado no documento — a definir pelo 
 - PMBOK 6: 6.4, p. 197, 200–202 e 204 (PDF 233, 236–238 e 240); 7.2, p. 241 e 247 (PDF 277 e 283); 7.3, p. 250 (PDF 286); glossário, p. 701 (PDF 737).
 - PMBOK 7: 2.4.2.2, p. 55–57 (PDF 150–152); glossário, p. 237 (PDF 332).
 - Rework: RW-014, RW-040, RW-057 (links nos itens e nos erros).
-- `checklist.md` (PC1, PC3, PC4, PC7; vago, CP9); `experiencia.md` §4, §5 e §7; SKILL.md, etapa 2.
+- `checklist.md` (PC1, PC3, PC4, PC7; vago, CP9); `experiencia.md` §4, §5 e §7; etapas/etapa-2.md.
