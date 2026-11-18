@@ -397,7 +397,7 @@ function PontoDePartidaNaTela({ ponto }: { ponto: PontoDePartida }) {
             {ponto.obrigacoes.length > 0 &&
               linha(
                 "Obrigações de quem executa (à parte)",
-                `${ponto.obrigacoes.length} (${ponto.obrigacoes.map((r) => r.numero).join(", ")}). Em construção: ainda não entram nos passos do PMO nem na matriz de atendimento; conferir na proposta.`,
+                `${ponto.obrigacoes.length} (${ponto.obrigacoes.map((r) => r.numero).join(", ")}). Fazem parte da lista de R (decisão 0080): vão para o TAP e o plano com o número; na matriz de atendimento da proposta, conferir à mão.`,
               )}
             {linha(
               "Critério de julgamento",

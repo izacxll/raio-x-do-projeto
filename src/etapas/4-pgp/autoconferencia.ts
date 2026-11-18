@@ -23,6 +23,7 @@ import type { EntradaPgp } from "./entrada";
 import { itensDoPgp, pgpInicial } from "./pgp";
 import { itensValidos, textoFinal } from "../../pmo/itens";
 import { NOME_PASSO_PGP, passoDaParte } from "./passos";
+import { reguaQueMudouEmTexto, reguasQueMudaram } from "./reguas";
 
 export const NOME_PGP_GERADO = "Plano gerado na etapa 4";
 
@@ -109,7 +110,7 @@ export function partesNaoGeradas(p: PgpDossie): Set<string> {
  */
 export function autoconferir(dossie: Dossie, e: EntradaPgp, agora = new Date()): ResultadoConferencia {
   const p = dossie.pgp ?? pgpInicial();
-  const r = ligarPeloId(conferirTodoOPlano(dossie, e, agora), p, e);
+  const r = comReguasQueMudaram(ligarPeloId(conferirTodoOPlano(dossie, e, agora), p, e), p);
   const naoGeradas = partesNaoGeradas(p);
   if (!naoGeradas.size) return r;
   const daParte = (id: string) => /[:]([AB]\d+)(?:\.\d+)?$/.exec(id)?.[1];
@@ -125,6 +126,28 @@ export function autoconferir(dossie: Dossie, e: EntradaPgp, agora = new Date()):
           }
         : v;
     }),
+  };
+}
+
+/**
+ * Régua corrigida num passo que não chegou às partes geradas antes (decisão 0078): uma verificação de aviso, com uma
+ * linha por duração. Não é achado: quem decide qual régua vale é o GP.
+ */
+function comReguasQueMudaram(r: ResultadoConferencia, p: PgpDossie): ResultadoConferencia {
+  const mudaram = reguasQueMudaram(p);
+  if (!mudaram.length) return r;
+  return {
+    ...r,
+    verificacoes: [
+      ...r.verificacoes,
+      {
+        id: "reguas-que-mudaram",
+        alvo: "réguas entre os passos",
+        descricao: "Régua corrigida num passo que não chegou às partes geradas antes",
+        estado: "nao-conferido" as const,
+        detalhe: mudaram.map(reguaQueMudouEmTexto).join(" "),
+      },
+    ],
   };
 }
 
@@ -204,7 +227,7 @@ function conferirTodoOPlano(dossie: Dossie, e: EntradaPgp, agora: Date): Resulta
     mapa: mapaDoPgpGerado(dossie, pgp),
     caracteristicas: caracteristicasDoPgp(dossie, e),
     premissasAplicaveis: p.premissasAplicaveis ?? e.premissasAnteriores,
-    requisitos: e.ponto.requisitos,
+    requisitos: e.ponto.listaDeR,
   });
 }
 

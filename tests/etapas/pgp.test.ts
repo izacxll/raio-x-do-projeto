@@ -161,9 +161,24 @@ describe("contas do código na etapa 4", () => {
 
   it("rastreabilidade: todo requisito da RFP chega ao TAP, à EAP e ao cronograma", () => {
     const r = rastrear(dossie.pgp!, entrada);
-    expect(r.map((x) => x.requisito)).toEqual(entrada.ponto.requisitos.map((x) => x.numero));
-    expect(r.filter((x) => x.situacao !== "rastreado")).toEqual([]);
+    // a lista única de R (decisão 0080): entregas e obrigações; as entregas chegam ao TAP, à EAP e ao cronograma
+    expect(r.map((x) => x.requisito)).toEqual(entrada.ponto.listaDeR.map((x) => x.numero));
+    const entregas = new Set(entrada.ponto.requisitos.map((x) => x.numero));
+    expect(r.filter((x) => entregas.has(x.requisito) && x.situacao !== "rastreado")).toEqual([]);
     expect(r.find((x) => x.requisito === "R01")?.tap.length).toBeGreaterThan(0);
+  });
+});
+
+describe("lista única de R (decisão 0080)", () => {
+  it("o pedido traz entregas e obrigações numa lista só e diz quais R o GP descartou", () => {
+    const e: EntradaPgp = { ...entrada, ponto: { ...entrada.ponto, rDescartados: ["R99"] } };
+    const pedido = PEDIDOS_PGP.escopo(e, dossie.pgp!);
+    expect(pedido).toContain("a lista de R da etapa 1, uma só do início ao fim");
+    for (const r of entrada.ponto.listaDeR) expect(pedido).toContain(`${r.numero} (`);
+    expect(pedido).toMatch(/Descartados pelo GP na etapa 1 \(não são R[^)]*\): R99\./);
+    expect(entrada.ponto.listaDeR.length).toBe(
+      entrada.ponto.requisitos.length + entrada.ponto.obrigacoes.length,
+    );
   });
 });
 
@@ -176,6 +191,20 @@ describe("pedidos da etapa 4", () => {
     expect(planos).toContain("PC3");
     expect(PEDIDOS_PGP.adaptacao(entrada, p)).toContain("### B33");
     expect(PEDIDOS_PGP.cronograma(entrada, p)).toContain("P1.1 Alinhamento e plano de trabalho");
+  });
+
+  it("riscos, planos e execução levam o cronograma do plano, com as predecessoras (decisão 0081)", () => {
+    const p = dossie.pgp!;
+    const a = p.cronograma!.resposta.atividades.find((x) => x.predecessoras.length)!;
+    for (const passo of ["riscos", "planos", "execucao"] as const) {
+      const pedido = PEDIDOS_PGP[passo](entrada, p);
+      expect(pedido).toContain(
+        "Cronograma do plano (passo cronograma; é este que vale, não o da proposta; durações pela conta do código):",
+      );
+      expect(pedido).toContain(`- ${a.id} ${a.nome} (produto ${a.produto}`);
+      expect(pedido).not.toContain("Atividades (cronograma):");
+      expect(pedido).toContain(`depois de: ${a.predecessoras.join(", ")}`);
+    }
   });
 
   it("requisito do TAP com R fora da lista da etapa 1 vai marcado no pedido do escopo", () => {
