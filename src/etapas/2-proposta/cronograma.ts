@@ -288,6 +288,27 @@ export function travasDaEap(atividades: AtividadeEap[], horas?: HorasPerfil[]): 
   return out;
 }
 
+/**
+ * O que falta quando o GP não informou o tempo de aprovação do cliente (decisão 0082). As análises do contratante que
+ * já são atividades da rede estão na conta, com a duração estimada; o tempo do GP, quando vier, troca essa duração
+ * (não soma). Nas entregas marcadas "com aprovação", o tempo do GP é um tempo extra depois de cada uma, que a conta
+ * ainda não tem.
+ */
+export function mensagemDoTempoDeAprovacao(atividades: AtividadeEap[]): string {
+  const analises = atividades.filter((a) => a.analiseDoContratante);
+  const aprovacoes = atividades.filter((a) => a.aprovacaoCliente && !a.analiseDoContratante);
+  const partes: string[] = [];
+  if (analises.length)
+    partes.push(
+      `As ${analises.length} análise(s) do contratante que já são atividades da rede (${analises.map((a) => a.id).join(", ")}) estão na conta, com a duração estimada; o tempo informado pelo GP, quando vier, troca essa duração (não soma).`,
+    );
+  if (aprovacoes.length)
+    partes.push(
+      `Depois de ${aprovacoes.length} entrega(s) marcada(s) com aprovação do cliente (${aprovacoes.map((a) => a.id).join(", ")}), o tempo de aprovação é um tempo extra que a conta ainda não tem: com ele, o cronograma fica mais longo.`,
+    );
+  return `Tempo de aprovação do cliente não informado pelo GP (decisão do GP ou prazo do documento). ${partes.join(" ")}`;
+}
+
 export function calcularCronograma(atividades: AtividadeEap[], par: ParametrosCronograma = {}): Cronograma {
   const problemas = validar(atividades);
   const cal = calendarioDoProjeto(par.feriados);
@@ -307,9 +328,7 @@ export function calcularCronograma(atividades: AtividadeEap[], par: ParametrosCr
   const ordem = ordenar(atividades);
   if (!ordem) return vazio("As predecessoras formam um ciclo: uma atividade depende dela mesma.");
   if (par.aprovacaoDias === undefined && atividades.some((a) => a.aprovacaoCliente || a.analiseDoContratante))
-    problemas.push(
-      "Tempo de aprovação do cliente não informado: o cronograma está sem ele. É decisão do GP (ou prazo do documento).",
-    );
+    problemas.push(mensagemDoTempoDeAprovacao(atividades));
 
   problemas.push(...travasDaEap(atividades, par.horas));
   const calc = new Map<string, AtividadeCalculada>();

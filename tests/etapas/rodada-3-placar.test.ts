@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import {
   calcularCronograma,
   encerramentoAntesDoAceite,
+  mensagemDoTempoDeAprovacao,
   situacaoDaDataFixa,
 } from "../../src/etapas/2-proposta/cronograma";
 import { pareceRepetirORegistroInicial, repeteORegistroInicial } from "../../src/etapas/4-pgp/pgp";
@@ -185,5 +186,23 @@ describe("premissa nova que repete o registro inicial com outras palavras (liç�
       { premissaCritica: "PC6" },
     );
     expect(pareceRepetirORegistroInicial(outraPc, inicial)).toBeUndefined();
+  });
+});
+
+describe("mensagem do tempo de aprovação (decisão 0082)", () => {
+  it("diz que as análises da rede já estão na conta e que o tempo depois das entregas é extra", () => {
+    const xs = [
+      atv("p1", [], 10),
+      atv("a1", ["p1"], 5, { analiseDoContratante: true }),
+      atv("p2", ["a1"], 10, { aprovacaoCliente: true }),
+    ];
+    const m = mensagemDoTempoDeAprovacao(xs);
+    expect(m).toMatch(/^Tempo de aprovação do cliente não informado pelo GP/);
+    expect(m).toMatch(/As 1 análise\(s\) do contratante que já são atividades da rede \(a1\) estão na conta/);
+    expect(m).toMatch(/troca essa duração \(não soma\)/);
+    expect(m).toMatch(
+      /Depois de 1 entrega\(s\) marcada\(s\) com aprovação do cliente \(p2\), o tempo de aprovação é um tempo extra/,
+    );
+    expect(calcularCronograma(xs).problemas.join(" ")).toContain(m);
   });
 });
