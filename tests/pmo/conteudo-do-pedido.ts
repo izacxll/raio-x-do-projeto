@@ -76,9 +76,17 @@ export function conteudoDoPedido(opcoes: {
     };
     confere("só a SKILL.md no texto de sistema", nomes.length === 1 && ehSkill(nomes[0] ?? ""));
     confere(`SKILL.md da etapa ${etapa}`, skillDaEtapaCerta(arquivos, etapa));
-    // rodada seguinte compacta (decisão 0071): os achados anteriores, o que mudou e só as páginas citadas (pode não
-    // haver nenhuma, quando nenhum achado nem item mudado cita o documento)
-    if (/## O que mudou na resposta desde a rodada/.test(pedido)) {
+    // segunda instância leve da etapa 5 (decisão 0077): os vereditos a conferir, as premissas críticas e as páginas
+    // citadas
+    if (/# Segunda instância leve — etapa 5/.test(pedido)) {
+      confere("vereditos a conferir", /## Vereditos a conferir\n- \*\*/.test(pedido));
+      confere("premissas críticas que se aplicam", /## Premissas críticas que se aplicam/.test(pedido));
+      conferencias.push(
+        `- ${/^=== Página /m.test(documentos) ? "ok" : "aviso"} · páginas citadas: ${(documentos.match(/^=== Página /gm) ?? []).length}`,
+      );
+    } else if (/## O que mudou na resposta desde a rodada/.test(pedido)) {
+      // rodada seguinte compacta (decisão 0071): os achados anteriores, o que mudou e só as páginas citadas (pode não
+      // haver nenhuma, quando nenhum achado nem item mudado cita o documento)
       confere("achados da rodada anterior", /## Achados da rodada \d+/.test(pedido));
       confere(
         "o que mudou na resposta (antes e depois)",

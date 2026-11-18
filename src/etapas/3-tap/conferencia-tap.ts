@@ -198,6 +198,32 @@ export function conferirMarcosPelaConta(
   };
 }
 
+/**
+ * A cobertura da lista de R no TAP (decisão 0080): a entrega tem de estar nos requisitos de alto nível (TAP.3); a
+ * obrigação, em qualquer item do TAP (limite, premissa, requisito), porque costuma ir para os limites. Observação do
+ * PMO não é conteúdo do TAP: não conta como destino. R citado no TAP.3 que não está na lista (descartado pelo GP ou
+ * inexistente) vai à parte.
+ */
+export function coberturaDosR(
+  listaDeR: { numero: string; tipo?: string }[],
+  altoNivel: { item: { requisitos: string[] } }[],
+  itensValidos: { id: string; item: { requisitos: string[] } }[],
+): { faltandoEntregas: string[]; faltandoObrigacoes: string[]; foraDaLista: string[] } {
+  const citados = new Set(altoNivel.flatMap((i) => i.item.requisitos));
+  const citadosNoTap = new Set(
+    itensValidos.filter((i) => !/:observacoes:/.test(i.id)).flatMap((i) => i.item.requisitos),
+  );
+  const faltandoEntregas = listaDeR
+    .filter((r) => r.tipo !== "obrigacao" && !citados.has(r.numero))
+    .map((r) => r.numero);
+  const faltandoObrigacoes = listaDeR
+    .filter((r) => r.tipo === "obrigacao" && !citadosNoTap.has(r.numero))
+    .map((r) => r.numero);
+  const daLista = new Set(listaDeR.map((r) => r.numero));
+  const foraDaLista = [...citados].filter((n) => !daLista.has(n) && !ehNumeroDeCompromisso(n)).sort();
+  return { faltandoEntregas, faltandoObrigacoes, foraDaLista };
+}
+
 export function conferirTap(
   e: EntradaTap,
   t: TapDossie,
@@ -233,23 +259,29 @@ export function conferirTap(
   // 2. requisitos de alto nível ligados a números R, e cada R da RFP coberto
   const altoNivel = itens.filter((i) => i.id.startsWith("tap:requisitosAltoNivel:") && valido(i));
   const semNumero = altoNivel.filter((i) => !i.item.requisitos.length);
-  const citados = new Set(altoNivel.flatMap((i) => i.item.requisitos));
-  const faltando = e.ponto.requisitos.map((r) => r.numero).filter((n) => !citados.has(n));
-  // R que saiu da lista na etapa 1 (descartado pelo GP) ou que não existe: não é requisito do TAP
-  const daLista = new Set(e.ponto.requisitos.map((r) => r.numero));
-  const foraDaLista = [...citados].filter((n) => !daLista.has(n) && !ehNumeroDeCompromisso(n)).sort();
+  const { faltandoEntregas, faltandoObrigacoes, foraDaLista } = coberturaDosR(
+    e.ponto.listaDeR,
+    altoNivel,
+    itens.filter(valido),
+  );
+  const faltando = [...faltandoEntregas, ...faltandoObrigacoes];
   out.push({
     id: "requisitos",
     nome: "Requisitos de alto nível ligados aos números R",
     situacao: semNumero.length || faltando.length || foraDaLista.length ? "atencao" : "ok",
     texto: [
       semNumero.length ? `${semNumero.length} requisito(s) de alto nível sem número R.` : "",
-      faltando.length ? `Requisitos da RFP não citados no TAP.3: ${faltando.join(", ")}.` : "",
+      faltandoEntregas.length
+        ? `Requisitos da RFP não citados no TAP.3: ${faltandoEntregas.join(", ")}.`
+        : "",
+      faltandoObrigacoes.length
+        ? `Obrigações da RFP (R) sem destino em nenhum item do TAP: ${faltandoObrigacoes.join(", ")}; sugere-se levá-las aos limites, às premissas ou aos requisitos.`
+        : "",
       foraDaLista.length
         ? `${foraDaLista.join(", ")} no TAP.3 não está na lista de requisitos da etapa 1 (descartado pelo GP ou inexistente): sugere-se tratá-lo como restrição ou observação, não como requisito de alto nível.`
         : "",
       !semNumero.length && !faltando.length && !foraDaLista.length
-        ? `Os ${e.ponto.requisitos.length} requisitos da RFP estão ligados.`
+        ? `Os ${e.ponto.listaDeR.length} requisitos da RFP estão ligados.`
         : "",
     ]
       .filter(Boolean)

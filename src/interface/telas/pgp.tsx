@@ -416,10 +416,22 @@ function Escopo({ p, e }: { p: PgpDossie; e: EntradaPgp }) {
         </thead>
         <tbody>
           {linhas.map((l) => (
-            <tr key={l.requisito} data-origem={l.situacao !== "rastreado" ? "nao-verificavel" : undefined}>
+            <tr
+              key={l.requisito}
+              data-origem={
+                l.situacao !== "rastreado" && l.situacao !== "obrigacao-no-plano"
+                  ? "nao-verificavel"
+                  : undefined
+              }
+            >
               <td title={l.descricao}>{l.requisito}</td>
               <td>{l.tap.length ? `${l.tap.length} item(ns)` : "—"}</td>
-              <td>{l.eap.join("; ") || "não localizado na EAP"}</td>
+              <td>
+                {l.eap.join("; ") ||
+                  (l.situacao === "obrigacao-no-plano"
+                    ? "obrigação no plano (sem pacote)"
+                    : "não localizado na EAP")}
+              </td>
               <td>{l.atividades.length ? `${l.atividades.length} atividade(s)` : "—"}</td>
             </tr>
           ))}
@@ -726,6 +738,13 @@ function Autoconferencia({
                 `${separados.decisoes.length} trechos com decisão do GP ainda vazia ("a definir pelo GP").`}{" "}
               No plano final, eles precisam do valor, do nome ou da cadência que só você define.
             </p>
+            {resultado.verificacoes
+              .filter((v) => v.id === "reguas-que-mudaram")
+              .map((v) => (
+                <p key={v.id} className="aviso" role="status" data-testid="reguas-que-mudaram">
+                  <b>Aviso:</b> {v.descricao}. {v.detalhe}
+                </p>
+              ))}
             {resultado.verificacoes
               .filter((v) => v.id === "presentes-pela-marca-do-pmo")
               .map((v) => (

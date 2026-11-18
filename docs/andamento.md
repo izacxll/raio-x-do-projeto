@@ -73,7 +73,6 @@ O que cada fase M ainda precisa cobrir está nas issues de cada uma (rótulos `e
 - **Ordem de impacto dos pontos de atenção** (caixa > dependência do contratante > preço > prazo): julgamento da análise, a confirmar pela responsável. Veio da engenharia reversa (o arquivo foi removido pela decisão 0075).
 - **Gravidade dos conflitos que envolvem mais de uma parte** do plano (etapa 5) e **gatilhos com número** como campos obrigatórios da etapa 4: a validar na M4 e na M5.
 - **A camada "tipo" (tipo de projeto, de contrato e de plano) vira um módulo comum às cinco etapas?** Hoje cada etapa reconhece o tipo por conta própria. Veio da engenharia reversa (decisão 0075).
-- **Segunda instância leve na etapa 5** (decisão 0077, pendente): conferir os vereditos "falso" e "regra_errada" do PMO contra a página citada e uma amostra das premissas críticas, no Sonnet. Custo medido: ~28 a 36 mil tokens por plano (25% a 30% da leitura do PMO), cerca de US$ 0,08 a 0,13.
 
 ## Próximo passo
 

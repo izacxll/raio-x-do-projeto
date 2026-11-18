@@ -37,7 +37,7 @@ function cabecalho(e: EntradaPgp, p: PgpDossie, titulo: string): string {
 
 ${tap} ${e.fonteProposta === "nenhuma" ? "Não há proposta." : "A proposta também vai (doc: proposta)."}
 
-Requisitos da RFP (use estes números): ${e.ponto.requisitos.map((r) => `${r.numero} (${r.rotulo})`).join("; ") || "nenhum"}.
+Requisitos da RFP (a lista de R da etapa 1, uma só do início ao fim; use estes números): ${e.ponto.listaDeR.map((r) => `${r.numero} (${r.rotulo})`).join("; ") || "nenhum"}.${e.ponto.rDescartados.length ? ` Descartados pelo GP na etapa 1 (não são R; se o documento os traz, entram como restrição ou observação): ${e.ponto.rDescartados.join(", ")}.` : ""}
 Premissas críticas que se aplicam (decisão do GP): ${premissasEmTexto(premissas)}.
 ${p.abordagem ? `Abordagem escolhida pelo GP: ${p.abordagem}.` : ""}`;
 }
@@ -70,11 +70,31 @@ function resumoDoEscopo(p: PgpDossie): string {
     : "- (EAP ainda não feita)";
 }
 
-function resumoDoCronograma(p: PgpDossie): string {
+/**
+ * O cronograma do plano (passo cronograma da etapa 4), com o pacote, as predecessoras e a duração de cada atividade:
+ * é ele que vale daqui em diante, não o da proposta. Sem as predecessoras, quem confere não vê, por exemplo, se o
+ * encerramento vem depois do aceite (decisão 0081). A duração é a da conta do código (a esperada dos três pontos, o
+ * tempo de aprovação do GP na análise do contratante, os dias úteis da janela na data fixa), e o aceite aparece de
+ * um jeito ou de outro: atividade de análise do contratante, ou entrega com aprovação do cliente depois.
+ */
+export function resumoDoCronograma(p: PgpDossie, e: EntradaPgp): string {
   const c = p.cronograma?.resposta;
   if (!c) return "- (cronograma ainda não feito)";
+  const conta = new Map((cronogramaDoPgp(p, e)?.atividades ?? []).map((a) => [a.id, a]));
   return [
-    ...c.atividades.map((a) => `- ${a.id} ${a.nome} (produto ${a.produto})`),
+    "Cronograma do plano (passo cronograma; é este que vale, não o da proposta; durações pela conta do código):",
+    ...c.atividades.map((a) => {
+      const k = conta.get(a.id);
+      const duracao = k
+        ? `${k.duracao} dias úteis`
+        : `${a.duracao.mais_provavel} dias úteis (estimativa do PMO)`;
+      const aceite = a.analiseDoContratante
+        ? "; análise do contratante"
+        : a.aprovacaoCliente
+          ? `; com aprovação do cliente depois${k?.aprovacao ? ` (+${k.aprovacao} dias úteis, tempo do GP)` : " (tempo do GP ainda não informado)"}`
+          : "";
+      return `- ${a.id} ${a.nome} (produto ${a.produto}${a.pacote ? `, pacote ${a.pacote}` : ""}; depois de: ${a.predecessoras.join(", ") || "início"}; ${duracao}${aceite}${a.restricaoData ? `; data fixa ${a.restricaoData.inicio} a ${a.restricaoData.fim}` : ""})`;
+    }),
     `Perfis: ${c.perfis.map((x) => `${x.id} ${x.nome}`).join("; ")}`,
   ].join("\n");
 }
@@ -135,7 +155,7 @@ Cada um num item da B17 (B17.5 para as exclusões, B17.7 para os limites de volu
 
 /** Requisitos de alto nível do TAP; o R que saiu da lista na etapa 1 vai marcado, para não virar requisito do plano. */
 function requisitosDoTapEmTexto(e: EntradaPgp): string {
-  const daLista = new Set(e.ponto.requisitos.map((r) => r.numero));
+  const daLista = new Set(e.ponto.listaDeR.map((r) => r.numero));
   return e.requisitosTap
     .map((r) => {
       const fora = r.requisitos.filter((n) => !daLista.has(n) && !ehNumeroDeCompromisso(n));
@@ -161,7 +181,7 @@ ${fichasDasPartes(partes)}
 
 # O que fazer
 1. textos: o texto de cada parte acima, item a item do conteúdo mínimo da ficha.
-2. eap: os pacotes de trabalho por produto, com o dicionário (descrição e critério de aceite) e os números R de cada pacote. Todo requisito da RFP deve estar em algum pacote. O código monta a matriz de rastreabilidade (B23) com isto.
+2. eap: os pacotes de trabalho por produto, com o dicionário (descrição e critério de aceite) e os números R de cada pacote. Toda entrega da lista de R deve estar em algum pacote; a obrigação (R do tipo obrigação) pode ficar só na especificação do escopo (B17) ou nos limites, com o número R. O código monta a matriz de rastreabilidade (B23) com isto.
 3. observacoes: o que você achou e o código não, com fonte.
 
 ${REGRAS}`;
@@ -216,8 +236,7 @@ export function pedidoRiscos(e: EntradaPgp, p: PgpDossie): string {
   const brechas = e.ponto.brechas.map((b) => `- ${b.id}: ${b.nome} — ${b.texto}`);
   return `${cabecalho(e, p, "passos 7 a 9: riscos, custos e atualização das premissas (fichas A8, B27, A4, B3)")}
 
-Atividades e perfis (passo anterior):
-${resumoDoCronograma(p)}
+${resumoDoCronograma(p, e)}
 
 Contas do código sobre o cronograma (use; não refaça as contas):
 ${contasDoCronograma(e, p)}
@@ -244,6 +263,8 @@ ${REGRAS}`;
 export function pedidoPlanos(e: EntradaPgp, p: PgpDossie): string {
   const partes = partesDoPasso("planos", p);
   return `${cabecalho(e, p, "passo 10: demais planos e documentos (as partes marcadas abaixo)")}
+
+${resumoDoCronograma(p, e)}
 
 ${resumoDosRiscos(p, e)}
 
@@ -310,8 +331,7 @@ export function pedidoExecucao(e: EntradaPgp, p: PgpDossie): string {
   const partes = partesDoPasso("execucao", p);
   return `${cabecalho(e, p, "passos 11 e 12: linha de base da medição e documentos de execução (as partes marcadas abaixo)")}
 ${regraDasQuestoesNoTopo(e, partes)}
-Atividades (cronograma):
-${resumoDoCronograma(p)}
+${resumoDoCronograma(p, e)}
 
 ${questoesDoPedido(e, partes)}Partes a escrever neste passo (o GP marcou):
 ${listaDePartes(partes, "execucao", p)}

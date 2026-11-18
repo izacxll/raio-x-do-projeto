@@ -35,6 +35,8 @@ export interface CandidatoConferido {
   avisos: string[];
   /** Achado de uma parte cuja dispensa (declarada só no plano) o PMO disse que não cabe. */
   daDispensa?: string;
+  /** O achado voltou a contar pela segunda instância leve (decisão 0077): o que ela disse. */
+  revisadoPelaSegunda?: string;
 }
 
 export type SituacaoDispensa = "cabe" | "nao-cabe" | "sem-veredito";

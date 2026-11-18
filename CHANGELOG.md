@@ -10,9 +10,28 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 - **Segunda instância:** o pedido e a skill de revisão usam a rubrica da etapa.
 - **Removidos:** os `docs/estudos/engenharia-reversa/07-regras-etapa-N.md`, com o que ainda valia levado às armadilhas e à definição de pronto, e a linha do `CLAUDE.md` que mandava lê-los.
 
+### A mensagem do tempo de aprovação do cliente (decisão 0082)
+- **Placar do cronograma:** as análises do contratante que já são atividades da EAP estão na conta; o tempo de aprovação do GP troca a duração delas e é um tempo extra só depois das entregas marcadas com aprovação.
+
+### O cronograma do plano nos passos seguintes da etapa 4 (decisão 0081)
+- **Riscos, planos e execução** levam o cronograma do plano (pacote, predecessoras, duração, análise do contratante, data fixa), e a segunda instância desses passos passa a vê-lo; antes, o de planos não o levava, e o revisor só via a EAP da proposta.
+
+### Uma lista de R só, do início ao fim (decisão 0080)
+- **Causa do R13 e R14 que sumiam:** o ponto de partida separava entregas e obrigações, e vários passos usavam só as entregas como "a lista de R". Agora há uma lista só (`listaDeR`) em todos os pedidos e conferências.
+- **O pedido diz quais R o GP descartou** na etapa 1.
+- **TAP:** a obrigação basta estar em qualquer item do TAP; a entrega, nos requisitos de alto nível.
+
+### Segunda instância leve na etapa 5 (decisão 0077, aceita)
+- **Só com veredito "falso" ou "regra_errada"** de achado do código: confere se o trecho cobre o item inteiro da ficha e todas as premissas críticas que se aplicam. Uma rodada, Sonnet por padrão; só as páginas citadas.
+- **A revisão volta ao total:** veredito derrubado ou que cobre só em parte faz o achado contar, com a parte que falta.
+- **Substitui a segunda instância genérica** da tela da etapa 5 (pedido inteiro); no teste externo, o passo `segunda-leitura`.
+
 ### Skill PMO 0.3.5 (decisão 0079)
 - **Etapa 5:** "falso" só com a evidência cobrindo o item inteiro (em parte é "sustenta", com o que falta); "a definir" com marco nomeado não é vago; a regra procurada no plano inteiro antes do "conflituoso".
 - **Etapa 4:** a correção de régua vai às partes geradas antes.
+
+### Aviso de régua corrigida que não chegou às partes anteriores (decisão 0078)
+- **Etapa 4:** a mesma duração chamada de "teto" num passo e de "referência" num passo seguinte vira aviso na autoconferência e no placar, apontando a parte que ficou para trás.
 
 ### Decisão pendente: segunda instância leve na etapa 5 (decisão 0077)
 - A pergunta, o custo medido nos dois casos do teste e os prós e contras, para a responsável decidir. Nada implementado.
@@ -22,22 +41,27 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 - **Formatos do app:** identificador de risco "xx01 · categoria" (B27.1); quem decide, com o comitê dispensado (A11.1); A14.10 dispensável em plano preditivo.
 - **"a definir"** com quando ou onde se define, ou ligado a uma questão aberta, deixa de ser vago.
 - Nos dois planos do teste externo, os 32 candidatos falsos não reaparecem.
+
 ### Remoção da documentação obsoleta (decisão 0075)
 - **Removidos de `docs/estudos/`:** a engenharia reversa da análise à mão (menos o rastro `07-regras-etapa-N.md`, que fica até a migração da decisão 0074), o estudo da etapa 1 do app antigo e os placares das fases M1 e M2. Os links apontam para o histórico no Git (commit `2ac4708`) ou para o documento que substituiu.
 
 ### Revisor de código e proposta de arquitetura da skill (decisão 0074)
 - **Subagente `revisor-codigo`:** code-review `low` em todo commit de código e `high` antes do merge de PR que mexe em exportação, importação, vigia, segurança ou pedidos; só lê e reporta.
 - **Decisão 0074 (aceita, migração depois do teste):** skill PMO base e um arquivo por etapa, com papel, entradas, saída, definição de pronto, armadilhas e rubrica da segunda instância.
+
 ### Skill PMO 0.3.4 (decisão 0073)
 - **Etapa 4:** regras da rodada 3 do teste (cronograma, riscos, planos e execução), cada uma com o erro que evita e exemplo inventado.
 - **Rótulos:** item que mistura documento e sugestão é sugestão; cadência sempre do GP.
+
 ### Resultado da etapa para apresentação (decisão 0072)
 - **`npm run resultado-da-etapa`:** um DOCX por etapa e por caso do teste externo, com o placar resumido e a segunda instância de cada passo (achados e o que o GP decidiu) e o resultado final da etapa, pelo exportador do app. Fora do Git; sempre minuta.
+
 ### Segunda instância mais barata e igual nas duas pontas (decisão 0071)
 - **Rodada 2 compacta:** os achados da rodada anterior, só os itens que mudaram e só as páginas citadas (no caso fiscal, de ~55 mil para ~15 mil tokens). A resposta inteira só a pedido do GP.
 - **Rodada 1 só com achados baixos:** segue com a correção, sem rodada 2 (configurável).
 - **Modelo da rodada 2** à escolha do GP (o da etapa ou o Sonnet, mais barato).
 - **Paridade:** o app passa a mandar os achados da rodada anterior; app e teste externo montam o pedido pela mesma função. Tabela em `docs/papeis.md`.
+
 ### Placar e pedidos da rodada 3 (decisão 0070)
 - **Data fixa já vencida** sai "não confirmável", e não "cabe"; com o início do documento vencido, a vigência também. No TAP, o marco vencido vira divergência própria.
 - **Aviso** quando o encerramento, a devolução ou o descarte de dados começa antes do último aceite.

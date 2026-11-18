@@ -25,7 +25,7 @@ No Raio-X, a régua é o pedido do passo, nem mais nem menos: item do método ou
 4. **Rótulo e premissa errados;** decisão do GP preenchida como fato; nome de pessoa.
 5. **Gravidade:** alta só se muda escopo, prazo, preço, caixa, aceite ou quem executa; média; baixa.
 
-**Rubrica da etapa** (decisões 0074 e 0083): além dos cinco itens acima, o revisor confere o que a seção "Rubrica da segunda instância" de `.claude/skills/pmo/referencias/etapas/etapa-N.md` lista para a etapa, sempre dentro do que o pedido exige. No Raio-X, ela já vai no texto de sistema do pedido; fora dele, ponha-a no prompt do revisor. Na etapa 5, a rubrica é a da **conferência leve** (decisão 0077): só os vereditos "falso" e "regra_errada" e as premissas críticas que se aplicam, numa rodada, com a resposta no schema `src/pmo/schemas/segunda-etapa-5.ts` (confirma, derruba, em parte ou sem base), e não os achados abaixo.
+**Rubrica da etapa** (decisões 0074 e 0083): além dos cinco itens acima, o revisor confere o que a seção "Rubrica da segunda instância" de `.claude/skills/pmo/referencias/etapas/etapa-N.md` lista para a etapa, sempre dentro do que o pedido exige. No Raio-X, ela já vai no texto de sistema do pedido; fora dele, ponha-a no prompt do revisor. Na etapa 5, a conferência é a versão leve (seção "Etapa 5: a versão leve", abaixo).
 
 Saída em JSON: `{achados:[{id,tipo,gravidade,onde,texto,evidencias,sugestao}], conferido:[...]}`. No Raio-X, `tipo` é `erro_de_fato`, `faltou`, `incoerencia_entre_etapas` ou `rotulo_errado` (itens 1 a 4), como no schema do app (`src/pmo/schemas/segunda-instancia.ts`). Cada achado com evidência (página + trecho literal, ou id do item). "conferido" lista o que está certo. Sem elogio.
 
@@ -43,6 +43,14 @@ Saída em JSON: `{achados:[{id,tipo,gravidade,onde,texto,evidencias,sugestao}], 
 - Antes de corrigir, confira cada achado sobre números ou contas na fonte (placar, caminho crítico, página). O revisor é o mesmo modelo e também erra: achado errado não vira correção.
 - Corrija na mesma etapa, numa versão nova (nome de arquivo novo), com as citações reverificadas por script.
 - Registre cada achado útil como lição (regra geral, sem dados do caso) e cada falso alarme na contagem da regra.
+
+### Etapa 5: a versão leve (decisão 0077)
+
+Na etapa 5, a segunda instância confere só os vereditos "falso" e "regra_errada" que o PMO deu a achados do código, e todas as premissas críticas que se aplicam. Vão só as páginas citadas; é uma rodada, no Sonnet por padrão.
+
+- **A régua:** o trecho citado cobre o **item inteiro** da ficha, não só o tema ("processo de auditoria" não cobre "conclusões das auditorias"). Cobre em parte → `em_parte`, com a parte que falta (o achado volta a contar). Não cobre → `derruba`.
+- **Na premissa crítica,** "tratada" só quando ela está escrita como premissa nos três lugares (B3, B27 com gatilho, A11 com reajuste).
+- **Erro que evita:** um veredito "falso" com um trecho que só tocava o tema tirou um achado real do total, e nenhuma camada viu.
 
 ## 5. Limite de rodadas
 
