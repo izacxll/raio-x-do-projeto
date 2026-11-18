@@ -43,6 +43,12 @@ export interface EntradaConferencia {
   tipoPlano?: TipoPlano;
   /** O plano foi gerado pela própria ferramenta (autoconferência da etapa 4): as convenções dela valem. */
   planoDaFerramenta?: boolean;
+  /**
+   * Itens do conteúdo mínimo que a autoconferência da etapa 4 marcou "presente", com o texto de cada item apontado em
+   * "onde" (decisão 0076). Antes de dar o item como ausente, o código procura esse texto no plano: achou, o item está
+   * lá com outra redação. Só existe quando o dossiê tem a etapa 4.
+   */
+  presentesPelaMarca?: Record<string, string[]>;
 }
 
 export type TipoPlano = "pgp" | "plano-trabalho";
@@ -167,6 +173,89 @@ export function ehDecisaoDoGp(texto: string, posicao: number): boolean {
   return /^a (?:ser )?definid?[oa]?s?r?\s*(?:pelo gp|[:;,—–-]?\s*decis[aã]o do gp)/i.test(
     normalizarTermo(texto.slice(posicao, posicao + 40)),
   );
+}
+
+/**
+ * "a definir" que diz quando ou onde se define (decisão 0076): "a definir antes do campo", "a definir no P1 e no
+ * treinamento", "a definir até a reunião inicial"; ou a mesma frase traz a questão aberta (QU-09) ou o acontecimento
+ * que a resolve ("quando o esclarecimento for respondido"). É pendência rastreada, não vago do plano.
+ */
+const A_DEFINIR_COM_QUANDO_OU_ONDE =
+  /\ba (?:ser )?definid?[oa]?s?r? (?:antes d[oa]s?|depois d[oa]s?|apos [oa]s?|ate [oa]s?|n[oa]s? |em |durante )/;
+const QUANDO_SE_RESOLVE =
+  /\bquando (?:o|a|os|as) [a-z]+ (?:for|forem|estiver|estiverem|chegar|chegarem|sair|sairem)\b|\bqu-\d+/;
+
+export function aDefinirComQuandoOuOnde(frase: string): boolean {
+  const t = normalizarTermo(frase).toLowerCase();
+  return A_DEFINIR_COM_QUANDO_OU_ONDE.test(t) || QUANDO_SE_RESOLVE.test(t);
+}
+
+const PALAVRAS_VAZIAS_DA_QUESTAO = new Set(
+  "para pelo pela pelos pelas como mais sobre entre cada este esta isso essa esse quando onde qual quais antes depois ainda tambem outro outra sem nos nas dos das com uma que nao definir sugestao".split(
+    " ",
+  ),
+);
+const radicaisDe = (t: string) =>
+  new Set(
+    normalizarTermo(t)
+      .toLowerCase()
+      .replace(/[^a-z0-9 ]+/g, " ")
+      .split(/\s+/)
+      .filter((w) => w.length >= 4 && !PALAVRAS_VAZIAS_DA_QUESTAO.has(w))
+      .map((w) => w.slice(0, 5)),
+  );
+
+/**
+ * O "a definir" está ligado a uma questão aberta do registro de questões (B9) do próprio plano: uma linha com QU-nn
+ * divide pelo menos três palavras-chave com a frase (por exemplo, "data a definir" da referência de início e a
+ * questão sobre a ordem de serviço). Decisão 0076.
+ */
+export function ligadoAQuestaoAberta(frase: string, questoes: string[]): boolean {
+  const a = radicaisDe(frase);
+  return questoes.some((q) => [...radicaisDe(q)].filter((w) => a.has(w)).length >= 3);
+}
+
+/**
+ * Itens que o próprio app escreve num formato que os sinais da ficha não pegam (decisão 0076):
+ * - B27.1: o identificador de cada risco no formato do app ("rk01 · contratual");
+ * - A11.1: o plano diz quem decide as mudanças e dispensa o comitê formal (porte pequeno).
+ */
+function presentePeloFormatoDoApp(
+  codigo: string,
+  paginas: PaginaLida[],
+  faixa?: Set<number>,
+): number | undefined {
+  const naFaixa = paginas.filter((p) => !faixa || faixa.has(p.numero));
+  for (const p of naFaixa) {
+    const t = normalizarTermo(p.texto).toLowerCase();
+    if (codigo === "B27.1" && /\b[a-z]{1,4}-?\d{2,3} ?· ?[a-z]/.test(t)) return p.numero;
+    if (
+      codigo === "A11.1" &&
+      /\b(?:sem|dispensa\w*|nao ha)\s+(?:o\s+|de\s+|um\s+)?comite\b/.test(t) &&
+      /\b(?:decide|decidem|aprova|aprovam|autoriza|autorizam)\b/.test(t)
+    )
+      return p.numero;
+  }
+  return undefined;
+}
+
+/**
+ * O texto de um item que a autoconferência da etapa 4 marcou "presente" está no plano (decisão 0076): procura um
+ * trecho de oito palavras do começo e um do meio de cada texto. Devolve a página.
+ */
+export function localizarPelaMarca(textos: string[] | undefined, paginas: PaginaLida[]): number | undefined {
+  if (!textos?.length) return undefined;
+  const corpo = paginas.map((p) => ({ numero: p.numero, t: ` ${soPalavras(p.texto)} ` }));
+  for (const texto of textos) {
+    const ws = soPalavras(texto).split(" ").filter(Boolean);
+    if (ws.length < 4) continue;
+    const meio = Math.max(0, Math.floor(ws.length / 2) - 4);
+    for (const trecho of [ws.slice(0, 8), ws.slice(meio, meio + 8)]) {
+      const achou = corpo.find((p) => p.t.includes(` ${trecho.join(" ")} `));
+      if (achou) return achou.numero;
+    }
+  }
+  return undefined;
 }
 
 export function vagoQueNaoPesa(padrao: string, o: { frase: string }): boolean {
@@ -367,6 +456,25 @@ export function conferirPlano(e: EntradaConferencia): ResultadoConferencia {
         });
         continue;
       }
+      // antes do ausente (decisão 0076): o formato que o próprio app usa e a marca "presente" da etapa 4
+      const peloFormato = presentePeloFormatoDoApp(item.codigo, e.pgp, faixa);
+      if (peloFormato) {
+        verificacoes.push({
+          ...base,
+          estado: "ok",
+          detalhe: `Localizado na p. ${peloFormato}, no formato que o app usa (os termos da ficha não aparecem).`,
+        });
+        continue;
+      }
+      const pelaMarca = localizarPelaMarca(e.presentesPelaMarca?.[item.codigo], e.pgp);
+      if (pelaMarca) {
+        verificacoes.push({
+          ...base,
+          estado: "pela-marca-do-pmo",
+          detalhe: `Presente pela autoconferência da etapa 4: o texto do item que ela aponta está na p. ${pelaMarca}; os termos da ficha não aparecem (redação a conferir).`,
+        });
+        continue;
+      }
       ausenteOuNaoVerificavel(id, item.codigo, item.texto, () =>
         registrar({
           tipo: "ausente",
@@ -552,6 +660,8 @@ export function conferirPlano(e: EntradaConferencia): ResultadoConferencia {
   // "a definir pelo GP" é a convenção do app para decisão pendente do GP: não é vago; vai para a verificação própria
   const decisoesPendentes = new Map<string, number>();
   const fontes = textoDasFontes([...(e.rfp ?? []), ...(e.tap ?? [])]);
+  // as questões abertas do próprio plano (linhas com QU-nn, em geral do B9), para o "a definir" ligado a uma delas
+  const questoesDoPlano = e.pgp.flatMap((p) => p.texto.split("\n")).filter((l) => /\bQU-\d+/.test(l));
   for (const padrao of PADROES_VAGO) {
     for (const o of procurarPadrao(e.pgp, padrao.re)) {
       const texto = e.pgp.find((p) => p.numero === o.pagina)?.texto ?? "";
@@ -566,6 +676,15 @@ export function conferirPlano(e: EntradaConferencia): ResultadoConferencia {
       // o plano reproduz o trecho do edital ou do TAP sem aspas: o vago é do documento, não do plano. Não vale para
       // "a definir", que é curto e comum demais para provar que o trecho veio do documento
       if (padrao.id !== "a-definir" && citaODocumento(texto, o.posicao, o.termo.length, fontes)) continue;
+      // "a definir" com quando ou onde se define, ou ligado a uma questão aberta do B9 (decisão 0076): pendência
+      // rastreada. Olha o item inteiro (a linha), não só a frase: o "quando" costuma vir depois de um ponto e vírgula
+      if (padrao.id === "a-definir") {
+        const ini = texto.lastIndexOf("\n", o.posicao) + 1;
+        const fim = texto.indexOf("\n", o.posicao);
+        const linha = texto.slice(ini, fim < 0 ? undefined : fim);
+        const outras = questoesDoPlano.filter((q) => q !== linha);
+        if (aDefinirComQuandoOuOnde(linha) || ligadoAQuestaoAberta(linha, outras)) continue;
+      }
       registrar({
         tipo: "vago",
         regra: `vago:${padrao.id}`,

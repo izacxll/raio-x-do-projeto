@@ -30,6 +30,7 @@ import { aplicarTipoPlano, proporMapa, sincronizarMapa, type ParteNoMapa } from 
 import { LeituraDoPmo } from "./leitura-pmo";
 import { conferirLeitura, type AchadoPmoConferido } from "../../etapas/5-conferencia/leitura-pmo";
 import { mapaInicialDaConferencia } from "../../etapas/5-conferencia/dispensas";
+import { presentesPelaMarcaDoDossie } from "../../etapas/4-pgp/autoconferencia";
 import {
   conferirComCandidatos,
   conferirVereditos,
@@ -142,6 +143,8 @@ export function ConferenciaPgp(props: Props) {
           premissasAplicaveis: conf.premissasAplicaveis,
           requisitos: conf.requisitos,
           tipoPlano: conf.tipoPlano,
+          // o que a autoconferência da etapa 4 marcou "presente" (decisão 0076): o código procura o texto no plano
+          presentesPelaMarca: presentesPelaMarcaDoDossie(dossie.pgp),
         },
         proposta,
       ),
@@ -155,6 +158,7 @@ export function ConferenciaPgp(props: Props) {
       conf.premissasAplicaveis,
       conf.requisitos,
       conf.tipoPlano,
+      dossie.pgp,
     ],
   );
   const resultado = comCandidatos.resultado;
