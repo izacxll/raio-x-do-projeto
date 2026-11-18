@@ -21,10 +21,15 @@ As duas revisões do teste externo apontaram que a seção "Decisão do GP: part
    - na capa (primeira decisão);
    - na seção da decisão no corpo;
    - na tela, ao lado da escolha do GP.
-3. **O código confere os itens citados:** o que não está na leitura sai como aviso para conferir.
+3. **O código confere a recomendação como confere os outros textos do PMO:**
+   - os itens citados existem na leitura (o que não existe sai como aviso) e saem pelo nome; o que o GP descartou sai do apoio;
+   - número do motivo ou das condições que não está no documento sai como "número sem fonte — conferir";
+   - motivo sem redação condicional, ou afirmativo, sai como "redação a conferir";
+   - sugestão fora da lista deixa a recomendação de fora, e a leitura vale (a API não força a lista).
 4. **O pedido e a skill (0.3.7)** pedem a recomendação com o motivo, as condições e os itens.
 
 ## Consequências
 
 - Um campo a mais na resposta da etapa 1: algumas dezenas de tokens de saída.
 - A recomendação só aparece a partir da próxima leitura de cada caso; os casos do teste externo foram lidos antes.
+- Em aberto: a recomendação não tem estado de revisão (pendente, aceita, descartada). Ela sai sempre rotulada como sugestão; se o GP quiser descartá-la, fica para a decisão sobre a fila de pendências (bloco 2 do pente fino).

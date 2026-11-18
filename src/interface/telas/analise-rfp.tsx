@@ -622,7 +622,11 @@ function Participacao({
   atualizar: (a: AnaliseRfpDossie) => void;
 }) {
   const p = salva.participacao;
-  const recomendacao = recomendacaoDoDossie(salva);
+  const documentos = useDossie((s) => s.dossie.documentos);
+  const recomendacao = recomendacaoDoDossie(
+    salva,
+    documentos.filter((d) => d.papel === "rfp" || d.papel === "anexo-rfp"),
+  );
   return (
     <div className="decisao" style={{ margin: "12px 0" }}>
       {recomendacao && (

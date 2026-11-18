@@ -57,8 +57,11 @@ export const RecomendacaoParticipacao = z.object({
 export type RecomendacaoParticipacao = z.infer<typeof RecomendacaoParticipacao>;
 
 export const RespostaLeituraRfp = z.object({
-  /** Recomendação de participar ou não (decisão 0086); as respostas gravadas antes dela não a têm. */
-  recomendacao: RecomendacaoParticipacao.nullable().default(null),
+  /**
+   * Recomendação de participar ou não (decisão 0086); as respostas gravadas antes dela não a têm. Fora do formato
+   * (sugestão fora da lista), ela fica de fora e a leitura vale.
+   */
+  recomendacao: RecomendacaoParticipacao.nullable().default(null).catch(null),
   /** Cruzamentos obrigatórios X1 a X6 (decisão 0046), registrados depois de ler. */
   cruzamentos: z.array(CruzamentoPmo).default([]),
   /** Autoconferência (decisão 0044): cada item do método ou das fichas usado, com o estado. */
