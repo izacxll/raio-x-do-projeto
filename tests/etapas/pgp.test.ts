@@ -183,8 +183,11 @@ describe("pedidos da etapa 4", () => {
     const a = p.cronograma!.resposta.atividades.find((x) => x.predecessoras.length)!;
     for (const passo of ["riscos", "planos", "execucao"] as const) {
       const pedido = PEDIDOS_PGP[passo](entrada, p);
-      expect(pedido).toContain("Cronograma do plano (passo cronograma; é este que vale, não o da proposta):");
+      expect(pedido).toContain(
+        "Cronograma do plano (passo cronograma; é este que vale, não o da proposta; durações pela conta do código):",
+      );
       expect(pedido).toContain(`- ${a.id} ${a.nome} (produto ${a.produto}`);
+      expect(pedido).not.toContain("Atividades (cronograma):");
       expect(pedido).toContain(`depois de: ${a.predecessoras.join(", ")}`);
     }
   });

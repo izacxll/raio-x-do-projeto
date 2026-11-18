@@ -16,3 +16,4 @@ No teste externo, a segunda instância do passo de planos apontou como erro uma 
 ## Consequências
 
 - No caso fiscal (cópia fora do Git), o pedido de planos subiu de ~76,9 para ~80,8 mil tokens, e o da segunda instância de planos de ~65,2 para ~70,8 mil. A rodada 2 compacta (decisão 0071) não muda, porque manda só o que mudou.
+- Revisão de código (nível alto): a duração vai pela conta do código (a esperada dos três pontos, o tempo do GP na análise do contratante, a janela na data fixa), e a entrega com aprovação do cliente vem marcada, com o tempo do GP quando houver. Limite conhecido: a segunda instância recebe o pedido do passo montado na hora; se o GP refez o cronograma depois de gerar planos, o revisor vê a rede nova. Vale refazer o passo antes de conferir.
