@@ -88,6 +88,7 @@ Uma decisão por arquivo, numerada em ordem. Cada uma registra o contexto, o que
 | [0082](0082-mensagem-do-tempo-de-aprovacao.md) | Placar do cronograma: as análises da rede já estão na conta; o tempo de aprovação é extra só depois das entregas com aprovação | aceita |
 | [0083](0083-skill-em-nucleo-e-etapas.md) | Skill PMO 0.3.6: núcleo no `SKILL.md` e um arquivo por etapa (papel, entradas, saída, pronto, armadilhas, rubrica); saem os `07-regras` (migração da 0074) |
 | [0084](0084-formato-do-resultado.md) | Formato do resultado: capa, quadros, corpo e anexo, cada um numa página; marcas ○ e ◊ no lugar do texto repetido; modelo no rodapé; etapa 5 com resultado |
+| [0085](0085-capa-de-decisao.md) | Capa de decisão e quadros de cada etapa, por código, na tela e no resultado (fora da proposta, do TAP e do PGP); veredito sugerido do plano na etapa 5 |
 
 Modelo para uma nova decisão:
 

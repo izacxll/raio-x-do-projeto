@@ -4,7 +4,16 @@
 // minuta enquanto houver item pendente.
 import type { Dossie, RevisaoItem } from "../dossie/esquema";
 import type { AnaliseRfp } from "../etapas/1-rfp/analisar-rfp";
-import { SECOES_LEITURA, type ItemLeitura, type LeituraRfp } from "../etapas/1-rfp/leitura";
+import {
+  montarLeituraRfp,
+  NOME_MODALIDADE,
+  SECOES_LEITURA,
+  type ItemLeitura,
+  type LeituraRfp,
+} from "../etapas/1-rfp/leitura";
+import { requisitosValidos } from "../etapas/1-rfp/revisao";
+import { curto, NAO_LOCALIZADO, secoesDaCapa, type CapaDeDecisao } from "./capa-de-decisao";
+import type { Alerta } from "./modelo";
 import {
   contarPendentesDaLeitura,
   leituraDoDossie,
@@ -99,14 +108,7 @@ function perguntaFinal(i: ItemLeitura, revisoes: Record<string, RevisaoItem>): s
 }
 
 function marcas(i: ItemLeitura): string {
-  return [
-    i.doPmo ? "leitura do PMO" : "",
-    i.doPmo && i.citacaoConferida && !i.trava ? "citação conferida" : "",
-    i.trava ? NOME_TRAVA[i.trava] : "",
-    i.aviso ? NOME_AVISO[i.aviso] : "",
-  ]
-    .filter(Boolean)
-    .join("; ");
+  return [i.trava ? NOME_TRAVA[i.trava] : "", i.aviso ? NOME_AVISO[i.aviso] : ""].filter(Boolean).join("; ");
 }
 
 function tabelaDaSecao(itens: ItemLeitura[], revisoes: Record<string, RevisaoItem>): Secao["tabela"] {
@@ -162,6 +164,170 @@ function secoesDaLeitura(leitura: LeituraRfp, revisoes: Record<string, RevisaoIt
   return out;
 }
 
+/** O que, na seção "uma-pagina", o código procurou e não achou: vira alerta alto (pergunta antes do preço). */
+const FALTA_QUE_PESA = ["prazo de execução ou vigência", "valor estimado ou teto"];
+
+/**
+ * Capa de decisão da etapa 1 (decisão 0085): a ficha da RFP e as perguntas antes do preço, os pontos de atenção que
+ * mais pesam como alertas e as decisões do GP (participar ou não, modalidade, perguntas, premissas críticas).
+ */
+export function capaDaRfp(
+  dossie: Dossie,
+  analise: AnaliseRfp,
+  leitura: LeituraRfp,
+  agora = new Date(),
+): CapaDeDecisao {
+  const a = dossie.analiseRfp;
+  if (!a) throw new Error("a análise da RFP ainda não foi feita");
+  const esqueleto = montarLeituraRfp(analise, a, agora);
+  const doCodigo = (id: string) => esqueleto.itens.find((i) => i.id === id);
+  const valido = (i: ItemLeitura) => estadoDoItem(a.revisoes, i.id) !== "descartado";
+  const atencao = leitura.itens.filter((i) => i.secao === "atencao" && valido(i));
+  const perguntas = atencao.filter((i) => i.pergunta);
+  const requisitos = requisitosValidos(a);
+  const produtos = requisitos.filter((r) => (r.tipo ?? "produto") === "produto");
+  const faltas = (esqueleto.naoLocalizados["uma-pagina"] ?? []).filter((f) => FALTA_QUE_PESA.includes(f));
+  const situacao = doCodigo("leitura:situacao");
+  // a leitura do PMO da seção "em uma página", pelo nome do item (a conferir: é sugestão)
+  const pmoSobre = (nome: RegExp) =>
+    leitura.itens.find((i) => i.secao === "uma-pagina" && i.doPmo && nome.test(i.nome) && valido(i));
+  const pcs = [...new Set(atencao.flatMap((i) => (i.premissa ? [i.premissa] : [])))].sort();
+  const modalidadeDoGp = a.modalidade;
+  const modalidade =
+    modalidadeDoGp && modalidadeDoGp in NOME_MODALIDADE
+      ? `${NOME_MODALIDADE[modalidadeDoGp as keyof typeof NOME_MODALIDADE]} (decisão do GP)`
+      : leitura.modalidade === "nao-identificada"
+        ? "não identificada no documento — a definir pelo GP"
+        : `${NOME_MODALIDADE[leitura.modalidade]} (reconhecida pelo código; o GP confirma)`;
+
+  // o que falta de prazo e valor vira um alerta só; o ponto de atenção do PMO sobre o mesmo assunto não repete
+  const mesmoAssunto = (i: ItemLeitura) => faltas.length > 0 && /\b(prazo|valor)\b/i.test(i.nome);
+  const alertas: Alerta[] = [
+    ...(faltas.length
+      ? [
+          {
+            nivel: "alto" as const,
+            texto: `${faltas.join(" e ").replace(/^./, (c) => c.toUpperCase())}: ${NAO_LOCALIZADO}${pmoSobre(/prazo|valor/i) ? `; o PMO leu: ${curto(pmoSobre(/prazo|valor/i)!.texto)}` : ""}. Se faltar mesmo, é a primeira pergunta antes do preço.`,
+          },
+        ]
+      : []),
+    ...(situacao && /já passou/i.test(situacao.texto)
+      ? [{ nivel: "alto" as const, texto: curto(situacao.texto) }]
+      : []),
+    ...atencao
+      .filter((i) => i.impacto !== undefined && i.impacto <= 4 && !mesmoAssunto(i))
+      .map((i) => ({
+        nivel: ((i.impacto ?? 9) <= 2 ? "alto" : "medio") as Alerta["nivel"],
+        texto: `${i.nome}${i.premissa ? ` (${i.premissa})` : ""}: ${curto(i.porquePesa ?? i.texto)}`,
+      })),
+  ];
+
+  const decidir = [
+    `Participar ou não: decisão do GP (hoje: ${NOME_PARTICIPACAO[a.participacao.decisao]}). Os alertas e os pontos de atenção são o insumo.`,
+    ...(modalidadeDoGp ? [] : [`Confirmar a modalidade: ${modalidade}.`]),
+    ...(perguntas.length
+      ? [
+          `Quais perguntas de esclarecimento enviar: ${perguntas.length} sugerida(s); as que mudam preço ou prazo estão no quadro "Perguntas antes do preço".`,
+        ]
+      : []),
+    ...(pcs.length
+      ? [`Quais premissas críticas se aplicam ao projeto: o PMO apontou ${pcs.join(", ")}.`]
+      : []),
+  ];
+
+  const numeros = [
+    { rotulo: "Modalidade", valor: modalidade },
+    {
+      rotulo: "Entregas",
+      valor: produtos.length
+        ? `${produtos.length} produto(s) (${produtos.map((r) => r.numero).join(", ")})`
+        : NAO_LOCALIZADO,
+    },
+    { rotulo: "Requisitos numerados (R)", valor: String(requisitos.length) },
+    {
+      rotulo: "Pontos de atenção",
+      valor: `${atencao.length}, ${atencao.filter((i) => (i.impacto ?? 9) <= 2).length} dos que mais pesam (caixa e dependência do contratante)`,
+    },
+    { rotulo: "Perguntas sugeridas", valor: String(perguntas.length) },
+  ];
+
+  // o que o código achou; o que não achou, com a leitura do PMO sobre o mesmo campo, quando houver (sugestão)
+  const linhaDaFicha = (
+    campo: string,
+    i: ItemLeitura | undefined,
+    falta?: string,
+    doPmo?: RegExp,
+  ): string[] => {
+    const achou = i && i.situacao !== "nao-localizado";
+    const pmo = !achou && doPmo ? pmoSobre(doPmo) : undefined;
+    return [
+      campo,
+      achou
+        ? i.texto
+        : `${falta ? `${falta}: ` : ""}${NAO_LOCALIZADO}${pmo ? `. Leitura do PMO (sugestão): ${curto(pmo.texto, 200)}` : ""}`,
+      i?.origem ? `${i.origem.documento}, p. ${i.origem.pagina}` : "—",
+    ];
+  };
+  const habilitacao = doCodigo("leitura:habilitacao:lista");
+  const ficha = {
+    titulo: "Ficha da RFP",
+    paragrafos: ["Montada pelo código a partir do documento; o que ele não achou fica para conferir na RFP."],
+    tabela: {
+      colunas: ["Campo", "Conteúdo", "Onde"],
+      larguras: [1.4, 5, 1.4],
+      linhas: [
+        linhaDaFicha("Objeto", doCodigo("identificacao:objeto")),
+        linhaDaFicha(
+          "Prazo de execução",
+          doCodigo("leitura:prazo"),
+          "prazo de execução ou vigência",
+          /prazo/i,
+        ),
+        linhaDaFicha("Valor", doCodigo("identificacao:valor"), "valor estimado ou teto", /valor/i),
+        linhaDaFicha("Entregas", doCodigo("leitura:tamanho")),
+        linhaDaFicha(
+          "Julgamento",
+          doCodigo("leitura:como-se-ganha"),
+          "critério de julgamento",
+          /julgamento|modalidade/i,
+        ),
+        [
+          "Habilitação",
+          habilitacao?.tabela?.linhas.length
+            ? `${habilitacao.tabela.linhas.length} documento(s) na lista do edital`
+            : NAO_LOCALIZADO,
+          habilitacao?.origem ? `${habilitacao.origem.documento}, p. ${habilitacao.origem.pagina}` : "—",
+        ],
+        linhaDaFicha("Situação das datas", situacao, undefined, /situa/i),
+      ],
+    },
+  };
+  const ordenadas = [...perguntas].sort((x, y) => (x.impacto ?? 9) - (y.impacto ?? 9));
+  const quadroPerguntas = {
+    titulo: "Perguntas antes do preço",
+    paragrafos: [
+      "Sugestões do PMO, na ordem do impacto (caixa, dependência do contratante, preço, prazo, escopo). Quais enviar é decisão do GP.",
+    ],
+    tabela: {
+      colunas: ["#", "Pergunta sugerida", "Premissa", "Onde"],
+      larguras: [0.4, 6, 0.9, 1.2],
+      linhas: ordenadas
+        .slice(0, 8)
+        .map((i, k) => [String(k + 1), perguntaFinal(i, a.revisoes), i.premissa ?? "—", origem(i)]),
+    },
+  };
+  return {
+    etapa: 1,
+    oQueE:
+      "Etapa 1, leitura da RFP: o que o documento pede, quanto, em quanto tempo e como se ganha, para o GP decidir se participa e o que perguntar antes do preço.",
+    decidir,
+    numeros,
+    alertas,
+    mudou: ["É a primeira etapa: não há etapa anterior."],
+    quadros: [ficha, ...(ordenadas.length ? [quadroPerguntas] : [])],
+  };
+}
+
 export function montarAnaliseRfp(
   dossie: Dossie,
   analise: AnaliseRfp,
@@ -169,6 +335,8 @@ export function montarAnaliseRfp(
 ): DocumentoExportavel {
   const { a, leitura, pendentes } = preparar(dossie, analise, agora);
   const secoes: Secao[] = [
+    // a capa de decisão e os quadros só com a leitura do PMO (decisão 0037)
+    ...(leitura.fonte === "pmo" ? secoesDaCapa(capaDaRfp(dossie, analise, leitura, agora)) : []),
     {
       titulo: "Decisão do GP: participar ou não",
       paragrafos: [

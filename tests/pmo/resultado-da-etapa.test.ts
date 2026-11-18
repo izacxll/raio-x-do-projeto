@@ -99,7 +99,10 @@ describe.skipIf(env.RAIO_X_MODO !== "resultado")("gerar o resultado de uma etapa
     const base = env.RAIO_X_BASE ?? "";
     const caso = env.RAIO_X_CASO ?? "";
     const saida = env.RAIO_X_SAIDA ?? "";
-    const arqDossie = join(pasta, `etapa-1-leitura-rfp-${base}.dossie.json`);
+    // a etapa 5 tem o dossiê dela (o plano a conferir e a leitura do PMO); as outras, o da cadeia
+    const daEtapa5 = join(pasta, `etapa-5-leitura-${base}.dossie.json`);
+    const arqDossie =
+      etapa === 5 && existsSync(daEtapa5) ? daEtapa5 : join(pasta, `etapa-1-leitura-rfp-${base}.dossie.json`);
     const r = lerDossie(readFileSync(arqDossie, "utf8"), arqDossie);
     if (!r.ok) throw new Error(r.erro);
     const ler = (nome: string) =>

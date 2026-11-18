@@ -1029,3 +1029,67 @@ tr[data-critica="sim"] td:first-child {
   white-space: normal;
   width: auto;
 }
+
+/* Capa de decisão (decisão 0085): o que decidir, números-chave, alertas e quadros, no topo da etapa. */
+.capa-decisao .capa-titulo {
+  font-size: var(--fs-base, 1rem);
+  color: var(--navy);
+  margin: var(--esp-2) 0 var(--esp-1);
+}
+
+.capa-decidir,
+.capa-mudou {
+  margin: 0 0 var(--esp-1);
+  padding-left: 1.4em;
+}
+
+.capa-numeros {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--esp-1);
+  margin: var(--esp-2) 0;
+}
+
+.capa-numeros div {
+  background: var(--soft);
+  border: 1px solid var(--soft-borda);
+  padding: 6px 10px;
+}
+
+.capa-numeros dt {
+  font-weight: 700;
+  color: var(--navy);
+  font-size: var(--fs-pequeno);
+}
+
+.capa-numeros dd {
+  margin: 0;
+}
+
+.capa-alerta {
+  margin: 4px 0;
+  padding: 6px 10px;
+  border-left: 4px solid;
+}
+
+.capa-alerta-alto {
+  background: var(--vinho-claro);
+  border-color: var(--vinho);
+}
+
+.capa-alerta-alto strong {
+  color: var(--vinho);
+}
+
+.capa-alerta-medio {
+  background: var(--laranja-claro);
+  border-color: var(--laranja);
+}
+
+.capa-alerta-medio strong {
+  color: var(--laranja-txt);
+}
+
+.capa-quadro .tabela-rolavel {
+  overflow-x: auto;
+}

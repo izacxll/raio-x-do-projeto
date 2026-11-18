@@ -37,6 +37,12 @@ describe("partes do nome", () => {
     expect(
       objetoCurto("Contratação de consultoria especializada na elaboração do plano diretor de tecnologia"),
     ).toBe("Elaboração do plano diretor de tecnologia");
+    // contratação direta da FGV (decisão 0085)
+    expect(
+      objetoCurto(
+        "Contratação dos serviços da Fundação Getulio Vargas para a avaliação do programa de merenda",
+      ),
+    ).toBe("Avaliação do programa de merenda");
     expect(objetoCurto("Contratar empresa especializada na prestação de serviços de apoio")).toBe(
       "Prestação de serviços de apoio",
     );

@@ -41,7 +41,7 @@ export interface Tabela {
 export type ParteDoDocumento = "capa" | "quadros" | "corpo" | "anexo";
 export const ORDEM_DAS_PARTES: ParteDoDocumento[] = ["capa", "quadros", "corpo", "anexo"];
 export const TITULO_DO_ANEXO =
-  "Anexo — o processo (placar, segunda instância, rodadas e tokens), para auditoria";
+  "Anexo — registros completos e o processo (placar, segunda instância, rodadas e tokens), para auditoria";
 
 /** Alerta da capa: "alto" muda preço, prazo, caixa, aceite ou quem executa; "medio" pede atenção. */
 export interface Alerta {
