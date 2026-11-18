@@ -125,7 +125,7 @@ describe("citação não prova (item 10g)", () => {
   });
 
   it("citação fraca conta toda palavra, inclusive a de uma letra", () => {
-    expect(citacaoEhFraca("mínimo e atribuída pontuação com base:")).toBe(false);
+    expect(citacaoEhFraca("exigido e com nota pela tabela:")).toBe(false);
     expect(citacaoEhFraca("conforme anexos")).toBe(true);
   });
 });

@@ -37,6 +37,8 @@ Os gabaritos e as leituras gravadas foram feitos pelo Claude Code seguindo a ski
 - a linha do tempo nos pedidos da EAP, do TAP e do cronograma, com `conferenciaDosMarcos` conferida pela conta do código;
 - a segunda instância depois de cada resposta (a ligação da regra 19 da skill).
 
+**Skill PMO 0.3.3 e revisão em camadas (decisão 0063):** as lições do teste ponta a ponta (etapas 1 a 3, dois TRs), a rubrica fixa da segunda instância, `docs/papeis.md` e o gabarito em `tests/pmo/gabarito/` (2 casos disfarçados; os achados da leitura do PMO esperam respostas gravadas).
+
 **Teste externo novo:** TR de um diagnóstico fiscal estadual e, como controle, um TR de contratação direta, fora do Git em `referencias/estudos-externos/` (decisão 0049). Ele recomeça do zero com a skill 0.3.2 e a decisão 0057; as respostas antigas das etapas 1 a 3 ficam em `rodada-2/`. O vigia exporta um passo de cada vez, na ordem do app, com a segunda instância depois de cada resposta.
 
 **Fase M2 (etapa 2 pelo método), PR aberto em cima do #46, aguarda o teste e o ok da responsável** (decisão 0038): a minuta redigida por inteiro na ordem do modelo do edital, preço pelo tipo de contrato, pontos por preço, caixa, quadro de equipe × produtividade e duração × vigência por código. Placar em `docs/estudos/placar-m2-etapa-2.md`: o esqueleto do código cobre todos os itens do gabarito que são do código (28 de 28 na SMPED, 31 de 31 na OEI); com a leitura gravada, 40 de 40 e a minuta redigida por inteiro (17 e 14 seções). **Skill 0.3.0 no PR #51 (rascunho), sem publicar antes do ok.**

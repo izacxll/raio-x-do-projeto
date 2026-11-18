@@ -32,7 +32,7 @@ Documento "que autoriza formalmente a existência de um projeto" e dá ao GP aut
   - sinais: "em conformidade com", "conforme o item" indicam que o código compara com o item citado
   - confere: só PMO
   - dispensa: nunca
-- **TAP-DV.4** Produto que a proposta acrescentou e a RFP não pedia: compromisso assinado, entra como entrega-chave (TAP4.2) com critério de aceite
+- **TAP-DV.4** Produto que a proposta acrescentou e a RFP não pedia: compromisso da proposta (assinado quando há contrato; prometido enquanto não há), entra como entrega-chave (TAP4.2) com critério de aceite
   - fonte: método da etapa 3, 4.1; PMBOK 6, 4.1.3.1, p. 81 (PDF 117)
   - sinais: lista de produtos da proposta comparada com a da RFP | "produto acrescentado"
   - confere: código

@@ -116,7 +116,7 @@ function temFonte(n: string, base: string): boolean {
 export function citacaoEhFraca(trecho: string): boolean {
   // datas e números contam como palavras: o princípio 3 manda trazer o número ou a data da afirmação
   // ("previsto para o período de 07/11/2026 a 06/01/2027" prova as datas)
-  // toda palavra conta, inclusive a de uma letra ("e", "a"): "mínimo e atribuída pontuação com base" tem 6
+  // toda palavra conta, inclusive a de uma letra ("e", "a"): "exigido e com nota pela tabela" tem 6
   return (normal(trecho).match(/[a-z]+|\d[\d./,]*/gi) ?? []).length < 6;
 }
 

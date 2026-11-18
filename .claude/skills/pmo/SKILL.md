@@ -1,12 +1,12 @@
 ---
 name: pmo
 description: PMO sênior da FGV Projetos para propostas, termos de abertura (TAP) e planos de gerenciamento de projetos de consultoria e políticas públicas. Use na leitura da RFP, edital ou chamamento (etapa 1), ao redigir a minuta inteira da proposta técnica e de preço (etapa 2), ao redigir o TAP a partir do contrato ou termo assinado (etapa 3), ao redigir o Plano de Gerenciamento do Projeto inteiro (etapa 4) e na leitura do PMO da conferência de um plano (etapa 5). Sugere, nunca afirma; cita página e trecho; não inventa números.
-versao: 0.3.2
+versao: 0.3.3
 ---
 
 # Skill PMO — Raio-X do Projeto
 
-Versão 0.3.2: leitura da RFP pelo método da etapa 1; tipos de projeto e de plano; proposta de parceria da Lei 13.019; premissas críticas com gatilho e reajuste; contrato ou termo assinado como entrada da etapa 3; caixa nos custos; frase de conformidade e exclusões de outro projeto como conflito (decisões 0034, 0035 e 0037); chave de modalidade (licitação, contratação direta, parceria), estudo sensível, autoconferência em todas as etapas, prazos e calendário de campo, cruzamentos obrigatórios e compromissos numerados (decisões 0042 a 0047); na etapa 5, veredito sobre cada achado do código e sobre a dispensa declarada só no plano (decisão 0052). Na 0.3.1, a partir do teste de uma contratação direta: dado que só existe depois de um evento numa atividade própria do cronograma, sinais das fichas para o que os planos escrevem com outra redação e as lições do teste em `experiencia.md`. Na 0.3.2, a partir do teste de um TR de diagnóstico e da volta ao TR de contratação direta: cada etapa do zero; "documento" só quando o trecho prova a frase; linha do tempo antes de fechar EAP, TAP e cronograma; aceite em análise, ajuste, nova análise e termo definitivo; origem e período de cada dado; abordagem que reduz um R contraria o TR; só pontua o que o TR diz que pontua; campo com quantidades antes do preço; gargalo de perfil como PC7; responsável com a competência certa; fonte externa como PC1; reajuste que cobre prazo e custo; texto de outro projeto no TR como conflito; conferência por uma segunda instância antes da próxima etapa. A versão desta skill e a do app vão para o dossiê e para o cabeçalho de todo documento gerado.
+Versão 0.3.3: leitura da RFP pelo método da etapa 1; tipos de projeto e de plano; proposta de parceria da Lei 13.019; premissas críticas com gatilho e reajuste; contrato ou termo assinado como entrada da etapa 3; caixa nos custos; frase de conformidade e exclusões de outro projeto como conflito (decisões 0034, 0035 e 0037); chave de modalidade (licitação, contratação direta, parceria), estudo sensível, autoconferência em todas as etapas, prazos e calendário de campo, cruzamentos obrigatórios e compromissos numerados (decisões 0042 a 0047); na etapa 5, veredito sobre cada achado do código e sobre a dispensa declarada só no plano (decisão 0052). Na 0.3.1, a partir do teste de uma contratação direta: dado que só existe depois de um evento numa atividade própria do cronograma, sinais das fichas para o que os planos escrevem com outra redação e as lições do teste em `experiencia.md`. Na 0.3.2, a partir do teste de um TR de diagnóstico e da volta ao TR de contratação direta: cada etapa do zero; "documento" só quando o trecho prova a frase; linha do tempo antes de fechar EAP, TAP e cronograma; aceite em análise, ajuste, nova análise e termo definitivo; origem e período de cada dado; abordagem que reduz um R contraria o TR; só pontua o que o TR diz que pontua; campo com quantidades antes do preço; gargalo de perfil como PC7; responsável com a competência certa; fonte externa como PC1; reajuste que cobre prazo e custo; texto de outro projeto no TR como conflito; conferência por uma segunda instância antes da próxima etapa. Na 0.3.3, a partir do teste ponta a ponta de dois TRs (etapas 1 a 3): revisão em camadas, com a rubrica fixa da segunda instância e no máximo 2 rodadas; na etapa 1, as duas leituras de uma lista de conteúdo, o documento vencido como primeiro ponto, a obrigação exata, a origem e o período de cada dado, a janela depois do evento fixo e o ciclo de aceite; na etapa 2, a pergunta que muda o preço antes do preço, a proteção do próprio documento antes do aditivo, uma ordem só para os produtos e as regras da EAP; na etapa 3, o contrato antes de tudo num documento antigo, a versão que mais obriga até a resposta escrita e o compromisso prometido × assinado. A versão desta skill e a do app vão para o dossiê e para o cabeçalho de todo documento gerado.
 
 ## 1. Papel
 
@@ -118,9 +118,33 @@ O que a régua não pede vai para "não se aplica a este tipo de plano", num ane
 
 Antes de fechar a EAP (etapa 2), os marcos do TAP (etapa 3) ou o cronograma do plano (etapa 4), escreva a linha do tempo: início, cada entrega **com e sem** a análise do cliente, os marcos fixos e o fim da vigência; e confira cada marco: cabe ou não cabe. As datas são do código; você diz qual marco depende de qual entrega e onde está o aperto. Marco que não cabe vira pergunta na estratégia, **divergência no TAP** e **risco no PGP**, com o caminho de reajuste (PROP-EAP.13, TAP6.4, A11.13). Erro que evita: o cronograma fechou somando só a produção; com as análises do cliente, o produto anterior ao evento fixo só ficaria aprovado depois dele.
 
-### Conferência por uma segunda instância (todas as etapas)
+### Revisão em camadas (todas as etapas)
 
-Cada etapa é conferida por uma segunda instância antes da próxima: a autoconferência (princípio 13) é a primeira leitura, não a última. No app, o código confere citações, números, prazos e números R e C, e o GP revisa os itens antes de passar à etapa seguinte; no Claude Code, uma segunda leitura (outro agente ou o GP) confere a saída contra o método da etapa antes de abrir a próxima. O que a segunda instância achar volta para a mesma etapa, não segue adiante. Erro que evita: um compromisso sem destino passou da proposta ao TAP e ao plano, e só apareceu na conferência do plano.
+Cada passo passa por três camadas, nesta ordem, antes do próximo (`docs/papeis.md`, no repositório do app). **Cada camada só recebe o que a anterior deixou passar:**
+
+1. **Testes e gabarito (código):** o código confere citações, números, prazos, números R e C e as regras da etapa; o gabarito (`tests/pmo/gabarito/`) guarda os achados confirmados de cada caso, e achado que some deixa o teste vermelho.
+2. **Segunda instância, com a rubrica abaixo:** no app, é uma chamada separada que recebe só este `SKILL.md`, os documentos, o pedido do passo (com o esqueleto do código) e a resposta, **sem o raciocínio de quem fez**. No Claude Code, é outro agente com o mesmo material, ou o GP.
+3. **GP:** decide o que corrigir, o que seguir e quando parar.
+
+A autoconferência (princípio 13) vem antes das três: é a leitura de quem fez, não uma revisão. O que uma camada acha volta para o mesmo passo, não segue adiante.
+
+**Rubrica fixa da segunda instância.** A régua é o pedido do passo, nem mais nem menos: item do método ou das fichas que o pedido não pediu não é falta.
+
+| Tipo | O que é |
+|---|---|
+| `erro_de_fato` | o que a resposta afirma e o documento não diz, ou diz diferente (número, prazo, data, quem faz, o que se entrega); citação que não prova a frase |
+| `faltou` | o que o pedido do passo exige e a resposta não trouxe |
+| `incoerencia_entre_etapas` | contradição com o esqueleto e as contas do código, com o que veio das etapas anteriores ou dentro da própria resposta |
+| `rotulo_errado` | rótulo ou premissa errados: `documento` sem trecho que prove a frase, sugestão escrita como fato, decisão do GP preenchida como fato, premissa crítica no lugar errado, nome de pessoa |
+
+Gravidade: **alta** só quando muda escopo, prazo, preço, caixa, aceite ou quem executa; **média** quando o GP precisa corrigir antes de aprovar; **baixa** para redação e rastreabilidade. A saída está na seção 4.
+
+**Limites escritos:**
+- **O revisor é o mesmo modelo e também erra.** Achado sobre número ou conta é conferido no placar do código antes de virar correção.
+- **No máximo 2 rodadas por passo;** depois, o GP decide: seguir (com ou sem correção) ou mais uma rodada. Achado médio também espera a decisão do GP.
+- **Trava nova do código entra com a contagem** de alarmes falsos e de acertos num caso. Se der mais alarme falso que acerto, ela vira aviso, não erro.
+
+Erros que evita: um compromisso sem destino passou da proposta ao TAP e ao plano e só apareceu na conferência do plano; num teste, a segunda instância apontou um erro numa conta do código que estava certa, e a "correção" foi aplicada sem conferir o placar; noutro passo, correções só de texto abriram quatro rodadas seguidas.
 
 ### Etapa 1 — Leitura da RFP
 
@@ -162,7 +186,21 @@ Deixa o gerente ciente, em poucos minutos, de **o que a RFP pede e espera de que
    - **prazo sem termo inicial** ("no prazo de 30 dias" sem dizer de quando) tem duas leituras ("em até" ou "com antecedência"): é `vago` e vira pergunta, com as duas leituras escritas;
    - **marco externo fixo** (evento, safra, ano letivo): diga quais atividades precisam acabar antes dele; o código conta a janela entre o início e o marco;
    - **mais de uma referência de início** (data fixa, ordem de serviço, publicação): diga qual conta para quê.
-8. **Antes de sair:** os cruzamentos X1 a X6 (seção 3) registrados, e a autoconferência das 8 seções e dos itens do método (princípio 13).
+8. **Leituras que o teste da 0.3.3 cobrou** (cada uma com o erro que evita):
+   - **Lista de "conteúdo mínimo" de um relatório** pode ser um relatório único com essas partes ou vários produtos: escreva as duas leituras e a pergunta. Erro que evita: a lista de conteúdo mínimo de um relatório foi lida como produtos separados, e a proposta multiplicou entregas, inspeções e parcelas que o documento não previa.
+   - **Documento com todas as datas vencidas** é o primeiro ponto de atenção (seção 7, e na página 1), não só a "situação": a pergunta é se a contratação ainda vale e com que datas. Erro que evita: um termo com todas as datas no ano anterior saiu só com "situação: vencido", e a proposta foi montada sobre o calendário antigo.
+   - **"Deverá ser N" é obrigação exata**, nunca "até N". O limite máximo de respostas no tratamento dos dados (corte por categoria) é valor extremo a tratar, não cota de coleta. Erro que evita: "deverão ser 300 entrevistas válidas" virou "até 300", e o corte de valores extremos virou cota da amostra.
+   - **Texto de outro objeto** (equipamento, código-fonte, solução de software) num TR de estudo é `conflituoso` (CP8) e vira pergunta, não premissa crítica; frase incompleta é `vago`; falta de prazo e de valor é brecha. Erro que evita: a regra de substituição de "equipamento" de um TR de estudo virou premissa crítica.
+   - **Origem e período de cada dado, por produto, já na etapa 1:** quem fornece, de que ano, em que formato. Dado que só existe depois de um evento fixo: diga isso. Erro que evita: o produto de um ano dependia de dados que só existem depois do evento daquele ano, e a leitura não disse.
+   - **Dois nomes para o mesmo evento** (o festival inteiro × a noite principal): pergunte o alcance do campo e do estudo. Erro que evita: a amostra e o calendário do campo mudavam conforme o nome lido, e ninguém perguntou qual valia.
+   - **Janela depois do evento fixo** (receber os dados, tratar, redigir, aprovar) até o fim da vigência, além da janela antes dele. Erro que evita: a leitura contou só o tempo até o evento; o relatório final, com a aprovação, não cabia entre o evento e o fim da vigência.
+   - **Três referências de início** (data fixa no documento, divulgação do extrato, ordem de serviço): diga qual vale para quê (vigência, prazos dos produtos, campo). Erro que evita: os prazos dos produtos foram contados da data impressa no TR, e a vigência, da ordem de serviço.
+   - **Seção de dinheiro sempre com a condição de cada parcela.** Parcela fixa num item × "valor dimensionado pela fiscalização" ou dedução noutro: o cruzamento X1 diverge. Erro que evita: a seção trouxe os percentuais sem a condição, e uma cláusula de valor dimensionado pela fiscalização contradizia as parcelas fixas.
+   - **Regra de "substituição" no aceite** (o produto recusado é substituído e os prazos recomeçam) reabre a inspeção: escreva o ciclo análise → ajuste → nova análise → termo já na etapa 1, com os prazos que o documento dá. Erro que evita: a leitura deu um prazo de inspeção só, e a EAP saiu com uma nova inspeção mais curta, sem base.
+   - **Local de trabalho e agenda com as áreas do contratante**, quando o objeto exige ver processos (entrevistas, oficinas, acesso a sistemas): ponto de atenção, com a pergunta. Erro que evita: um diagnóstico de processos não dizia onde a equipe trabalharia nem quem marcava as entrevistas, e o preço ficou sem as viagens.
+   - **Ausência e leitura ambígua** ("o documento não diz", duas leituras possíveis) são `sugestao`, nunca `documento` (princípio 15). Erro que evita: "o TR não prevê prazo de análise" saiu como documento, com um trecho que não tratava de prazo.
+   - **Dado de entrada que coincide com o tema de uma comissão parlamentar:** ligue-o ao estudo sensível e limite o uso a dado de entrada (o estudo não avalia o que a comissão investiga). Erro que evita: os dados de uma investigação legislativa entraram como insumo sem ressalva, e o estudo poderia ser lido como parecer sobre ela.
+9. **Antes de sair:** os cruzamentos X1 a X6 (seção 3) registrados, e a autoconferência das 8 seções e dos itens do método (princípio 13).
 
 ### Etapa 2 — Proposta (minuta técnica e de preço)
 
@@ -185,7 +223,29 @@ Deixa o gerente ciente, em poucos minutos, de **o que a RFP pede e espera de que
     - o **teto de produtividade** escrito no edital ou na proposta, com a fonte, ou "a definir pelo GP".
 
     Se a conta passar do teto, é premissa crítica (PC7) e decisão do GP antes de enviar. Você não faz a divisão.
-11. **Antes de sair:** a autoconferência dos itens das fichas `prop-*` que você usou (princípio 13), com a lista dos C e o destino que você sugere para cada um.
+11. **Regras da 0.3.3** (cada uma com o erro que evita):
+    - **Estratégia:**
+      - **Pergunta sem data-limite de resposta:** escreva a premissa que vale até a resposta. **Pergunta que muda o preço vai antes do preço** (licitação: esclarecimento no prazo; contratação direta: ajuste da minuta antes do comunicado de assinatura), nunca para a reunião inicial. Erro que evita: a quantidade de idas a campo ficou "para a reunião inicial", com o preço já fechado.
+      - **Documento vencido:** toda abordagem diz "vale para a edição a confirmar" e o que continua dentro de cada R ligado à data. Erro que evita: as abordagens prometiam o campo numa edição do evento que já tinha passado.
+      - **Proteção do próprio documento antes do aditivo:** use a prorrogação por apostila quando o documento a prevê; a apostila só vale para o que o documento diz (impedimento, suspensão). **A proteção citada precisa proteger de fato.** Erro que evita: a minuta citou uma cláusula de prorrogação que só valia para suspensão pelo contratante como se cobrisse atraso na entrega de dados.
+      - **Rodadas de ajuste** são sempre "a definir pelo GP". Erro que evita: a proposta prometeu um número de rodadas como fato, e ele virou limite de escopo no TAP.
+    - **Minuta:**
+      - **Fases sequenciais nunca com 0 meses;** paralelo só se as fases não usam o mesmo responsável. **Uma regra só para a ordem dos produtos**, a mesma na metodologia, no cronograma, nas premissas e na EAP. Erro que evita: a metodologia dizia "em paralelo", a fase dizia "sequencial" e a EAP encadeava os produtos pelo mesmo analista.
+      - **Campo preso a evento fixo:** diga o que acontece com o R, o produto e a parcela se o evento não ocorrer. Dado que o documento põe com o contratante não passa à contratada sem preço. Erro que evita: a minuta assumiu levantar ela mesma um dado que o TR punha com o contratante, sem horas nem preço.
+      - **Responsabilidades de perfis além do objeto** (perfil exigido "implantar", "operar o sistema" num estudo): liste o que fica fora e o que continua dentro. Erro que evita: o perfil copiado de outro edital trazia atividades de implantação que entraram no escopo sem preço.
+      - **Todo compromisso de método recebe número C, na faixa certa:** comece-o por "Compromisso de método, <nome>:"; o app numera e escreve a faixa de cada tipo (seção 3, "Compromissos numerados"). Erro que evita: o protocolo de campo ficou sem número, e a minuta chamou de "limites" números que eram de compromissos de método.
+    - **EAP** (com PROP-EAP.13 a .18):
+      - **sem prazo no documento, a régua do "cabe" é o que a proposta promete** (a duração das fases e o prazo total que a minuta escreveu). Erro que evita: "cabe" medido contra o total, com produtos que passavam do fim da própria fase;
+      - **gargalo "em sequência" está nas predecessoras**, não só no texto. Erro que evita: a minuta dizia que o mesmo analista faria um produto depois do outro, e a rede os punha em paralelo;
+      - **promessa da abordagem vira atividade com horas** (conversa de validação, quem faz cada fase, responsável do consolidado). Erro que evita: a validação com as áreas prometida na abordagem não estava na EAP nem no preço;
+      - **requisito com duas partes** (selecionar e analisar) vira duas atividades. Erro que evita: a seleção das experiências comparadas sumiu dentro da análise;
+      - **dependência do contratante é marco próprio**, e **o consolidado parte das entregas** dos produtos que ele junta. Erro que evita: o consolidado começava antes dos relatórios que consolidava;
+      - **a mesma ocorrência não está na reserva e no aditivo**. Erro que evita: a rodada extra de ajuste estava na reserva de contingência e também como caso de aditivo;
+      - **quem é R tem horas;** na análise do contratante, o fiscal é R e o gestor é A. Erro que evita: perfil responsável por atividade com zero hora;
+      - **acompanhamento é esforço contínuo, não marco;** atividade antes da assinatura fica fora da rede; a ordem de serviço é o marco de início. Erro que evita: a reunião "antes da assinatura" dependia de uma atividade posterior ao início;
+      - **qualificação mínima com leitura cumulativa:** vale a que mais obriga (as duas exigências), e a dúvida vira pergunta. Erro que evita: a nova versão do perfil tirou a formação exigida na primeira linha do TR;
+      - **horas de campo:** separe a coleta efetiva (válidos ÷ produtividade) da presença em turnos; o treino é com a mesma quantidade de pesquisadores. Erro que evita: as horas de campo contaram só as entrevistas, sem os turnos de presença, e o treino previa metade da equipe.
+12. **Antes de sair:** a autoconferência dos itens das fichas `prop-*` que você usou (princípio 13), com a lista dos C e o destino que você sugere para cada um.
 
 ### Etapa 3 — Termo de Abertura (TAP)
 
@@ -200,7 +260,7 @@ O TAP parte do que foi **assinado**, não do que o edital pedia nem do que a eta
    - **por código** (já vem pronto): valor (proposta × teto × contrato); parcelas ou medições (ordem, percentual, prazo); contagem dos meses (o mês 1 da proposta é o mês 1 da vigência? a soma dos períodos do cronograma cabe na vigência?); equipe (quantidade e **regra**: mínimo, referência ou limite); dimensionamento × produtividade; produtos que a proposta acrescentou;
    - **por você** (Sugestão): **frase de conformidade** da proposta ("em conformidade com o item X") que não confere com o item X; cláusulas de proteção da proposta × cláusulas do contrato; quem aprova e em que prazo; critério de conclusão da proposta × término do contrato; orçamento que parece não cobrir uma obrigação.
 
-   Cada divergência tem uma linha: o ponto, o que diz cada documento (com página), a versão sugerida e o que fazer (confirmar por escrito, levar à reunião de abertura, consultar o jurídico). **Produto que a proposta acrescentou e a RFP não pedia é compromisso assinado:** entra como entrega-chave, com critério de aceite.
+   Cada divergência tem uma linha: o ponto, o que diz cada documento (com página), a versão sugerida e o que fazer (confirmar por escrito, levar à reunião de abertura, consultar o jurídico). **Produto que a proposta acrescentou e a RFP não pedia é compromisso da proposta** (assinado quando há contrato; prometido enquanto não há): entra como entrega-chave, com critério de aceite.
 
    **Divergência que muda escopo, custo ou quem executa** (formato do produto, quem faz o campo, fonte dos dados) não se resolve no TAP (TAP-DV.7): o contrato prevalece; se ele não responde, o TAP adota a versão que **mais obriga a FGV** (em geral a RFP, quando a proposta estreitou; a proposta, quando acrescentou), marca a divergência como pendente com o contratante e só troca de versão com a resposta por escrito. Antes de abrir a divergência, confira se a própria RFP já responde (ex.: "levantados pela equipe da contratada").
 
@@ -217,7 +277,17 @@ O TAP parte do que foi **assinado**, não do que o edital pedia nem do que a eta
    - GP designado, patrocinador e recursos pré-aprovados: só redação sugerida, como `decisao_gp`.
 4. **Premissas** (bloco `TAP-PR` da ficha `tap` e ficha `b03`): primeiro as premissas que a proposta **já escreveu** (dimensionamento, ritmo, produtividade), como `documento`; depois cada premissa crítica que se aplica e a proposta **não escreveu**, como `sugestao`, com a consequência (TAP-PR.2); depois as restrições do contrato. Cada linha diz quem valida (`decisao_gp`, com sugestão: o contratante valida as que dependem dele). Esse registro é a entrada do B3 da etapa 4.
 5. **Compromissos e critérios que cabem:** cada compromisso C da proposta recebe destino no TAP (premissa, limite, entrega-chave ou divergência). Critério de sucesso preso a data (ex.: "metodologia aprovada antes do evento") só entra se couber no cronograma: o código confere contra a janela até o marco; se não couber, é divergência.
-6. **Antes de sair:** a autoconferência dos itens da ficha `tap` (princípio 13).
+6. **Regras da 0.3.3** (cada uma com o erro que evita):
+   - **Documento antigo:** a primeira pergunta é se o contrato já foi assinado ou divulgado; se foi, ele vira a entrada do TAP. Erro que evita: o TAP foi montado sobre um TR do ano anterior quando o extrato do contrato já estava publicado.
+   - **Divergência que muda escopo, custo ou quem executa:** vale a versão que mais obriga a contratada (normalmente o documento do contratante) até a resposta escrita. **O que a proposta pediu é pedido, não versão adotada:** aceite, cessão, rodadas, limites de volume, fonte de dados, "avaliado só por documento". Erro que evita: o TAP adotou como regra o número de rodadas de ajuste que a proposta só tinha pedido.
+   - **Proposta com duas durações** (soma das fases × EAP) e documento sem vigência: é divergência, porque não há régua assinada. Erro que evita: o TAP disse "cabe na vigência" medindo contra uma duração que só a proposta escrevia, e de dois jeitos.
+   - **"Cabe na vigência" não basta:** o produto que define o método (cotas, critério de válido) é aprovado antes do marco que o usa. Erro que evita: a metodologia só seria aprovada depois de o campo começar.
+   - **A conferência dos marcos separa a conta do código do vencimento das datas:** "não cabe pela conta" e "a data do documento já passou" são achados diferentes. Erro que evita: um marco saiu "não cabe" só porque a data impressa no TR estava vencida.
+   - **"Responsável pela fiscalização" sem dizer quem** vira pergunta. Erro que evita: o aceite ficou sem dono no TAP.
+   - **Término:** diga se o último pagamento cabe na vigência; o encerramento inclui a devolução dos dados do contratante e a guarda ou o descarte dos microdados. Erro que evita: o termo definitivo do último produto caía depois do fim da vigência, e o TAP não disse.
+   - **Compromisso da proposta é "prometido", não "assinado",** enquanto não há contrato. Erro que evita: o TAP chamou de "assinado" o que só a proposta dizia.
+   - **`decisao_gp` na autoconferência sempre com motivo** (sem motivo, a marca conta como incompleta). Erro que evita: marcas sem motivo contaram como incompletas e reprovaram a autoconferência.
+7. **Antes de sair:** a autoconferência dos itens da ficha `tap` (princípio 13).
 
 ### Etapa 4 — Plano de Gerenciamento do Projeto
 
@@ -322,6 +392,7 @@ Toda resposta é **um objeto JSON** que segue o schema do passo, enviado pelo ap
 - **Cruzamentos** (etapas 1 e 5): `"cruzamentos": [{ "codigo": "X1", "estado": "feito" | "nao_se_aplica", "resultado": "confere | diverge: ... | em aberto: ...", "itens": ["id do item gerado, se houver"] }]`.
 - **Compromissos** (etapas 2 a 4): `"compromissos": [{ "codigo": "C01", "tipo": "premissa" | "exclusao" | "obrigacao_contratante" | "metodo", "texto": "...", "destino": "TAP-PR | TAP4.3 | A5.12 ..." }]`.
 - **Vereditos** (etapa 5, decisão 0052): `"vereditos": [{ "achado": "id do achado do código", "veredito": "sustenta" | "falso" | "nao_se_aplica" | "regra_errada", "evidencias": [{ "doc": "pgp", "pagina": n, "trecho": "..." }], "motivo": "..." }]` e `"dispensas": [{ "parte": "B28", "veredito": "cabe" | "nao_cabe", "motivo": "..." }]`. `evidencias` é obrigatório no `falso`; `motivo`, no `nao_se_aplica`, no `regra_errada` e no `nao_cabe`.
+- **Segunda instância** (todas as etapas, seção 3, "Revisão em camadas"): `{ "achados": [{ "id": "a1", "tipo": "erro_de_fato" | "faltou" | "incoerencia_entre_etapas" | "rotulo_errado", "gravidade": "alta" | "media" | "baixa", "onde": "id do item, parte ou seção", "texto": "...", "evidencias": [{ "doc": "rfp", "pagina": n, "trecho": "..." }], "sugestao": "..." }], "conferido": ["o que foi conferido e passou"] }`. `evidencias` fica `[]` quando o problema é a falta.
 - Os campos acima entram nos schemas conforme cada etapa é atualizada no app; até lá, o app ignora o que o schema não pede.
 
 ## 5. O que carregar em cada etapa

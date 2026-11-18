@@ -74,13 +74,13 @@ ${JSON.stringify(resposta, null, 2)}
 A régua é o pedido do passo: o que ele exige, nem mais nem menos. Item do método ou das fichas que o pedido não pediu não é falta.
 1. erro_de_fato: o que a resposta afirma e o documento não diz, ou diz diferente (número, prazo, data, quem faz, o que se entrega); número, R, C, conta ou data que não bate com o esqueleto do código; citação que não prova a frase.
 2. faltou: o que o pedido do passo exige (as seções, os campos e a autoconferência da lista "O que fazer" e das regras dele) e a resposta não trouxe.
-3. incoerencia_entre_etapas: a resposta contradiz o esqueleto do código ou o que veio das etapas anteriores e está nos documentos (proposta, TAP), ou contradiz a si mesma.
-4. rotulo_errado: "documento" sem trecho que prove a frase; sugestão escrita como fato; decisão do GP preenchida como fato.
+3. incoerencia_entre_etapas: a resposta contradiz o esqueleto e as contas do código, ou o que veio das etapas anteriores e está nos documentos (proposta, TAP), ou contradiz a si mesma.
+4. rotulo_errado: rótulo ou premissa errados: "documento" sem trecho que prove a frase; sugestão escrita como fato; decisão do GP preenchida como fato; premissa crítica no lugar errado; nome de pessoa.
 
 # Como responder
-- achados: um por problema, com tipo, gravidade (alta: muda preço, prazo, escopo ou quem executa, ou afirma como fato o que o documento não diz; media: o GP precisa corrigir antes de aprovar; baixa: redação ou rastreabilidade), onde (o id do item, a parte ou a seção), texto, evidencias (doc, página do arquivo e trecho literal; [] quando o problema é a falta) e sugestao em redação condicional.
+- achados: um por problema, com tipo, gravidade (alta só quando muda escopo, prazo, preço, caixa, aceite ou quem executa; media: o GP precisa corrigir antes de aprovar; baixa: redação ou rastreabilidade), onde (o id do item, a parte ou a seção), texto, evidencias (doc, página do arquivo e trecho literal; [] quando o problema é a falta) e sugestao em redação condicional.
 - conferido: o que você conferiu e passou, em frases curtas (inclusive os números R e C e as contas do esqueleto). Aparece sempre.
-- Precisão antes de cobertura: só aponte o que muda uma decisão do GP ou o que a FGV terá de fazer, entregar, cumprir ou pagar. Não refaça as contas do código: use as do esqueleto.
+- Precisão antes de cobertura: só aponte o que muda uma decisão do GP ou o que a FGV terá de fazer, entregar, cumprir ou pagar. Não refaça as contas do código: use as do esqueleto. Achado sobre número ou conta diz em que linha do esqueleto ele se apoia, porque o GP o confere no placar antes de corrigir.
 - Responda só com o objeto JSON, no schema enviado. Listas sem conteúdo ficam com [].`;
 }
 
