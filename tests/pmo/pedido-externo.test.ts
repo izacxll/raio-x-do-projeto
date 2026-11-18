@@ -189,9 +189,13 @@ function montarSegunda(d: Dossie, passo: string): Passo {
   };
 }
 
-/** O TAP revisado só vai na segunda instância das premissas (decisão 0068). */
+/**
+ * O TAP revisado só vai na segunda instância das premissas (decisão 0068), com os itens conferidos contra os mesmos
+ * documentos da tela do TAP.
+ */
 function tapRevisadoDoPasso(d: Dossie, alvo: string) {
-  return etapa === 3 && alvo === "premissas" ? montarTapRevisado(d.tap) : undefined;
+  if (etapa !== 3 || alvo !== "premissas" || !d.tap) return undefined;
+  return montarTapRevisado(d.tap, itensDaEtapa3(d.tap, montarEntradaTap(d, HOJE).documentos));
 }
 
 /** Passos de cada etapa, na ordem: o seguinte só sai depois de importar a resposta do anterior. */
@@ -598,7 +602,12 @@ describe.skipIf(MODO !== "importar")("importar a resposta do PMO (leitura indepe
       const versaoNoPedido = existsSync(pedidoExportado)
         ? lerVersaoDoTapNoPedido(readFileSync(pedidoExportado, "utf8"))
         : undefined;
-      const versaoDoTap = versaoNoPedido ?? tapRevisadoDoPasso(dossie, alvo)?.versao;
+      const versaoAgora = tapRevisadoDoPasso(dossie, alvo)?.versao;
+      if (versaoAgora && !versaoNoPedido)
+        console.warn(
+          `Aviso: não achei o pedido exportado (${pedidoExportado}) ao lado da resposta; a conferência fica com o TAP revisado do dossiê agora, que pode não ser o que o revisor recebeu.`,
+        );
+      const versaoDoTap = versaoNoPedido ?? versaoAgora;
       const rodada = proximaRodada(dossie.segundaInstancia?.[chave], r.em, versaoDoTap);
       dossie = {
         ...dossie,

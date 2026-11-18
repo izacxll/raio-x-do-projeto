@@ -5,7 +5,7 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 ## [Não publicado]
 
 ### TAP revisado na segunda instância das premissas (decisão 0068)
-- **Pedido da segunda instância do registro de premissas** com o TAP como o GP o deixou: itens com rótulo, texto editado, sem os descartados, pendentes marcados e as decisões do GP no TAP (~6 mil tokens a mais, só neste passo). A conferência guardada fica velha, e a rodada sobe, se o TAP revisado mudar.
+- **Pedido da segunda instância do registro de premissas** com o TAP como o GP o deixou: itens com o rótulo da tela (página ou "citação não conferida"), texto editado, sem os descartados, e os campos do GP (~5 mil tokens a mais, só neste passo). A conferência guardada fica velha, e a rodada sobe, se o TAP revisado mudar.
 - **Pedido das premissas** com os limites e o risco geral revisados pelo GP.
 - **Rubrica e skill de revisão:** incoerência só com o que está no pedido.
 

@@ -50,11 +50,11 @@ export function conferenciaVelha(
   guardada: { deResposta: string; deAnterior?: string } | undefined,
   respostaEm: string,
   versaoDoTap?: string,
-): "sem-conferencia" | "resposta-mudou" | "tap-mudou" | undefined {
+): "sem-conferencia" | "resposta-mudou" | "tap-mudou" | "tap-ausente" | undefined {
   if (!guardada) return "sem-conferencia";
   if (guardada.deResposta !== respostaEm) return "resposta-mudou";
-  if (guardada.deAnterior !== undefined && guardada.deAnterior !== versaoDoTap) return "tap-mudou";
-  return undefined;
+  if (guardada.deAnterior === undefined || guardada.deAnterior === versaoDoTap) return undefined;
+  return versaoDoTap === undefined ? "tap-ausente" : "tap-mudou";
 }
 
 /** Chave da conferência no dossiê: "2:conteudo", "4:cronograma". */
