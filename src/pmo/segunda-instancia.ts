@@ -65,7 +65,7 @@ export function pedidoSegundaInstancia(
 ): string {
   return `# Segunda instância — conferência da resposta da etapa ${etapa}, passo ${passo}
 
-Você é a segunda instância (SKILL.md, seção 3, "Revisão em camadas", com a rubrica fixa). Outra chamada produziu a resposta abaixo a partir do pedido do passo, que também vai abaixo, com o esqueleto do código. Confira a resposta contra os documentos acima, contra o esqueleto e contra o que o pedido do passo exige, **antes** de o GP aprovar e de a próxima etapa começar. Você não reescreve a resposta: aponta o que precisa mudar.
+Você é a segunda instância (revisão em camadas; a rubrica fixa vai abaixo, em "O que procurar"). Outra chamada produziu a resposta abaixo a partir do pedido do passo, que também vai abaixo, com o esqueleto do código. Confira a resposta contra os documentos acima, contra o esqueleto e contra o que o pedido do passo exige, **antes** de o GP aprovar e de a próxima etapa começar. Você não reescreve a resposta: aponta o que precisa mudar.
 
 ## Pedido do passo conferido (como foi ao PMO, com o esqueleto do código)
 ${pedidoDoPasso.trim() ? `<pedido-do-passo>\n${pedidoDoPasso.trim()}\n</pedido-do-passo>` : "(o pedido do passo não veio: confira só contra os documentos e a skill, e diga isso em conferido)"}

@@ -4,6 +4,11 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 
 ## [Não publicado]
 
+### Skill de revisão por segunda instância (decisão 0065)
+- **Nova skill** `.claude/skills/revisao-segunda-instancia/`: pedido isolado, rubrica fixa, como lançar o revisor, aplicar os achados com checagem, limite de rodadas e confidencialidade.
+- **A PMO e o `docs/papeis.md` apontam para ela**, sem repetir a rubrica; o pedido da segunda instância no app continua com a rubrica.
+- **CLAUDE.md:** "Revisões de passo: usar `.claude/skills/revisao-segunda-instancia`".
+
 ### Tamanho do pedido sem perder conteúdo (decisão 0064)
 - **SKILL.md por etapa:** o núcleo e só a seção da etapa; a segunda instância leva o recorte da etapa conferida.
 - **Checklist:** depois da confirmação do GP, só as premissas críticas confirmadas e a tabela de onde aparecem.

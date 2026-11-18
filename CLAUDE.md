@@ -94,6 +94,7 @@ O Raio-X do Plano de Trabalho (código em `referencias/raio-x/`, fora do Git) ap
 ## 6. Como trabalhar
 
 - **Papéis e revisão:** [docs/papeis.md](docs/papeis.md) traz o objetivo (o GP decide rápido e com segurança a partir do documento) e quem decide o quê. A revisão tem três camadas, nesta ordem: testes e gabarito (`tests/pmo/gabarito/`), depois a segunda instância com a rubrica, depois o GP.
+- Revisões de passo: usar `.claude/skills/revisao-segunda-instancia`.
 - **Protocolo de teste:** as 5 etapas, com a segunda instância em cada passo e no máximo 2 rodadas; depois, o GP decide se segue ou pede mais uma rodada (decisões 0059 e 0060).
 - Ambiente de desenvolvimento: Windows + PowerShell (o Bash do Git também está disponível). Node e npm já instalados.
 - Faça você mesmo tudo o que der (instalar, rodar testes, commits, PRs, publicação). Peça à responsável pelo projeto só o que só ela pode fazer (logins, permissões, arquivos fora da pasta, aprovações previstas), em passos curtos, e espere.
