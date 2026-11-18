@@ -5,6 +5,7 @@ import type { DocumentoLido } from "../../dossie/esquema";
 import { useDossie } from "../../dossie/store";
 import type { ErroPmo } from "../../pmo/cliente";
 import { estimarCusto, formatarDolar, formatarTokens } from "../../pmo/custo";
+import { identidadeDoCaso } from "../../pmo/identidade-do-caso";
 import { estimarTokens, textoDosDocumentos } from "../../pmo/montagem";
 import { RespostaSegundaInstancia } from "../../pmo/schemas/segunda-instancia";
 import {
@@ -47,9 +48,14 @@ export function SegundaInstancia({
   const cancelar = useRef<AbortController | null>(null);
   const sistema = useMemo(() => sistemaDaSegundaInstancia(etapa), [etapa]);
   const textoDocs = useMemo(() => textoDosDocumentos(documentos), [documentos]);
+  // a identidade do caso no topo do pedido (decisão 0066): os documentos do dossiê, não só os do passo
+  const identidade = useMemo(
+    () => identidadeDoCaso(dossie.documentos, dossie.projeto.nome),
+    [dossie.documentos, dossie.projeto.nome],
+  );
   const pedido = useMemo(
-    () => pedidoSegundaInstancia(etapa, passo, resposta, pedidoDoPasso),
-    [etapa, passo, resposta, pedidoDoPasso],
+    () => pedidoSegundaInstancia(etapa, passo, resposta, pedidoDoPasso, identidade),
+    [etapa, passo, resposta, pedidoDoPasso, identidade],
   );
   const est = estimarCusto(
     modelo,

@@ -17,6 +17,7 @@ import type { z } from "zod";
 import { criarDossieVazio, lerDossie, serializarDossie } from "../../src/dossie/arquivo";
 import type { Dossie, DocumentoLido } from "../../src/dossie/esquema";
 import { RespostaSegundaInstancia } from "../../src/pmo/schemas/segunda-instancia";
+import { identidadeDoCaso } from "../../src/pmo/identidade-do-caso";
 import {
   chaveDaSegundaInstancia,
   conferirSegundaInstancia,
@@ -163,7 +164,14 @@ function montarSegunda(d: Dossie, passo: string): Passo {
     sistema: sistemaDaSegundaInstancia(etapa),
     documentos: textoDosDocumentos(documentosDoPasso(d)),
     // o pedido do passo conferido, como foi ao PMO (esqueleto e o que o passo exige; decisão 0059)
-    pedido: pedidoSegundaInstancia(etapa, alvo, r.resposta, montarPasso(d, alvo).pedido),
+    // com a identidade do caso no topo (decisão 0066): com dois casos lado a lado, o revisor confere que é este
+    pedido: pedidoSegundaInstancia(
+      etapa,
+      alvo,
+      r.resposta,
+      montarPasso(d, alvo).pedido,
+      identidadeDoCaso(d.documentos, d.projeto.nome),
+    ),
     schema: RespostaSegundaInstancia,
   };
 }
