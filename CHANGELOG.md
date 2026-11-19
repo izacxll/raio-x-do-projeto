@@ -4,6 +4,9 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 
 ## [Não publicado]
 
+### Skill PMO 0.3.8: lições marcadas (decisão 0094)
+- Cada lição das armadilhas e da experiência marcada como [geral] (41), [geral, visto num caso] (16) ou [um caso] (10), com a legenda no topo da seção.
+
 ### Alarme falso das travas (decisão 0093)
 - **Medição:** a "redação a conferir" marcava 701 de 1.139 itens, com 48,75% de alarme falso numa amostra de 80; as outras travas são raras.
 - **Trava ajustada:** formas condicionais a mais, linha de estrutura ou modelo e registros de riscos e premissas fora; 41% de alarme falso numa amostra nova de 40 e 19% menos marcas nos dois casos.

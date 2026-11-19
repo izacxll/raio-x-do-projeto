@@ -47,15 +47,16 @@ Critério de aceite do método (`docs/estudos/metodo-etapa-3.md`, que prevalece)
 - **Antes de sair:** a autoconferência dos itens da ficha `tap` (princípio 13).
 
 ## Armadilhas
-- **Documento antigo:** a primeira pergunta é se o contrato já foi assinado ou divulgado; se foi, ele vira a entrada do TAP. Erro que evita: o TAP foi montado sobre um TR do ano anterior quando o extrato do contrato já estava publicado.
-- **Divergência que muda escopo, custo ou quem executa:** vale a versão que mais obriga a contratada (normalmente o documento do contratante) até a resposta escrita. **O que a proposta pediu é pedido, não versão adotada:** aceite, cessão, rodadas, limites de volume, fonte de dados, "avaliado só por documento". Erro que evita: o TAP adotou como regra o número de rodadas de ajuste que a proposta só tinha pedido.
-- **Proposta com duas durações** (soma das fases × EAP) e documento sem vigência: é divergência, porque não há régua assinada. Erro que evita: o TAP disse "cabe na vigência" medindo contra uma duração que só a proposta escrevia, e de dois jeitos.
-- **"Cabe na vigência" não basta:** o produto que define o método (cotas, critério de válido) é aprovado antes do marco que o usa. Erro que evita: a metodologia só seria aprovada depois de o campo começar.
-- **A conferência dos marcos separa a conta do código do vencimento das datas:** "não cabe pela conta" e "a data do documento já passou" são achados diferentes. Erro que evita: um marco saiu "não cabe" só porque a data impressa no TR estava vencida.
-- **"Responsável pela fiscalização" sem dizer quem** vira pergunta. Erro que evita: o aceite ficou sem dono no TAP.
-- **Término:** diga se o último pagamento cabe na vigência; o encerramento inclui a devolução dos dados do contratante e a guarda ou o descarte dos microdados. Erro que evita: o termo definitivo do último produto caía depois do fim da vigência, e o TAP não disse.
-- **Compromisso da proposta é "prometido", não "assinado",** enquanto não há contrato. Erro que evita: o TAP chamou de "assinado" o que só a proposta dizia.
-- **`decisao_gp` na autoconferência sempre com motivo** (sem motivo, a marca conta como incompleta). Erro que evita: marcas sem motivo contaram como incompletas e reprovaram a autoconferência.
+Marca de cada lição (decisão 0094): **[geral]** vale para qualquer projeto (lei, método, conta ou dois casos ou mais); **[geral, visto num caso]** decorre da lei ou da conta, mas até agora apareceu num caso só; **[um caso]** nasceu de um caso e vale quando a mesma condição aparece de novo, nunca como regra para todo projeto.
+- [geral] **Documento antigo:** a primeira pergunta é se o contrato já foi assinado ou divulgado; se foi, ele vira a entrada do TAP. Erro que evita: o TAP foi montado sobre um TR do ano anterior quando o extrato do contrato já estava publicado.
+- [geral] **Divergência que muda escopo, custo ou quem executa:** vale a versão que mais obriga a contratada (normalmente o documento do contratante) até a resposta escrita. **O que a proposta pediu é pedido, não versão adotada:** aceite, cessão, rodadas, limites de volume, fonte de dados, "avaliado só por documento". Erro que evita: o TAP adotou como regra o número de rodadas de ajuste que a proposta só tinha pedido.
+- [geral] **Proposta com duas durações** (soma das fases × EAP) e documento sem vigência: é divergência, porque não há régua assinada. Erro que evita: o TAP disse "cabe na vigência" medindo contra uma duração que só a proposta escrevia, e de dois jeitos.
+- [geral, visto num caso] **"Cabe na vigência" não basta:** o produto que define o método (cotas, critério de válido) é aprovado antes do marco que o usa. Erro que evita: a metodologia só seria aprovada depois de o campo começar.
+- [geral, visto num caso] **A conferência dos marcos separa a conta do código do vencimento das datas:** "não cabe pela conta" e "a data do documento já passou" são achados diferentes. Erro que evita: um marco saiu "não cabe" só porque a data impressa no TR estava vencida.
+- [geral] **"Responsável pela fiscalização" sem dizer quem** vira pergunta. Erro que evita: o aceite ficou sem dono no TAP.
+- [geral] **Término:** diga se o último pagamento cabe na vigência; o encerramento inclui a devolução dos dados do contratante e a guarda ou o descarte dos microdados. Erro que evita: o termo definitivo do último produto caía depois do fim da vigência, e o TAP não disse.
+- [geral] **Compromisso da proposta é "prometido", não "assinado",** enquanto não há contrato. Erro que evita: o TAP chamou de "assinado" o que só a proposta dizia.
+- [geral] **`decisao_gp` na autoconferência sempre com motivo** (sem motivo, a marca conta como incompleta). Erro que evita: marcas sem motivo contaram como incompletas e reprovaram a autoconferência.
 
 ## Rubrica da segunda instância
 Além da rubrica geral, nesta etapa o revisor confere:

@@ -97,6 +97,7 @@ Uma decisão por arquivo, numerada em ordem. Cada uma registra o contexto, o que
 | [0091](0091-pgp-enxuto-por-porte.md) | PGP enxuto por porte: limites de partes e páginas, núcleo de 14 partes no porte pequeno, parte fundida numa hospedeira ou dispensada com o motivo, páginas estimadas na capa |
 | [0092](0092-riscos-ligados-e-reserva-derivada.md) | Cada risco liga resposta, reserva e marco (produto do cronograma, conferido pelo código); a reserva de contingência é a soma das reservas dos riscos marcados, valores do GP |
 | [0093](0093-alarme-falso-das-travas.md) | Alarme falso das travas medido: a "redação a conferir" fica, com formas condicionais a mais e sem linha de estrutura nem registros (de 48,75% para 40% de alarme falso); rótulo misto no "do documento" |
+| [0094](0094-licoes-geral-ou-de-um-caso.md) | Lições da skill marcadas: regra geral, regra geral vista num caso só ou de um caso só (skill 0.3.8; espera aprovação) |
 
 Modelo para uma nova decisão:
 
