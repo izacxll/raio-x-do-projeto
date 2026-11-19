@@ -1,6 +1,7 @@
 // Etapa 4 (PGP): entrada, respostas gravadas do PMO para a RFP pública da OEI (tests/fixtures/gerados/pgp-oei/),
 // contas do código (cronograma, marcos, custos, rastreabilidade), pedidos e a autoconferência pelas regras da etapa 5.
 import { readFileSync } from "node:fs";
+import { CARACTERISTICAS_PADRAO } from "../../src/dominio/caracteristicas";
 import { beforeAll, describe, expect, it } from "vitest";
 import { propostaGravada, tapGravado } from "../ajudantes/gravadas";
 import { criarDossieVazio } from "../../src/dossie/arquivo";
@@ -417,7 +418,10 @@ describe("compromissos no plano e partes dispensadas no pedido", () => {
   it("o pedido lista as partes do passo que o GP dispensou, com o motivo", () => {
     const p = { ...dossie.pgp!, gerar: { ...dossie.pgp!.gerar, A12: false } };
     const pedido = PEDIDOS_PGP.planos(entrada, p);
-    expect(pedido).toMatch(/Dispensadas pelo GP neste passo[\s\S]*- A12 — /);
+    // decisão 0091: a fundida e a dispensada saem da lista de partes, cada uma com o destino
+    expect(pedido).toMatch(
+      /Não escreva como parte própria[\s\S]*- A12 — [^\n]*: (?:fundida em A11|dispensada — )/,
+    );
   });
 });
 
@@ -461,8 +465,22 @@ describe("pedidos da etapa 4 só com as partes marcadas", () => {
     const cs = (entrada.dadosProposta?.compromissos ?? []).filter((c) => c.tipo === "exclusao");
     if (cs.length) expect(pedido).toContain(`- ${cs[0]!.numero} (exclusão → B17.5)`);
     expect(
-      PEDIDOS_PGP.escopo(entrada, { ...dossie.pgp!, gerar: { ...dossie.pgp!.gerar, B17: false } }),
+      PEDIDOS_PGP.escopo(entrada, {
+        ...dossie.pgp!,
+        gerar: { ...dossie.pgp!.gerar, B17: false, A13: false },
+      }),
     ).not.toContain("exclusão → B17.5");
+    // no porte pequeno, a B17 fundida na A13 (decisão 0091) continua levando as exclusões: o porte reduz partes, não a
+    // cobertura
+    const caracteristicas = { ...CARACTERISTICAS_PADRAO, porte: "pequeno" as const };
+    const pequeno = {
+      ...dossie.pgp!,
+      sugestaoPeloPorte: caracteristicas,
+      gerar: gerarSugerido(dossie.pgp!.adaptacao!.resposta, caracteristicas),
+    };
+    expect(pequeno.gerar.B17).toBe(false);
+    if (cs.length)
+      expect(PEDIDOS_PGP.escopo(entrada, pequeno)).toContain(`- ${cs[0]!.numero} (exclusão → B17.5)`);
   });
 });
 

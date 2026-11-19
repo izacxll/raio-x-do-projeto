@@ -5,6 +5,7 @@
 // condições da ficha; se não couber, a parte volta a ser conferida.
 import type { PaginaLida, PgpDossie } from "../../dossie/esquema";
 import type { Ficha } from "../../dominio/fichas";
+import { destinoDaParte } from "../4-pgp/porte";
 import {
   aplicarDispensas,
   confirmacaoInicial,
@@ -13,20 +14,25 @@ import {
   type ParteNoMapa,
 } from "../../regras/mapa-pgp";
 
-/** Partes dispensadas pelo GP na etapa 4, com a justificativa da adaptação. Código → justificativa. */
+/**
+ * Partes que não são parte própria do plano da etapa 4, com o motivo: a dispensada, com a justificativa; a fundida
+ * (decisão 0091), com a parte onde o conteúdo dela está. Código → justificativa.
+ */
 export function dispensasDaEtapa4(pgp: PgpDossie | undefined): Map<string, string> {
   if (!pgp) return new Map();
-  const justificativas = new Map(
-    (pgp.adaptacao?.resposta.partes ?? []).map((s) => [s.codigo, s.justificativa]),
-  );
   return new Map(
     Object.entries(pgp.gerar)
       .filter(([, gerar]) => gerar === false)
-      .map(([codigo]) => [
-        codigo,
-        `Dispensada pelo GP na etapa 4: ${justificativas.get(codigo) ?? ""}`.trim(),
-      ]),
+      .map(([codigo]) => [codigo, justificativaDaEtapa4(codigo, pgp)]),
   );
+}
+
+/** "Fundida na etapa 4 em A13 (…)" ou "Dispensada pelo GP na etapa 4: motivo". */
+export function justificativaDaEtapa4(codigo: string, pgp: PgpDossie): string {
+  const d = destinoDaParte(codigo, pgp);
+  return d.tipo === "fundida"
+    ? `Fundida na etapa 4 em ${d.em} (decisão 0091): o conteúdo dela está na parte ${d.em}.`
+    : `Dispensada pelo GP na etapa 4: ${d.tipo === "dispensada" ? d.motivo : ""}`.trim();
 }
 
 export const PREFIXO_DISPENSA_DO_PLANO = "Declarada dispensada pelo GP no próprio plano:";

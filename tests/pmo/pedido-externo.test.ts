@@ -99,6 +99,7 @@ import { reguaQueMudouEmTexto, reguasQueMudaram } from "../../src/etapas/4-pgp/r
 import { PEDIDOS_PGP, pgpAntesDoPasso } from "../../src/etapas/4-pgp/pedidos";
 import { linhaDaProposta } from "../../src/etapas/linha-do-tempo";
 import {
+  gerarSugerido,
   itensDoPgp,
   pareceRepetirORegistroInicial,
   passoAnterior,
@@ -946,20 +947,20 @@ describe.skipIf(MODO !== "importar")("importar a resposta do PMO (leitura indepe
           [passo]: guardada,
         } as PgpDossie;
         if (passo === "adaptacao") {
-          // decisão do GP com o padrão do teste: --gerar "A1,A3,…", ou tudo o que o PMO não marcou como dispensável
+          // decisão do GP com o padrão do teste: --gerar "A1,A3,…", ou a sugestão pelo porte (decisão 0091)
           const a = v.data as z.infer<typeof SCHEMAS_PGP.adaptacao>;
+          const porteDaSugestao = pgp.caracteristicas ?? sugestaoDoCodigo({ ...dossie, pgp });
           const escolhidas = env.RAIO_X_GERAR
             ? new Set(env.RAIO_X_GERAR.split(",").map((x) => x.trim()))
             : undefined;
           pgp = {
             ...pgp,
             abordagem: a.abordagem,
-            gerar: Object.fromEntries(
-              a.partes.map((s) => [
-                s.codigo,
-                escolhidas ? escolhidas.has(s.codigo) : s.recomendacao !== "dispensavel",
-              ]),
-            ),
+            gerar: escolhidas
+              ? Object.fromEntries(a.partes.map((s) => [s.codigo, escolhidas.has(s.codigo)]))
+              : gerarSugerido(a, porteDaSugestao),
+            // a mesma regra da tela: as características do GP ou, sem elas, as que o código sugere (decisão 0091)
+            sugestaoPeloPorte: porteDaSugestao,
           };
         }
         dossie = { ...dossie, pgp };

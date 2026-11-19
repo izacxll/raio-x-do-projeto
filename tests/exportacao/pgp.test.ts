@@ -95,7 +95,8 @@ describe("saídas da etapa 4", () => {
 
   it("índice do pacote: cada parte, gerada ou dispensada pelo GP", () => {
     const indice = indiceDoPacote(dossie);
-    expect(indice).toContain("A9 Plano de gerenciamento das aquisições: dispensada pelo GP");
+    // decisão 0091: o índice diz para onde foi a parte (fundida numa gerada ou dispensada, com o motivo)
+    expect(indice).toMatch(/A9 Plano de gerenciamento das aquisições: (?:dispensada: |fundida em )/);
     expect(indice).toContain("A8 Plano de gerenciamento dos riscos: gerada");
   });
 });

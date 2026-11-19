@@ -86,7 +86,10 @@ test("etapa 4 com o PMO simulado: adaptação, seis passos, contas, autoconferê
   expect(Object.keys(arquivos).sort()).toEqual(
     ["eap.svg", "indice.txt", "plano.docx", "plano.pdf", "rede.svg", "registros.xlsx"].sort(),
   );
-  expect(strFromU8(arquivos["indice.txt"]!)).toContain("B32 Termo de nomeação da equipe: dispensada pelo GP");
+  // decisão 0091: o índice diz para onde foi a parte que o GP tirou (fundida numa gerada ou dispensada, com o motivo)
+  expect(strFromU8(arquivos["indice.txt"]!)).toMatch(
+    /B32 Termo de nomeação da equipe: (?:fundida em A6|dispensada: )/,
+  );
   expect(zip.includes(Buffer.from(CHAVE))).toBe(false);
 
   expect(deFora).toEqual([]);

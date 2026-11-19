@@ -38,6 +38,9 @@ import { eventoEEfeito, reguaDosMarcos } from "./capa-regras";
 export { eventoEEfeito } from "./capa-regras";
 import type { Alerta, Destaque, NumeroChave } from "./modelo";
 import { capaDaRfp } from "./relatorio-rfp";
+import { montarPgp } from "./relatorio-pgp";
+import { paginasDoCorpoDoPlano } from "./paginas";
+import { destinoDaParte, essenciaisSemCobertura, LIMITES_DO_PORTE } from "../etapas/4-pgp/porte";
 import { contar, plural } from "../texto/plural";
 
 const A_DEFINIR = "a definir pelo GP";
@@ -487,8 +490,38 @@ export function capaDoPgp(dossie: Dossie, agora = new Date()): CapaDeDecisao | u
   const semPrazo = marcos.filter((m) => m.situacao === "nao-conferido" || m.situacao === "nao-confirmavel");
   // a régua dos marcos pelos prazos do TAP que o código tem (decisão 0087): sem eles, "não localizados", não "sem régua"
   const regua = reguaDosMarcos(e.marcosTap.map((m) => m.prazo));
+  // o tamanho do plano contra o limite do porte (decisão 0091): partes geradas e páginas estimadas
+  const porte = p.sugestaoPeloPorte?.porte;
+  const limite = porte ? LIMITES_DO_PORTE[porte] : undefined;
+  const paginas = paginasDoCorpoDoPlano(montarPgp(dossie, agora));
 
+  // decisão 0044: porte reduz partes, não a cobertura; a essencial do PMO que ficou sem lugar é alertada
+  const semCobertura = essenciaisSemCobertura(p);
   const alertas: Alerta[] = [
+    ...(semCobertura.length
+      ? [
+          {
+            nivel: "alto" as const,
+            texto: `${plural(semCobertura.length, "Parte essencial", "Partes essenciais")} pela sugestão do PMO sem lugar no plano (nem gerada nem fundida): ${semCobertura.join(", ")}. Sugere-se gerar ou marcar a hospedeira.`,
+          },
+        ]
+      : []),
+    ...(limite && paginas > limite.paginas
+      ? [
+          {
+            nivel: "medio" as const,
+            texto: `O plano passa do limite do porte ${porte}: cerca de ${paginas} páginas, para até ${limite.paginas}. Sugere-se pedir de novo as partes mais longas, com uma linha por item da ficha.`,
+          },
+        ]
+      : []),
+    ...(limite && mantidas.length > limite.partes[1]
+      ? [
+          {
+            nivel: "medio" as const,
+            texto: `${contar(mantidas.length, "parte gerada", "partes geradas")}, acima das ${limite.partes[1]} do porte ${porte}: sugere-se fundir as recomendadas na parte do mesmo assunto.`,
+          },
+        ]
+      : []),
     ...(crono?.conferenciaPrazo.situacao === "nao-cabe"
       ? [
           {
@@ -533,7 +566,14 @@ export function capaDoPgp(dossie: Dossie, agora = new Date()): CapaDeDecisao | u
     ...numerosDaFila(4, fila, p.revisoes),
     {
       rotulo: "Partes do plano",
-      valor: `${mantidas.length} ${plural(mantidas.length, "mantida", "mantidas")}, ${dispensadas.length} ${plural(dispensadas.length, "dispensada", "dispensadas")} pela adaptação`,
+      valor: `${mantidas.length} ${plural(mantidas.length, "gerada", "geradas")}; ${(() => {
+        const fundidas = dispensadas.filter((x) => destinoDaParte(x.codigo, p).tipo === "fundida").length;
+        return `${fundidas} ${plural(fundidas, "fundida", "fundidas")} numa parte gerada, ${dispensadas.length - fundidas} ${plural(dispensadas.length - fundidas, "dispensada", "dispensadas")}`;
+      })()}${limite ? ` (porte ${porte}: de ${limite.partes[0]} a ${limite.partes[1]} partes)` : ""}`,
+    },
+    {
+      rotulo: "Tamanho do plano",
+      valor: `cerca de ${paginas} páginas (estimativa)${limite ? `; limite do porte ${porte}: ${limite.paginas} páginas` : ""}`,
     },
     {
       rotulo: "Duração",

@@ -31,6 +31,7 @@ import { textoDasHoras, textoDasHorasTotais } from "../etapas/2-proposta/preco";
 import { itensValidos, paragrafoDoItem, type ItemConferido } from "../pmo/itens";
 import { camposDoDossie, type DocumentoExportavel, type Secao, type Tabela } from "./modelo";
 import { contar, plural } from "../texto/plural";
+import { destinoDaParte, destinoEmTexto, fundidasEm } from "../etapas/4-pgp/porte";
 
 const A_DEFINIR = "a definir pelo GP";
 /** Premissas do PMO que repetiam o registro inicial (mesma premissa crítica) e saíram do B3. */
@@ -435,18 +436,34 @@ function tabelasDoCodigo(codigo: string, c: Contexto): { paragrafos?: string[]; 
   return out;
 }
 
-/** As seções das partes que o GP marcou, em ordem, com o texto do PMO e as tabelas do código. */
+/**
+ * As seções das partes que o GP marcou, em ordem, com o texto do PMO e as tabelas do código. A parte fundida (decisão
+ * 0091) sai com a hospedeira: o plano (A) fundido vem dentro da seção dela; o registro (B) fundido vem logo depois, numa
+ * seção própria que começa com "Parte Bn do plano.", para ir ao anexo como os outros registros (decisão 0085).
+ */
 function secoesDasPartes(c: Contexto): Secao[] {
   const partes = partesAGerar(c.p).sort((a, b) => ordemDaParte(a) - ordemDaParte(b));
   const secoes: Secao[] = [];
+  const daParte = (x: string) =>
+    c.itens.filter(
+      (i) => i.grupo.startsWith(`${x} —`) && !i.id.startsWith("riscos:B27") && !i.id.startsWith("riscos:B3:"),
+    );
   partes.forEach((codigo, k) => {
     const titulo = `${k + 1}. ${nomeDaParte(codigo)}`;
-    const doPmo = c.itens.filter(
-      (i) =>
-        i.grupo.startsWith(`${codigo} —`) && !i.id.startsWith("riscos:B27") && !i.id.startsWith("riscos:B3:"),
-    );
-    const codigoTabelas = tabelasDoCodigo(codigo, c);
-    const paragrafos = [`Parte ${codigo} do plano.`, ...doPmo.map((i) => paragrafoDoItem(i, c.p.revisoes))];
+    const fundidas = fundidasEm(codigo, c.p);
+    const planosFundidos = fundidas.filter((x) => x.startsWith("A"));
+    const registrosFundidos = fundidas.filter((x) => x.startsWith("B"));
+    const doPmo = [codigo, ...planosFundidos].flatMap(daParte);
+    const codigoTabelas = [codigo, ...planosFundidos].flatMap((x) => tabelasDoCodigo(x, c));
+    const paragrafos = [
+      `Parte ${codigo} do plano.`,
+      ...(fundidas.length
+        ? [
+            `Esta parte inclui ${fundidas.map((x) => `${x} (${nomeDaParte(x)})`).join(", ")}, fundidas nela pelo porte do projeto.`,
+          ]
+        : []),
+      ...doPmo.map((i) => paragrafoDoItem(i, c.p.revisoes)),
+    ];
     if (codigo === "B27" || codigo === "B3")
       paragrafos.push(
         ...c.itens
@@ -468,6 +485,25 @@ function secoesDasPartes(c: Contexto): Secao[] {
           tabela: t.tabela,
         }),
       );
+    // os registros fundidos na hospedeira: cada um numa seção própria, logo depois dela
+    for (const b of registrosFundidos) {
+      const tituloB = `${titulo} — ${b} ${nomeDaParte(b)}`;
+      const inicio = [
+        `Parte ${b} do plano.`,
+        `Fundida em ${codigo} pelo porte do projeto.`,
+        ...daParte(b).map((i) => paragrafoDoItem(i, c.p.revisoes)),
+      ];
+      const tabelas = tabelasDoCodigo(b, c);
+      if (!tabelas.length) secoes.push({ titulo: tituloB, paragrafos: inicio });
+      else
+        tabelas.forEach((t, j) =>
+          secoes.push({
+            titulo: j === 0 ? tituloB : `${tituloB} (continuação)`,
+            paragrafos: j === 0 ? [...inicio, ...(t.paragrafos ?? [])] : t.paragrafos,
+            tabela: t.tabela,
+          }),
+        );
+    }
   });
   return secoes;
 }
@@ -482,7 +518,10 @@ export function montarPgp(dossie: Dossie, agora = new Date()): DocumentoExportav
       titulo: "Situação da minuta",
       paragrafos: [
         `TAP usado: ${c.e.fonteTap === "pdf" ? `PDF (${c.e.tap?.nomeArquivo})` : c.e.fonteTap === "dossie" ? "TAP da etapa 3 (dossiê)" : "nenhum"}. Proposta: ${c.e.fonteProposta === "nenhuma" ? "nenhuma" : c.e.fonteProposta === "pdf" ? "PDF" : "da etapa 2 (dossiê)"}.`,
-        `${contar(partesAGerar(c.p).length, "parte marcada", "partes marcadas")} para gerar pelo GP; ${dispensadas.length} ${plural(dispensadas.length, "dispensada", "dispensadas")}. ${contar(c.pendentes, "pendência", "pendências")} de revisão do GP.`,
+        `${contar(partesAGerar(c.p).length, "parte marcada", "partes marcadas")} para gerar pelo GP; ${(() => {
+          const fundidas = dispensadas.filter((d) => destinoDaParte(d.codigo, c.p).tipo === "fundida").length;
+          return `${fundidas} ${plural(fundidas, "fundida", "fundidas")} numa parte gerada, ${dispensadas.length - fundidas} ${plural(dispensadas.length - fundidas, "dispensada", "dispensadas")}`;
+        })()}. ${contar(c.pendentes, "pendência", "pendências")} de revisão do GP.`,
         "Os itens [Sugestão] são propostas do PMO em redação condicional; os [Decisão do GP] só o GP preenche. As tabelas de cronograma, marcos, custos, designações e rastreabilidade são contas do código.",
       ],
     },
@@ -491,11 +530,23 @@ export function montarPgp(dossie: Dossie, agora = new Date()): DocumentoExportav
   if (dispensadas.length)
     secoes.push({
       titulo: "Partes dispensadas pelo GP",
-      paragrafos: ["Não contam como ausentes na conferência do plano (etapa 5)."],
+      paragrafos: [
+        "Não contam como ausentes na conferência do plano (etapa 5). A parte fundida (decisão 0091) tem o conteúdo mínimo na parte indicada; a dispensada, o motivo.",
+      ],
       tabela: {
-        colunas: ["Parte", "Justificativa (sugestão do PMO)"],
+        colunas: ["Parte", "Para onde foi ou por que saiu"],
         larguras: [2, 5],
-        linhas: dispensadas.map((d) => [`${d.codigo} ${nomeDaParte(d.codigo)}`, d.justificativa]),
+        linhas: dispensadas.map((d) => {
+          const destino = destinoDaParte(d.codigo, c.p);
+          return [
+            `${d.codigo} ${nomeDaParte(d.codigo)}`,
+            destino.tipo === "fundida"
+              ? `Fundida em ${destino.em} (${nomeDaParte(destino.em)})`
+              : destino.tipo === "dispensada"
+                ? destino.motivo
+                : d.justificativa,
+          ];
+        }),
       },
     });
   if (obs.length)
@@ -560,7 +611,7 @@ export function indiceDoPacote(dossie: Dossie): string {
     "",
     "Partes:",
     ...(p.adaptacao?.resposta.partes ?? []).map(
-      (s) => `${s.codigo} ${nomeDaParte(s.codigo)}: ${p.gerar[s.codigo] ? "gerada" : "dispensada pelo GP"}`,
+      (s) => `${s.codigo} ${nomeDaParte(s.codigo)}: ${destinoEmTexto(destinoDaParte(s.codigo, p))}`,
     ),
   ];
   return linhas.join("\n");

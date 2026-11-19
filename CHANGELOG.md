@@ -4,6 +4,11 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 
 ## [Não publicado]
 
+### PGP enxuto por porte (decisão 0091)
+- **Porte pequeno:** um PGP único com o núcleo de 14 partes (15 com aquisições); médio com o essencial e o recomendado fundido; grande como era.
+- **Parte fundida:** vai na hospedeira com o conteúdo mínimo (a ficha no pedido, os itens na autoconferência, as tabelas do código na seção dela); a dispensada fica com o motivo. O plano, o índice, a tela e a etapa 5 dizem para onde foi.
+- **Tamanho:** páginas estimadas na capa contra o limite do porte (15, 30, 50) e o orçamento de páginas por parte no pedido.
+
 ### Capa com o resumo da etapa e a leitura da etapa 5 no dossiê (decisão 0090)
 - **Capa:** o resultado da etapa numa linha abaixo dos blocos (também na tela); o bloco da etapa 5 em uma linha ("43/44").
 - **Etapa 5:** a leitura do PMO gravada no dossiê pela mesma função da tela, com teste de ida e volta; o gerador do resultado avisa quando o dossiê está sem a leitura.
