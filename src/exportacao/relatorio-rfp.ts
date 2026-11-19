@@ -14,6 +14,7 @@ import {
 import { requisitosValidos } from "../etapas/1-rfp/revisao";
 import { recomendacaoDoDossie, recomendacaoEmTexto } from "../etapas/1-rfp/recomendacao";
 import { curto, NAO_LOCALIZADO, secoesDaCapa, type CapaDeDecisao } from "./capa-de-decisao";
+import { camposConfirmadosPeloPmo, type CampoQuePesa } from "./capa-regras";
 import type { Alerta } from "./modelo";
 import {
   contarPendentesDaLeitura,
@@ -171,8 +172,6 @@ const docsDaRfp = (dossie: Dossie) =>
 
 /** O que, na seção "uma-pagina", o código procurou e não achou: vira alerta alto (pergunta antes do preço). */
 const FALTA_QUE_PESA = ["prazo de execução ou vigência", "valor estimado ou teto"];
-/** A leitura do PMO diz que o documento não traz o dado (e não que só não achou). */
-const NAO_TRAZ = /n[aã]o (?:traz|informa|diz|tem|h[aá])\b|n[aã]o informad[oa] no documento/i;
 
 /**
  * Capa de decisão da etapa 1 (decisão 0085): a ficha da RFP e as perguntas antes do preço, os pontos de atenção que
@@ -210,11 +209,19 @@ export function capaDaRfp(
 
   // o que falta de prazo e valor vira um alerta só; o ponto de atenção do PMO sobre o mesmo assunto não repete
   const mesmoAssunto = (i: ItemLeitura) => faltas.length > 0 && /\b(prazo|valor)\b/i.test(i.nome);
-  // as duas leituras concordam: o código procurou e não achou, e o PMO diz que o documento não traz (decisão 0087)
-  const confirmadoPeloPmo = Boolean(
-    faltas.length && pmoSobre(/prazo|valor/i) && NAO_TRAZ.test(pmoSobre(/prazo|valor/i)!.texto),
+  // as duas leituras concordam, campo a campo: o código procurou e não achou, e o PMO diz que o documento não traz
+  // aquele campo e não dá número dele (decisão 0087)
+  const camposFaltando = faltas.map((f) => (f.startsWith("prazo") ? "prazo" : "valor") as CampoQuePesa);
+  // só a seção "em uma página": é onde o PMO diz o prazo e o valor do contrato (os pontos de atenção citam prazos de
+  // outras coisas, como o da inspeção)
+  const textosDoPmo = leitura.itens
+    .filter((i) => i.doPmo && i.secao === "uma-pagina" && valido(i))
+    .map((i) => `${i.nome}: ${i.texto}`);
+  const confirmados = camposConfirmadosPeloPmo(camposFaltando, textosDoPmo);
+  const naoConfirmados = faltas.filter(
+    (f) => !confirmados.includes(f.startsWith("prazo") ? "prazo" : "valor"),
   );
-  const nomeDoDocumento = /termo de refer[eê]ncia|\bTR\b/i.test(
+  const nomeDoDocumento = /^\s*(?:termo de refer[eê]ncia|TR)\b/i.test(
     analise.itens.find((i) => i.id === "identificacao:instrumento")?.texto ?? "",
   )
     ? "TR"
@@ -224,9 +231,16 @@ export function capaDaRfp(
       ? [
           {
             nivel: "alto" as const,
-            texto: confirmadoPeloPmo
-              ? `O ${nomeDoDocumento} não traz ${faltas.map((f) => (f.startsWith("prazo") ? "prazo" : "valor")).join(" nem ")}: perguntar antes do preço (o código não achou, e a leitura do PMO confirma).`
-              : `${faltas.join(" e ").replace(/^./, (c) => c.toUpperCase())}: ${NAO_LOCALIZADO}${pmoSobre(/prazo|valor/i) ? `; o PMO leu (sugestão): ${curto(pmoSobre(/prazo|valor/i)!.texto).replace(/\.$/, "")}` : ""}. Se faltar mesmo, é a primeira pergunta antes do preço.`,
+            texto: [
+              confirmados.length
+                ? `O ${nomeDoDocumento} não traz ${confirmados.join(" nem ")}: perguntar antes do preço (o código não achou, e a leitura do PMO confirma; conferir no documento).`
+                : "",
+              naoConfirmados.length
+                ? `${naoConfirmados.join(" e ").replace(/^./, (c) => c.toUpperCase())}: ${NAO_LOCALIZADO}. Se faltar mesmo, é a primeira pergunta antes do preço.`
+                : "",
+            ]
+              .filter(Boolean)
+              .join(" "),
           },
         ]
       : []),

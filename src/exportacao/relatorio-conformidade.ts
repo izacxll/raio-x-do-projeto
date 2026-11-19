@@ -205,7 +205,7 @@ function secaoDaLeitura(leitura: AchadoPmoConferido[], decisoes: Record<string, 
   return {
     titulo: "Leitura do PMO (sugestões)",
     paragrafos: [
-      "Leitura opcional pedida pelo GP. Todo achado é sugestão: o código conferiu as citações, procurou o que o PMO apontou como ausente na parte apontada (sem os trechos que o próprio achado cita) e aplicou a gravidade e a categoria pela parte do plano.",
+      "Leitura opcional pedida pelo GP. Todo achado é sugestão: o código conferiu as citações, procurou o que o PMO apontou como ausente na parte apontada (sem os trechos que o próprio achado cita) e aplicou a gravidade e a categoria pela parte do plano (conflito sobre a régua de prazo: no mínimo média, decisão 0087).",
     ],
     tabela: {
       colunas: [
@@ -222,7 +222,7 @@ function secaoDaLeitura(leitura: AchadoPmoConferido[], decisoes: Record<string, 
       larguras: [0.6, 1, 1.1, 0.8, 1.8, 3, 3, 3, 1.8],
       linhas: leitura.map((a, i) => [
         `PMO-${i + 1}`,
-        a.gravidade,
+        `${(decisoes[`pmo:${a.id}`]?.gravidade as string | undefined) ?? a.gravidade}${a.motivoDaGravidade ? ` (${a.motivoDaGravidade})` : ""}`,
         NOME_TIPO[a.tipo],
         a.parte,
         NOME_SITUACAO_PMO[a.situacao],
