@@ -44,6 +44,22 @@ export interface AchadoPmoConferido extends AchadoPmo {
   redacaoAConferir: boolean;
 }
 
+/**
+ * Conflito entre partes sobre a régua de prazo (o mesmo prazo como teto numa parte e como referência noutra, ou dois
+ * prazos para o mesmo marco) muda o prazo do projeto: no mínimo média, qualquer que seja a parte (decisão 0087; no
+ * teste, a regra fixa da parte deu baixa e a segunda instância, média).
+ */
+export function gravidadeDoConflitoDeRegua(
+  a: Pick<AchadoPmo, "tipo" | "titulo" | "descricao">,
+  base: Gravidade,
+): Gravidade {
+  if (a.tipo !== "conflituoso" || base !== "baixa") return base;
+  const texto = `${a.titulo} ${a.descricao}`;
+  const regua = /\b(?:teto|r[eé]gua|refer[eê]ncia|limite|prazo|vig[eê]ncia)\b/i.test(texto);
+  const tempo = /\b\d+\s*(?:meses|m[eê]s|dias(?: [uú]teis| corridos)?|semanas|anos)\b/i.test(texto);
+  return regua && tempo ? "média" : base;
+}
+
 /** Gravidade e categoria pela parte do PGP (regra fixa); parte desconhecida fica baixa e sem categoria. */
 function regraFixa(parte: string): { gravidade: Gravidade; categoria: string } {
   const f = buscarParte(parte);
@@ -200,9 +216,11 @@ export function conferirLeitura(
         c.parte === a.parte &&
         (!a.item || c.descricao.includes(a.item) || c.id.includes(a.item)),
     );
+    const fixa = regraFixa(a.parte);
     return {
       ...a,
-      ...regraFixa(a.parte),
+      ...fixa,
+      gravidade: gravidadeDoConflitoDeRegua(a, fixa.gravidade),
       citacoes,
       situacao,
       localizadoEm,

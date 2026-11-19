@@ -345,6 +345,21 @@ export function capaDoTap(dossie: Dossie, agora = new Date()): CapaDeDecisao | u
 
 // ---------- etapa 4 ----------
 
+/**
+ * O risco numa linha: o evento e o efeito ("Causa: … Evento: … Efeito: …", como o registro B27 escreve), sem a causa
+ * cortada; sem essas marcas, o começo do texto (decisão 0087).
+ */
+export function eventoEEfeito(texto: string, limite = 220): string {
+  const parte = (nome: string) =>
+    new RegExp(`${nome}:\\s*(.*?)\\s*(?=(?:Causa|Evento|Efeito|Situa[cç][aã]o):|$)`, "i")
+      .exec(texto)?.[1]
+      ?.replace(/[.;]$/, "");
+  const evento = parte("Evento");
+  const efeito = parte("Efeito");
+  if (!evento && !efeito) return curto(texto, limite);
+  return limitar([evento, efeito].filter(Boolean).join(" → "), limite);
+}
+
 const PESO_PROB = { baixa: 1, media: 2, alta: 3 } as const;
 const NOME_PROB = { baixa: "baixa", media: "média", alta: "alta" } as const;
 const NOME_IMPACTO = { baixo: "baixo", medio: "médio", alto: "alto" } as const;
@@ -369,6 +384,9 @@ export function capaDoPgp(dossie: Dossie, agora = new Date()): CapaDeDecisao | u
   const { decisoes } = separarDecisoesPendentes(auto.achados);
   const reguas = reguasQueMudaram(p);
   const foraDoPrazo = marcos.filter((m) => m.situacao === "nao-cabe");
+  const semPrazo = marcos.filter((m) => m.situacao === "nao-conferido" || m.situacao === "nao-confirmavel");
+  // nenhum marco com prazo em dias no TAP: não há régua para dizer "fora do prazo" (decisão 0087)
+  const semRegua = marcos.length > 0 && semPrazo.length === marcos.length;
 
   const alertas: Alerta[] = [
     ...(crono?.conferenciaPrazo.situacao === "nao-cabe"
@@ -389,7 +407,7 @@ export function capaDoPgp(dossie: Dossie, agora = new Date()): CapaDeDecisao | u
     ...reguas.map((x) => ({ nivel: "medio" as const, texto: curto(reguaQueMudouEmTexto(x), 200) })),
     ...riscos
       .filter((x) => x.probabilidade === "alta" && x.impacto === "alto")
-      .map((x) => ({ nivel: "alto" as const, texto: `Risco ${x.id}: ${curto(x.item.texto, 180)}` })),
+      .map((x) => ({ nivel: "alto" as const, texto: `Risco ${x.id}: ${eventoEEfeito(x.item.texto)}` })),
     ...(custos?.faltando.length
       ? [{ nivel: "medio" as const, texto: `Orçamento: falta ${custos.faltando.slice(0, 3).join("; ")}.` }]
       : []),
@@ -418,7 +436,12 @@ export function capaDoPgp(dossie: Dossie, agora = new Date()): CapaDeDecisao | u
         ? `${Math.round(crono.total)} dias úteis${crono.dataFim ? `, até ${dataBr(crono.dataFim)}` : ""}`
         : "não conferida",
     },
-    { rotulo: "Marcos", valor: `${marcos.length}, ${foraDoPrazo.length} fora do prazo do TAP` },
+    {
+      rotulo: "Marcos",
+      valor: semRegua
+        ? `${marcos.length}, sem régua: o TAP não dá prazo em dias para nenhum`
+        : `${marcos.length}, ${foraDoPrazo.length} fora do prazo do TAP`,
+    },
     {
       rotulo: "Riscos",
       valor: `${riscos.length}, ${riscos.filter((x) => x.impacto === "alto").length} de impacto alto, ${riscos.filter((x) => x.pedeReserva).length} com reserva`,
@@ -426,7 +449,9 @@ export function capaDoPgp(dossie: Dossie, agora = new Date()): CapaDeDecisao | u
     { rotulo: "Orçamento (linha de base)", valor: reais(custos?.linhaDeBase) },
   ];
   const mudou = [
-    `Marcos do TAP no cronograma do plano: ${marcos.filter((m) => m.situacao === "cabe").length} cabem, ${foraDoPrazo.length} não cabem e ${marcos.filter((m) => m.situacao === "nao-conferido" || m.situacao === "nao-confirmavel").length} sem prazo em dias no TAP (a conferir).`,
+    semRegua
+      ? `Marcos do TAP no cronograma do plano: sem régua (o TAP não dá prazo em dias); as datas são só as da conta do código.`
+      : `Marcos do TAP no cronograma do plano: ${marcos.filter((m) => m.situacao === "cabe").length} cabem, ${foraDoPrazo.length} não cabem e ${semPrazo.length} sem prazo em dias no TAP (a conferir).`,
     `${riscos.length} risco(s) no registro, a partir das premissas e do risco geral do TAP.`,
     ...(reguas.length
       ? [`${reguas.length} régua(s) corrigida(s) num passo e não levada(s) às partes anteriores.`]
@@ -471,7 +496,7 @@ export function capaDoPgp(dossie: Dossie, agora = new Date()): CapaDeDecisao | u
           linhas: riscos
             .slice(0, 5)
             .map((x) => [
-              `${x.id} — ${curto(x.item.texto, 140)}`,
+              `${x.id} — ${eventoEEfeito(x.item.texto, 160)}`,
               `${NOME_PROB[x.probabilidade]} × ${NOME_IMPACTO[x.impacto]}`,
               curto(`${x.estrategia}: ${x.resposta}`, 160),
               curto(x.gatilho || "—", 120),
