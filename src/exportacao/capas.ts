@@ -13,10 +13,12 @@ import { conferirTap } from "../etapas/3-tap/conferencia-tap";
 import { compararRfpEProposta, pedeDecisao } from "../etapas/3-tap/divergencias";
 import { dadosDaProposta, montarEntradaTap } from "../etapas/3-tap/entrada";
 import { itensDaEtapa3, tapInicial } from "../etapas/3-tap/tap";
+import { itensDaProposta } from "../etapas/2-proposta/proposta";
+import { itensDoPgp, partesAGerar } from "../etapas/4-pgp/pgp";
+import { PRAZO_DAS_DECISOES, resumoDaFila, revisavelDoConferido } from "../pmo/fila";
 import { autoconferir, separarDecisoesPendentes } from "../etapas/4-pgp/autoconferencia";
 import { cronogramaDoPgp, custosDoPgp, marcosDoPgp } from "../etapas/4-pgp/calculos";
 import { montarEntradaPgp } from "../etapas/4-pgp/entrada";
-import { partesAGerar } from "../etapas/4-pgp/pgp";
 import { reguaQueMudouEmTexto, reguasQueMudaram } from "../etapas/4-pgp/reguas";
 import { resultadoDaEtapa5 } from "../etapas/5-conferencia/resultado";
 import type { ResultadoVereditos } from "../etapas/5-conferencia/candidatos";
@@ -133,6 +135,10 @@ export function capaDaProposta(dossie: Dossie, agora = new Date()): CapaDeDecisa
   ];
 
   const numeros: NumeroChave[] = [
+    {
+      rotulo: "Fila do GP",
+      valor: `${resumoDaFila(itensDaProposta(p, docs).map(revisavelDoConferido), p.revisoes, p.abordagem ? [] : ["Escolher a abordagem técnica"])}; decidir ${PRAZO_DAS_DECISOES[2]}`,
+    },
     { rotulo: "Abordagem", valor: abordagem ? `${abordagem.id} — ${abordagem.nome}` : A_DEFINIR },
     { rotulo: "Produtos", valor: String(conteudo.produtos.length) },
     {
@@ -251,6 +257,13 @@ export function capaDoTap(dossie: Dossie, agora = new Date()): CapaDeDecisao | u
     ...(t.decisoes.aprovadoPor?.trim() ? [] : ["Aprovar o TAP (quem aprova e quando)."]),
   ];
   const numeros: NumeroChave[] = [
+    {
+      rotulo: "Fila do GP",
+      valor: `${resumoDaFila(todos.map(revisavelDoConferido), t.revisoes, [
+        ...aDecidir.map((d) => `Versão que vale: ${d.tema}`),
+        ...(t.decisoes.aprovadoPor?.trim() ? [] : ["Aprovar o TAP"]),
+      ])}; decidir ${PRAZO_DAS_DECISOES[3]}`,
+    },
     {
       rotulo: "Proposta usada",
       valor:
@@ -413,6 +426,10 @@ export function capaDoPgp(dossie: Dossie, agora = new Date()): CapaDeDecisao | u
     "Aprovar o plano depois de revisar os itens com a marca ○.",
   ];
   const numeros: NumeroChave[] = [
+    {
+      rotulo: "Fila do GP",
+      valor: `${resumoDaFila(itensDoPgp(p, e.documentos, e.premissasTap).map(revisavelDoConferido), p.revisoes)}; decidir ${PRAZO_DAS_DECISOES[4]}`,
+    },
     {
       rotulo: "Partes do plano",
       valor: `${mantidas.length} mantidas, ${dispensadas.length} dispensadas pela adaptação`,

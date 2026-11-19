@@ -4,6 +4,12 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 
 ## [Não publicado]
 
+### Fila de pendências do GP (decisão 0088)
+- **Quatro classes:** decisão do GP, a conferir, do documento e sugestão sem aviso; decisão e item com aviso nunca vão em lote.
+- **Fila no topo de cada etapa**, por impacto (caixa ou preço, prazo, aceite, quem executa), com o prazo da decisão; contagem na capa.
+- **Etapa 5:** gravidade escolhida pelo GP também nos achados do PMO.
+- **Teste externo:** o placar da correção diz o que mudou desde a resposta conferida pela segunda instância.
+
 ### Ajustes da capa de decisão (decisão 0087)
 - **Etapa 1:** prazo e valor ausentes, confirmados pelo PMO, viram alerta afirmativo ("o TR não traz…: perguntar antes do preço").
 - **Etapa 4:** marcos "sem régua" quando o TAP não dá prazo em dias; riscos por evento e efeito.

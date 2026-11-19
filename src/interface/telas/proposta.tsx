@@ -1,6 +1,8 @@
 // Etapa 2 na tela: o ponto de partida (código), os três passos do PMO com o custo à vista, as decisões do GP
 // (abordagem, premissas críticas, valores, nomes), as contas do código (cronograma, preço), a conferência final,
 // a revisão item a item e as saídas.
+import { FilaDePendencias } from "../componentes/fila-de-pendencias";
+import { aceitar, revisavelDoConferido, PRAZO_DAS_DECISOES } from "../../pmo/fila";
 import { useMemo, useRef, useState, type ReactNode } from "react";
 import { LIMITE_DOCUMENTO_TOKENS, MODELOS, type IdModelo } from "../../config/modelo";
 import { MOEDA, PRECOS_CONSULTADOS_EM } from "../../config/precos";
@@ -349,6 +351,14 @@ export function PropostaDoFornecedor({ todos }: { todos: DocumentoLido[] }) {
       {p.estrategia && <MinutaPeloMetodo minuta={minuta} p={p} atualizar={atualizar} />}
 
       {(p.conteudo || p.estrategia) && <ConferenciaNaTela p={p} ponto={ponto} />}
+
+      <FilaDePendencias
+        prazo={PRAZO_DAS_DECISOES[2]}
+        itens={itens.map(revisavelDoConferido)}
+        revisoes={p.revisoes}
+        aoAceitar={(ids) => atualizar({ ...p, revisoes: aceitar(p.revisoes, ids) })}
+        outrasDecisoes={p.estrategia && !p.abordagem ? ["Escolher a abordagem técnica"] : []}
+      />
 
       <section className="bloco">
         <RotuloSecao>Exportar</RotuloSecao>

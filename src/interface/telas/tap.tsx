@@ -1,6 +1,8 @@
 // Etapa 3 na tela: a proposta usada (PDF final do GP ou a da etapa 2), as divergências RFP × proposta com a decisão
 // do GP, o que vem dos documentos (código), os dois passos do PMO (12 elementos e registro de premissas), os campos
 // que só o GP preenche, a conferência do TAP (código), a aprovação e as saídas.
+import { FilaDePendencias } from "../componentes/fila-de-pendencias";
+import { aceitar, revisavelDoConferido, PRAZO_DAS_DECISOES } from "../../pmo/fila";
 import { useMemo, useState } from "react";
 import { MODELOS, type IdModelo } from "../../config/modelo";
 import type { DecisoesTap, TapDossie } from "../../dossie/esquema";
@@ -15,7 +17,13 @@ import {
 import { dadosDosDocumentos } from "../../etapas/3-tap/do-documento";
 import { montarEntradaTap, NOME_PROPOSTA_DO_DOSSIE } from "../../etapas/3-tap/entrada";
 import { pedidoPremissas, pedidoTap } from "../../etapas/3-tap/pedidos";
-import { contarPendentesTap, itensDaEtapa3, tapInicial, type PassoTap } from "../../etapas/3-tap/tap";
+import {
+  contarPendentesTap,
+  divergenciasSemDecisao,
+  itensDaEtapa3,
+  tapInicial,
+  type PassoTap,
+} from "../../etapas/3-tap/tap";
 import { montarTapRevisado } from "../../pmo/tap-revisado";
 import { exportar, type FormatoExportacao } from "../../exportacao/exportar";
 import { montarRegistroPremissas, montarTap } from "../../exportacao/relatorio-tap";
@@ -383,6 +391,17 @@ export function TermoDeAbertura() {
           </label>
         </div>
       </section>
+
+      <FilaDePendencias
+        prazo={PRAZO_DAS_DECISOES[3]}
+        itens={itens.map(revisavelDoConferido)}
+        revisoes={t.revisoes}
+        aoAceitar={(ids) => atualizar({ ...t, revisoes: aceitar(t.revisoes, ids) })}
+        outrasDecisoes={[
+          ...divergenciasSemDecisao(t, divergencias).map((d) => `Versão que vale: ${d.tema}`),
+          ...(t.tap && !t.decisoes.aprovadoPor?.trim() ? ["Aprovar o TAP"] : []),
+        ]}
+      />
 
       <section className="bloco">
         <RotuloSecao>Exportar</RotuloSecao>
