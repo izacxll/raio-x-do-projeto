@@ -27,6 +27,11 @@ export function corpoSse(r: RespostaSimulada): string {
             input_tokens: uso.entrada,
             output_tokens: 1,
             cache_creation_input_tokens: uso.escritaCache ?? 0,
+            // o app escreve o prefixo estável no cache de 1 hora (decisão 0095)
+            cache_creation: {
+              ephemeral_5m_input_tokens: 0,
+              ephemeral_1h_input_tokens: uso.escritaCache ?? 0,
+            },
             cache_read_input_tokens: uso.leituraCache ?? 0,
           },
         },

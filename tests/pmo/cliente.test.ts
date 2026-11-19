@@ -33,9 +33,15 @@ describe("chamada ao PMO", () => {
     ]);
     const r = await pedido(api.fetch);
     expect(r.resposta).toEqual({ ok: true, itens: ["a"] });
-    expect(r.uso).toEqual({ entrada: 1000, saida: 2000, escritaCache: 50000, leituraCache: 0 });
-    // 1000 × 4 + 2000 × 20 + 50000 × 5, por milhão
-    expect(r.custo).toBeCloseTo(0.294, 6);
+    expect(r.uso).toEqual({
+      entrada: 1000,
+      saida: 2000,
+      escritaCache: 50000,
+      escritaCache1h: 50000,
+      leituraCache: 0,
+    });
+    // 1000 × 4 + 2000 × 20 + 50000 × 8 (escrita no cache de 1 hora, decisão 0095), por milhão
+    expect(r.custo).toBeCloseTo(0.444, 6);
   });
 
   it("manda a skill e os documentos com cache, o schema na saída estruturada e o esforço explícito", async () => {
@@ -47,8 +53,9 @@ describe("chamada ao PMO", () => {
     const corpo = p?.corpo as Record<string, any>;
     expect(corpo.model).toBe("claude-opus-5-5");
     expect(corpo.stream).toBe(true);
-    expect(corpo.system[0].cache_control).toEqual({ type: "ephemeral" });
-    expect(corpo.messages[0].content[0].cache_control).toEqual({ type: "ephemeral" });
+    // o prefixo estável no cache de 1 hora (decisão 0095)
+    expect(corpo.system[0].cache_control).toEqual({ type: "ephemeral", ttl: "1h" });
+    expect(corpo.messages[0].content[0].cache_control).toEqual({ type: "ephemeral", ttl: "1h" });
     expect(corpo.messages[0].content[1].cache_control).toBeUndefined();
     expect(corpo.output_config.effort).toBe("high");
     expect(corpo.output_config.format.type).toBe("json_schema");

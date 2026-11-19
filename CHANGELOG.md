@@ -4,6 +4,11 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 
 ## [Não publicado]
 
+### Cache de 1 hora no prefixo estável (decisão 0095)
+- A skill e os documentos vão no cache de 1 hora; o uso e o custo leem a escrita por tempo de vida.
+- Simulação por projeto completo nos dois casos: o cache de 5 minutos encarecia (US$ 12,66 e 16,66 contra 12,09 e 15,16 sem cache); com o de 1 hora, US$ 11,37 e 14,70.
+- Painel da comissão com o custo por projeto em dólar e em reais.
+
 ### Resultado no padrão da FGV Projetos (decisão 0089)
 - **Capa** com o título do estudo e os números-chave em destaque; **sumário**; seções numeradas; rodapé com "página n / total".
 - **Rótulos fora da linha:** referência "(TR, p. N)" no fim da frase, nota de sugestão por seção, decisões no quadro "Para o GP decidir"; marcas e avisos no anexo de revisão; termos internos só no anexo técnico.

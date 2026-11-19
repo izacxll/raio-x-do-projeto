@@ -6,7 +6,10 @@ import { PRECOS, type PrecoModelo } from "../config/precos";
 export interface UsoChamada {
   entrada: number;
   saida: number;
+  /** Tokens escritos no cache (os dois tempos de vida somados). */
   escritaCache: number;
+  /** Desses, os escritos no cache de 1 hora (decisão 0095); o resto é do cache de 5 minutos. */
+  escritaCache1h?: number;
   leituraCache: number;
 }
 
@@ -21,7 +24,8 @@ export function custoDoUso(modelo: string, uso: UsoChamada): number | undefined 
   return (
     (uso.entrada * p.entrada +
       uso.saida * p.saida +
-      uso.escritaCache * p.escritaCache +
+      (uso.escritaCache - (uso.escritaCache1h ?? 0)) * p.escritaCache +
+      (uso.escritaCache1h ?? 0) * p.escritaCache1h +
       uso.leituraCache * p.leituraCache) /
     1e6
   );
@@ -33,7 +37,7 @@ export interface EstimativaCusto {
   saidaMax: number;
   /** Primeira chamada: a entrada é escrita no cache. */
   semCache: { min: number; max: number };
-  /** Chamada seguinte, dentro de 5 minutos: skill e documentos lidos do cache. */
+  /** Chamada seguinte, dentro de 1 hora: skill e documentos lidos do cache (decisão 0095). */
   comCache: { min: number; max: number };
 }
 
@@ -49,7 +53,8 @@ export function estimarCusto(
   const p = precoDe(modelo);
   if (!p) return undefined;
   const { min, max } = SAIDA_ESPERADA[passo];
-  const primeira = (tokensCacheaveis * p.escritaCache + tokensPedido * p.entrada) / 1e6;
+  // o prefixo estável (skill e documentos) vai no cache de 1 hora (decisão 0095)
+  const primeira = (tokensCacheaveis * p.escritaCache1h + tokensPedido * p.entrada) / 1e6;
   const seguinte = (tokensCacheaveis * p.leituraCache + tokensPedido * p.entrada) / 1e6;
   const saida = (n: number) => (n * p.saida) / 1e6;
   return {

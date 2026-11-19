@@ -128,7 +128,7 @@ export function PassoPmoNaTela({
                 entrada e {formatarTokens(estimativa.saidaMin)} a {formatarTokens(estimativa.saidaMax)} de
                 saída: {formatarDolar(estimativa.semCache.min)} a {formatarDolar(estimativa.semCache.max)} na
                 primeira chamada; {formatarDolar(estimativa.comCache.min)} a{" "}
-                {formatarDolar(estimativa.comCache.max)} se feita em até 5 minutos depois da anterior (skill e
+                {formatarDolar(estimativa.comCache.max)} se feita em até 1 hora depois da anterior (skill e
                 documentos lidos do cache).
               </p>
             )}

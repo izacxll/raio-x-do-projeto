@@ -173,6 +173,7 @@ function lerUso(u: Anthropic.Beta.BetaUsage): UsoChamada {
     entrada: u.input_tokens ?? 0,
     saida: u.output_tokens ?? 0,
     escritaCache: u.cache_creation_input_tokens ?? 0,
+    escritaCache1h: u.cache_creation?.ephemeral_1h_input_tokens ?? 0,
     leituraCache: u.cache_read_input_tokens ?? 0,
   };
 }
@@ -219,7 +220,15 @@ export async function chamarPmo<S extends z.ZodType>(
       effort: ESFORCO[p.passo],
       format: { type: "json_schema" as const, schema: formato.schema },
     },
-    system: [{ type: "text" as const, text: p.sistema, cache_control: { type: "ephemeral" as const } }],
+    // o prefixo estável (skill e documentos) no cache de 1 hora: o intervalo típico entre os passos de uma etapa passa
+    // de 5 minutos (decisão 0095, medido no teste externo)
+    system: [
+      {
+        type: "text" as const,
+        text: p.sistema,
+        cache_control: { type: "ephemeral" as const, ttl: "1h" as const },
+      },
+    ],
     messages: [
       {
         role: "user" as const,
@@ -227,7 +236,13 @@ export async function chamarPmo<S extends z.ZodType>(
         // a API recusa bloco de texto vazio
         content: [
           ...(p.documentos.trim()
-            ? [{ type: "text" as const, text: p.documentos, cache_control: { type: "ephemeral" as const } }]
+            ? [
+                {
+                  type: "text" as const,
+                  text: p.documentos,
+                  cache_control: { type: "ephemeral" as const, ttl: "1h" as const },
+                },
+              ]
             : []),
           { type: "text" as const, text: p.pedido },
         ],
