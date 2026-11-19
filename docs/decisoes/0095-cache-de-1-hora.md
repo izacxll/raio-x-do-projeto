@@ -19,7 +19,7 @@ O teste rodou pelo claude.ai, sem fatura. Por isso a medição foi uma simulaç�
 - **Cache:** o prefixo (sistema e documentos) é lido do cache quando o mesmo prefixo foi usado dentro do tempo de vida.
 - **Preços do Opus 5.5:** entrada US$ 4, saída US$ 20, escrita 5 min US$ 5 (1,25 ×), escrita 1 h US$ 8 (2 ×) e leitura US$ 0,20 por milhão de tokens.
 
-| Configuração | TR fiscal (31 pedidos) | TR de contratação direta (40 pedidos) |
+| Configuração | Caso 1 (TR fiscal, 31 pedidos) | Caso 2 (contratação direta, 40 pedidos) |
 |---|---|---|
 | Sem cache | US$ 12,09 | US$ 15,16 |
 | Cache de 5 minutos (antes) | US$ 12,66 | US$ 16,66 |
@@ -43,5 +43,5 @@ O teste rodou pelo claude.ai, sem fatura. Por isso a medição foi uma simulaç�
 ## Consequências
 
 - A medição com a fatura real fica para a próxima rodada do teste com a chave da API. A tela de cada etapa já mostra a escrita e a leitura do cache de cada chamada.
-- A saída não tem cache: de 230 mil a 245 mil tokens por projeto, cerca de US$ 4,6 a US$ 4,9, entre um terço e dois quintos do custo.
+- A saída não tem cache. Com o cache de 1 hora, ela é cerca de 43% do custo no Caso 1 (~244 mil tokens, US$ 4,88) e cerca de 31% no Caso 2 (~226 mil tokens, US$ 4,52).
 - A tabela acima conta todos os documentos com cache. Com a rodada compacta sem cache nos documentos, o custo real fica um pouco abaixo dela.
