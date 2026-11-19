@@ -1142,6 +1142,13 @@ tr[data-critica="sim"] td:first-child {
   color: var(--ink);
 }
 
+.capa-resumo {
+  margin: 0 0 var(--esp-2);
+  text-align: center;
+  color: var(--navy);
+  font-weight: 600;
+}
+
 .capa-quadro-decisoes {
   border: 2px solid var(--laranja);
   background: var(--laranja-claro);

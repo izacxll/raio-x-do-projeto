@@ -52,9 +52,21 @@ O custo é um **piso**:
 - a pasta de cada passo guarda só o último pedido exportado;
 - as rodadas anteriores da segunda instância e os passos refeitos não entram.
 
-O teste rodou pelo claude.ai, sem a API, então não há fatura a conferir. O app com a API usa o cache de prompt (skill e documentos), que deve baixar o custo de entrada dos passos seguintes; a medição real com a API é o bloco 5 do pente fino.
+O teste rodou pelo claude.ai, sem a API, então não há fatura a conferir.
 
-**Em reais:** ~US$ 10 por projeto completo, que dá cerca de R$ 55 ao câmbio de exemplo de R$ 5,50 por dólar (conferir o câmbio do dia).
+**Custo por projeto completo, com o cache (bloco 5 do pente fino, decisão 0095).** A simulação cobra, pelos preços da API para o Opus 5.5, todos os pedidos do teste: os dos passos e os da segunda instância, inclusive as rodadas anteriores. Cada pedido entra com o tamanho que tinha e na hora em que foi feito. O cache só conta quando o mesmo prefixo (skill e documentos) foi usado dentro do tempo de vida.
+
+| Configuração | TR fiscal (31 pedidos) | TR de contratação direta (40 pedidos) |
+|---|---|---|
+| Sem cache | US$ 12,09 (R$ 69) | US$ 15,16 (R$ 87) |
+| Cache de 5 minutos (o app até a decisão 0095) | US$ 12,66 (R$ 73) | US$ 16,66 (R$ 96) |
+| **Cache de 1 hora no prefixo estável (agora)** | **US$ 11,37 (R$ 65)** | **US$ 14,70 (R$ 84)** |
+
+- **Cache de 5 minutos:** encarecia, porque o intervalo mediano entre pedidos foi de 9 a 10 minutos. A escrita custa 1,25 × a entrada e quase nunca era lida.
+- **Cache de 1 hora:** o prefixo é lido do cache em cerca de metade dos pedidos. O custo cai de 10% a 12% contra o app de antes e de 3% a 6% contra o sem cache.
+- **Saída:** cerca de 230 mil a 245 mil tokens por projeto, a US$ 20 por milhão, isto é, US$ 4,6 a US$ 4,9, entre um terço e dois quintos do custo. A saída não tem cache.
+- **Câmbio:** PTAX de venda de 16/11/2026, R$ 5,7324 por dólar (conferir no Banco Central no dia).
+- **Medição com a fatura:** a medição real, com a chave da API, fica para a próxima rodada do teste. A tela de cada etapa já mostra, em cada chamada, a escrita e a leitura do cache que a API devolve.
 
 ## Leitura para o gerente
 

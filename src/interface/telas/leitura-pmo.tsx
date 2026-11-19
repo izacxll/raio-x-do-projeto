@@ -14,7 +14,7 @@ import {
   textoDeSistema,
   textoDosDocumentos,
 } from "../../pmo/montagem";
-import { semRevisoesDoPmo } from "../../pmo/itens";
+import { camposDaLeituraNova } from "../../etapas/5-conferencia/leitura-no-dossie";
 import { RespostaLeitura } from "../../pmo/schemas/leitura";
 import type { Achado } from "../../regras/achado";
 import { EtiquetaRotulo, RotuloSecao } from "../componentes/basicos";
@@ -82,11 +82,9 @@ export function LeituraDoPmo({
     });
     if (!r) return;
     atualizar({
-      // a leitura nova não herda as decisões da anterior
-      decisoes: semRevisoesDoPmo(conf.decisoes),
-      leituraPmo: { resposta: r.resposta, modelo: r.modelo, em: r.em },
+      // os mesmos campos do import do teste externo (decisão 0090): a leitura nova não herda as decisões da anterior
+      ...camposDaLeituraNova(conf, { resposta: r.resposta, modelo: r.modelo, em: r.em }),
       usoPmo: r.uso ? [...uso, r.uso] : uso,
-      executadaEm: new Date().toISOString(),
     });
   }
 

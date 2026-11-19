@@ -95,7 +95,7 @@ export function itensDoConteudo(c: RespostaConteudo, docs: DocumentoLido[]): Ite
       grupo: NOME_GRUPO.premissas ?? "Premissas",
       item: p.item,
       complemento: `${p.premissaCritica ? `Premissa crítica ${p.premissaCritica}. ` : ""}Se não se confirmar: ${p.consequencia}`,
-      conferencia: conferirItem(p.item, docs),
+      conferencia: conferirItem(p.item, docs, { registro: true }),
     }),
   );
   // campos do método (decisão 0038): o GP revisa as metas e os riscos como os outros itens
@@ -116,7 +116,7 @@ export function itensDoConteudo(c: RespostaConteudo, docs: DocumentoLido[]): Ite
       grupo: NOME_GRUPO.riscos ?? "Riscos",
       item: x.item,
       complemento: `Gatilho: ${x.gatilho || "a definir pelo GP"}; dono: ${x.dono || "a definir pelo GP"}; resposta: ${x.resposta || "—"}${x.premissaCritica ? `; ${x.premissaCritica}` : ""}.`,
-      conferencia: conferirItem(x.item, docs),
+      conferencia: conferirItem(x.item, docs, { registro: true }),
     }),
   );
   c.obrigacoesContratante.forEach((o, k) =>
@@ -186,6 +186,7 @@ export function registrarUso(p: PropostaDossie, passo: string, r: RespostaPmo<un
         entrada: r.uso.entrada,
         saida: r.uso.saida,
         escritaCache: r.uso.escritaCache,
+        escritaCache1h: r.uso.escritaCache1h ?? 0,
         leituraCache: r.uso.leituraCache,
         custoUsd: r.custo,
         em: r.em,

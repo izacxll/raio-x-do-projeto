@@ -1,6 +1,6 @@
 # Andamento
 
-Atualizado em 19/11/2026. Teste externo da rodada 3 fechado nos dois casos (etapas 1 a 5). Pente fino para a comissão: os seis blocos feitos. Os blocos 3, 4 e 5 estão em PRs abertos, à espera do ok da responsável.
+Atualizado em 19/11/2026. Teste externo da rodada 3 fechado nos dois casos (etapas 1 a 5). Pente fino para a comissão: os seis blocos feitos e na `main` (PRs #99 a #105, mesclados em 19/11/2026 com o ok da responsável).
 
 ## Onde estamos
 
@@ -14,10 +14,10 @@ Atualizado em 19/11/2026. Teste externo da rodada 3 fechado nos dois casos (etap
 - **Bloco 2, decisões do GP (#96, decisão 0088):** fila de pendências por impacto, com a decisão do GP e o item com aviso nunca em lote, e o que mudou na correção.
 - **Bloco 3, gestão:**
   - PGP enxuto por porte (0091, #100): de 10 a 15 partes no pequeno, com o destino do conteúdo dispensado e o limite de páginas por porte. Medido: de 44 para 18 partes num caso e de 44 para 33 no outro. O corpo fica em cerca de 15 páginas; o total quase não muda, porque o volume está nos registros B;
-  - riscos ligados a resposta, reserva e marco, e a contingência derivada dos riscos marcados (0092, #101, empilhado no #100).
+  - riscos ligados a resposta, reserva e marco, e a contingência derivada dos riscos marcados (0092, #101).
 - **Bloco 4, qualidade da IA:**
   - travas (0093, #102): alarme falso medido por trava. A "redação a conferir" ficou mantida, porque erra menos do que acerta; foi ajustada e ganhou a checagem de rótulo misto;
-  - lições da skill marcadas como regra geral ou de um caso só (0094, #103, skill: espera aprovação);
+  - lições da skill marcadas como regra geral ou de um caso só (0094, #103, aprovada em 19/11/2026);
   - revisor em outro modelo: [`estudos/revisor-em-outro-modelo.md`](estudos/revisor-em-outro-modelo.md).
 - **Bloco 5, custo (0095, #104):** cache de 1 hora no prefixo estável, com o custo por projeto completo no painel da comissão, em dólar e em reais.
 - **Bloco 6, material da comissão (#97):** `docs/comissao/`.
@@ -91,12 +91,11 @@ O que cada fase M ainda precisa cobrir está nas issues de cada uma (rótulos `e
 - **Ordem de impacto dos pontos de atenção** (caixa > dependência do contratante > preço > prazo): julgamento da análise, a confirmar pela responsável. Veio da engenharia reversa (o arquivo foi removido pela decisão 0075).
 - **Gravidade dos conflitos que envolvem mais de uma parte** do plano (etapa 5) e **gatilhos com número** como campos obrigatórios da etapa 4: a validar na M4 e na M5.
 - **A camada "tipo" (tipo de projeto, de contrato e de plano) vira um módulo comum às cinco etapas?** Hoje cada etapa reconhece o tipo por conta própria. Veio da engenharia reversa (decisão 0075).
-- **Pente fino (19/11/2026):**
-  - merge dos PRs #99 a #104;
-  - aprovar a skill 0.3.8 (#103);
-  - no porte pequeno, levar os registros B só para a planilha, para o total de páginas cair;
-  - revisor da segunda instância: manter o de hoje, trocar pelo Sonnet 5.5 ou rodar os dois em paralelo na próxima rodada;
-  - reimportar a leitura da etapa 5 nas pastas dos dois casos, para o dossiê ter a leitura do PMO.
+- **Decididas pela responsável em 19/11/2026 (pente fino):**
+  - **Registros B no porte pequeno:** só na planilha. No Word do plano, cada registro vira uma tabela-resumo com a indicação da planilha. No porte médio, os registros ficam no anexo por enquanto.
+  - **Revisor da segunda instância:** no terceiro TR, o revisor atual e o Sonnet 5.5 rodam em paralelo, só nas etapas 4 e 5. A comparação mede quantos achados de cada um se sustentam depois da conferência, não quantos achados cada um traz.
+  - **Leitura da etapa 5:** reimportada nas pastas dos dois casos, com o Word da etapa 5 gerado de novo.
+  - **Custo no painel da comissão:** a PTAX conferida no Banco Central, e o custo marcado como estimativa feita com os pedidos do teste.
 
 ## Próximo passo
 

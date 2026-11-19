@@ -73,6 +73,7 @@ export function CapaNaTela({ capa, aoBaixar }: { capa: Capa; aoBaixar?: () => Pr
           ))}
         </div>
       ) : null}
+      {capa.resumo && <p className="capa-resumo">{capa.resumo}</p>}
       <p className="texto-apoio">{capa.oQueE}</p>
       {capa.decidir.length ? (
         <div className="capa-quadro-decisoes">

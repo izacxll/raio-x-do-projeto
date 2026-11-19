@@ -129,7 +129,7 @@ export function itensDasPremissas(r: RespostaPremissas, docs: DocumentoLido[]): 
     ]
       .filter(Boolean)
       .join(" "),
-    conferencia: conferirItem(p.item, docs),
+    conferencia: conferirItem(p.item, docs, { registro: true }),
   }));
   r.observacoes.forEach((item, k) =>
     out.push({

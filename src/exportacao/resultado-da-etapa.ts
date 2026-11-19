@@ -23,6 +23,9 @@ import { capaDaEtapa } from "./capas";
 import { curto, secoesDaCapa } from "./capa-de-decisao";
 import { apresentar, lerItem } from "./apresentacao";
 import { contar } from "../texto/plural";
+import { registrosNoAnexo } from "./registros-no-anexo";
+
+export { registrosNoAnexo };
 
 export const NOME_DA_ETAPA: Record<number, string> = {
   1: "Leitura da RFP",
@@ -162,21 +165,6 @@ function resultadoFinal(dossie: Dossie, etapa: number, agora: Date, minutas: boo
     );
   }
   return [];
-}
-
-/**
- * Etapa 4: as partes B do plano (os documentos do projeto: registros, listas, matrizes) vão inteiras para o anexo; o
- * corpo fica com os planos (partes A) e o que os resume está nos quadros (decisão 0085). A seção da parte começa com
- * "Parte Bn do plano."; as continuações herdam.
- */
-export function registrosNoAnexo(secoes: Secao[]): Secao[] {
-  let doRegistro = false;
-  return secoes.map((x) => {
-    const parte = /^Parte ([AB])\d+ do plano\.$/.exec(x.paragrafos?.[0] ?? "")?.[1];
-    if (parte) doRegistro = parte === "B";
-    else if (!/\(continuação\)$/.test(x.titulo)) doRegistro = false;
-    return doRegistro ? { ...x, parte: "anexo" as const } : x;
-  });
 }
 
 /** A leitura do PMO da etapa 5 foi feita para outro plano (o id do plano guardado não é o do documento atual). */

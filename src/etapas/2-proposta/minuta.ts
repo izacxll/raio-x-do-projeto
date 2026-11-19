@@ -208,7 +208,10 @@ function casaSecao(modelo: { codigo: string; titulo: string }, s: SecaoProposta)
 /** Rótulo que vale: "documento" só se o código achou ao menos uma citação; item do PMO sem isso é Sugestão. */
 function rotuloQueVale(item: ItemPmo, conferencia: ConferenciaItem): Rotulo {
   if (item.rotulo === "decisao_gp") return "decisao-gp";
-  return item.rotulo === "documento" && conferencia.citacoes.some(citacaoValeComoFato)
+  // rótulo misto (decisão 0093, regra 15 da skill): o item que mistura documento e sugestão vale como sugestão
+  return item.rotulo === "documento" &&
+    !conferencia.rotuloMisto &&
+    conferencia.citacoes.some(citacaoValeComoFato)
     ? "documento"
     : "sugestao";
 }

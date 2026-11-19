@@ -24,7 +24,11 @@ export function ItemNaTela({
   const editado = revisoes[i.id]?.textoEditado;
   const mudar = (e: EstadoItem, texto?: string) =>
     aoMudar({ ...revisoes, [i.id]: { estado: e, textoEditado: texto ?? editado } });
-  const rotulo = ROTULO_APP[i.item.rotulo];
+  // rótulo misto (decisão 0093, regra 15 da skill): o item que mistura documento e sugestão vale como sugestão
+  const rotulo =
+    i.item.rotulo === "documento" && i.conferencia.rotuloMisto
+      ? ROTULO_APP.sugestao
+      : ROTULO_APP[i.item.rotulo];
   const pagina = i.conferencia.citacoes.find((c) => c.pagina)?.pagina;
   const c = i.conferencia;
   return (
@@ -48,6 +52,9 @@ export function ItemNaTela({
             </span>
           )}
           {c.redacaoAConferir && <span className="lb aviso-item">redação a conferir (afirmativa)</span>}
+          {c.rotuloMisto && (
+            <span className="lb aviso-item">rótulo misto — há sugestão dentro do item do documento</span>
+          )}
           {c.numerosSemFonte.length > 0 && (
             <span className="lb aviso-item">número sem fonte — conferir: {c.numerosSemFonte.join(", ")}</span>
           )}
