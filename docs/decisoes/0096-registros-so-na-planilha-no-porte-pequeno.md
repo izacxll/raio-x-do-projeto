@@ -18,19 +18,24 @@ A responsável decidiu:
 
 1. **Plano (DOCX e PDF) no porte pequeno.** Cada registro gerado ou fundido sai numa seção só, com:
    - "Parte Bn do plano." e, se for o caso, onde foi fundido;
-   - a frase "o registro completo fica só na planilha de registros do plano (XLSX), aba "…"", com o nome exato da aba;
+   - a frase "o registro completo fica só na planilha de registros do plano (XLSX)", com o nome exato de cada aba (a da tabela do código e a dos itens do PMO);
+   - as notas do código sobre o registro, inteiras: conferências, data fixa vencida, premissa repetida, citação não conferida;
    - uma tabela-resumo:
-     - **registro com tabela do código:** as 5 primeiras linhas, com os riscos de impacto alto primeiro;
-     - **registro só com itens do PMO:** os 5 primeiros itens, com rótulo e marca, em resumo;
+     - **registro com tabela do código:** as 5 primeiras linhas, com os riscos de impacto alto primeiro e a linha de total, se houver. Quando o registro também tem itens do PMO, uma nota diz que o texto das linhas vem da resposta do PMO (Sugestão) e que o rótulo e a revisão do GP estão na planilha;
+     - **registro só com itens do PMO:** os 5 primeiros itens. O texto é encurtado; o rótulo, as marcas e os avisos de conferência ficam sempre;
    - quantas linhas ou itens há ao todo.
 
    A primeira seção do plano diz que, neste porte, os registros estão completos só na planilha. O índice do pacote diz o mesmo.
-2. **Planilha, em todos os portes.** Ganha uma aba por registro com os itens do PMO ("Bn Nome — itens"), com rótulo, texto e revisão do GP. Antes, a planilha só tinha as tabelas do código: o registro escrito pelo PMO estava só no Word.
+2. **Planilha, em todos os portes.** Ganha:
+   - as tabelas do código de todos os registros gerados, e não só as de uma lista fixa (o B9, com as questões, ficava de fora);
+   - uma aba por registro com os itens do PMO ("Bn itens do PMO", nome curto que o limite de 31 caracteres do Excel não corta), com rótulo, texto e revisão do GP.
+
+   Antes, a planilha só tinha parte das tabelas do código: o registro escrito pelo PMO estava só no Word.
 3. **O que continua lendo o plano completo:**
    - a autoconferência da etapa 4;
    - o plano como documento da etapa 5.
 
-   O resumo é só da apresentação: a conferência nunca vê um registro cortado. Se o GP conferir na etapa 5 o PDF do plano do porte pequeno, o código acha a marca "o registro completo fica só na planilha" na seção do registro. O que ele não localizar nesse registro fica "não verificável — conferir na planilha", nunca "ausente" (não achado não é ausente).
+   O resumo é só da apresentação: a conferência nunca vê um registro cortado. Se o GP conferir na etapa 5 o PDF do plano do porte pequeno, o código acha a marca "o registro completo fica só na planilha" na seção do registro. O que ele não localizar nesse registro fica "não verificável — conferir na planilha", nunca "ausente" (não achado não é ausente). Vale para o conteúdo mínimo do registro e para o que o código procura dentro dele: a premissa crítica no B3 e no B27, o perfil de equipe e o requisito de escopo. A premissa crítica que não aparece em parte nenhuma do plano continua ausente, porque o A8 e o A11 estão inteiros.
 4. **Estimativa de páginas e resultado da etapa:** usam o plano como ele sai, então o porte pequeno conta o resumo.
 5. **Porte médio e grande:** sem mudança. No resultado da etapa, os registros continuam no anexo (decisão 0085).
 
@@ -40,7 +45,7 @@ Páginas estimadas do plano, com as partes do porte (decisão 0091):
 
 | Caso | Registros inteiros | Com o resumo | Corpo |
 |---|---|---|---|
-| TR de contratação direta (porte pequeno, 18 partes) | ~49 | ~28 | ~13 nos dois |
+| TR de contratação direta (porte pequeno, 18 partes) | ~49 | ~29 | ~13 nos dois |
 | TR fiscal (porte médio, 33 partes) | ~55 | ~55 (sem mudança) | ~14 |
 
 ## Consequências

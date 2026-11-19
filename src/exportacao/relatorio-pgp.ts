@@ -456,11 +456,6 @@ function tabelasDoCodigo(codigo: string, c: Contexto): { paragrafos?: string[]; 
   return out;
 }
 
-/**
- * As seções das partes que o GP marcou, em ordem, com o texto do PMO e as tabelas do código. A parte fundida (decisão
- * 0091) sai com a hospedeira: o plano (A) fundido vem dentro da seção dela; o registro (B) fundido vem logo depois, numa
- * seção própria que começa com "Parte Bn do plano.", para ir ao anexo como os outros registros (decisão 0085).
- */
 /** Porte pequeno (decisão 0096): os registros (partes B) ficam completos só na planilha; o plano traz um resumo. */
 export function registrosSoNaPlanilha(p: PgpDossie): boolean {
   return p.sugestaoPeloPorte?.porte === "pequeno";
@@ -471,18 +466,27 @@ export interface OpcoesPgp {
   registrosCompletos?: boolean;
 }
 
-/** Os itens do PMO de um registro: os do passo da parte e, no B27 e no B3, os riscos e as premissas do passo de riscos. */
-function itensDoRegistro(codigo: string, c: Contexto): ItemConferido[] {
-  const proprios = c.itens.filter(
+/** Os itens do PMO do passo da parte (os riscos e as premissas do passo de riscos ficam fora: vão no B27 e no B3). */
+function itensProprios(codigo: string, c: Contexto): ItemConferido[] {
+  return c.itens.filter(
     (i) =>
       i.grupo.startsWith(`${codigo} —`) && !i.id.startsWith("riscos:B27") && !i.id.startsWith("riscos:B3:"),
   );
-  if (codigo !== "B27" && codigo !== "B3") return proprios;
-  const prefixo = codigo === "B27" ? "riscos:B27:" : "riscos:B3:";
-  return [...proprios, ...c.itens.filter((i) => i.id.startsWith(prefixo))];
 }
 
-/** Os registros (partes B) geradas, com os fundidos logo depois da hospedeira, na ordem do plano. */
+/** Os riscos (B27) e as premissas (B3) que o passo de riscos escreveu. */
+function itensDoPassoDeRiscos(codigo: string, c: Contexto): ItemConferido[] {
+  if (codigo !== "B27" && codigo !== "B3") return [];
+  const prefixo = codigo === "B27" ? "riscos:B27:" : "riscos:B3:";
+  return c.itens.filter((i) => i.id.startsWith(prefixo));
+}
+
+/** Os itens do PMO de um registro: os do passo da parte e, no B27 e no B3, os do passo de riscos. */
+function itensDoRegistro(codigo: string, c: Contexto): ItemConferido[] {
+  return [...itensProprios(codigo, c), ...itensDoPassoDeRiscos(codigo, c)];
+}
+
+/** Os registros (partes B) gerados, com os fundidos logo depois da hospedeira, na ordem do plano. */
 function registrosGerados(p: PgpDossie): string[] {
   return partesAGerar(p)
     .sort((a, b) => ordemDaParte(a) - ordemDaParte(b))
@@ -491,33 +495,44 @@ function registrosGerados(p: PgpDossie): string[] {
 }
 
 const LINHAS_DO_RESUMO = 5;
+/** Texto e complemento de cada item no resumo; o rótulo, as marcas e os avisos ficam sempre. */
+const LIMITE_DO_ITEM = 220;
 const PESO_DO_IMPACTO: Record<string, number> = { alto: 0, médio: 1, medio: 1, baixo: 2 };
-const encurtar = (s: string, n = 220) => (s.length > n ? `${s.slice(0, n - 1).trimEnd()}…` : s);
+const ehTotal = (linha: string[]) => /^total\b/i.test((linha[0] ?? "").trim());
+const aspas = (abas: string[]) => abas.map((x) => `"${x}"`).join(" e ");
 
 /**
- * O resumo de um registro no plano do porte pequeno (decisão 0096): as primeiras linhas da tabela do código (riscos de
- * impacto alto primeiro) ou os primeiros itens do PMO, e a aba da planilha onde está o registro inteiro. Sem tabela nem
- * item (o passo ainda não foi pedido), undefined: a parte sai como antes.
+ * O resumo de um registro no plano do porte pequeno (decisão 0096):
+ * - as notas do código sobre o registro (conferências, alertas), inteiras;
+ * - as primeiras linhas da tabela do código (riscos de impacto alto primeiro, e a linha de total, se houver) ou os
+ *   primeiros itens do PMO, com rótulo e marcas;
+ * - as abas da planilha onde está o registro inteiro.
+ * Sem tabela nem item (o passo ainda não foi pedido), undefined: a parte sai como antes.
  */
 function resumoDoRegistro(
   codigo: string,
   titulo: string,
   inicio: string[],
   c: Contexto,
-  abas: Map<string, string>,
+  abas: Map<string, string[]>,
 ): Secao | undefined {
-  const principal = tabelasDoCodigo(codigo, c).find((x) => x.tabela)?.tabela;
+  const doCodigo = tabelasDoCodigo(codigo, c);
+  const principal = doCodigo.find((x) => x.tabela)?.tabela;
   const itens = itensDoRegistro(codigo, c);
   if (!principal && !itens.length) return undefined;
-  const aba = abas.get(codigo);
-  const onde = `na planilha de registros do plano (XLSX)${aba ? `, aba "${aba}"` : ""}`;
+  const nomes = abas.get(codigo) ?? [];
+  const onde = `na planilha de registros do plano (XLSX)${nomes.length ? `, ${nomes.length > 1 ? "abas" : "aba"} ${aspas(nomes)}` : ""}`;
   const paragrafos = [
     ...inicio,
     `Porte pequeno: o registro completo fica só ${onde} (decisão 0096). Aqui, um resumo.`,
+    // as notas do código (conferências e alertas) não se resumem
+    ...doCodigo.flatMap((x) => x.paragrafos ?? []),
   ];
   const doPmo = itens.length ? `; ${contar(itens.length, "item do PMO", "itens do PMO")} na planilha` : "";
   if (principal) {
-    const linhas = principal.linhas.filter((_, k) => !principal.faixas?.includes(k));
+    const todas = principal.linhas.filter((_, k) => !principal.faixas?.includes(k));
+    const total = todas.length > 1 && ehTotal(todas[todas.length - 1]!) ? todas[todas.length - 1] : undefined;
+    const linhas = total ? todas.slice(0, -1) : todas;
     const iImpacto = principal.colunas.findIndex((x) => /^impacto/i.test(x));
     const ordenadas =
       iImpacto >= 0
@@ -530,11 +545,19 @@ function resumoDoRegistro(
     const mostradas = ordenadas.slice(0, LINHAS_DO_RESUMO);
     paragrafos.push(
       mostradas.length < linhas.length
-        ? `Mostradas ${mostradas.length} de ${contar(linhas.length, "linha", "linhas")}${iImpacto >= 0 ? ", as de impacto alto primeiro" : ""}${doPmo}.`
+        ? `Mostradas ${mostradas.length} de ${contar(linhas.length, "linha", "linhas")}${iImpacto >= 0 ? ", as de impacto alto primeiro" : ""}${total ? ", e o total" : ""}${doPmo}.`
         : `${contar(linhas.length, "linha", "linhas")} na tabela${doPmo}.`,
     );
+    if (itens.length)
+      paragrafos.push(
+        "[Sugestão] O texto das linhas vem da resposta do PMO; o rótulo, o texto revisado e a revisão do GP de cada item estão na planilha.",
+      );
     // as faixas de grupo saem do resumo (os índices delas não valem nas linhas escolhidas)
-    return { titulo, paragrafos, tabela: { ...principal, faixas: undefined, linhas: mostradas } };
+    return {
+      titulo,
+      paragrafos,
+      tabela: { ...principal, faixas: undefined, linhas: total ? [...mostradas, total] : mostradas },
+    };
   }
   const mostrados = itens.slice(0, LINHAS_DO_RESUMO);
   paragrafos.push(
@@ -548,18 +571,21 @@ function resumoDoRegistro(
     tabela: {
       colunas: ["Nº", "Item (resumo)"],
       larguras: [1, 9],
-      linhas: mostrados.map((i, k) => [String(k + 1), encurtar(paragrafoDoItem(i, c.p.revisoes))]),
+      linhas: mostrados.map((i, k) => [String(k + 1), paragrafoDoItem(i, c.p.revisoes, LIMITE_DO_ITEM)]),
     },
   };
 }
 
-function secoesDasPartes(c: Contexto, abas?: Map<string, string>): Secao[] {
+/**
+ * As seções das partes que o GP marcou, em ordem, com o texto do PMO e as tabelas do código. A parte fundida (decisão
+ * 0091) sai com a hospedeira: o plano (A) fundido vem dentro da seção dela; o registro (B) fundido vem logo depois, numa
+ * seção própria que começa com "Parte Bn do plano.", para ir ao anexo como os outros registros (decisão 0085). No porte
+ * pequeno (`abas`), cada registro sai em resumo (decisão 0096).
+ */
+function secoesDasPartes(c: Contexto, abas?: Map<string, string[]>): Secao[] {
   const partes = partesAGerar(c.p).sort((a, b) => ordemDaParte(a) - ordemDaParte(b));
   const secoes: Secao[] = [];
-  const daParte = (x: string) =>
-    c.itens.filter(
-      (i) => i.grupo.startsWith(`${x} —`) && !i.id.startsWith("riscos:B27") && !i.id.startsWith("riscos:B3:"),
-    );
+  const daParte = (x: string) => itensProprios(x, c);
   partes.forEach((codigo, k) => {
     const titulo = `${k + 1}. ${nomeDaParte(codigo)}`;
     const fundidas = fundidasEm(codigo, c.p);
@@ -631,7 +657,7 @@ export function montarPgp(dossie: Dossie, agora = new Date(), opcoes: OpcoesPgp 
   const c = preparar(dossie, agora);
   // porte pequeno (decisão 0096): cada registro vira um resumo com a aba da planilha onde está inteiro
   const soNaPlanilha = !opcoes.registrosCompletos && registrosSoNaPlanilha(c.p);
-  const abas = soNaPlanilha ? abasDosRegistros(dossie, agora) : undefined;
+  const abas = soNaPlanilha ? abasDosRegistros(dossie, c, agora) : undefined;
   const sugestoes = c.p.adaptacao?.resposta.partes ?? [];
   const dispensadas = sugestoes.filter((s) => c.p.gerar[s.codigo] === false);
   const obs = c.itens.filter((i) => i.grupo === "Observações do PMO");
@@ -694,7 +720,10 @@ export function montarPgp(dossie: Dossie, agora = new Date(), opcoes: OpcoesPgp 
 
 /** Registros, cronograma e matrizes (XLSX): uma aba por tabela. */
 export function montarRegistrosPgp(dossie: Dossie, agora = new Date()): DocumentoExportavel {
-  const c = preparar(dossie, agora);
+  return registrosDoContexto(dossie, preparar(dossie, agora), agora);
+}
+
+function registrosDoContexto(dossie: Dossie, c: Contexto, agora: Date): DocumentoExportavel {
   const ordem = ["B11", "B15", "B8", "B2", "B18", "B6", "A15", "B27", "B3", "B23", "A13", "A17", "A16"];
   const secoes: Secao[] = [];
   const sugestoes = c.p.adaptacao?.resposta.partes ?? [];
@@ -715,12 +744,16 @@ export function montarRegistrosPgp(dossie: Dossie, agora = new Date()): Document
   for (const codigo of ordem)
     for (const t of tabelasDoCodigo(codigo, c))
       if (t.tabela) secoes.push({ titulo: `${codigo} ${nomeDaParte(codigo)}`, tabela: t.tabela });
-  // os itens do PMO de cada registro (partes B), para o registro inteiro estar na planilha (decisão 0096)
+  // decisão 0096: o registro inteiro na planilha. As tabelas do código dos registros gerados fora da lista acima (B9,
+  // B16…) e os itens do PMO de cada registro, numa aba de nome curto ("Bn itens do PMO", que o corte do nome não apaga)
+  for (const codigo of registrosGerados(c.p).filter((x) => !ordem.includes(x)))
+    for (const t of tabelasDoCodigo(codigo, c))
+      if (t.tabela) secoes.push({ titulo: `${codigo} ${nomeDaParte(codigo)}`, tabela: t.tabela });
   for (const codigo of registrosGerados(c.p)) {
     const itens = itensDoRegistro(codigo, c);
     if (!itens.length) continue;
     secoes.push({
-      titulo: `${codigo} ${nomeDaParte(codigo)} — itens`,
+      titulo: `${codigo} itens do PMO`,
       tabela: {
         colunas: ["Nº", "Item (rótulo, texto e revisão do GP)"],
         larguras: [1, 12],
@@ -739,13 +772,13 @@ export function montarRegistrosPgp(dossie: Dossie, agora = new Date()): Document
 }
 
 /** A aba da planilha de cada registro (a primeira com o código dele), pelo mesmo nome que o gerador da planilha dá. */
-function abasDosRegistros(dossie: Dossie, agora: Date): Map<string, string> {
-  const secoes = montarRegistrosPgp(dossie, agora).secoes.filter((s) => s.tabela);
+function abasDosRegistros(dossie: Dossie, c: Contexto, agora: Date): Map<string, string[]> {
+  const secoes = registrosDoContexto(dossie, c, agora).secoes.filter((s) => s.tabela);
   const nomes = abasDasSecoes(secoes);
-  const abas = new Map<string, string>();
+  const abas = new Map<string, string[]>();
   secoes.forEach((s, k) => {
     const codigo = /^([AB]\d+) /.exec(s.titulo)?.[1];
-    if (codigo && !abas.has(codigo) && nomes[k]) abas.set(codigo, nomes[k]);
+    if (codigo && nomes[k]) abas.set(codigo, [...(abas.get(codigo) ?? []), nomes[k]!]);
   });
   return abas;
 }

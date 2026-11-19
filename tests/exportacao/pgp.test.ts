@@ -139,10 +139,21 @@ describe("porte pequeno: registros só na planilha (decisão 0096)", () => {
     for (const s of registros) {
       const nota = s.paragrafos!.find((x) => /registro completo fica só na planilha/.test(x));
       expect(nota, s.titulo).toBeDefined();
-      const aba = /aba "([^"]+)"/.exec(nota!)?.[1];
-      expect(aba && abas.includes(aba), `${s.titulo}: aba ${aba}`).toBe(true);
-      expect(s.tabela!.linhas.length).toBeLessThanOrEqual(5);
+      // todas as abas citadas existem na planilha, com o nome que o gerador dá
+      const citadas = [...nota!.matchAll(/"([^"]+)"/g)].map((m) => m[1]!);
+      expect(citadas.length, s.titulo).toBeGreaterThan(0);
+      for (const aba of citadas) expect(abas, `${s.titulo}: aba ${aba}`).toContain(aba);
+      // 5 linhas e, no máximo, a linha de total
+      expect(s.tabela!.linhas.length).toBeLessThanOrEqual(6);
+      // item do PMO no resumo: sempre com o rótulo
+      if (s.tabela!.colunas[1] === "Item (resumo)")
+        for (const l of s.tabela!.linhas) expect(l[1]).toMatch(/\[(Sugestão|Do documento|Decisão do GP)/);
     }
+    // o registro com tabela e itens cita as duas abas
+    const notaB27 = registros
+      .find((s) => s.paragrafos![0] === "Parte B27 do plano.")!
+      .paragrafos!.find((x) => /registro completo/.test(x))!;
+    expect(notaB27).toMatch(/abas "B27 [^"]+" e "B27 itens do PMO"/);
     // o B27 é uma seção só (sem continuação), com os riscos de impacto alto primeiro
     const b27 = registros.find((s) => s.paragrafos![0] === "Parte B27 do plano.")!;
     const iImpacto = b27.tabela!.colunas.findIndex((x) => /^impacto/i.test(x));
@@ -155,7 +166,10 @@ describe("porte pequeno: registros só na planilha (decisão 0096)", () => {
   it("a planilha leva os itens do PMO de cada registro, e a autoconferência lê o plano completo", () => {
     const d = pequeno();
     const planilha = montarRegistrosPgp(d, HOJE);
-    expect(planilha.secoes.some((s) => /^B27 .* — itens$/.test(s.titulo))).toBe(true);
+    expect(planilha.secoes.some((s) => s.titulo === "B27 itens do PMO")).toBe(true);
+    // as tabelas do código de todos os registros gerados, não só os da lista fixa (o B9, com as questões)
+    if (d.pgp!.gerar.B9)
+      expect(planilha.secoes.some((s) => s.titulo.startsWith("B9 ") && s.tabela)).toBe(true);
     const completo = pgpComoDocumento(d, HOJE)
       .paginas.map((x) => x.texto)
       .join(" ");
@@ -172,6 +186,13 @@ describe("porte pequeno: registros só na planilha (decisão 0096)", () => {
     });
     const naPlanilha = registrosSoNaPlanilhaDoPlano(resumo.paginas);
     expect(naPlanilha.has("B27")).toBe(true);
+    // o conjunto é exatamente o dos registros que saíram em resumo no plano
+    const resumidos = new Set(
+      montarPgp(d, HOJE)
+        .secoes.filter((s) => s.paragrafos?.some((x) => /registro completo fica só na planilha/.test(x)))
+        .map((s) => /^Parte (B\d+) do plano\.$/.exec(s.paragrafos![0]!)?.[1]),
+    );
+    expect(naPlanilha).toEqual(resumidos);
     const e = montarEntradaPgp(d, HOJE);
     const conferencia = (doc: typeof resumo) =>
       conferirPlano({
@@ -188,11 +209,13 @@ describe("porte pequeno: registros só na planilha (decisão 0096)", () => {
       });
     const r = conferencia(resumo);
     const doRegistro = (alvo: string) => [...naPlanilha].some((b) => new RegExp(`^${b}\\b`).test(alvo));
-    // nenhum ausente de conteúdo mínimo num registro que está só na planilha
+    // nenhum ausente procurado num registro que está só na planilha (conteúdo mínimo, premissa crítica no lugar,
+    // requisito); a premissa crítica que não aparece em parte nenhuma do plano continua ausente (o A8 e o A11 estão
+    // inteiros no plano)
     expect(
       r.achados.filter(
         (a) =>
-          a.tipo === "ausente" && a.regra === "conteudo-minimo" && a.partes.some((p) => naPlanilha.has(p)),
+          a.tipo === "ausente" && a.regra !== "premissa-critica" && a.partes.some((p) => naPlanilha.has(p)),
       ),
     ).toEqual([]);
     const naoVerificaveis = r.verificacoes.filter(
@@ -202,6 +225,18 @@ describe("porte pequeno: registros só na planilha (decisão 0096)", () => {
     for (const v of naoVerificaveis) expect(v.detalhe).toMatch(/decisão 0096/);
     // o plano completo não tem a marca: a regra não muda nada nele
     expect(registrosSoNaPlanilhaDoPlano(pgpComoDocumento(d, HOJE).paginas).size).toBe(0);
+  });
+
+  it("a marca de um registro em resumo não pega a seção inteira de outro registro logo antes", () => {
+    const paginas = [
+      {
+        texto:
+          "3. Registro das lições\nParte B5 do plano.\nA gerar: o passo ainda não foi pedido ao PMO.\n4. Registro dos riscos\nParte B27 do plano.\nPorte pequeno: o registro completo fica só na planilha de registros do plano (XLSX).",
+      },
+      // acento separado, como pode vir de um PDF
+      { texto: "Parte B3 do plano.\nPorte pequeno: o registro completo fica so\u0301 na planilha." },
+    ];
+    expect(registrosSoNaPlanilhaDoPlano(paginas)).toEqual(new Set(["B27", "B3"]));
   });
 
   it("o plano do porte pequeno fica menor que o mesmo plano com os registros inteiros", () => {

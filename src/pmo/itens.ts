@@ -61,8 +61,15 @@ export function rotuloDoItem(i: ItemConferido): string {
   return `[${ROTULO[i.item.rotulo]}]`;
 }
 
-/** Parágrafo de um item no documento exportado: rótulo, texto final, complemento e avisos. */
-export function paragrafoDoItem(i: ItemConferido, revisoes: Record<string, RevisaoItem>): string {
+/**
+ * O item como parágrafo: marca, rótulo, texto, complemento, requisitos e avisos. Com `limite`, só o texto e o complemento
+ * são encurtados: o rótulo, as marcas e os avisos de conferência sempre ficam (decisão 0096).
+ */
+export function paragrafoDoItem(
+  i: ItemConferido,
+  revisoes: Record<string, RevisaoItem>,
+  limite?: number,
+): string {
   const avisos = [
     i.item.rotulo === "documento" && i.conferencia.citacaoNaoProva
       ? "citação a conferir: o trecho pode não provar a frase"
@@ -74,7 +81,9 @@ export function paragrafoDoItem(i: ItemConferido, revisoes: Record<string, Revis
   ].filter(Boolean);
   const marcas = marcasDoItem(estadoDe(revisoes, i.id) === "pendente", i.conferencia.redacaoAConferir);
   const requisitos = i.item.requisitos.length ? ` [${i.item.requisitos.join(", ")}]` : "";
-  return `${marcas}${rotuloDoItem(i)} ${textoFinal(i, revisoes)}${i.complemento ? ` ${i.complemento}` : ""}${requisitos}${avisos.length ? ` (${avisos.join("; ")})` : ""}`;
+  const corpo = `${textoFinal(i, revisoes)}${i.complemento ? ` ${i.complemento}` : ""}`;
+  const texto = limite && corpo.length > limite ? `${corpo.slice(0, limite - 1).trimEnd()}…` : corpo;
+  return `${marcas}${rotuloDoItem(i)} ${texto}${requisitos}${avisos.length ? ` (${avisos.join("; ")})` : ""}`;
 }
 
 /** Uso de uma chamada, para o dossiê (tokens e valor, nunca a chave). */
