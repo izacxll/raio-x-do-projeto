@@ -50,6 +50,16 @@ describe("capítulo em página nova", () => {
     expect(await quebras(documento(capitulos()))).toBe(1);
   });
 
+  it("depois dos quadros, o primeiro capítulo marcado do corpo quebra uma vez só", async () => {
+    const secoes: Secao[] = [
+      { titulo: "Quadros", parte: "quadros", paragrafos: ["Quadro."] },
+      { titulo: "1. Primeiro", paragrafos: ["Texto."], novaPagina: true },
+      { titulo: "2. Segundo", paragrafos: ["Texto."], novaPagina: true },
+    ];
+    // os quadros, o primeiro e o segundo capítulo: nenhuma quebra a mais
+    expect(await quebras(documento(secoes))).toBe(3);
+  });
+
   it("no anexo, a marca não abre outra página depois do título ANEXOS", async () => {
     const secoes: Secao[] = [
       { titulo: "1. Corpo", paragrafos: ["Texto."] },
