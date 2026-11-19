@@ -694,7 +694,8 @@ function Autoconferencia({
   const mudar = (m: Partial<Caracteristicas>) => {
     const caracteristicas = { ...car, ...m };
     // o porte mudou: a sugestão do que gerar é refeita pelo porte novo (decisão 0091); o GP ajusta na tabela
-    const refazer = Boolean(m.porte && m.porte !== car.porte && p.adaptacao);
+    // compara com o porte da sugestão gravada: o dossiê antigo (sem ela) também é refeito ao confirmar o porte
+    const refazer = Boolean(m.porte && m.porte !== p.sugestaoPeloPorte?.porte && p.adaptacao);
     atualizar({
       ...p,
       caracteristicas,
