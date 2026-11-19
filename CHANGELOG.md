@@ -4,6 +4,9 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 
 ## [Não publicado]
 
+### Skill PMO 0.3.8: lições marcadas (decisão 0094)
+- Cada lição das armadilhas e da experiência marcada como [geral] (41), [geral, visto num caso] (16) ou [um caso] (10), com a legenda no topo da seção.
+
 ### Resultado no padrão da FGV Projetos (decisão 0089)
 - **Capa** com o título do estudo e os números-chave em destaque; **sumário**; seções numeradas; rodapé com "página n / total".
 - **Rótulos fora da linha:** referência "(TR, p. N)" no fim da frase, nota de sugestão por seção, decisões no quadro "Para o GP decidir"; marcas e avisos no anexo de revisão; termos internos só no anexo técnico.
