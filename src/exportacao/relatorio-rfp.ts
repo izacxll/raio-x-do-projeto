@@ -14,7 +14,7 @@ import {
 import { requisitosValidos } from "../etapas/1-rfp/revisao";
 import { NOME_RECOMENDACAO, recomendacaoDoDossie, recomendacaoEmTexto } from "../etapas/1-rfp/recomendacao";
 import { curto, duracaoCurta, NAO_LOCALIZADO, secoesDaCapa, type CapaDeDecisao } from "./capa-de-decisao";
-import { numerosDaFila, revisavelDaLeitura } from "../pmo/fila";
+import { decisoesAte, numerosDaFila, revisavelDaLeitura } from "../pmo/fila";
 import { camposConfirmadosPeloPmo, type CampoQuePesa } from "./capa-regras";
 import type { Alerta, Destaque } from "./modelo";
 import {
@@ -392,6 +392,7 @@ export function capaDaRfp(
   };
   return {
     etapa: 1,
+    resumo: `Leitura do ${nomeDoDocumento} com ${contar(produtos.length, "entrega", "entregas")}${recomendacao && recomendacao.recomendacao.sugestao !== "sem_base" ? `; sugestão do PMO: ${NOME_RECOMENDACAO[recomendacao.recomendacao.sugestao]}` : ""}; ${decisoesAte(1, itensRevisaveis(leitura).map(revisavelDaLeitura), a.revisoes, outrasDecisoesDaRfp(a))}.`,
     destaques: [
       destaqueDaFicha("Prazo", doCodigo("leitura:prazo"), confirmados.includes("prazo"), nomeDoDocumento),
       destaqueDaFicha(

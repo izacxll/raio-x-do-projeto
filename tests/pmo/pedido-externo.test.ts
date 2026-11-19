@@ -28,7 +28,7 @@ import {
   segundaEtapa5EmTexto,
   vereditosAConferir,
 } from "../../src/pmo/segunda-etapa-5";
-import { semRevisoesDoPmo } from "../../src/pmo/itens";
+import { comLeituraDaEtapa5 } from "../../src/etapas/5-conferencia/leitura-no-dossie";
 import { identidadeDoCaso } from "../../src/pmo/identidade-do-caso";
 import { diferencasDaResposta } from "../../src/pmo/segunda-rodada";
 import { lerVersaoDoTapNoPedido, montarTapRevisado } from "../../src/pmo/tap-revisado";
@@ -1292,24 +1292,12 @@ describe.skipIf(MODO !== "importar")("importar a resposta do PMO (leitura indepe
         const resposta = v.data as z.infer<typeof RespostaLeitura>;
         // a leitura fica no dossiê, como na tela: a segunda instância leve parte dela (decisão 0077); a revisão
         // anterior fica velha com a leitura nova
-        dossie = {
-          ...dossie,
-          conferencia: {
-            ...(dossie.conferencia ?? {
-              caracteristicas: c.caracteristicas,
-              mapa: c.mapa,
-              premissasAplicaveis: c.premissasAplicaveis,
-              requisitos: [],
-              proximoRequisito: 1,
-              decisoes: {},
-            }),
-            // como a tela (leitura-pmo.tsx): as decisões do GP sobre a leitura anterior saem, o plano fica ligado
-            pgpId: c.pgp.id,
-            decisoes: semRevisoesDoPmo(dossie.conferencia?.decisoes ?? {}),
-            executadaEm: HOJE.toISOString(),
-            leituraPmo: { resposta, modelo: "claude.ai (leitura independente)", em: HOJE.toISOString() },
-          },
-        };
+        dossie = comLeituraDaEtapa5(
+          dossie,
+          { caracteristicas: c.caracteristicas, mapa: c.mapa, premissasAplicaveis: c.premissasAplicaveis },
+          c.pgp.id,
+          { resposta, modelo: "claude.ai (leitura independente)", em: HOJE.toISOString() },
+        );
         const candidatosAgora = conferirVereditos(resposta, c.achados, c.condicionais, c.mapa, [
           c.pgp,
           ...(c.tap ? [c.tap] : []),

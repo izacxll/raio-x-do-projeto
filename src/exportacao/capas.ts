@@ -15,7 +15,7 @@ import { dadosDaProposta, montarEntradaTap } from "../etapas/3-tap/entrada";
 import { itensDaEtapa3, tapInicial } from "../etapas/3-tap/tap";
 import { itensDaProposta } from "../etapas/2-proposta/proposta";
 import { itensDoPgp, partesAGerar } from "../etapas/4-pgp/pgp";
-import { numerosDaFila, revisavelDoConferido } from "../pmo/fila";
+import { decisoesAte, numerosDaFila, revisavelDoConferido } from "../pmo/fila";
 import { autoconferir, separarDecisoesPendentes } from "../etapas/4-pgp/autoconferencia";
 import { cronogramaDoPgp, custosDoPgp, marcosDoPgp } from "../etapas/4-pgp/calculos";
 import { montarEntradaPgp } from "../etapas/4-pgp/entrada";
@@ -240,6 +240,7 @@ export function capaDaProposta(dossie: Dossie, agora = new Date()): CapaDeDecisa
   });
   return {
     etapa: 2,
+    resumo: `Minuta da proposta com ${contar(conteudo.produtos.length, "produto", "produtos")}${dados?.cronograma?.total ? ` em ${Math.round(dados.cronograma.total)} dias úteis` : ""}; ${decisoesAte(2, itensDaProposta(p, docs).map(revisavelDoConferido), p.revisoes, p.abordagem ? [] : ["Escolher a abordagem técnica"])}.`,
     // os números principais (duração, entregas, valor ou horas); o resto fica na tabela (decisão 0089)
     destaques: [
       destaqueDaDuracao(dados?.cronograma),
@@ -387,6 +388,7 @@ export function capaDoTap(dossie: Dossie, agora = new Date()): CapaDeDecisao | u
   const linha = (campo: string, textos: string[]) => [campo, textos.length ? textos.join("\n") : A_DEFINIR];
   return {
     etapa: 3,
+    resumo: `TAP com ${contar(r.entregas.length, "entrega-chave", "entregas-chave")} e ${contar(r.marcos.length, "marco", "marcos")}, ${entrada.contrato ? "a partir do contrato assinado" : "sem o contrato assinado"}; ${decisoesAte(3, todos.map(revisavelDoConferido), t.revisoes, [...aDecidir.map((d) => `Versão que vale: ${d.tema}`), ...(t.decisoes.aprovadoPor?.trim() ? [] : ["Aprovar o TAP"])])}.`,
     // os números principais (duração, entregas, valor); o resto fica na tabela (decisão 0089)
     destaques: [
       destaqueDaVigencia(entrada.lidoDoContrato?.vigencia?.texto, entrada.ponto.prazoExecucao?.texto),
@@ -569,6 +571,7 @@ export function capaDoPgp(dossie: Dossie, agora = new Date()): CapaDeDecisao | u
   const nomeDoPerfil = new Map((p.cronograma?.resposta.perfis ?? []).map((x) => [x.id, x.nome]));
   return {
     etapa: 4,
+    resumo: `Plano com ${contar(mantidas.length, "parte", "partes")}, ${contar(riscos.length, "risco", "riscos")} e ${contar(marcos.length, "marco", "marcos")}; ${decisoesAte(4, itensDoPgp(p, e.documentos, e.premissasTap).map(revisavelDoConferido), p.revisoes)}.`,
     // os números principais (duração, entregas, valor ou horas); o resto fica na tabela (decisão 0089)
     destaques: [
       destaqueDaDuracao(crono, "Duração"),
@@ -792,6 +795,7 @@ export function capaDosVereditos(
   ];
   return {
     etapa: 5,
+    resumo: `Veredito sugerido pela regra fixa: ${veredito}, com ${contar(sustentados.length, "achado que se sustenta", "achados que se sustentam")} (${contar(conta("grave"), "grave", "graves")}); quem decide é o GP, antes de assinar o plano.`,
     destaques: [
       {
         valor: veredito.replace(/^./, (x) => x.toUpperCase()),
@@ -805,7 +809,7 @@ export function capaDosVereditos(
         explicacao: `que se sustentam, ${contar(conta("grave"), "grave", "graves")}`,
       },
       {
-        valor: `${verdes.length} de ${presentes.length}`,
+        valor: `${verdes.length}/${presentes.length}`,
         rotulo: "Partes em ordem",
         explicacao: "sem achado",
       },

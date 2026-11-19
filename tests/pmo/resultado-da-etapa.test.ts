@@ -106,6 +106,15 @@ describe.skipIf(env.RAIO_X_MODO !== "resultado")("gerar o resultado de uma etapa
       etapa === 5 && existsSync(daEtapa5) ? daEtapa5 : join(pasta, `etapa-1-leitura-rfp-${base}.dossie.json`);
     const r = lerDossie(readFileSync(arqDossie, "utf8"), arqDossie);
     if (!r.ok) throw new Error(r.erro);
+    // a resposta importada e o dossiê sem a leitura: o import foi feito antes de a leitura ficar no dossiê (#87)
+    if (
+      etapa === 5 &&
+      !r.dossie.conferencia?.leituraPmo &&
+      existsSync(join(pasta, `resposta-etapa-5-leitura-${base}.json`))
+    )
+      throw new Error(
+        `O dossiê da etapa 5 está sem a leitura do PMO, mas a resposta está na pasta: importe de novo (npm run importar-resposta -- --etapa 5 --passo leitura --arquivo resposta-etapa-5-leitura-${base}.json --dossie etapa-5-leitura-${base}.dossie.json --plano dossie).`,
+      );
     const ler = (nome: string) =>
       existsSync(join(pasta, nome)) ? readFileSync(join(pasta, nome), "utf8") : undefined;
     const passos: ArquivosDoPasso[] = (PASSOS[etapa] ?? []).map((passo) => ({
