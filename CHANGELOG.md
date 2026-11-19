@@ -4,6 +4,11 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 
 ## [Não publicado]
 
+### Registros só na planilha no porte pequeno (decisão 0096)
+- **Plano do porte pequeno:** cada registro B vira uma tabela-resumo (5 linhas, riscos altos primeiro) com a aba da planilha onde está inteiro; de ~49 para ~28 páginas no caso medido.
+- **Planilha:** uma aba com os itens do PMO de cada registro, em todos os portes.
+- A autoconferência e a etapa 5 continuam lendo o plano completo.
+
 ### Andamento do pente fino e revisor em outro modelo
 - `docs/andamento.md` com os blocos 3, 4 e 5 e as decisões pendentes; avaliação do Sonnet 5.5 como revisor da segunda instância (só contagens).
 

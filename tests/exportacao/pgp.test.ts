@@ -13,6 +13,11 @@ import { TEXTO_MINUTA } from "../../src/exportacao/modelo";
 import { indiceDoPacote, montarPgp, montarRegistrosPgp } from "../../src/exportacao/relatorio-pgp";
 import { SCHEMAS_PGP, type PassoPgp } from "../../src/pmo/schemas/pgp";
 import { lerRfpPublica } from "../ajudantes/rfp-publica";
+import { CARACTERISTICAS_PADRAO } from "../../src/dominio/caracteristicas";
+import { gerarPeloPorte } from "../../src/etapas/4-pgp/porte";
+import { pgpComoDocumento } from "../../src/etapas/4-pgp/autoconferencia";
+import { abasDasSecoes } from "../../src/exportacao/abas";
+import { paginasEstimadas } from "../../src/exportacao/paginas";
 
 const ler = (n: string) =>
   JSON.parse(
@@ -100,5 +105,76 @@ describe("saídas da etapa 4", () => {
     // decisão 0091: o índice diz para onde foi a parte (fundida numa gerada ou dispensada, com o motivo)
     expect(indice).toMatch(/A9 Plano de gerenciamento das aquisições: (?:dispensada: |fundida em )/);
     expect(indice).toContain("A8 Plano de gerenciamento dos riscos: gerada");
+  });
+});
+
+describe("porte pequeno: registros só na planilha (decisão 0096)", () => {
+  const pequeno = (): Dossie => {
+    const caracteristicas = { ...CARACTERISTICAS_PADRAO, porte: "pequeno" as const };
+    const p = dossie.pgp!;
+    return {
+      ...dossie,
+      pgp: {
+        ...p,
+        sugestaoPeloPorte: caracteristicas,
+        gerar: gerarPeloPorte(p.adaptacao!.resposta, caracteristicas),
+      },
+    };
+  };
+
+  it("no plano, cada registro é uma tabela-resumo com a aba da planilha onde está inteiro", () => {
+    const d = pequeno();
+    const plano = montarPgp(d, HOJE);
+    const abas = abasDasSecoes(montarRegistrosPgp(d, HOJE).secoes);
+    const registros = plano.secoes.filter((s) => /^Parte B\d+ do plano\.$/.test(s.paragrafos?.[0] ?? ""));
+    expect(registros.length).toBeGreaterThan(0);
+    for (const s of registros) {
+      const nota = s.paragrafos!.find((x) => /registro completo fica só na planilha/.test(x));
+      expect(nota, s.titulo).toBeDefined();
+      const aba = /aba "([^"]+)"/.exec(nota!)?.[1];
+      expect(aba && abas.includes(aba), `${s.titulo}: aba ${aba}`).toBe(true);
+      expect(s.tabela!.linhas.length).toBeLessThanOrEqual(5);
+    }
+    // o B27 é uma seção só (sem continuação), com os riscos de impacto alto primeiro
+    const b27 = registros.find((s) => s.paragrafos![0] === "Parte B27 do plano.")!;
+    const iImpacto = b27.tabela!.colunas.findIndex((x) => /^impacto/i.test(x));
+    expect(b27.tabela!.linhas[0]![iImpacto]).toBe("alto");
+    expect(plano.secoes.some((s) => s.titulo.startsWith(`${b27.titulo} (continuação)`))).toBe(false);
+    expect(plano.secoes[0]!.paragrafos!.some((x) => /decisão 0096/.test(x))).toBe(true);
+    expect(indiceDoPacote(d)).toMatch(/completos só em registros\.xlsx/);
+  });
+
+  it("a planilha leva os itens do PMO de cada registro, e a autoconferência lê o plano completo", () => {
+    const d = pequeno();
+    const planilha = montarRegistrosPgp(d, HOJE);
+    expect(planilha.secoes.some((s) => /^B27 .* — itens$/.test(s.titulo))).toBe(true);
+    const completo = pgpComoDocumento(d, HOJE)
+      .paginas.map((x) => x.texto)
+      .join(" ");
+    expect(completo).not.toMatch(/registro completo fica só na planilha/);
+  });
+
+  it("o plano do porte pequeno fica menor que o mesmo plano com os registros inteiros", () => {
+    const d = pequeno();
+    const resumo = paginasEstimadas(montarPgp(d, HOJE));
+    const inteiro = paginasEstimadas(montarPgp(d, HOJE, { registrosCompletos: true }));
+    expect(resumo).toBeLessThan(inteiro);
+  });
+
+  it("no porte médio, os registros continuam inteiros no plano", () => {
+    const caracteristicas = { ...CARACTERISTICAS_PADRAO, porte: "médio" as const };
+    const p = dossie.pgp!;
+    const d = {
+      ...dossie,
+      pgp: {
+        ...p,
+        sugestaoPeloPorte: caracteristicas,
+        gerar: gerarPeloPorte(p.adaptacao!.resposta, caracteristicas),
+      },
+    };
+    const plano = montarPgp(d, HOJE);
+    expect(
+      plano.secoes.some((s) => s.paragrafos?.some((x) => /registro completo fica só na planilha/.test(x))),
+    ).toBe(false);
   });
 });

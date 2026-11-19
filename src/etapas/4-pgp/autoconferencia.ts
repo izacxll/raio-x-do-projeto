@@ -32,7 +32,8 @@ export const NOME_PGP_GERADO = "Plano gerado na etapa 4";
 
 /** O plano gerado como documento "lido": uma página por seção, com os títulos que o mapa reconhece. */
 export function pgpComoDocumento(dossie: Dossie, agora = new Date()): DocumentoLido {
-  return documentoDeExportavel(montarPgp(dossie, agora), {
+  // o plano completo, com os registros inteiros mesmo no porte pequeno (decisão 0096)
+  return documentoDeExportavel(montarPgp(dossie, agora, { registrosCompletos: true }), {
     id: "pgp-gerado",
     papel: "pgp",
     nomeArquivo: NOME_PGP_GERADO,
