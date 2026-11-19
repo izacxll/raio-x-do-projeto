@@ -623,12 +623,13 @@ function Custos({
           c.riscosComReserva.map((r) => (
             <CampoValor
               key={r.id}
-              rotulo={`Reserva do risco ${r.id}${r.marco ? ` (marco ${r.marco})` : ""} (R$, decisão do GP)`}
+              rotulo={`Reserva do risco ${r.id} (marco: ${r.marco}) (R$, decisão do GP)`}
               valor={r.valor}
               aoMudar={(v) => {
+                // a reserva fica com o texto do risco: refeito o passo de riscos, outro risco não herda o valor
                 const reservasPorRisco = { ...(p.parametros.reservasPorRisco ?? {}) };
                 if (v === undefined) delete reservasPorRisco[r.id];
-                else reservasPorRisco[r.id] = v;
+                else reservasPorRisco[r.id] = { valor: v, risco: r.texto };
                 mudarPar({ reservasPorRisco });
               }}
             />
@@ -638,6 +639,27 @@ function Custos({
             Nenhum risco do registro pede reserva de contingência: ela fica em zero.
           </p>
         )}
+        {/* o valor único de um dossiê antigo: à vista, só para apagar (decisão 0092) */}
+        {p.parametros.contingencia !== undefined && (
+          <p className="envio__obs" data-testid="contingencia-unica">
+            Valor único de contingência informado antes: {reais(p.parametros.contingencia)}.{" "}
+            {c.origemDaContingencia === "global"
+              ? "Vale até haver reserva por risco."
+              : "Não entra na conta: a contingência agora é a soma das reservas dos riscos."}{" "}
+            <button
+              type="button"
+              className="botao botao--discreto"
+              onClick={() => mudarPar({ contingencia: undefined })}
+            >
+              Apagar o valor único
+            </button>
+          </p>
+        )}
+        {c.avisosDaContingencia.map((a) => (
+          <p key={a} className="aviso" role="status">
+            {a}
+          </p>
+        ))}
         <CampoValor
           rotulo="Reserva gerencial (R$, decisão do GP)"
           valor={p.parametros.gerencial}

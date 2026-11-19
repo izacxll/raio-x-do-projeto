@@ -18,19 +18,24 @@ Nos dois casos do teste externo havia 20 e 22 riscos, 12 e 13 de impacto alto e 
    - Cada risco do B27 ganha o campo `marco`: o produto (P1…) cujo marco ele ameaça, da lista do cronograma do plano, ou vazio quando o risco é do projeto todo.
    - O PMO preenche, e o código confere se o produto existe no cronograma. Quando não existe, fica "P9 (não localizado no cronograma)".
    - A resposta gravada antes, sem o campo, continua válida, com o marco vazio.
-2. **Reserva por risco:** o GP dá o valor da reserva de cada risco que pede reserva (`reservasPorRisco`). O valor é Decisão do GP; o PMO não escreve valor.
+2. **Reserva por risco:**
+   - O GP dá o valor da reserva de cada risco que pede reserva (`reservasPorRisco`). O valor é Decisão do GP; o PMO não escreve valor.
+   - A reserva fica guardada com o texto do risco. Se o passo de riscos for refeito e o mesmo id vier com outro risco, o valor não passa para ele: a reserva precisa ser dada de novo, e o plano avisa.
+   - Id repetido conta uma vez só e é avisado.
 3. **Contingência derivada:**
    - **Regra:** a reserva de contingência do plano é a soma das reservas dos riscos marcados, pela conta do código.
    - **Falta o valor de algum risco marcado:** a contingência fica a definir, com os riscos que faltam. A linha de base não fecha.
    - **Nenhum risco pede reserva:** a contingência é zero.
-   - **Dossiê antigo, só com o valor único:** ele vale enquanto nenhum risco tiver valor próprio, e o plano diz que ainda não foi dado risco a risco.
+   - **Dossiê antigo, só com o valor único:** ele vale enquanto nenhum risco tiver valor próprio, e o plano diz que ainda não foi dado risco a risco. A tela mostra esse valor, com um botão para apagá-lo. Se nenhum risco pedir reserva, ele não entra, e o plano avisa.
 4. **No plano e na tela:**
    - o B27 traz as colunas Reserva (o valor, "a definir pelo GP" ou "não pede") e Marco;
    - a tabela de custos (A15) mostra cada risco com a reserva e o marco, e a soma;
    - a tela tem um campo de reserva por risco;
-   - a capa da etapa 4 mostra o marco e o valor da reserva nos 5 riscos principais e alerta o risco de impacto alto sem marco ligado.
+   - o marco aparece conferido em todo lugar (B27, A15, tela, capa e pedidos seguintes): "P9 (não localizado no cronograma)" ou "do projeto todo";
+   - a capa da etapa 4 mostra o marco e o valor da reserva nos 5 riscos principais e alerta o risco de impacto alto ligado a um marco que não está no cronograma. O risco do projeto todo (marco vazio, como o pedido permite) não é alertado.
 5. **No pedido do passo de riscos:**
-   - pede o marco de cada risco e diz que a contingência é a soma das reservas, pela conta do código, sem valor no A4;
+   - pede o marco de cada risco;
+   - diz, para qualquer parte que cubra o A4 (própria ou fundida), que a contingência é a soma das reservas, pela conta do código, sem valor escrito. Numa parceria, a contingência é margem de prazo e remanejamento (ficha A4);
    - nos passos seguintes, a lista dos riscos traz a resposta, a reserva e o marco.
 
 ## Medição (os dois casos do teste externo, respostas já gravadas; fora do Git)
@@ -41,7 +46,7 @@ Nos dois casos do teste externo havia 20 e 22 riscos, 12 e 13 de impacto alto e 
 | Contratação direta | 22 | 13 | 6 | 0 | não informada |
 
 **Depois, com as respostas já gravadas:**
-- a capa alerta os 12 e os 13 riscos de impacto alto sem marco;
+- os riscos aparecem "do projeto todo", porque o campo do marco não existia;
 - a tabela de custos lista os 6 riscos que pedem reserva, cada um "a definir pelo GP";
 - a contingência fica a definir até o GP dar os 6 valores.
 

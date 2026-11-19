@@ -12,6 +12,7 @@ import type { PremissaRegistro } from "../../pmo/schemas/tap";
 import { tirarAcentos } from "../../texto/normalizar";
 import type { Caracteristicas } from "../../dominio/caracteristicas";
 import { gerarPeloPorte } from "./porte";
+import { marcoDoRisco } from "./calculos";
 
 export function pgpInicial(modelo: string = MODELO_PADRAO): PgpDossie {
   return { modelo, gerar: {}, revisoes: {}, parametros: { valoresHora: {}, nomes: {} }, uso: [] };
@@ -153,7 +154,7 @@ export function itensDoPgp(
             `Gatilho: ${x.gatilho || "a definir pelo GP"}.`,
             `Responsável: ${x.responsavel || "a definir pelo GP"}.`,
             x.pedeReserva ? "Pede reserva de contingência (valor do GP)." : "",
-            `Marco: ${x.marco || "do projeto todo"}.`,
+            `Marco: ${marcoDoRisco(x.marco, new Set((p.cronograma?.resposta.atividades ?? []).map((a) => a.produto)))}.`,
           ]
             .filter(Boolean)
             .join(" "),

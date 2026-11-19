@@ -208,6 +208,8 @@ export interface CustosPgp {
    * sem o valor por risco) ou "sem-risco" (nenhum risco pede reserva: zero).
    */
   origemDaContingencia?: "riscos" | "global" | "sem-risco";
+  /** O que o GP precisa saber sobre a contingência: id repetido, risco que mudou, valor único que não entra. */
+  avisosDaContingencia: string[];
 }
 
 /**
@@ -220,23 +222,62 @@ export function marcoDoRisco(marco: string | undefined, produtos: Set<string>): 
   return produtos.has(m) ? m : `${m} (não localizado no cronograma)`;
 }
 
+/** A reserva que o GP deu a um risco, com o texto do risco naquele momento (decisão 0092). */
+export type ReservaDoRisco = { valor: number; risco: string };
+
+/** A reserva do risco, se ela foi dada a este mesmo risco (o texto não mudou desde então). */
+export function reservaValida(
+  r: { id: string; texto: string },
+  reservas: Record<string, ReservaDoRisco> | undefined,
+): number | undefined {
+  const x = reservas?.[r.id];
+  return x && x.risco === r.texto ? x.valor : undefined;
+}
+
 /**
  * A reserva de contingência pelos riscos (decisão 0092): a soma das reservas que o GP deu a cada risco que pede reserva.
- * Falta valor em algum risco: a contingência fica a definir. Nenhum risco pede reserva: zero. O valor global de um
- * dossiê antigo vale só enquanto nenhum risco tem valor próprio.
+ * - A reserva vale só para o mesmo risco: refeito o passo de riscos, um id com outro texto não herda o valor.
+ * - Id repetido conta uma vez só.
+ * - Falta valor em algum risco: a contingência fica a definir, com os riscos que faltam.
+ * - Nenhum risco pede reserva: zero; o valor único de um dossiê antigo, se houver, é avisado e não entra.
+ * - O valor único vale só enquanto nenhum risco tem valor próprio.
  */
 export function contingenciaPelosRiscos(
-  riscos: { id: string; pedeReserva: boolean }[],
-  reservas: Record<string, number> | undefined,
+  riscos: { id: string; texto: string; pedeReserva: boolean }[],
+  reservas: Record<string, ReservaDoRisco> | undefined,
   global: number | undefined,
-): { valor?: number; origem?: CustosPgp["origemDaContingencia"]; semValor: string[] } {
-  const marcados = riscos.filter((r) => r.pedeReserva);
-  const comValor = marcados.filter((r) => reservas?.[r.id] !== undefined);
-  const semValor = marcados.filter((r) => reservas?.[r.id] === undefined).map((r) => r.id);
-  if (!marcados.length) return { valor: 0, origem: "sem-risco", semValor: [] };
-  if (!comValor.length && global !== undefined) return { valor: global, origem: "global", semValor: [] };
-  if (semValor.length) return { semValor };
-  return { valor: comValor.reduce((s, r) => s + reservas![r.id]!, 0), origem: "riscos", semValor: [] };
+): { valor?: number; origem?: CustosPgp["origemDaContingencia"]; semValor: string[]; avisos: string[] } {
+  const vistos = new Set<string>();
+  const repetidos: string[] = [];
+  const marcados = riscos
+    .filter((r) => r.pedeReserva)
+    .filter((r) => (vistos.has(r.id) ? (repetidos.push(r.id), false) : (vistos.add(r.id), true)));
+  const avisos = repetidos.length
+    ? [`id de risco repetido no registro (${[...new Set(repetidos)].join(", ")}): a reserva conta uma vez só`]
+    : [];
+  const mudaram = marcados.filter((r) => reservas?.[r.id] && reservaValida(r, reservas) === undefined);
+  if (mudaram.length)
+    avisos.push(
+      `o risco ${mudaram.map((r) => r.id).join(", ")} mudou depois que o GP deu a reserva: a reserva precisa ser dada de novo`,
+    );
+  const comValor = marcados.filter((r) => reservaValida(r, reservas) !== undefined);
+  const semValor = marcados.filter((r) => reservaValida(r, reservas) === undefined).map((r) => r.id);
+  if (!marcados.length) {
+    if (global !== undefined)
+      avisos.push(
+        `o valor único de contingência informado antes (R$ ${global.toLocaleString("pt-BR")}) não entra: nenhum risco do registro pede reserva`,
+      );
+    return { valor: 0, origem: "sem-risco", semValor: [], avisos };
+  }
+  if (!comValor.length && !mudaram.length && global !== undefined)
+    return { valor: global, origem: "global", semValor: [], avisos };
+  if (semValor.length) return { semValor, avisos };
+  return {
+    valor: comValor.reduce((s, r) => s + reservaValida(r, reservas)!, 0),
+    origem: "riscos",
+    semValor: [],
+    avisos,
+  };
 }
 
 const reais = (v: number) => v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
@@ -254,10 +295,18 @@ export function custosDoPgp(p: PgpDossie, e: EntradaPgp): CustosPgp | undefined 
     reserva: 0,
   });
   const faltando = [...preco.faltando];
-  const riscos = p.riscos?.resposta.riscos ?? [];
+  const riscos = (p.riscos?.resposta.riscos ?? []).map((r) => ({ ...r, texto: r.item.texto }));
+  // o marco já conferido no cronograma do plano: o que não existe sai "não localizado" em todo lugar (decisão 0092)
+  const produtos = new Set(c.atividades.map((a) => a.produto));
+  const vistos = new Set<string>();
   const riscosComReserva = riscos
-    .filter((r) => r.pedeReserva)
-    .map((r) => ({ id: r.id, texto: r.item.texto, valor: par.reservasPorRisco?.[r.id], marco: r.marco }));
+    .filter((r) => r.pedeReserva && (vistos.has(r.id) ? false : (vistos.add(r.id), true)))
+    .map((r) => ({
+      id: r.id,
+      texto: r.texto,
+      valor: reservaValida(r, par.reservasPorRisco),
+      marco: marcoDoRisco(r.marco, produtos),
+    }));
   // a contingência deriva dos riscos marcados (decisão 0092)
   const cont = p.riscos
     ? contingenciaPelosRiscos(riscos, par.reservasPorRisco, par.contingencia)
@@ -265,6 +314,7 @@ export function custosDoPgp(p: PgpDossie, e: EntradaPgp): CustosPgp | undefined 
         valor: par.contingencia,
         origem: par.contingencia !== undefined ? ("global" as const) : undefined,
         semValor: [],
+        avisos: [],
       };
   if (cont.semValor.length)
     faltando.push(
@@ -295,6 +345,7 @@ export function custosDoPgp(p: PgpDossie, e: EntradaPgp): CustosPgp | undefined 
     conferencia,
     riscosComReserva,
     contingencia: cont.valor,
+    avisosDaContingencia: cont.avisos,
     ...(cont.origem ? { origemDaContingencia: cont.origem } : {}),
   };
 }

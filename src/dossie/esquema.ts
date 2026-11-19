@@ -340,7 +340,9 @@ export const ParametrosPgp = z.object({
    */
   contingencia: z.number().nonnegative().optional(),
   /** Reserva de contingência de cada risco que pede reserva (B27), em R$, pelo id do risco: decisão do GP. */
-  reservasPorRisco: z.record(z.string(), z.number().nonnegative()).optional(),
+  reservasPorRisco: z
+    .record(z.string(), z.object({ valor: z.number().nonnegative(), risco: z.string() }))
+    .optional(),
   gerencial: z.number().nonnegative().optional(),
   /** Nomes da equipe, pelo id do perfil. */
   nomes: z.record(z.string(), z.string()),

@@ -17,7 +17,13 @@ import { itensDaProposta } from "../etapas/2-proposta/proposta";
 import { itensDoPgp, partesAGerar } from "../etapas/4-pgp/pgp";
 import { numerosDaFila, revisavelDoConferido } from "../pmo/fila";
 import { autoconferir, separarDecisoesPendentes } from "../etapas/4-pgp/autoconferencia";
-import { cronogramaDoPgp, custosDoPgp, marcoDoRisco, marcosDoPgp } from "../etapas/4-pgp/calculos";
+import {
+  cronogramaDoPgp,
+  custosDoPgp,
+  marcoDoRisco,
+  marcosDoPgp,
+  reservaValida,
+} from "../etapas/4-pgp/calculos";
 import { montarEntradaPgp } from "../etapas/4-pgp/entrada";
 import { reguaQueMudouEmTexto, reguasQueMudaram } from "../etapas/4-pgp/reguas";
 import { resultadoDaEtapa5 } from "../etapas/5-conferencia/resultado";
@@ -488,10 +494,9 @@ export function capaDoPgp(dossie: Dossie, agora = new Date()): CapaDeDecisao | u
   const regua = reguaDosMarcos(e.marcosTap.map((m) => m.prazo));
   // decisão 0092: o risco de impacto alto liga o marco que ameaça, conferido nos produtos do cronograma
   const produtosDoPlano = new Set((p.cronograma?.resposta.atividades ?? []).map((a) => a.produto));
+  // "" é o risco do projeto todo, que o pedido permite; o alerta é para o marco que não existe no cronograma
   const altosSemMarco = riscos.filter(
-    (x) =>
-      x.impacto === "alto" &&
-      (!x.marco.trim() || (produtosDoPlano.size > 0 && !produtosDoPlano.has(x.marco.trim()))),
+    (x) => x.impacto === "alto" && /não localizado/.test(marcoDoRisco(x.marco, produtosDoPlano)),
   );
   // o tamanho do plano contra o limite do porte (decisão 0091): partes geradas e páginas estimadas
   const porte = p.sugestaoPeloPorte?.porte;
@@ -513,7 +518,7 @@ export function capaDoPgp(dossie: Dossie, agora = new Date()): CapaDeDecisao | u
       ? [
           {
             nivel: "medio" as const,
-            texto: `${contar(altosSemMarco.length, "risco de impacto alto", "riscos de impacto alto")} sem marco ligado no cronograma (${altosSemMarco.map((x) => x.id).join(", ")}): sugere-se dizer qual entrega cada um ameaça.`,
+            texto: `${contar(altosSemMarco.length, "risco de impacto alto ligado", "riscos de impacto alto ligados")} a um marco que não está no cronograma (${altosSemMarco.map((x) => `${x.id} → ${x.marco}`).join(", ")}): sugere-se conferir qual entrega cada um ameaça.`,
           },
         ]
       : []),
@@ -563,11 +568,7 @@ export function capaDoPgp(dossie: Dossie, agora = new Date()): CapaDeDecisao | u
         ]
       : []),
     ...(custos?.faltando.length ? [`Orçamento: ${custos.faltando.slice(0, 3).join("; ")}.`] : []),
-    ...(custos?.riscosComReserva.length
-      ? [
-          `Valor da reserva de contingência dos riscos ${custos.riscosComReserva.map((x) => x.id).join(", ")}.`,
-        ]
-      : []),
+    // a reserva que falta, risco a risco, já vem no "Orçamento: falta…" acima (decisão 0092)
     ...(foraDoPrazo.length ? ["O que fazer com os marcos que não cabem no prazo do TAP."] : []),
     "Aprovar o plano depois de revisar os itens pendentes.",
   ];
@@ -704,8 +705,9 @@ export function capaDoPgp(dossie: Dossie, agora = new Date()): CapaDeDecisao | u
               curto(x.responsavel || "—", 60),
               !x.pedeReserva
                 ? "não"
-                : p.parametros.reservasPorRisco?.[x.id] !== undefined
-                  ? reais(p.parametros.reservasPorRisco[x.id])
+                : reservaValida({ id: x.id, texto: x.item.texto }, p.parametros.reservasPorRisco) !==
+                    undefined
+                  ? reais(reservaValida({ id: x.id, texto: x.item.texto }, p.parametros.reservasPorRisco))
                   : A_DEFINIR,
               marcoDoRisco(x.marco, produtosDoPlano),
             ]),

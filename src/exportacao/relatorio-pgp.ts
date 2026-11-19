@@ -14,6 +14,7 @@ import {
   inicioDoPgp,
   marcoDoRisco,
   marcosDoPgp,
+  reservaValida,
   rastrear,
   textoDaData,
 } from "../etapas/4-pgp/calculos";
@@ -313,11 +314,13 @@ function tabelasDoCodigo(codigo: string, c: Contexto): { paragrafos?: string[]; 
         paragrafos: [
           `${conta} Horas esperadas (PERT) × valor-hora do GP.`,
           "Despesas (viagens, passagens, diárias): decisão do GP, fora desta conta de horas.",
+          // decisão 0092: a reserva de cada risco, com o valor do GP ou "a definir" só para o que falta
           ...(custos.riscosComReserva.length
             ? [
-                `Contingência pedida pelos riscos ${custos.riscosComReserva.map((r) => r.id).join(", ")}: ${A_DEFINIR}, dentro da linha de base dos custos (A15).`,
+                `Contingência pedida pelos riscos, dentro da linha de base dos custos (A15): ${custos.riscosComReserva.map((r) => `${r.id} ${r.valor !== undefined ? reais(r.valor) : A_DEFINIR}`).join("; ")}.`,
               ]
             : []),
+          ...custos.avisosDaContingencia.map((a) => `Atenção: ${a}.`),
         ],
         tabela: {
           colunas: ["Perfil", "Horas", "Valor-hora (GP)", "Custo"],
@@ -355,7 +358,7 @@ function tabelasDoCodigo(codigo: string, c: Contexto): { paragrafos?: string[]; 
             ],
             // decisão 0092: a contingência deriva dos riscos; cada um com a reserva (do GP) e o marco que ameaça
             ...custos.riscosComReserva.map((r) => [
-              `  Risco ${r.id}${r.marco ? `, marco ${r.marco}` : ""} (${r.texto.slice(0, 80)}${r.texto.length > 80 ? "…" : ""})`,
+              `  Risco ${r.id}, marco ${r.marco} (${r.texto.slice(0, 80)}${r.texto.length > 80 ? "…" : ""})`,
               r.valor !== undefined ? reais(r.valor) : A_DEFINIR,
             ]),
             ["Linha de base dos custos", reais(custos.linhaDeBase)],
@@ -394,7 +397,11 @@ function tabelasDoCodigo(codigo: string, c: Contexto): { paragrafos?: string[]; 
             `${r.estrategia}: ${r.resposta}`,
             r.gatilho || A_DEFINIR,
             r.responsavel || A_DEFINIR,
-            !r.pedeReserva ? "não pede" : reservas[r.id] !== undefined ? reais(reservas[r.id]) : A_DEFINIR,
+            !r.pedeReserva
+              ? "não pede"
+              : reservaValida({ id: r.id, texto: r.item.texto }, reservas) !== undefined
+                ? reais(reservaValida({ id: r.id, texto: r.item.texto }, reservas))
+                : A_DEFINIR,
             marcoDoRisco(r.marco, produtos),
             r.premissaCritica || "—",
           ]),
