@@ -1,7 +1,7 @@
 # 0094 — Lições da skill marcadas como regra geral ou de um caso só
 
 - **Data:** 19/11/2026
-- **Status:** proposta, espera a aprovação da responsável (mudança na skill PMO 0.3.8; bloco 4 do pente fino)
+- **Status:** aceita em 19/11/2026 (mudança na skill PMO 0.3.8; bloco 4 do pente fino)
 - **Quem decidiu:** responsável pelo projeto (o pedido), com a redação do Claude Code
 
 ## Contexto

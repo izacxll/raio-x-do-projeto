@@ -4,6 +4,9 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 
 ## [Não publicado]
 
+### Andamento do pente fino e revisor em outro modelo
+- `docs/andamento.md` com os blocos 3, 4 e 5 e as decisões pendentes; avaliação do Sonnet 5.5 como revisor da segunda instância (só contagens).
+
 ### Cache de 1 hora no prefixo estável (decisão 0095)
 - A skill e os documentos vão no cache de 1 hora; o uso e o custo leem a escrita por tempo de vida.
 - Na rodada compacta da segunda instância, os documentos (só as páginas citadas) vão sem cache; o dossiê guarda a escrita de 1 hora de cada chamada.
