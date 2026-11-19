@@ -54,6 +54,8 @@ export function impactoPeloTexto(texto: string): number {
 }
 
 export function classeDoItem(i: ItemRevisavel): ClassePendencia {
+  // o item do documento com rótulo misto é "a conferir" antes de ser decisão (decisão 0093)
+  if (i.rotulo === "documento" && i.avisos.some((a) => a.startsWith("rótulo misto"))) return "conferir";
   if (i.rotulo === "decisao" || /a de(?:finir|cidir) pelo GP/i.test(i.texto)) return "decisao";
   if (i.avisos.length) return "conferir";
   return i.rotulo === "documento" ? "documento" : "sugestao";
@@ -104,6 +106,7 @@ export function revisavelDoConferido(
       c.citacaoNaoConferida ? "citação não conferida" : "",
       c.citacaoNaoProva ? "citação a conferir" : "",
       c.redacaoAConferir ? "redação a conferir" : "",
+      c.rotuloMisto ? "rótulo misto: há sugestão dentro do item do documento" : "",
       c.numerosSemFonte.length ? `número sem fonte: ${c.numerosSemFonte.join(", ")}` : "",
     ].filter(Boolean),
     texto: i.item.texto,

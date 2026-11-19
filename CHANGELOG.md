@@ -4,6 +4,11 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 
 ## [Não publicado]
 
+### Alarme falso das travas (decisão 0093)
+- **Medição:** a "redação a conferir" marcava 701 de 1.139 itens, com 48,75% de alarme falso numa amostra de 80; as outras travas são raras.
+- **Trava ajustada:** formas condicionais a mais, linha de estrutura ou modelo e registros de riscos e premissas fora; 41% de alarme falso numa amostra nova de 40 e 19% menos marcas nos dois casos.
+- **Rótulo misto:** o "do documento" com sugestão dentro vai para "a conferir"; os pedidos das etapas 2 a 4 pedem o item à parte.
+
 ### Riscos ligados e contingência derivada (decisão 0092)
 - **Risco → resposta, reserva e marco:** campo do marco (produto do cronograma, conferido pelo código) no B27; colunas Reserva e Marco no plano e na capa; alerta do risco alto sem marco.
 - **Contingência:** a soma das reservas dos riscos marcados, cada uma decidida pelo GP na tela; a que falta fica a definir, com os riscos; o valor único antigo vale só sem valor por risco.

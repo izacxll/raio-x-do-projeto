@@ -96,6 +96,7 @@ Uma decisão por arquivo, numerada em ordem. Cada uma registra o contexto, o que
 | [0090](0090-capa-com-resumo-e-leitura-da-etapa-5.md) | Capa com o resultado da etapa numa linha e o bloco "43/44"; a leitura do PMO da etapa 5 gravada no dossiê pela mesma função da tela |
 | [0091](0091-pgp-enxuto-por-porte.md) | PGP enxuto por porte: limites de partes e páginas, núcleo de 14 partes no porte pequeno, parte fundida numa hospedeira ou dispensada com o motivo, páginas estimadas na capa |
 | [0092](0092-riscos-ligados-e-reserva-derivada.md) | Cada risco liga resposta, reserva e marco (produto do cronograma, conferido pelo código); a reserva de contingência é a soma das reservas dos riscos marcados, valores do GP |
+| [0093](0093-alarme-falso-das-travas.md) | Alarme falso das travas medido: a "redação a conferir" fica, com formas condicionais a mais e sem linha de estrutura nem registros (de 48,75% para 40% de alarme falso); rótulo misto no "do documento" |
 
 Modelo para uma nova decisão:
 
