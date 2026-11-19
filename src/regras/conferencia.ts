@@ -298,12 +298,27 @@ export function sinaisParaOutroPlano(
   };
 }
 
+/**
+ * Registros que o plano diz estarem completos só na planilha (porte pequeno, decisão 0096): a seção da parte começa
+ * com "Parte Bn do plano." e avisa que "o registro completo fica só na planilha".
+ */
+export function registrosSoNaPlanilhaDoPlano(paginas: { texto: string }[]): Set<string> {
+  const texto = paginas.map((p) => p.texto).join("\n");
+  const codigos = new Set<string>();
+  for (const m of texto.matchAll(
+    /Parte (B\d+) do plano\.[\s\S]{0,400}?o\s+registro\s+completo\s+fica\s+só\s+na\s+planilha/g,
+  ))
+    if (m[1]) codigos.add(m[1]);
+  return codigos;
+}
+
 export function conferirPlano(e: EntradaConferencia): ResultadoConferencia {
   const achados: Achado[] = [];
   const verificacoes: Verificacao[] = [];
   const fichas = new Map(e.partes.map((p) => [p.codigo, p]));
   const confirmadas = new Map(e.mapa.map((m) => [m.codigo, m]));
   const ilegiveis = paginasNaoVerificaveis(e.pgp);
+  const naPlanilha = registrosSoNaPlanilhaDoPlano(e.pgp);
 
   const gravidadeDe = (codigo: string): Gravidade => {
     const g = fichas.get(codigo)?.gravidade;
@@ -366,6 +381,18 @@ export function conferirPlano(e: EntradaConferencia): ResultadoConferencia {
         descricao,
         estado: "nao-verificavel",
         detalhe: `Páginas sem texto legível no plano (${ilegiveis.join(", ")}): o código não pode dar o item como ausente.`,
+      });
+      return;
+    }
+    // não achado não é ausente: o registro do porte pequeno está inteiro só na planilha (decisão 0096)
+    const registro = /^(B\d+)\b/.exec(alvo)?.[1];
+    if (registro && naPlanilha.has(registro)) {
+      verificacoes.push({
+        id,
+        alvo,
+        descricao,
+        estado: "nao-verificavel",
+        detalhe: `O plano diz que o registro ${registro} está completo só na planilha de registros (porte pequeno, decisão 0096): o código não pode dar o item como ausente; conferir na planilha.`,
       });
       return;
     }

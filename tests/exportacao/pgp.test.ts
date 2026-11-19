@@ -15,7 +15,15 @@ import { SCHEMAS_PGP, type PassoPgp } from "../../src/pmo/schemas/pgp";
 import { lerRfpPublica } from "../ajudantes/rfp-publica";
 import { CARACTERISTICAS_PADRAO } from "../../src/dominio/caracteristicas";
 import { gerarPeloPorte } from "../../src/etapas/4-pgp/porte";
-import { pgpComoDocumento } from "../../src/etapas/4-pgp/autoconferencia";
+import {
+  caracteristicasDoPgp,
+  mapaDoPgpGerado,
+  pgpComoDocumento,
+} from "../../src/etapas/4-pgp/autoconferencia";
+import { montarEntradaPgp } from "../../src/etapas/4-pgp/entrada";
+import { documentoDeExportavel } from "../../src/etapas/documento-virtual";
+import { PARTES_PGP, PREMISSAS_CRITICAS } from "../../src/dominio/skill";
+import { conferirPlano, registrosSoNaPlanilhaDoPlano } from "../../src/regras/conferencia";
 import { abasDasSecoes } from "../../src/exportacao/abas";
 import { paginasEstimadas } from "../../src/exportacao/paginas";
 
@@ -152,6 +160,48 @@ describe("porte pequeno: registros só na planilha (decisão 0096)", () => {
       .paginas.map((x) => x.texto)
       .join(" ");
     expect(completo).not.toMatch(/registro completo fica só na planilha/);
+  });
+
+  it("etapa 5 com o PDF do plano do porte pequeno: o que está só na planilha fica não verificável, nunca ausente", () => {
+    const d = pequeno();
+    const resumo = documentoDeExportavel(montarPgp(d, HOJE), {
+      id: "pgp-exportado",
+      papel: "pgp",
+      nomeArquivo: "plano.pdf",
+      lidoEm: HOJE.toISOString(),
+    });
+    const naPlanilha = registrosSoNaPlanilhaDoPlano(resumo.paginas);
+    expect(naPlanilha.has("B27")).toBe(true);
+    const e = montarEntradaPgp(d, HOJE);
+    const conferencia = (doc: typeof resumo) =>
+      conferirPlano({
+        planoDaFerramenta: true,
+        pgp: doc.paginas,
+        tap: e.tap?.paginas,
+        rfp: e.rfp.flatMap((x) => x.paginas),
+        partes: PARTES_PGP,
+        premissas: PREMISSAS_CRITICAS,
+        mapa: mapaDoPgpGerado(d, doc),
+        caracteristicas: caracteristicasDoPgp(d, e),
+        premissasAplicaveis: d.pgp!.premissasAplicaveis ?? e.premissasAnteriores,
+        requisitos: e.ponto.listaDeR,
+      });
+    const r = conferencia(resumo);
+    const doRegistro = (alvo: string) => [...naPlanilha].some((b) => new RegExp(`^${b}\\b`).test(alvo));
+    // nenhum ausente de conteúdo mínimo num registro que está só na planilha
+    expect(
+      r.achados.filter(
+        (a) =>
+          a.tipo === "ausente" && a.regra === "conteudo-minimo" && a.partes.some((p) => naPlanilha.has(p)),
+      ),
+    ).toEqual([]);
+    const naoVerificaveis = r.verificacoes.filter(
+      (v) => v.estado === "nao-verificavel" && doRegistro(v.alvo),
+    );
+    expect(naoVerificaveis.length).toBeGreaterThan(0);
+    for (const v of naoVerificaveis) expect(v.detalhe).toMatch(/decisão 0096/);
+    // o plano completo não tem a marca: a regra não muda nada nele
+    expect(registrosSoNaPlanilhaDoPlano(pgpComoDocumento(d, HOJE).paginas).size).toBe(0);
   });
 
   it("o plano do porte pequeno fica menor que o mesmo plano com os registros inteiros", () => {

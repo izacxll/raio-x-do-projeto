@@ -30,7 +30,7 @@ A responsável decidiu:
    - a autoconferência da etapa 4;
    - o plano como documento da etapa 5.
 
-   O resumo é só da apresentação: a conferência nunca vê um registro cortado.
+   O resumo é só da apresentação: a conferência nunca vê um registro cortado. Se o GP conferir na etapa 5 o PDF do plano do porte pequeno, o código acha a marca "o registro completo fica só na planilha" na seção do registro. O que ele não localizar nesse registro fica "não verificável — conferir na planilha", nunca "ausente" (não achado não é ausente).
 4. **Estimativa de páginas e resultado da etapa:** usam o plano como ele sai, então o porte pequeno conta o resumo.
 5. **Porte médio e grande:** sem mudança. No resultado da etapa, os registros continuam no anexo (decisão 0085).
 
