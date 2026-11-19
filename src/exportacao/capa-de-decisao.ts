@@ -19,6 +19,8 @@ export interface CapaDeDecisao {
   quadros: Secao[];
   /** Os 3 ou 4 números da capa do documento, em bloco grande (decisão 0089). */
   destaques?: Destaque[];
+  /** O resultado da etapa numa linha, montado por código, abaixo dos blocos da capa. */
+  resumo?: string;
 }
 
 /** Os números-chave que não estão nos blocos grandes: a tabela não repete o bloco (decisão 0089). */
