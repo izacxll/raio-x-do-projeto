@@ -95,6 +95,10 @@ describe("capa de cada etapa, com a RFP pública da OEI", () => {
     const c = capaDoTap(dossie, HOJE);
     confereForma(c, 3);
     expect(c!.quadros[0]!.titulo).toBe("TAP em uma página");
+    // a fila do GP na capa (decisão 0088): decisões, a conferir e o que pode ir em lote, com o prazo
+    expect(c!.numeros.find((n) => n.rotulo === "Fila do GP")?.valor).toMatch(
+      /decisão\(ões\) do GP, \d+ a conferir, \d+ aceitável\(is\) em lote; decidir antes da reunião de abertura/,
+    );
     expect(c!.decidir.some((d) => /Aprovar o TAP/.test(d))).toBe(true);
   });
 

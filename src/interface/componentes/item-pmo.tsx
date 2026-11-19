@@ -3,6 +3,7 @@
 import type { EstadoItem, RevisaoItem } from "../../dossie/esquema";
 import { NOME_ESTADO_CITACAO } from "../../pmo/citacoes";
 import { estadoDe, type ItemConferido } from "../../pmo/itens";
+import { aceitaveisEmLote, filaDePendencias, revisavelDoConferido } from "../../pmo/fila";
 import { EtiquetaRotulo, NOME_ESTADO } from "./basicos";
 
 const ROTULO_APP = { documento: "documento", sugestao: "sugestao", decisao_gp: "decisao-gp" } as const;
@@ -127,7 +128,9 @@ export function ItensPmo({
   rotuloAceitar?: string;
 }) {
   const grupos = [...new Set(itens.map((i) => i.grupo))];
-  const pendentes = itens.filter((i) => estadoDe(revisoes, i.id) === "pendente");
+  // em lote, só o que vem do documento com a citação conferida e as sugestões sem aviso (decisão 0088)
+  const lote = aceitaveisEmLote(filaDePendencias(itens.map(revisavelDoConferido), revisoes));
+  const pendentes = [...lote.documento, ...lote.sugestao];
   return (
     <>
       {pendentes.length > 1 && (
@@ -137,11 +140,11 @@ export function ItensPmo({
           style={{ margin: "8px 0" }}
           onClick={() => {
             const novas = { ...revisoes };
-            for (const i of pendentes) novas[i.id] = { estado: "aceito" };
+            for (const id of pendentes) novas[id] = { estado: "aceito" };
             aoMudar(novas);
           }}
         >
-          Aceitar os {pendentes.length} pendentes {rotuloAceitar}
+          Aceitar os {pendentes.length} sem aviso {rotuloAceitar} (do documento e sugestões)
         </button>
       )}
       {grupos.map((g) => (

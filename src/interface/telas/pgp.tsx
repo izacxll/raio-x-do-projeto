@@ -1,6 +1,8 @@
 // Etapa 4 na tela: os documentos usados (TAP e proposta), as premissas críticas, os seis passos do PMO na ordem da
 // decisão 0007 (com a adaptação decidida pelo GP), as contas do código (rastreabilidade, cronograma, marcos, custos),
 // os valores e nomes que só o GP preenche, a autoconferência pelas regras da etapa 5 e as saídas.
+import { FilaDePendencias } from "../componentes/fila-de-pendencias";
+import { aceitar, revisavelDoConferido, PRAZO_DAS_DECISOES } from "../../pmo/fila";
 import { useMemo, useState } from "react";
 import { MODELOS, type IdModelo } from "../../config/modelo";
 import type { Caracteristicas } from "../../dominio/caracteristicas";
@@ -276,6 +278,13 @@ export function PlanoDeGerenciamento() {
       })}
 
       {p.adaptacao && <Autoconferencia p={p} e={entrada} atualizar={atualizar} />}
+
+      <FilaDePendencias
+        prazo={PRAZO_DAS_DECISOES[4]}
+        itens={itens.map(revisavelDoConferido)}
+        revisoes={p.revisoes}
+        aoAceitar={(ids) => atualizar({ ...p, revisoes: aceitar(p.revisoes, ids) })}
+      />
 
       <section className="bloco">
         <RotuloSecao>Exportar</RotuloSecao>

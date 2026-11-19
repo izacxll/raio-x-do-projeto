@@ -2,7 +2,7 @@
 // prazos (XLSX), checklist de habilitação linha a linha (XLSX) e perguntas de esclarecimento (DOCX), estas com a
 // premissa crítica de cada ponto. A tela só exporta depois da leitura do PMO (decisão 0037); um dossiê sem ela sai marcado como "sem a leitura do PMO". Cabeçalho de
 // minuta enquanto houver item pendente.
-import type { Dossie, RevisaoItem } from "../dossie/esquema";
+import type { AnaliseRfpDossie, Dossie, RevisaoItem } from "../dossie/esquema";
 import type { AnaliseRfp } from "../etapas/1-rfp/analisar-rfp";
 import {
   montarLeituraRfp,
@@ -14,9 +14,12 @@ import {
 import { requisitosValidos } from "../etapas/1-rfp/revisao";
 import { recomendacaoDoDossie, recomendacaoEmTexto } from "../etapas/1-rfp/recomendacao";
 import { curto, NAO_LOCALIZADO, secoesDaCapa, type CapaDeDecisao } from "./capa-de-decisao";
+import { PRAZO_DAS_DECISOES, resumoDaFila, revisavelDaLeitura } from "../pmo/fila";
+import { camposConfirmadosPeloPmo, type CampoQuePesa } from "./capa-regras";
 import type { Alerta } from "./modelo";
 import {
   contarPendentesDaLeitura,
+  itensRevisaveis,
   leituraDoDossie,
   NOME_AVISO,
   NOME_TRAVA,
@@ -169,6 +172,14 @@ function secoesDaLeitura(leitura: LeituraRfp, revisoes: Record<string, RevisaoIt
 const docsDaRfp = (dossie: Dossie) =>
   dossie.documentos.filter((d) => d.papel === "rfp" || d.papel === "anexo-rfp");
 
+/** As decisões da etapa 1 que não são item: participar ou não e a modalidade (decisão 0088). */
+export function outrasDecisoesDaRfp(a: AnaliseRfpDossie): string[] {
+  return [
+    ...(a.participacao.decisao === "a-decidir" ? ["Participar ou não"] : []),
+    ...(a.modalidade ? [] : ["Confirmar a modalidade"]),
+  ];
+}
+
 /** O que, na seção "uma-pagina", o código procurou e não achou: vira alerta alto (pergunta antes do preço). */
 const FALTA_QUE_PESA = ["prazo de execução ou vigência", "valor estimado ou teto"];
 
@@ -208,12 +219,38 @@ export function capaDaRfp(
 
   // o que falta de prazo e valor vira um alerta só; o ponto de atenção do PMO sobre o mesmo assunto não repete
   const mesmoAssunto = (i: ItemLeitura) => faltas.length > 0 && /\b(prazo|valor)\b/i.test(i.nome);
+  // as duas leituras concordam, campo a campo: o código procurou e não achou, e o PMO diz que o documento não traz
+  // aquele campo e não dá número dele (decisão 0087)
+  const camposFaltando = faltas.map((f) => (f.startsWith("prazo") ? "prazo" : "valor") as CampoQuePesa);
+  // só a seção "em uma página": é onde o PMO diz o prazo e o valor do contrato (os pontos de atenção citam prazos de
+  // outras coisas, como o da inspeção)
+  const textosDoPmo = leitura.itens
+    .filter((i) => i.doPmo && i.secao === "uma-pagina" && valido(i))
+    .map((i) => `${i.nome}: ${i.texto}`);
+  const confirmados = camposConfirmadosPeloPmo(camposFaltando, textosDoPmo);
+  const naoConfirmados = faltas.filter(
+    (f) => !confirmados.includes(f.startsWith("prazo") ? "prazo" : "valor"),
+  );
+  const nomeDoDocumento = /^\s*(?:termo de refer[eê]ncia|TR)\b/i.test(
+    analise.itens.find((i) => i.id === "identificacao:instrumento")?.texto ?? "",
+  )
+    ? "TR"
+    : "documento";
   const alertas: Alerta[] = [
     ...(faltas.length
       ? [
           {
             nivel: "alto" as const,
-            texto: `${faltas.join(" e ").replace(/^./, (c) => c.toUpperCase())}: ${NAO_LOCALIZADO}${pmoSobre(/prazo|valor/i) ? `; o PMO leu (sugestão): ${curto(pmoSobre(/prazo|valor/i)!.texto).replace(/\.$/, "")}` : ""}. Se faltar mesmo, é a primeira pergunta antes do preço.`,
+            texto: [
+              confirmados.length
+                ? `O ${nomeDoDocumento} não traz ${confirmados.join(" nem ")}: perguntar antes do preço (o código não achou, e a leitura do PMO confirma; conferir no documento).`
+                : "",
+              naoConfirmados.length
+                ? `${naoConfirmados.join(" e ").replace(/^./, (c) => c.toUpperCase())}: ${NAO_LOCALIZADO}. Se faltar mesmo, é a primeira pergunta antes do preço.`
+                : "",
+            ]
+              .filter(Boolean)
+              .join(" "),
           },
         ]
       : []),
@@ -242,6 +279,10 @@ export function capaDaRfp(
   ];
 
   const numeros = [
+    {
+      rotulo: "Fila do GP",
+      valor: `${resumoDaFila(itensRevisaveis(leitura).map(revisavelDaLeitura), a.revisoes, outrasDecisoesDaRfp(a))}; decidir ${PRAZO_DAS_DECISOES[1]}`,
+    },
     { rotulo: "Modalidade", valor: modalidade },
     {
       rotulo: "Entregas",

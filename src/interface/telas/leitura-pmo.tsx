@@ -177,7 +177,10 @@ export function LeituraDoPmo({
                       <span className="lb">leitura do PMO</span>
                       <span className="lb">{a.tipo}</span>
                       <span className="lb">{a.parte}</span>
-                      <span className="lb">{a.gravidade}</span>
+                      <span className="lb" title={a.motivoDaGravidade}>
+                        {d?.gravidade ?? a.gravidade}
+                        {!d?.gravidade && a.motivoDaGravidade ? " (régua de prazo)" : ""}
+                      </span>
                       <span className="lb">{a.categoria}</span>
                       {a.situacao !== "valido" && (
                         <span className="lb aviso-item">{NOME_SITUACAO_PMO[a.situacao]}</span>
@@ -216,6 +219,21 @@ export function LeituraDoPmo({
                         <option value="">pendente</option>
                         <option value="sim">procede</option>
                         <option value="nao">não procede</option>
+                      </select>
+                      {/* a gravidade também é do GP, como nos achados do código (decisão 0088) */}
+                      <select
+                        aria-label={`Gravidade de ${a.id}`}
+                        value={d?.gravidade ?? ""}
+                        onChange={(e) =>
+                          decidir(id, {
+                            gravidade: (e.target.value || undefined) as DecisaoAchado["gravidade"],
+                          })
+                        }
+                      >
+                        <option value="">gravidade do código</option>
+                        <option value="grave">grave</option>
+                        <option value="média">média</option>
+                        <option value="baixa">baixa</option>
                       </select>
                       <input
                         aria-label={`Justificativa de ${a.id}`}

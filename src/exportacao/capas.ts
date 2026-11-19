@@ -13,10 +13,12 @@ import { conferirTap } from "../etapas/3-tap/conferencia-tap";
 import { compararRfpEProposta, pedeDecisao } from "../etapas/3-tap/divergencias";
 import { dadosDaProposta, montarEntradaTap } from "../etapas/3-tap/entrada";
 import { itensDaEtapa3, tapInicial } from "../etapas/3-tap/tap";
+import { itensDaProposta } from "../etapas/2-proposta/proposta";
+import { itensDoPgp, partesAGerar } from "../etapas/4-pgp/pgp";
+import { PRAZO_DAS_DECISOES, resumoDaFila, revisavelDoConferido } from "../pmo/fila";
 import { autoconferir, separarDecisoesPendentes } from "../etapas/4-pgp/autoconferencia";
 import { cronogramaDoPgp, custosDoPgp, marcosDoPgp } from "../etapas/4-pgp/calculos";
 import { montarEntradaPgp } from "../etapas/4-pgp/entrada";
-import { partesAGerar } from "../etapas/4-pgp/pgp";
 import { reguaQueMudouEmTexto, reguasQueMudaram } from "../etapas/4-pgp/reguas";
 import { resultadoDaEtapa5 } from "../etapas/5-conferencia/resultado";
 import type { ResultadoVereditos } from "../etapas/5-conferencia/candidatos";
@@ -24,6 +26,8 @@ import type { AchadoPmoConferido } from "../etapas/5-conferencia/leitura-pmo";
 import { itensValidos, rotuloDoItem, textoFinal } from "../pmo/itens";
 import { ordenarAchados } from "../regras/conferencia";
 import { comPrefixo, curto, limitar, NAO_LOCALIZADO, type CapaDeDecisao } from "./capa-de-decisao";
+import { eventoEEfeito, reguaDosMarcos } from "./capa-regras";
+export { eventoEEfeito } from "./capa-regras";
 import type { Alerta, NumeroChave } from "./modelo";
 import { capaDaRfp } from "./relatorio-rfp";
 
@@ -131,6 +135,10 @@ export function capaDaProposta(dossie: Dossie, agora = new Date()): CapaDeDecisa
   ];
 
   const numeros: NumeroChave[] = [
+    {
+      rotulo: "Fila do GP",
+      valor: `${resumoDaFila(itensDaProposta(p, docs).map(revisavelDoConferido), p.revisoes, p.abordagem ? [] : ["Escolher a abordagem técnica"])}; decidir ${PRAZO_DAS_DECISOES[2]}`,
+    },
     { rotulo: "Abordagem", valor: abordagem ? `${abordagem.id} — ${abordagem.nome}` : A_DEFINIR },
     { rotulo: "Produtos", valor: String(conteudo.produtos.length) },
     {
@@ -249,6 +257,13 @@ export function capaDoTap(dossie: Dossie, agora = new Date()): CapaDeDecisao | u
     ...(t.decisoes.aprovadoPor?.trim() ? [] : ["Aprovar o TAP (quem aprova e quando)."]),
   ];
   const numeros: NumeroChave[] = [
+    {
+      rotulo: "Fila do GP",
+      valor: `${resumoDaFila(todos.map(revisavelDoConferido), t.revisoes, [
+        ...aDecidir.map((d) => `Versão que vale: ${d.tema}`),
+        ...(t.decisoes.aprovadoPor?.trim() ? [] : ["Aprovar o TAP"]),
+      ])}; decidir ${PRAZO_DAS_DECISOES[3]}`,
+    },
     {
       rotulo: "Proposta usada",
       valor:
@@ -369,6 +384,9 @@ export function capaDoPgp(dossie: Dossie, agora = new Date()): CapaDeDecisao | u
   const { decisoes } = separarDecisoesPendentes(auto.achados);
   const reguas = reguasQueMudaram(p);
   const foraDoPrazo = marcos.filter((m) => m.situacao === "nao-cabe");
+  const semPrazo = marcos.filter((m) => m.situacao === "nao-conferido" || m.situacao === "nao-confirmavel");
+  // a régua dos marcos pelos prazos do TAP que o código tem (decisão 0087): sem eles, "não localizados", não "sem régua"
+  const regua = reguaDosMarcos(e.marcosTap.map((m) => m.prazo));
 
   const alertas: Alerta[] = [
     ...(crono?.conferenciaPrazo.situacao === "nao-cabe"
@@ -389,7 +407,7 @@ export function capaDoPgp(dossie: Dossie, agora = new Date()): CapaDeDecisao | u
     ...reguas.map((x) => ({ nivel: "medio" as const, texto: curto(reguaQueMudouEmTexto(x), 200) })),
     ...riscos
       .filter((x) => x.probabilidade === "alta" && x.impacto === "alto")
-      .map((x) => ({ nivel: "alto" as const, texto: `Risco ${x.id}: ${curto(x.item.texto, 180)}` })),
+      .map((x) => ({ nivel: "alto" as const, texto: `Risco ${x.id}: ${eventoEEfeito(x.item.texto)}` })),
     ...(custos?.faltando.length
       ? [{ nivel: "medio" as const, texto: `Orçamento: falta ${custos.faltando.slice(0, 3).join("; ")}.` }]
       : []),
@@ -409,6 +427,10 @@ export function capaDoPgp(dossie: Dossie, agora = new Date()): CapaDeDecisao | u
   ];
   const numeros: NumeroChave[] = [
     {
+      rotulo: "Fila do GP",
+      valor: `${resumoDaFila(itensDoPgp(p, e.documentos, e.premissasTap).map(revisavelDoConferido), p.revisoes)}; decidir ${PRAZO_DAS_DECISOES[4]}`,
+    },
+    {
       rotulo: "Partes do plano",
       valor: `${mantidas.length} mantidas, ${dispensadas.length} dispensadas pela adaptação`,
     },
@@ -418,7 +440,15 @@ export function capaDoPgp(dossie: Dossie, agora = new Date()): CapaDeDecisao | u
         ? `${Math.round(crono.total)} dias úteis${crono.dataFim ? `, até ${dataBr(crono.dataFim)}` : ""}`
         : "não conferida",
     },
-    { rotulo: "Marcos", valor: `${marcos.length}, ${foraDoPrazo.length} fora do prazo do TAP` },
+    {
+      rotulo: "Marcos",
+      valor:
+        regua === "sem-regua"
+          ? `${marcos.length}, sem régua: o TAP não dá prazo em dias para nenhum`
+          : regua === "nao-localizados"
+            ? `${marcos.length}; marcos do TAP ${NAO_LOCALIZADO}`
+            : `${marcos.length}, ${foraDoPrazo.length} fora do prazo do TAP`,
+    },
     {
       rotulo: "Riscos",
       valor: `${riscos.length}, ${riscos.filter((x) => x.impacto === "alto").length} de impacto alto, ${riscos.filter((x) => x.pedeReserva).length} com reserva`,
@@ -426,7 +456,11 @@ export function capaDoPgp(dossie: Dossie, agora = new Date()): CapaDeDecisao | u
     { rotulo: "Orçamento (linha de base)", valor: reais(custos?.linhaDeBase) },
   ];
   const mudou = [
-    `Marcos do TAP no cronograma do plano: ${marcos.filter((m) => m.situacao === "cabe").length} cabem, ${foraDoPrazo.length} não cabem e ${marcos.filter((m) => m.situacao === "nao-conferido" || m.situacao === "nao-confirmavel").length} sem prazo em dias no TAP (a conferir).`,
+    regua === "sem-regua"
+      ? `Marcos do TAP no cronograma do plano: sem régua (o TAP não dá prazo em dias); as datas são só as da conta do código.`
+      : regua === "nao-localizados"
+        ? `Marcos do TAP: ${NAO_LOCALIZADO} (TAP em PDF, sem TAP ou marcos descartados); as datas são só as da conta do código.`
+        : `Marcos do TAP no cronograma do plano: ${marcos.filter((m) => m.situacao === "cabe").length} cabem, ${foraDoPrazo.length} não cabem e ${semPrazo.length} sem prazo em dias no TAP (a conferir).`,
     `${riscos.length} risco(s) no registro, a partir das premissas e do risco geral do TAP.`,
     ...(reguas.length
       ? [`${reguas.length} régua(s) corrigida(s) num passo e não levada(s) às partes anteriores.`]
@@ -471,7 +505,7 @@ export function capaDoPgp(dossie: Dossie, agora = new Date()): CapaDeDecisao | u
           linhas: riscos
             .slice(0, 5)
             .map((x) => [
-              `${x.id} — ${curto(x.item.texto, 140)}`,
+              `${x.id} — ${eventoEEfeito(x.item.texto, 160)}`,
               `${NOME_PROB[x.probabilidade]} × ${NOME_IMPACTO[x.impacto]}`,
               curto(`${x.estrategia}: ${x.resposta}`, 160),
               curto(x.gatilho || "—", 120),

@@ -42,6 +42,29 @@ export interface AchadoPmoConferido extends AchadoPmo {
   /** O código já tinha apontado o mesmo tipo de problema na mesma parte (id do achado do código). */
   jaApontadoPeloCodigo?: string;
   redacaoAConferir: boolean;
+  /** Por que a gravidade não é a da parte do plano (decisão 0087), para a tela e o relatório dizerem. */
+  motivoDaGravidade?: string;
+}
+
+export const MOTIVO_REGUA_DE_PRAZO =
+  "conflito sobre a régua de prazo: no mínimo média, qualquer que seja a parte (decisão 0087)";
+
+/**
+ * Conflito entre partes sobre a régua de prazo (o mesmo prazo como teto numa parte e como referência noutra, ou dois
+ * prazos para o mesmo marco) muda o prazo do projeto: no mínimo média, qualquer que seja a parte (decisão 0087; no
+ * teste, a regra fixa da parte deu baixa e a segunda instância, média). Olha só o título, e a palavra de régua e o
+ * prazo precisam estar na mesma frase (a descrição cita prazos de outras coisas).
+ */
+export function gravidadeDoConflitoDeRegua(
+  a: Pick<AchadoPmo, "tipo" | "titulo">,
+  base: Gravidade,
+): { gravidade: Gravidade; motivo?: string } {
+  if (a.tipo !== "conflituoso" || base !== "baixa") return { gravidade: base };
+  const regua = /\b(?:tetos?|r[eé]guas?|refer[eê]ncias?|limites?|prazos?|vig[eê]ncias?)\b/i;
+  const tempo =
+    /\b(?:\d+|um|uma|dois|duas|tr[eê]s|quatro|cinco|seis|sete|oito|nove|dez|doze|vinte|trinta)\s*(?:\([^)]{1,20}\)\s*)?(?:meses|m[eê]s|dias(?: [uú]teis| corridos)?|semanas|anos)\b/i;
+  const sim = a.titulo.split(/[.;]\s/).some((frase) => regua.test(frase) && tempo.test(frase));
+  return sim ? { gravidade: "média", motivo: MOTIVO_REGUA_DE_PRAZO } : { gravidade: base };
 }
 
 /** Gravidade e categoria pela parte do PGP (regra fixa); parte desconhecida fica baixa e sem categoria. */
@@ -200,9 +223,14 @@ export function conferirLeitura(
         c.parte === a.parte &&
         (!a.item || c.descricao.includes(a.item) || c.id.includes(a.item)),
     );
+    const fixa = regraFixa(a.parte);
     return {
       ...a,
-      ...regraFixa(a.parte),
+      ...fixa,
+      ...(() => {
+        const g = gravidadeDoConflitoDeRegua(a, fixa.gravidade);
+        return { gravidade: g.gravidade, ...(g.motivo ? { motivoDaGravidade: g.motivo } : {}) };
+      })(),
       citacoes,
       situacao,
       localizadoEm,
