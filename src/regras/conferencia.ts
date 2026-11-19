@@ -298,12 +298,32 @@ export function sinaisParaOutroPlano(
   };
 }
 
+/**
+ * Registros que o plano diz estarem completos só na planilha (porte pequeno, decisão 0096): a seção da parte começa
+ * com "Parte Bn do plano." e avisa que "o registro completo fica só na planilha".
+ */
+export function registrosSoNaPlanilhaDoPlano(paginas: { texto: string }[]): Set<string> {
+  // NFC: o "só" extraído de um PDF pode vir com o acento separado
+  const texto = paginas
+    .map((p) => p.texto)
+    .join("\n")
+    .normalize("NFC");
+  const codigos = new Set<string>();
+  // o trecho entre a marca da parte e o aviso não atravessa a marca de outra parte
+  for (const m of texto.matchAll(
+    /Parte (B\d+) do plano\.(?:(?!Parte [AB]\d+ do plano\.)[\s\S]){0,400}?o\s+registro\s+completo\s+fica\s+só\s+na\s+planilha/g,
+  ))
+    if (m[1]) codigos.add(m[1]);
+  return codigos;
+}
+
 export function conferirPlano(e: EntradaConferencia): ResultadoConferencia {
   const achados: Achado[] = [];
   const verificacoes: Verificacao[] = [];
   const fichas = new Map(e.partes.map((p) => [p.codigo, p]));
   const confirmadas = new Map(e.mapa.map((m) => [m.codigo, m]));
   const ilegiveis = paginasNaoVerificaveis(e.pgp);
+  const naPlanilha = registrosSoNaPlanilhaDoPlano(e.pgp);
 
   const gravidadeDe = (codigo: string): Gravidade => {
     const g = fichas.get(codigo)?.gravidade;
@@ -358,7 +378,17 @@ export function conferirPlano(e: EntradaConferencia): ResultadoConferencia {
   });
 
   /** "Ausente" só vale com o plano inteiro legível; senão, a verificação fica "não verificável". */
-  function ausenteOuNaoVerificavel(id: string, alvo: string, descricao: string, gerar: () => void) {
+  /**
+   * `ondeProcurou`: as partes em que o item foi procurado (o lugar da premissa crítica, da equipe, do escopo). Se uma
+   * delas é um registro que está só na planilha, o item também fica "não verificável" (decisão 0096).
+   */
+  function ausenteOuNaoVerificavel(
+    id: string,
+    alvo: string,
+    descricao: string,
+    gerar: () => void,
+    ondeProcurou: string[] = [],
+  ) {
     if (ilegiveis.length) {
       verificacoes.push({
         id,
@@ -366,6 +396,18 @@ export function conferirPlano(e: EntradaConferencia): ResultadoConferencia {
         descricao,
         estado: "nao-verificavel",
         detalhe: `Páginas sem texto legível no plano (${ilegiveis.join(", ")}): o código não pode dar o item como ausente.`,
+      });
+      return;
+    }
+    // não achado não é ausente: o registro do porte pequeno está inteiro só na planilha (decisão 0096)
+    const registro = [/^(B\d+)\b/.exec(alvo)?.[1], ...ondeProcurou].find((x) => x && naPlanilha.has(x));
+    if (registro) {
+      verificacoes.push({
+        id,
+        alvo,
+        descricao,
+        estado: "nao-verificavel",
+        detalhe: `O plano diz que o registro ${registro} está completo só na planilha de registros (porte pequeno, decisão 0096): o código não pode dar o item como ausente; conferir na planilha.`,
       });
       return;
     }
@@ -535,10 +577,16 @@ export function conferirPlano(e: EntradaConferencia): ResultadoConferencia {
         registrar({
           tipo: "ausente",
           regra: "premissa-critica",
-          partes: ["A8", ...LUGARES_DA_PREMISSA],
+          // decisão 0096: o registro em resumo (B3, B27) não pôde ser conferido: sai das partes do achado
+          partes: ["A8", ...LUGARES_DA_PREMISSA.filter((x) => !naPlanilha.has(x))],
           chave: pc.codigo,
           titulo: `Premissa crítica ${pc.codigo} ${NAO_LOCALIZADO}`,
-          descricao: `A premissa crítica "${pc.titulo}" se aplica ao projeto (confirmado pelo GP) e não foi localizada no plano. Ela deveria estar no registro de premissas (B3), no registro de riscos (B27), no plano de mudanças (A11) e no tratamento das premissas críticas do plano de riscos (A8.12).`,
+          descricao: `A premissa crítica "${pc.titulo}" se aplica ao projeto (confirmado pelo GP) e não foi localizada no plano. Ela deveria estar no registro de premissas (B3), no registro de riscos (B27), no plano de mudanças (A11) e no tratamento das premissas críticas do plano de riscos (A8.12).${(() => {
+            const soNaPlanilha = LUGARES_DA_PREMISSA.filter((x) => naPlanilha.has(x));
+            return soNaPlanilha.length
+              ? ` No ${soNaPlanilha.join(" e no ")}, que estão completos só na planilha (decisão 0096), ela não pôde ser conferida.`
+              : "";
+          })()}`,
           evidencias: [evidencia],
           sugestao: `Sugere-se escrever a premissa no plano: o que se assume (${pc.assume.replace(/\.$/, "")}), de quem depende, até quando e o efeito se falhar; com um risco ligado no B27 (resposta e gatilho) e o modo de reajustar escopo, prazo e metas no A11.`,
         }),
@@ -552,22 +600,27 @@ export function conferirPlano(e: EntradaConferencia): ResultadoConferencia {
       if (!faixa) continue; // parte fundida com outra: o plano inteiro já foi procurado
       if (procurarSinais(e.pgp, sinais, faixa)) continue;
       faltou = true;
-      ausenteOuNaoVerificavel(`${id}:${lugar}`, pc.codigo, `${pc.titulo} (${lugar})`, () =>
-        registrar({
-          tipo: "ausente",
-          regra: "premissa-critica-lugar",
-          partes: [lugar],
-          chave: pc.codigo,
-          titulo: `Premissa crítica ${pc.codigo} não localizada em ${nomeDe(lugar)}`,
-          descricao: `A premissa crítica "${pc.titulo}" aparece no plano (p. ${noPlano[0]?.pagina}), mas não foi localizada em ${lugar} (${nomeDe(lugar)}), onde também tem de estar.`,
-          evidencias: [evidenciaPgp(noPlano[0] as Ocorrencia), evidencia],
-          sugestao:
-            lugar === "B27"
-              ? `Sugere-se registrar no B27 o risco de a premissa ${pc.codigo} não se confirmar, com resposta e gatilho.`
-              : lugar === "A11"
-                ? `Sugere-se dizer no plano de mudanças como reajustar escopo, prazo e metas se a premissa ${pc.codigo} falhar.`
-                : `Sugere-se escrever a premissa ${pc.codigo} no registro de premissas, com responsável e prazo para validar.`,
-        }),
+      ausenteOuNaoVerificavel(
+        `${id}:${lugar}`,
+        pc.codigo,
+        `${pc.titulo} (${lugar})`,
+        () =>
+          registrar({
+            tipo: "ausente",
+            regra: "premissa-critica-lugar",
+            partes: [lugar],
+            chave: pc.codigo,
+            titulo: `Premissa crítica ${pc.codigo} não localizada em ${nomeDe(lugar)}`,
+            descricao: `A premissa crítica "${pc.titulo}" aparece no plano (p. ${noPlano[0]?.pagina}), mas não foi localizada em ${lugar} (${nomeDe(lugar)}), onde também tem de estar.`,
+            evidencias: [evidenciaPgp(noPlano[0] as Ocorrencia), evidencia],
+            sugestao:
+              lugar === "B27"
+                ? `Sugere-se registrar no B27 o risco de a premissa ${pc.codigo} não se confirmar, com resposta e gatilho.`
+                : lugar === "A11"
+                  ? `Sugere-se dizer no plano de mudanças como reajustar escopo, prazo e metas se a premissa ${pc.codigo} falhar.`
+                  : `Sugere-se escrever a premissa ${pc.codigo} no registro de premissas, com responsável e prazo para validar.`,
+          }),
+        [lugar],
       );
     }
     if (!faltou)
@@ -578,6 +631,10 @@ export function conferirPlano(e: EntradaConferencia): ResultadoConferencia {
   const lugarDoEscopo = ["B17", "A13", "A1"].find((c) => presente(c)) ?? "B17";
   const faixaEscopo = paginasDaParte(confirmadas.get(lugarDoEscopo));
   const lugarDaEquipe = ["B18", "A6", "B26"].find((c) => presente(c)) ?? "A6";
+  // decisão 0096: no porte pequeno, o B17 (requisitos) e o B18/B26 (equipe) vão fundidos e em resumo, numa seção
+  // própria; o requisito que só está numa linha cortada deles fica "não verificável", nunca "ausente"
+  const emResumoNoEscopo = ["B17", "B22", "B23"].filter((x) => naPlanilha.has(x));
+  const emResumoNaEquipe = ["B18", "B26", "B6"].filter((x) => naPlanilha.has(x));
   for (const r of e.requisitos) {
     const id = `requisito:${r.numero}`;
     // o número R e o rótulo "Produto N" também valem: a descrição pode vir partida da tabela de duas colunas da RFP
@@ -622,24 +679,29 @@ export function conferirPlano(e: EntradaConferencia): ResultadoConferencia {
         });
         continue;
       }
-      ausenteOuNaoVerificavel(id, r.numero, base.descricao, () =>
-        registrar({
-          tipo: "ausente",
-          regra: "requisito",
-          partes: [lugarDaEquipe],
-          chave: r.numero,
-          titulo: `${r.numero} (${papel}) ${NAO_LOCALIZADO} no plano`,
-          descricao: `O perfil de equipe ${r.numero} exigido pela RFP ("${r.descricao}") não foi localizado no plano.`,
-          evidencias: [
-            {
-              documento: "rfp",
-              pagina: r.origem === "codigo" ? r.pagina : undefined,
-              trecho: r.origem === "codigo" ? r.trecho : r.descricao,
-              rotulo: r.origem === "codigo" ? `RFP, p. ${r.pagina}` : "Requisito incluído pelo GP",
-            },
-          ],
-          sugestao: `Sugere-se indicar no plano quem ocupa o perfil "${papel}" (${r.numero}) e a dedicação prevista, como pede a RFP.`,
-        }),
+      ausenteOuNaoVerificavel(
+        id,
+        r.numero,
+        base.descricao,
+        () =>
+          registrar({
+            tipo: "ausente",
+            regra: "requisito",
+            partes: [lugarDaEquipe],
+            chave: r.numero,
+            titulo: `${r.numero} (${papel}) ${NAO_LOCALIZADO} no plano`,
+            descricao: `O perfil de equipe ${r.numero} exigido pela RFP ("${r.descricao}") não foi localizado no plano.`,
+            evidencias: [
+              {
+                documento: "rfp",
+                pagina: r.origem === "codigo" ? r.pagina : undefined,
+                trecho: r.origem === "codigo" ? r.trecho : r.descricao,
+                rotulo: r.origem === "codigo" ? `RFP, p. ${r.pagina}` : "Requisito incluído pelo GP",
+              },
+            ],
+            sugestao: `Sugere-se indicar no plano quem ocupa o perfil "${papel}" (${r.numero}) e a dedicação prevista, como pede a RFP.`,
+          }),
+        [lugarDaEquipe, ...emResumoNaEquipe],
       );
       continue;
     }
@@ -663,20 +725,27 @@ export function conferirPlano(e: EntradaConferencia): ResultadoConferencia {
       trecho: r.origem === "codigo" ? r.trecho : r.descricao,
       rotulo: r.origem === "codigo" ? `RFP, p. ${r.pagina}` : "Requisito incluído pelo GP",
     };
-    ausenteOuNaoVerificavel(id, r.numero, base.descricao, () =>
-      registrar({
-        tipo: "ausente",
-        regra: "requisito",
-        partes: [lugarDoEscopo],
-        chave: r.numero,
-        categoriaComparada: "escopo",
-        titulo: `${r.numero} (${r.rotulo}) ${NAO_LOCALIZADO} na especificação do escopo`,
-        descricao: noPlano.length
-          ? `O requisito ${r.numero} da RFP ("${r.descricao}") aparece no plano (p. ${noPlano[0]?.pagina}), mas não foi localizado em ${nomeDe(lugarDoEscopo)}.`
-          : `O requisito ${r.numero} da RFP ("${r.descricao}") não foi localizado no plano.`,
-        evidencias: noPlano.length ? [evidenciaRfp, evidenciaPgp(noPlano[0] as Ocorrencia)] : [evidenciaRfp],
-        sugestao: `Sugere-se incluir o ${r.rotulo.toLowerCase()} "${r.descricao}" em ${nomeDe(lugarDoEscopo)}, com o mesmo nome e número da RFP (${r.numero}).`,
-      }),
+    ausenteOuNaoVerificavel(
+      id,
+      r.numero,
+      base.descricao,
+      () =>
+        registrar({
+          tipo: "ausente",
+          regra: "requisito",
+          partes: [lugarDoEscopo],
+          chave: r.numero,
+          categoriaComparada: "escopo",
+          titulo: `${r.numero} (${r.rotulo}) ${NAO_LOCALIZADO} na especificação do escopo`,
+          descricao: noPlano.length
+            ? `O requisito ${r.numero} da RFP ("${r.descricao}") aparece no plano (p. ${noPlano[0]?.pagina}), mas não foi localizado em ${nomeDe(lugarDoEscopo)}.`
+            : `O requisito ${r.numero} da RFP ("${r.descricao}") não foi localizado no plano.`,
+          evidencias: noPlano.length
+            ? [evidenciaRfp, evidenciaPgp(noPlano[0] as Ocorrencia)]
+            : [evidenciaRfp],
+          sugestao: `Sugere-se incluir o ${r.rotulo.toLowerCase()} "${r.descricao}" em ${nomeDe(lugarDoEscopo)}, com o mesmo nome e número da RFP (${r.numero}).`,
+        }),
+      [lugarDoEscopo, ...emResumoNoEscopo],
     );
   }
 
