@@ -1,37 +1,41 @@
-// A leitura do PMO da etapa 5 no dossiê, como a tela a guarda (leitura-pmo.tsx). O import do teste externo usa esta
-// mesma função: sem ela, o dossiê salvo pelo vigia ficava sem a leitura e o resultado da etapa 5 saía vazio.
+// A leitura do PMO da etapa 5 no dossiê. A tela (leitura-pmo.tsx) e o import do teste externo gravam a leitura pelos
+// mesmos campos (camposDaLeituraNova); o import usa comLeituraDaEtapa5, que também liga o plano. Sem isso, o dossiê
+// salvo pelo vigia ficava sem a leitura, e o resultado da etapa 5 saía vazio (decisão 0090).
 import type { Dossie } from "../../dossie/esquema";
 import { semRevisoesDoPmo } from "../../pmo/itens";
 
 type Conferencia = NonNullable<Dossie["conferencia"]>;
+type Leitura = NonNullable<Conferencia["leituraPmo"]>;
 
 /** O que a conferência precisa para começar, quando o dossiê ainda não tem uma (o mapa e a régua do plano). */
 export type BaseDaConferencia = Pick<Conferencia, "caracteristicas" | "mapa" | "premissasAplicaveis">;
 
 /**
- * O dossiê com a leitura nova: o plano fica ligado (pgpId), e as decisões do GP sobre a leitura anterior saem (a leitura
- * nova não as herda). Uma conferência que já existe mantém o mapa, as características e as premissas dela.
+ * Os campos que uma leitura nova muda, na tela e no import: a leitura, quando foi feita e as decisões do GP sem as
+ * que eram sobre a leitura anterior (as sobre os achados do código ficam).
+ */
+export function camposDaLeituraNova(
+  conf: Pick<Conferencia, "decisoes"> | undefined,
+  leitura: Leitura,
+): Pick<Conferencia, "decisoes" | "leituraPmo" | "executadaEm"> {
+  return { decisoes: semRevisoesDoPmo(conf?.decisoes ?? {}), leituraPmo: leitura, executadaEm: leitura.em };
+}
+
+/**
+ * O dossiê com a leitura nova e o plano ligado (pgpId). Sem conferência, ela começa da base. Com a conferência de outro
+ * plano, como a tela faz ao trocar de plano: o mapa volta ao do plano novo e as decisões saem.
  */
 export function comLeituraDaEtapa5(
   dossie: Dossie,
   base: BaseDaConferencia,
   pgpId: string,
-  leitura: NonNullable<Conferencia["leituraPmo"]>,
+  leitura: Leitura,
 ): Dossie {
-  const atual: Conferencia = dossie.conferencia ?? {
-    ...base,
-    requisitos: [],
-    proximoRequisito: 1,
-    decisoes: {},
-  };
-  return {
-    ...dossie,
-    conferencia: {
-      ...atual,
-      pgpId,
-      decisoes: semRevisoesDoPmo(atual.decisoes ?? {}),
-      executadaEm: leitura.em,
-      leituraPmo: leitura,
-    },
-  };
+  const anterior = dossie.conferencia;
+  const atual: Conferencia = !anterior
+    ? { ...base, requisitos: [], proximoRequisito: 1, decisoes: {} }
+    : anterior.pgpId && anterior.pgpId !== pgpId
+      ? { ...anterior, mapa: base.mapa, decisoes: {} }
+      : anterior;
+  return { ...dossie, conferencia: { ...atual, pgpId, ...camposDaLeituraNova(atual, leitura) } };
 }

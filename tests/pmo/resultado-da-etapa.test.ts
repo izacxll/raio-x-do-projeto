@@ -107,11 +107,12 @@ describe.skipIf(env.RAIO_X_MODO !== "resultado")("gerar o resultado de uma etapa
     const r = lerDossie(readFileSync(arqDossie, "utf8"), arqDossie);
     if (!r.ok) throw new Error(r.erro);
     // a resposta importada e o dossiê sem a leitura: o import foi feito antes de a leitura ficar no dossiê (#87)
-    if (
-      etapa === 5 &&
-      !r.dossie.conferencia?.leituraPmo &&
-      existsSync(join(pasta, `resposta-etapa-5-leitura-${base}.json`))
-    )
+    const respostaDa5 = existsSync(join(pasta, `resposta-etapa-5-leitura-${base}.json`));
+    if (etapa === 5 && respostaDa5 && !existsSync(daEtapa5))
+      throw new Error(
+        `A resposta da etapa 5 está na pasta, mas falta o dossiê etapa-5-leitura-${base}.dossie.json: exporte o pedido da etapa 5 antes de importar.`,
+      );
+    if (etapa === 5 && respostaDa5 && !r.dossie.conferencia?.leituraPmo)
       throw new Error(
         `O dossiê da etapa 5 está sem a leitura do PMO, mas a resposta está na pasta: importe de novo (npm run importar-resposta -- --etapa 5 --passo leitura --arquivo resposta-etapa-5-leitura-${base}.json --dossie etapa-5-leitura-${base}.dossie.json --plano dossie).`,
       );

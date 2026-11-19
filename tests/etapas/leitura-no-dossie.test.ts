@@ -48,14 +48,20 @@ describe("leitura da etapa 5 no dossiê", () => {
     );
     const comDecisao = {
       ...primeira,
-      conferencia: { ...primeira.conferencia!, decisoes: { "pmo:a1": { procede: "nao" } } },
+      conferencia: {
+        ...primeira.conferencia!,
+        decisoes: { "pmo:a1": { procede: "nao" }, "A8:ausente:A8.12": { procede: "sim" } },
+      },
     } as typeof primeira;
-    const segunda = comLeituraDaEtapa5(comDecisao, { ...base, mapa: [] }, plano.id, {
-      resposta,
-      modelo: "teste",
-      em: HOJE.toISOString(),
-    });
-    expect(segunda.conferencia?.decisoes).toEqual({});
+    const leituraNova = { resposta, modelo: "teste", em: HOJE.toISOString() };
+    const segunda = comLeituraDaEtapa5(comDecisao, { ...base, mapa: [] }, plano.id, leituraNova);
+    // a decisão sobre a leitura anterior sai; a sobre o achado do código fica
+    expect(segunda.conferencia?.decisoes).toEqual({ "A8:ausente:A8.12": { procede: "sim" } });
     expect(segunda.conferencia?.mapa).toEqual(mapa);
+    // outro plano: o mapa volta ao do plano novo e as decisões saem, como a tela faz
+    const outro = comLeituraDaEtapa5(comDecisao, { ...base, mapa: [] }, "outro-plano", leituraNova);
+    expect(outro.conferencia?.mapa).toEqual([]);
+    expect(outro.conferencia?.decisoes).toEqual({});
+    expect(outro.conferencia?.pgpId).toBe("outro-plano");
   });
 });
