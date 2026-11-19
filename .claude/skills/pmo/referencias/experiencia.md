@@ -6,6 +6,7 @@ Padrões gerais tirados da pesquisa com a gestão de projetos da FGV Projetos (a
 
 A experiência melhora a sugestão, mas **não vira fato**: o que sai daqui entra na peça como Sugestão, com o motivo, nunca como afirmação sobre o projeto em análise.
 
+Marca de cada lição (decisão 0094): **[geral]** vale para qualquer projeto (lei, método, conta ou dois casos ou mais); **[geral, visto num caso]** decorre da lei ou da conta, mas até agora apareceu num caso só; **[um caso]** nasceu de um caso e vale quando a mesma condição aparece de novo, nunca como regra para todo projeto.
 ## 1. Contratante público
 
 - **O edital manda.** Em licitação, as regras do edital e do contrato prevalecem sobre qualquer boa prática. A sugestão se adapta ao instrumento, nunca o contrário (ver `licitacoes.md`).
@@ -20,7 +21,7 @@ A experiência melhora a sugestão, mas **não vira fato**: o que sai daqui entr
 - A assinatura atrasa, mas a data final (um evento, um ciclo orçamentário, um prazo legal) não se move. As etapas seguintes absorvem o atraso.
 - Os prazos ficam contados de pontos diferentes: produtos intermediários a partir da etapa anterior, produto final a partir de uma data fixa. O conflito só aparece quando se monta a rede.
 - **Resposta típica:** cronograma em dias contados da ordem de serviço, premissa sobre a data de início e contingência com gatilho para a entrega presa a data imóvel.
-- **Atividade do cliente ou de campo presa ao aceite sem o TR pedir** (0.3.2): prender o campo ou uma oficina ao aceite de um produto, quando o TR não exige, gasta a janela esperando o cliente. Uma validação curta própria (reunião, nota técnica), com prazo, basta. Erro que evita: questionários em campo postos depois do aceite do plano de trabalho, e a espera pelo aceite consumiu a janela até o evento.
+- [geral, visto num caso] **Atividade do cliente ou de campo presa ao aceite sem o TR pedir** (0.3.2): prender o campo ou uma oficina ao aceite de um produto, quando o TR não exige, gasta a janela esperando o cliente. Uma validação curta própria (reunião, nota técnica), com prazo, basta. Erro que evita: questionários em campo postos depois do aceite do plano de trabalho, e a espera pelo aceite consumiu a janela até o evento.
 
 ## 3. Dependência de terceiros
 
@@ -29,7 +30,7 @@ A experiência melhora a sugestão, mas **não vira fato**: o que sai daqui entr
 - Condição que o método supõe existir no território: rede de serviços, conectividade, mercado.
 - **Resposta típica:** a dependência escrita como premissa, com prazo e responsável do outro lado, uma alternativa se não vier e um marco no cronograma.
 - **O "até quando" da premissa crítica sai do cronograma:** é a data em que ela precisa estar confirmada para a atividade que depende dela começar. Essa data é o gatilho do risco ligado. Premissa crítica sem "até quando" não dá para verificar, mesmo quando o plano já tem as datas em outra parte.
-- **De onde vem cada dado e de que período** (0.3.2): para cada produto, a fonte e o período de cada dado. Se o produto pode depender de dado de outro período, a premissa sai com a alternativa; dado que só existe depois de um evento entra numa atividade depois do evento. Erro que evita: o relatório do ano corrente contava com dados que o órgão só fecha no ano seguinte.
+- [geral] **De onde vem cada dado e de que período** (0.3.2): para cada produto, a fonte e o período de cada dado. Se o produto pode depender de dado de outro período, a premissa sai com a alternativa; dado que só existe depois de um evento entra numa atividade depois do evento. Erro que evita: o relatório do ano corrente contava com dados que o órgão só fecha no ano seguinte.
 
 ## 4. Equipe × volume
 

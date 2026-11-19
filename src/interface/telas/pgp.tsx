@@ -56,6 +56,7 @@ import { ItensPmo } from "../componentes/item-pmo";
 import { PassoPmoNaTela, UsoNaTela, useChamadaPmo } from "../componentes/passo-pmo";
 import { OPCOES, rotuloValor } from "./conferencia";
 import { contar } from "../../texto/plural";
+import { destinoDaParte, destinoEmTexto, LIMITES_DO_PORTE } from "../../etapas/4-pgp/porte";
 
 const reais = (v?: number) =>
   v === undefined ? "a definir pelo GP" : v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
@@ -137,8 +138,13 @@ export function PlanoDeGerenciamento() {
     const novo = { ...atual, [passo]: guardada, uso: r.uso ? [...atual.uso, r.uso] : atual.uso } as PgpDossie;
     // a adaptação traz a sugestão do que gerar e da abordagem: o GP muda na tabela
     if (passo === "adaptacao" && novo.adaptacao) {
-      novo.gerar = gerarSugerido(novo.adaptacao.resposta);
       novo.abordagem = novo.adaptacao.resposta.abordagem;
+      // o porte vale desde a adaptação (decisão 0091): sem as características do GP, as que o código sugere, como no
+      // teste externo; o GP confirma ou muda na autoconferência, e a mudança de porte refaz a sugestão
+      const caracteristicas = caracteristicasDoPgp({ ...useDossie.getState().dossie, pgp: novo }, entrada);
+      // guardadas à parte: a sugestão do código não vira característica confirmada pelo GP (a etapa 5 usa só estas)
+      novo.sugestaoPeloPorte = caracteristicas;
+      novo.gerar = gerarSugerido(novo.adaptacao.resposta, caracteristicas);
     }
     atualizar(novo);
   }
@@ -321,8 +327,17 @@ function Adaptacao({ p, atualizar }: { p: PgpDossie; atualizar: (np: PgpDossie) 
       </div>
       <p className="envio__obs">
         A sugestão do PMO vem ao lado. O que você dispensar fica registrado e não é apontado como ausente na
-        conferência do plano.
+        conferência do plano. Pelo porte (decisão 0091), a parte que não se gera vai fundida numa parte
+        gerada, com o conteúdo mínimo dela, ou fica dispensada, com o motivo.
       </p>
+      {p.sugestaoPeloPorte ? (
+        <p className="envio__obs" data-testid="limite-do-porte">
+          Porte {p.sugestaoPeloPorte.porte}: {partesAGerar(p).length} partes marcadas para gerar (o porte pede
+          de {LIMITES_DO_PORTE[p.sugestaoPeloPorte.porte].partes[0]} a{" "}
+          {LIMITES_DO_PORTE[p.sugestaoPeloPorte.porte].partes[1]}) e o plano em até{" "}
+          {LIMITES_DO_PORTE[p.sugestaoPeloPorte.porte].paginas} páginas.
+        </p>
+      ) : null}
       <label className="campo-numero">
         <span className="lb">Abordagem (decisão do GP)</span>
         <select
@@ -343,6 +358,7 @@ function Adaptacao({ p, atualizar }: { p: PgpDossie; atualizar: (np: PgpDossie) 
               <th>Parte</th>
               <th>Sugestão do PMO</th>
               <th>Justificativa</th>
+              <th>Para onde vai</th>
             </tr>
           </thead>
           <tbody>
@@ -365,6 +381,7 @@ function Adaptacao({ p, atualizar }: { p: PgpDossie; atualizar: (np: PgpDossie) 
                   </td>
                   <td>{s ? NOME_RECOMENDACAO[s.recomendacao] : "—"}</td>
                   <td>{s?.justificativa ?? "sem sugestão do PMO"}</td>
+                  <td>{destinoEmTexto(destinoDaParte(f.codigo, p))}</td>
                 </tr>
               );
             })}
@@ -601,11 +618,48 @@ function Custos({
         </tbody>
       </table>
       <div className="acoes-exportar" style={{ marginTop: 8 }}>
-        <CampoValor
-          rotulo="Reserva de contingência (R$, decisão do GP)"
-          valor={p.parametros.contingencia}
-          aoMudar={(v) => mudarPar({ contingencia: v })}
-        />
+        {c.riscosComReserva.length ? (
+          // decisão 0092: a contingência é a soma das reservas dos riscos marcados, cada uma decidida pelo GP
+          c.riscosComReserva.map((r) => (
+            <CampoValor
+              key={r.id}
+              rotulo={`Reserva do risco ${r.id} (marco: ${r.marco}) (R$, decisão do GP)`}
+              valor={r.valor}
+              aoMudar={(v) => {
+                // a reserva fica com o texto do risco: refeito o passo de riscos, outro risco não herda o valor
+                const reservasPorRisco = { ...(p.parametros.reservasPorRisco ?? {}) };
+                if (v === undefined) delete reservasPorRisco[r.id];
+                else reservasPorRisco[r.id] = { valor: v, risco: r.texto };
+                mudarPar({ reservasPorRisco });
+              }}
+            />
+          ))
+        ) : (
+          <p className="envio__obs">
+            Nenhum risco do registro pede reserva de contingência: ela fica em zero.
+          </p>
+        )}
+        {/* o valor único de um dossiê antigo: à vista, só para apagar (decisão 0092) */}
+        {p.parametros.contingencia !== undefined && (
+          <p className="envio__obs" data-testid="contingencia-unica">
+            Valor único de contingência informado antes: {reais(p.parametros.contingencia)}.{" "}
+            {c.origemDaContingencia === "global"
+              ? "Vale até haver reserva por risco."
+              : "Não entra na conta: a contingência agora é a soma das reservas dos riscos."}{" "}
+            <button
+              type="button"
+              className="botao botao--discreto"
+              onClick={() => mudarPar({ contingencia: undefined })}
+            >
+              Apagar o valor único
+            </button>
+          </p>
+        )}
+        {c.avisosDaContingencia.map((a) => (
+          <p key={a} className="aviso" role="status">
+            {a}
+          </p>
+        ))}
         <CampoValor
           rotulo="Reserva gerencial (R$, decisão do GP)"
           valor={p.parametros.gerencial}
@@ -617,6 +671,15 @@ function Custos({
           <tr>
             <td>Pessoal</td>
             <td>{reais(c.preco.pessoal)}</td>
+          </tr>
+          <tr>
+            <td>
+              Reserva de contingência{" "}
+              {c.origemDaContingencia === "global"
+                ? "(valor único, ainda não dado risco a risco)"
+                : "(soma das reservas dos riscos)"}
+            </td>
+            <td>{reais(c.contingencia)}</td>
           </tr>
           <tr>
             <td>Linha de base dos custos (pessoal + contingência)</td>
@@ -675,7 +738,17 @@ function Autoconferencia({
   const [resultado, setResultado] = useState<ResultadoConferencia | null>(null);
   const car = caracteristicasDoPgp(dossie, e);
   const mudar = (m: Partial<Caracteristicas>) => {
-    atualizar({ ...p, caracteristicas: { ...car, ...m } });
+    const caracteristicas = { ...car, ...m };
+    // o porte mudou: a sugestão do que gerar é refeita pelo porte novo (decisão 0091); o GP ajusta na tabela
+    // compara com o porte da sugestão gravada: o dossiê antigo (sem ela) também é refeito ao confirmar o porte
+    const refazer = Boolean(m.porte && m.porte !== p.sugestaoPeloPorte?.porte && p.adaptacao);
+    atualizar({
+      ...p,
+      caracteristicas,
+      ...(refazer
+        ? { sugestaoPeloPorte: caracteristicas, gerar: gerarSugerido(p.adaptacao!.resposta, caracteristicas) }
+        : {}),
+    });
     setResultado(null);
   };
   const separados = resultado ? separarDecisoesPendentes(resultado.achados) : null;

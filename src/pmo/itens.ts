@@ -46,6 +46,8 @@ const ROTULO = { documento: "Do documento", sugestao: "Sugestão", decisao_gp: "
 
 /** Rótulo visível de um item, com a página conferida ou o aviso de citação não conferida. */
 export function rotuloDoItem(i: ItemConferido): string {
+  // rótulo misto (decisão 0093, regra 15 da skill): o item que mistura documento e sugestão vale como sugestão
+  if (i.item.rotulo === "documento" && i.conferencia.rotuloMisto) return `[${ROTULO.sugestao}]`;
   if (i.item.rotulo === "documento") {
     if (i.conferencia.citacaoNaoConferida) return "[Do documento — citação não conferida]";
     const k = i.conferencia.citacoes.findIndex(
@@ -65,6 +67,7 @@ export function paragrafoDoItem(i: ItemConferido, revisoes: Record<string, Revis
     i.item.rotulo === "documento" && i.conferencia.citacaoNaoProva
       ? "citação a conferir: o trecho pode não provar a frase"
       : "",
+    i.conferencia.rotuloMisto ? "rótulo misto: há sugestão dentro do item do documento" : "",
     i.conferencia.numerosSemFonte.length
       ? `número sem fonte — conferir: ${i.conferencia.numerosSemFonte.join(", ")}`
       : "",
