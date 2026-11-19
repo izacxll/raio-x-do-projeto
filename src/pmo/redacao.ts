@@ -23,12 +23,13 @@ export const CONDICIONAL =
  * das etapas 2 a 4, onde foi medida.
  */
 export const CONDICIONAL_AMPLIADA =
-  /(?<!não\s)(?<!\p{L})pode(?!\p{L})|a definir(?!\p{L})|decis(?:ão|ões) do GP|sugerid|(?<!\p{L})sugere(?!\p{L})|a confirmar|o GP (?:confirma|decide|define|aceita|aceitar|escolhe)|(?:^|[.;:]\s*)caso\s+(?:o|a|os|as|haja|seja|não|ocorra)(?!\p{L})/iu;
+  /(?<!(?:não|nunca|jamais)\s)(?<!\p{L})pode(?!\p{L})|a definir(?!\p{L})|decis(?:ão|ões) do GP|sugerid|(?<!\p{L})sugere(?!\p{L})|a confirmar|o GP (?:confirma|decide|define|aceita|aceitar|escolhe)|(?:^|[.;:]\s*)caso\s+(?:o|a|os|as|haja|seja|não|ocorra)(?!\p{L})/iu;
 
 /**
  * Linha de estrutura ou de modelo (campos, colunas, escalas, status, categorias, fases): não afirma escolha, e a
  * redação condicional não faz sentido nela (decisão 0093). Só quando, depois do rótulo, vem uma lista curta (cada
- * parte com até 5 palavras) numa oração só: "Impacto: a FGV arca com a remobilização" não é linha de estrutura.
+ * parte com até 3 palavras) numa linha e oração só, sem a FGV, o GP, o contratante ou a equipe como sujeito: "Impacto:
+ * a FGV paga a multa" não é linha de estrutura.
  */
 const ROTULO_DE_ESTRUTURA =
   /^(?:Campos?|Colunas?|Status|Situação[^:]{0,40}|Probabilidade|Impacto|Categorias?|Escalas?|Fases|Dicionário)\s*:\s*/i;
@@ -38,8 +39,9 @@ export function linhaDeEstrutura(texto: string): boolean {
   const m = ROTULO_DE_ESTRUTURA.exec(t);
   if (!m) return false;
   const resto = t.slice(m[0].length).replace(/\.\s*$/, "");
-  if (/[.;]\s+\S/.test(resto)) return false;
-  return resto.split(/,|\se\s/).every((parte) => parte.trim().split(/\s+/).length <= 5);
+  if (/[.;\n]\s*\S/.test(resto)) return false;
+  if (/(?<!\p{L})(?:FGV|GP|contratante|equipe)(?!\p{L})/u.test(resto)) return false;
+  return resto.split(/,|\se\s/).every((parte) => parte.trim().split(/\s+/).length <= 3);
 }
 
 /**

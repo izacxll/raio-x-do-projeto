@@ -45,6 +45,8 @@ function base(dossie: Dossie, titulo: string, subtitulo: string, minuta: boolean
 
 /** Rótulo visível de um item, com a página conferida ou o aviso de citação não conferida. */
 export function rotuloDoItem(i: ItemProposta): string {
+  // rótulo misto (decisão 0093, regra 15 da skill): o item que mistura documento e sugestão vale como sugestão
+  if (i.item.rotulo === "documento" && i.conferencia?.rotuloMisto) return `[${ROTULO.sugestao}]`;
   if (i.item.rotulo === "documento") {
     if (i.conferencia.citacaoNaoConferida) return "[Do documento — citação não conferida]";
     const k = i.conferencia.citacoes.findIndex(

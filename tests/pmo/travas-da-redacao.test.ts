@@ -89,3 +89,19 @@ describe("revisão alta do #102 (decisão 0093)", () => {
     expect(rotuloMisto(literal)).toBe(false);
   });
 });
+
+describe("segunda revisão alta do #102 (decisão 0093)", () => {
+  it("o item de rótulo misto sai como Sugestão no rótulo e no cartão", async () => {
+    const { rotuloDoItem } = await import("../../src/pmo/itens");
+    const misto = item("documento", "A vigência é de 12 meses; sugere-se prever prorrogação.");
+    const i = { id: "x", passo: "tap", grupo: "g", item: misto, conferencia: conferirItem(misto, []) };
+    expect(rotuloDoItem(i as never)).toBe("[Sugestão]");
+  });
+
+  it("afirmação curta depois do rótulo não é linha de estrutura; 'nunca pode' não é condicional", () => {
+    expect(sugestaoSemCondicional("Impacto: a FGV paga a multa.", { ampliada: true })).toBe(true);
+    expect(sugestaoSemCondicional("Campos: nome, cargo\nA FGV fará a coleta", { ampliada: true })).toBe(true);
+    expect(sugestaoSemCondicional("Nunca pode faltar o coordenador.", { ampliada: true })).toBe(true);
+    expect(sugestaoSemCondicional("Escala: baixa, média, alta.", { ampliada: true })).toBe(false);
+  });
+});
