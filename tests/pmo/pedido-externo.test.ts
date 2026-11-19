@@ -949,6 +949,7 @@ describe.skipIf(MODO !== "importar")("importar a resposta do PMO (leitura indepe
         if (passo === "adaptacao") {
           // decisão do GP com o padrão do teste: --gerar "A1,A3,…", ou a sugestão pelo porte (decisão 0091)
           const a = v.data as z.infer<typeof SCHEMAS_PGP.adaptacao>;
+          const porteDaSugestao = pgp.caracteristicas ?? sugestaoDoCodigo({ ...dossie, pgp });
           const escolhidas = env.RAIO_X_GERAR
             ? new Set(env.RAIO_X_GERAR.split(",").map((x) => x.trim()))
             : undefined;
@@ -957,7 +958,9 @@ describe.skipIf(MODO !== "importar")("importar a resposta do PMO (leitura indepe
             abordagem: a.abordagem,
             gerar: escolhidas
               ? Object.fromEntries(a.partes.map((s) => [s.codigo, escolhidas.has(s.codigo)]))
-              : gerarSugerido(a, pgp.caracteristicas),
+              : gerarSugerido(a, porteDaSugestao),
+            // a mesma regra da tela: as características do GP ou, sem elas, as que o código sugere (decisão 0091)
+            sugestaoPeloPorte: porteDaSugestao,
           };
         }
         dossie = { ...dossie, pgp };

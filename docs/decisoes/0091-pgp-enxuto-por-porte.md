@@ -51,16 +51,20 @@ Faltava o código aplicar essa régua.
    - O código estima as páginas sem abrir o Word, pelos caracteres do texto e das tabelas. A fórmula foi calibrada com os dois planos do teste externo.
    - A capa da etapa 4 mostra as partes e as páginas contra o limite do porte e alerta quando passa.
    - Cada pedido da etapa 4 traz o orçamento: "o corpo do plano (os planos A, sem os registros B) em até N páginas, cerca de X página por plano; uma linha por item da ficha".
-   - A tela já aplica o porte ao receber a adaptação. Sem as características do GP, usa as que o código sugere, como no teste externo. A mudança de porte refaz a sugestão do que gerar.
+   - A tela e o teste externo aplicam o porte ao receber a adaptação, pela mesma regra: as características do GP ou, sem elas, as que o código sugere.
+   - As características usadas ficam num campo à parte (`sugestaoPeloPorte`). Elas não viram características confirmadas pelo GP, que são as que a etapa 5 usa.
+   - Só a sugestão feita assim funde partes. No dossiê antigo, sem o campo, o que não se gera é dispensa.
+   - A mudança de porte pelo GP refaz a sugestão do que gerar.
+   - No porte pequeno, a parte que o PMO marcou como essencial continua gerada, mesmo se estiver na lista do que o porte dispensaria.
 
 ## Medição (os dois casos do teste externo, com as respostas já gravadas; fora do Git)
 
 | Caso | Antes: partes / páginas no total / páginas do corpo | Depois |
 |---|---|---|
-| Contratação direta (porte pequeno) | 44 / ~55 / ~14 | 15 / ~53 / ~14 |
+| Contratação direta (porte pequeno) | 44 / ~55 / ~14 | 18 / ~54 / ~14 |
 | TR fiscal (porte médio) | 44 / ~59 / ~15 | 33 / ~59 / ~15 |
 
-- **Partes:** o número cai.
+- **Partes:** o número cai. No caso pequeno ficam 18, acima das 15: o PMO marcou como essenciais três partes que o porte dispensaria, e o essencial dele prevalece. A capa alerta, e o GP decide.
 - **Corpo:** os dois planos já estavam dentro do limite (15 e 30 páginas).
 - **Volume:** quase todo vem dos registros B (riscos, premissas, cronograma, RACI, rastreabilidade), cerca de 40 páginas, que também saem na planilha.
 - **Decisão pendente da responsável:** no porte pequeno, deixar os registros só na planilha e tirá-los do Word do plano.

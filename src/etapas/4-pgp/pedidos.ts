@@ -46,14 +46,14 @@ ${linhaDoPorte(p)}`;
 
 /** O tamanho do plano pelo porte (decisão 0091): quantas partes e até quantas páginas. */
 function linhaDoPorte(p: PgpDossie): string {
-  const porte = p.caracteristicas?.porte;
+  const porte = p.sugestaoPeloPorte?.porte;
   if (!porte || !p.adaptacao) return "";
   const geradas = partesAGerar(p);
   // o limite vale para o corpo: os planos (A); os registros (B) vão para o anexo
   const planos = geradas.filter((c) => c.startsWith("A")).length;
   const paginas = LIMITES_DO_PORTE[porte].paginas;
   const porPlano = Math.max(0.5, Math.round((paginas / Math.max(1, planos)) * 2) / 2);
-  return `Porte do projeto: ${porte}. Plano enxuto (decisão 0091): ${geradas.length} partes geradas; o corpo do plano (os ${planos} planos A, sem os registros B, que vão para o anexo) em até ${paginas} páginas, cerca de ${String(porPlano).replace(".", ",")} página por plano. Cubra o conteúdo mínimo com uma linha por item da ficha que vale para o projeto; não repita o que outra parte ou o TAP já diz.`;
+  return `Porte do projeto: ${porte}${p.caracteristicas ? "" : " (sugerido pelo código; o GP confirma na tela)"}. Plano enxuto (decisão 0091): ${geradas.length} partes geradas; o corpo do plano (os ${planos} planos A, sem os registros B, que vão para o anexo) em até ${paginas} páginas, cerca de ${String(porPlano).replace(".", ",")} página por plano. Cubra o conteúdo mínimo com uma linha por item da ficha que vale para o projeto; não repita o que outra parte ou o TAP já diz.`;
 }
 
 /** As partes do passo com as fundidas nelas (decisão 0091): a ficha da fundida vai junto, e a hospedeira cobre o conteúdo mínimo dela. */

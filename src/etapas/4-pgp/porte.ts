@@ -122,8 +122,7 @@ export function gerarPeloPorte(a: RespostaAdaptacao, c?: Caracteristicas): Recor
     return Object.fromEntries(
       a.partes.map((p) => [
         p.codigo,
-        nucleo.has(p.codigo) ||
-          (p.recomendacao === "essencial" && !HOSPEDEIRA[p.codigo] && !DISPENSADAS_NO_PEQUENO[p.codigo]),
+        nucleo.has(p.codigo) || (p.recomendacao === "essencial" && !HOSPEDEIRA[p.codigo]),
       ]),
     );
   }
@@ -153,9 +152,11 @@ export function destinoDaParte(codigo: string, p: PgpDossie): DestinoDaParte {
   const sugestao = p.adaptacao?.resposta.partes.find((x) => x.codigo === codigo);
   if (!sugestao)
     return { tipo: "dispensada", motivo: "fora da adaptação do PMO (sem sugestão para esta parte)" };
-  const porte = p.caracteristicas?.porte;
+  // só a sugestão feita pelo porte (decisão 0091) funde partes: o dossiê antigo, sem ela, não tem parte fundida
+  const sugestaoDoPorte = p.sugestaoPeloPorte;
+  const porte = sugestaoDoPorte?.porte;
   const peloPorte =
-    p.adaptacao && p.caracteristicas ? gerarPeloPorte(p.adaptacao.resposta, p.caracteristicas) : {};
+    p.adaptacao && sugestaoDoPorte ? gerarPeloPorte(p.adaptacao.resposta, sugestaoDoPorte) : {};
   const hospedeira = HOSPEDEIRA[codigo];
   if (porte === "pequeno" && DISPENSADAS_NO_PEQUENO[codigo] && sugestao.recomendacao !== "essencial")
     return { tipo: "dispensada", motivo: DISPENSADAS_NO_PEQUENO[codigo] };

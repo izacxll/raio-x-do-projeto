@@ -360,6 +360,12 @@ export const PgpDossie = z.object({
   premissasAplicaveis: z.record(z.string(), z.boolean()).optional(),
   /** Características do projeto para a autoconferência (as mesmas da etapa 5), confirmadas pelo GP. */
   caracteristicas: CaracteristicasProjeto.optional(),
+  /**
+   * As características com que a sugestão do que gerar foi feita pelo porte (decisão 0091): as do GP ou, sem elas, as que
+   * o código sugere. Não são confirmação do GP (a etapa 5 usa só as de cima). Sem este campo (dossiê antigo), nenhuma
+   * parte é tratada como fundida: o que não se gera é dispensa.
+   */
+  sugestaoPeloPorte: CaracteristicasProjeto.optional(),
   uso: z.array(UsoPmo),
 });
 export type PgpDossie = z.infer<typeof PgpDossie>;

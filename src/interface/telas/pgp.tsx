@@ -142,7 +142,8 @@ export function PlanoDeGerenciamento() {
       // o porte vale desde a adaptação (decisão 0091): sem as características do GP, as que o código sugere, como no
       // teste externo; o GP confirma ou muda na autoconferência, e a mudança de porte refaz a sugestão
       const caracteristicas = caracteristicasDoPgp({ ...useDossie.getState().dossie, pgp: novo }, entrada);
-      novo.caracteristicas = caracteristicas;
+      // guardadas à parte: a sugestão do código não vira característica confirmada pelo GP (a etapa 5 usa só estas)
+      novo.sugestaoPeloPorte = caracteristicas;
       novo.gerar = gerarSugerido(novo.adaptacao.resposta, caracteristicas);
     }
     atualizar(novo);
@@ -329,12 +330,12 @@ function Adaptacao({ p, atualizar }: { p: PgpDossie; atualizar: (np: PgpDossie) 
         conferência do plano. Pelo porte (decisão 0091), a parte que não se gera vai fundida numa parte
         gerada, com o conteúdo mínimo dela, ou fica dispensada, com o motivo.
       </p>
-      {p.caracteristicas ? (
+      {p.sugestaoPeloPorte ? (
         <p className="envio__obs" data-testid="limite-do-porte">
-          Porte {p.caracteristicas.porte}: {partesAGerar(p).length} partes marcadas para gerar (o porte pede
-          de {LIMITES_DO_PORTE[p.caracteristicas.porte].partes[0]} a{" "}
-          {LIMITES_DO_PORTE[p.caracteristicas.porte].partes[1]}) e o plano em até{" "}
-          {LIMITES_DO_PORTE[p.caracteristicas.porte].paginas} páginas.
+          Porte {p.sugestaoPeloPorte.porte}: {partesAGerar(p).length} partes marcadas para gerar (o porte pede
+          de {LIMITES_DO_PORTE[p.sugestaoPeloPorte.porte].partes[0]} a{" "}
+          {LIMITES_DO_PORTE[p.sugestaoPeloPorte.porte].partes[1]}) e o plano em até{" "}
+          {LIMITES_DO_PORTE[p.sugestaoPeloPorte.porte].paginas} páginas.
         </p>
       ) : null}
       <label className="campo-numero">
@@ -693,11 +694,14 @@ function Autoconferencia({
   const mudar = (m: Partial<Caracteristicas>) => {
     const caracteristicas = { ...car, ...m };
     // o porte mudou: a sugestão do que gerar é refeita pelo porte novo (decisão 0091); o GP ajusta na tabela
-    const gerar =
-      m.porte && m.porte !== car.porte && p.adaptacao
-        ? gerarSugerido(p.adaptacao.resposta, caracteristicas)
-        : p.gerar;
-    atualizar({ ...p, caracteristicas, gerar });
+    const refazer = Boolean(m.porte && m.porte !== car.porte && p.adaptacao);
+    atualizar({
+      ...p,
+      caracteristicas,
+      ...(refazer
+        ? { sugestaoPeloPorte: caracteristicas, gerar: gerarSugerido(p.adaptacao!.resposta, caracteristicas) }
+        : {}),
+    });
     setResultado(null);
   };
   const separados = resultado ? separarDecisoesPendentes(resultado.achados) : null;

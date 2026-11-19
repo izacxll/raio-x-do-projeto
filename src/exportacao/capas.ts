@@ -487,7 +487,7 @@ export function capaDoPgp(dossie: Dossie, agora = new Date()): CapaDeDecisao | u
   // a régua dos marcos pelos prazos do TAP que o código tem (decisão 0087): sem eles, "não localizados", não "sem régua"
   const regua = reguaDosMarcos(e.marcosTap.map((m) => m.prazo));
   // o tamanho do plano contra o limite do porte (decisão 0091): partes geradas e páginas estimadas
-  const porte = p.caracteristicas?.porte;
+  const porte = p.sugestaoPeloPorte?.porte;
   const limite = porte ? LIMITES_DO_PORTE[porte] : undefined;
   const paginas = paginasDoCorpoDoPlano(montarPgp(dossie, agora));
 

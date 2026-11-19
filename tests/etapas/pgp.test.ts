@@ -475,7 +475,7 @@ describe("pedidos da etapa 4 só com as partes marcadas", () => {
     const caracteristicas = { ...CARACTERISTICAS_PADRAO, porte: "pequeno" as const };
     const pequeno = {
       ...dossie.pgp!,
-      caracteristicas,
+      sugestaoPeloPorte: caracteristicas,
       gerar: gerarSugerido(dossie.pgp!.adaptacao!.resposta, caracteristicas),
     };
     expect(pequeno.gerar.B17).toBe(false);

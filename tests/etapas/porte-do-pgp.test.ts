@@ -13,6 +13,7 @@ import {
   fundidasDeTexto,
   fundidasEm,
   gerarPeloPorte,
+  HOSPEDEIRA,
   LIMITES_DO_PORTE,
   NUCLEO_PEQUENO,
 } from "../../src/etapas/4-pgp/porte";
@@ -28,7 +29,7 @@ const comPorte = (porte: Caracteristicas["porte"], extra: Partial<Caracteristica
   const caracteristicas = { ...CARACTERISTICAS_PADRAO, porte, ...extra };
   return {
     ...pgpInicial(),
-    caracteristicas,
+    sugestaoPeloPorte: caracteristicas,
     adaptacao: { resposta: adaptacao, modelo: "teste", em: "" },
     gerar: gerarPeloPorte(adaptacao, caracteristicas),
   };
@@ -36,17 +37,26 @@ const comPorte = (porte: Caracteristicas["porte"], extra: Partial<Caracteristica
 const geradas = (p: PgpDossie) => Object.values(p.gerar).filter(Boolean).length;
 
 describe("plano enxuto por porte (decisão 0091)", () => {
-  it("porte pequeno: o núcleo de 14 partes, 15 com a subcontratação permitida", () => {
+  it("porte pequeno: o núcleo de 14 partes, mais A9 sem a subcontratação vedada e o essencial do PMO sem hospedeira", () => {
     const p = comPorte("pequeno", { subcontratacao: "vedada" });
+    // além do núcleo, só a parte que o PMO marcou como essencial e não tem hospedeira (o essencial dele vale)
+    const extras = adaptacao.partes
+      .filter(
+        (x) =>
+          x.recomendacao === "essencial" &&
+          !HOSPEDEIRA[x.codigo] &&
+          !NUCLEO_PEQUENO.includes(x.codigo as never),
+      )
+      .map((x) => x.codigo)
+      .filter((c) => c !== "A9");
     expect(
       Object.keys(p.gerar)
         .filter((c) => p.gerar[c])
         .sort(),
-    ).toEqual([...NUCLEO_PEQUENO].sort());
-    const [min, max] = LIMITES_DO_PORTE.pequeno.partes;
+    ).toEqual([...NUCLEO_PEQUENO, ...extras].sort());
+    const [min] = LIMITES_DO_PORTE.pequeno.partes;
     expect(geradas(p)).toBeGreaterThanOrEqual(min);
-    expect(geradas(p)).toBeLessThanOrEqual(max);
-    expect(geradas(comPorte("pequeno", { subcontratacao: "permitida" }))).toBe(15);
+    expect(geradas(comPorte("pequeno", { subcontratacao: "permitida" }))).toBe(geradas(p) + 1);
   });
 
   it("porte pequeno: cada parte fora do núcleo diz para onde foi", () => {
@@ -116,5 +126,25 @@ describe("plano enxuto por porte (decisão 0091)", () => {
     const c = { ...CARACTERISTICAS_PADRAO, porte: "médio" as const };
     const invertida = { ...adaptacao, partes: [...adaptacao.partes].reverse() };
     expect(gerarPeloPorte(invertida, c)).toEqual(gerarPeloPorte(adaptacao, c));
+  });
+});
+
+describe("segunda revisão alta (decisão 0091)", () => {
+  it("dossiê antigo, sem a sugestão pelo porte: o que não se gera é dispensa, nunca fundida", () => {
+    const p = comPorte("pequeno");
+    const antigo = { ...p, sugestaoPeloPorte: undefined, caracteristicas: p.sugestaoPeloPorte };
+    expect(destinoDaParte("B17", antigo).tipo).toBe("dispensada");
+    expect(fundidasDeTexto(antigo)).toEqual([]);
+  });
+
+  it("no pequeno, a parte essencial pelo PMO que estaria na lista do porte continua gerada", () => {
+    const essencialB33 = {
+      ...adaptacao,
+      partes: adaptacao.partes.map((x) =>
+        x.codigo === "B33" ? { ...x, recomendacao: "essencial" as const } : x,
+      ),
+    };
+    const c = { ...CARACTERISTICAS_PADRAO, porte: "pequeno" as const };
+    expect(gerarPeloPorte(essencialB33, c).B33).toBe(true);
   });
 });
