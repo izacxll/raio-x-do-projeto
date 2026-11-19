@@ -618,11 +618,26 @@ function Custos({
         </tbody>
       </table>
       <div className="acoes-exportar" style={{ marginTop: 8 }}>
-        <CampoValor
-          rotulo="Reserva de contingência (R$, decisão do GP)"
-          valor={p.parametros.contingencia}
-          aoMudar={(v) => mudarPar({ contingencia: v })}
-        />
+        {c.riscosComReserva.length ? (
+          // decisão 0092: a contingência é a soma das reservas dos riscos marcados, cada uma decidida pelo GP
+          c.riscosComReserva.map((r) => (
+            <CampoValor
+              key={r.id}
+              rotulo={`Reserva do risco ${r.id}${r.marco ? ` (marco ${r.marco})` : ""} (R$, decisão do GP)`}
+              valor={r.valor}
+              aoMudar={(v) => {
+                const reservasPorRisco = { ...(p.parametros.reservasPorRisco ?? {}) };
+                if (v === undefined) delete reservasPorRisco[r.id];
+                else reservasPorRisco[r.id] = v;
+                mudarPar({ reservasPorRisco });
+              }}
+            />
+          ))
+        ) : (
+          <p className="envio__obs">
+            Nenhum risco do registro pede reserva de contingência: ela fica em zero.
+          </p>
+        )}
         <CampoValor
           rotulo="Reserva gerencial (R$, decisão do GP)"
           valor={p.parametros.gerencial}
@@ -634,6 +649,15 @@ function Custos({
           <tr>
             <td>Pessoal</td>
             <td>{reais(c.preco.pessoal)}</td>
+          </tr>
+          <tr>
+            <td>
+              Reserva de contingência{" "}
+              {c.origemDaContingencia === "global"
+                ? "(valor único, ainda não dado risco a risco)"
+                : "(soma das reservas dos riscos)"}
+            </td>
+            <td>{reais(c.contingencia)}</td>
           </tr>
           <tr>
             <td>Linha de base dos custos (pessoal + contingência)</td>

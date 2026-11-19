@@ -153,6 +153,7 @@ export function itensDoPgp(
             `Gatilho: ${x.gatilho || "a definir pelo GP"}.`,
             `Responsável: ${x.responsavel || "a definir pelo GP"}.`,
             x.pedeReserva ? "Pede reserva de contingência (valor do GP)." : "",
+            `Marco: ${x.marco || "do projeto todo"}.`,
           ]
             .filter(Boolean)
             .join(" "),

@@ -69,7 +69,9 @@ test("etapa 4 com o PMO simulado: adaptação, seis passos, contas, autoconferê
   await expect(page.getByTestId("rastreabilidade")).toContainText("R06");
   await expect(page.getByTestId("marcos")).toContainText("não cabe");
   await page.getByLabel("Aprovação de cada produto (dias úteis, decisão do GP)").fill("5");
-  await page.getByLabel("Reserva de contingência (R$, decisão do GP)").fill("10000");
+  // decisão 0092: a reserva de contingência é dada risco a risco, e o plano soma
+  const reservas = page.getByLabel(/^Reserva do risco /);
+  for (let k = 0; k < (await reservas.count()); k++) await reservas.nth(k).fill("5000");
 
   await page.getByTestId("autoconferir").click();
   await expect(page.getByTestId("resultado-autoconferencia")).toContainText(

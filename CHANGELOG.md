@@ -4,6 +4,10 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 
 ## [Não publicado]
 
+### Riscos ligados e contingência derivada (decisão 0092)
+- **Risco → resposta, reserva e marco:** campo do marco (produto do cronograma, conferido pelo código) no B27; colunas Reserva e Marco no plano e na capa; alerta do risco alto sem marco.
+- **Contingência:** a soma das reservas dos riscos marcados, cada uma decidida pelo GP na tela; a que falta fica a definir, com os riscos; o valor único antigo vale só sem valor por risco.
+
 ### PGP enxuto por porte (decisão 0091)
 - **Porte pequeno:** um PGP único com o núcleo de 14 partes (15 com aquisições); médio com o essencial e o recomendado fundido; grande como era.
 - **Parte fundida:** vai na hospedeira com o conteúdo mínimo (a ficha no pedido, os itens na autoconferência, as tabelas do código na seção dela); a dispensada fica com o motivo. O plano, o índice, a tela e a etapa 5 dizem para onde foi.

@@ -200,7 +200,43 @@ export interface CustosPgp {
   /** Conferência do orçamento com os recursos do TAP ou o preço da proposta. */
   conferencia: string;
   /** Riscos que pedem reserva de contingência (B27): o valor de cada um é do GP, dentro da linha de base. */
-  riscosComReserva: { id: string; texto: string }[];
+  riscosComReserva: { id: string; texto: string; valor?: number; marco: string }[];
+  /** A reserva de contingência que entra na linha de base (decisão 0092). */
+  contingencia?: number;
+  /**
+   * De onde ela vem: "riscos" (a soma das reservas de cada risco marcado), "global" (o valor único de um dossiê antigo,
+   * sem o valor por risco) ou "sem-risco" (nenhum risco pede reserva: zero).
+   */
+  origemDaContingencia?: "riscos" | "global" | "sem-risco";
+}
+
+/**
+ * O marco que o risco ameaça, conferido no cronograma do plano (decisão 0092): o produto que existe; o que não existe
+ * fica "não localizado no cronograma"; sem marco, o risco é do projeto todo.
+ */
+export function marcoDoRisco(marco: string | undefined, produtos: Set<string>): string {
+  const m = marco?.trim();
+  if (!m) return "do projeto todo";
+  return produtos.has(m) ? m : `${m} (não localizado no cronograma)`;
+}
+
+/**
+ * A reserva de contingência pelos riscos (decisão 0092): a soma das reservas que o GP deu a cada risco que pede reserva.
+ * Falta valor em algum risco: a contingência fica a definir. Nenhum risco pede reserva: zero. O valor global de um
+ * dossiê antigo vale só enquanto nenhum risco tem valor próprio.
+ */
+export function contingenciaPelosRiscos(
+  riscos: { id: string; pedeReserva: boolean }[],
+  reservas: Record<string, number> | undefined,
+  global: number | undefined,
+): { valor?: number; origem?: CustosPgp["origemDaContingencia"]; semValor: string[] } {
+  const marcados = riscos.filter((r) => r.pedeReserva);
+  const comValor = marcados.filter((r) => reservas?.[r.id] !== undefined);
+  const semValor = marcados.filter((r) => reservas?.[r.id] === undefined).map((r) => r.id);
+  if (!marcados.length) return { valor: 0, origem: "sem-risco", semValor: [] };
+  if (!comValor.length && global !== undefined) return { valor: global, origem: "global", semValor: [] };
+  if (semValor.length) return { semValor };
+  return { valor: comValor.reduce((s, r) => s + reservas![r.id]!, 0), origem: "riscos", semValor: [] };
 }
 
 const reais = (v: number) => v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
@@ -218,18 +254,26 @@ export function custosDoPgp(p: PgpDossie, e: EntradaPgp): CustosPgp | undefined 
     reserva: 0,
   });
   const faltando = [...preco.faltando];
-  const riscosComReserva = (p.riscos?.resposta.riscos ?? [])
+  const riscos = p.riscos?.resposta.riscos ?? [];
+  const riscosComReserva = riscos
     .filter((r) => r.pedeReserva)
-    .map((r) => ({ id: r.id, texto: r.item.texto }));
-  if (par.contingencia === undefined)
+    .map((r) => ({ id: r.id, texto: r.item.texto, valor: par.reservasPorRisco?.[r.id], marco: r.marco }));
+  // a contingência deriva dos riscos marcados (decisão 0092)
+  const cont = p.riscos
+    ? contingenciaPelosRiscos(riscos, par.reservasPorRisco, par.contingencia)
+    : {
+        valor: par.contingencia,
+        origem: par.contingencia !== undefined ? ("global" as const) : undefined,
+        semValor: [],
+      };
+  if (cont.semValor.length)
     faltando.push(
-      `reserva de contingência (decisão do GP${riscosComReserva.length ? `; pedida pelos riscos ${riscosComReserva.map((r) => r.id).join(", ")}` : ""})`,
+      `reserva de contingência dos riscos ${cont.semValor.join(", ")} (decisão do GP, risco a risco)`,
     );
+  else if (cont.valor === undefined) faltando.push("reserva de contingência (decisão do GP)");
   if (par.gerencial === undefined) faltando.push("reserva gerencial (decisão do GP)");
   const linhaDeBase =
-    preco.pessoal !== undefined && par.contingencia !== undefined
-      ? preco.pessoal + par.contingencia
-      : undefined;
+    preco.pessoal !== undefined && cont.valor !== undefined ? preco.pessoal + cont.valor : undefined;
   const orcamento =
     linhaDeBase !== undefined && par.gerencial !== undefined ? linhaDeBase + par.gerencial : undefined;
   const referencia = (e.recursosTap && lerValorEmReais(e.recursosTap)) || e.dadosProposta?.valor;
@@ -243,7 +287,16 @@ export function custosDoPgp(p: PgpDossie, e: EntradaPgp): CustosPgp | undefined 
         : orcamento > referencia
           ? `O orçamento (${reais(orcamento)}) passa do ${deOnde} (${reais(referencia)}): conferir. Tributos e custos indiretos não entram nesta conta.`
           : `O orçamento (${reais(orcamento)}) cabe no ${deOnde} (${reais(referencia)}). Tributos e custos indiretos não entram nesta conta.`;
-  return { preco, linhaDeBase, orcamento, faltando, conferencia, riscosComReserva };
+  return {
+    preco,
+    linhaDeBase,
+    orcamento,
+    faltando,
+    conferencia,
+    riscosComReserva,
+    contingencia: cont.valor,
+    ...(cont.origem ? { origemDaContingencia: cont.origem } : {}),
+  };
 }
 
 export interface LinhaRastreabilidade {

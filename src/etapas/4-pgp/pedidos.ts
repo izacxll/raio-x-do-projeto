@@ -134,7 +134,10 @@ function resumoDosRiscos(p: PgpDossie, e: EntradaPgp): string {
   return [
     "Riscos do registro (B27):",
     ...(riscos.length
-      ? riscos.map((r) => `- ${r.id}${r.premissaCritica ? ` (${r.premissaCritica})` : ""}: ${r.item.texto}`)
+      ? riscos.map(
+          (r) =>
+            `- ${r.id}${r.premissaCritica ? ` (${r.premissaCritica})` : ""}: ${r.item.texto} [resposta: ${r.estrategia}; ${r.pedeReserva ? "pede reserva" : "sem reserva"}; marco: ${r.marco || "do projeto todo"}]`,
+        )
       : ["- (registro de riscos ainda não feito)"]),
     "Premissas do registro inicial (TAP):",
     ...(premissasTap.length ? premissasTap : ["- (sem registro inicial no dossiê)"]),
@@ -282,7 +285,7 @@ ${listaDePartes(partes, "riscos", p)}
 ${fichasDasPartes([...cobertas, "B27", "B3"])}
 
 # O que fazer
-1. riscos (B27): condições futuras da execução, cada uma com categoria, probabilidade e impacto qualitativos, estratégia, resposta, gatilho e responsável (papel). Cada premissa crítica que se aplica vira um risco com resposta e gatilho (B27.13). Marque pedeReserva no risco que pede reserva; o valor é do GP.
+1. riscos (B27): condições futuras da execução, cada uma com categoria, probabilidade e impacto qualitativos, estratégia, resposta, gatilho e responsável (papel). Cada premissa crítica que se aplica vira um risco com resposta e gatilho (B27.13). Cada risco liga resposta, reserva e marco (decisão 0092): em "marco", o produto (P1…) do cronograma acima cujo marco o risco ameaça, ou "" quando é do projeto todo; marque pedeReserva no risco que pede reserva de contingência. O valor da reserva de cada risco é do GP, e a contingência do plano é a soma delas, pela conta do código: no A4, não escreva um valor de contingência.
 2. textos: ${soAsMarcadas(partes, { A8: "A8 (com o tratamento das premissas críticas, A8.12)", A4: "A4 (como os custos são estimados e controlados, com a reserva de contingência dentro da linha de base e a gerencial fora, valores do GP)" }) || "nenhuma parte de texto marcada neste passo"}. O código faz as estimativas de custos (B6) e a linha de base dos custos (A15).
 3. premissas (B3): só as novas, que nascem das estimativas de duração e de custo e dos riscos, cada uma com a origem (B3.4). As do registro inicial do TAP já entram pelo código.
 4. observacoes: o que você achou e o código não, com fonte.

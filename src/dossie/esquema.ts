@@ -334,8 +334,13 @@ export const ParametrosPgp = z.object({
   /** Feriados municipais (aaaa-mm-dd) que o GP informa; os nacionais o código já desconta. */
   feriados: z.array(z.string()).optional(),
   valoresHora: z.record(z.string(), z.number().nonnegative()),
-  /** Reserva de contingência (dentro da linha de base) e gerencial (fora dela), em R$. */
+  /**
+   * Reserva de contingência (dentro da linha de base) e gerencial (fora dela), em R$. A contingência deriva dos riscos
+   * (decisão 0092): a soma de reservasPorRisco; o valor global fica para o dossiê antigo, sem o valor por risco.
+   */
   contingencia: z.number().nonnegative().optional(),
+  /** Reserva de contingência de cada risco que pede reserva (B27), em R$, pelo id do risco: decisão do GP. */
+  reservasPorRisco: z.record(z.string(), z.number().nonnegative()).optional(),
   gerencial: z.number().nonnegative().optional(),
   /** Nomes da equipe, pelo id do perfil. */
   nomes: z.record(z.string(), z.string()),

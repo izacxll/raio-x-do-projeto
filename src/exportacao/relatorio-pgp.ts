@@ -12,6 +12,7 @@ import {
   cronogramaDoPgp,
   custosDoPgp,
   inicioDoPgp,
+  marcoDoRisco,
   marcosDoPgp,
   rastrear,
   textoDaData,
@@ -347,12 +348,15 @@ function tabelasDoCodigo(codigo: string, c: Contexto): { paragrafos?: string[]; 
           linhas: [
             ["Pessoal (estimativas de custos)", reais(custos.preco.pessoal)],
             [
-              "Reserva de contingência (decisão do GP, dentro da linha de base)",
-              reais(p.parametros.contingencia),
+              custos.origemDaContingencia === "global"
+                ? "Reserva de contingência (valor único do GP, ainda não dado risco a risco)"
+                : "Reserva de contingência (soma das reservas dos riscos marcados, dentro da linha de base)",
+              reais(custos.contingencia),
             ],
+            // decisão 0092: a contingência deriva dos riscos; cada um com a reserva (do GP) e o marco que ameaça
             ...custos.riscosComReserva.map((r) => [
-              `  Contingência do risco ${r.id} (${r.texto.slice(0, 80)}${r.texto.length > 80 ? "…" : ""})`,
-              p.parametros.contingencia === undefined ? A_DEFINIR : `parte da reserva acima (${A_DEFINIR})`,
+              `  Risco ${r.id}${r.marco ? `, marco ${r.marco}` : ""} (${r.texto.slice(0, 80)}${r.texto.length > 80 ? "…" : ""})`,
+              r.valor !== undefined ? reais(r.valor) : A_DEFINIR,
             ]),
             ["Linha de base dos custos", reais(custos.linhaDeBase)],
             ["Reserva gerencial (decisão do GP, fora da linha de base)", reais(p.parametros.gerencial)],
@@ -361,7 +365,10 @@ function tabelasDoCodigo(codigo: string, c: Contexto): { paragrafos?: string[]; 
         },
       });
   }
-  if (codigo === "B27" && p.riscos)
+  if (codigo === "B27" && p.riscos) {
+    // decisão 0092: cada risco liga a resposta, a reserva (valor do GP) e o marco que ameaça (conferido no cronograma)
+    const produtos = new Set((p.cronograma?.resposta.atividades ?? []).map((a) => a.produto));
+    const reservas = p.parametros.reservasPorRisco ?? {};
     out.push({
       tabela: {
         colunas: [
@@ -372,9 +379,11 @@ function tabelasDoCodigo(codigo: string, c: Contexto): { paragrafos?: string[]; 
           "Resposta",
           "Gatilho",
           "Responsável",
+          "Reserva",
+          "Marco",
           "Premissa crítica",
         ],
-        larguras: [4, 1, 1, 1, 3, 2, 1, 1],
+        larguras: [4, 1, 1, 1, 3, 2, 1, 1, 1, 1],
         linhas: p.riscos.resposta.riscos
           .filter((_, k) => c.itens.some((i) => i.id === `riscos:B27:${k}`))
           .map((r) => [
@@ -385,10 +394,13 @@ function tabelasDoCodigo(codigo: string, c: Contexto): { paragrafos?: string[]; 
             `${r.estrategia}: ${r.resposta}`,
             r.gatilho || A_DEFINIR,
             r.responsavel || A_DEFINIR,
+            !r.pedeReserva ? "não pede" : reservas[r.id] !== undefined ? reais(reservas[r.id]) : A_DEFINIR,
+            marcoDoRisco(r.marco, produtos),
             r.premissaCritica || "—",
           ]),
       },
     });
+  }
   if (codigo === "B3" && (e.premissasTap.length || p.riscos))
     out.push({
       paragrafos: [
