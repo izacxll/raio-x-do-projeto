@@ -11,6 +11,7 @@ import { premissasEmTexto } from "../3-tap/pedidos";
 import type { EntradaPgp } from "./entrada";
 import { PASSOS_PGP } from "./passos";
 import { nomeDaParte, partesAGerar } from "./pgp";
+import { destinoDaParte, fundidasDeTextoEm, LIMITES_DO_PORTE, NUCLEO_PEQUENO } from "./porte";
 import { cronogramaDoPgp, custosDoPgp } from "./calculos";
 import { textoDasHorasTotais } from "../2-proposta/preco";
 import { INSTRUCAO_MARCOS, linhaDoTempoEmTexto, linhaDosDados } from "../linha-do-tempo";
@@ -39,7 +40,24 @@ ${tap} ${e.fonteProposta === "nenhuma" ? "Não há proposta." : "A proposta tamb
 
 Requisitos da RFP (a lista de R da etapa 1, uma só do início ao fim; use estes números): ${e.ponto.listaDeR.map((r) => `${r.numero} (${r.rotulo})`).join("; ") || "nenhum"}.${e.ponto.rDescartados.length ? ` Descartados pelo GP na etapa 1 (não são R; se o documento os traz, entram como restrição ou observação): ${e.ponto.rDescartados.join(", ")}.` : ""}
 Premissas críticas que se aplicam (decisão do GP): ${premissasEmTexto(premissas)}.
-${p.abordagem ? `Abordagem escolhida pelo GP: ${p.abordagem}.` : ""}`;
+${p.abordagem ? `Abordagem escolhida pelo GP: ${p.abordagem}.` : ""}
+${linhaDoPorte(p)}`;
+}
+
+/** O tamanho do plano pelo porte (decisão 0091): quantas partes e até quantas páginas. */
+function linhaDoPorte(p: PgpDossie): string {
+  const porte = p.caracteristicas?.porte;
+  if (!porte || !p.adaptacao) return "";
+  const partes = partesAGerar(p).length;
+  const paginas = LIMITES_DO_PORTE[porte].paginas;
+  // o orçamento por parte, em meias páginas (as tabelas do código contam no total)
+  const porParte = Math.max(0.5, Math.round((paginas / Math.max(1, partes)) * 2) / 2);
+  return `Porte do projeto (decisão do GP): ${porte}. Plano enxuto (decisão 0091): ${partes} partes geradas, o plano inteiro em até ${paginas} páginas, cerca de ${String(porParte).replace(".", ",")} página por parte com as tabelas. Uma linha por item da ficha que vale para o projeto; não repita o que outra parte ou o TAP já diz.`;
+}
+
+/** As partes do passo com as fundidas nelas (decisão 0091): a ficha da fundida vai junto, e a hospedeira cobre o conteúdo mínimo dela. */
+function comFundidas(partes: string[], p: PgpDossie): string[] {
+  return [...partes, ...partes.flatMap((c) => fundidasDeTextoEm(c, p))];
 }
 
 function partesDoPasso(passo: PassoPgp, p: PgpDossie): string[] {
@@ -47,19 +65,27 @@ function partesDoPasso(passo: PassoPgp, p: PgpDossie): string[] {
   return (PASSOS_PGP.find((x) => x.passo === passo)?.textos ?? []).filter((c) => gerar.has(c));
 }
 
-/** Partes do passo que o GP marcou e, à parte, as que ele dispensou, com o motivo (não se escreve parte dispensada). */
+/**
+ * Partes do passo que o GP marcou, cada uma com as partes fundidas nela (decisão 0091), e, à parte, as que não se
+ * escrevem como parte própria: a fundida (vai dentro da hospedeira) e a dispensada, com o motivo.
+ */
 function listaDePartes(codigos: string[], passo: PassoPgp, p: PgpDossie): string {
   const marcadas = codigos.length
-    ? codigos.map((c) => `- ${c} — ${nomeDaParte(c)}`).join("\n")
+    ? codigos
+        .map((c) => {
+          const fundidas = fundidasDeTextoEm(c, p);
+          return `- ${c} — ${nomeDaParte(c)}${fundidas.length ? ` (inclui o conteúdo mínimo de ${fundidas.map((x) => `${x} — ${nomeDaParte(x)}`).join("; ")}: uma linha por item que vale, com a ficha do item, por exemplo ${fundidas[0]}.1)` : ""}`;
+        })
+        .join("\n")
     : "- nenhuma (o GP dispensou)";
-  const justificativas = new Map(
-    (p.adaptacao?.resposta.partes ?? []).map((x) => [x.codigo, x.justificativa]),
-  );
-  const dispensadas = (PASSOS_PGP.find((x) => x.passo === passo)?.textos ?? []).filter(
-    (c) => !codigos.includes(c),
-  );
-  return dispensadas.length
-    ? `${marcadas}\n\nDispensadas pelo GP neste passo (não escreva; o conteúdo que sobra vai para a parte indicada no motivo):\n${dispensadas.map((c) => `- ${c} — ${nomeDaParte(c)}: ${justificativas.get(c) || "sem motivo registrado"}`).join("\n")}`
+  const fora = (PASSOS_PGP.find((x) => x.passo === passo)?.textos ?? []).filter((c) => !codigos.includes(c));
+  return fora.length
+    ? `${marcadas}\n\nNão escreva como parte própria (a fundida vai dentro da hospedeira acima; a dispensada não se escreve):\n${fora
+        .map((c) => {
+          const d = destinoDaParte(c, p);
+          return `- ${c} — ${nomeDaParte(c)}: ${d.tipo === "fundida" ? `fundida em ${d.em}` : d.tipo === "dispensada" ? `dispensada — ${d.motivo}` : "gerada"}`;
+        })
+        .join("\n")}`
     : marcadas;
 }
 
@@ -128,7 +154,7 @@ ${dispensaDasFichas(codigos)}
 ${fichasDasPartes(["A17", "A18"])}
 
 # O que fazer
-1. partes: para cada uma das ${codigos.length} partes acima (${codigos.join(", ")}), sugira essencial, recomendado ou dispensavel para este projeto, com justificativa de uma linha (porte, campo, subcontratação, fases, contratante). Projeto pequeno não leva tudo. Quem marca é o GP.
+1. partes: para cada uma das ${codigos.length} partes acima (${codigos.join(", ")}), sugira essencial, recomendado ou dispensavel para este projeto, com justificativa de uma linha (porte, campo, subcontratação, fases, contratante). Projeto pequeno não leva tudo: no porte pequeno, a ferramenta gera um PGP único com o núcleo (${NUCLEO_PEQUENO.join(", ")}, e A9 se a subcontratação for permitida) e funde as outras partes numa delas ou as dispensa (decisão 0091); sugira mesmo assim parte a parte. Quem marca é o GP.
 2. abordagem (preditiva, adaptativa ou hibrida) e fases, cada uma com as entregas (P1…) e o critério de saída.
 3. textos: o texto de A17 (ciclo de vida) e A18 (abordagem de desenvolvimento), cobrindo o conteúdo mínimo das fichas.
 4. observacoes: o que você achou e o código não, com fonte.
@@ -169,15 +195,16 @@ function requisitosDoTapEmTexto(e: EntradaPgp): string {
 
 export function pedidoEscopo(e: EntradaPgp, p: PgpDossie): string {
   const partes = partesDoPasso("escopo", p);
+  const cobertas = comFundidas(partes, p);
   return `${cabecalho(e, p, "passo 3: escopo e requisitos (fichas A1, A2, B22, B17, A13)")}
 
 Requisitos de alto nível do TAP:
 ${requisitosDoTapEmTexto(e) || "- (TAP em PDF ou sem TAP: ler no documento)"}
 
-${compromissosDoEscopo(e, partes)}Partes a escrever neste passo (o GP marcou):
+${compromissosDoEscopo(e, cobertas)}Partes a escrever neste passo (o GP marcou):
 ${listaDePartes(partes, "escopo", p)}
 
-${fichasDasPartes(partes)}
+${fichasDasPartes(cobertas)}
 
 # O que fazer
 1. textos: o texto de cada parte acima, item a item do conteúdo mínimo da ficha.
@@ -189,6 +216,7 @@ ${REGRAS}`;
 
 export function pedidoCronograma(e: EntradaPgp, p: PgpDossie): string {
   const partes = partesDoPasso("cronograma", p);
+  const cobertas = comFundidas(partes, p);
   const marcos = e.marcosTap.map((m) => `- ${m.produto || "—"}: ${m.item.texto} (${m.prazo || "sem prazo"})`);
   return `${cabecalho(e, p, "passos 4 a 6: atividades, recursos e durações (fichas A3, A6, B1, B4, B26, B32 e as marcadas)")}
 
@@ -206,7 +234,7 @@ ${e.ponto.prazoExecucao ? `Prazo de execução na RFP: ${e.ponto.prazoExecucao.t
 Partes a escrever neste passo (o GP marcou):
 ${listaDePartes(partes, "cronograma", p)}
 
-${fichasDasPartes(partes)}
+${fichasDasPartes(cobertas)}
 
 # O que fazer
 1. atividades: por pacote da EAP, com o campo "produto" = produto (P1…) e o campo "pacote" = código do pacote da lista acima ("2.1"), obrigatório; todo pacote tem ao menos uma atividade. Predecessoras e duração em três pontos em dias úteis, cada uma com a base. Atividade com data fixa (evento): restricaoData com início, fim e fonte. Se a análise e o aceite do contratante forem uma atividade própria, marque analiseDoContratante nela (o código troca a duração pelo tempo de aprovação do GP, quando houver) e não marque aprovacaoCliente na entrega anterior; sem essa atividade, marque aprovacaoCliente na entrega que o contratante aprova (o código soma o tempo depois). Não calcule datas nem o caminho crítico.
@@ -233,6 +261,7 @@ function contasDoCronograma(e: EntradaPgp, p: PgpDossie): string {
 
 export function pedidoRiscos(e: EntradaPgp, p: PgpDossie): string {
   const partes = partesDoPasso("riscos", p);
+  const cobertas = comFundidas(partes, p);
   const brechas = e.ponto.brechas.map((b) => `- ${b.id}: ${b.nome} — ${b.texto}`);
   return `${cabecalho(e, p, "passos 7 a 9: riscos, custos e atualização das premissas (fichas A8, B27, A4, B3)")}
 
@@ -249,7 +278,7 @@ ${resumoDosRiscos(p, e)}
 Partes a escrever neste passo (o GP marcou):
 ${listaDePartes(partes, "riscos", p)}
 
-${fichasDasPartes([...partes, "B27", "B3"])}
+${fichasDasPartes([...cobertas, "B27", "B3"])}
 
 # O que fazer
 1. riscos (B27): condições futuras da execução, cada uma com categoria, probabilidade e impacto qualitativos, estratégia, resposta, gatilho e responsável (papel). Cada premissa crítica que se aplica vira um risco com resposta e gatilho (B27.13). Marque pedeReserva no risco que pede reserva; o valor é do GP.
@@ -262,6 +291,7 @@ ${REGRAS}`;
 
 export function pedidoPlanos(e: EntradaPgp, p: PgpDossie): string {
   const partes = partesDoPasso("planos", p);
+  const cobertas = comFundidas(partes, p);
   return `${cabecalho(e, p, "passo 10: demais planos e documentos (as partes marcadas abaixo)")}
 
 ${resumoDoCronograma(p, e)}
@@ -271,7 +301,7 @@ ${resumoDosRiscos(p, e)}
 Partes a escrever neste passo (o GP marcou):
 ${listaDePartes(partes, "planos", p)}
 
-${fichasDasPartes(partes)}
+${fichasDasPartes(cobertas)}
 
 # O que fazer
 1. textos: cada parte marcada acima, item a item do conteúdo mínimo, e nenhuma parte dispensada.${exemplosDoQueNaoFalta(partes)}
@@ -329,6 +359,7 @@ function regraDasQuestoesNoTopo(e: EntradaPgp, partes: string[]): string {
 
 export function pedidoExecucao(e: EntradaPgp, p: PgpDossie): string {
   const partes = partesDoPasso("execucao", p);
+  const cobertas = comFundidas(partes, p);
   return `${cabecalho(e, p, "passos 11 e 12: linha de base da medição e documentos de execução (as partes marcadas abaixo)")}
 ${regraDasQuestoesNoTopo(e, partes)}
 ${resumoDoCronograma(p, e)}
@@ -336,7 +367,7 @@ ${resumoDoCronograma(p, e)}
 ${questoesDoPedido(e, partes)}Partes a escrever neste passo (o GP marcou):
 ${listaDePartes(partes, "execucao", p)}
 
-${fichasDasPartes(partes)}
+${fichasDasPartes(cobertas)}
 
 # O que fazer
 1. textos: ${partes.includes("A16") ? "A16 (como escopo, cronograma e custos são medidos juntos) e, " : ""}para cada documento de execução marcado, um modelo inicial: a estrutura e só as primeiras entradas que se puder tirar dos documentos, sem inventar acontecimentos. Parte dispensada não se escreve.

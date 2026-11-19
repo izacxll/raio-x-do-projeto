@@ -56,6 +56,7 @@ import { ItensPmo } from "../componentes/item-pmo";
 import { PassoPmoNaTela, UsoNaTela, useChamadaPmo } from "../componentes/passo-pmo";
 import { OPCOES, rotuloValor } from "./conferencia";
 import { contar } from "../../texto/plural";
+import { destinoDaParte, destinoEmTexto, LIMITES_DO_PORTE } from "../../etapas/4-pgp/porte";
 
 const reais = (v?: number) =>
   v === undefined ? "a definir pelo GP" : v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
@@ -137,7 +138,7 @@ export function PlanoDeGerenciamento() {
     const novo = { ...atual, [passo]: guardada, uso: r.uso ? [...atual.uso, r.uso] : atual.uso } as PgpDossie;
     // a adaptação traz a sugestão do que gerar e da abordagem: o GP muda na tabela
     if (passo === "adaptacao" && novo.adaptacao) {
-      novo.gerar = gerarSugerido(novo.adaptacao.resposta);
+      novo.gerar = gerarSugerido(novo.adaptacao.resposta, novo.caracteristicas);
       novo.abordagem = novo.adaptacao.resposta.abordagem;
     }
     atualizar(novo);
@@ -321,8 +322,17 @@ function Adaptacao({ p, atualizar }: { p: PgpDossie; atualizar: (np: PgpDossie) 
       </div>
       <p className="envio__obs">
         A sugestão do PMO vem ao lado. O que você dispensar fica registrado e não é apontado como ausente na
-        conferência do plano.
+        conferência do plano. Pelo porte (decisão 0091), a parte que não se gera vai fundida numa parte
+        gerada, com o conteúdo mínimo dela, ou fica dispensada, com o motivo.
       </p>
+      {p.caracteristicas ? (
+        <p className="envio__obs" data-testid="limite-do-porte">
+          Porte {p.caracteristicas.porte}: {partesAGerar(p).length} partes marcadas para gerar (o porte pede
+          de {LIMITES_DO_PORTE[p.caracteristicas.porte].partes[0]} a{" "}
+          {LIMITES_DO_PORTE[p.caracteristicas.porte].partes[1]}) e o plano em até{" "}
+          {LIMITES_DO_PORTE[p.caracteristicas.porte].paginas} páginas.
+        </p>
+      ) : null}
       <label className="campo-numero">
         <span className="lb">Abordagem (decisão do GP)</span>
         <select
@@ -343,6 +353,7 @@ function Adaptacao({ p, atualizar }: { p: PgpDossie; atualizar: (np: PgpDossie) 
               <th>Parte</th>
               <th>Sugestão do PMO</th>
               <th>Justificativa</th>
+              <th>Para onde vai</th>
             </tr>
           </thead>
           <tbody>
@@ -365,6 +376,7 @@ function Adaptacao({ p, atualizar }: { p: PgpDossie; atualizar: (np: PgpDossie) 
                   </td>
                   <td>{s ? NOME_RECOMENDACAO[s.recomendacao] : "—"}</td>
                   <td>{s?.justificativa ?? "sem sugestão do PMO"}</td>
+                  <td>{destinoEmTexto(destinoDaParte(f.codigo, p))}</td>
                 </tr>
               );
             })}

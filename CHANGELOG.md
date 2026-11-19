@@ -4,6 +4,11 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 
 ## [Não publicado]
 
+### PGP enxuto por porte (decisão 0091)
+- **Porte pequeno:** um PGP único com o núcleo de 14 partes (15 com aquisições); médio com o essencial e o recomendado fundido; grande como era.
+- **Parte fundida:** vai na hospedeira com o conteúdo mínimo (a ficha no pedido, os itens na autoconferência, as tabelas do código na seção dela); a dispensada fica com o motivo. O plano, o índice, a tela e a etapa 5 dizem para onde foi.
+- **Tamanho:** páginas estimadas na capa contra o limite do porte (15, 30, 50) e o orçamento de páginas por parte no pedido.
+
 ### Resultado no padrão da FGV Projetos (decisão 0089)
 - **Capa** com o título do estudo e os números-chave em destaque; **sumário**; seções numeradas; rodapé com "página n / total".
 - **Rótulos fora da linha:** referência "(TR, p. N)" no fim da frase, nota de sugestão por seção, decisões no quadro "Para o GP decidir"; marcas e avisos no anexo de revisão; termos internos só no anexo técnico.

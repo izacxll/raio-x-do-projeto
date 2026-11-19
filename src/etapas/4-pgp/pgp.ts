@@ -10,6 +10,8 @@ import type { ParteGerada, PassoPgp, RespostaAdaptacao } from "../../pmo/schemas
 import { PASSOS_PGP } from "./passos";
 import type { PremissaRegistro } from "../../pmo/schemas/tap";
 import { tirarAcentos } from "../../texto/normalizar";
+import type { Caracteristicas } from "../../dominio/caracteristicas";
+import { gerarPeloPorte } from "./porte";
 
 export function pgpInicial(modelo: string = MODELO_PADRAO): PgpDossie {
   return { modelo, gerar: {}, revisoes: {}, parametros: { valoresHora: {}, nomes: {} }, uso: [] };
@@ -24,8 +26,9 @@ export function grupoDaParte(codigo: string): string {
 }
 
 /** O que gerar, sugerido pela adaptação do PMO: essencial e recomendado entram; dispensável fica de fora. */
-export function gerarSugerido(a: RespostaAdaptacao): Record<string, boolean> {
-  return Object.fromEntries(a.partes.map((p) => [p.codigo, p.recomendacao !== "dispensavel"]));
+export function gerarSugerido(a: RespostaAdaptacao, c?: Caracteristicas): Record<string, boolean> {
+  // pelo porte (decisão 0091): sem as características, o porte grande (tudo o que o PMO não dispensou)
+  return gerarPeloPorte(a, c);
 }
 
 /** Partes que o GP marcou para gerar. Sem a adaptação, nenhuma. */

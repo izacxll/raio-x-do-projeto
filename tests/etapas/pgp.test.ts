@@ -417,7 +417,10 @@ describe("compromissos no plano e partes dispensadas no pedido", () => {
   it("o pedido lista as partes do passo que o GP dispensou, com o motivo", () => {
     const p = { ...dossie.pgp!, gerar: { ...dossie.pgp!.gerar, A12: false } };
     const pedido = PEDIDOS_PGP.planos(entrada, p);
-    expect(pedido).toMatch(/Dispensadas pelo GP neste passo[\s\S]*- A12 — /);
+    // decisão 0091: a fundida e a dispensada saem da lista de partes, cada uma com o destino
+    expect(pedido).toMatch(
+      /Não escreva como parte própria[\s\S]*- A12 — [^\n]*: (?:fundida em A11|dispensada — )/,
+    );
   });
 });
 
@@ -461,8 +464,19 @@ describe("pedidos da etapa 4 só com as partes marcadas", () => {
     const cs = (entrada.dadosProposta?.compromissos ?? []).filter((c) => c.tipo === "exclusao");
     if (cs.length) expect(pedido).toContain(`- ${cs[0]!.numero} (exclusão → B17.5)`);
     expect(
-      PEDIDOS_PGP.escopo(entrada, { ...dossie.pgp!, gerar: { ...dossie.pgp!.gerar, B17: false } }),
+      PEDIDOS_PGP.escopo(entrada, {
+        ...dossie.pgp!,
+        gerar: { ...dossie.pgp!.gerar, B17: false, A13: false },
+      }),
     ).not.toContain("exclusão → B17.5");
+    // a B17 fundida na A13 (decisão 0091) continua levando as exclusões: o porte reduz partes, não a cobertura
+    if (cs.length)
+      expect(
+        PEDIDOS_PGP.escopo(entrada, {
+          ...dossie.pgp!,
+          gerar: { ...dossie.pgp!.gerar, B17: false, A13: true },
+        }),
+      ).toContain(`- ${cs[0]!.numero} (exclusão → B17.5)`);
   });
 });
 
