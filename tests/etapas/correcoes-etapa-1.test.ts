@@ -208,6 +208,7 @@ describe("conferência dos números do PMO com as contas dos cruzamentos (decis�
     };
     const c = conferirLeituraRfp(
       {
+        recomendacao: null,
         cruzamentos: [],
         autoconferencia: [],
         itens: [

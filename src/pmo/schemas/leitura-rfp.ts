@@ -41,7 +41,27 @@ export const ItemLeituraRfpPmo = z.object({
 });
 export type ItemLeituraRfpPmo = z.infer<typeof ItemLeituraRfpPmo>;
 
+/**
+ * Recomendação de participar ou não (decisão 0086): sugestão do PMO, com o motivo e as condições, apoiada nos pontos de
+ * atenção (ids dos itens). Quem decide é o GP; a ferramenta nunca preenche a decisão.
+ */
+export const RecomendacaoParticipacao = z.object({
+  sugestao: z.enum(["participar", "participar_com_condicoes", "nao_participar", "sem_base"]),
+  /** Uma ou duas frases, em redação condicional. */
+  motivo: z.string(),
+  /** O que precisa de resposta ou ir à proposta antes de participar (perguntas, premissas, exclusões). */
+  condicoes: z.array(z.string()),
+  /** Ids dos itens da leitura que sustentam a recomendação. */
+  itens: z.array(z.string()),
+});
+export type RecomendacaoParticipacao = z.infer<typeof RecomendacaoParticipacao>;
+
 export const RespostaLeituraRfp = z.object({
+  /**
+   * Recomendação de participar ou não (decisão 0086); as respostas gravadas antes dela não a têm. Fora do formato
+   * (sugestão fora da lista), ela fica de fora e a leitura vale.
+   */
+  recomendacao: RecomendacaoParticipacao.nullable().default(null).catch(null),
   /** Cruzamentos obrigatórios X1 a X6 (decisão 0046), registrados depois de ler. */
   cruzamentos: z.array(CruzamentoPmo).default([]),
   /** Autoconferência (decisão 0044): cada item do método ou das fichas usado, com o estado. */

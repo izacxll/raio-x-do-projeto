@@ -12,6 +12,7 @@ import {
   type LeituraRfp,
 } from "../etapas/1-rfp/leitura";
 import { requisitosValidos } from "../etapas/1-rfp/revisao";
+import { recomendacaoDoDossie, recomendacaoEmTexto } from "../etapas/1-rfp/recomendacao";
 import { curto, NAO_LOCALIZADO, secoesDaCapa, type CapaDeDecisao } from "./capa-de-decisao";
 import type { Alerta } from "./modelo";
 import {
@@ -164,6 +165,10 @@ function secoesDaLeitura(leitura: LeituraRfp, revisoes: Record<string, RevisaoIt
   return out;
 }
 
+/** Os documentos da etapa 1 (RFP e anexos), onde os números do PMO são procurados. */
+const docsDaRfp = (dossie: Dossie) =>
+  dossie.documentos.filter((d) => d.papel === "rfp" || d.papel === "anexo-rfp");
+
 /** O que, na seção "uma-pagina", o código procurou e não achou: vira alerta alto (pergunta antes do preço). */
 const FALTA_QUE_PESA = ["prazo de execução ou vigência", "valor estimado ou teto"];
 
@@ -188,6 +193,7 @@ export function capaDaRfp(
   const produtos = requisitos.filter((r) => (r.tipo ?? "produto") === "produto");
   const faltas = (esqueleto.naoLocalizados["uma-pagina"] ?? []).filter((f) => FALTA_QUE_PESA.includes(f));
   const situacao = doCodigo("leitura:situacao");
+  const recomendacao = recomendacaoDoDossie(a, docsDaRfp(dossie));
   // a leitura do PMO da seção "em uma página", pelo nome do item (a conferir: é sugestão)
   const pmoSobre = (nome: RegExp) =>
     leitura.itens.find((i) => i.secao === "uma-pagina" && i.doPmo && nome.test(i.nome) && valido(i));
@@ -207,7 +213,7 @@ export function capaDaRfp(
       ? [
           {
             nivel: "alto" as const,
-            texto: `${faltas.join(" e ").replace(/^./, (c) => c.toUpperCase())}: ${NAO_LOCALIZADO}${pmoSobre(/prazo|valor/i) ? `; o PMO leu: ${curto(pmoSobre(/prazo|valor/i)!.texto)}` : ""}. Se faltar mesmo, é a primeira pergunta antes do preço.`,
+            texto: `${faltas.join(" e ").replace(/^./, (c) => c.toUpperCase())}: ${NAO_LOCALIZADO}${pmoSobre(/prazo|valor/i) ? `; o PMO leu (sugestão): ${curto(pmoSobre(/prazo|valor/i)!.texto).replace(/\.$/, "")}` : ""}. Se faltar mesmo, é a primeira pergunta antes do preço.`,
           },
         ]
       : []),
@@ -223,7 +229,7 @@ export function capaDaRfp(
   ];
 
   const decidir = [
-    `Participar ou não: decisão do GP (hoje: ${NOME_PARTICIPACAO[a.participacao.decisao]}). Os alertas e os pontos de atenção são o insumo.`,
+    `Participar ou não: decisão do GP (hoje: ${NOME_PARTICIPACAO[a.participacao.decisao]}). ${recomendacao ? recomendacaoEmTexto(recomendacao) : "O PMO não deixou recomendação; os alertas e os pontos de atenção são o insumo."}`,
     ...(modalidadeDoGp ? [] : [`Confirmar a modalidade: ${modalidade}.`]),
     ...(perguntas.length
       ? [
@@ -334,6 +340,7 @@ export function montarAnaliseRfp(
   agora = new Date(),
 ): DocumentoExportavel {
   const { a, leitura, pendentes } = preparar(dossie, analise, agora);
+  const recomendacao = recomendacaoDoDossie(a, docsDaRfp(dossie));
   const secoes: Secao[] = [
     // a capa de decisão e os quadros só com a leitura do PMO (decisão 0037)
     ...(leitura.fonte === "pmo" ? secoesDaCapa(capaDaRfp(dossie, analise, leitura, agora)) : []),
@@ -342,6 +349,7 @@ export function montarAnaliseRfp(
       paragrafos: [
         `Decisão: ${NOME_PARTICIPACAO[a.participacao.decisao]}.${a.participacao.justificativa ? ` Justificativa: ${a.participacao.justificativa}` : ""}`,
         "Os pontos de atenção são insumo para a decisão, nunca a decisão.",
+        ...(recomendacao ? [`[Sugestão] ${recomendacaoEmTexto(recomendacao)}`] : []),
         leitura.fonte === "codigo"
           ? AVISO_LEITURA_PARCIAL
           : `Leitura do PMO (${a.leituraPmo?.modelo ?? ""}), conferida pelo código: cada citação procurada na página e cada número no trecho citado. Tudo o que veio do PMO é sugestão.`,

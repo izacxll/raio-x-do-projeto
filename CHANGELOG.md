@@ -4,6 +4,10 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 
 ## [Não publicado]
 
+### Recomendação de participar ou não (decisão 0086)
+- **Etapa 1:** o PMO sugere participar, participar com condições ou não participar, com motivo, condições e os itens que sustentam; o código confere os itens; a decisão continua só do GP.
+- **Skill PMO 0.3.7.**
+
 ### Capa de decisão de cada etapa (decisão 0085)
 - **Página 1:** o que é, o que o GP decide agora (até 5), números-chave, alertas (os altos primeiro) e o que mudou; montada por código, na tela e no resultado.
 - **Quadros:** ficha da RFP e perguntas antes do preço; produtos × equipe × horas; TAP em uma página e divergências; marcos, 5 riscos principais e RACI; veredito sugerido, semáforo e o que corrigir antes de assinar.

@@ -306,6 +306,7 @@ describe("método da etapa 1 — leitura do PMO conferida pelo código (decisão
     const base = gravada("rfp-smped").itens[0];
     if (!base) throw new Error("vazia");
     const plantados: RespostaLeituraRfp = {
+      recomendacao: null,
       cruzamentos: [],
       autoconferencia: [],
       itens: [
@@ -355,7 +356,12 @@ describe("método da etapa 1 — leitura do PMO conferida pelo código (decisão
     const l = combinarLeitura(d.l, c);
     expect(l.itens.filter((i) => i.doPmo && i.rotulo !== "sugestao")).toEqual([]);
     const comDecisao = conferirLeituraRfp(
-      { cruzamentos: [], autoconferencia: [], itens: [{ ...base, id: "X9", rotulo: "decisao_gp" }] },
+      {
+        recomendacao: null,
+        cruzamentos: [],
+        autoconferencia: [],
+        itens: [{ ...base, id: "X9", rotulo: "decisao_gp" }],
+      },
       [d.doc],
       d.l,
       analiseInicial(d.a, HOJE),

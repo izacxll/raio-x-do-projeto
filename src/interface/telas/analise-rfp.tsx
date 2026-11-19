@@ -3,6 +3,7 @@
 // RFP" monta o esqueleto do código, manda-o ao PMO com o texto da RFP e mostra a leitura conferida pelo código
 // (citação, número, R). Sem chave, nada é analisado; o esqueleto não aparece sozinho.
 // Cada item tem o rótulo, a página e a revisão do GP (aceitar, editar, descartar). Participar é decisão só do GP.
+import { recomendacaoDoDossie, recomendacaoEmTexto } from "../../etapas/1-rfp/recomendacao";
 import { useMemo, useState } from "react";
 import { MODELO_PADRAO, MODELOS, type IdModelo } from "../../config/modelo";
 import type { AnaliseRfpDossie, DocumentoLido, EstadoItem } from "../../dossie/esquema";
@@ -621,8 +622,18 @@ function Participacao({
   atualizar: (a: AnaliseRfpDossie) => void;
 }) {
   const p = salva.participacao;
+  const documentos = useDossie((s) => s.dossie.documentos);
+  const recomendacao = recomendacaoDoDossie(
+    salva,
+    documentos.filter((d) => d.papel === "rfp" || d.papel === "anexo-rfp"),
+  );
   return (
     <div className="decisao" style={{ margin: "12px 0" }}>
+      {recomendacao && (
+        <p className="texto-apoio">
+          <EtiquetaRotulo rotulo="sugestao" /> {recomendacaoEmTexto(recomendacao)}
+        </p>
+      )}
       <EtiquetaRotulo rotulo="decisao-gp" />
       <label>
         <span className="lb">Participar da disputa?</span>{" "}

@@ -45,6 +45,7 @@ Deixa o gerente ciente, em poucos minutos, de **o que a RFP pede e espera de que
    - **prazo sem termo inicial** ("no prazo de 30 dias" sem dizer de quando) tem duas leituras ("em até" ou "com antecedência"): é `vago` e vira pergunta, com as duas leituras escritas;
    - **marco externo fixo** (evento, safra, ano letivo): diga quais atividades precisam acabar antes dele; o código conta a janela entre o início e o marco;
    - **mais de uma referência de início** (data fixa, ordem de serviço, publicação): diga qual conta para quê.
+- **Recomendação de participar ou não** (decisão 0086), sempre como sugestão, com motivo, condições e os ids dos itens que a sustentam: `"recomendacao": { "sugestao": "participar" | "participar_com_condicoes" | "nao_participar" | "sem_base", "motivo": "...", "condicoes": [...], "itens": [...] }`.
 - **Formato:** cada item leva a seção (das 8), o tema (seção 2) e, na seção 7, a premissa crítica, por que pesa, a pergunta e a ordem de impacto, como o schema do passo pede. Os cruzamentos vão em `"cruzamentos": [{ "codigo": "X1", "estado": "feito" | "nao_se_aplica", "resultado": "confere | diverge: ... | em aberto: ...", "itens": ["id do item gerado, se houver"] }]`.
 - **Estudo sensível** (núcleo, seção 3): ponto de atenção sem premissa (o resultado será contestado; quem é o interlocutor único).
 
