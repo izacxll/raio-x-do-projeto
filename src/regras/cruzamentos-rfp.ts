@@ -16,6 +16,7 @@ import {
 import { limparEspacos } from "../texto/frase";
 import { tirarAcentos } from "../texto/normalizar";
 import { normalizarTermo } from "./busca";
+import { contar } from "../texto/plural";
 
 export type CodigoCruzamento = "X1" | "X2" | "X3" | "X4" | "X5" | "X6";
 export type EstadoCruzamento = "confere" | "diverge" | "em-aberto" | "para-o-pmo" | "nao-se-aplica";
@@ -85,7 +86,7 @@ function x1(desembolso: Desembolso, docs: DocumentoRfp[]): Cruzamento {
   return {
     ...base,
     estado: "para-o-pmo",
-    resultado: `O código achou a forma de pagamento em ${ocorrencias.length} trecho(s) (p. ${paginas(ocorrencias)}), sem contradição de forma. A leitura confere a condição de cada pagamento (entrega, aceite, aprovação) nesses trechos e na minuta.`,
+    resultado: `O código achou a forma de pagamento em ${contar(ocorrencias.length, "trecho", "trechos")} (p. ${paginas(ocorrencias)}), sem contradição de forma. A leitura confere a condição de cada pagamento (entrega, aceite, aprovação) nesses trechos e na minuta.`,
     ocorrencias,
   };
 }
@@ -368,7 +369,7 @@ function x6(itens: ItemAnalise[]): Cruzamento {
     ...base,
     estado: prazos.length ? "confere" : "nao-se-aplica",
     resultado: prazos.length
-      ? `${prazos.length} prazo(s) da execução, sem o mesmo marco com dois valores.`
+      ? `${contar(prazos.length, "prazo", "prazos")} da execução, sem o mesmo marco com dois valores.`
       : "Prazos da execução não localizados pelo código — conferir no documento.",
     ocorrencias: prazos.slice(0, 4).flatMap((p) => (p.origem ? [p.origem] : [])),
   };

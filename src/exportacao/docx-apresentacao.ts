@@ -211,11 +211,14 @@ function quadroDeDecisoes(d: DecisaoNoQuadro[]): (Table | Paragraph)[] {
                         ...(x.opcoes
                           ? runs(` Opções: ${x.opcoes}.`, { size: 18, color: cor("laranja-txt") })
                           : []),
-                        ...runs(` Impacto: ${x.impacto}.`, {
-                          size: 18,
-                          italics: true,
-                          color: cor("laranja-txt"),
-                        }),
+                        // sem dimensão clara (caixa, prazo, aceite, quem executa), o impacto não aparece
+                        ...(x.impacto
+                          ? runs(` Impacto: ${x.impacto}.`, {
+                              size: 18,
+                              italics: true,
+                              color: cor("laranja-txt"),
+                            })
+                          : []),
                       ],
                     }),
                   ],
@@ -280,11 +283,20 @@ function destaques(doc: DocumentoExportavel): Table | undefined {
             new TableCell({
               width: { size: largura, type: WidthType.PERCENTAGE },
               verticalAlign: VerticalAlign.TOP,
+              margins: { top: 120, bottom: 120, left: 120, right: 120 },
               children: [
                 new Paragraph({
                   alignment: AlignmentType.CENTER,
+                  spacing: { after: 60 },
                   children: [
-                    new TextRun({ text: x.valor, font: FONTE, size: 44, bold: true, color: cor("blue") }),
+                    new TextRun({
+                      text: x.valor,
+                      font: FONTE,
+                      // o número grande, como na capa do documento de referência; texto longo um pouco menor
+                      size: x.valor.length <= 8 ? 72 : x.valor.length <= 14 ? 52 : 40,
+                      bold: true,
+                      color: cor("blue"),
+                    }),
                   ],
                 }),
                 new Paragraph({

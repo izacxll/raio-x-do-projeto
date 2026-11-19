@@ -3,6 +3,7 @@
 import type { ItemAnalise } from "../../extracao/rfp/item";
 import { formatarData } from "../../texto/datas";
 import { valorNaProposta, type DadosProposta, type EntradaTap, type MarcoDaProposta } from "./entrada";
+import { contar } from "../../texto/plural";
 
 export interface DadoDoDocumento {
   id: string;
@@ -75,7 +76,7 @@ function datasDoMarco(m: MarcoDaProposta, d?: DadosProposta): string {
     return `primeira entrega: ${quando(x.primeiraEntrega, x.dataPrimeiraEntrega, d)}; fim da inspeção do contratante: ${quando(x.fimDaInspecao ?? x.termo, x.dataFimDaInspecao, d)}; termo definitivo (aprovação): ${quando(x.termo, x.dataTermo, d)}. As análises do contratante já estão na conta (ciclo de aceite da EAP)`;
   return d?.aprovacaoDias === undefined
     ? `primeira entrega: ${quando(x.primeiraEntrega, x.dataPrimeiraEntrega, d)}. Aprovação sem data: a EAP não tem a análise do contratante e o GP não informou o tempo de aprovação`
-    : `primeira entrega: ${quando(x.primeiraEntrega, x.dataPrimeiraEntrega, d)}; aprovação: ${quando(x.termo, x.dataTermo, d)}, com ${d.aprovacaoDias} dia(s) útil(eis) de aprovação (decisão do GP)`;
+    : `primeira entrega: ${quando(x.primeiraEntrega, x.dataPrimeiraEntrega, d)}; aprovação: ${quando(x.termo, x.dataTermo, d)}, com ${contar(d.aprovacaoDias, "dia útil", "dias úteis")} de aprovação (decisão do GP)`;
 }
 
 const reais = (v: number) => v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });

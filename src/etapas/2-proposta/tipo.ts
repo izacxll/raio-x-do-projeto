@@ -4,6 +4,7 @@
 import type { AnaliseRfp } from "../1-rfp/analisar-rfp";
 import type { Requisito } from "../../extracao/requisitos";
 import { localizarTodos } from "../../extracao/rfp/localizar";
+import { contar } from "../../texto/plural";
 
 /** Chave de modalidade (decisão 0042): licitação, contratação direta ou parceria. */
 export type TipoContrato = "licitacao" | "contratacao-direta" | "parceria";
@@ -75,7 +76,7 @@ export function sugerirTipo(
   const operacao = sinais.size >= 2 || (parceria && !produtos);
   if (produtos)
     motivos.push(
-      `${produtos} produto(s) com número R${porEntrega ? `, pagos por entrega (${porEntrega} parcelas)` : ""}`,
+      `${contar(produtos, "produto", "produtos")} com número R${porEntrega ? `, pagos por entrega (${porEntrega} parcelas)` : ""}`,
     );
   if (sinais.size >= 2 || (sinais.size && !produtos))
     motivos.push(`sinais de operação contínua: ${[...sinais].slice(0, 4).join(", ")}`);

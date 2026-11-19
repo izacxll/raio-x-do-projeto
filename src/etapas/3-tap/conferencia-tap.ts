@@ -14,6 +14,7 @@ import { lerValorEmReais } from "../2-proposta/preco";
 import { diasDoTexto, pedeDecisao, type Divergencia } from "./divergencias";
 import { valorNaProposta, type EntradaTap } from "./entrada";
 import { ELEMENTOS_TAP } from "./tap";
+import { contar, plural } from "../../texto/plural";
 
 export type SituacaoVerificacao = "ok" | "atencao" | "nao-conferido";
 
@@ -270,7 +271,9 @@ export function conferirTap(
     nome: "Requisitos de alto nível ligados aos números R",
     situacao: semNumero.length || faltando.length || foraDaLista.length ? "atencao" : "ok",
     texto: [
-      semNumero.length ? `${semNumero.length} requisito(s) de alto nível sem número R.` : "",
+      semNumero.length
+        ? `${contar(semNumero.length, "requisito", "requisitos")} de alto nível sem número R.`
+        : "",
       faltandoEntregas.length
         ? `Requisitos da RFP não citados no TAP.3: ${faltandoEntregas.join(", ")}.`
         : "",
@@ -330,11 +333,11 @@ export function conferirTap(
       situacao: fora.length || produtosFora.length || crono?.situacao === "nao-cabe" ? "atencao" : "ok",
       texto: [
         fora.length
-          ? `Marco(s) além da vigência (${prazo.texto}): ${fora.map((x) => x.m.prazo).join("; ")}.`
+          ? `${plural(fora.length, "Marco", "Marcos")} além da vigência (${prazo.texto}): ${fora.map((x) => x.m.prazo).join("; ")}.`
           : `Nenhum marco com prazo além de ${prazo.texto}.`,
-        semPrazo.length ? `${semPrazo.length} marco(s) sem prazo em dias: conferir.` : "",
+        semPrazo.length ? `${contar(semPrazo.length, "marco", "marcos")} sem prazo em dias: conferir.` : "",
         datasSemInicio
-          ? `${datasSemInicio} marco(s) com data: conferidos contra a vigência só com o início do projeto informado (decisão do GP).`
+          ? `${contar(datasSemInicio, "marco", "marcos")} com data: ${plural(datasSemInicio, "conferido", "conferidos")} contra a vigência só com o início do projeto informado (decisão do GP).`
           : "",
         produtosFora.length
           ? `No cronograma da proposta, a entrega passa do prazo do produto na RFP: ${produtosFora.map((m) => `${m.produto} (${m.textoConferencia})`).join("; ")}`
@@ -421,10 +424,10 @@ export function conferirTap(
       ? "Sem os produtos da proposta no dossiê: conferir o aceite de cada entrega no documento."
       : [
           semAceite.length
-            ? `Entrega(s) sem critério de aceite: ${semAceite.map((x) => `${x.id} — ${x.nome}`).join("; ")}.`
+            ? `${plural(semAceite.length, "Entrega", "Entregas")} sem critério de aceite: ${semAceite.map((x) => `${x.id} — ${x.nome}`).join("; ")}.`
             : `As ${produtos.length} entregas têm critério de aceite.`,
           acrescentados.length
-            ? `Produto(s) que a proposta acrescentou e a RFP não pedia: compromisso da proposta (${e.contrato ? "assinado" : "prometido, enquanto não há contrato"}), entra como entrega-chave com aceite (${acrescentados.map((d) => d.proposta.texto).join("; ")}).`
+            ? `${plural(acrescentados.length, "Produto", "Produtos")} que a proposta acrescentou e a RFP não pedia: compromisso da proposta (${e.contrato ? "assinado" : "prometido, enquanto não há contrato"}), ${plural(acrescentados.length, "entra como entrega-chave", "entram como entregas-chave")} com aceite (${acrescentados.map((d) => d.proposta.texto).join("; ")}).`
             : "",
         ]
           .filter(Boolean)
@@ -438,7 +441,7 @@ export function conferirTap(
     nome: "Toda divergência com a versão escolhida pelo GP",
     situacao: !divergencias.length ? "nao-conferido" : abertas.length ? "atencao" : "ok",
     texto: abertas.length
-      ? `${abertas.length} divergência(s) sem versão escolhida: ${abertas.map((d) => d.id).join(", ")}.`
+      ? `${contar(abertas.length, "divergência", "divergências")} sem versão escolhida: ${abertas.map((d) => d.id).join(", ")}.`
       : divergencias.length
         ? "Todas as divergências têm a versão escolhida pelo GP."
         : "Sem divergências para decidir.",
@@ -455,10 +458,10 @@ export function conferirTap(
     texto:
       [
         naoConferidas.length
-          ? `${naoConferidas.length} item(ns) "do documento" com citação não conferida: não valem como fato.`
+          ? `${contar(naoConferidas.length, "item", "itens")} "do documento" com citação não conferida: não valem como fato.`
           : "",
         naoProvam.length
-          ? `Aviso: ${naoProvam.length} item(ns) "do documento" com citação a conferir (o trecho pode não trazer o termo-chave): ${naoProvam.map((i) => i.id).join(", ")}.`
+          ? `Aviso: ${contar(naoProvam.length, "item", "itens")} "do documento" com citação a conferir (o trecho pode não trazer o termo-chave): ${naoProvam.map((i) => i.id).join(", ")}.`
           : "",
       ]
         .filter(Boolean)
@@ -488,7 +491,7 @@ export function conferirTap(
       texto: !pcs.length
         ? "Nenhuma premissa crítica confirmada pelo GP."
         : sem.length
-          ? `Premissa(s) crítica(s) confirmada(s) sem linha no registro com a consequência: ${sem.join(", ")}.`
+          ? `${plural(sem.length, "Premissa crítica confirmada", "Premissas críticas confirmadas")} sem linha no registro com a consequência: ${sem.join(", ")}.`
           : `As premissas críticas confirmadas (${pcs.join(", ")}) estão no registro, com a consequência.`,
     });
   }

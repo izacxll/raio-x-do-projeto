@@ -6,6 +6,7 @@ import type { AnaliseRfp } from "../1-rfp/analisar-rfp";
 import type { ItemAnalise, OrigemItem } from "../../extracao/rfp/item";
 import { localizarTodos } from "../../extracao/rfp/localizar";
 import { tirarAcentos } from "../../texto/normalizar";
+import { plural } from "../../texto/plural";
 
 export type TipoCriterio = "texto" | "documento" | "misto";
 
@@ -237,7 +238,7 @@ export function tabelaPontosPorPreco(regra: RegraPreco, estimado?: number): Tabe
     return {
       colunas: ["Desconto sobre o estimado", "Preço", "Pontos de preço"],
       linhas,
-      texto: `${regra.pontos.toLocaleString("pt-BR")} ponto(s) a cada ${regra.aCada.toLocaleString("pt-BR")}% abaixo (${regra.origem.documento}, p. ${regra.origem.pagina}).`,
+      texto: `${regra.pontos.toLocaleString("pt-BR")} ${plural(regra.pontos, "ponto", "pontos")} a cada ${regra.aCada.toLocaleString("pt-BR")}% abaixo (${regra.origem.documento}, p. ${regra.origem.pagina}).`,
     };
   }
   return undefined;

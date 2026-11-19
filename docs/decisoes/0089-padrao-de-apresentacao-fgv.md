@@ -48,6 +48,39 @@ A responsável mandou uma proposta real da FGV como referência visual. Ela é c
 
 O documento de cada etapa que o app já exportava (proposta, TAP, PGP etc.) continua como estava. O padrão vale para o resultado da etapa.
 
+## Ajustes pedidos antes do merge (18/11/2026)
+
+1. **Plurais:**
+   - o texto que o GP lê usa singular ou plural pela quantidade ("1 decisão", "6 decisões"), sem "(s)", "(ões)" nem "(is)";
+   - o placar e a conferência gravados na pasta do caso passam por uma correção final no resultado.
+   - Os textos dos pedidos ao PMO ficam como estão: quem os lê é o modelo.
+2. **Impacto:** o quadro "Para o GP decidir" só mostra o impacto quando a decisão mexe em caixa ou preço, prazo, aceite ou quem executa. Sem dimensão clara, não aparece "outro".
+3. **Capa:**
+   - 3 ou 4 blocos grandes, azuis e centralizados: duração, entregas, valor ou horas e, quando a etapa tem, o veredito;
+   - o veredito é a recomendação de participar na etapa 1 e o veredito sugerido na etapa 5;
+   - os outros números ficam na tabela, que não repete o que já está num bloco.
+4. **Fila do GP:** em uma linha curta ("6 decisões · 1 a conferir · 55 em lote"), com o prazo na linha "Decidir".
+
+## Correções da revisão de código alta
+
+- **Tabelas do corpo:**
+  - a coluna do rótulo fica: é o rótulo visível de cada linha;
+  - a coluna do estado sai, e cada linha pendente ou com marca vai ao anexo de revisão.
+- **Etapa 4:** as pendências do plano que foi ao anexo técnico também entram no anexo de revisão.
+- **Item com aviso:** fica no corpo com um sinal curto ("citação não conferida", "valor não conferido", "não localizado pela ferramenta — conferir no documento"), para não se ler como fato.
+- **Citação sem página:** fica "não verificável", sem o nome de um documento que a linha não diz.
+- **Decisões:** só a decisão ainda pendente vai ao quadro; a revisada fica no texto como "Decisão do GP".
+- **Termos internos:** a troca de "código" por "ferramenta" não vale para o trecho do documento, para nome de lei ("Código Civil") nem para unidades como "(m2)".
+- **Word baixado da tela:**
+  - é minuta enquanto algum documento da etapa tiver item sem revisão;
+  - não fala em teste externo;
+  - um erro na geração aparece na tela.
+- **Quadros:**
+  - o cronograma em barras não conta a aprovação duas vezes;
+  - a premissa crítica que a ferramenta não acha num dos três lugares fica "não localizada — conferir no plano", não "falta";
+  - o que o GP descartou não conta.
+- **Título:** o nome dado pelo GP fica como está. Um nome sugerido traz na capa "título sugerido a partir do objeto, a confirmar pelo GP".
+
 ## Medição (os 10 documentos do teste externo, fora do Git; páginas no Word)
 
 | Etapa | Antes (decisão 0085): total / antes do anexo | Agora: total / antes dos anexos (inclui capa e sumário) |

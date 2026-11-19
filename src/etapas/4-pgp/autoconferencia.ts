@@ -24,6 +24,7 @@ import { itensDoPgp, pgpInicial } from "./pgp";
 import { itensValidos, textoFinal } from "../../pmo/itens";
 import { NOME_PASSO_PGP, passoDaParte } from "./passos";
 import { reguaQueMudouEmTexto, reguasQueMudaram } from "./reguas";
+import { contar } from "../../texto/plural";
 
 export const NOME_PGP_GERADO = "Plano gerado na etapa 4";
 
@@ -208,7 +209,7 @@ export function ligarPeloId(r: ResultadoConferencia, p: PgpDossie, e: EntradaPgp
         alvo: "conteúdo mínimo",
         descricao: "Itens presentes pela marca do PMO, redação a conferir",
         estado: "pela-marca-do-pmo" as const,
-        detalhe: `${ligados.size} item(ns): ${[...ligados.entries()].map(([c, ids]) => `${c} (${ids.join(", ")})`).join("; ")}.`,
+        detalhe: `${contar(ligados.size, "item", "itens")}: ${[...ligados.entries()].map(([c, ids]) => `${c} (${ids.join(", ")})`).join("; ")}.`,
       },
     ],
   };

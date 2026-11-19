@@ -21,6 +21,14 @@ export interface CapaDeDecisao {
   destaques?: Destaque[];
 }
 
+/** Os números-chave que não estão nos blocos grandes: a tabela não repete o bloco (decisão 0089). */
+export function numerosForaDosDestaques(c: CapaDeDecisao): NumeroChave[] {
+  const nosBlocos = new Set(
+    (c.destaques ?? []).slice(0, 4).flatMap((d) => (d.substitui ? [d.substitui] : [])),
+  );
+  return c.numeros.filter((n) => !nosBlocos.has(n.rotulo));
+}
+
 /** Os alertas da capa: os altos primeiro, sem repetir, no máximo 5. */
 export function escolherAlertas(alertas: Alerta[]): Alerta[] {
   const vistos = new Set<string>();
@@ -65,6 +73,14 @@ export function limitar(texto: string, limite = 220): string {
  * Texto curto para a capa: a primeira frase, até um limite, sem cortar palavra. A frase termina em ponto seguido de
  * maiúscula ou do fim: "p. 14" e "art. 75" não cortam.
  */
+/** "12 (doze) meses, contados da assinatura" → "12 meses": só o número e a unidade, como o documento diz. */
+export function duracaoCurta(texto?: string): string | undefined {
+  const m = /(\d+)\s*(?:\([^)]*\)\s*)?(dias? úteis|dias? corridos|dias?|meses|mês|anos?|semanas?)/i.exec(
+    texto ?? "",
+  );
+  return m ? `${m[1]} ${m[2]!.toLowerCase()}` : undefined;
+}
+
 export function curto(texto: string, limite = 160): string {
   const t = texto.replace(/\s+/g, " ").trim();
   const frase = (/^.*?\.(?=\s+[A-ZÀ-Ý"“(]|$)/.exec(t)?.[0] ?? t).trim().replace(/[;,:]$/, ".");

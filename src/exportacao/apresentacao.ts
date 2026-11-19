@@ -8,7 +8,8 @@
 //   internos saem do corpo;
 // - seções numeradas, tabelas com legenda "Tabela N.M – título".
 import type { CapaDeDecisao } from "./capa-de-decisao";
-import { escolherAlertas, MAXIMO_DE_DECISOES } from "./capa-de-decisao";
+import { escolherAlertas, MAXIMO_DE_DECISOES, numerosForaDosDestaques } from "./capa-de-decisao";
+import { corrigirPlurais } from "../texto/plural";
 import { impactoPeloTexto, NOME_IMPACTO } from "../pmo/fila";
 import type {
   CapaDoDocumento,
@@ -72,17 +73,35 @@ export function lerItem(linha: string, nomeDaRfp: string): ItemLido | undefined 
           ? "contrato"
           : /\bPGP\b/.test(rot)
             ? "plano"
-            : nomeDaRfp;
-    referencia = pag ? `${doc}, p. ${pag}` : doc;
+            : pag
+              ? nomeDaRfp
+              : undefined;
+    // sem página, a citação não é verificável: não se põe o nome de um documento que a linha não diz
+    referencia = pag ? `${doc}, p. ${pag}` : doc ? `${doc}, não verificável` : "não verificável";
   }
   return {
     marcas: (m.groups.marcas ?? "").trim(),
     numero: (m.groups.num ?? "").replace(/ — $/, ""),
     rotulo,
     referencia,
-    texto: limparTermosInternos(resto),
+    // o trecho do documento fica como está (um "Código Civil" citado não vira "ferramenta")
+    texto: rotulo === "documento" ? resto : limparTermosInternos(resto),
     avisos,
   };
+}
+
+/**
+ * O sinal curto que fica no corpo quando a conferência deixou aviso: o item com citação, número ou trecho a conferir não
+ * pode se ler como fato (CLAUDE.md, seção 1). O aviso inteiro vai ao anexo de revisão; "redação a conferir" só lá.
+ */
+export function sinalNoCorpo(i: Pick<ItemLido, "rotulo" | "avisos">): string | undefined {
+  const a = i.avisos.join(" ");
+  if (i.rotulo === "nao-conferida" || /citação não conferida/i.test(a)) return "citação não conferida";
+  if (/citação a conferir/i.test(a)) return "citação a conferir";
+  if (/número sem fonte|valor não conferido/i.test(a)) return "valor não conferido";
+  if (/não localizado/i.test(a)) return "não localizado pela ferramenta — conferir no documento";
+  if (/não verificável/i.test(a)) return "não verificável";
+  return undefined;
 }
 
 /**
@@ -90,20 +109,24 @@ export function lerItem(linha: string, nomeDaRfp: string): ItemLido | undefined 
  * as referências internas entre parênteses (ids de itens, QU-nn) saem. As tabelas e o anexo técnico os mantêm.
  */
 export function limparTermosInternos(texto: string): string {
-  const id = String.raw`(?:QU-\d+|[a-z]{1,3}\d+(?:_\d+)?|[A-Z]\d{1,2}\.\d+|dv\d+)`;
+  // ids internos: com dois dígitos ou com "_" ("sk01", "a5_3"); "(m2)" e "(km2)" são unidades e ficam
+  const id = String.raw`(?:QU-\d+|[a-z]{1,3}\d{2,}(?:_\d+)?|[a-z]{1,3}\d+_\d+|[A-Z]\d{1,2}\.\d+|dv\d+)`;
   // a troca mantém a maiúscula do começo ("Pela conta do código" → "Pelo cálculo da ferramenta")
   const trocar = (novo: string) => (achado: string) =>
     /^[A-ZÀ-Ý]/.test(achado) ? novo.charAt(0).toUpperCase() + novo.slice(1) : novo;
+  // "código" do app: em minúscula e não seguido de nome de lei ou de cadastro ("Código Civil", "código CNAE" ficam)
+  const codigo = String.raw`código(?!\s+(?:\p{Lu}|civil|penal|tribut|de defesa|de [ée]tica|florestal|eleitoral|de processo|de obras|cnae|de barras))(?!\p{L})`;
+  const app = (antes: string) => new RegExp(String.raw`(?<!\p{L})${antes}${codigo}`, "gu");
   return (
     texto
       .replace(new RegExp(String.raw`\s*\((?:ver |cf\. )?${id}(?:\s*(?:,|e|;|a)\s*${id})*\)`, "g"), "")
       // "Risco sk01: …" no texto corrido vira "Risco: …" (o id fica nas tabelas)
       .replace(/\bRisco [a-z]{1,3}\d+:/g, "Risco:")
-      .replace(/\bpela conta do código\b/gi, trocar("pelo cálculo da ferramenta"))
-      .replace(/\bconta do código\b/gi, trocar("cálculo da ferramenta"))
-      .replace(/\bpelo código\b/gi, trocar("pela ferramenta"))
-      .replace(/\bdo código\b/gi, trocar("da ferramenta"))
-      .replace(/\bo código\b/gi, trocar("a ferramenta"))
+      .replace(app("[Pp]ela conta do "), trocar("pelo cálculo da ferramenta"))
+      .replace(app("[Cc]onta do "), trocar("cálculo da ferramenta"))
+      .replace(app("[Pp]elo "), trocar("pela ferramenta"))
+      .replace(app("[Dd]o "), trocar("da ferramenta"))
+      .replace(app("[Oo] "), trocar("a ferramenta"))
       .replace(/\bdossiê(?!\p{L})/giu, trocar("arquivo do projeto"))
       .replace(/\s{2,}/g, " ")
       .trim()
@@ -112,43 +135,81 @@ export function limparTermosInternos(texto: string): string {
 
 /** Seção que é do funcionamento do app: vai para o anexo técnico. */
 export function secaoTecnica(s: Secao): boolean {
-  return (
-    s.parte === "anexo" ||
-    /\((?:código)\)\s*$|placar|segunda instância|autoconferência|situação da minuta|como ler|vereditos do pmo|o que o código|achados do código|travas|cruzamentos|decisão do gp: participar|fora da leitura|capa: resumo e decisões/i.test(
-      s.titulo,
-    )
+  return s.parte === "anexo" || secaoDoApp(s);
+}
+
+/** Seção sobre o funcionamento do app (placar, segunda instância, conferências do código), pelo título. */
+function secaoDoApp(s: Secao): boolean {
+  return /\((?:código)\)\s*$|placar|segunda instância|autoconferência|situação da minuta|como ler|vereditos do pmo|o que o código|achados do código|travas|cruzamentos|decisão do gp: participar|fora da leitura|capa: resumo e decisões|^passo /i.test(
+    s.titulo,
   );
 }
 
-/** Colunas que são do funcionamento do app (rótulo, estado de revisão): saem das tabelas do corpo. */
-const COLUNA_INTERNA = /^(rótulo|estado|revisão do gp|situação \(código\))$/i;
+/** Colunas do estado de revisão: saem das tabelas do corpo, e o que está pendente vai ao anexo de revisão. */
+const COLUNA_DE_REVISAO = /^(estado|revisão do gp)$/i;
 
-function tabelaDoCorpo(t: Tabela, legenda: string): Tabela {
-  const manter = t.colunas.map((c) => !COLUNA_INTERNA.test(c.trim()));
-  const limpar = (c: string) =>
-    limparTermosInternos(c.replace(/^[○◊]+\s*/, "").replace(/^\[[^\]]+\]\s*/, ""));
+/**
+ * A tabela de uma seção do corpo. A coluna do rótulo fica (é o rótulo visível de cada linha, CLAUDE.md seção 1); a do
+ * estado de revisão sai, e cada linha pendente ou com marca vai ao anexo de revisão, com o nome da seção.
+ */
+function tabelaDoCorpo(
+  t: Tabela,
+  legenda: string,
+  secao: string,
+  revisao: string[],
+): { tabela: Tabela; temSugestao: boolean } {
+  const manter = t.colunas.map((c) => !COLUNA_DE_REVISAO.test(c.trim()));
+  const rotulo = t.colunas.findIndex((c) => /^rótulo$/i.test(c.trim()));
+  let temSugestao = false;
+  for (const l of t.linhas) {
+    if (rotulo >= 0 && /sugest/i.test(l[rotulo] ?? "")) temSugestao = true;
+    const pendente = l.some((c, i) => !manter[i] && /pendente|○/i.test(c));
+    const marcas = l.join(" ");
+    const motivos = [
+      pendente || /^○/.test(l[0] ?? "") ? "pendente de revisão do GP" : "",
+      /◊/.test(marcas) ? "redação a conferir" : "",
+    ].filter(Boolean);
+    if (motivos.length) {
+      const nome = limparTermosInternos((l[0] ?? "").replace(/^[○◊]+\s*/, "").split("\n")[0]!);
+      revisao.push(
+        `${secao} — ${nome.length > 110 ? `${nome.slice(0, 110)}…` : nome}: ${motivos.join("; ")}.`,
+      );
+    }
+  }
+  const limpar = (c: string) => limparTermosInternos(c.replace(/^[○◊]+\s*/, ""));
   return {
-    ...t,
-    colunas: t.colunas.filter((_, i) => manter[i]),
-    larguras: t.larguras?.filter((_, i) => manter[i]),
-    linhas: t.linhas.map((l) => l.filter((_, i) => manter[i]).map(limpar)),
-    legenda,
+    tabela: {
+      ...t,
+      colunas: t.colunas.filter((_, i) => manter[i]).map((c) => c.replace(/\s*\(código\)$/i, "")),
+      larguras: t.larguras?.filter((_, i) => manter[i]),
+      linhas: t.linhas.map((l) => l.filter((_, i) => manter[i]).map(limpar)),
+      legenda,
+    },
+    temSugestao,
   };
 }
 
-/** Uma decisão do GP para o quadro, com o impacto pelo texto (decisão 0088). */
+/** Uma decisão do GP para o quadro, com o impacto pelo texto (decisão 0088); sem dimensão clara, sem impacto. */
 function decisaoDoQuadro(texto: string, opcoes?: string): DecisaoNoQuadro {
+  const impacto = impactoPeloTexto(texto);
   return {
     decisao: texto.replace(/\.$/, ""),
     ...(opcoes ? { opcoes } : {}),
-    impacto: NOME_IMPACTO[impactoPeloTexto(texto)] ?? "outro",
+    ...(impacto < 5 && NOME_IMPACTO[impacto] ? { impacto: NOME_IMPACTO[impacto] } : {}),
   };
 }
 
 const NOTA_SUGESTAO = "Conteúdo sugerido pelo PMO, salvo quando a frase traz a referência ao documento.";
 
 /** Uma seção do corpo no padrão: itens sem rótulo por linha, decisões no quadro, marcas para a revisão. */
-function secaoDoCorpo(s: Secao, numero: number, nomeDaRfp: string, revisao: string[]): Secao {
+function secaoDoCorpo(
+  s: Secao,
+  numero: number,
+  nomeDaRfp: string,
+  revisao: string[],
+  /** Como a seção aparece no anexo de revisão; por padrão, o número e o título no corpo. */
+  ondeNaRevisao = `${numero}. ${s.titulo.replace(/^\d+\.\s*/, "")}`,
+): Secao {
   const paragrafos: string[] = [];
   const decisoes: DecisaoNoQuadro[] = [];
   let temSugestao = false;
@@ -160,7 +221,7 @@ function secaoDoCorpo(s: Secao, numero: number, nomeDaRfp: string, revisao: stri
     }
     if (i.marcas || i.avisos.length || i.rotulo === "nao-conferida")
       revisao.push(
-        `${numero}. ${s.titulo.replace(/^\d+\.\s*/, "")} — ${i.texto.length > 110 ? `${i.texto.slice(0, 110)}…` : i.texto.replace(/\.$/, "")}: ${[
+        `${ondeNaRevisao} — ${i.texto.length > 110 ? `${i.texto.slice(0, 110)}…` : i.texto.replace(/\.$/, "")}: ${[
           i.marcas.includes("○") ? "pendente de revisão do GP" : "",
           i.marcas.includes("◊") ? "redação a conferir" : "",
           i.rotulo === "nao-conferida" ? "citação não conferida" : "",
@@ -169,14 +230,26 @@ function secaoDoCorpo(s: Secao, numero: number, nomeDaRfp: string, revisao: stri
           .filter(Boolean)
           .join("; ")}.`,
       );
-    if (i.rotulo === "decisao") {
+    // a decisão ainda pendente vai ao quadro; a já revisada pelo GP fica no texto, como decisão tomada
+    if (i.rotulo === "decisao" && i.marcas.includes("○")) {
       decisoes.push(decisaoDoQuadro(i.texto));
       continue;
     }
-    if (i.rotulo !== "documento") temSugestao = true;
+    if (i.rotulo === "sugestao" || i.rotulo === "nao-conferida") temSugestao = true;
     const numeroC = i.numero ? `**${i.numero}** — ` : "";
-    paragrafos.push(`• ${numeroC}${i.texto}${i.referencia ? ` (${i.referencia})` : ""}`);
+    const fim = [i.referencia, sinalNoCorpo(i)].filter(Boolean).join("; ");
+    const decidido = i.rotulo === "decisao" ? "Decisão do GP: " : "";
+    paragrafos.push(`• ${numeroC}${decidido}${i.texto}${fim ? ` (${fim})` : ""}`);
   }
+  const tabela = s.tabela
+    ? tabelaDoCorpo(
+        s.tabela,
+        `Tabela ${numero}.1 – ${s.titulo.replace(/^\d+\.\s*/, "")}`,
+        ondeNaRevisao,
+        revisao,
+      )
+    : undefined;
+  if (tabela?.temSugestao) temSugestao = true;
   return {
     titulo: `${numero}. ${s.titulo.replace(/^\d+\.\s*/, "")}`,
     parte: "corpo",
@@ -184,9 +257,7 @@ function secaoDoCorpo(s: Secao, numero: number, nomeDaRfp: string, revisao: stri
     ...(decisoes.length ? { decisoes } : {}),
     ...(s.alertas ? { alertas: s.alertas } : {}),
     paragrafos,
-    ...(s.tabela
-      ? { tabela: tabelaDoCorpo(s.tabela, `Tabela ${numero}.1 – ${s.titulo.replace(/^\d+\.\s*/, "")}`) }
-      : {}),
+    ...(tabela ? { tabela: tabela.tabela } : {}),
   };
 }
 
@@ -217,7 +288,7 @@ export function apresentar(
       titulo: "Números-chave",
       nivel: 2,
       parte: "capa",
-      numeros: c.numeros.map((n) => ({
+      numeros: numerosForaDosDestaques(c).map((n) => ({
         rotulo: limparTermosInternos(n.rotulo),
         valor: limparTermosInternos(n.valor),
       })),
@@ -260,6 +331,10 @@ export function apresentar(
     secoes.push(nova);
     numero++;
   }
+  // o conteúdo que foi ao anexo técnico (na etapa 4, o plano inteiro e os registros) também tem as pendências (marcas,
+  // avisos, decisões) listadas na revisão; as seções do funcionamento do app não têm item
+  for (const s of [...paraOTecnico, ...tecnico].filter((x) => !secaoDoApp(x)))
+    secaoDoCorpo(s, 0, ctx.nomeDaRfp, revisao, `Anexo B, ${s.titulo.replace(/^\d+\.\s*/, "")}`);
   // anexos: a revisão do GP (marcas e avisos por seção) e o técnico (processo, seções do código, plano inteiro)
   secoes.push({
     titulo: "A. Revisão do GP: o que ainda está pendente",
@@ -283,5 +358,15 @@ export function apresentar(
     etapa: `Etapa ${ctx.etapa} · ${ctx.nomeDaEtapa}`,
     destaques: ctx.destaques,
   };
-  return { ...doc, secoes, apresentacao: capa };
+  // o cabeçalho de minuta fica enquanto houver item sem revisão do GP (nos documentos da etapa ou na revisão)
+  const pendente = revisao.some((r) => /pendente de revisão do GP/.test(r));
+  // o placar e a conferência vêm prontos da pasta do caso: os "N item(ns)" deles também saem no plural certo
+  const semParenteses = secoes.map((s) => ({
+    ...s,
+    ...(s.paragrafos ? { paragrafos: s.paragrafos.map(corrigirPlurais) } : {}),
+    ...(s.tabela
+      ? { tabela: { ...s.tabela, linhas: s.tabela.linhas.map((l) => l.map(corrigirPlurais)) } }
+      : {}),
+  }));
+  return { ...doc, minuta: doc.minuta || pendente, secoes: semParenteses, apresentacao: capa };
 }

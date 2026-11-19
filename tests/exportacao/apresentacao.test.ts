@@ -3,7 +3,14 @@
 import { readFileSync } from "node:fs";
 import { strFromU8, unzipSync } from "fflate";
 import { describe, expect, it } from "vitest";
-import { apresentar, lerItem, limparTermosInternos, secaoTecnica } from "../../src/exportacao/apresentacao";
+import {
+  apresentar,
+  lerItem,
+  limparTermosInternos,
+  secaoTecnica,
+  sinalNoCorpo,
+} from "../../src/exportacao/apresentacao";
+import { contar, corrigirPlurais, plural } from "../../src/texto/plural";
 import { gerarDocx } from "../../src/exportacao/docx";
 import type { CapaDeDecisao } from "../../src/exportacao/capa-de-decisao";
 import type { DocumentoExportavel } from "../../src/exportacao/modelo";
@@ -34,6 +41,38 @@ describe("leitura das linhas de item", () => {
     expect(lerItem("[Decisão do GP] Valor-hora do coordenador.", "TR")!.rotulo).toBe("decisao");
     expect(lerItem("○ C04 — [Sugestão] Exclusão de viagens.", "TR")!.numero).toBe("C04");
     expect(lerItem("Texto corrido sem rótulo.", "TR")).toBeUndefined();
+  });
+});
+
+describe("o que a revisão alta apontou (decisão 0089)", () => {
+  it("o item com aviso guarda no corpo um sinal curto, e sem página a citação é não verificável", () => {
+    const i = lerItem("[Do documento, p. 4] Prazo de 30 dias. (número sem fonte — conferir: 30)", "TR")!;
+    expect(sinalNoCorpo(i)).toBe("valor não conferido");
+    expect(lerItem("[Do documento] Texto.", "TR")!.referencia).toBe("não verificável");
+    expect(lerItem("[Do documento, proposta] Texto.", "TR")!.referencia).toBe("proposta, não verificável");
+  });
+
+  it("o trecho do documento fica como está; lei e unidade não viram termo do app", () => {
+    expect(lerItem("[Do documento, p. 2] Conforme o código civil.", "TR")!.texto).toBe(
+      "Conforme o código civil.",
+    );
+    expect(limparTermosInternos("Conforme o Código Civil e o código de defesa do consumidor.")).toBe(
+      "Conforme o Código Civil e o código de defesa do consumidor.",
+    );
+    expect(limparTermosInternos("Área de 40 (m2).")).toBe("Área de 40 (m2).");
+    expect(limparTermosInternos("O código não achou o prazo.")).toBe("A ferramenta não achou o prazo.");
+  });
+
+  it("plural pela quantidade, sem parênteses", () => {
+    expect(contar(1, "decisão", "decisões")).toBe("1 decisão");
+    expect(contar(0, "item", "itens")).toBe("0 itens");
+    expect(contar(6, "decisão", "decisões")).toBe("6 decisões");
+    expect(plural(1.5, "ponto", "pontos")).toBe("ponto");
+    // texto pronto da pasta do caso (placar, conferência)
+    expect(
+      corrigirPlurais("14 item(ns) marcados; folga 7 dia(s) corrido(s); 1 linha(s); 3 decisão(ões)"),
+    ).toBe("14 itens marcados; folga 7 dias corridos; 1 linha; 3 decisões");
+    expect(corrigirPlurais("2 dia(s) útil(eis) e 2 aceitável(is)")).toBe("2 dias úteis e 2 aceitáveis");
   });
 });
 
@@ -86,6 +125,17 @@ describe("o documento apresentado", () => {
       ],
     },
     { titulo: "Situação da minuta", paragrafos: ["12 pendências."] },
+    {
+      titulo: "2. Leitura",
+      paragrafos: [],
+      tabela: {
+        colunas: ["Item", "Conteúdo", "Rótulo", "Estado"],
+        linhas: [
+          ["Prazo", "12 meses", "Do documento", "Aceito"],
+          ["Reunião", "Sugere-se reunião mensal", "Sugestão", "○ Pendente"],
+        ],
+      },
+    },
   ];
   const doc = apresentar(base(), corpo, [{ titulo: "Passo eap: placar resumido", parte: "anexo" as const }], {
     capa,
@@ -121,6 +171,21 @@ describe("o documento apresentado", () => {
     expect(doc.secoes.find((x) => x.titulo.startsWith("A. Revisão"))?.paragrafos?.join(" ")).toMatch(
       /3\. Metodologia — Cadência das reuniões: pendente de revisão do GP/,
     );
+  });
+
+  it("tabela do corpo: o rótulo fica, o estado sai e o pendente vai ao anexo de revisão", () => {
+    const s = doc.secoes.find((x) => x.titulo === "4. Leitura")!;
+    expect(s.tabela?.colunas).toEqual(["Item", "Conteúdo", "Rótulo"]);
+    expect(s.nota).toMatch(/sugerido pelo PMO/);
+    expect(doc.secoes.find((x) => x.titulo.startsWith("A. Revisão"))?.paragrafos?.join(" ")).toMatch(
+      /4\. Leitura — Reunião: pendente de revisão do GP/,
+    );
+    expect(doc.minuta).toBe(true);
+  });
+
+  it("decisão sem dimensão clara não mostra impacto", () => {
+    const d = doc.secoes.find((x) => x.titulo === "3. Metodologia")!.decisoes!;
+    expect(d[0]!.impacto).toBeUndefined();
   });
 
   it("o alerta e as decisões da capa sem termo interno", () => {

@@ -125,8 +125,6 @@ describe("etapa 1: o que a revisão de código apontou (decisão 0088)", () => {
   });
 
   it("as decisões que não são item contam na fila", () => {
-    expect(resumoDaFila([], {}, ["Participar ou não", "Confirmar a modalidade"])).toMatch(
-      /^2 decisão\(ões\) do GP/,
-    );
+    expect(resumoDaFila([], {}, ["Participar ou não", "Confirmar a modalidade"])).toMatch(/^2 decisões · /);
   });
 });

@@ -1,3 +1,4 @@
+import { contar } from "../texto/plural";
 // Marcas dos itens nos documentos exportados (decisão 0084), sem dependências: usadas pela exportação e por
 // src/pmo/itens.ts.
 /**
@@ -15,8 +16,10 @@ export interface ContagemDeMarcas {
 export function legendaDasMarcas(m?: ContagemDeMarcas): string {
   if (!m || (!m.pendentes && !m.redacaoAConferir)) return "";
   const partes = [
-    m.pendentes ? `${MARCA_PENDENTE} pendente de revisão do GP: ${m.pendentes} item(ns)` : "",
-    m.redacaoAConferir ? `${MARCA_REDACAO} redação a conferir: ${m.redacaoAConferir} item(ns)` : "",
+    m.pendentes ? `${MARCA_PENDENTE} pendente de revisão do GP: ${contar(m.pendentes, "item", "itens")}` : "",
+    m.redacaoAConferir
+      ? `${MARCA_REDACAO} redação a conferir: ${contar(m.redacaoAConferir, "item", "itens")}`
+      : "",
   ].filter(Boolean);
   return `Marcas: ${partes.join(" · ")}.`;
 }

@@ -11,6 +11,7 @@ import { lerValorEmReais } from "../2-proposta/preco";
 import { prazoEmDias, type PrazoEmDias } from "../2-proposta/ponto-de-partida";
 import { valorNaProposta, type EntradaTap } from "./entrada";
 import { divergenciasDoMetodo } from "./divergencias-metodo";
+import { contar } from "../../texto/plural";
 
 export type TemaDivergencia =
   | "produto"
@@ -301,7 +302,7 @@ function divergenciasDeMarcoFixo(e: EntradaTap): Divergencia[] {
       tema: "prazo" as const,
       rfp: { texto: `data fixa de ${formatarData(f.inicio)} a ${formatarData(f.fim)}` },
       proposta: {
-        texto: `as atividades anteriores terminam em ${formatarData(f.fimPredecessoras as Date)}, ${-(f.folgaCorrida ?? 0)} dia(s) corrido(s) depois do início do marco (conta do código${e.dados?.aprovacaoDias !== undefined ? `, com ${e.dados.aprovacaoDias} dias úteis de aprovação do cliente` : ", sem o tempo de aprovação do cliente, não informado pelo GP"})`,
+        texto: `as atividades anteriores terminam em ${formatarData(f.fimPredecessoras as Date)}, ${contar(-(f.folgaCorrida ?? 0), "dia corrido", "dias corridos")} depois do início do marco (conta do código${e.dados?.aprovacaoDias !== undefined ? `, com ${e.dados.aprovacaoDias} dias úteis de aprovação do cliente` : ", sem o tempo de aprovação do cliente, não informado pelo GP"})`,
         onde: `${nomeProposta(e)}, EAP, atividade ${f.atividade}`,
       },
       situacao: "diferente" as const,

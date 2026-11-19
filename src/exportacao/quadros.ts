@@ -3,6 +3,7 @@
 import type { Cronograma } from "../etapas/2-proposta/cronograma";
 import type { PgpDossie, PropostaDossie } from "../dossie/esquema";
 import { calcularPreco } from "../etapas/2-proposta/preco";
+import { estadoDe } from "../pmo/itens";
 import { curto } from "./capa-de-decisao";
 import type { Secao } from "./modelo";
 
@@ -73,7 +74,8 @@ export function quadroDoCronograma(crono: Cronograma | undefined, titulo = "Cron
   const porProduto = new Map<string, { ini: number; fim: number }>();
   for (const a of crono.atividades) {
     const atual = porProduto.get(a.produto);
-    const fim = a.fimMaisCedo + a.aprovacao;
+    // o fim mais cedo já inclui a aprovação do cliente
+    const fim = a.fimMaisCedo;
     porProduto.set(a.produto, {
       ini: Math.min(atual?.ini ?? Infinity, a.inicioMaisCedo),
       fim: Math.max(atual?.fim ?? 0, fim),
@@ -112,17 +114,28 @@ export function quadroDasPremissasCriticas(
     .map(([k]) => k)
     .sort();
   if (!aplicaveis.length) return undefined;
+  // o que o GP descartou não conta como tratado
+  const valido = (id: string) => estadoDe(p.revisoes, id) !== "descartado";
   const b3 = new Set(
-    [...registroDoTap, ...(p.riscos?.resposta.premissas ?? [])].map((x) => x.premissaCritica),
+    [
+      ...registroDoTap,
+      ...(p.riscos?.resposta.premissas ?? []).filter((_, k) => valido(`riscos:B3:${k}`)),
+    ].map((x) => x.premissaCritica),
   );
-  const b27 = new Set((p.riscos?.resposta.riscos ?? []).map((x) => x.premissaCritica));
+  const b27 = new Set(
+    (p.riscos?.resposta.riscos ?? [])
+      .filter((_, k) => valido(`riscos:B27:${k}`))
+      .map((x) => x.premissaCritica),
+  );
   const a11 = (p.planos?.resposta.textos ?? [])
     .filter((t) => t.codigo === "A11")
     .flatMap((t) => t.itens.map((i) => i.texto))
     .join(" ");
   return {
     titulo: "Premissas críticas",
-    paragrafos: ["Cada premissa crítica que se aplica ao projeto precisa estar nos três lugares do plano."],
+    paragrafos: [
+      "Cada premissa crítica que se aplica ao projeto precisa estar nos três lugares do plano. A ferramenta procura a premissa pelo código dela (PC1 a PC8): o que ela não localiza pede conferência no plano, não é ausência.",
+    ],
     tabela: {
       colunas: ["Premissa", "B3 (premissas)", "B27 (riscos)", "A11 (mudanças)", "Situação"],
       larguras: [1, 1.2, 1.2, 1.2, 2.4],
@@ -132,7 +145,9 @@ export function quadroDasPremissasCriticas(
         return [
           pc,
           ...lugares.map((x) => (x ? "sim" : "não localizado")),
-          faltam.length ? `falta em ${faltam.join(", ")}` : "nos três lugares",
+          faltam.length
+            ? `não localizada em ${faltam.join(", ")} — conferir no plano`
+            : "localizada nos três lugares",
         ];
       }),
     },

@@ -18,6 +18,7 @@ import {
 import { calendarioDoProjeto } from "../../texto/feriados";
 import type { Calendario } from "../../texto/datas";
 import type { PrazoEmDias } from "./ponto-de-partida";
+import { contar } from "../../texto/plural";
 
 export interface AtividadeCalculada {
   id: string;
@@ -411,10 +412,10 @@ export function calcularCronograma(atividades: AtividadeEap[], par: ParametrosCr
         vencida
           ? `Não confirmável: a atividade ${a.id} tem data fixa (${janela}), que já passou em relação a hoje (${formatarDataCurta(par.hoje as Date)}). A conta do código (${cabe ? "caberia" : "não caberia"} a partir do início informado) vale só como intervalo; o marco não é executável como está e pede a decisão do contratante (nova data ou nova edição). Sugere-se levar ao TAP como divergência, ao registro de riscos e ao plano de mudanças.`
           : !cabe && fimPred
-            ? `Não cabe antes do marco: a atividade ${a.id} tem data fixa (${janela}, ${corridos} dias corridos), mas as predecessoras${par.aprovacaoDias !== undefined ? ", com a aprovação do cliente," : ""} só terminam em ${formatarDataCurta(fimPred)}, ${-(folgaCorrida ?? 0)} dia(s) corrido(s) depois do início da janela (conta do código, ${cal.descricao}). Sugere-se levar ao TAP como divergência.`
+            ? `Não cabe antes do marco: a atividade ${a.id} tem data fixa (${janela}, ${corridos} dias corridos), mas as predecessoras${par.aprovacaoDias !== undefined ? ", com a aprovação do cliente," : ""} só terminam em ${formatarDataCurta(fimPred)}, ${contar(-(folgaCorrida ?? 0), "dia corrido", "dias corridos")} depois do início da janela (conta do código, ${cal.descricao}). Sugere-se levar ao TAP como divergência.`
             : `Atividade ${a.id} presa à data fixa: de ${janela}, ${corridos} dias corridos (campo em dias corridos).${
                 fimPred && folgaCorrida !== undefined
-                  ? ` As predecessoras terminam em ${formatarDataCurta(fimPred)}: folga de ${folgaCorrida} dia(s) corrido(s) (${deslocamento - depoisDasPredecessoras} útil(eis)) até ${formatarDataCurta(iniFixo)} (conta do código, ${cal.descricao}).${semAprovacao ? " A conta está sem o tempo de aprovação do cliente, ainda não informado pelo GP: com ele, a folga diminui." : ""}`
+                  ? ` As predecessoras terminam em ${formatarDataCurta(fimPred)}: folga de ${contar(folgaCorrida, "dia corrido", "dias corridos")} (${contar(deslocamento - depoisDasPredecessoras, "útil", "úteis")}) até ${formatarDataCurta(iniFixo)} (conta do código, ${cal.descricao}).${semAprovacao ? " A conta está sem o tempo de aprovação do cliente, ainda não informado pelo GP: com ele, a folga diminui." : ""}`
                   : ""
               }`,
       );

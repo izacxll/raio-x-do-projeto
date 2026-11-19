@@ -3,6 +3,7 @@
 // feriado religioso de observância nacional. Carnaval e Corpus Christi são ponto facultativo e não entram: o GP os
 // informa como feriados municipais quando valerem no local do projeto.
 import type { Calendario } from "./datas";
+import { plural } from "./plural";
 
 const FIXOS: [mes: number, dia: number, nome: string][] = [
   [1, 1, "Confraternização Universal"],
@@ -73,7 +74,7 @@ export function calendarioDoProjeto(municipais: string[] = []): Calendario & { i
   return {
     ehFeriado: (d) => nacionais(d.getFullYear()).has(chave(d)) || locais.has(chave(d)),
     descricao: locais.size
-      ? `com os feriados nacionais e ${locais.size} municipal(is) informado(s) pelo GP`
+      ? `com os feriados nacionais e ${locais.size} ${plural(locais.size, "municipal informado", "municipais informados")} pelo GP`
       : "com os feriados nacionais; os municipais, o GP informa",
     ilegiveis,
   };

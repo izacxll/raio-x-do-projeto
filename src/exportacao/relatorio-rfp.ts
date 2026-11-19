@@ -12,9 +12,9 @@ import {
   type LeituraRfp,
 } from "../etapas/1-rfp/leitura";
 import { requisitosValidos } from "../etapas/1-rfp/revisao";
-import { recomendacaoDoDossie, recomendacaoEmTexto } from "../etapas/1-rfp/recomendacao";
-import { curto, NAO_LOCALIZADO, secoesDaCapa, type CapaDeDecisao } from "./capa-de-decisao";
-import { PRAZO_DAS_DECISOES, resumoDaFila, revisavelDaLeitura } from "../pmo/fila";
+import { NOME_RECOMENDACAO, recomendacaoDoDossie, recomendacaoEmTexto } from "../etapas/1-rfp/recomendacao";
+import { curto, duracaoCurta, NAO_LOCALIZADO, secoesDaCapa, type CapaDeDecisao } from "./capa-de-decisao";
+import { numerosDaFila, revisavelDaLeitura } from "../pmo/fila";
 import { camposConfirmadosPeloPmo, type CampoQuePesa } from "./capa-regras";
 import type { Alerta, Destaque } from "./modelo";
 import {
@@ -27,6 +27,7 @@ import {
 import { estadoDoItem } from "../etapas/1-rfp/revisao";
 import { compactar } from "../texto/normalizar";
 import { camposDoDossie, MARCA_PENDENTE, type DocumentoExportavel, type Secao } from "./modelo";
+import { contar, plural } from "../texto/plural";
 
 /** Rótulos curtos, para caber na coluna sem quebrar a palavra. */
 const NOME_ROTULO = {
@@ -184,6 +185,9 @@ function destaqueDaFicha(
   if (!i || i.situacao === "nao-localizado")
     return { valor: "—", rotulo, explicacao: `não localizado: conferir no ${nomeDoDocumento}` };
   const curtoDemais = i.texto.length <= 24;
+  // o prazo no bloco só com o número e a unidade ("12 meses"); o texto inteiro vai na explicação
+  const duracao = rotulo === "Prazo" ? duracaoCurta(i.texto) : undefined;
+  if (duracao) return { valor: duracao, rotulo, ...(curtoDemais ? {} : { explicacao: curto(i.texto, 90) }) };
   return {
     valor: curtoDemais ? i.texto : curto(i.texto, 24),
     rotulo,
@@ -289,7 +293,7 @@ export function capaDaRfp(
     ...(modalidadeDoGp ? [] : [`Confirmar a modalidade: ${modalidade}.`]),
     ...(perguntas.length
       ? [
-          `Quais perguntas de esclarecimento enviar: ${perguntas.length} sugerida(s); as que mudam preço ou prazo estão no quadro "Perguntas antes do preço".`,
+          `Quais perguntas de esclarecimento enviar: ${perguntas.length} ${plural(perguntas.length, "sugerida", "sugeridas")}; as que mudam preço ou prazo estão no quadro "Perguntas antes do preço".`,
         ]
       : []),
     ...(pcs.length
@@ -298,15 +302,12 @@ export function capaDaRfp(
   ];
 
   const numeros = [
-    {
-      rotulo: "Fila do GP",
-      valor: `${resumoDaFila(itensRevisaveis(leitura).map(revisavelDaLeitura), a.revisoes, outrasDecisoesDaRfp(a))}; decidir ${PRAZO_DAS_DECISOES[1]}`,
-    },
+    ...numerosDaFila(1, itensRevisaveis(leitura).map(revisavelDaLeitura), a.revisoes, outrasDecisoesDaRfp(a)),
     { rotulo: "Modalidade", valor: modalidade },
     {
       rotulo: "Entregas",
       valor: produtos.length
-        ? `${produtos.length} produto(s) (${produtos.map((r) => r.numero).join(", ")})`
+        ? `${contar(produtos.length, "produto", "produtos")} (${produtos.map((r) => r.numero).join(", ")})`
         : NAO_LOCALIZADO,
     },
     { rotulo: "Requisitos numerados (R)", valor: String(requisitos.length) },
@@ -367,7 +368,7 @@ export function capaDaRfp(
         [
           "Habilitação",
           habilitacao?.tabela?.linhas.length
-            ? `${habilitacao.tabela.linhas.length} documento(s) na lista do edital`
+            ? `${contar(habilitacao.tabela.linhas.length, "documento", "documentos")} na lista do edital`
             : NAO_LOCALIZADO,
           habilitacao?.origem ? `${habilitacao.origem.documento}, p. ${habilitacao.origem.pagina}` : "—",
         ],
@@ -399,8 +400,32 @@ export function capaDaRfp(
         confirmados.includes("valor"),
         nomeDoDocumento,
       ),
-      { valor: String(produtos.length), rotulo: "Entregas", explicacao: "produtos numerados (R)" },
-      { valor: String(perguntas.length), rotulo: "Perguntas", explicacao: "antes do preço" },
+      {
+        valor: produtos.length ? String(produtos.length) : "—",
+        rotulo: "Entregas",
+        explicacao: produtos.length
+          ? curto(
+              `${plural(produtos.length, "produto", "produtos")}: ${produtos.map((r) => r.numero).join(", ")}`,
+              60,
+            )
+          : NAO_LOCALIZADO,
+        substitui: "Entregas",
+      },
+      // o veredito da etapa 1 é a recomendação de participar, que é sugestão do PMO (decisão 0086)
+      ...(recomendacao
+        ? [
+            {
+              valor:
+                recomendacao.recomendacao.sugestao === "sem_base"
+                  ? "Sem base"
+                  : NOME_RECOMENDACAO[recomendacao.recomendacao.sugestao].replace(/^./, (x) =>
+                      x.toUpperCase(),
+                    ),
+              rotulo: "Recomendação",
+              explicacao: "sugestão do PMO; quem decide é o GP",
+            },
+          ]
+        : []),
     ],
     oQueE:
       "Etapa 1, leitura da RFP: o que o documento pede, quanto, em quanto tempo e como se ganha, para o GP decidir se participa e o que perguntar antes do preço.",

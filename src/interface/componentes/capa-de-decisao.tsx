@@ -1,10 +1,11 @@
 // A capa de decisão da etapa na tela (decisão 0085): a mesma que vai no resultado da etapa, montada por código a partir
 // do dossiê. O que é, o que decidir agora, os números-chave, os alertas, o que mudou e os quadros.
-import { useDeferredValue, useMemo } from "react";
+import { useDeferredValue, useMemo, useState } from "react";
 import type { Dossie } from "../../dossie/esquema";
 import {
   escolherAlertas,
   MAXIMO_DE_DECISOES,
+  numerosForaDosDestaques,
   type CapaDeDecisao as Capa,
 } from "../../exportacao/capa-de-decisao";
 import { capaDaEtapa } from "../../exportacao/capas";
@@ -35,13 +36,28 @@ async function baixarResultado(dossie: Dossie, etapa: number) {
     import("../../exportacao/resultado-da-etapa"),
     import("../../exportacao/exportar"),
   ]);
-  const doc = montarResultadoApresentado(dossie, etapa, [], { caso: dossie.projeto.nome || "projeto" });
+  // baixado da tela: sem o caso do teste externo, e minuta só enquanto houver item sem revisão do GP
+  const doc = montarResultadoApresentado(dossie, etapa, []);
   await exportar(doc, "docx", `resultado-etapa-${etapa}`);
 }
 
 /** O desenho da capa (a mesma para todas as etapas). */
-export function CapaNaTela({ capa, aoBaixar }: { capa: Capa; aoBaixar?: () => void }) {
+export function CapaNaTela({ capa, aoBaixar }: { capa: Capa; aoBaixar?: () => Promise<void> }) {
   const alertas = escolherAlertas(capa.alertas);
+  const [baixando, setBaixando] = useState(false);
+  const [erro, setErro] = useState<string>();
+  const baixar = async () => {
+    if (!aoBaixar) return;
+    setBaixando(true);
+    setErro(undefined);
+    try {
+      await aoBaixar();
+    } catch (e) {
+      setErro(e instanceof Error ? e.message : String(e));
+    } finally {
+      setBaixando(false);
+    }
+  };
   return (
     <section className="bloco capa-decisao" aria-label="Capa de decisão">
       <RotuloSecao>Capa de decisão</RotuloSecao>
@@ -71,13 +87,23 @@ export function CapaNaTela({ capa, aoBaixar }: { capa: Capa; aoBaixar?: () => vo
         <p className="texto-apoio">Nada a decidir agora pelo que a ferramenta conferiu.</p>
       )}
       {aoBaixar && (
-        <button className="botao botao--discreto" type="button" onClick={aoBaixar}>
-          Baixar o resultado da etapa (Word)
+        <button
+          className="botao botao--discreto"
+          type="button"
+          disabled={baixando}
+          onClick={() => void baixar()}
+        >
+          {baixando ? "Gerando o Word…" : "Baixar o resultado da etapa (Word)"}
         </button>
       )}
-      {capa.numeros.length > 0 && (
+      {erro && (
+        <p className="aviso aviso--erro" role="alert">
+          Não foi possível gerar o Word: {erro}
+        </p>
+      )}
+      {numerosForaDosDestaques(capa).length > 0 && (
         <dl className="capa-numeros">
-          {capa.numeros.map((n) => (
+          {numerosForaDosDestaques(capa).map((n) => (
             <div key={n.rotulo}>
               <dt>{n.rotulo}</dt>
               <dd>{n.valor}</dd>

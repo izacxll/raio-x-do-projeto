@@ -4,6 +4,7 @@
 // rampa de pessoas ou das horas do cronograma, como aproximação dita na tela. Nenhum valor é inventado aqui.
 import type { OrigemItem } from "../extracao/rfp/item";
 import { tirarAcentos } from "../texto/normalizar";
+import { contar, plural } from "../texto/plural";
 
 export interface ParcelaCaixa {
   rotulo: string;
@@ -114,7 +115,10 @@ export function calcularCaixa(parcelas: ParcelaCaixa[], custoMensal: number[]): 
       ? `o custo passa do recebido a partir do mês ${primeiroNegativo.mes} (folga de ${fmtPp(primeiroNegativo.folga)} p.p.)`
       : "o recebido fica sempre à frente do custo",
   ];
-  if (semMes.length) partes.push(`${semMes.length} parcela(s) sem mês ficaram fora da conta`);
+  if (semMes.length)
+    partes.push(
+      `${contar(semMes.length, "parcela", "parcelas")} sem mês ${plural(semMes.length, "ficou", "ficaram")} fora da conta`,
+    );
   return {
     meses,
     parcelas: folgas,

@@ -20,6 +20,7 @@ import {
   sistemaDaSegundaInstancia,
 } from "../../pmo/segunda-instancia";
 import { useChave } from "./conectar-claude";
+import { contar, plural } from "../../texto/plural";
 
 export function SegundaInstancia({
   etapa,
@@ -156,7 +157,7 @@ export function SegundaInstancia({
           <p>
             Rodada {montagem.rodada}:{" "}
             {montagem.compacta
-              ? `vão só os achados da rodada anterior, os ${montagem.itensQueMudaram ?? 0} item(ns) que mudaram e as páginas citadas.`
+              ? `vão só os achados da rodada anterior, os ${contar(montagem.itensQueMudaram ?? 0, "item", "itens")} que ${plural(montagem.itensQueMudaram ?? 0, "mudou", "mudaram")} e as páginas citadas.`
               : "vai a resposta inteira, com os achados da rodada anterior."}
           </p>
           <label>
@@ -224,8 +225,8 @@ export function SegundaInstancia({
       {resultado && (
         <>
           <p className={`aviso${resultado.altas ? " aviso--erro" : ""}`} role="status">
-            Rodada {atual?.rodada ?? 1}: {resultado.achados.length} achado(s), {resultado.altas} de gravidade
-            alta. Todo achado é Sugestão: quem decide é o GP.
+            Rodada {atual?.rodada ?? 1}: {contar(resultado.achados.length, "achado", "achados")},{" "}
+            {resultado.altas} de gravidade alta. Todo achado é Sugestão: quem decide é o GP.
           </p>
           {resultado.achados.length > 0 && resultado.achados.every((a) => a.gravidade === "baixa") && (
             <p className="envio__obs">

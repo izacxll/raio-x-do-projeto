@@ -83,7 +83,8 @@ export interface Secao {
 export interface DecisaoNoQuadro {
   decisao: string;
   opcoes?: string;
-  impacto: string;
+  /** O que a decisão mexe (caixa ou preço, prazo, aceite, quem executa); sem dimensão clara, fica sem impacto. */
+  impacto?: string;
 }
 
 /** Número-chave da capa, em bloco grande (decisão 0089). */
@@ -91,6 +92,8 @@ export interface Destaque {
   valor: string;
   rotulo: string;
   explicacao?: string;
+  /** O rótulo do número-chave que o bloco já mostra: a linha sai da tabela, sem repetir. */
+  substitui?: string;
 }
 
 /** A capa do documento no padrão da FGV Projetos (decisão 0089). */
