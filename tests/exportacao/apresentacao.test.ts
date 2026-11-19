@@ -117,6 +117,8 @@ describe("o que a segunda revisão alta apontou (decisão 0089)", () => {
     expect(decisaoEmAberto("Abordagem A2 — Avaliação independente do programa.")).toBe(false);
     expect(decisaoEmAberto("R12 · Avaliação com cronograma a definir com a contratante.")).toBe(false);
     expect(decisaoEmAberto("Preço: valor final a definir pelo GP.")).toBe(true);
+    expect(decisaoEmAberto("Estratégia: Abordagem A2 — Oficinas para definir prioridades.")).toBe(false);
+    expect(decisaoEmAberto("Valor-hora a definir pelo GP: sugere-se a tabela da FGV.")).toBe(true);
     expect(decisaoEmAberto("A FGV tem? Critério X: atestado de capacidade. Decisão do GP.")).toBe(true);
   });
 });

@@ -209,20 +209,19 @@ function decisaoDoQuadro(texto: string, opcoes?: string): DecisaoNoQuadro {
 }
 
 /**
- * A decisão do GP sem a marca ○ que o texto diz estar em aberto (as linhas de decisão montadas pela ferramenta). Vale
- * o que vem depois do nome ("Nome: texto"): "a definir", "pendente(s)" como palavra, pergunta ou "Decisão do GP" no
- * fim. "Decisões do GP (N pendentes)" está em aberto só com N maior que zero. Requisito incluído pelo GP ("R12 · …")
- * não passa por aqui: sem a marca, ele já foi revisado.
+ * A decisão do GP sem a marca ○ que o texto diz estar em aberto (as linhas de decisão montadas pela ferramenta):
+ * "a definir" ou "a decidir" como expressão, em qualquer ponto da linha; e, depois do nome ("Nome: texto"),
+ * "pendente(s)" como palavra, pergunta ou "Decisão do GP" no fim. "Decisões do GP (N pendentes)" está em aberto só com
+ * N maior que zero. Requisito incluído pelo GP ("R12 · …") não passa por aqui: sem a marca, ele já foi revisado.
  */
 export function decisaoEmAberto(texto: string): boolean {
   const contagem = /^Decis(?:ão|ões) do GP \((\d+) pendentes?\)/i.exec(texto);
   if (contagem) return Number(contagem[1]) > 0;
   if (/^R\d+\s·/.test(texto)) return false;
+  if (/(?<!\p{L})a (?:definir|decidir)(?!\p{L})/iu.test(texto)) return true;
   const doisPontos = texto.indexOf(": ");
   const depois = doisPontos >= 0 ? texto.slice(doisPontos + 2) : texto;
-  return /a (?:definir|decidir)(?!\p{L})|(?<!\p{L})pendentes?(?!\p{L})|\?|decis(?:ão|ões) do GP\.?$/iu.test(
-    depois,
-  );
+  return /(?<!\p{L})pendentes?(?!\p{L})|\?|decis(?:ão|ões) do GP\.?$/iu.test(depois);
 }
 
 /** A frase do corpo que termina com a referência ao documento ("(TR, p. 4)"). */
