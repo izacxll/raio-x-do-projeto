@@ -74,3 +74,12 @@ describe("marco do risco (decisão 0092)", () => {
     expect(resp.riscos.every((x) => typeof x.marco === "string")).toBe(true);
   });
 });
+
+describe("dossiê da prévia com a reserva só em número (decisão 0092)", () => {
+  it("abre, e a reserva sem o texto do risco não confere: o GP dá de novo", async () => {
+    const { ParametrosPgp } = await import("../../src/dossie/esquema");
+    const p = ParametrosPgp.parse({ valoresHora: {}, nomes: {}, reservasPorRisco: { R1: 5000 } });
+    expect(p.reservasPorRisco?.R1).toEqual({ valor: 5000, risco: "" });
+    expect(reservaValida({ id: "R1", texto: "atraso nos dados" }, p.reservasPorRisco)).toBeUndefined();
+  });
+});

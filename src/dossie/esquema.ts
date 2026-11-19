@@ -341,7 +341,14 @@ export const ParametrosPgp = z.object({
   contingencia: z.number().nonnegative().optional(),
   /** Reserva de contingência de cada risco que pede reserva (B27), em R$, pelo id do risco: decisão do GP. */
   reservasPorRisco: z
-    .record(z.string(), z.object({ valor: z.number().nonnegative(), risco: z.string() }))
+    .record(
+      z.string(),
+      // o formato da prévia (só o número) é lido sem o texto do risco: a reserva não confere e o GP dá de novo, com aviso
+      z.preprocess(
+        (v) => (typeof v === "number" ? { valor: v, risco: "" } : v),
+        z.object({ valor: z.number().nonnegative(), risco: z.string() }),
+      ),
+    )
     .optional(),
   gerencial: z.number().nonnegative().optional(),
   /** Nomes da equipe, pelo id do perfil. */
