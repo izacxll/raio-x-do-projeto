@@ -26,6 +26,7 @@ import type { AchadoPmoConferido } from "../etapas/5-conferencia/leitura-pmo";
 import { itensValidos, rotuloDoItem, textoFinal } from "../pmo/itens";
 import { ordenarAchados } from "../regras/conferencia";
 import { comPrefixo, curto, limitar, NAO_LOCALIZADO, type CapaDeDecisao } from "./capa-de-decisao";
+import { quadroDasPremissasCriticas, quadroDaEquipe, quadroDoCronograma, quadroDosProdutos } from "./quadros";
 import { eventoEEfeito, reguaDosMarcos } from "./capa-regras";
 export { eventoEEfeito } from "./capa-regras";
 import type { Alerta, NumeroChave } from "./modelo";
@@ -131,7 +132,7 @@ export function capaDaProposta(dossie: Dossie, agora = new Date()): CapaDeDecisa
           "O que fazer com o marco que não cabe: pergunta de esclarecimento, ajuste da minuta ou premissa escrita.",
         ]
       : []),
-    "Enviar ou não a proposta, depois de revisar a minuta (os itens com a marca ○).",
+    "Enviar ou não a proposta, depois de revisar os itens pendentes da minuta.",
   ];
 
   const numeros: NumeroChave[] = [
@@ -182,6 +183,24 @@ export function capaDaProposta(dossie: Dossie, agora = new Date()): CapaDeDecisa
   });
   return {
     etapa: 2,
+    destaques: [
+      {
+        valor: preco ? `${Math.round(preco.horasTotais).toLocaleString("pt-BR")} h` : "—",
+        rotulo: "Horas",
+        explicacao: "esperadas, pela estimativa de três pontos",
+      },
+      {
+        valor: precoQueVale !== undefined ? reais(precoQueVale) : "A definir",
+        rotulo: "Preço",
+        explicacao: precoQueVale !== undefined ? "calculado ou fixado pelo GP" : "faltam valores do GP",
+      },
+      { valor: String(conteudo.produtos.length), rotulo: "Produtos", explicacao: "no escopo da proposta" },
+      {
+        valor: String(compromissos.length),
+        rotulo: "Compromissos",
+        explicacao: `${metodo.length} de método`,
+      },
+    ],
     oQueE:
       "Etapa 2, proposta: a minuta técnica e de preço, com a abordagem, os produtos, a equipe, as horas e os compromissos que a FGV assume.",
     decidir,
@@ -189,15 +208,22 @@ export function capaDaProposta(dossie: Dossie, agora = new Date()): CapaDeDecisa
     alertas,
     mudou,
     quadros: [
-      {
-        titulo: "Produtos × equipe × horas",
-        paragrafos: ["Horas esperadas por produto (três pontos, conta do código); quem trabalha em cada um."],
-        tabela: {
-          colunas: ["Produto", "Horas", "Perfis", "Requisitos"],
-          larguras: [3, 1.2, 3, 1.2],
-          linhas,
+      ...[
+        quadroDaEquipe(p),
+        {
+          titulo: "Produtos × equipe × horas",
+          paragrafos: [
+            "Horas esperadas por produto (três pontos, conta do código); quem trabalha em cada um.",
+          ],
+          tabela: {
+            colunas: ["Produto", "Horas", "Perfis", "Requisitos"],
+            larguras: [3, 1.2, 3, 1.2],
+            linhas,
+          },
         },
-      },
+        quadroDosProdutos(p, dados?.marcos ?? []),
+        quadroDoCronograma(dados?.cronograma),
+      ].filter((x): x is NonNullable<typeof x> => x !== undefined),
       ...(metodo.length
         ? [
             {
@@ -297,6 +323,20 @@ export function capaDoTap(dossie: Dossie, agora = new Date()): CapaDeDecisao | u
   const linha = (campo: string, textos: string[]) => [campo, textos.length ? textos.join("\n") : A_DEFINIR];
   return {
     etapa: 3,
+    destaques: [
+      { valor: String(r.marcos.length), rotulo: "Marcos", explicacao: "no termo de abertura" },
+      { valor: String(aDecidir.length), rotulo: "Divergências", explicacao: "a decidir pelo GP" },
+      {
+        valor: String(registro.filter((x) => x.premissaCritica).length),
+        rotulo: "Premissas críticas",
+        explicacao: `de ${registro.length} no registro`,
+      },
+      {
+        valor: t.decisoes.recursos?.trim() ? "Definidos" : "A definir",
+        rotulo: "Recursos",
+        explicacao: "financeiros (TAP.7)",
+      },
+    ],
     oQueE:
       "Etapa 3, termo de abertura (TAP): o que foi assinado, em uma página, e as divergências que o GP decide antes de começar.",
     decidir,
@@ -423,7 +463,7 @@ export function capaDoPgp(dossie: Dossie, agora = new Date()): CapaDeDecisao | u
         ]
       : []),
     ...(foraDoPrazo.length ? ["O que fazer com os marcos que não cabem no prazo do TAP."] : []),
-    "Aprovar o plano depois de revisar os itens com a marca ○.",
+    "Aprovar o plano depois de revisar os itens pendentes.",
   ];
   const numeros: NumeroChave[] = [
     {
@@ -472,6 +512,28 @@ export function capaDoPgp(dossie: Dossie, agora = new Date()): CapaDeDecisao | u
   const nomeDoPerfil = new Map((p.cronograma?.resposta.perfis ?? []).map((x) => [x.id, x.nome]));
   return {
     etapa: 4,
+    destaques: [
+      {
+        valor: crono ? `${Math.round(crono.total)}` : "—",
+        rotulo: "Dias úteis",
+        explicacao: crono?.dataFim ? `até ${dataBr(crono.dataFim)}` : "de duração",
+      },
+      {
+        valor: String(marcos.length),
+        rotulo: "Marcos",
+        explicacao: regua === "sem-regua" ? "sem régua no TAP" : `${foraDoPrazo.length} fora do prazo`,
+      },
+      {
+        valor: String(riscos.filter((x) => x.impacto === "alto").length),
+        rotulo: "Riscos altos",
+        explicacao: `de ${riscos.length} no registro`,
+      },
+      {
+        valor: `${mantidas.length}`,
+        rotulo: "Partes do plano",
+        explicacao: `${dispensadas.length} dispensadas`,
+      },
+    ],
     oQueE:
       "Etapa 4, plano de gerenciamento do projeto: como executar, acompanhar e encerrar o que foi assinado, adaptado ao porte e ao tipo do projeto.",
     decidir,
@@ -479,6 +541,10 @@ export function capaDoPgp(dossie: Dossie, agora = new Date()): CapaDeDecisao | u
     alertas,
     mudou,
     quadros: [
+      ...[
+        quadroDoCronograma(crono, "Cronograma do plano"),
+        quadroDasPremissasCriticas(p, dossie.tap?.premissas?.resposta.premissas ?? []),
+      ].filter((x): x is NonNullable<typeof x> => x !== undefined),
       {
         titulo: "Linha do tempo dos marcos",
         paragrafos: ["Datas pela conta do código (entrega e aprovação do cliente, com o tempo do GP)."],
@@ -500,8 +566,8 @@ export function capaDoPgp(dossie: Dossie, agora = new Date()): CapaDeDecisao | u
           "Sugestões do PMO, ordenadas pelo código por probabilidade × impacto (qualitativos, do registro). O valor da reserva é do GP.",
         ],
         tabela: {
-          colunas: ["Risco", "P × I", "Resposta", "Gatilho", "Reserva"],
-          larguras: [3, 0.9, 3, 2, 0.9],
+          colunas: ["Risco", "P × I", "Resposta", "Gatilho", "Responsável", "Reserva"],
+          larguras: [3, 0.9, 3, 2, 1.3, 0.9],
           linhas: riscos
             .slice(0, 5)
             .map((x) => [
@@ -509,6 +575,7 @@ export function capaDoPgp(dossie: Dossie, agora = new Date()): CapaDeDecisao | u
               `${NOME_PROB[x.probabilidade]} × ${NOME_IMPACTO[x.impacto]}`,
               curto(`${x.estrategia}: ${x.resposta}`, 160),
               curto(x.gatilho || "—", 120),
+              curto(x.responsavel || "—", 60),
               x.pedeReserva ? "sim (valor do GP)" : "não",
             ]),
         },
@@ -652,6 +719,19 @@ export function capaDosVereditos(
   ];
   return {
     etapa: 5,
+    destaques: [
+      {
+        valor: veredito.replace(/^./, (x) => x.toUpperCase()),
+        rotulo: "Veredito sugerido",
+        explicacao: "regra fixa; quem decide é o GP",
+      },
+      { valor: String(sustentados.length), rotulo: "Achados", explicacao: "que se sustentam" },
+      {
+        valor: `${verdes.length} de ${presentes.length}`,
+        rotulo: "Partes em ordem",
+        explicacao: "sem achado",
+      },
+    ],
     oQueE:
       "Etapa 5, conferência do plano: se o plano cobre o que a RFP, a proposta e o TAP pedem, na régua do tipo de plano, e o que corrigir antes de assinar.",
     decidir,

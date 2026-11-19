@@ -4,6 +4,13 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 
 ## [Não publicado]
 
+### Resultado no padrão da FGV Projetos (decisão 0089)
+- **Capa** com o título do estudo e os números-chave em destaque; **sumário**; seções numeradas; rodapé com "página n / total".
+- **Rótulos fora da linha:** referência "(TR, p. N)" no fim da frase, nota de sugestão por seção, decisões no quadro "Para o GP decidir"; marcas e avisos no anexo de revisão; termos internos só no anexo técnico.
+- **Quadros novos:** equipe, produtos, cronograma em barras, premissas críticas e riscos com responsável; "não informado no TR" em vermelho.
+- **Etapa 4:** os planos em resumo no corpo (6 páginas antes dos anexos); o plano inteiro no anexo.
+- **App:** capa com destaques e quadro de decisões; botão para baixar o resultado da etapa em Word.
+
 ### Material para a comissão
 - `docs/comissao/`: painel de métricas do teste (só contagens), caminho dos dados (com a política de retenção da Anthropic conferida em 18/11/2026), plano de validação com 5 a 10 TRs e respostas curtas para três perguntas prováveis.
 

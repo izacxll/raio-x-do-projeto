@@ -3,7 +3,7 @@
 // alertas (os que mudam preço, prazo, caixa, aceite ou quem executa primeiro); o que mudou desde a etapa anterior. Depois
 // da capa, os quadros (o resultado em forma visual). Nada aqui é decisão: o que vem do PMO continua sugestão, e o que o
 // código não achou é "não localizado pelo código — conferir no documento".
-import type { Alerta, NumeroChave, Secao } from "./modelo";
+import type { Alerta, Destaque, NumeroChave, Secao } from "./modelo";
 
 export const MAXIMO_DE_DECISOES = 5;
 export const MAXIMO_DE_ALERTAS = 5;
@@ -17,6 +17,8 @@ export interface CapaDeDecisao {
   alertas: Alerta[];
   mudou: string[];
   quadros: Secao[];
+  /** Os 3 ou 4 números da capa do documento, em bloco grande (decisão 0089). */
+  destaques?: Destaque[];
 }
 
 /** Os alertas da capa: os altos primeiro, sem repetir, no máximo 5. */

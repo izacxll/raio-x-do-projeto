@@ -20,7 +20,8 @@ import { montarRegistroPremissas, montarTap } from "./relatorio-tap";
 import { montarRelatorioConformidade } from "./relatorio-conformidade";
 import { resultadoDaEtapa5 } from "../etapas/5-conferencia/resultado";
 import { capaDaEtapa } from "./capas";
-import { secoesDaCapa } from "./capa-de-decisao";
+import { curto, secoesDaCapa } from "./capa-de-decisao";
+import { apresentar, lerItem } from "./apresentacao";
 
 export const NOME_DA_ETAPA: Record<number, string> = {
   1: "Leitura da RFP",
@@ -255,4 +256,75 @@ export function montarResultadoDaEtapa(
     geradoEm: agora,
     secoes,
   };
+}
+
+/**
+ * Etapa 4 no padrão de apresentação: o corpo traz os planos em resumo (uma linha por parte A: o que o plano estabelece,
+ * pelo primeiro item, e quantos itens tem); o plano inteiro e os registros vão para o anexo (decisão 0089).
+ */
+export function resumoDosPlanos(secoes: Secao[], nomeDaRfp: string): Secao {
+  const linhas: string[][] = [];
+  for (let k = 0; k < secoes.length; k++) {
+    const s = secoes[k]!;
+    const codigo = /^Parte (A\d+) do plano\.$/.exec(s.paragrafos?.[0] ?? "")?.[1];
+    if (!codigo) continue;
+    const itens = (s.paragrafos ?? []).map((p) => lerItem(p, nomeDaRfp)).filter((i) => i !== undefined);
+    const primeiro = itens.find((i) => i.rotulo !== "decisao") ?? itens[0];
+    linhas.push([
+      s.titulo.replace(/^\d+\.\s*/, ""),
+      primeiro ? curto(primeiro.texto, 200) : "a gerar",
+      String(itens.length),
+      String(itens.filter((i) => i.rotulo === "decisao").length),
+    ]);
+  }
+  return {
+    titulo: "Os planos em resumo",
+    paragrafos: [
+      "O que cada plano estabelece, pelo primeiro item; o texto inteiro de cada plano e os registros estão no anexo técnico.",
+    ],
+    tabela: {
+      colunas: ["Plano", "O que estabelece", "Itens", "Decisões do GP"],
+      larguras: [2.2, 6, 0.8, 1],
+      linhas,
+    },
+  };
+}
+
+/**
+ * O resultado da etapa no padrão de apresentação da FGV Projetos (decisão 0089): capa com o título do estudo e os
+ * números-chave, sumário, "o que decidir", os quadros, o corpo sem rótulo por linha e os anexos de revisão e técnico.
+ */
+export function montarResultadoApresentado(
+  dossie: Dossie,
+  etapa: number,
+  passos: ArquivosDoPasso[],
+  opcoes: { caso: string; agora?: Date },
+): DocumentoExportavel {
+  const agora = opcoes.agora ?? new Date();
+  const base = montarResultadoDaEtapa(dossie, etapa, passos, { ...opcoes, agora });
+  const capa = capaDaEtapa(dossie, etapa, agora);
+  const docs = dossie.documentos.filter((d) => d.papel === "rfp" || d.papel === "anexo-rfp");
+  const analise = docs.length ? analisarRfp(docs, agora) : undefined;
+  const item = (id: string) => analise?.itens.find((i) => i.id === id);
+  const instrumento = item("identificacao:instrumento")?.texto ?? "";
+  const nomeDaRfp = /^\s*(?:termo de refer[eê]ncia|TR)\b/i.test(instrumento) ? "TR" : "edital";
+  const contratante = item("identificacao:contratante")?.texto;
+  const corpo = base.secoes.filter((s) => (s.parte ?? "corpo") === "corpo");
+  const tecnico = base.secoes.filter((s) => s.parte === "anexo");
+  return apresentar(
+    { ...base, titulo: `Resultado da etapa ${etapa}`, subtitulo: undefined },
+    corpo,
+    tecnico,
+    {
+      capa,
+      nomeDaRfp,
+      // o título do estudo, sem o aviso de nome sugerido nem o instrumento entre parênteses
+      tituloDoEstudo: base.projeto.replace(/\s+—\s+nome sugerido.*$/, "").replace(/\s*\([^)]*\)\s*$/, ""),
+      ...(contratante ? { contratante: curto(contratante, 80) } : {}),
+      etapa,
+      nomeDaEtapa: NOME_DA_ETAPA[etapa] ?? "",
+      destaques: capa?.destaques ?? [],
+    },
+    etapa === 4 && dossie.pgp ? resumoDosPlanos(corpo, nomeDaRfp) : undefined,
+  );
 }

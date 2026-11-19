@@ -86,7 +86,10 @@ describe("capa de cada etapa, com a RFP pública da OEI", () => {
   it("etapa 2: produtos × equipe × horas e o preço do GP", () => {
     const c = capaDaProposta(dossie, HOJE);
     confereForma(c, 2);
-    expect(c!.quadros[0]!.titulo).toBe("Produtos × equipe × horas");
+    // equipe, produtos × horas, produtos com prazo e cronograma em barras (decisão 0089)
+    expect(c!.quadros.map((q) => q.titulo)).toEqual(
+      expect.arrayContaining(["Equipe", "Produtos × equipe × horas", "Produtos", "Cronograma"]),
+    );
     // sem valor-hora, o preço é decisão do GP e não um número inventado
     expect(c!.numeros.find((n) => n.rotulo === "Preço calculado")?.valor).toBe("a definir pelo GP");
   });

@@ -1,0 +1,144 @@
+// Resultado no padrão de apresentação da FGV Projetos (decisão 0089): rótulos fora das linhas, decisões no quadro,
+// marcas no anexo de revisão, termos internos só no anexo técnico, capa com destaques, sumário e legendas.
+import { readFileSync } from "node:fs";
+import { strFromU8, unzipSync } from "fflate";
+import { describe, expect, it } from "vitest";
+import { apresentar, lerItem, limparTermosInternos, secaoTecnica } from "../../src/exportacao/apresentacao";
+import { gerarDocx } from "../../src/exportacao/docx";
+import type { CapaDeDecisao } from "../../src/exportacao/capa-de-decisao";
+import type { DocumentoExportavel } from "../../src/exportacao/modelo";
+
+const logo = readFileSync(new URL("../../src/interface/ativos/logo-fgv-projetos.jpg", import.meta.url));
+const logoBuffer = logo.buffer.slice(logo.byteOffset, logo.byteOffset + logo.byteLength) as ArrayBuffer;
+
+describe("leitura das linhas de item", () => {
+  it("do documento: a referência discreta no fim, sem o rótulo", () => {
+    const i = lerItem("[Do documento, p. 4] O prazo é de 30 dias.", "TR")!;
+    expect(i.rotulo).toBe("documento");
+    expect(i.referencia).toBe("TR, p. 4");
+    expect(i.texto).toBe("O prazo é de 30 dias.");
+    expect(lerItem("[Do documento, proposta, p. 3] Texto.", "TR")!.referencia).toBe("proposta, p. 3");
+  });
+
+  it("marcas e avisos saem do texto", () => {
+    const i = lerItem(
+      "○◊ [Sugestão] Sugere-se reunião mensal. (número sem fonte — conferir: 12 meses)",
+      "TR",
+    )!;
+    expect(i.marcas).toBe("○◊");
+    expect(i.avisos).toEqual(["número sem fonte — conferir: 12 meses"]);
+    expect(i.texto).toBe("Sugere-se reunião mensal.");
+  });
+
+  it("decisão do GP e número C", () => {
+    expect(lerItem("[Decisão do GP] Valor-hora do coordenador.", "TR")!.rotulo).toBe("decisao");
+    expect(lerItem("○ C04 — [Sugestão] Exclusão de viagens.", "TR")!.numero).toBe("C04");
+    expect(lerItem("Texto corrido sem rótulo.", "TR")).toBeUndefined();
+  });
+});
+
+describe("termos internos", () => {
+  it("código vira ferramenta, dossiê vira arquivo do projeto e os ids entre parênteses saem", () => {
+    expect(limparTermosInternos("Pela conta do código, o marco cabe (a5_3, QU-09).")).toBe(
+      "Pelo cálculo da ferramenta, o marco cabe.",
+    );
+    expect(limparTermosInternos("Guardado no dossiê.")).toBe("Guardado no arquivo do projeto.");
+  });
+
+  it("seções do funcionamento do app vão para o anexo técnico", () => {
+    expect(secaoTecnica({ titulo: "Passo riscos: placar resumido" })).toBe(true);
+    expect(secaoTecnica({ titulo: "Conferência do TAP (código)" })).toBe(true);
+    expect(secaoTecnica({ titulo: "Pontos de atenção" })).toBe(false);
+  });
+});
+
+const capa: CapaDeDecisao = {
+  etapa: 2,
+  oQueE: "Etapa 2, proposta.",
+  decidir: ["Escolher a abordagem técnica.", "Valores do preço."],
+  numeros: [{ rotulo: "Produtos", valor: "3" }],
+  alertas: [{ nivel: "alto", texto: "O código não achou o prazo." }],
+  mudou: ["Abordagem escolhida."],
+  quadros: [{ titulo: "Equipe", tabela: { colunas: ["Perfil", "Horas"], linhas: [["Coordenação", "120"]] } }],
+  destaques: [{ valor: "3", rotulo: "Produtos" }],
+};
+
+function base(): DocumentoExportavel {
+  return {
+    titulo: "Resultado da etapa 2",
+    projeto: "Estudo inventado",
+    minuta: true,
+    geradoEm: new Date(2026, 10, 18),
+    versaoApp: "0.0.0",
+    versaoSkill: "0.3.7",
+    secoes: [],
+  };
+}
+
+describe("o documento apresentado", () => {
+  const corpo = [
+    {
+      titulo: "1. Metodologia",
+      paragrafos: [
+        "[Sugestão] Sugere-se oficina de abertura.",
+        "○ [Decisão do GP] Cadência das reuniões.",
+        "[Do documento, p. 7] O relatório final é entregue no mês 6.",
+      ],
+    },
+    { titulo: "Situação da minuta", paragrafos: ["12 pendências."] },
+  ];
+  const doc = apresentar(base(), corpo, [{ titulo: "Passo eap: placar resumido", parte: "anexo" as const }], {
+    capa,
+    nomeDaRfp: "TR",
+    tituloDoEstudo: "Estudo inventado",
+    etapa: 2,
+    nomeDaEtapa: "Proposta",
+    destaques: capa.destaques!,
+  });
+
+  it("o que decidir, quadros com legenda, corpo numerado e os dois anexos", () => {
+    const titulos = doc.secoes.map((s) => s.titulo);
+    expect(titulos[0]).toBe("1. O que decidir");
+    expect(titulos).toContain("2. Resultado em quadros");
+    expect(titulos).toContain("3. Metodologia");
+    expect(doc.secoes.find((s) => s.titulo === "Equipe")?.tabela?.legenda).toBe("Tabela 2.1 – Equipe");
+    expect(titulos).toContain("A. Revisão do GP: o que ainda está pendente");
+    expect(titulos).toContain("B. Anexo técnico");
+    // a seção do funcionamento do app foi para o anexo técnico
+    expect(doc.secoes.find((s) => s.titulo === "Situação da minuta")?.parte).toBe("anexo");
+  });
+
+  it("no corpo: sem rótulo por linha, decisão no quadro, referência no fim e nota de sugestão", () => {
+    const s = doc.secoes.find((x) => x.titulo === "3. Metodologia")!;
+    expect(s.paragrafos).toEqual([
+      "• Sugere-se oficina de abertura.",
+      "• O relatório final é entregue no mês 6. (TR, p. 7)",
+    ]);
+    expect(s.decisoes?.map((d) => d.decisao)).toEqual(["Cadência das reuniões"]);
+    expect(s.nota).toMatch(/sugerido pelo PMO/);
+    expect(JSON.stringify(s)).not.toMatch(/\[Sugestão\]|\[Do documento|○/);
+    // a marca foi para o anexo de revisão
+    expect(doc.secoes.find((x) => x.titulo.startsWith("A. Revisão"))?.paragrafos?.join(" ")).toMatch(
+      /3\. Metodologia — Cadência das reuniões: pendente de revisão do GP/,
+    );
+  });
+
+  it("o alerta e as decisões da capa sem termo interno", () => {
+    expect(JSON.stringify(doc.secoes[0])).not.toMatch(/código/);
+  });
+
+  it("DOCX: capa com o título e os destaques, sumário, legenda e rodapé com página n / total", async () => {
+    const arquivos = unzipSync(new Uint8Array(await (await gerarDocx(doc, logoBuffer)).arrayBuffer()));
+    const corpoXml = strFromU8(arquivos["word/document.xml"]!);
+    expect(corpoXml).toContain("Estudo inventado");
+    expect(corpoXml).toContain("SUMÁRIO");
+    expect(corpoXml).toMatch(/TOC \\h \\o/);
+    expect(corpoXml).toContain("PARA O GP DECIDIR");
+    expect(corpoXml).toContain("Tabela 2.1 – Equipe");
+    const rodape = Object.keys(arquivos)
+      .filter((n) => /^word\/footer\d*\.xml$/.test(n))
+      .map((n) => strFromU8(arquivos[n]!))
+      .join("");
+    expect(rodape).toMatch(/NUMPAGES/);
+  });
+});

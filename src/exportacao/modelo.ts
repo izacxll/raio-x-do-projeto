@@ -32,6 +32,12 @@ export interface Tabela {
   linhas: string[][];
   /** Largura relativa de cada coluna (soma livre). */
   larguras?: number[];
+  /** Legenda no padrão ("Tabela N.M – título"), centralizada abaixo da tabela (decisão 0089). */
+  legenda?: string;
+  /** Linhas que são faixa de grupo (uma célula, fundo azul-claro). */
+  faixas?: number[];
+  /** Colunas de barra do cronograma: célula "█" sai cheia de azul, sem texto. */
+  barras?: boolean;
 }
 
 /**
@@ -63,6 +69,37 @@ export interface Secao {
   parte?: ParteDoDocumento;
   alertas?: Alerta[];
   numeros?: NumeroChave[];
+  /** Subtítulo (nível 2) dentro da seção anterior; sem ele, seção numerada (nível 1). */
+  nivel?: 1 | 2;
+  /** Quadro "Para o GP decidir" no início da seção (decisão 0089). */
+  decisoes?: DecisaoNoQuadro[];
+  /** Nota no início da seção ("conteúdo sugerido pelo PMO, salvo indicação de fonte"). */
+  nota?: string;
+  /** Parágrafo de abertura, antes do quadro de decisões e dos alertas. */
+  abertura?: string;
+}
+
+/** Uma decisão do GP no quadro "Para o GP decidir": a decisão, as opções (quando houver) e o impacto. */
+export interface DecisaoNoQuadro {
+  decisao: string;
+  opcoes?: string;
+  impacto: string;
+}
+
+/** Número-chave da capa, em bloco grande (decisão 0089). */
+export interface Destaque {
+  valor: string;
+  rotulo: string;
+  explicacao?: string;
+}
+
+/** A capa do documento no padrão da FGV Projetos (decisão 0089). */
+export interface CapaDoDocumento {
+  /** O título do estudo (nome sugerido a partir do objeto, ou o que o GP deu). */
+  titulo: string;
+  contratante?: string;
+  etapa: string;
+  destaques: Destaque[];
 }
 
 export interface DocumentoExportavel {
@@ -79,6 +116,8 @@ export interface DocumentoExportavel {
   secoes: Secao[];
   /** Contagem das marcas dos itens; sem ela, a legenda não sai. */
   marcas?: ContagemDeMarcas;
+  /** Com ela, o documento sai no padrão de apresentação da FGV Projetos: capa, sumário, seções numeradas (decisão 0089). */
+  apresentacao?: CapaDoDocumento;
 }
 
 /** As seções agrupadas pela parte, na ordem das partes; a ordem dentro de cada parte é a de chegada. */
