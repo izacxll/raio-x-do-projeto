@@ -4,8 +4,13 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 
 ## [Não publicado]
 
+### Documentos da comissão coerentes com o painel
+- O painel é a fonte única dos números de custo; a FAQ passa a citá-lo (US$ 11,37 a 16,66, R$ 65 a 96, cache de 1 hora com economia de 10% a 12%).
+- O piso diz "com o último pedido de cada passo" e a simulação, "com todos os pedidos do teste"; os casos têm o mesmo nome em todas as tabelas.
+- A parte da saída no custo por caso (cerca de 43% e 31%) e a ressalva da rodada compacta na linha atual; as travas com a medição da decisão 0093; as lições marcadas da decisão 0094.
+
 ### Painel da comissão: custo como estimativa
-- O custo por projeto aparece como estimativa feita com os pedidos do teste, não fatura; a PTAX de 16/11/2026 (R$ 5,7324) foi conferida no Banco Central.
+- O custo por projeto aparece como estimativa feita com os pedidos do teste, não fatura; a PTAX de 16/11/2026 (R$ 5,7324) foi conferida no Banco Central em 19/11/2026 (decisão 0095).
 
 ### Registros só na planilha no porte pequeno (decisão 0096)
 - **Plano do porte pequeno:** cada registro B vira uma tabela-resumo (5 linhas, riscos altos primeiro) com a aba da planilha onde está inteiro; de ~49 para ~29 páginas no caso medido.

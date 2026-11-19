@@ -14,11 +14,18 @@ Porque o código confere o que a IA escreve, e nada do que ela escreve vira fato
 
 ## Quanto custa e quanto economiza?
 
-- **Custo medido:** cerca de US$ 10 por projeto completo (5 etapas, com a segunda instância), pelo tamanho dos pedidos do teste e o preço da API para o Opus 5.5. Isso dá cerca de R$ 55 ao câmbio de exemplo de R$ 5,50. É um piso: as rodadas refeitas não entraram. O cache de prompt, que o app já usa, deve baixar a entrada dos passos seguintes; a medição com a API real é o próximo passo.
+- **Custo estimado:** de US$ 11,37 a US$ 16,66 por projeto completo (5 etapas, com a segunda instância), ou de R$ 65 a R$ 96. Os números estão no [painel de métricas](painel-de-metricas.md), que é a fonte única deles; esta resposta só os resume.
+  - **Como foi estimado:** com todos os pedidos dos dois casos do teste e o preço da API para o Opus 5.5. Não é fatura: o teste rodou pelo claude.ai.
+  - **Câmbio:** PTAX de venda de 16/11/2026, R$ 5,7324, conferida no Banco Central em 19/11/2026.
+  - **Cache:** o cache de 5 minutos que o app usava encarecia o projeto, porque os passos ficam a cerca de 10 minutos um do outro. O de 1 hora, em uso desde a decisão 0095, economiza de 10% a 12%.
+  - **O que falta:** a medição com a fatura da API vem na próxima rodada do teste.
 - **Economia:** depende das horas de PMO por projeto hoje, um número que vem da FGV. Para comparar: um projeto do teste passou por 13 passos do PMO e 12 revisões. Ao fim de cada etapa, o gerente recebe uma capa de decisão de uma página, o resultado em quadros e uma fila de pendências por impacto.
 
 ## Funciona fora destes dois casos?
 
 Ainda não está provado, e é preciso dizer isso.
-- **Hoje:** as regras vêm de 2 casos (uma licitação e uma contratação direta), com 206 lições. Cada lição virou regra geral, com exemplo disfarçado, e o gabarito de regressão na CI impede que uma regra nova estrague outra.
+- **Hoje:** as regras vêm de 2 casos (uma licitação e uma contratação direta), com 206 lições.
+  - **Cada lição da skill tem marca** (decisão 0094): 41 são regra geral, 16 são regra geral vista num caso só e 10 vieram de um caso só, a confirmar em outros TRs.
+  - **Exemplos:** disfarçados.
+  - **Regressão:** o gabarito na CI impede que uma regra nova estrague outra.
 - **Para provar:** o [plano de validação](plano-de-validacao.md) roda de 5 a 10 TRs publicados, variados por modalidade, tipo, porte e campo. Ele mede cobertura, precisão, alarmes falsos, páginas, custo e tempo, e tem critério de pronto: cobertura de 80%, precisão de 70% e nenhum achado real perdido entre versões.
