@@ -21,6 +21,17 @@ describe("custo com o cache de 1 hora (decisão 0095)", () => {
     ).toBeCloseTo(0.05, 6);
   });
 
+  it("a parte de 1 hora maior que o total não deixa o custo negativo", () => {
+    const c = custoDoUso("claude-opus-5-5", {
+      entrada: 0,
+      saida: 0,
+      escritaCache: 0,
+      escritaCache1h: 50000,
+      leituraCache: 0,
+    });
+    expect(c).toBe(0);
+  });
+
   it("a estimativa da primeira chamada usa a escrita de 1 hora; a seguinte, a leitura", () => {
     const e = estimarCusto("claude-opus-5-5", "riscos", 100000, 10000)!;
     // 100 mil × 8 + 10 mil × 4 = 0,84 de entrada na primeira; 100 mil × 0,2 + 10 mil × 4 = 0,06 na seguinte

@@ -64,7 +64,7 @@ O teste rodou pelo claude.ai, sem a API, então não há fatura a conferir.
 
 - **Cache de 5 minutos:** encarecia, porque o intervalo mediano entre pedidos foi de 9 a 10 minutos. A escrita custa 1,25 × a entrada e quase nunca era lida.
 - **Cache de 1 hora:** o prefixo é lido do cache em cerca de metade dos pedidos. O custo cai de 10% a 12% contra o app de antes e de 3% a 6% contra o sem cache.
-- **Saída:** o maior peso é a saída (cerca de 230 mil a 245 mil tokens por projeto, US$ 20 por milhão). A saída não tem cache.
+- **Saída:** cerca de 230 mil a 245 mil tokens por projeto, a US$ 20 por milhão, isto é, US$ 4,6 a US$ 4,9, entre um terço e dois quintos do custo. A saída não tem cache.
 - **Câmbio:** PTAX de venda de 16/11/2026, R$ 5,7324 por dólar (conferir no Banco Central no dia).
 - **Medição com a fatura:** a medição real, com a chave da API, fica para a próxima rodada do teste. A tela de cada etapa já mostra, em cada chamada, a escrita e a leitura do cache que a API devolve.
 

@@ -28,13 +28,14 @@ O teste rodou pelo claude.ai, sem fatura. Por isso a medição foi uma simulaç�
 
 - **O cache de 5 minutos encarecia o projeto.** O intervalo mediano entre pedidos foi de 9 a 10 minutos: só 7 e 11 intervalos ficaram dentro de 5 minutos, contra 25 e 31 dentro de 1 hora. O app pagava a escrita e quase nunca lia.
 - **Com o cache de 1 hora,** o prefixo inteiro é lido do cache em 17 e 20 pedidos. O custo cai de 10% a 12% contra o app de antes.
-- **Cache de 1 hora só no sistema:** fica dentro de 1% nos dois casos. Vale o prefixo estável inteiro, que é o mais simples e o que foi pedido.
+- **Cache de 1 hora só no sistema:** a diferença fica em cerca de 1% nos dois casos. No TR de contratação direta, ele sai um pouco mais barato (US$ 14,55 contra US$ 14,70), porque há chamadas cujo bloco de documentos não se repete. Por isso, a rodada compacta da segunda instância, que manda só as páginas citadas, vai com os documentos sem cache (item 1 da decisão).
 
 ## Decisão
 
-1. **Chamada:** o sistema (a skill e as referências da etapa) e os documentos vão com `cache_control: { type: "ephemeral", ttl: "1h" }`. O pedido do passo fica fora do cache.
+1. **Chamada:** o sistema (a skill e as referências da etapa) e os documentos vão com `cache_control: { type: "ephemeral", ttl: "1h" }`. O pedido do passo fica fora do cache. Na rodada compacta da segunda instância (decisão 0071), os documentos são só as páginas citadas, um prefixo que não se repete: eles vão sem cache, e o sistema continua com 1 hora.
 2. **Uso:**
    - o app lê a escrita no cache por tempo de vida (`usage.cache_creation.ephemeral_1h_input_tokens`) e cobra a de 1 hora a 2 × a entrada;
+   - o dossiê guarda a escrita de 1 hora de cada chamada (`escritaCache1h`, opcional: dossiê antigo continua abrindo);
    - a tabela de preços ganha a escrita de 1 hora e foi reconferida em 19/11/2026;
    - a estimativa antes de cada passo usa a escrita de 1 hora na primeira chamada e a leitura nas seguintes, até 1 hora depois.
 3. **Painel da comissão:** o custo por projeto completo, sem cache, com o cache de 5 minutos e com o de 1 hora, em dólar e em reais. O câmbio é a PTAX de venda de 16/11/2026, R$ 5,7324, a conferir no dia.
@@ -42,4 +43,5 @@ O teste rodou pelo claude.ai, sem fatura. Por isso a medição foi uma simulaç�
 ## Consequências
 
 - A medição com a fatura real fica para a próxima rodada do teste com a chave da API. A tela de cada etapa já mostra a escrita e a leitura do cache de cada chamada.
-- O maior peso do custo é a saída, sem cache: de 230 mil a 245 mil tokens por projeto.
+- A saída não tem cache: de 230 mil a 245 mil tokens por projeto, cerca de US$ 4,6 a US$ 4,9, entre um terço e dois quintos do custo.
+- A tabela acima conta todos os documentos com cache. Com a rodada compacta sem cache nos documentos, o custo real fica um pouco abaixo dela.

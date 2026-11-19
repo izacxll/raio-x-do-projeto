@@ -88,6 +88,41 @@ describe("chamada ao PMO", () => {
     expect(corpo.messages[0].content).toEqual([{ type: "text", text: "confira a rodada 2" }]);
   });
 
+  it("documentos que não se repetem (rodada compacta) vão sem cache; o sistema continua com 1 hora", async () => {
+    const api = fetchSimulado([{ texto: JSON.stringify({ ok: true, itens: [] }) }]);
+    await chamarPmo(
+      {
+        chave: CHAVE,
+        modelo: "claude-opus-5-5",
+        passo: "segunda-instancia",
+        sistema: "SKILL",
+        documentos: "=== Página 3 === trecho citado",
+        cacheDocumentos: false,
+        pedido: "confira a rodada 2",
+        schema: Schema,
+      },
+      { fetch: api.fetch },
+    );
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- corpo da requisição lido como JSON livre
+    const corpo = api.pedidos[0]?.corpo as Record<string, any>;
+    expect(corpo.system[0].cache_control).toEqual({ type: "ephemeral", ttl: "1h" });
+    expect(corpo.messages[0].content[0].cache_control).toBeUndefined();
+  });
+
+  it("separa a escrita de 5 minutos da de 1 hora no uso e no custo", async () => {
+    const api = fetchSimulado([
+      {
+        texto: JSON.stringify({ ok: true, itens: [] }),
+        uso: { entrada: 0, saida: 0, escritaCache: 10000, escritaCache1h: 6000 },
+      },
+    ]);
+    const r = await pedido(api.fetch);
+    expect(r.uso.escritaCache).toBe(10000);
+    expect(r.uso.escritaCache1h).toBe(6000);
+    // 4 mil × 5 + 6 mil × 8 de escrita, por milhão
+    expect(r.custo).toBeCloseTo(0.068, 6);
+  });
+
   it("chave recusada vira mensagem em português, sem a chave no texto", async () => {
     const api = fetchSimulado([
       { status: 401, corpo: corpoErro("authentication_error", `invalid x-api-key ${CHAVE}`) },

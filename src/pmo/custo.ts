@@ -21,11 +21,12 @@ export function precoDe(modelo: string): PrecoModelo | undefined {
 export function custoDoUso(modelo: string, uso: UsoChamada): number | undefined {
   const p = precoDe(modelo);
   if (!p) return undefined;
+  const umaHora = Math.min(uso.escritaCache, uso.escritaCache1h ?? 0);
   return (
     (uso.entrada * p.entrada +
       uso.saida * p.saida +
-      (uso.escritaCache - (uso.escritaCache1h ?? 0)) * p.escritaCache +
-      (uso.escritaCache1h ?? 0) * p.escritaCache1h +
+      (uso.escritaCache - umaHora) * p.escritaCache +
+      umaHora * p.escritaCache1h +
       uso.leituraCache * p.leituraCache) /
     1e6
   );

@@ -1,4 +1,4 @@
-// Preços da API, em US$ por milhão de tokens (decisão 0002). Consultados em 13/11/2026, na referência da API
+// Preços da API, em US$ por milhão de tokens (decisão 0002). Consultados em 19/11/2026, na referência da API
 // (claude-api, tabela de modelos e cache). Reconferir em docs.claude.com quando a FGV fechar o modelo.
 // Escrita no cache de 5 minutos custa 1,25 × a entrada e no de 1 hora, 2 × (decisão 0095); leitura do cache tem preço
 // próprio (0,05 × a entrada no Opus 5.5 e no Sonnet 5.5). Conferido em 19/11/2026 na referência da API.

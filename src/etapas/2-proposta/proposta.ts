@@ -186,6 +186,7 @@ export function registrarUso(p: PropostaDossie, passo: string, r: RespostaPmo<un
         entrada: r.uso.entrada,
         saida: r.uso.saida,
         escritaCache: r.uso.escritaCache,
+        escritaCache1h: r.uso.escritaCache1h ?? 0,
         leituraCache: r.uso.leituraCache,
         custoUsd: r.custo,
         em: r.em,

@@ -95,11 +95,13 @@ export function SegundaInstancia({
   const textoDocs = useMemo(() => textoDosDocumentos(montagem.documentos), [montagem.documentos]);
   const rodadaSeguinte = montagem.rodada > 1;
   const modeloDaChamada = rodadaSeguinte ? modeloDaRodada : modelo;
+  // na rodada compacta, os documentos são só as páginas citadas: prefixo que não se repete, vai sem cache (0095)
+  const cacheDocumentos = !montagem.compacta;
   const est = estimarCusto(
     modeloDaChamada,
     "segunda-instancia",
-    estimarTokens(sistema) + estimarTokens(textoDocs),
-    estimarTokens(pedido),
+    estimarTokens(sistema) + (cacheDocumentos ? estimarTokens(textoDocs) : 0),
+    estimarTokens(pedido) + (cacheDocumentos ? 0 : estimarTokens(textoDocs)),
   );
   const resultado = useMemo(
     () => (atual ? conferirSegundaInstancia(atual.resposta, documentos) : undefined),
@@ -120,6 +122,7 @@ export function SegundaInstancia({
         passo: "segunda-instancia",
         sistema,
         documentos: textoDocs,
+        cacheDocumentos,
         pedido,
         schema: RespostaSegundaInstancia,
         sinal: controle.signal,

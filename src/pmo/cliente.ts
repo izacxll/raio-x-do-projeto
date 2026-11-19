@@ -151,6 +151,11 @@ export interface PedidoPmo<S extends z.ZodType> {
   sistema: string;
   /** Texto dos documentos: vai com cache, antes do pedido. */
   documentos: string;
+  /**
+   * false: os documentos vão sem cache. Para o prefixo que não se repete (as páginas citadas da rodada compacta da
+   * segunda instância): a escrita de 1 hora custa 2 × a entrada e ninguém lê depois (decisão 0095).
+   */
+  cacheDocumentos?: boolean;
   /** O pedido do passo (ponto de partida, abordagem escolhida…). */
   pedido: string;
   schema: S;
@@ -169,11 +174,13 @@ export interface RespostaPmo<T> {
 }
 
 function lerUso(u: Anthropic.Beta.BetaUsage): UsoChamada {
+  const escrita = u.cache_creation_input_tokens ?? 0;
   return {
     entrada: u.input_tokens ?? 0,
     saida: u.output_tokens ?? 0,
-    escritaCache: u.cache_creation_input_tokens ?? 0,
-    escritaCache1h: u.cache_creation?.ephemeral_1h_input_tokens ?? 0,
+    escritaCache: escrita,
+    // a parte de 1 hora nunca passa do total escrito: o custo de 5 minutos fica sempre >= 0
+    escritaCache1h: Math.min(escrita, u.cache_creation?.ephemeral_1h_input_tokens ?? 0),
     leituraCache: u.cache_read_input_tokens ?? 0,
   };
 }
@@ -240,7 +247,9 @@ export async function chamarPmo<S extends z.ZodType>(
                 {
                   type: "text" as const,
                   text: p.documentos,
-                  cache_control: { type: "ephemeral" as const, ttl: "1h" as const },
+                  ...(p.cacheDocumentos === false
+                    ? {}
+                    : { cache_control: { type: "ephemeral" as const, ttl: "1h" as const } }),
                 },
               ]
             : []),
