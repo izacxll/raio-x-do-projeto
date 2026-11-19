@@ -4,6 +4,9 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 
 ## [Não publicado]
 
+### Material para a comissão
+- `docs/comissao/`: painel de métricas do teste (só contagens), caminho dos dados (com a política de retenção da Anthropic conferida em 18/11/2026), plano de validação com 5 a 10 TRs e respostas curtas para três perguntas prováveis.
+
 ### Recomendação de participar ou não (decisão 0086)
 - **Etapa 1:** o PMO sugere participar, participar com condições ou não participar, com motivo, condições e os itens que sustentam; o código confere os itens; a decisão continua só do GP.
 - **Skill PMO 0.3.7.**
