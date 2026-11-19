@@ -2,22 +2,11 @@
 import ExcelJS from "exceljs";
 import { cor } from "../interface/tokens";
 import { linhaDeVersoes, TEXTO_MINUTA, type DocumentoExportavel } from "./modelo";
+import { nomeDeAba } from "./abas";
+
+export { nomeDeAba };
 
 const argb = (nome: string) => `FF${cor(nome)}`;
-
-/** Nome de aba válido no Excel: até 31 caracteres, sem : \ / ? * [ ], e sem repetir. */
-export function nomeDeAba(titulo: string, usados: Set<string>): string {
-  const base =
-    titulo
-      .replace(/[:\\/?*[\]]/g, " ")
-      .replace(/\s+/g, " ")
-      .trim()
-      .slice(0, 28) || "Planilha";
-  let nome = base;
-  for (let i = 2; usados.has(nome.toLowerCase()); i++) nome = `${base.slice(0, 27)} ${i}`;
-  usados.add(nome.toLowerCase());
-  return nome;
-}
 
 export async function gerarXlsx(doc: DocumentoExportavel, logo: ArrayBuffer): Promise<Blob> {
   const livro = new ExcelJS.Workbook();
