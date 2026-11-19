@@ -29,7 +29,7 @@ graph LR
 | Protocolo | HTTPS, Messages API em streaming (`beta.messages.stream`), com saída estruturada (`zodOutputFormat`) | `chamarPmo` em `src/pmo/cliente.ts` |
 | Autenticação | Chave da API do próprio GP, informada na tela e guardada só no `sessionStorage` da aba | `src/pmo/chave.ts` |
 | SDK | `@anthropic-ai/sdk` com `dangerouslyAllowBrowser: true`, 3 novas tentativas e tempo limite de 15 minutos | `criarCliente` em `src/pmo/cliente.ts` |
-| Cache | A skill (`system`) e o texto dos documentos vão com `cache_control: ephemeral` | `src/pmo/cliente.ts`, `src/pmo/montagem.ts` |
+| Cache | A skill (`system`) e o texto dos documentos vão com `cache_control: ephemeral` e tempo de vida de 1 hora (`ttl: "1h"`, decisão 0095); na rodada compacta da segunda instância, os documentos vão sem cache | `src/pmo/cliente.ts`, `src/pmo/montagem.ts` |
 | Modelo e esforço | Opus 5.5 padrão provisório, Sonnet 5.5 para comparação; esforço e limite de saída por passo | `src/config/modelo.ts` (decisão 0002) |
 | Reserva em recusa | Beta `server-side-fallback-2026-07-01` com `fallbacks: "default"` | `src/pmo/cliente.ts` |
 | Erros | Traduzidos para o português, cada um com o que fazer; a chave é apagada das mensagens (`semChave`) | `traduzirErro` em `src/pmo/cliente.ts` |

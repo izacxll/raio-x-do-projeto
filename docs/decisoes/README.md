@@ -98,6 +98,7 @@ Uma decisão por arquivo, numerada em ordem. Cada uma registra o contexto, o que
 | [0092](0092-riscos-ligados-e-reserva-derivada.md) | Cada risco liga resposta, reserva e marco (produto do cronograma, conferido pelo código); a reserva de contingência é a soma das reservas dos riscos marcados, valores do GP |
 | [0093](0093-alarme-falso-das-travas.md) | Alarme falso das travas medido: a "redação a conferir" fica, com formas condicionais a mais e sem linha de estrutura nem registros (de 48,75% para 40% de alarme falso); rótulo misto no "do documento" |
 | [0094](0094-licoes-geral-ou-de-um-caso.md) | Lições da skill marcadas: regra geral, regra geral vista num caso só ou de um caso só (skill 0.3.8; espera aprovação) |
+| [0095](0095-cache-de-1-hora.md) | Cache de prompt de 1 hora no prefixo estável (skill e documentos), com a escrita de 1 hora no custo; simulação por projeto completo e custo em reais no painel da comissão |
 
 Modelo para uma nova decisão:
 

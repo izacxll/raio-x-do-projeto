@@ -4,6 +4,12 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 
 ## [Não publicado]
 
+### Cache de 1 hora no prefixo estável (decisão 0095)
+- A skill e os documentos vão no cache de 1 hora; o uso e o custo leem a escrita por tempo de vida.
+- Na rodada compacta da segunda instância, os documentos (só as páginas citadas) vão sem cache; o dossiê guarda a escrita de 1 hora de cada chamada.
+- Simulação por projeto completo nos dois casos: o cache de 5 minutos encarecia (US$ 12,66 e 16,66 contra 12,09 e 15,16 sem cache); com o de 1 hora, US$ 11,37 e 14,70.
+- Painel da comissão com o custo por projeto em dólar e em reais.
+
 ### Skill PMO 0.3.8: lições marcadas (decisão 0094)
 - Cada lição das armadilhas e da experiência marcada como [geral] (41), [geral, visto num caso] (16) ou [um caso] (10), com a legenda no topo da seção.
 

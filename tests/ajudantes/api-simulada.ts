@@ -5,7 +5,14 @@ export interface RespostaSimulada {
   texto: string;
   modelo?: string;
   stopReason?: "end_turn" | "max_tokens" | "refusal";
-  uso?: { entrada: number; saida: number; escritaCache?: number; leituraCache?: number };
+  uso?: {
+    entrada: number;
+    saida: number;
+    escritaCache?: number;
+    /** Desses, os do cache de 1 hora; sem o campo, toda a escrita é de 1 hora (decisão 0095). */
+    escritaCache1h?: number;
+    leituraCache?: number;
+  };
 }
 
 export function corpoSse(r: RespostaSimulada): string {
@@ -27,6 +34,12 @@ export function corpoSse(r: RespostaSimulada): string {
             input_tokens: uso.entrada,
             output_tokens: 1,
             cache_creation_input_tokens: uso.escritaCache ?? 0,
+            // o app escreve o prefixo estável no cache de 1 hora (decisão 0095)
+            cache_creation: {
+              ephemeral_5m_input_tokens:
+                (uso.escritaCache ?? 0) - (uso.escritaCache1h ?? uso.escritaCache ?? 0),
+              ephemeral_1h_input_tokens: uso.escritaCache1h ?? uso.escritaCache ?? 0,
+            },
             cache_read_input_tokens: uso.leituraCache ?? 0,
           },
         },

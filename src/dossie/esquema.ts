@@ -160,6 +160,8 @@ export const AnaliseRfpDossie = z.object({
         entrada: z.number().int().nonnegative(),
         saida: z.number().int().nonnegative(),
         escritaCache: z.number().int().nonnegative(),
+        /** Desses, os do cache de 1 hora (decisão 0095). Ausente em dossiê antigo: tudo de 5 minutos. */
+        escritaCache1h: z.number().int().nonnegative().optional(),
         leituraCache: z.number().int().nonnegative(),
         custoUsd: z.number().nonnegative().optional(),
         em: z.string(),
@@ -209,6 +211,8 @@ export const Conferencia = z.object({
         entrada: z.number().int().nonnegative(),
         saida: z.number().int().nonnegative(),
         escritaCache: z.number().int().nonnegative(),
+        /** Desses, os do cache de 1 hora (decisão 0095). Ausente em dossiê antigo: tudo de 5 minutos. */
+        escritaCache1h: z.number().int().nonnegative().optional(),
         leituraCache: z.number().int().nonnegative(),
         custoUsd: z.number().nonnegative().optional(),
         em: z.string(),
@@ -227,6 +231,8 @@ export const UsoPmo = z.object({
   entrada: z.number().int().nonnegative(),
   saida: z.number().int().nonnegative(),
   escritaCache: z.number().int().nonnegative(),
+  /** Desses, os do cache de 1 hora (decisão 0095). Ausente em dossiê antigo: tudo de 5 minutos. */
+  escritaCache1h: z.number().int().nonnegative().optional(),
   leituraCache: z.number().int().nonnegative(),
   custoUsd: z.number().nonnegative().optional(),
   em: z.string(),

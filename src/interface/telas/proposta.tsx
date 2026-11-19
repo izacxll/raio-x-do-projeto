@@ -260,7 +260,8 @@ export function PropostaDoFornecedor({ todos }: { todos: DocumentoLido[] }) {
                       entrada e {formatarTokens(est.saidaMin)} a {formatarTokens(est.saidaMax)} de saída:{" "}
                       {formatarDolar(est.semCache.min)} a {formatarDolar(est.semCache.max)} na primeira
                       chamada; {formatarDolar(est.comCache.min)} a {formatarDolar(est.comCache.max)} se feita
-                      em até 5 minutos depois da anterior (skill e documentos lidos do cache).
+                      em até 1 hora depois da anterior (skill e documentos lidos do cache, se o passo anterior
+                      usou a mesma skill e os mesmos documentos).
                     </p>
                   )}
 
