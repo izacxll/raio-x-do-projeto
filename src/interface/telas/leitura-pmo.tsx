@@ -177,7 +177,10 @@ export function LeituraDoPmo({
                       <span className="lb">leitura do PMO</span>
                       <span className="lb">{a.tipo}</span>
                       <span className="lb">{a.parte}</span>
-                      <span className="lb">{a.gravidade}</span>
+                      <span className="lb" title={a.motivoDaGravidade}>
+                        {a.gravidade}
+                        {a.motivoDaGravidade ? " (régua de prazo)" : ""}
+                      </span>
                       <span className="lb">{a.categoria}</span>
                       {a.situacao !== "valido" && (
                         <span className="lb aviso-item">{NOME_SITUACAO_PMO[a.situacao]}</span>
