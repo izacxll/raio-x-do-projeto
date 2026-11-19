@@ -4,6 +4,9 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 
 ## [Não publicado]
 
+### Material para a comissão
+- `docs/comissao/`: painel de métricas do teste (só contagens), caminho dos dados (com a política de retenção da Anthropic conferida em 18/11/2026), plano de validação com 5 a 10 TRs e respostas curtas para três perguntas prováveis.
+
 ### Fila de pendências do GP (decisão 0088)
 - **Quatro classes:** decisão do GP, a conferir, do documento e sugestão sem aviso; decisão e item com aviso nunca vão em lote.
 - **Fila no topo de cada etapa**, por impacto (caixa ou preço, prazo, aceite, quem executa), com o prazo da decisão; contagem na capa.

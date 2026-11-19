@@ -39,4 +39,5 @@ Descreve o sistema como ele está no código (v0.8.1). Cada documento termina co
 | Documento | Conteúdo |
 |---|---|
 | [`estudos/metodo-etapa-1.md`](estudos/metodo-etapa-1.md) a [`metodo-etapa-5.md`](estudos/metodo-etapa-5.md) | O método de cada etapa (decisão 0034): prevalece sobre o que a etapa faz hoje |
+| [`comissao/`](comissao/) | Material para a comissão: painel de métricas, caminho dos dados, plano de validação e perguntas prováveis |
 | [`estudos/roteiro-etapa-5-plano-real.md`](estudos/roteiro-etapa-5-plano-real.md) | Roteiro da etapa 5 sobre um plano real (`npm run conferir-plano-real`) |

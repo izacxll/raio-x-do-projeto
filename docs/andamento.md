@@ -1,8 +1,21 @@
 # Andamento
 
-Atualizado em 18/11/2026. Teste externo da rodada 3: etapas 1 a 4 fechadas nos dois casos; etapa 5 exportada. Na `main` (18/11/2026, por squash): as decisões 0070 a 0074 (#77 a #81).
+Atualizado em 18/11/2026. Teste externo da rodada 3 fechado nos dois casos (etapas 1 a 5). Pente fino para a comissão em andamento: blocos 1, 2 e 6 feitos; faltam os blocos 5, 4 e 3.
 
 ## Onde estamos
+
+**Pente fino para a comissão (18/11/2026).** A responsável pediu um pente fino a partir de duas revisões independentes do teste externo (fora do Git), com esta ordem: formato do resultado, decisões do GP e material da comissão; depois custo, qualidade da IA e proporcionalidade.
+- **Bloco 1, formato do resultado (na `main`):**
+  - capa de decisão, quadros, corpo e anexo (0084);
+  - capa e quadros de cada etapa (0085);
+  - recomendação de participar como sugestão (0086).
+  - Os ajustes da capa (0087, #95) aguardam merge.
+- **Bloco 2, decisões do GP (#96, decisão 0088):** fila de pendências por impacto, com a decisão do GP e o item com aviso nunca em lote, e o que mudou na correção.
+- **Bloco 6, material da comissão (#97):** `docs/comissao/`.
+- **Próximos:**
+  - bloco 5: cache com tempo de vida de 1 hora e custo medido com a API;
+  - bloco 4: alarme falso por trava, a começar pela "redação a conferir", e marcar regra geral × observação de caso;
+  - bloco 3: PGP enxuto por porte e reserva derivada dos riscos.
 
 **Rodada 3 do teste externo, etapa 4 fechada (18/11/2026).** Os dois casos (o TR fiscal e o TR de contratação direta) passaram por adaptação, escopo, cronograma, riscos, planos e execução, cada passo com duas rodadas de segunda instância e "seguir". As lições ficam fora do Git. O fechamento virou cinco PRs:
 - **0070, placar e pedidos:** data fixa vencida "não confirmável"; aviso de encerramento antes do último aceite; vago que só reproduz o documento sai; premissa nova parecida com o registro inicial vira aviso; regra das QU no topo do pedido de execução; A2.8 era regra estreita; tokens de cada pedido no placar.
