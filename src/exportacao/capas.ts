@@ -39,8 +39,8 @@ export { eventoEEfeito } from "./capa-regras";
 import type { Alerta, Destaque, NumeroChave } from "./modelo";
 import { capaDaRfp } from "./relatorio-rfp";
 import { montarPgp } from "./relatorio-pgp";
-import { paginasEstimadas } from "./paginas";
-import { destinoDaParte, LIMITES_DO_PORTE } from "../etapas/4-pgp/porte";
+import { paginasDoCorpoDoPlano } from "./paginas";
+import { destinoDaParte, essenciaisSemCobertura, LIMITES_DO_PORTE } from "../etapas/4-pgp/porte";
 import { contar, plural } from "../texto/plural";
 
 const A_DEFINIR = "a definir pelo GP";
@@ -489,9 +489,19 @@ export function capaDoPgp(dossie: Dossie, agora = new Date()): CapaDeDecisao | u
   // o tamanho do plano contra o limite do porte (decisão 0091): partes geradas e páginas estimadas
   const porte = p.caracteristicas?.porte;
   const limite = porte ? LIMITES_DO_PORTE[porte] : undefined;
-  const paginas = paginasEstimadas(montarPgp(dossie, agora));
+  const paginas = paginasDoCorpoDoPlano(montarPgp(dossie, agora));
 
+  // decisão 0044: porte reduz partes, não a cobertura; a essencial do PMO que ficou sem lugar é alertada
+  const semCobertura = essenciaisSemCobertura(p);
   const alertas: Alerta[] = [
+    ...(semCobertura.length
+      ? [
+          {
+            nivel: "alto" as const,
+            texto: `${plural(semCobertura.length, "Parte essencial", "Partes essenciais")} pela sugestão do PMO sem lugar no plano (nem gerada nem fundida): ${semCobertura.join(", ")}. Sugere-se gerar ou marcar a hospedeira.`,
+          },
+        ]
+      : []),
     ...(limite && paginas > limite.paginas
       ? [
           {

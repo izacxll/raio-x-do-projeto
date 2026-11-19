@@ -9,6 +9,7 @@ import { pgpInicial } from "../../src/etapas/4-pgp/pgp";
 import { itensEsperadosDoPgp } from "../../src/etapas/4-pgp/autoconferencia";
 import {
   destinoDaParte,
+  essenciaisSemCobertura,
   fundidasDeTexto,
   fundidasEm,
   gerarPeloPorte,
@@ -16,7 +17,7 @@ import {
   NUCLEO_PEQUENO,
 } from "../../src/etapas/4-pgp/porte";
 import { justificativaDaEtapa4 } from "../../src/etapas/5-conferencia/dispensas";
-import { paginasEstimadas } from "../../src/exportacao/paginas";
+import { paginasDoCorpoDoPlano, paginasEstimadas } from "../../src/exportacao/paginas";
 import type { PgpDossie } from "../../src/dossie/esquema";
 import { RespostaAdaptacao } from "../../src/pmo/schemas/pgp";
 
@@ -81,9 +82,39 @@ describe("plano enxuto por porte (decisão 0091)", () => {
       expect(medio.gerar[x.codigo]).toBe(true);
   });
 
-  it("páginas estimadas: texto e tabela pelos caracteres", () => {
+  it("páginas estimadas: texto e tabela pelos caracteres; o corpo do plano sem os registros B", () => {
     const texto = "x".repeat(35000);
     expect(paginasEstimadas({ secoes: [{ titulo: "a", paragrafos: [texto] }] })).toBe(10);
     expect(paginasEstimadas({ secoes: [] })).toBe(1);
+    const plano = {
+      secoes: [
+        { titulo: "1. Escopo", paragrafos: ["Parte A13 do plano.", texto] },
+        { titulo: "2. Riscos", paragrafos: ["Parte B27 do plano.", texto] },
+      ],
+    };
+    expect(paginasDoCorpoDoPlano(plano)).toBe(10);
+  });
+
+  it("revisão alta: no grande, o GP dispensa de verdade; no pequeno, a hospedeira desmarcada deixa a fundida sem lugar", () => {
+    const grande = comPorte("grande");
+    grande.gerar = { ...grande.gerar, B32: false };
+    expect(destinoDaParte("B32", grande).tipo).toBe("dispensada");
+    const pequeno = comPorte("pequeno");
+    pequeno.gerar = { ...pequeno.gerar, A13: false };
+    const b17 = destinoDaParte("B17", pequeno);
+    expect(b17.tipo === "dispensada" && b17.motivo).toMatch(/^sem lugar: o porte a fundiria em A13/);
+    // e a essencial que ficou sem lugar é alertada
+    if (adaptacao.partes.find((x) => x.codigo === "B17")?.recomendacao === "essencial")
+      expect(essenciaisSemCobertura(pequeno)).toContain("B17");
+    // a parte que o porte geraria e o GP desmarcou é dispensa do GP, não fusão
+    const semA3 = comPorte("pequeno");
+    semA3.gerar = { ...semA3.gerar, A3: false };
+    expect(destinoDaParte("A3", semA3).tipo).toBe("dispensada");
+  });
+
+  it("revisão alta: no médio, a sugestão não depende da ordem das partes", () => {
+    const c = { ...CARACTERISTICAS_PADRAO, porte: "médio" as const };
+    const invertida = { ...adaptacao, partes: [...adaptacao.partes].reverse() };
+    expect(gerarPeloPorte(invertida, c)).toEqual(gerarPeloPorte(adaptacao, c));
   });
 });

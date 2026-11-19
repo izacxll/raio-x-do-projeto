@@ -138,8 +138,12 @@ export function PlanoDeGerenciamento() {
     const novo = { ...atual, [passo]: guardada, uso: r.uso ? [...atual.uso, r.uso] : atual.uso } as PgpDossie;
     // a adaptação traz a sugestão do que gerar e da abordagem: o GP muda na tabela
     if (passo === "adaptacao" && novo.adaptacao) {
-      novo.gerar = gerarSugerido(novo.adaptacao.resposta, novo.caracteristicas);
       novo.abordagem = novo.adaptacao.resposta.abordagem;
+      // o porte vale desde a adaptação (decisão 0091): sem as características do GP, as que o código sugere, como no
+      // teste externo; o GP confirma ou muda na autoconferência, e a mudança de porte refaz a sugestão
+      const caracteristicas = caracteristicasDoPgp({ ...useDossie.getState().dossie, pgp: novo }, entrada);
+      novo.caracteristicas = caracteristicas;
+      novo.gerar = gerarSugerido(novo.adaptacao.resposta, caracteristicas);
     }
     atualizar(novo);
   }
@@ -687,7 +691,13 @@ function Autoconferencia({
   const [resultado, setResultado] = useState<ResultadoConferencia | null>(null);
   const car = caracteristicasDoPgp(dossie, e);
   const mudar = (m: Partial<Caracteristicas>) => {
-    atualizar({ ...p, caracteristicas: { ...car, ...m } });
+    const caracteristicas = { ...car, ...m };
+    // o porte mudou: a sugestão do que gerar é refeita pelo porte novo (decisão 0091); o GP ajusta na tabela
+    const gerar =
+      m.porte && m.porte !== car.porte && p.adaptacao
+        ? gerarSugerido(p.adaptacao.resposta, caracteristicas)
+        : p.gerar;
+    atualizar({ ...p, caracteristicas, gerar });
     setResultado(null);
   };
   const separados = resultado ? separarDecisoesPendentes(resultado.achados) : null;

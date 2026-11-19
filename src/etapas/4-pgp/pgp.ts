@@ -25,9 +25,10 @@ export function grupoDaParte(codigo: string): string {
   return `${codigo} — ${nomeDaParte(codigo)}`;
 }
 
-/** O que gerar, sugerido pela adaptação do PMO: essencial e recomendado entram; dispensável fica de fora. */
+/** O que gerar, sugerido pela adaptação do PMO e pelo porte do projeto (decisão 0091). */
 export function gerarSugerido(a: RespostaAdaptacao, c?: Caracteristicas): Record<string, boolean> {
-  // pelo porte (decisão 0091): sem as características, o porte grande (tudo o que o PMO não dispensou)
+  // pelo porte (decisão 0091): o núcleo no pequeno, o essencial e o recomendado sem hospedeira no médio, e sem as
+  // características o porte grande (tudo o que o PMO não marcou como dispensável)
   return gerarPeloPorte(a, c);
 }
 
