@@ -53,7 +53,7 @@ export function impactoPeloTexto(texto: string): number {
 }
 
 export function classeDoItem(i: ItemRevisavel): ClassePendencia {
-  if (i.rotulo === "decisao" || /a definir pelo GP/i.test(i.texto)) return "decisao";
+  if (i.rotulo === "decisao" || /a de(?:finir|cidir) pelo GP/i.test(i.texto)) return "decisao";
   if (i.avisos.length) return "conferir";
   return i.rotulo === "documento" ? "documento" : "sugestao";
 }
@@ -110,24 +110,41 @@ export function revisavelDoConferido(
   };
 }
 
-/** Item da leitura da etapa 1 na forma da fila: as travas e o aviso do código viram avisos; o impacto da seção 7 vale. */
+/**
+ * O impacto da etapa 1 (método 3.1: 1 caixa, 2 dependência do contratante, 3 preço, 4 prazo, 5 escopo, 6 outros) na
+ * escala da fila (1 caixa ou preço, 2 prazo, 3 aceite, 4 quem executa, 5 outro).
+ */
+const IMPACTO_DA_ETAPA_1: Record<number, number> = { 1: 1, 2: 4, 3: 1, 4: 2, 5: 5, 6: 5 };
+
+/**
+ * Item da leitura da etapa 1 na forma da fila (decisão 0088, com a revisão de código):
+ * - o item que o PMO marcou como decisão do GP (a marca fica na nota: "a decidir pelo GP") é decisão;
+ * - o requisito R incluído pelo próprio GP não é decisão pendente: vai em lote;
+ * - as travas, o aviso e o que o código não localizou viram avisos (a conferir, nunca em lote);
+ * - o impacto da seção 7 vale, na escala da fila.
+ */
 export function revisavelDaLeitura(i: {
   id: string;
   rotulo: "documento" | "sugestao" | "decisao-gp";
   nome: string;
   texto: string;
   secao: string;
+  situacao?: string;
+  nota?: string;
   impacto?: number;
   trava?: string;
   aviso?: string;
 }): ItemRevisavel {
+  const marcadoPeloPmo = /a de(?:finir|cidir) pelo GP/i.test(i.nota ?? "");
+  const requisitoDoGp = i.id.startsWith("requisito:") && i.rotulo === "decisao-gp";
+  const naoLocalizado = i.situacao !== undefined && !["localizado", "calculado"].includes(i.situacao);
   return {
     id: i.id,
-    rotulo: i.rotulo === "decisao-gp" ? "decisao" : i.rotulo,
-    avisos: [i.trava ?? "", i.aviso ?? ""].filter(Boolean),
+    rotulo: requisitoDoGp ? "sugestao" : marcadoPeloPmo || i.rotulo === "decisao-gp" ? "decisao" : i.rotulo,
+    avisos: [i.trava ?? "", i.aviso ?? "", naoLocalizado ? "não localizado pelo código" : ""].filter(Boolean),
     texto: `${i.nome}: ${i.texto}`,
     grupo: i.secao,
-    ...(i.impacto ? { impacto: Math.min(i.impacto, 5) } : {}),
+    ...(i.impacto ? { impacto: IMPACTO_DA_ETAPA_1[i.impacto] ?? 5 } : {}),
   };
 }
 
@@ -147,8 +164,13 @@ export const PRAZO_DAS_DECISOES: Record<number, string> = {
   5: "antes de assinar o plano",
 };
 
-/** A fila numa linha, para a capa: decisões, a conferir e o que pode ir em lote. */
-export function resumoDaFila(itens: ItemRevisavel[], revisoes: Record<string, RevisaoItem>): string {
+/** A fila numa linha, para a capa: decisões (itens e as que não são item), a conferir e o que pode ir em lote. */
+export function resumoDaFila(
+  itens: ItemRevisavel[],
+  revisoes: Record<string, RevisaoItem>,
+  /** Decisões que não são item (participar, abordagem, divergências, aprovação): contam como decisão do GP. */
+  outrasDecisoes: string[] = [],
+): string {
   const c = contarFila(filaDePendencias(itens, revisoes));
-  return `${c.decisao} decisão(ões) do GP, ${c.conferir} a conferir, ${c.documento + c.sugestao} aceitável(is) em lote`;
+  return `${c.decisao + outrasDecisoes.length} decisão(ões) do GP, ${c.conferir} a conferir, ${c.documento + c.sugestao} aceitável(is) em lote`;
 }

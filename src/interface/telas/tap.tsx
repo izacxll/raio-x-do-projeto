@@ -17,7 +17,13 @@ import {
 import { dadosDosDocumentos } from "../../etapas/3-tap/do-documento";
 import { montarEntradaTap, NOME_PROPOSTA_DO_DOSSIE } from "../../etapas/3-tap/entrada";
 import { pedidoPremissas, pedidoTap } from "../../etapas/3-tap/pedidos";
-import { contarPendentesTap, itensDaEtapa3, tapInicial, type PassoTap } from "../../etapas/3-tap/tap";
+import {
+  contarPendentesTap,
+  divergenciasSemDecisao,
+  itensDaEtapa3,
+  tapInicial,
+  type PassoTap,
+} from "../../etapas/3-tap/tap";
 import { montarTapRevisado } from "../../pmo/tap-revisado";
 import { exportar, type FormatoExportacao } from "../../exportacao/exportar";
 import { montarRegistroPremissas, montarTap } from "../../exportacao/relatorio-tap";
@@ -391,6 +397,10 @@ export function TermoDeAbertura() {
         itens={itens.map(revisavelDoConferido)}
         revisoes={t.revisoes}
         aoAceitar={(ids) => atualizar({ ...t, revisoes: aceitar(t.revisoes, ids) })}
+        outrasDecisoes={[
+          ...divergenciasSemDecisao(t, divergencias).map((d) => `Versão que vale: ${d.tema}`),
+          ...(t.tap && !t.decisoes.aprovadoPor?.trim() ? ["Aprovar o TAP"] : []),
+        ]}
       />
 
       <section className="bloco">

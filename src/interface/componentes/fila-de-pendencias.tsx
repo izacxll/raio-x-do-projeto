@@ -14,7 +14,10 @@ import { RotuloSecao } from "./basicos";
 /** Leva o GP ao cartão do item (o app usa o hash para as rotas: nada de âncora). */
 function irAoItem(id: string) {
   const alvo = document.querySelector(`[data-testid="item-${CSS.escape(id)}"]`);
-  alvo?.scrollIntoView({ behavior: "smooth", block: "center" });
+  if (!(alvo instanceof HTMLElement)) return;
+  alvo.scrollIntoView({ behavior: "smooth", block: "center" });
+  if (!alvo.hasAttribute("tabindex")) alvo.setAttribute("tabindex", "-1");
+  alvo.focus({ preventScroll: true });
 }
 
 export function FilaDePendencias({
@@ -23,6 +26,7 @@ export function FilaDePendencias({
   aoAceitar,
   maximo = 12,
   prazo,
+  outrasDecisoes = [],
 }: {
   itens: ItemRevisavel[];
   revisoes: Record<string, RevisaoItem>;
@@ -31,9 +35,11 @@ export function FilaDePendencias({
   maximo?: number;
   /** Até quando o GP decide (PRAZO_DAS_DECISOES da etapa). */
   prazo?: string;
+  /** Decisões do GP que não são item (participar, abordagem, divergências, aprovação). */
+  outrasDecisoes?: string[];
 }) {
   const fila = filaDePendencias(itens, revisoes);
-  if (!fila.length) return null;
+  if (!fila.length && !outrasDecisoes.length) return null;
   const conta = contarFila(fila);
   const lote = aceitaveisEmLote(fila);
   const individuais = fila.filter((i) => i.classe === "decisao" || i.classe === "conferir");
@@ -43,7 +49,7 @@ export function FilaDePendencias({
       <div className="cartao cartao__corpo">
         <p className="resumo-leitura" aria-live="polite">
           <span>
-            {conta.decisao} {NOME_CLASSE.decisao.toLowerCase()}
+            {conta.decisao + outrasDecisoes.length} {NOME_CLASSE.decisao.toLowerCase()}
           </span>
           ·<span>{conta.conferir} a conferir</span>·<span>{conta.documento} do documento</span>·
           <span>{conta.sugestao} sugestões sem aviso</span>
@@ -70,8 +76,13 @@ export function FilaDePendencias({
             </button>
           )}
         </div>
-        {individuais.length > 0 && (
+        {(individuais.length > 0 || outrasDecisoes.length > 0) && (
           <ol className="fila-pendencias">
+            {outrasDecisoes.map((d) => (
+              <li key={d}>
+                <span className="lb">{NOME_CLASSE.decisao}</span> {d}
+              </li>
+            ))}
             {individuais.slice(0, maximo).map((i) => (
               <li key={i.id}>
                 <span className={`lb ${i.classe === "decisao" ? "" : "aviso-item"}`}>

@@ -3,6 +3,7 @@
 // RFP" monta o esqueleto do código, manda-o ao PMO com o texto da RFP e mostra a leitura conferida pelo código
 // (citação, número, R). Sem chave, nada é analisado; o esqueleto não aparece sozinho.
 // Cada item tem o rótulo, a página e a revisão do GP (aceitar, editar, descartar). Participar é decisão só do GP.
+import { outrasDecisoesDaRfp } from "../../exportacao/relatorio-rfp";
 import { FilaDePendencias } from "../componentes/fila-de-pendencias";
 import { aceitaveisEmLote, filaDePendencias, revisavelDaLeitura, PRAZO_DAS_DECISOES } from "../../pmo/fila";
 import { recomendacaoDoDossie, recomendacaoEmTexto } from "../../etapas/1-rfp/recomendacao";
@@ -258,6 +259,7 @@ function Analise({
         itens={itensRevisaveis(leitura).map(revisavelDaLeitura)}
         revisoes={salva.revisoes}
         aoAceitar={(ids) => mudarEstado(ids, "aceito")}
+        outrasDecisoes={outrasDecisoesDaRfp(salva)}
       />
       <LeituraDoPmoNaEtapa1
         analise={analise}

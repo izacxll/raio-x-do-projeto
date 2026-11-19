@@ -8,6 +8,7 @@ import {
   contarFila,
   filaDePendencias,
   impactoPeloTexto,
+  resumoDaFila,
   revisavelDaLeitura,
   type ItemRevisavel,
 } from "../../src/pmo/fila";
@@ -81,5 +82,51 @@ describe("fila e lote", () => {
     expect(r.avisos).toEqual(["citacao-fraca"]);
     expect(r.impacto).toBe(1);
     expect(classeDoItem(r)).toBe("conferir");
+  });
+});
+
+describe("etapa 1: o que a revisão de código apontou (decisão 0088)", () => {
+  const base = { nome: "Item", texto: "Texto.", secao: "atencao" };
+  it("o item que o PMO marcou como decisão do GP é decisão, mesmo com o rótulo de sugestão", () => {
+    const r = revisavelDaLeitura({
+      ...base,
+      id: "pmo:a9",
+      rotulo: "sugestao",
+      situacao: "localizado",
+      nota: "O PMO marcou como decisão do GP: a decidir pelo GP.",
+    });
+    expect(classeDoItem(r)).toBe("decisao");
+    expect(aceitaveisEmLote(filaDePendencias([r], {}))).toEqual({ documento: [], sugestao: [] });
+  });
+
+  it("o que o código não localizou vai a conferir, nunca em lote", () => {
+    const r = revisavelDaLeitura({
+      ...base,
+      id: "leitura:situacao",
+      rotulo: "documento",
+      situacao: "nao-localizado",
+    });
+    expect(classeDoItem(r)).toBe("conferir");
+  });
+
+  it("o requisito incluído pelo próprio GP não fica como decisão pendente", () => {
+    const r = revisavelDaLeitura({
+      ...base,
+      id: "requisito:R15",
+      rotulo: "decisao-gp",
+      situacao: "localizado",
+    });
+    expect(classeDoItem(r)).toBe("sugestao");
+  });
+
+  it("o impacto da etapa 1 na escala da fila (dependência do contratante = quem executa; prazo = prazo)", () => {
+    expect(revisavelDaLeitura({ ...base, id: "x", rotulo: "sugestao", impacto: 2 }).impacto).toBe(4);
+    expect(revisavelDaLeitura({ ...base, id: "y", rotulo: "sugestao", impacto: 4 }).impacto).toBe(2);
+  });
+
+  it("as decisões que não são item contam na fila", () => {
+    expect(resumoDaFila([], {}, ["Participar ou não", "Confirmar a modalidade"])).toMatch(
+      /^2 decisão\(ões\) do GP/,
+    );
   });
 });

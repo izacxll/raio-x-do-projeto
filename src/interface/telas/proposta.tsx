@@ -357,6 +357,7 @@ export function PropostaDoFornecedor({ todos }: { todos: DocumentoLido[] }) {
         itens={itens.map(revisavelDoConferido)}
         revisoes={p.revisoes}
         aoAceitar={(ids) => atualizar({ ...p, revisoes: aceitar(p.revisoes, ids) })}
+        outrasDecisoes={p.estrategia && !p.abordagem ? ["Escolher a abordagem técnica"] : []}
       />
 
       <section className="bloco">

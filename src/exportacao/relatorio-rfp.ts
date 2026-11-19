@@ -2,7 +2,7 @@
 // prazos (XLSX), checklist de habilitação linha a linha (XLSX) e perguntas de esclarecimento (DOCX), estas com a
 // premissa crítica de cada ponto. A tela só exporta depois da leitura do PMO (decisão 0037); um dossiê sem ela sai marcado como "sem a leitura do PMO". Cabeçalho de
 // minuta enquanto houver item pendente.
-import type { Dossie, RevisaoItem } from "../dossie/esquema";
+import type { AnaliseRfpDossie, Dossie, RevisaoItem } from "../dossie/esquema";
 import type { AnaliseRfp } from "../etapas/1-rfp/analisar-rfp";
 import {
   montarLeituraRfp,
@@ -171,6 +171,14 @@ function secoesDaLeitura(leitura: LeituraRfp, revisoes: Record<string, RevisaoIt
 const docsDaRfp = (dossie: Dossie) =>
   dossie.documentos.filter((d) => d.papel === "rfp" || d.papel === "anexo-rfp");
 
+/** As decisões da etapa 1 que não são item: participar ou não e a modalidade (decisão 0088). */
+export function outrasDecisoesDaRfp(a: AnaliseRfpDossie): string[] {
+  return [
+    ...(a.participacao.decisao === "a-decidir" ? ["Participar ou não"] : []),
+    ...(a.modalidade ? [] : ["Confirmar a modalidade"]),
+  ];
+}
+
 /** O que, na seção "uma-pagina", o código procurou e não achou: vira alerta alto (pergunta antes do preço). */
 const FALTA_QUE_PESA = ["prazo de execução ou vigência", "valor estimado ou teto"];
 
@@ -246,7 +254,7 @@ export function capaDaRfp(
   const numeros = [
     {
       rotulo: "Fila do GP",
-      valor: `${resumoDaFila(itensRevisaveis(leitura).map(revisavelDaLeitura), a.revisoes)}; decidir ${PRAZO_DAS_DECISOES[1]}`,
+      valor: `${resumoDaFila(itensRevisaveis(leitura).map(revisavelDaLeitura), a.revisoes, outrasDecisoesDaRfp(a))}; decidir ${PRAZO_DAS_DECISOES[1]}`,
     },
     { rotulo: "Modalidade", valor: modalidade },
     {

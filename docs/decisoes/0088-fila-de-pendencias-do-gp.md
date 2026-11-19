@@ -34,6 +34,13 @@ As duas revisões do teste externo apontaram cerca de 380 "pendentes de revisão
    - o placar do código já roda sobre a resposta corrigida;
    - agora ele também diz o que mudou desde a resposta que a segunda instância conferiu (itens alterados, novos e removidos), para o GP ver antes de seguir.
 
+## Ajustes da revisão de código
+
+- **Etapa 1:** o item que o PMO marcou como decisão do GP (a marca fica na nota, "a decidir pelo GP") é decisão, nunca vai em lote. O que o código não localizou vai a conferir. O requisito incluído pelo próprio GP não fica pendente como decisão. O impacto da etapa 1 é levado para a escala da fila.
+- **As decisões que não são item** contam na fila e na capa: participar ou não, a modalidade, a abordagem, a versão que vale em cada divergência e a aprovação do TAP.
+- **A fila leva o foco ao item,** não só a rolagem.
+- **O cartão do achado do PMO mostra a gravidade escolhida pelo GP.** O relatório de conformidade passa a usá-la com a decisão 0087.
+
 ## Consequências
 
 - O total de pendentes não muda; muda o que o GP olha um a um. No PGP do teste, as decisões e os itens a conferir são uma parte pequena dos 385.

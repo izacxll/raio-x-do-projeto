@@ -135,7 +135,7 @@ export function capaDaProposta(dossie: Dossie, agora = new Date()): CapaDeDecisa
   const numeros: NumeroChave[] = [
     {
       rotulo: "Fila do GP",
-      valor: `${resumoDaFila(itensDaProposta(p, docs).map(revisavelDoConferido), p.revisoes)}; decidir ${PRAZO_DAS_DECISOES[2]}`,
+      valor: `${resumoDaFila(itensDaProposta(p, docs).map(revisavelDoConferido), p.revisoes, p.abordagem ? [] : ["Escolher a abordagem técnica"])}; decidir ${PRAZO_DAS_DECISOES[2]}`,
     },
     { rotulo: "Abordagem", valor: abordagem ? `${abordagem.id} — ${abordagem.nome}` : A_DEFINIR },
     { rotulo: "Produtos", valor: String(conteudo.produtos.length) },
@@ -257,7 +257,10 @@ export function capaDoTap(dossie: Dossie, agora = new Date()): CapaDeDecisao | u
   const numeros: NumeroChave[] = [
     {
       rotulo: "Fila do GP",
-      valor: `${resumoDaFila(todos.map(revisavelDoConferido), t.revisoes)}; decidir ${PRAZO_DAS_DECISOES[3]}`,
+      valor: `${resumoDaFila(todos.map(revisavelDoConferido), t.revisoes, [
+        ...aDecidir.map((d) => `Versão que vale: ${d.tema}`),
+        ...(t.decisoes.aprovadoPor?.trim() ? [] : ["Aprovar o TAP"]),
+      ])}; decidir ${PRAZO_DAS_DECISOES[3]}`,
     },
     {
       rotulo: "Proposta usada",
