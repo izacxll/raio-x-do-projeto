@@ -69,7 +69,9 @@ test("etapa 4 com o PMO simulado: adaptação, seis passos, contas, autoconferê
   await expect(page.getByTestId("rastreabilidade")).toContainText("R06");
   await expect(page.getByTestId("marcos")).toContainText("não cabe");
   await page.getByLabel("Aprovação de cada produto (dias úteis, decisão do GP)").fill("5");
-  await page.getByLabel("Reserva de contingência (R$, decisão do GP)").fill("10000");
+  // decisão 0092: a reserva de contingência é dada risco a risco, e o plano soma
+  const reservas = page.getByLabel(/^Reserva do risco /);
+  for (let k = 0; k < (await reservas.count()); k++) await reservas.nth(k).fill("5000");
 
   await page.getByTestId("autoconferir").click();
   await expect(page.getByTestId("resultado-autoconferencia")).toContainText(
@@ -86,7 +88,10 @@ test("etapa 4 com o PMO simulado: adaptação, seis passos, contas, autoconferê
   expect(Object.keys(arquivos).sort()).toEqual(
     ["eap.svg", "indice.txt", "plano.docx", "plano.pdf", "rede.svg", "registros.xlsx"].sort(),
   );
-  expect(strFromU8(arquivos["indice.txt"]!)).toContain("B32 Termo de nomeação da equipe: dispensada pelo GP");
+  // decisão 0091: o índice diz para onde foi a parte que o GP tirou (fundida numa gerada ou dispensada, com o motivo)
+  expect(strFromU8(arquivos["indice.txt"]!)).toMatch(
+    /B32 Termo de nomeação da equipe: (?:fundida em A6|dispensada: )/,
+  );
   expect(zip.includes(Buffer.from(CHAVE))).toBe(false);
 
   expect(deFora).toEqual([]);

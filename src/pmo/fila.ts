@@ -192,3 +192,15 @@ export function numerosDaFila(
     ...(prazo ? [{ rotulo: "Decidir", valor: prazo.replace(/^./, (x) => x.toUpperCase()) }] : []),
   ];
 }
+
+/** "30 decisões do GP antes de enviar a proposta": o fim da linha de resumo da capa (decisão 0089). */
+export function decisoesAte(
+  etapa: number,
+  itens: ItemRevisavel[],
+  revisoes: Record<string, RevisaoItem>,
+  outrasDecisoes: string[] = [],
+): string {
+  const n = contarFila(filaDePendencias(itens, revisoes)).decisao + outrasDecisoes.length;
+  if (!n) return "nenhuma decisão do GP pendente";
+  return `${contar(n, "decisão do GP", "decisões do GP")} ${PRAZO_DAS_DECISOES[etapa] ?? ""}`.trim();
+}

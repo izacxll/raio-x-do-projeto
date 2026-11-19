@@ -147,6 +147,7 @@ const capa: CapaDeDecisao = {
   mudou: ["Abordagem escolhida."],
   quadros: [{ titulo: "Equipe", tabela: { colunas: ["Perfil", "Horas"], linhas: [["Coordenação", "120"]] } }],
   destaques: [{ valor: "3", rotulo: "Produtos" }],
+  resumo: "Minuta da proposta com 3 produtos; 2 decisões do GP antes de enviar a proposta.",
 };
 
 function base(): DocumentoExportavel {
@@ -247,6 +248,10 @@ describe("o documento apresentado", () => {
     expect(corpoXml).toMatch(/TOC \\h \\o/);
     expect(corpoXml).toContain("PARA O GP DECIDIR");
     expect(corpoXml).toContain("Tabela 2.1 – Equipe");
+    // o resultado numa linha, abaixo dos blocos da capa
+    expect(corpoXml).toContain(
+      "Minuta da proposta com 3 produtos; 2 decisões do GP antes de enviar a proposta.",
+    );
     const rodape = Object.keys(arquivos)
       .filter((n) => /^word\/footer\d*\.xml$/.test(n))
       .map((n) => strFromU8(arquivos[n]!))
