@@ -1,6 +1,6 @@
 # Andamento
 
-Atualizado em 18/11/2026. Teste externo da rodada 3 fechado nos dois casos (etapas 1 a 5). Pente fino para a comissão em andamento: blocos 1, 2 e 6 feitos; faltam os blocos 5, 4 e 3.
+Atualizado em 19/11/2026. Teste externo da rodada 3 fechado nos dois casos (etapas 1 a 5). Pente fino para a comissão: os seis blocos feitos. Os blocos 3, 4 e 5 estão em PRs abertos, à espera do ok da responsável.
 
 ## Onde estamos
 
@@ -9,13 +9,18 @@ Atualizado em 18/11/2026. Teste externo da rodada 3 fechado nos dois casos (etap
   - capa de decisão, quadros, corpo e anexo (0084);
   - capa e quadros de cada etapa (0085);
   - recomendação de participar como sugestão (0086).
-  - Os ajustes da capa (0087, #95) aguardam merge.
+  - ajustes da capa (0087) e resultado no padrão da FGV Projetos (0089, #98, na `main`);
+  - resumo de uma linha na capa, "43/44" na etapa 5 e a leitura do PMO da etapa 5 gravada no dossiê pelo vigia (0090, #99).
 - **Bloco 2, decisões do GP (#96, decisão 0088):** fila de pendências por impacto, com a decisão do GP e o item com aviso nunca em lote, e o que mudou na correção.
+- **Bloco 3, gestão:**
+  - PGP enxuto por porte (0091, #100): de 10 a 15 partes no pequeno, com o destino do conteúdo dispensado e o limite de páginas por porte. Medido: de 44 para 18 partes num caso e de 44 para 33 no outro. O corpo fica em cerca de 15 páginas; o total quase não muda, porque o volume está nos registros B;
+  - riscos ligados a resposta, reserva e marco, e a contingência derivada dos riscos marcados (0092, #101, empilhado no #100).
+- **Bloco 4, qualidade da IA:**
+  - travas (0093, #102): alarme falso medido por trava. A "redação a conferir" ficou mantida, porque erra menos do que acerta; foi ajustada e ganhou a checagem de rótulo misto;
+  - lições da skill marcadas como regra geral ou de um caso só (0094, #103, skill: espera aprovação);
+  - revisor em outro modelo: [`estudos/revisor-em-outro-modelo.md`](estudos/revisor-em-outro-modelo.md).
+- **Bloco 5, custo (0095, #104):** cache de 1 hora no prefixo estável, com o custo por projeto completo no painel da comissão, em dólar e em reais.
 - **Bloco 6, material da comissão (#97):** `docs/comissao/`.
-- **Próximos:**
-  - bloco 5: cache com tempo de vida de 1 hora e custo medido com a API;
-  - bloco 4: alarme falso por trava, a começar pela "redação a conferir", e marcar regra geral × observação de caso;
-  - bloco 3: PGP enxuto por porte e reserva derivada dos riscos.
 
 **Rodada 3 do teste externo, etapa 4 fechada (18/11/2026).** Os dois casos (o TR fiscal e o TR de contratação direta) passaram por adaptação, escopo, cronograma, riscos, planos e execução, cada passo com duas rodadas de segunda instância e "seguir". As lições ficam fora do Git. O fechamento virou cinco PRs:
 - **0070, placar e pedidos:** data fixa vencida "não confirmável"; aviso de encerramento antes do último aceite; vago que só reproduz o documento sai; premissa nova parecida com o registro inicial vira aviso; regra das QU no topo do pedido de execução; A2.8 era regra estreita; tokens de cada pedido no placar.
@@ -86,6 +91,12 @@ O que cada fase M ainda precisa cobrir está nas issues de cada uma (rótulos `e
 - **Ordem de impacto dos pontos de atenção** (caixa > dependência do contratante > preço > prazo): julgamento da análise, a confirmar pela responsável. Veio da engenharia reversa (o arquivo foi removido pela decisão 0075).
 - **Gravidade dos conflitos que envolvem mais de uma parte** do plano (etapa 5) e **gatilhos com número** como campos obrigatórios da etapa 4: a validar na M4 e na M5.
 - **A camada "tipo" (tipo de projeto, de contrato e de plano) vira um módulo comum às cinco etapas?** Hoje cada etapa reconhece o tipo por conta própria. Veio da engenharia reversa (decisão 0075).
+- **Pente fino (19/11/2026):**
+  - merge dos PRs #99 a #104;
+  - aprovar a skill 0.3.8 (#103);
+  - no porte pequeno, levar os registros B só para a planilha, para o total de páginas cair;
+  - revisor da segunda instância: manter o de hoje, trocar pelo Sonnet 5.5 ou rodar os dois em paralelo na próxima rodada;
+  - reimportar a leitura da etapa 5 nas pastas dos dois casos, para o dossiê ter a leitura do PMO.
 
 ## Próximo passo
 
