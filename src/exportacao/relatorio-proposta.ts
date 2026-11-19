@@ -244,6 +244,7 @@ function linhaDaMinuta(i: ItemMinuta): string {
   const avisos = [
     i.conferencia?.citacaoNaoConferida ? "citação não conferida" : "",
     i.conferencia?.citacaoNaoProva ? "citação a conferir: o trecho pode não provar a frase" : "",
+    i.conferencia?.rotuloMisto ? "rótulo misto: há sugestão dentro do item do documento" : "",
     i.conferencia?.numerosSemFonte.length
       ? `valor não conferido: ${i.conferencia.numerosSemFonte.join(", ")}`
       : "",

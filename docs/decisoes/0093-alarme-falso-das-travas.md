@@ -37,26 +37,33 @@ Todos os 701 vinham da falta de marca condicional. Nenhum vinha de frase afirmat
 
 1. **A trava continua "a conferir"**, sem rebaixamento: ela acertava um pouco mais do que errava (41 a 39).
 2. **Regras novas, para cortar os alarmes falsos:**
-   - **Formas condicionais a mais:** "pode", "a definir", "decisão do GP", "sugerido", "sugere", "a confirmar", o GP que confirma, decide, aceita ou aprova, "quando houver", "caso" e "depende de".
-   - **Linha de estrutura ou modelo fora da trava:** "Campos:", "Colunas:", "Status:", "Situação…:", "Probabilidade:", "Impacto:", "Categorias:", "Escala:", "Fases:", "Dicionário:" e afins.
-   - **Registros de riscos e de premissas fora da trava:** o texto é condição futura ou suposição por natureza.
+   - **Formas condicionais a mais, só nos itens das etapas 2 a 4**, onde foi medido:
+     - "pode" (não "não pode"), "a definir", "decisão do GP", "sugerido", "sugere", "a confirmar";
+     - o GP que confirma, decide, define, aceita ou escolhe;
+     - "caso" no começo da oração ("neste caso" não conta).
+
+     A recomendação da etapa 1 e os achados da etapa 5 seguem a regra antiga.
+   - **Linha de estrutura ou modelo fora da trava:** "Campos:", "Colunas:", "Status:", "Situação…:", "Probabilidade:", "Impacto:", "Categorias:", "Escala:", "Fases:" e "Dicionário:". Só quando, depois do rótulo, vem uma lista curta numa oração só ("Impacto: a FGV arca com…" continua marcado).
+   - **Registros de riscos e de premissas fora da falta de marca condicional, nas etapas 2 a 4:** o texto é condição futura ou suposição por natureza. A frase afirmativa ("a FGV deve…") continua marcada.
 3. **Rótulo misto:**
-   - O item "Do documento" com sugestão ou decisão do GP dentro ("…; sugere-se…", "a definir pelo GP") recebe o aviso "rótulo misto: há sugestão dentro do item do documento". Ele vai para "a conferir" e nunca é aceito em lote.
-   - Os pedidos das etapas 2 a 4 dizem que o item "documento" traz só o que o trecho diz, e a sugestão vai num item à parte.
+   - O item "Do documento" com sugestão ou decisão do GP dentro ("…; sugere-se…", "a definir pelo GP") recebe o aviso "rótulo misto: há sugestão dentro do item do documento".
+   - O termo que está no próprio trecho citado ("recomenda-se a visita técnica", do edital) não conta.
+   - O item vai para "a conferir" e nunca é aceito em lote. O aviso aparece no cartão, na minuta e no exportado.
+   - Os pedidos das etapas 2 a 4 dizem que o item "documento" traz só o que o trecho diz: a sugestão vai num item à parte, ou o item inteiro vira "sugestao" (skill, regra 15).
 
 ## Resultado
 
-**Na amostra usada para desenhar as regras:** o alarme falso caiu de 48,8% para 33,3%, e as marcas, de 80 para 54. Perderam-se 5 alarmes verdadeiros, todos limítrofes.
+**Na amostra usada para desenhar as regras (já com os ajustes da revisão de código):** o alarme falso caiu de 48,8% para 31,5%, e as marcas, de 80 para 54. Perderam-se 4 alarmes verdadeiros, todos limítrofes.
 
 **Validação numa amostra nova de 40 itens ainda marcados**, com outro classificador e a mesma rubrica:
-- **Resultado:** 24 precisam de conferência e 16 são alarme falso, uma taxa de **40%**. A trava acerta 60%.
+- **Resultado:** 24 precisam de conferência e 16 são alarme falso, uma taxa de **40%**. Com os ajustes da revisão de código, são 41%. A trava acerta cerca de 60%.
 - **Padrões que sobram para a próxima rodada:**
   - rótulo seguido só de uma lista de nomes ("Estados: …");
   - remissão a outra parte do plano ("levadas ao B3", "na RACI").
 
-**Nos dois casos inteiros:** de 701 para 579 marcas (−17%). Na etapa 4, de 276 para 225 e de 270 para 220.
+**Nos dois casos inteiros:** de 701 para 567 marcas (−19%). Na etapa 4, de 546 para 461.
 
-**Rótulo misto:** 5 dos 159 itens "Do documento" (3%).
+**Rótulo misto:** 4 dos 159 itens "Do documento" (3%).
 
 ## Consequências
 

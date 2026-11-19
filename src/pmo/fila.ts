@@ -54,6 +54,8 @@ export function impactoPeloTexto(texto: string): number {
 }
 
 export function classeDoItem(i: ItemRevisavel): ClassePendencia {
+  // o item do documento com aviso (citação, rótulo misto) é "a conferir" antes de ser decisão (decisão 0093)
+  if (i.rotulo === "documento" && i.avisos.length) return "conferir";
   if (i.rotulo === "decisao" || /a de(?:finir|cidir) pelo GP/i.test(i.texto)) return "decisao";
   if (i.avisos.length) return "conferir";
   return i.rotulo === "documento" ? "documento" : "sugestao";

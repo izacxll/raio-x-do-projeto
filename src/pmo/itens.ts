@@ -65,6 +65,7 @@ export function paragrafoDoItem(i: ItemConferido, revisoes: Record<string, Revis
     i.item.rotulo === "documento" && i.conferencia.citacaoNaoProva
       ? "citação a conferir: o trecho pode não provar a frase"
       : "",
+    i.conferencia.rotuloMisto ? "rótulo misto: há sugestão dentro do item do documento" : "",
     i.conferencia.numerosSemFonte.length
       ? `número sem fonte — conferir: ${i.conferencia.numerosSemFonte.join(", ")}`
       : "",

@@ -17,39 +17,61 @@ export const CONDICIONAL =
   /sugere-se|recomenda-se|uma opção|pode-se|poderia|pode ser|convém avaliar|avaliar|considerar|alternativa|a definir pelo GP|propõe-se|sugest|\bse\b[^.]{3,200}\bent[aã]o\b/i;
 
 /**
- * Formas condicionais ou de proposta que a lista acima não pegava (decisão 0093, medição do alarme falso): "pode",
- * "a definir", "decisão do GP", "sugerido", "a confirmar", o GP que confirma, decide ou aceita, "quando houver", "caso",
- * "depende de".
+ * Formas condicionais ou de proposta que a lista acima não pegava (decisão 0093, medição do alarme falso): "pode" (não
+ * "não pode"), "a definir", "decisão do GP", "sugerido", "a confirmar", o GP que confirma, decide, define, aceita ou
+ * escolhe, e "caso" no começo da oração ("Caso o contratante atrase…"; "neste caso" não conta). Vale só para os itens
+ * das etapas 2 a 4, onde foi medida.
  */
 export const CONDICIONAL_AMPLIADA =
-  /(?<!\p{L})pode(?!\p{L})|a definir(?!\p{L})|decis(?:ão|ões) do GP|sugerid|(?<!\p{L})sugere(?!\p{L})|a confirmar|o GP (?:confirma|decide|define|aceita|aceitar|escolhe|aprova)|quando houver|(?<!\p{L})caso(?!\p{L})|depende d[aoe]/iu;
+  /(?<!não\s)(?<!\p{L})pode(?!\p{L})|a definir(?!\p{L})|decis(?:ão|ões) do GP|sugerid|(?<!\p{L})sugere(?!\p{L})|a confirmar|o GP (?:confirma|decide|define|aceita|aceitar|escolhe)|(?:^|[.;:]\s*)caso\s+(?:o|a|os|as|haja|seja|não|ocorra)(?!\p{L})/iu;
 
 /**
  * Linha de estrutura ou de modelo (campos, colunas, escalas, status, categorias, fases): não afirma escolha, e a
- * redação condicional não faz sentido nela (decisão 0093).
+ * redação condicional não faz sentido nela (decisão 0093). Só quando, depois do rótulo, vem uma lista curta (cada
+ * parte com até 5 palavras) numa oração só: "Impacto: a FGV arca com a remobilização" não é linha de estrutura.
  */
-export const LINHA_DE_ESTRUTURA =
-  /^(?:Campos?|Colunas?|Status|Situação[^:]{0,40}|Probabilidade|Impacto|Categorias?|Escalas?|Fases|Dicionário|Valores?|Formato|Modelo|Estrutura)\s*:/i;
+const ROTULO_DE_ESTRUTURA =
+  /^(?:Campos?|Colunas?|Status|Situação[^:]{0,40}|Probabilidade|Impacto|Categorias?|Escalas?|Fases|Dicionário)\s*:\s*/i;
+
+export function linhaDeEstrutura(texto: string): boolean {
+  const t = texto.trim();
+  const m = ROTULO_DE_ESTRUTURA.exec(t);
+  if (!m) return false;
+  const resto = t.slice(m[0].length).replace(/\.\s*$/, "");
+  if (/[.;]\s+\S/.test(resto)) return false;
+  return resto.split(/,|\se\s/).every((parte) => parte.trim().split(/\s+/).length <= 5);
+}
 
 /**
  * Item "do documento" com sugestão ou decisão do GP dentro (decisão 0093): a parte sugerida não é do documento, e o
- * item inteiro passaria por fato. O aviso pede que o GP separe.
+ * item inteiro passaria por fato. O termo que está no próprio trecho citado ("recomenda-se a visita técnica", do
+ * edital) não conta.
  */
 const SUGESTAO_DENTRO =
   /sugere-se|recomenda-se|uma opção|pode-se|convém|propõe-se|sugest|recomendável|a definir pelo GP|decis(?:ão|ões) do GP|a critério do GP/i;
 
-export function rotuloMisto(item: Pick<ItemPmo, "rotulo" | "texto">): boolean {
-  return item.rotulo === "documento" && SUGESTAO_DENTRO.test(item.texto);
+export function rotuloMisto(
+  item: Pick<ItemPmo, "rotulo" | "texto"> & { fontes?: { trecho: string }[] },
+): boolean {
+  if (item.rotulo !== "documento") return false;
+  const m = SUGESTAO_DENTRO.exec(item.texto);
+  if (!m) return false;
+  const termo = m[0].toLowerCase();
+  return !(item.fontes ?? []).some((f) => f.trecho.toLowerCase().includes(termo));
 }
 
 export function redacaoAfirmativa(texto: string): boolean {
   return AFIRMATIVAS.test(texto);
 }
 
-/** Sugestão sem nenhuma marca condicional, ou com afirmação: o GP é avisado. */
-export function sugestaoSemCondicional(texto: string): boolean {
+/**
+ * Sugestão sem nenhuma marca condicional, ou com afirmação: o GP é avisado. Com "ampliada" (os itens das etapas 2 a 4,
+ * decisão 0093), valem também as formas condicionais a mais e a linha de estrutura fica de fora.
+ */
+export function sugestaoSemCondicional(texto: string, opcoes: { ampliada?: boolean } = {}): boolean {
   if (redacaoAfirmativa(texto)) return true;
-  if (LINHA_DE_ESTRUTURA.test(texto.trim())) return false;
+  if (!opcoes.ampliada) return !CONDICIONAL.test(texto);
+  if (linhaDeEstrutura(texto)) return false;
   return !CONDICIONAL.test(texto) && !CONDICIONAL_AMPLIADA.test(texto);
 }
 
@@ -205,7 +227,12 @@ export function conferirItem(
     citacoes,
     citacaoNaoConferida: item.rotulo === "documento" && !algumaVale,
     citacaoNaoProva: item.rotulo === "documento" && algumaVale && !citacaoProvaOItem(item.texto, trechos),
-    redacaoAConferir: item.rotulo === "sugestao" && !opcoes.registro && sugestaoSemCondicional(item.texto),
+    // no registro de riscos e de premissas, só a frase afirmativa (a falta de marca condicional é da natureza dele)
+    redacaoAConferir:
+      item.rotulo === "sugestao" &&
+      (opcoes.registro
+        ? redacaoAfirmativa(item.texto)
+        : sugestaoSemCondicional(item.texto, { ampliada: true })),
     rotuloMisto: rotuloMisto(item),
     numerosSemFonte: item.rotulo === "documento" ? [] : numerosSemFonte(item.texto, item, documentos),
   };

@@ -24,7 +24,7 @@ describe("trava da redação (decisão 0093)", () => {
       "O requisito ganha número quando o GP aceitar.",
       "Caso o contratante atrase, o prazo se desloca.",
     ])
-      expect(sugestaoSemCondicional(t), t).toBe(false);
+      expect(sugestaoSemCondicional(t, { ampliada: true }), t).toBe(false);
   });
 
   it("linha de estrutura ou modelo não é marcada", () => {
@@ -33,7 +33,7 @@ describe("trava da redação (decisão 0093)", () => {
       "Status: aberta, em análise, decidida.",
       "Escala: baixa, média, alta.",
     ])
-      expect(sugestaoSemCondicional(t), t).toBe(false);
+      expect(sugestaoSemCondicional(t, { ampliada: true }), t).toBe(false);
   });
 
   it("registro de riscos e de premissas fica fora da trava", () => {
@@ -53,5 +53,39 @@ describe("rótulo misto (decisão 0093)", () => {
     );
     expect(rotuloMisto(item("documento", "A vigência é de 12 meses."))).toBe(false);
     expect(rotuloMisto(item("sugestao", "Sugere-se prever prorrogação."))).toBe(false);
+  });
+});
+
+describe("revisão alta do #102 (decisão 0093)", () => {
+  const ampliada = (t: string) => sugestaoSemCondicional(t, { ampliada: true });
+
+  it("as formas soltas não liberam a afirmação", () => {
+    expect(ampliada("O coordenador não pode se ausentar das oficinas.")).toBe(true);
+    expect(ampliada("Neste caso, a FGV fará a remobilização.")).toBe(true);
+    expect(ampliada("O GP aprova cada produto antes do envio.")).toBe(true);
+    expect(ampliada("A FGV refaz o produto quando houver rejeição.")).toBe(true);
+  });
+
+  it("linha de estrutura só com lista curta numa oração", () => {
+    expect(ampliada("Impacto: a FGV arca com a remobilização da equipe.")).toBe(true);
+    expect(ampliada("Fases: diagnóstico e implantação. A FGV fará as oficinas presencialmente.")).toBe(true);
+    expect(ampliada("Status: aberta, em análise, decidida.")).toBe(false);
+  });
+
+  it("fora das etapas 2 a 4, a regra antiga (sem as formas a mais)", () => {
+    expect(sugestaoSemCondicional("A FGV pode participar; o prazo é exequível.")).toBe(true);
+  });
+
+  it("no registro, a frase afirmativa continua marcada", () => {
+    const afirmativa = item("sugestao", "A FGV deve arcar com a multa por atraso.");
+    expect(conferirItem(afirmativa, [], { registro: true }).redacaoAConferir).toBe(true);
+  });
+
+  it("rótulo misto não marca o termo que está no próprio trecho citado", () => {
+    const literal = {
+      ...item("documento", "Recomenda-se a visita técnica ao local."),
+      fontes: [{ doc: "rfp", pagina: 3, trecho: "Recomenda-se a visita técnica ao local" }],
+    } as ItemPmo;
+    expect(rotuloMisto(literal)).toBe(false);
   });
 });

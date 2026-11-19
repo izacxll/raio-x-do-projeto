@@ -48,6 +48,9 @@ export function ItemNaTela({
             </span>
           )}
           {c.redacaoAConferir && <span className="lb aviso-item">redação a conferir (afirmativa)</span>}
+          {c.rotuloMisto && (
+            <span className="lb aviso-item">rótulo misto — há sugestão dentro do item do documento</span>
+          )}
           {c.numerosSemFonte.length > 0 && (
             <span className="lb aviso-item">número sem fonte — conferir: {c.numerosSemFonte.join(", ")}</span>
           )}

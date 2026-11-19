@@ -13,7 +13,7 @@ import { idDoItemTap } from "./tap";
 
 const regras = (passo: PassoEtapa3) => `Regras deste pedido (além da skill):
 - Responda só com o objeto JSON do passo, no schema enviado.
-- "rotulo" usa: documento | sugestao | decisao_gp. Item "documento" sempre com fonte: doc "rfp" (RFP e anexos), "proposta" ou "contrato", página do arquivo e trecho literal. Na proposta do dossiê, cada "página" é uma seção da minuta. O app confere cada trecho na página; o que não for achado vira "citação não conferida". Um item "documento" traz só o que o trecho diz: a sugestão ou a decisão do GP sobre ele vai num item à parte, com o rótulo dela (o app marca "rótulo misto", decisão 0093).
+- "rotulo" usa: documento | sugestao | decisao_gp. Item "documento" sempre com fonte: doc "rfp" (RFP e anexos), "proposta" ou "contrato", página do arquivo e trecho literal. Na proposta do dossiê, cada "página" é uma seção da minuta. O app confere cada trecho na página; o que não for achado vira "citação não conferida". Um item "documento" traz só o que o trecho diz: a sugestão ou a decisão do GP sobre ele vai num item à parte, com o rótulo dela, ou o item inteiro vira "sugestao", com o trecho em fontes (skill, regra 15).
 - Sugestão em redação condicional ("sugere-se", "uma opção é", "recomenda-se avaliar"). Nada de valores, prazos ou quantidades que não estejam nos documentos: escreva "não informado no documento — a definir pelo GP".
 - GP designado, nível de autoridade, patrocinador e recursos financeiros são decisao_gp: só redação sugerida, nunca nome, valor ou alçada como fato.
 - Use os números de requisito da RFP (R01, R02…). Requisito novo é sugestão, sem número.

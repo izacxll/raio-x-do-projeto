@@ -6,7 +6,7 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 
 ### Alarme falso das travas (decisão 0093)
 - **Medição:** a "redação a conferir" marcava 701 de 1.139 itens, com 48,75% de alarme falso numa amostra de 80; as outras travas são raras.
-- **Trava ajustada:** formas condicionais a mais, linha de estrutura ou modelo e registros de riscos e premissas fora; 40% de alarme falso numa amostra nova de 40 e 17% menos marcas nos dois casos.
+- **Trava ajustada:** formas condicionais a mais, linha de estrutura ou modelo e registros de riscos e premissas fora; 41% de alarme falso numa amostra nova de 40 e 19% menos marcas nos dois casos.
 - **Rótulo misto:** o "do documento" com sugestão dentro vai para "a conferir"; os pedidos das etapas 2 a 4 pedem o item à parte.
 
 ### Resultado no padrão da FGV Projetos (decisão 0089)
