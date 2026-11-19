@@ -157,7 +157,7 @@ export function SegundaInstancia({
           <p>
             Rodada {montagem.rodada}:{" "}
             {montagem.compacta
-              ? `vão só os achados da rodada anterior, os ${contar(montagem.itensQueMudaram ?? 0, "item", "itens")} que ${plural(montagem.itensQueMudaram ?? 0, "mudou", "mudaram")} e as páginas citadas.`
+              ? `vão só os achados da rodada anterior, ${plural(montagem.itensQueMudaram ?? 0, "o", "os")} ${contar(montagem.itensQueMudaram ?? 0, "item", "itens")} que ${plural(montagem.itensQueMudaram ?? 0, "mudou", "mudaram")} e as páginas citadas.`
               : "vai a resposta inteira, com os achados da rodada anterior."}
           </p>
           <label>

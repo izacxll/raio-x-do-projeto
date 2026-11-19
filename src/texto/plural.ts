@@ -29,7 +29,8 @@ function formaPlural(palavra: string, sufixo: string): string {
  */
 export function corrigirPlurais(texto: string): string {
   return texto.replace(
-    /(\d+(?:[.,]\d+)?)((?:\s+\p{L}+\((?:s|ns|ões|eis|is)\))+)/gu,
+    // o número inteiro, com os pontos de milhar ("1.000.001"), nunca um pedaço dele
+    /(?<![\d.,])(\d{1,3}(?:\.\d{3})+(?:,\d+)?|\d+(?:,\d+)?)((?:\s+\p{L}+\((?:s|ns|ões|eis|is)\))+)/gu,
     (_, numero: string, palavras: string) => {
       const n = Number(numero.replace(/\./g, "").replace(",", "."));
       return (

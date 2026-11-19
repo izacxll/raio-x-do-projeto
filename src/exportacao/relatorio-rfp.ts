@@ -403,13 +403,8 @@ export function capaDaRfp(
       {
         valor: produtos.length ? String(produtos.length) : "—",
         rotulo: "Entregas",
-        explicacao: produtos.length
-          ? curto(
-              `${plural(produtos.length, "produto", "produtos")}: ${produtos.map((r) => r.numero).join(", ")}`,
-              60,
-            )
-          : NAO_LOCALIZADO,
-        substitui: "Entregas",
+        // a lista inteira dos números R fica na tabela (o bloco só resume)
+        explicacao: produtos.length ? "produtos numerados (R)" : NAO_LOCALIZADO,
       },
       // o veredito da etapa 1 é a recomendação de participar, que é sugestão do PMO (decisão 0086)
       ...(recomendacao
@@ -422,7 +417,13 @@ export function capaDaRfp(
                       x.toUpperCase(),
                     ),
               rotulo: "Recomendação",
-              explicacao: "sugestão do PMO; quem decide é o GP",
+              // com aviso da conferência (redação, número sem fonte, item fora da leitura), o bloco diz "a conferir"
+              explicacao:
+                recomendacao.redacaoAConferir ||
+                recomendacao.numerosSemFonte.length ||
+                recomendacao.semItem.length
+                  ? "sugestão do PMO, a conferir; quem decide é o GP"
+                  : "sugestão do PMO; quem decide é o GP",
             },
           ]
         : []),

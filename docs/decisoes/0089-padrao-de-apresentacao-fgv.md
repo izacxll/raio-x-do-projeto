@@ -97,3 +97,19 @@ O que o gestor lê antes dos anexos cai na etapa 4 (de 15 para 6 páginas) e na 
 
 - O DOCX sai com o sumário marcado para atualizar: o Word atualiza as páginas ao abrir.
 - A leitura da linha depende do formato das linhas de item ("[Rótulo] texto (avisos)"). Uma linha fora desse formato fica como texto corrido.
+
+## Correções da segunda revisão alta
+
+- **Decisão do GP em aberto:**
+  - vai ao quadro mesmo sem a marca ○, quando o texto diz "a definir", "pendente", traz pergunta ou termina em "Decisão do GP" (as linhas de decisão montadas pela ferramenta não levam a marca);
+  - com decisão em aberto no corpo, o documento continua minuta.
+- **Bloco "Valor" do TAP:** só quando o texto do GP é um valor em reais e nada mais; senão, "Definidos", e o texto fica na tabela.
+- **Bloco "Entregas" da etapa 1:** a lista dos números R fica na tabela.
+- **Ids e termos internos:**
+  - os ids de um dígito ("a5", "c4") voltam a sair do corpo; as unidades ("m2", "km2") ficam;
+  - "código de conduta", "código interno" e afins ficam como estão.
+- **Citação:**
+  - a frase com referência ao documento fica literal, sem a correção de plural;
+  - o item que a ferramenta escreveu ("não localizado… — conferir no documento") não ganha "não verificável".
+- **Duração:** vale o número depois de "vigência" ou "prazo", e a duração composta fica inteira.
+- **Concordância:** corrigida onde ainda faltava. A recomendação com aviso diz "a conferir" no bloco.

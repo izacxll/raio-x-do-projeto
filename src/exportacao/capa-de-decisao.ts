@@ -70,17 +70,25 @@ export function limitar(texto: string, limite = 220): string {
 }
 
 /**
+ * "12 (doze) meses, contados da assinatura" → "12 meses": só o número e a unidade, como o documento diz. Com
+ * "vigência" ou "prazo" no texto, vale o número logo depois deles ("assinatura em 5 dias; vigência de 12 meses" dá
+ * 12 meses); a duração composta ("3 anos e 6 meses") fica inteira.
+ */
+export function duracaoCurta(texto?: string): string | undefined {
+  const t = texto ?? "";
+  const unidade = String.raw`(\d+)\s*(?:\([^)]*\)\s*)?(dias? úteis|dias? corridos|dias?|meses|mês|anos?|semanas?)`;
+  const m =
+    new RegExp(String.raw`(?:vig[êe]ncia|prazo)[^.;\d]{0,40}` + unidade, "i").exec(t) ??
+    new RegExp(unidade, "i").exec(t);
+  if (!m) return undefined;
+  const mais = new RegExp(String.raw`^\s+e\s+` + unidade, "i").exec(t.slice(m.index + m[0].length));
+  return `${m[1]} ${m[2]!.toLowerCase()}${mais ? ` e ${mais[1]} ${mais[2]!.toLowerCase()}` : ""}`;
+}
+
+/**
  * Texto curto para a capa: a primeira frase, até um limite, sem cortar palavra. A frase termina em ponto seguido de
  * maiúscula ou do fim: "p. 14" e "art. 75" não cortam.
  */
-/** "12 (doze) meses, contados da assinatura" → "12 meses": só o número e a unidade, como o documento diz. */
-export function duracaoCurta(texto?: string): string | undefined {
-  const m = /(\d+)\s*(?:\([^)]*\)\s*)?(dias? úteis|dias? corridos|dias?|meses|mês|anos?|semanas?)/i.exec(
-    texto ?? "",
-  );
-  return m ? `${m[1]} ${m[2]!.toLowerCase()}` : undefined;
-}
-
 export function curto(texto: string, limite = 160): string {
   const t = texto.replace(/\s+/g, " ").trim();
   const frase = (/^.*?\.(?=\s+[A-ZÀ-Ý"“(]|$)/.exec(t)?.[0] ?? t).trim().replace(/[;,:]$/, ".");

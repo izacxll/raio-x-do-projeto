@@ -76,8 +76,9 @@ function destaqueDosRecursos(recursos?: string): Destaque {
       explicacao: "recursos financeiros, decisão do GP",
       substitui: "Recursos financeiros",
     };
-  const emReais = /R\$\s*[\d.]+(?:,\d{2})?/.exec(texto)?.[0];
-  // sem o valor em reais, o bloco diz só "Definidos" e o texto do GP fica na tabela
+  // só quando o texto do GP é um valor em reais e nada mais ("R$ 1,5 milhão" ou dois valores ficam na tabela inteiros)
+  const emReais = /^R\$\s*\d{1,3}(?:\.\d{3})*(?:,\d{2})?\.?$/.exec(texto)?.[0]?.replace(/\.$/, "");
+  // sem isso, o bloco diz só "Definidos" e o texto do GP fica na tabela
   return emReais
     ? {
         valor: emReais,
@@ -526,7 +527,7 @@ export function capaDoPgp(dossie: Dossie, agora = new Date()): CapaDeDecisao | u
     ...numerosDaFila(4, itensDoPgp(p, e.documentos, e.premissasTap).map(revisavelDoConferido), p.revisoes),
     {
       rotulo: "Partes do plano",
-      valor: `${mantidas.length} mantidas, ${dispensadas.length} dispensadas pela adaptação`,
+      valor: `${mantidas.length} ${plural(mantidas.length, "mantida", "mantidas")}, ${dispensadas.length} ${plural(dispensadas.length, "dispensada", "dispensadas")} pela adaptação`,
     },
     {
       rotulo: "Duração",
@@ -554,7 +555,7 @@ export function capaDoPgp(dossie: Dossie, agora = new Date()): CapaDeDecisao | u
       ? `Marcos do TAP no cronograma do plano: sem régua (o TAP não dá prazo em dias); as datas são só as da conta do código.`
       : regua === "nao-localizados"
         ? `Marcos do TAP: ${NAO_LOCALIZADO} (TAP em PDF, sem TAP ou marcos descartados); as datas são só as da conta do código.`
-        : `Marcos do TAP no cronograma do plano: ${marcos.filter((m) => m.situacao === "cabe").length} cabem, ${foraDoPrazo.length} não cabem e ${semPrazo.length} sem prazo em dias no TAP (a conferir).`,
+        : `Marcos do TAP no cronograma do plano: ${marcos.filter((m) => m.situacao === "cabe").length} ${plural(marcos.filter((m) => m.situacao === "cabe").length, "cabe", "cabem")}, ${foraDoPrazo.length} ${plural(foraDoPrazo.length, "não cabe", "não cabem")} e ${semPrazo.length} sem prazo em dias no TAP (a conferir).`,
     `${contar(riscos.length, "risco", "riscos")} no registro, a partir das premissas e do risco geral do TAP.`,
     ...(reguas.length
       ? [

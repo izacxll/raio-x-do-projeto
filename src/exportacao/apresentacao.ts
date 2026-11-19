@@ -76,8 +76,16 @@ export function lerItem(linha: string, nomeDaRfp: string): ItemLido | undefined 
             : pag
               ? nomeDaRfp
               : undefined;
-    // sem página, a citação não é verificável: não se põe o nome de um documento que a linha não diz
-    referencia = pag ? `${doc}, p. ${pag}` : doc ? `${doc}, não verificável` : "não verificável";
+    // sem página, a citação não é verificável: não se põe o nome de um documento que a linha não diz. O item que a
+    // própria ferramenta escreveu ("não localizado … — conferir no documento") não é citação: fica sem referência
+    const daFerramenta = !pag && /não localizad/i.test(resto);
+    referencia = daFerramenta
+      ? undefined
+      : pag
+        ? `${doc}, p. ${pag}`
+        : doc
+          ? `${doc}, não verificável`
+          : "não verificável";
   }
   return {
     marcas: (m.groups.marcas ?? "").trim(),
@@ -85,7 +93,7 @@ export function lerItem(linha: string, nomeDaRfp: string): ItemLido | undefined 
     rotulo,
     referencia,
     // o trecho do documento fica como está (um "Código Civil" citado não vira "ferramenta")
-    texto: rotulo === "documento" ? resto : limparTermosInternos(resto),
+    texto: rotulo === "documento" && referencia ? resto : limparTermosInternos(resto),
     avisos,
   };
 }
@@ -109,13 +117,14 @@ export function sinalNoCorpo(i: Pick<ItemLido, "rotulo" | "avisos">): string | u
  * as referências internas entre parênteses (ids de itens, QU-nn) saem. As tabelas e o anexo técnico os mantêm.
  */
 export function limparTermosInternos(texto: string): string {
-  // ids internos: com dois dígitos ou com "_" ("sk01", "a5_3"); "(m2)" e "(km2)" são unidades e ficam
-  const id = String.raw`(?:QU-\d+|[a-z]{1,3}\d{2,}(?:_\d+)?|[a-z]{1,3}\d+_\d+|[A-Z]\d{1,2}\.\d+|dv\d+)`;
+  // ids internos ("a5", "sk01", "a5_3"); unidades como "(m2)", "(km2)" e "(m3)" não são id e ficam
+  const id = String.raw`(?:QU-\d+|(?!(?:km|cm|mm|m)\d\b)[a-z]{1,3}\d+(?:_\d+)?|[A-Z]\d{1,2}\.\d+|dv\d+)`;
   // a troca mantém a maiúscula do começo ("Pela conta do código" → "Pelo cálculo da ferramenta")
   const trocar = (novo: string) => (achado: string) =>
     /^[A-ZÀ-Ý]/.test(achado) ? novo.charAt(0).toUpperCase() + novo.slice(1) : novo;
-  // "código" do app: em minúscula e não seguido de nome de lei ou de cadastro ("Código Civil", "código CNAE" ficam)
-  const codigo = String.raw`código(?!\s+(?:\p{Lu}|civil|penal|tribut|de defesa|de [ée]tica|florestal|eleitoral|de processo|de obras|cnae|de barras))(?!\p{L})`;
+  // "código" do app: em minúscula e não seguido de nome de lei, de cadastro ou de qualificativo ("Código Civil",
+  // "código CNAE", "código de conduta", "código interno" ficam)
+  const codigo = String.raw`código(?!\s+(?:\p{Lu}|civil|penal|tribut|de defesa|de [ée]tica|de conduta|florestal|eleitoral|de processo|de obras|de acesso|cnae|de barras|interno|fonte))(?![\p{L}-])`;
   const app = (antes: string) => new RegExp(String.raw`(?<!\p{L})${antes}${codigo}`, "gu");
   return (
     texto
@@ -199,6 +208,15 @@ function decisaoDoQuadro(texto: string, opcoes?: string): DecisaoNoQuadro {
   };
 }
 
+/** A decisão do GP que o texto diz estar em aberto: "a definir", "pendente", pergunta ou "Decisão do GP" no fim. */
+function decisaoEmAberto(texto: string): boolean {
+  return /a (?:definir|decidir)|pendente|\?|decis(?:ão|ões) do GP\.?$/i.test(texto);
+}
+
+/** A frase do corpo que termina com a referência ao documento ("(TR, p. 4)"). */
+const REFERENCIA_NO_FIM =
+  /\((?:TR|edital|proposta|TAP|contrato|plano)(?:, p\. \d+|, não verificável)[^()]*\)$/;
+
 const NOTA_SUGESTAO = "Conteúdo sugerido pelo PMO, salvo quando a frase traz a referência ao documento.";
 
 /** Uma seção do corpo no padrão: itens sem rótulo por linha, decisões no quadro, marcas para a revisão. */
@@ -230,8 +248,9 @@ function secaoDoCorpo(
           .filter(Boolean)
           .join("; ")}.`,
       );
-    // a decisão ainda pendente vai ao quadro; a já revisada pelo GP fica no texto, como decisão tomada
-    if (i.rotulo === "decisao" && i.marcas.includes("○")) {
+    // a decisão ainda aberta vai ao quadro: a marcada como pendente e a que o próprio texto diz estar em aberto (as
+    // linhas de decisão montadas pela ferramenta não levam a marca); só a revisada e fechada fica no texto
+    if (i.rotulo === "decisao" && (i.marcas.includes("○") || decisaoEmAberto(i.texto))) {
       decisoes.push(decisaoDoQuadro(i.texto));
       continue;
     }
@@ -359,11 +378,17 @@ export function apresentar(
     destaques: ctx.destaques,
   };
   // o cabeçalho de minuta fica enquanto houver item sem revisão do GP (nos documentos da etapa ou na revisão)
-  const pendente = revisao.some((r) => /pendente de revisão do GP/.test(r));
+  // e enquanto houver decisão do GP em aberto no corpo
+  const pendente =
+    revisao.some((r) => /pendente de revisão do GP/.test(r)) ||
+    secoes.some((s) => s.parte === "corpo" && (s.decisoes?.length ?? 0) > 0);
   // o placar e a conferência vêm prontos da pasta do caso: os "N item(ns)" deles também saem no plural certo
   const semParenteses = secoes.map((s) => ({
     ...s,
-    ...(s.paragrafos ? { paragrafos: s.paragrafos.map(corrigirPlurais) } : {}),
+    // a frase com a referência ao documento é citação: fica literal
+    ...(s.paragrafos
+      ? { paragrafos: s.paragrafos.map((p) => (REFERENCIA_NO_FIM.test(p) ? p : corrigirPlurais(p))) }
+      : {}),
     ...(s.tabela
       ? { tabela: { ...s.tabela, linhas: s.tabela.linhas.map((l) => l.map(corrigirPlurais)) } }
       : {}),

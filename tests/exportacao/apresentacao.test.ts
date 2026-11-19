@@ -12,7 +12,7 @@ import {
 } from "../../src/exportacao/apresentacao";
 import { contar, corrigirPlurais, plural } from "../../src/texto/plural";
 import { gerarDocx } from "../../src/exportacao/docx";
-import type { CapaDeDecisao } from "../../src/exportacao/capa-de-decisao";
+import { duracaoCurta, type CapaDeDecisao } from "../../src/exportacao/capa-de-decisao";
 import type { DocumentoExportavel } from "../../src/exportacao/modelo";
 
 const logo = readFileSync(new URL("../../src/interface/ativos/logo-fgv-projetos.jpg", import.meta.url));
@@ -73,6 +73,38 @@ describe("o que a revisão alta apontou (decisão 0089)", () => {
       corrigirPlurais("14 item(ns) marcados; folga 7 dia(s) corrido(s); 1 linha(s); 3 decisão(ões)"),
     ).toBe("14 itens marcados; folga 7 dias corridos; 1 linha; 3 decisões");
     expect(corrigirPlurais("2 dia(s) útil(eis) e 2 aceitável(is)")).toBe("2 dias úteis e 2 aceitáveis");
+  });
+});
+
+describe("o que a segunda revisão alta apontou (decisão 0089)", () => {
+  it("decisão em aberto sem a marca vai ao quadro e o documento continua minuta", () => {
+    const d = apresentar(
+      { ...base(), minuta: false },
+      [{ titulo: "1. Preço", paragrafos: ["[Decisão do GP] Preço: valor final a definir pelo GP."] }],
+      [],
+      { nomeDaRfp: "TR", tituloDoEstudo: "Estudo", etapa: 2, nomeDaEtapa: "Proposta", destaques: [] },
+    );
+    const s = d.secoes.find((x) => x.titulo === "1. Preço")!;
+    expect(s.decisoes?.map((x) => x.decisao)).toEqual(["Preço: valor final a definir pelo GP"]);
+    expect(s.paragrafos).toEqual([]);
+    expect(d.minuta).toBe(true);
+  });
+
+  it("ids de um dígito saem, unidades e 'código de conduta' ficam", () => {
+    expect(limparTermosInternos("Depois da análise do contratante (a5), mas antes (c4, c5).")).toBe(
+      "Depois da análise do contratante, mas antes.",
+    );
+    expect(limparTermosInternos("Área de 40 (m2) e 3 (km2).")).toBe("Área de 40 (m2) e 3 (km2).");
+    expect(limparTermosInternos("Segue o código de conduta.")).toBe("Segue o código de conduta.");
+  });
+
+  it("item da ferramenta sem página não ganha 'não verificável'; plural com milhar; duração ancorada", () => {
+    const i = lerItem("[Do documento] Critérios não localizados pelo código — conferir no documento.", "TR")!;
+    expect(i.referencia).toBeUndefined();
+    expect(i.texto).toBe("Critérios não localizados pela ferramenta — conferir no documento.");
+    expect(corrigirPlurais("1.000.001 item(ns)")).toBe("1.000.001 itens");
+    expect(duracaoCurta("assinatura em até 5 dias; vigência de 12 meses")).toBe("12 meses");
+    expect(duracaoCurta("prazo de 3 anos e 6 meses")).toBe("3 anos e 6 meses");
   });
 });
 

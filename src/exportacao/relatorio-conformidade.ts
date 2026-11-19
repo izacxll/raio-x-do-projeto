@@ -8,6 +8,7 @@ import { NOME_SITUACAO_CANDIDATO, type ResultadoVereditos } from "../etapas/5-co
 import { camposDoDossie, type DocumentoExportavel, type Secao } from "./modelo";
 import { capaDosVereditos } from "./capas";
 import { secoesDaCapa } from "./capa-de-decisao";
+import { contar } from "../texto/plural";
 
 export const NOME_TIPO = { vago: "Vago", conflituoso: "Conflituoso", ausente: "Ausente" } as const;
 
@@ -60,7 +61,7 @@ export function montarRelatorioConformidade(
     {
       titulo: "Resumo",
       paragrafos: [
-        `${finais.length} achados: cada um é vago, conflituoso ou ausente, com a gravidade dada pela parte do plano. ${pendentes} ainda sem decisão do GP.`,
+        `${contar(finais.length, "achado", "achados")}: cada um é vago, conflituoso ou ausente, com a gravidade dada pela parte do plano. ${pendentes} ainda sem decisão do GP.`,
         "Ausente quer dizer não localizado pelo código no plano inteiro: conferir no documento antes de decidir.",
         ...(vereditos
           ? [

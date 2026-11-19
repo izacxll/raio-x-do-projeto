@@ -425,7 +425,9 @@ export function conferirTap(
       : [
           semAceite.length
             ? `${plural(semAceite.length, "Entrega", "Entregas")} sem critério de aceite: ${semAceite.map((x) => `${x.id} — ${x.nome}`).join("; ")}.`
-            : `As ${produtos.length} entregas têm critério de aceite.`,
+            : produtos.length === 1
+              ? "A entrega tem critério de aceite."
+              : `As ${produtos.length} entregas têm critério de aceite.`,
           acrescentados.length
             ? `${plural(acrescentados.length, "Produto", "Produtos")} que a proposta acrescentou e a RFP não pedia: compromisso da proposta (${e.contrato ? "assinado" : "prometido, enquanto não há contrato"}), ${plural(acrescentados.length, "entra como entrega-chave", "entram como entregas-chave")} com aceite (${acrescentados.map((d) => d.proposta.texto).join("; ")}).`
             : "",

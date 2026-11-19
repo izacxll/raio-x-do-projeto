@@ -482,7 +482,7 @@ export function montarPgp(dossie: Dossie, agora = new Date()): DocumentoExportav
       titulo: "Situação da minuta",
       paragrafos: [
         `TAP usado: ${c.e.fonteTap === "pdf" ? `PDF (${c.e.tap?.nomeArquivo})` : c.e.fonteTap === "dossie" ? "TAP da etapa 3 (dossiê)" : "nenhum"}. Proposta: ${c.e.fonteProposta === "nenhuma" ? "nenhuma" : c.e.fonteProposta === "pdf" ? "PDF" : "da etapa 2 (dossiê)"}.`,
-        `${partesAGerar(c.p).length} partes marcadas para gerar pelo GP; ${dispensadas.length} dispensadas. ${c.pendentes} pendências de revisão do GP.`,
+        `${contar(partesAGerar(c.p).length, "parte marcada", "partes marcadas")} para gerar pelo GP; ${dispensadas.length} ${plural(dispensadas.length, "dispensada", "dispensadas")}. ${contar(c.pendentes, "pendência", "pendências")} de revisão do GP.`,
         "Os itens [Sugestão] são propostas do PMO em redação condicional; os [Decisão do GP] só o GP preenche. As tabelas de cronograma, marcos, custos, designações e rastreabilidade são contas do código.",
       ],
     },
