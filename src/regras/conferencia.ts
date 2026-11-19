@@ -26,6 +26,7 @@ import {
 import { paginasDaParte, parteDaPosicao, type ParteConfirmada } from "./mapa-pgp";
 import { PADROES_VAGO } from "./vago";
 import { fraseEmVolta } from "../texto/frase";
+import { contar } from "../texto/plural";
 
 export interface EntradaConferencia {
   pgp: PaginaLida[];
@@ -728,7 +729,9 @@ export function conferirPlano(e: EntradaConferencia): ResultadoConferencia {
       alvo: "decisões do GP",
       descricao: 'Decisões do GP ainda pendentes no plano ("a definir pelo GP")',
       estado: "nao-conferido",
-      detalhe: `${total} decisão(ões) do GP pendente(s), por parte: ${[...decisoesPendentes.entries()]
+      detalhe: `${contar(total, "decisão do GP pendente", "decisões do GP pendentes")}, por parte: ${[
+        ...decisoesPendentes.entries(),
+      ]
         .sort((a, b) => b[1] - a[1])
         .map(([p, n]) => `${p} (${n})`)
         .join(", ")}. Não é vago: é a convenção da ferramenta para o que só o GP decide.`,

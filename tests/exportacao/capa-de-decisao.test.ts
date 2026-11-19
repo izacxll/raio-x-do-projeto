@@ -15,6 +15,7 @@ import {
   escolherAlertas,
   MAXIMO_DE_ALERTAS,
   MAXIMO_DE_DECISOES,
+  numerosForaDosDestaques,
   secoesDaCapa,
   type CapaDeDecisao,
 } from "../../src/exportacao/capa-de-decisao";
@@ -86,9 +87,16 @@ describe("capa de cada etapa, com a RFP pública da OEI", () => {
   it("etapa 2: produtos × equipe × horas e o preço do GP", () => {
     const c = capaDaProposta(dossie, HOJE);
     confereForma(c, 2);
-    expect(c!.quadros[0]!.titulo).toBe("Produtos × equipe × horas");
+    // equipe, produtos × horas, produtos com prazo e cronograma em barras (decisão 0089)
+    expect(c!.quadros.map((q) => q.titulo)).toEqual(
+      expect.arrayContaining(["Equipe", "Produtos × equipe × horas", "Produtos", "Cronograma"]),
+    );
     // sem valor-hora, o preço é decisão do GP e não um número inventado
     expect(c!.numeros.find((n) => n.rotulo === "Preço calculado")?.valor).toBe("a definir pelo GP");
+    // sem preço, o bloco é o das horas, e a linha das horas sai da tabela (não repete o bloco)
+    expect(c!.destaques!.map((d) => d.rotulo)).toEqual(["Dias úteis", "Produtos", "Horas"]);
+    expect(numerosForaDosDestaques(c!).map((n) => n.rotulo)).not.toContain("Horas");
+    expect(numerosForaDosDestaques(c!).map((n) => n.rotulo)).toContain("Preço calculado");
   });
 
   it("etapa 3: o TAP em uma página e as decisões do GP", () => {
@@ -97,8 +105,15 @@ describe("capa de cada etapa, com a RFP pública da OEI", () => {
     expect(c!.quadros[0]!.titulo).toBe("TAP em uma página");
     // a fila do GP na capa (decisão 0088): decisões, a conferir e o que pode ir em lote, com o prazo
     expect(c!.numeros.find((n) => n.rotulo === "Fila do GP")?.valor).toMatch(
-      /decisão\(ões\) do GP, \d+ a conferir, \d+ aceitável\(is\) em lote; decidir antes da reunião de abertura/,
+      /^\d+ decis(?:ão|ões) · \d+ a conferir · \d+ em lote$/,
     );
+    // o prazo das decisões numa linha à parte (decisão 0089)
+    expect(c!.numeros.find((n) => n.rotulo === "Decidir")?.valor).toBe(
+      "Antes da reunião de abertura e da aprovação do TAP",
+    );
+    // os blocos grandes: duração, entregas e valor; nada de "(s)" nem "(ões)"
+    expect(c!.destaques!.map((d) => d.rotulo)).toEqual(["Prazo", "Entregas", "Valor"]);
+    expect(JSON.stringify(c)).not.toMatch(/\p{L}\((?:s|ões|is|ns|eis)\)/u);
     expect(c!.decidir.some((d) => /Aprovar o TAP/.test(d))).toBe(true);
   });
 

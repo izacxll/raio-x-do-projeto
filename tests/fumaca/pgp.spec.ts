@@ -72,7 +72,9 @@ test("etapa 4 com o PMO simulado: adaptação, seis passos, contas, autoconferê
   await page.getByLabel("Reserva de contingência (R$, decisão do GP)").fill("10000");
 
   await page.getByTestId("autoconferir").click();
-  await expect(page.getByTestId("resultado-autoconferencia")).toContainText("decisão(ões) do GP pendente(s)");
+  await expect(page.getByTestId("resultado-autoconferencia")).toContainText(
+    /decis(?:ão|ões) do GP pendentes?/,
+  );
   expect(
     await page.evaluate("document.documentElement.scrollWidth <= document.documentElement.clientWidth"),
   ).toBe(true);

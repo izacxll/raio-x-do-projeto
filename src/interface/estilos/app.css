@@ -1114,3 +1114,51 @@ tr[data-critica="sim"] td:first-child {
   text-decoration: underline;
   font: inherit;
 }
+
+/* Capa no padrão de apresentação (decisão 0089): números em destaque e o quadro "Para o GP decidir". */
+.capa-destaques {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: var(--esp-2);
+  margin: var(--esp-2) 0;
+  text-align: center;
+}
+
+.capa-destaques strong {
+  display: block;
+  font-size: 28px;
+  color: var(--blue);
+}
+
+.capa-destaques span {
+  display: block;
+  font-size: var(--fs-pequeno);
+  font-weight: 700;
+  color: var(--navy);
+  text-transform: uppercase;
+}
+
+.capa-destaques small {
+  color: var(--ink);
+}
+
+.capa-quadro-decisoes {
+  border: 2px solid var(--laranja);
+  background: var(--laranja-claro);
+  margin: var(--esp-2) 0;
+}
+
+.capa-quadro-decisoes h3 {
+  margin: 0;
+  padding: 4px 10px;
+  background: var(--laranja);
+  color: var(--white);
+  font-size: var(--fs-pequeno);
+  text-transform: uppercase;
+}
+
+.capa-quadro-decisoes ul {
+  margin: 6px 0;
+  color: var(--laranja-txt);
+  list-style: square;
+}

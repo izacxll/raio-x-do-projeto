@@ -18,6 +18,7 @@ import { sistemaDaSegundaInstancia } from "../../pmo/segunda-instancia";
 import type { Achado } from "../../regras/achado";
 import { useDossie } from "../../dossie/store";
 import { useChave } from "./conectar-claude";
+import { contar, plural } from "../../texto/plural";
 
 const NOME_REVISAO = {
   confirma: "confirma o veredito",
@@ -125,10 +126,10 @@ export function SegundaInstanciaEtapa5({
     <div className="cartao cartao__corpo bloco" data-testid="segunda-instancia-etapa-5">
       <h3 className="subtitulo-grupo">Segunda instância (vereditos e premissas críticas)</h3>
       <p className="envio__obs">
-        O PMO deu {montagem.quantos} veredito(s) &quot;falso&quot; ou &quot;regra errada&quot;: cada um tira
-        um achado do código do total. Uma chamada separada confere se o trecho citado cobre o item inteiro da
-        ficha e se cada premissa crítica que se aplica está escrita nos três lugares. Vão só as páginas
-        citadas.
+        O PMO deu {contar(montagem.quantos, "veredito", "vereditos")} &quot;falso&quot; ou &quot;regra
+        errada&quot;: cada um tira um achado do código do total. Uma chamada separada confere se o trecho
+        citado cobre o item inteiro da ficha e se cada premissa crítica que se aplica está escrita nos três
+        lugares. Vão só as páginas citadas.
       </p>
       {est && (
         <p className="envio__obs">
@@ -174,9 +175,13 @@ export function SegundaInstanciaEtapa5({
       {atual && (
         <>
           <p className="aviso" role="status">
-            {aplicarSegundaEtapa5(montagem.vd, atual.resposta, leitura.resposta).contam.length -
-              montagem.vd.contam.length}{" "}
-            achado(s) voltaram a contar no resultado. Todo achado é Sugestão: quem decide é o GP. (
+            {(() => {
+              const n =
+                aplicarSegundaEtapa5(montagem.vd, atual.resposta, leitura.resposta).contam.length -
+                montagem.vd.contam.length;
+              return `${contar(n, "achado", "achados")} ${plural(n, "voltou", "voltaram")}`;
+            })()}{" "}
+            a contar no resultado. Todo achado é Sugestão: quem decide é o GP. (
             {MODELOS[atual.modelo as IdModelo]?.nome ?? atual.modelo})
           </p>
           <ul>

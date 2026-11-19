@@ -245,7 +245,7 @@ describe("vago: convenção do app e expressão citada entre aspas (teste extern
     );
     expect(r.achados.filter((a) => a.regra === "vago:a-definir")).toEqual([]);
     const v = r.verificacoes.find((x) => x.id === "decisoes-do-gp-pendentes");
-    expect(v?.detalhe).toMatch(/^3 decisão\(ões\) do GP pendente\(s\)/);
+    expect(v?.detalhe).toMatch(/^3 decisões do GP pendentes/);
   });
 
   it('"a definir" solto continua vago; a expressão do documento entre aspas não', () => {

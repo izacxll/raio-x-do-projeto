@@ -3,7 +3,7 @@
 // alertas (os que mudam preço, prazo, caixa, aceite ou quem executa primeiro); o que mudou desde a etapa anterior. Depois
 // da capa, os quadros (o resultado em forma visual). Nada aqui é decisão: o que vem do PMO continua sugestão, e o que o
 // código não achou é "não localizado pelo código — conferir no documento".
-import type { Alerta, NumeroChave, Secao } from "./modelo";
+import type { Alerta, Destaque, NumeroChave, Secao } from "./modelo";
 
 export const MAXIMO_DE_DECISOES = 5;
 export const MAXIMO_DE_ALERTAS = 5;
@@ -17,6 +17,16 @@ export interface CapaDeDecisao {
   alertas: Alerta[];
   mudou: string[];
   quadros: Secao[];
+  /** Os 3 ou 4 números da capa do documento, em bloco grande (decisão 0089). */
+  destaques?: Destaque[];
+}
+
+/** Os números-chave que não estão nos blocos grandes: a tabela não repete o bloco (decisão 0089). */
+export function numerosForaDosDestaques(c: CapaDeDecisao): NumeroChave[] {
+  const nosBlocos = new Set(
+    (c.destaques ?? []).slice(0, 4).flatMap((d) => (d.substitui ? [d.substitui] : [])),
+  );
+  return c.numeros.filter((n) => !nosBlocos.has(n.rotulo));
 }
 
 /** Os alertas da capa: os altos primeiro, sem repetir, no máximo 5. */
@@ -57,6 +67,24 @@ export function secoesDaCapa(c: CapaDeDecisao): Secao[] {
 export function limitar(texto: string, limite = 220): string {
   const t = texto.replace(/\s+/g, " ").trim();
   return t.length > limite ? `${t.slice(0, limite).replace(/[\s,]+\S*$/, "")}…` : t;
+}
+
+/**
+ * "12 (doze) meses, contados da assinatura" → "12 meses": só o número e a unidade, como o documento diz. Com
+ * "vigência" ou "prazo" no texto, vale o número logo depois deles ("assinatura em 5 dias; vigência de 12 meses" dá
+ * 12 meses); a duração composta ("3 anos e 6 meses") fica inteira.
+ */
+export function duracaoCurta(texto?: string): string | undefined {
+  const t = texto ?? "";
+  const unidade = String.raw`(\d+)\s*(?:\([^)]*\)\s*)?(dias? úteis|dias? corridos|dias?|meses|mês|anos?|semanas?)`;
+  // a vigência primeiro ("prazo para assinatura de 5 dias; vigência de 24 meses" dá 24 meses), depois o prazo
+  const m =
+    new RegExp(String.raw`vig[êe]ncia[^.;\d]{0,40}` + unidade, "i").exec(t) ??
+    new RegExp(String.raw`prazo[^.;\d]{0,40}` + unidade, "i").exec(t) ??
+    new RegExp(unidade, "i").exec(t);
+  if (!m) return undefined;
+  const mais = new RegExp(String.raw`^\s+e\s+` + unidade, "i").exec(t.slice(m.index + m[0].length));
+  return `${m[1]} ${m[2]!.toLowerCase()}${mais ? ` e ${mais[1]} ${mais[2]!.toLowerCase()}` : ""}`;
 }
 
 /**

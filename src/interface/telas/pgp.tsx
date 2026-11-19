@@ -55,6 +55,7 @@ import { ConectarClaude, useChave } from "../componentes/conectar-claude";
 import { ItensPmo } from "../componentes/item-pmo";
 import { PassoPmoNaTela, UsoNaTela, useChamadaPmo } from "../componentes/passo-pmo";
 import { OPCOES, rotuloValor } from "./conferencia";
+import { contar } from "../../texto/plural";
 
 const reais = (v?: number) =>
   v === undefined ? "a definir pelo GP" : v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
@@ -434,14 +435,14 @@ function Escopo({ p, e }: { p: PgpDossie; e: EntradaPgp }) {
               }
             >
               <td title={l.descricao}>{l.requisito}</td>
-              <td>{l.tap.length ? `${l.tap.length} item(ns)` : "—"}</td>
+              <td>{l.tap.length ? contar(l.tap.length, "item", "itens") : "—"}</td>
               <td>
                 {l.eap.join("; ") ||
                   (l.situacao === "obrigacao-no-plano"
                     ? "obrigação no plano (sem pacote)"
                     : "não localizado na EAP")}
               </td>
-              <td>{l.atividades.length ? `${l.atividades.length} atividade(s)` : "—"}</td>
+              <td>{l.atividades.length ? contar(l.atividades.length, "atividade", "atividades") : "—"}</td>
             </tr>
           ))}
         </tbody>

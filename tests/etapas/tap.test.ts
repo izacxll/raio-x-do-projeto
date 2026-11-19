@@ -264,7 +264,7 @@ describe("respostas gravadas do PMO na etapa 3 (OEI)", () => {
     const itens = itensDaEtapa3(comData, entrada.documentos);
     const sem = conferirTap(entrada, comData, itens, {}).find((x) => x.id === "marcos")!;
     expect(sem.texto).not.toMatch(/além da vigência/);
-    expect(sem.texto).toMatch(/1 marco\(s\) com data: conferidos contra a vigência só com o início/);
+    expect(sem.texto).toMatch(/1 marco com data: conferido contra a vigência só com o início/);
     const e = montarEntradaTap(
       {
         ...dossie,

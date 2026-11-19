@@ -18,6 +18,7 @@ import {
 } from "./2-proposta/cronograma";
 import type { PontoDePartida, PrazoEmDias } from "./2-proposta/ponto-de-partida";
 import type { DadosProposta } from "./3-tap/entrada";
+import { contar } from "../texto/plural";
 
 export interface MarcoDaLinha {
   /** "inicio", "P1", "fixa:2.3", "vigencia". */
@@ -67,11 +68,11 @@ export function datasEmTexto(
     return `primeira entrega no ${dia(d.primeiraEntrega)}; fim da inspeção do contratante no ${dia(d.fimDaInspecao ?? d.termo)}; termo definitivo (aprovação) no ${dia(d.termo)}, pelo ciclo de aceite da EAP (análise, ajuste e nova análise${
       aprovacaoDias === undefined
         ? ", com as durações da EAP"
-        : `, cada análise com o tempo de aprovação do GP, ${aprovacaoDias} dia(s) útil(eis)`
+        : `, cada análise com o tempo de aprovação do GP, ${contar(aprovacaoDias, "dia útil", "dias úteis")}`
     })`;
   return aprovacaoDias === undefined
     ? `primeira entrega no ${dia(d.primeiraEntrega)}; aprovação sem data: a EAP não tem a análise do contratante e o GP não informou o tempo de aprovação`
-    : `primeira entrega no ${dia(d.primeiraEntrega)}; aprovação no ${dia(d.termo)}, com ${aprovacaoDias} dia(s) útil(eis) de aprovação (decisão do GP)`;
+    : `primeira entrega no ${dia(d.primeiraEntrega)}; aprovação no ${dia(d.termo)}, com ${contar(aprovacaoDias, "dia útil", "dias úteis")} de aprovação (decisão do GP)`;
 }
 
 export function linhaDoTempo(x: EntradaLinha): MarcoDaLinha[] {
@@ -128,7 +129,7 @@ export function linhaDoTempo(x: EntradaLinha): MarcoDaLinha[] {
       situacao: situacaoDaDataFixa(f),
       texto: `Marco fixo da atividade ${f.atividade}: ${formatarData(f.inicio)} a ${formatarData(f.fim)}; as atividades anteriores terminam ${
         f.fimPredecessoras ? `em ${formatarData(f.fimPredecessoras)}` : "sem data (falta o início)"
-      }${f.folgaCorrida !== undefined ? `, folga de ${f.folgaCorrida} dia(s) corrido(s)` : ""}${f.semAprovacao ? " (sem o tempo de aprovação do cliente)" : ""}.${
+      }${f.folgaCorrida !== undefined ? `, folga de ${contar(f.folgaCorrida, "dia corrido", "dias corridos")}` : ""}${f.semAprovacao ? " (sem o tempo de aprovação do cliente)" : ""}.${
         f.vencida
           ? " A data já passou em relação a hoje: o marco não é executável como está; a conta vale só como intervalo (decisão do contratante: nova data ou nova edição)."
           : ""

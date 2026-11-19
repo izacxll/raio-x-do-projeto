@@ -20,7 +20,9 @@ import { montarRegistroPremissas, montarTap } from "./relatorio-tap";
 import { montarRelatorioConformidade } from "./relatorio-conformidade";
 import { resultadoDaEtapa5 } from "../etapas/5-conferencia/resultado";
 import { capaDaEtapa } from "./capas";
-import { secoesDaCapa } from "./capa-de-decisao";
+import { curto, secoesDaCapa } from "./capa-de-decisao";
+import { apresentar, lerItem } from "./apresentacao";
+import { contar } from "../texto/plural";
 
 export const NOME_DA_ETAPA: Record<number, string> = {
   1: "Leitura da RFP",
@@ -61,7 +63,8 @@ export function placarResumido(placar: string, limite = 40): string[] {
   const comeco = Math.min(6, k0 < 0 ? 6 : k0);
   const resumo = linhas.filter((l, k) => k < comeco || titulo(l) || (k > 0 && titulo(linhas[k - 1] ?? "")));
   const saida = resumo.slice(0, limite).map(semMarkdown);
-  if (resumo.length > limite) saida.push(`(… mais ${resumo.length - limite} linha(s) no placar completo)`);
+  if (resumo.length > limite)
+    saida.push(`(… mais ${contar(resumo.length - limite, "linha", "linhas")} no placar completo)`);
   return saida;
 }
 
@@ -100,9 +103,13 @@ export function parteDaSecao(s: Secao): ParteDoDocumento {
  * 0084). Na etapa 3, as premissas ficam só no registro de premissas, não também no TAP. Na etapa 5, o relatório de
  * conformidade, calculado como na tela.
  */
-function resultadoFinal(dossie: Dossie, etapa: number, agora: Date): Secao[] {
+function resultadoFinal(dossie: Dossie, etapa: number, agora: Date, minutas: boolean[] = []): Secao[] {
   const docs = dossie.documentos.filter((d) => d.papel === "rfp" || d.papel === "anexo-rfp");
-  const secoes = (d: DocumentoExportavel): Secao[] => d.secoes.map((x) => ({ ...x, parte: parteDaSecao(x) }));
+  // cada documento da etapa diz se ainda é minuta (há item sem revisão do GP); o resultado herda
+  const secoes = (d: DocumentoExportavel): Secao[] => {
+    minutas.push(d.minuta);
+    return d.secoes.map((x) => ({ ...x, parte: parteDaSecao(x) }));
+  };
   if (etapa === 1) return secoes(montarAnaliseRfp(dossie, analisarRfp(docs, agora), agora));
   // a proposta, o TAP e o PGP são as peças em si: a capa do GP vai antes delas só aqui (decisão 0085)
   const capa = etapa >= 2 && etapa <= 4 ? capaDaEtapa(dossie, etapa, agora) : undefined;
@@ -187,14 +194,16 @@ export function montarResultadoDaEtapa(
   dossie: Dossie,
   etapa: number,
   passos: ArquivosDoPasso[],
-  { caso, agora = new Date() }: { caso: string; agora?: Date },
+  { caso, agora = new Date() }: { caso?: string; agora?: Date },
 ): DocumentoExportavel {
   const processo: Secao[] = [
     {
       titulo: "Como ler este documento",
       parte: "anexo",
       paragrafos: [
-        `Resultado da etapa ${etapa} (${NOME_DA_ETAPA[etapa] ?? ""}) no teste externo, caso ${caso}, gerado quando todos os passos da etapa fecharam (com "seguir" do GP ou sem achado pendente).`,
+        caso
+          ? `Resultado da etapa ${etapa} (${NOME_DA_ETAPA[etapa] ?? ""}) no teste externo, caso ${caso}, gerado quando todos os passos da etapa fecharam (com "seguir" do GP ou sem achado pendente).`
+          : `Resultado da etapa ${etapa} (${NOME_DA_ETAPA[etapa] ?? ""}), baixado da tela da etapa em ${agora.toLocaleDateString("pt-BR")}.`,
         "O resultado da etapa vem primeiro, como a tela o exporta. Neste anexo, para cada passo: o placar resumido (o que o código conferiu na resposta do PMO) e a conferência da segunda instância (achados, o que passou e a decisão do GP).",
         "Os rótulos valem como na tela: Do documento (com página e trecho), Sugestão e Decisão do GP. Tudo do PMO e da segunda instância é Sugestão; quem decide é o GP.",
       ],
@@ -229,7 +238,8 @@ export function montarResultadoDaEtapa(
         paragrafos: ["Sem placar nem conferência na pasta do caso."],
       });
   }
-  const final = resultadoFinal(dossie, etapa, agora);
+  const minutas: boolean[] = [];
+  const final = resultadoFinal(dossie, etapa, agora, minutas);
   const secoes: Secao[] = [
     ...(final.length
       ? final
@@ -249,10 +259,86 @@ export function montarResultadoDaEtapa(
   ];
   return {
     titulo: `Resultado da etapa ${etapa} — ${NOME_DA_ETAPA[etapa] ?? ""}`,
-    subtitulo: `Teste externo, caso ${caso}`,
+    ...(caso ? { subtitulo: `Teste externo, caso ${caso}` } : {}),
     ...camposDoDossie(dossie, etapa),
-    minuta: true,
+    // no teste externo, sempre minuta; na tela, minuta enquanto algum documento da etapa tiver item sem revisão
+    minuta: caso !== undefined || !final.length || minutas.some(Boolean),
     geradoEm: agora,
     secoes,
   };
+}
+
+/**
+ * Etapa 4 no padrão de apresentação: o corpo traz os planos em resumo (uma linha por parte A: o que o plano estabelece,
+ * pelo primeiro item, e quantos itens tem); o plano inteiro e os registros vão para o anexo (decisão 0089).
+ */
+export function resumoDosPlanos(secoes: Secao[], nomeDaRfp: string): Secao {
+  const linhas: string[][] = [];
+  for (let k = 0; k < secoes.length; k++) {
+    const s = secoes[k]!;
+    const codigo = /^Parte (A\d+) do plano\.$/.exec(s.paragrafos?.[0] ?? "")?.[1];
+    if (!codigo) continue;
+    const itens = (s.paragrafos ?? []).map((p) => lerItem(p, nomeDaRfp)).filter((i) => i !== undefined);
+    const primeiro = itens.find((i) => i.rotulo !== "decisao") ?? itens[0];
+    linhas.push([
+      s.titulo.replace(/^\d+\.\s*/, ""),
+      primeiro ? curto(primeiro.texto, 200) : "a gerar",
+      String(itens.length),
+      String(itens.filter((i) => i.rotulo === "decisao").length),
+    ]);
+  }
+  return {
+    titulo: "Os planos em resumo",
+    paragrafos: [
+      "O que cada plano estabelece, pelo primeiro item; o texto inteiro de cada plano e os registros estão no anexo técnico.",
+    ],
+    tabela: {
+      colunas: ["Plano", "O que estabelece", "Itens", "Decisões do GP"],
+      larguras: [2.2, 6, 0.8, 1],
+      linhas,
+    },
+  };
+}
+
+/**
+ * O resultado da etapa no padrão de apresentação da FGV Projetos (decisão 0089): capa com o título do estudo e os
+ * números-chave, sumário, "o que decidir", os quadros, o corpo sem rótulo por linha e os anexos de revisão e técnico.
+ */
+export function montarResultadoApresentado(
+  dossie: Dossie,
+  etapa: number,
+  passos: ArquivosDoPasso[],
+  opcoes: { caso?: string; agora?: Date } = {},
+): DocumentoExportavel {
+  const agora = opcoes.agora ?? new Date();
+  const base = montarResultadoDaEtapa(dossie, etapa, passos, { ...opcoes, agora });
+  const capa = capaDaEtapa(dossie, etapa, agora);
+  const docs = dossie.documentos.filter((d) => d.papel === "rfp" || d.papel === "anexo-rfp");
+  const analise = docs.length ? analisarRfp(docs, agora) : undefined;
+  const item = (id: string) => analise?.itens.find((i) => i.id === id);
+  const instrumento = item("identificacao:instrumento")?.texto ?? "";
+  const nomeDaRfp = /^\s*(?:termo de refer[eê]ncia|TR)\b/i.test(instrumento) ? "TR" : "edital";
+  const contratante = item("identificacao:contratante")?.texto;
+  const corpo = base.secoes.filter((s) => (s.parte ?? "corpo") === "corpo");
+  const tecnico = base.secoes.filter((s) => s.parte === "anexo");
+  // o nome que o GP deu fica como está; o sugerido perde o instrumento entre parênteses, e a capa diz que é sugestão
+  const sugerido = /\s+—\s+nome sugerido/.test(base.projeto);
+  const tituloDoEstudo = sugerido
+    ? base.projeto.replace(/\s+—\s+nome sugerido.*$/, "").replace(/\s*\([^)]*\)\s*$/, "")
+    : base.projeto;
+  return apresentar(
+    { ...base, titulo: `Resultado da etapa ${etapa}`, subtitulo: undefined },
+    corpo,
+    tecnico,
+    {
+      capa,
+      nomeDaRfp,
+      tituloDoEstudo,
+      ...(contratante ? { contratante: curto(contratante, 80) } : {}),
+      etapa,
+      nomeDaEtapa: `${NOME_DA_ETAPA[etapa] ?? ""}${sugerido ? " · título sugerido a partir do objeto, a confirmar pelo GP" : ""}`,
+      destaques: capa?.destaques ?? [],
+    },
+    etapa === 4 && dossie.pgp ? resumoDosPlanos(corpo, nomeDaRfp) : undefined,
+  );
 }

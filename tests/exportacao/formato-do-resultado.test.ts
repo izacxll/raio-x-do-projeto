@@ -70,7 +70,7 @@ describe("marcas", () => {
     expect(contarMarcas(["○ a", "○◊ b", "c ○", "◊ d"])).toEqual({ pendentes: 2, redacaoAConferir: 2 });
     expect(marcasDoDocumento(documento())).toEqual({ pendentes: 2, redacaoAConferir: 1 });
     expect(legendaDasMarcas({ pendentes: 2, redacaoAConferir: 1 })).toBe(
-      "Marcas: ○ pendente de revisão do GP: 2 item(ns) · ◊ redação a conferir: 1 item(ns).",
+      "Marcas: ○ pendente de revisão do GP: 2 itens · ◊ redação a conferir: 1 item.",
     );
     expect(legendaDasMarcas({ pendentes: 0, redacaoAConferir: 0 })).toBe("");
   });
@@ -91,7 +91,7 @@ describe("DOCX no formato novo", () => {
     // quadros, corpo e anexo começam numa página nova
     expect(corpo.match(/<w:pageBreakBefore\/>/g)?.length).toBe(3);
     expect(corpo).toContain("O TR não informa o prazo de execução.");
-    expect(corpo).toContain("Marcas: ○ pendente de revisão do GP: 2 item(ns)");
+    expect(corpo).toContain("Marcas: ○ pendente de revisão do GP: 2 itens");
     const rodapes = Object.keys(arquivos)
       .filter((n) => /^word\/footer\d*\.xml$/.test(n))
       .map((n) => strFromU8(arquivos[n]!))

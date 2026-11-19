@@ -12,11 +12,11 @@ import {
   type LeituraRfp,
 } from "../etapas/1-rfp/leitura";
 import { requisitosValidos } from "../etapas/1-rfp/revisao";
-import { recomendacaoDoDossie, recomendacaoEmTexto } from "../etapas/1-rfp/recomendacao";
-import { curto, NAO_LOCALIZADO, secoesDaCapa, type CapaDeDecisao } from "./capa-de-decisao";
-import { PRAZO_DAS_DECISOES, resumoDaFila, revisavelDaLeitura } from "../pmo/fila";
+import { NOME_RECOMENDACAO, recomendacaoDoDossie, recomendacaoEmTexto } from "../etapas/1-rfp/recomendacao";
+import { curto, duracaoCurta, NAO_LOCALIZADO, secoesDaCapa, type CapaDeDecisao } from "./capa-de-decisao";
+import { numerosDaFila, revisavelDaLeitura } from "../pmo/fila";
 import { camposConfirmadosPeloPmo, type CampoQuePesa } from "./capa-regras";
-import type { Alerta } from "./modelo";
+import type { Alerta, Destaque } from "./modelo";
 import {
   contarPendentesDaLeitura,
   itensRevisaveis,
@@ -27,6 +27,7 @@ import {
 import { estadoDoItem } from "../etapas/1-rfp/revisao";
 import { compactar } from "../texto/normalizar";
 import { camposDoDossie, MARCA_PENDENTE, type DocumentoExportavel, type Secao } from "./modelo";
+import { contar, plural } from "../texto/plural";
 
 /** Rótulos curtos, para caber na coluna sem quebrar a palavra. */
 const NOME_ROTULO = {
@@ -172,6 +173,28 @@ function secoesDaLeitura(leitura: LeituraRfp, revisoes: Record<string, RevisaoIt
 const docsDaRfp = (dossie: Dossie) =>
   dossie.documentos.filter((d) => d.papel === "rfp" || d.papel === "anexo-rfp");
 
+/** Número da capa a partir de um campo da ficha: o valor curto, "não informado" (confirmado) ou "não localizado". */
+function destaqueDaFicha(
+  rotulo: string,
+  i: ItemLeitura | undefined,
+  confirmadoAusente: boolean,
+  nomeDoDocumento: string,
+): Destaque {
+  if (confirmadoAusente)
+    return { valor: "Não informado", rotulo, explicacao: `no ${nomeDoDocumento}: perguntar antes do preço` };
+  if (!i || i.situacao === "nao-localizado")
+    return { valor: "—", rotulo, explicacao: `não localizado: conferir no ${nomeDoDocumento}` };
+  const curtoDemais = i.texto.length <= 24;
+  // o prazo no bloco só com o número e a unidade ("12 meses"); o texto inteiro vai na explicação
+  const duracao = rotulo === "Prazo" ? duracaoCurta(i.texto) : undefined;
+  if (duracao) return { valor: duracao, rotulo, ...(curtoDemais ? {} : { explicacao: curto(i.texto, 90) }) };
+  return {
+    valor: curtoDemais ? i.texto : curto(i.texto, 24),
+    rotulo,
+    ...(curtoDemais ? {} : { explicacao: curto(i.texto, 90) }),
+  };
+}
+
 /** As decisões da etapa 1 que não são item: participar ou não e a modalidade (decisão 0088). */
 export function outrasDecisoesDaRfp(a: AnaliseRfpDossie): string[] {
   return [
@@ -270,7 +293,7 @@ export function capaDaRfp(
     ...(modalidadeDoGp ? [] : [`Confirmar a modalidade: ${modalidade}.`]),
     ...(perguntas.length
       ? [
-          `Quais perguntas de esclarecimento enviar: ${perguntas.length} sugerida(s); as que mudam preço ou prazo estão no quadro "Perguntas antes do preço".`,
+          `Quais perguntas de esclarecimento enviar: ${perguntas.length} ${plural(perguntas.length, "sugerida", "sugeridas")}; as que mudam preço ou prazo estão no quadro "Perguntas antes do preço".`,
         ]
       : []),
     ...(pcs.length
@@ -279,15 +302,12 @@ export function capaDaRfp(
   ];
 
   const numeros = [
-    {
-      rotulo: "Fila do GP",
-      valor: `${resumoDaFila(itensRevisaveis(leitura).map(revisavelDaLeitura), a.revisoes, outrasDecisoesDaRfp(a))}; decidir ${PRAZO_DAS_DECISOES[1]}`,
-    },
+    ...numerosDaFila(1, itensRevisaveis(leitura).map(revisavelDaLeitura), a.revisoes, outrasDecisoesDaRfp(a)),
     { rotulo: "Modalidade", valor: modalidade },
     {
       rotulo: "Entregas",
       valor: produtos.length
-        ? `${produtos.length} produto(s) (${produtos.map((r) => r.numero).join(", ")})`
+        ? `${contar(produtos.length, "produto", "produtos")} (${produtos.map((r) => r.numero).join(", ")})`
         : NAO_LOCALIZADO,
     },
     { rotulo: "Requisitos numerados (R)", valor: String(requisitos.length) },
@@ -318,19 +338,26 @@ export function capaDaRfp(
   const habilitacao = doCodigo("leitura:habilitacao:lista");
   const ficha = {
     titulo: "Ficha da RFP",
-    paragrafos: ["Montada pelo código a partir do documento; o que ele não achou fica para conferir na RFP."],
+    paragrafos: [
+      "Montada pela ferramenta a partir do documento; o que ela não achou fica para conferir no documento.",
+    ],
     tabela: {
       colunas: ["Campo", "Conteúdo", "Onde"],
       larguras: [1.4, 5, 1.4],
       linhas: [
         linhaDaFicha("Objeto", doCodigo("identificacao:objeto")),
-        linhaDaFicha(
-          "Prazo de execução",
-          doCodigo("leitura:prazo"),
-          "prazo de execução ou vigência",
-          /prazo/i,
-        ),
-        linhaDaFicha("Valor", doCodigo("identificacao:valor"), "valor estimado ou teto", /valor/i),
+        // o que as duas leituras confirmam ausente sai "não informado no TR" (decisão 0089)
+        confirmados.includes("prazo")
+          ? ["Prazo de execução", `não informado no ${nomeDoDocumento}`, "—"]
+          : linhaDaFicha(
+              "Prazo de execução",
+              doCodigo("leitura:prazo"),
+              "prazo de execução ou vigência",
+              /prazo/i,
+            ),
+        confirmados.includes("valor")
+          ? ["Valor", `não informado no ${nomeDoDocumento}`, "—"]
+          : linhaDaFicha("Valor", doCodigo("identificacao:valor"), "valor estimado ou teto", /valor/i),
         linhaDaFicha("Entregas", doCodigo("leitura:tamanho")),
         linhaDaFicha(
           "Julgamento",
@@ -341,7 +368,7 @@ export function capaDaRfp(
         [
           "Habilitação",
           habilitacao?.tabela?.linhas.length
-            ? `${habilitacao.tabela.linhas.length} documento(s) na lista do edital`
+            ? `${contar(habilitacao.tabela.linhas.length, "documento", "documentos")} na lista do edital`
             : NAO_LOCALIZADO,
           habilitacao?.origem ? `${habilitacao.origem.documento}, p. ${habilitacao.origem.pagina}` : "—",
         ],
@@ -365,6 +392,42 @@ export function capaDaRfp(
   };
   return {
     etapa: 1,
+    destaques: [
+      destaqueDaFicha("Prazo", doCodigo("leitura:prazo"), confirmados.includes("prazo"), nomeDoDocumento),
+      destaqueDaFicha(
+        "Valor",
+        doCodigo("identificacao:valor"),
+        confirmados.includes("valor"),
+        nomeDoDocumento,
+      ),
+      {
+        valor: produtos.length ? String(produtos.length) : "—",
+        rotulo: "Entregas",
+        // a lista inteira dos números R fica na tabela (o bloco só resume)
+        explicacao: produtos.length ? "produtos numerados (R)" : NAO_LOCALIZADO,
+      },
+      // o veredito da etapa 1 é a recomendação de participar, que é sugestão do PMO (decisão 0086)
+      ...(recomendacao
+        ? [
+            {
+              valor:
+                recomendacao.recomendacao.sugestao === "sem_base"
+                  ? "Sem base"
+                  : NOME_RECOMENDACAO[recomendacao.recomendacao.sugestao].replace(/^./, (x) =>
+                      x.toUpperCase(),
+                    ),
+              rotulo: "Recomendação",
+              // com aviso da conferência (redação, número sem fonte, item fora da leitura), o bloco diz "a conferir"
+              explicacao:
+                recomendacao.redacaoAConferir ||
+                recomendacao.numerosSemFonte.length ||
+                recomendacao.semItem.length
+                  ? "sugestão do PMO, a conferir; quem decide é o GP"
+                  : "sugestão do PMO; quem decide é o GP",
+            },
+          ]
+        : []),
+    ],
     oQueE:
       "Etapa 1, leitura da RFP: o que o documento pede, quanto, em quanto tempo e como se ganha, para o GP decidir se participa e o que perguntar antes do preço.",
     decidir,

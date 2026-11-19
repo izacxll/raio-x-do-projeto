@@ -8,6 +8,7 @@ import { criarDossieVazio, lerDossie } from "../../src/dossie/arquivo";
 import {
   type ArquivosDoPasso,
   lerConferenciaEmBlocos,
+  montarResultadoApresentado,
   montarResultadoDaEtapa,
   placarResumido,
 } from "../../src/exportacao/resultado-da-etapa";
@@ -112,7 +113,7 @@ describe.skipIf(env.RAIO_X_MODO !== "resultado")("gerar o resultado de uma etapa
       placar: ler(`resposta-etapa-${etapa}-${passo}-${base}.placar.md`),
       conferencia: ler(`conferencia-etapa-${etapa}-${passo}-${base}.md`),
     }));
-    const doc = montarResultadoDaEtapa(r.dossie, etapa, passos, { caso, agora: new Date() });
+    const doc = montarResultadoApresentado(r.dossie, etapa, passos, { caso, agora: new Date() });
     const { gerarDocx } = await import("../../src/exportacao/docx");
     const logo = readFileSync(new URL("../../src/interface/ativos/logo-fgv-projetos.jpg", import.meta.url));
     const docx = await gerarDocx(doc, logo.buffer.slice(logo.byteOffset, logo.byteOffset + logo.byteLength));

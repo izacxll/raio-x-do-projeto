@@ -56,6 +56,7 @@ import {
   type TipoProjeto,
   type TipoSugerido,
 } from "./tipo";
+import { contar, plural } from "../../texto/plural";
 
 export type SecaoMetodoProposta =
   | "capa"
@@ -521,7 +522,7 @@ export function montarMinuta(
         secao: "estrutura",
         rotulo: "sugestao",
         nome: "Seções do modelo não redigidas",
-        texto: `${ruins.length} seção(ões) do modelo ${ruins.some((s) => s.situacao === "so-descrita") ? "só descritas ou " : ""}sem texto: ${ruins.map((s) => `${s.codigo} ${s.titulo}`).join("; ")}. Pelo método, a minuta sai redigida por inteiro.`,
+        texto: `${contar(ruins.length, "seção", "seções")} do modelo ${ruins.some((s) => s.situacao === "so-descrita") ? plural(ruins.length, "só descrita ou ", "só descritas ou ") : ""}sem texto: ${ruins.map((s) => `${s.codigo} ${s.titulo}`).join("; ")}. Pelo método, a minuta sai redigida por inteiro.`,
         alerta: true,
       });
   }
@@ -710,7 +711,7 @@ export function montarMinuta(
       secao: "metas-equipe",
       rotulo: "decisao-gp",
       nome: "Cronograma × vigência (conta do código)",
-      texto: `Duração a definir em ${aDefinir.length} fase(s) (${aDefinir.map((f) => f.nome).join("; ")}): o código não soma o cronograma contra a vigência até o GP definir a duração de todas.`,
+      texto: `Duração a definir em ${contar(aDefinir.length, "fase", "fases")} (${aDefinir.map((f) => f.nome).join("; ")}): o código não soma o cronograma contra a vigência até o GP definir a duração de todas.`,
       origem: ponto.prazoExecucao?.origem,
     });
   else if (fases.length) {

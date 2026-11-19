@@ -131,6 +131,8 @@ function tabelaDeNumeros(numeros: NumeroChave[]): Table {
 }
 
 export async function gerarDocx(doc: DocumentoExportavel, logo: ArrayBuffer): Promise<Blob> {
+  // o padrão de apresentação da FGV Projetos (decisão 0089), para o resultado da etapa
+  if (doc.apresentacao) return (await import("./docx-apresentacao")).gerarDocxApresentacao(doc, logo);
   const cabecalho: Paragraph[] = [
     new Paragraph({
       children: [new ImageRun({ type: "jpg", data: logo, transformation: { width: 180, height: 30 } })],

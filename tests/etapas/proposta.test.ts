@@ -381,7 +381,7 @@ describe("data fixa com o início do projeto: o cronograma respeita o evento", (
     expect(c4?.folga).toBe(0);
     expect(c.atividades.find((a) => a.id === "m1")?.folga).toBeGreaterThan(0);
     expect(c.problemas.join(" ")).toMatch(
-      /presa à data fixa: de 07\/11\/2026 a 06\/01\/2027, 61 dias corridos.*folga de \d+ dia\(s\) corrido/,
+      /presa à data fixa: de 07\/11\/2026 a 06\/01\/2027, 61 dias corridos.*folga de \d+ dias? corrido/,
     );
     expect(c4?.diasCorridos).toBe(61);
   });

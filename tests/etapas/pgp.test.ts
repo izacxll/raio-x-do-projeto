@@ -290,10 +290,10 @@ describe("RACI e data fixa no plano (teste externo do TR)", () => {
       ({ datasFixas: [{ ...base, ...f }] }) as unknown as Parameters<typeof alertasDeDataFixa>[0];
     const [nao] = alertasDeDataFixa(crono({ folgaCorrida: -5, cabe: false }));
     expect(nao).toMatch(
-      /^Alerta \(conta do código\): a atividade c4 começa na data fixa de 07\/11\/2026.*5 dia\(s\) corrido\(s\) depois.*PC3.*PC6/,
+      /^Alerta \(conta do código\): a atividade c4 começa na data fixa de 07\/11\/2026.*5 dias corridos depois.*PC3.*PC6/,
     );
     const [sim] = alertasDeDataFixa(crono({ folgaCorrida: 3, cabe: true }));
-    expect(sim).toMatch(/folga de 3 dia\(s\) corrido\(s\)/);
+    expect(sim).toMatch(/folga de 3 dias corridos/);
   });
 });
 
@@ -510,7 +510,7 @@ describe("autoconferência: item marcado pelo PMO com o id", () => {
     expect(ligado.achados).toEqual([]);
     expect(ligado.verificacoes[0]?.estado).toBe("pela-marca-do-pmo");
     expect(ligado.verificacoes.find((v) => v.id === "presentes-pela-marca-do-pmo")?.detalhe).toMatch(
-      /^1 item\(ns\): /,
+      /^1 item: /,
     );
     expect(ligado.verificacoes[0]?.detalhe).toMatch(/id conferido pelo código/);
     expect(ligarPeloId(base, comMarca("id-que-nao-existe"), entrada).achados).toHaveLength(1);

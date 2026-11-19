@@ -2,6 +2,7 @@
 // aceito em lote, e ordena por impacto. Nada é aceito sem o GP: o "em lote" é um clique dele, nunca automático
 // (CLAUDE.md, seção 1). A decisão do GP e o item com aviso do código nunca vão em lote.
 import type { RevisaoItem } from "../dossie/esquema";
+import { contar } from "../texto/plural";
 import { estadoDe, type ItemConferido } from "./itens";
 
 /**
@@ -172,5 +173,19 @@ export function resumoDaFila(
   outrasDecisoes: string[] = [],
 ): string {
   const c = contarFila(filaDePendencias(itens, revisoes));
-  return `${c.decisao + outrasDecisoes.length} decisão(ões) do GP, ${c.conferir} a conferir, ${c.documento + c.sugestao} aceitável(is) em lote`;
+  return `${contar(c.decisao + outrasDecisoes.length, "decisão", "decisões")} · ${c.conferir} a conferir · ${c.documento + c.sugestao} em lote`;
+}
+
+/** As duas linhas da fila nos números-chave: a fila curta e, à parte, até quando decidir (decisão 0089). */
+export function numerosDaFila(
+  etapa: number,
+  itens: ItemRevisavel[],
+  revisoes: Record<string, RevisaoItem>,
+  outrasDecisoes: string[] = [],
+): { rotulo: string; valor: string }[] {
+  const prazo = PRAZO_DAS_DECISOES[etapa];
+  return [
+    { rotulo: "Fila do GP", valor: resumoDaFila(itens, revisoes, outrasDecisoes) },
+    ...(prazo ? [{ rotulo: "Decidir", valor: prazo.replace(/^./, (x) => x.toUpperCase()) }] : []),
+  ];
 }

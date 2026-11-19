@@ -4,6 +4,27 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 
 ## [Não publicado]
 
+### Resultado no padrão da FGV Projetos (decisão 0089)
+- **Capa** com o título do estudo e os números-chave em destaque; **sumário**; seções numeradas; rodapé com "página n / total".
+- **Rótulos fora da linha:** referência "(TR, p. N)" no fim da frase, nota de sugestão por seção, decisões no quadro "Para o GP decidir"; marcas e avisos no anexo de revisão; termos internos só no anexo técnico.
+- **Quadros novos:** equipe, produtos, cronograma em barras, premissas críticas e riscos com responsável; "não informado no TR" em vermelho.
+- **Etapa 4:** os planos em resumo no corpo (6 páginas antes dos anexos); o plano inteiro no anexo.
+- **App:** capa com destaques e quadro de decisões; botão para baixar o resultado da etapa em Word.
+- **Ajustes antes do merge:**
+  - plurais certos em todo o texto que o GP lê, sem "(s)", "(ões)" nem "(is)";
+  - sem "Impacto: outro" no quadro;
+  - na capa, 3 ou 4 blocos (duração, entregas, valor ou horas, veredito), e a tabela não repete o bloco;
+  - fila do GP curta ("6 decisões · 1 a conferir · 55 em lote"), com o prazo numa linha à parte.
+- **Correções da revisão alta:**
+  - tabelas do corpo mantêm o rótulo e levam os pendentes ao anexo de revisão;
+  - o plano da etapa 4 no anexo também entra na revisão;
+  - item com aviso guarda no corpo "citação não conferida", "valor não conferido" ou "não localizado";
+  - citação sem página fica "não verificável";
+  - "Código Civil" e unidades como "(m2)" não são mais trocados;
+  - o Word da tela só é minuta enquanto há item sem revisão e não fala em teste externo;
+  - barras do cronograma sem a aprovação contada duas vezes;
+  - premissa crítica "não localizada", não "falta".
+
 ### Material para a comissão
 - `docs/comissao/`: painel de métricas do teste (só contagens), caminho dos dados (com a política de retenção da Anthropic conferida em 18/11/2026), plano de validação com 5 a 10 TRs e respostas curtas para três perguntas prováveis.
 
