@@ -78,8 +78,9 @@ export interface Secao {
   /** Parágrafo de abertura, antes do quadro de decisões e dos alertas. */
   abertura?: string;
   /**
-   * A seção começa numa página nova (no padrão de apresentação): para documentos com capítulos, como o material da
-   * comissão. Sem ela, só a primeira seção de cada parte quebra a página.
+   * Capítulo que começa numa página nova, para documentos com capítulos, como o material da comissão. Vale só no padrão
+   * de apresentação (DOCX com `apresentacao`), na seção de nível 1 fora do anexo; o PDF e o DOCX simples a ignoram.
+   * Sem ela, só a primeira seção de cada parte quebra a página.
    */
   novaPagina?: boolean;
 }

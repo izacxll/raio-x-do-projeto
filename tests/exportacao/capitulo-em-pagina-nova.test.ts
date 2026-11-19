@@ -1,8 +1,9 @@
-// Padrão de apresentação (decisão 0089): a seção marcada com novaPagina começa numa página nova; sem a marca, só a
-// primeira seção de cada parte quebra a página, como antes.
+// Padrão de apresentação (decisão 0089): o capítulo marcado com novaPagina (nível 1, fora do anexo) começa numa página
+// nova; a subseção e o anexo ignoram a marca; sem a marca, só a primeira seção de cada parte quebra a página.
 import { readFileSync } from "node:fs";
 import { strFromU8, unzipSync } from "fflate";
 import { describe, expect, it } from "vitest";
+import { apresentar } from "../../src/exportacao/apresentacao";
 import { gerarDocxApresentacao } from "../../src/exportacao/docx-apresentacao";
 import type { DocumentoExportavel, Secao } from "../../src/exportacao/modelo";
 
@@ -22,9 +23,9 @@ function documento(secoes: Secao[]): DocumentoExportavel {
   };
 }
 
-const capitulos = (novaPagina?: boolean): Secao[] => [
+const capitulos = (novaPagina?: boolean, naSubsecao?: boolean): Secao[] => [
   { titulo: "1. Primeiro", paragrafos: ["Texto do primeiro."], novaPagina },
-  { titulo: "1.1 Parte do primeiro", nivel: 2, paragrafos: ["Mais texto."] },
+  { titulo: "1.1 Parte do primeiro", nivel: 2, paragrafos: ["Mais texto."], novaPagina: naSubsecao },
   { titulo: "2. Segundo", paragrafos: ["Texto do segundo."], novaPagina },
   { titulo: "3. Terceiro", paragrafos: ["Texto do terceiro."], novaPagina },
 ];
@@ -37,11 +38,48 @@ async function quebras(doc: DocumentoExportavel): Promise<number> {
 }
 
 describe("capítulo em página nova", () => {
-  it("cada seção marcada começa numa página nova; a subseção não", async () => {
+  it("cada capítulo marcado começa numa página nova", async () => {
     expect(await quebras(documento(capitulos(true)))).toBe(3);
+  });
+
+  it("a subseção marcada não quebra a página", async () => {
+    expect(await quebras(documento(capitulos(true, true)))).toBe(3);
   });
 
   it("sem a marca, só a primeira seção do corpo quebra a página, como antes", async () => {
     expect(await quebras(documento(capitulos()))).toBe(1);
+  });
+
+  it("no anexo, a marca não abre outra página depois do título ANEXOS", async () => {
+    const secoes: Secao[] = [
+      { titulo: "1. Corpo", paragrafos: ["Texto."] },
+      { titulo: "A. Anexo", parte: "anexo", paragrafos: ["Texto do anexo."], novaPagina: true },
+      { titulo: "A.1 Mais", parte: "anexo", nivel: 2, paragrafos: ["Mais."], novaPagina: true },
+    ];
+    // o corpo e o título ANEXOS
+    expect(await quebras(documento(secoes))).toBe(2);
+  });
+
+  it("pelo apresentar(): a marca segue no corpo e sai no anexo técnico", () => {
+    const base = documento([]);
+    const corpo: Secao[] = [
+      { titulo: "Primeiro", paragrafos: ["Texto."], novaPagina: true },
+      { titulo: "Segundo", paragrafos: ["Texto."], novaPagina: true },
+    ];
+    const tecnico: Secao[] = [
+      { titulo: "Placar (código)", parte: "anexo", paragrafos: ["x"], novaPagina: true },
+    ];
+    const d = apresentar(base, corpo, tecnico, {
+      nomeDaRfp: "TR",
+      tituloDoEstudo: "Estudo inventado",
+      etapa: 2,
+      nomeDaEtapa: "Proposta",
+      destaques: [],
+    });
+    const doCorpo = d.secoes.filter(
+      (s) => (s.parte ?? "corpo") === "corpo" && /Primeiro|Segundo/.test(s.titulo),
+    );
+    expect(doCorpo.map((s) => s.novaPagina)).toEqual([true, true]);
+    expect(d.secoes.filter((s) => s.parte === "anexo").some((s) => s.novaPagina)).toBe(false);
   });
 });

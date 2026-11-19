@@ -459,10 +459,10 @@ export async function gerarDocxApresentacao(doc: DocumentoExportavel, logo: Arra
       primeira = false;
     }
     for (const s of g.secoes) {
-      // cada seção numerada da capa, dos quadros e do corpo começa numa página na primeira de cada parte
-      corpo.push(
-        titulo(s, primeira || !!s.novaPagina || (s.nivel !== 2 && g.parte !== "anexo" && s === g.secoes[0])),
-      );
+      // cada seção numerada da capa, dos quadros e do corpo começa numa página na primeira de cada parte; o capítulo
+      // marcado (novaPagina, nível 1 fora do anexo) também. No anexo, o título "ANEXOS" já abriu a página.
+      const capitulo = s.nivel !== 2 && g.parte !== "anexo";
+      corpo.push(titulo(s, primeira || (capitulo && (!!s.novaPagina || s === g.secoes[0]))));
       primeira = false;
       if (s.abertura) corpo.push(paragrafo(s.abertura));
       if (s.nota)
