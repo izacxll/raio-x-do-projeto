@@ -17,7 +17,7 @@ import { INSTRUCAO_MARCOS, linhaDoTempoEmTexto, linhaDosDados } from "../linha-d
 
 const REGRAS = `Regras deste pedido (além da skill):
 - Responda só com o objeto JSON do passo, no schema enviado.
-- "rotulo" usa: documento | sugestao | decisao_gp. Item "documento" sempre com fonte: doc "rfp" (RFP e anexos), "tap" ou "proposta", página do arquivo e trecho literal. No TAP e na proposta do dossiê, cada "página" é uma seção. O app confere cada trecho; o que não for achado vira "citação não conferida".
+- "rotulo" usa: documento | sugestao | decisao_gp. Item "documento" sempre com fonte: doc "rfp" (RFP e anexos), "tap" ou "proposta", página do arquivo e trecho literal. No TAP e na proposta do dossiê, cada "página" é uma seção. O app confere cada trecho; o que não for achado vira "citação não conferida". Um item "documento" traz só o que o trecho diz: a sugestão ou a decisão do GP sobre ele vai num item à parte, com o rótulo dela (o app marca "rótulo misto", decisão 0093).
 - Sugestão em redação condicional ("sugere-se", "uma opção é", "recomenda-se avaliar"). Nada de valores, prazos, quantidades, cadências numéricas ou nomes que não estejam nos documentos: escreva "não informado no documento — a definir pelo GP".
 - Valores, reservas, nomes da equipe e cadência das reuniões são decisao_gp.
 - Em cada item, "ficha" é o item do conteúdo mínimo que ele cobre (A7.2, B27.13…). Cubra o conteúdo mínimo de cada parte, deixando de fora, com o motivo, o que a ficha diz ser dispensável para este projeto. Adapte ao porte: o PMBOK é guia, não checklist.

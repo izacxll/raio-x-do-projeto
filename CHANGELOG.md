@@ -4,6 +4,11 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 
 ## [Não publicado]
 
+### Alarme falso das travas (decisão 0093)
+- **Medição:** a "redação a conferir" marcava 701 de 1.139 itens, com 48,75% de alarme falso numa amostra de 80; as outras travas são raras.
+- **Trava ajustada:** formas condicionais a mais, linha de estrutura ou modelo e registros de riscos e premissas fora; 40% de alarme falso numa amostra nova de 40 e 17% menos marcas nos dois casos.
+- **Rótulo misto:** o "do documento" com sugestão dentro vai para "a conferir"; os pedidos das etapas 2 a 4 pedem o item à parte.
+
 ### Resultado no padrão da FGV Projetos (decisão 0089)
 - **Capa** com o título do estudo e os números-chave em destaque; **sumário**; seções numeradas; rodapé com "página n / total".
 - **Rótulos fora da linha:** referência "(TR, p. N)" no fim da frase, nota de sugestão por seção, decisões no quadro "Para o GP decidir"; marcas e avisos no anexo de revisão; termos internos só no anexo técnico.

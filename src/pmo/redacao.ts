@@ -16,13 +16,41 @@ export const AFIRMATIVAS =
 export const CONDICIONAL =
   /sugere-se|recomenda-se|uma opção|pode-se|poderia|pode ser|convém avaliar|avaliar|considerar|alternativa|a definir pelo GP|propõe-se|sugest|\bse\b[^.]{3,200}\bent[aã]o\b/i;
 
+/**
+ * Formas condicionais ou de proposta que a lista acima não pegava (decisão 0093, medição do alarme falso): "pode",
+ * "a definir", "decisão do GP", "sugerido", "a confirmar", o GP que confirma, decide ou aceita, "quando houver", "caso",
+ * "depende de".
+ */
+export const CONDICIONAL_AMPLIADA =
+  /(?<!\p{L})pode(?!\p{L})|a definir(?!\p{L})|decis(?:ão|ões) do GP|sugerid|(?<!\p{L})sugere(?!\p{L})|a confirmar|o GP (?:confirma|decide|define|aceita|aceitar|escolhe|aprova)|quando houver|(?<!\p{L})caso(?!\p{L})|depende d[aoe]/iu;
+
+/**
+ * Linha de estrutura ou de modelo (campos, colunas, escalas, status, categorias, fases): não afirma escolha, e a
+ * redação condicional não faz sentido nela (decisão 0093).
+ */
+export const LINHA_DE_ESTRUTURA =
+  /^(?:Campos?|Colunas?|Status|Situação[^:]{0,40}|Probabilidade|Impacto|Categorias?|Escalas?|Fases|Dicionário|Valores?|Formato|Modelo|Estrutura)\s*:/i;
+
+/**
+ * Item "do documento" com sugestão ou decisão do GP dentro (decisão 0093): a parte sugerida não é do documento, e o
+ * item inteiro passaria por fato. O aviso pede que o GP separe.
+ */
+const SUGESTAO_DENTRO =
+  /sugere-se|recomenda-se|uma opção|pode-se|convém|propõe-se|sugest|recomendável|a definir pelo GP|decis(?:ão|ões) do GP|a critério do GP/i;
+
+export function rotuloMisto(item: Pick<ItemPmo, "rotulo" | "texto">): boolean {
+  return item.rotulo === "documento" && SUGESTAO_DENTRO.test(item.texto);
+}
+
 export function redacaoAfirmativa(texto: string): boolean {
   return AFIRMATIVAS.test(texto);
 }
 
 /** Sugestão sem nenhuma marca condicional, ou com afirmação: o GP é avisado. */
 export function sugestaoSemCondicional(texto: string): boolean {
-  return redacaoAfirmativa(texto) || !CONDICIONAL.test(texto);
+  if (redacaoAfirmativa(texto)) return true;
+  if (LINHA_DE_ESTRUTURA.test(texto.trim())) return false;
+  return !CONDICIONAL.test(texto) && !CONDICIONAL_AMPLIADA.test(texto);
 }
 
 // valor em reais, percentual e quantidade com unidade de prazo, esforço ou volume
@@ -155,10 +183,20 @@ export interface ConferenciaItem {
    */
   citacaoNaoProva?: boolean;
   redacaoAConferir: boolean;
+  /** "Do documento" com sugestão ou decisão do GP dentro (decisão 0093). */
+  rotuloMisto?: boolean;
   numerosSemFonte: string[];
 }
 
-export function conferirItem(item: ItemPmo, documentos: DocumentoLido[]): ConferenciaItem {
+export function conferirItem(
+  item: ItemPmo,
+  documentos: DocumentoLido[],
+  /**
+   * Item de registro (riscos e premissas): o texto é condição futura ou suposição por natureza, e a trava da redação
+   * não se aplica (decisão 0093).
+   */
+  opcoes: { registro?: boolean } = {},
+): ConferenciaItem {
   const citacoes = item.fontes.map((f) => conferirCitacao(f, documentos));
   const algumaVale = citacoes.some(citacaoValeComoFato);
   // o termo-chave é procurado em todos os trechos do item (decisão 0058)
@@ -167,7 +205,8 @@ export function conferirItem(item: ItemPmo, documentos: DocumentoLido[]): Confer
     citacoes,
     citacaoNaoConferida: item.rotulo === "documento" && !algumaVale,
     citacaoNaoProva: item.rotulo === "documento" && algumaVale && !citacaoProvaOItem(item.texto, trechos),
-    redacaoAConferir: item.rotulo === "sugestao" && sugestaoSemCondicional(item.texto),
+    redacaoAConferir: item.rotulo === "sugestao" && !opcoes.registro && sugestaoSemCondicional(item.texto),
+    rotuloMisto: rotuloMisto(item),
     numerosSemFonte: item.rotulo === "documento" ? [] : numerosSemFonte(item.texto, item, documentos),
   };
 }

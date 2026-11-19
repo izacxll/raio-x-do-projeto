@@ -104,6 +104,7 @@ export function revisavelDoConferido(
       c.citacaoNaoConferida ? "citação não conferida" : "",
       c.citacaoNaoProva ? "citação a conferir" : "",
       c.redacaoAConferir ? "redação a conferir" : "",
+      c.rotuloMisto ? "rótulo misto: há sugestão dentro do item do documento" : "",
       c.numerosSemFonte.length ? `número sem fonte: ${c.numerosSemFonte.join(", ")}` : "",
     ].filter(Boolean),
     texto: i.item.texto,

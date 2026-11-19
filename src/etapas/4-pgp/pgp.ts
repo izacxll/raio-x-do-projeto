@@ -152,7 +152,8 @@ export function itensDoPgp(
           ]
             .filter(Boolean)
             .join(" "),
-          conferencia: conferirItem(x.item, docs),
+          // registro de riscos e de premissas: condição futura ou suposição por natureza (decisão 0093)
+          conferencia: conferirItem(x.item, docs, { registro: true }),
         }),
       );
       p.riscos.resposta.premissas.forEach((x, k) => {
@@ -170,7 +171,8 @@ export function itensDoPgp(
           ]
             .filter(Boolean)
             .join(" "),
-          conferencia: conferirItem(x.item, docs),
+          // registro de riscos e de premissas: condição futura ou suposição por natureza (decisão 0093)
+          conferencia: conferirItem(x.item, docs, { registro: true }),
         });
       });
     }

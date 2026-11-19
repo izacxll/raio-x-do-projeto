@@ -93,6 +93,7 @@ Uma decisão por arquivo, numerada em ordem. Cada uma registra o contexto, o que
 | [0087](0087-ajustes-da-capa.md) | Capa: prazo e valor que o PMO confirma ausentes viram afirmação; marcos sem régua; riscos por evento e efeito; conflito sobre a régua de prazo no mínimo média |
 | [0088](0088-fila-de-pendencias-do-gp.md) | Fila de pendências do GP: decisão, a conferir e aceite em lote (só documento e sugestão sem aviso); prazo da decisão; o que mudou na correção |
 | [0089](0089-padrao-de-apresentacao-fgv.md) | Resultado da etapa no padrão dos documentos da FGV Projetos: capa com números em destaque, sumário, seções numeradas, rótulos fora da linha, quadro "Para o GP decidir", tabelas com legenda, anexos de revisão e técnico |
+| [0093](0093-alarme-falso-das-travas.md) | Alarme falso das travas medido: a "redação a conferir" fica, com formas condicionais a mais e sem linha de estrutura nem registros (de 48,75% para 40% de alarme falso); rótulo misto no "do documento" |
 
 Modelo para uma nova decisão:
 
