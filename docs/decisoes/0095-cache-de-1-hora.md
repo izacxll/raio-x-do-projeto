@@ -38,7 +38,7 @@ O teste rodou pelo claude.ai, sem fatura. Por isso a medição foi uma simulaç�
    - o dossiê guarda a escrita de 1 hora de cada chamada (`escritaCache1h`, opcional: dossiê antigo continua abrindo);
    - a tabela de preços ganha a escrita de 1 hora e foi reconferida em 19/11/2026;
    - a estimativa antes de cada passo usa a escrita de 1 hora na primeira chamada e a leitura nas seguintes, até 1 hora depois.
-3. **Painel da comissão:** o custo por projeto completo, sem cache, com o cache de 5 minutos e com o de 1 hora, em dólar e em reais. O câmbio é a PTAX de venda de 16/11/2026, R$ 5,7324, a conferir no dia.
+3. **Painel da comissão:** o custo por projeto completo, sem cache, com o cache de 5 minutos e com o de 1 hora, em dólar e em reais. O câmbio é a PTAX de venda de 16/11/2026, R$ 5,7324, conferida no Banco Central em 19/11/2026. O custo é estimativa feita com os pedidos do teste, não fatura.
 
 ## Consequências
 

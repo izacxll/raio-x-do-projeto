@@ -45,7 +45,7 @@ Nenhum achado alto segue sem correção ou sem "seguir" explícito do GP (decis�
 | Tokens de entrada (último pedido de cada passo) | 901.598 | 977.044 |
 | Tokens de entrada da segunda instância (última rodada) | 584.040 | 651.777 |
 | Tokens de saída (estimados pelo tamanho das respostas) | ~180 mil | ~166 mil |
-| Custo estimado sem cache (preço do app para o Opus 5.5: US$ 4 por milhão de entrada e US$ 20 por milhão de saída) | ~US$ 9,55 | ~US$ 9,84 |
+| Custo estimado sem cache, com os pedidos do teste (preço do app para o Opus 5.5: US$ 4 por milhão de entrada e US$ 20 por milhão de saída) | ~US$ 9,55 | ~US$ 9,84 |
 | Tempo de relógio do teste (inclui as esperas entre os passos) | 24,2 h | 24,2 h |
 
 O custo é um **piso**:
@@ -54,9 +54,9 @@ O custo é um **piso**:
 
 O teste rodou pelo claude.ai, sem a API, então não há fatura a conferir.
 
-**Custo por projeto completo, com o cache (bloco 5 do pente fino, decisão 0095).** A simulação cobra, pelos preços da API para o Opus 5.5, todos os pedidos do teste: os dos passos e os da segunda instância, inclusive as rodadas anteriores. Cada pedido entra com o tamanho que tinha e na hora em que foi feito. O cache só conta quando o mesmo prefixo (skill e documentos) foi usado dentro do tempo de vida.
+**Custo por projeto completo, com o cache (bloco 5 do pente fino, decisão 0095): estimativa feita com os pedidos do teste, não fatura.** A simulação cobra, pelos preços da API para o Opus 5.5, todos os pedidos do teste: os dos passos e os da segunda instância, inclusive as rodadas anteriores. Cada pedido entra com o tamanho que tinha e na hora em que foi feito. O cache só conta quando o mesmo prefixo (skill e documentos) foi usado dentro do tempo de vida.
 
-| Configuração | TR fiscal (31 pedidos) | TR de contratação direta (40 pedidos) |
+| Configuração (custo estimado) | TR fiscal (31 pedidos) | TR de contratação direta (40 pedidos) |
 |---|---|---|
 | Sem cache | US$ 12,09 (R$ 69) | US$ 15,16 (R$ 87) |
 | Cache de 5 minutos (o app até a decisão 0095) | US$ 12,66 (R$ 73) | US$ 16,66 (R$ 96) |
@@ -65,7 +65,7 @@ O teste rodou pelo claude.ai, sem a API, então não há fatura a conferir.
 - **Cache de 5 minutos:** encarecia, porque o intervalo mediano entre pedidos foi de 9 a 10 minutos. A escrita custa 1,25 × a entrada e quase nunca era lida.
 - **Cache de 1 hora:** o prefixo é lido do cache em cerca de metade dos pedidos. O custo cai de 10% a 12% contra o app de antes e de 3% a 6% contra o sem cache.
 - **Saída:** cerca de 230 mil a 245 mil tokens por projeto, a US$ 20 por milhão, isto é, US$ 4,6 a US$ 4,9, entre um terço e dois quintos do custo. A saída não tem cache.
-- **Câmbio:** PTAX de venda de 16/11/2026, R$ 5,7324 por dólar (conferir no Banco Central no dia).
+- **Câmbio:** PTAX de venda de 16/11/2026, R$ 5,7324 por dólar, conferida em 19/11/2026 no serviço de cotações PTAX do Banco Central. Os valores em reais são o dólar estimado vezes essa taxa.
 - **Medição com a fatura:** a medição real, com a chave da API, fica para a próxima rodada do teste. A tela de cada etapa já mostra, em cada chamada, a escrita e a leitura do cache que a API devolve.
 
 ## Leitura para o gerente

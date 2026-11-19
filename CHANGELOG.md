@@ -4,6 +4,9 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 
 ## [Não publicado]
 
+### Painel da comissão: custo como estimativa
+- O custo por projeto aparece como estimativa feita com os pedidos do teste, não fatura; a PTAX de 16/11/2026 (R$ 5,7324) foi conferida no Banco Central.
+
 ### Registros só na planilha no porte pequeno (decisão 0096)
 - **Plano do porte pequeno:** cada registro B vira uma tabela-resumo (5 linhas, riscos altos primeiro) com a aba da planilha onde está inteiro; de ~49 para ~29 páginas no caso medido.
 - **Planilha:** as tabelas do código de todos os registros gerados e uma aba com os itens do PMO de cada registro, em todos os portes.
