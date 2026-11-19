@@ -1,6 +1,8 @@
 // Etapa 4, passo 13 (código): autoconferência. Antes da exportação, o plano gerado passa pelas regras da etapa 5
 // (vago, conflituoso, ausente; gravidade pela parte; categoria pela regra fixa). O que o GP dispensou na adaptação
 // fica "dispensada" no mapa e não conta como ausente. O que as regras acharem aparece para o GP corrigir.
+import { fundidasDeTexto, parteQueEscreve } from "./porte";
+import { justificativaDaEtapa4 } from "../5-conferencia/dispensas";
 import {
   CARACTERISTICAS_PADRAO,
   pareceEstudoSensivel,
@@ -81,14 +83,12 @@ export function caracteristicasDoPgp(dossie: Dossie, e: EntradaPgp): Caracterist
 /** Mapa do plano gerado: o que o código acha pelo título; o que o GP dispensou fica dispensado. */
 export function mapaDoPgpGerado(dossie: Dossie, pgp: DocumentoLido): ParteConfirmada[] {
   const p = dossie.pgp ?? pgpInicial();
-  const justificativas = new Map(
-    (p.adaptacao?.resposta.partes ?? []).map((s) => [s.codigo, s.justificativa]),
-  );
   // parte cujo passo não foi pedido tem só o título e "A gerar": não existe ainda, e a faixa dela não é procurada
   const naoGeradas = partesNaoGeradas(p);
+  // a fundida (decisão 0091) fica fora como parte própria, com a hospedeira na justificativa
   return confirmacaoInicial(proporMapa(pgp.paginas, PARTES_PGP)).map((m) =>
     p.gerar[m.codigo] === false
-      ? { codigo: m.codigo, situacao: "dispensada", justificativa: justificativas.get(m.codigo) }
+      ? { codigo: m.codigo, situacao: "dispensada", justificativa: justificativaDaEtapa4(m.codigo, p) }
       : naoGeradas.has(m.codigo)
         ? { codigo: m.codigo, situacao: "nao-existe" }
         : m,
@@ -247,10 +247,12 @@ export function separarDecisoesPendentes(achados: Achado[]): { decisoes: Achado[
 /**
  * Itens esperados na autoconferência do PMO: todos os itens das fichas das partes que o GP manteve (as que ele
  * dispensou não entram). Item que a condição de dispensa da ficha tira para o projeto continua esperado: o PMO o
- * marca como "dispensado", com o motivo. Porte pequeno reduz partes, não a cobertura das partes mantidas.
+ * marca como "dispensado", com o motivo. Porte pequeno reduz partes, não a cobertura das partes mantidas: os itens
+ * das partes fundidas (decisão 0091) também são esperados, cobertos na hospedeira.
  */
-export function itensEsperadosDoPgp(gerar: Record<string, boolean>): string[] {
-  return PARTES_PGP.filter((p) => gerar[p.codigo] === true).flatMap((p) => p.itens.map((i) => i.codigo));
+export function itensEsperadosDoPgp(gerar: Record<string, boolean>, fundidas: string[] = []): string[] {
+  const cobertas = new Set([...Object.keys(gerar).filter((c) => gerar[c] === true), ...fundidas]);
+  return PARTES_PGP.filter((p) => cobertas.has(p.codigo)).flatMap((p) => p.itens.map((i) => i.codigo));
 }
 
 /** As marcas de autoconferência de todos os passos do PGP que o PMO já respondeu. */
@@ -267,8 +269,9 @@ export function marcasDoPgp(p: PgpDossie): ItemAutoconferencia[] {
 export function conferirAutoconferenciaDoPgp(
   p: PgpDossie,
 ): ResultadoAutoconferencia & { regenerar: string[] } {
-  const r = conferirAutoconferencia(itensEsperadosDoPgp(p.gerar), marcasDoPgp(p));
-  return { ...r, regenerar: partesARegenerar(r) };
+  const r = conferirAutoconferencia(itensEsperadosDoPgp(p.gerar, fundidasDeTexto(p)), marcasDoPgp(p));
+  // o item de parte fundida se pede de novo na hospedeira
+  return { ...r, regenerar: [...new Set(partesARegenerar(r).map((c) => parteQueEscreve(c, p)))] };
 }
 
 /**

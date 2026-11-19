@@ -7,6 +7,24 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 ### Skill PMO 0.3.8: lições marcadas (decisão 0094)
 - Cada lição das armadilhas e da experiência marcada como [geral] (41), [geral, visto num caso] (16) ou [um caso] (10), com a legenda no topo da seção.
 
+### Alarme falso das travas (decisão 0093)
+- **Medição:** a "redação a conferir" marcava 701 de 1.139 itens, com 48,75% de alarme falso numa amostra de 80; as outras travas são raras.
+- **Trava ajustada:** formas condicionais a mais, linha de estrutura ou modelo e registros de riscos e premissas fora; 41% de alarme falso numa amostra nova de 40 e 19% menos marcas nos dois casos.
+- **Rótulo misto:** o "do documento" com sugestão dentro vai para "a conferir"; os pedidos das etapas 2 a 4 pedem o item à parte.
+
+### Riscos ligados e contingência derivada (decisão 0092)
+- **Risco → resposta, reserva e marco:** campo do marco (produto do cronograma, conferido pelo código) no B27; colunas Reserva e Marco no plano e na capa; alerta do risco alto sem marco.
+- **Contingência:** a soma das reservas dos riscos marcados, cada uma decidida pelo GP na tela; a que falta fica a definir, com os riscos; o valor único antigo vale só sem valor por risco.
+
+### PGP enxuto por porte (decisão 0091)
+- **Porte pequeno:** um PGP único com o núcleo de 14 partes (15 com aquisições); médio com o essencial e o recomendado fundido; grande como era.
+- **Parte fundida:** vai na hospedeira com o conteúdo mínimo (a ficha no pedido, os itens na autoconferência, as tabelas do código na seção dela); a dispensada fica com o motivo. O plano, o índice, a tela e a etapa 5 dizem para onde foi.
+- **Tamanho:** páginas estimadas na capa contra o limite do porte (15, 30, 50) e o orçamento de páginas por parte no pedido.
+
+### Capa com o resumo da etapa e a leitura da etapa 5 no dossiê (decisão 0090)
+- **Capa:** o resultado da etapa numa linha abaixo dos blocos (também na tela); o bloco da etapa 5 em uma linha ("43/44").
+- **Etapa 5:** a leitura do PMO gravada no dossiê pela mesma função da tela, com teste de ida e volta; o gerador do resultado avisa quando o dossiê está sem a leitura.
+
 ### Resultado no padrão da FGV Projetos (decisão 0089)
 - **Capa** com o título do estudo e os números-chave em destaque; **sumário**; seções numeradas; rodapé com "página n / total".
 - **Rótulos fora da linha:** referência "(TR, p. N)" no fim da frase, nota de sugestão por seção, decisões no quadro "Para o GP decidir"; marcas e avisos no anexo de revisão; termos internos só no anexo técnico.

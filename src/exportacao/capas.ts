@@ -15,9 +15,15 @@ import { dadosDaProposta, montarEntradaTap } from "../etapas/3-tap/entrada";
 import { itensDaEtapa3, tapInicial } from "../etapas/3-tap/tap";
 import { itensDaProposta } from "../etapas/2-proposta/proposta";
 import { itensDoPgp, partesAGerar } from "../etapas/4-pgp/pgp";
-import { numerosDaFila, revisavelDoConferido } from "../pmo/fila";
+import { decisoesAte, numerosDaFila, PRAZO_DAS_DECISOES, revisavelDoConferido } from "../pmo/fila";
 import { autoconferir, separarDecisoesPendentes } from "../etapas/4-pgp/autoconferencia";
-import { cronogramaDoPgp, custosDoPgp, marcosDoPgp } from "../etapas/4-pgp/calculos";
+import {
+  cronogramaDoPgp,
+  custosDoPgp,
+  marcoDoRisco,
+  marcosDoPgp,
+  reservaValida,
+} from "../etapas/4-pgp/calculos";
 import { montarEntradaPgp } from "../etapas/4-pgp/entrada";
 import { reguaQueMudouEmTexto, reguasQueMudaram } from "../etapas/4-pgp/reguas";
 import { resultadoDaEtapa5 } from "../etapas/5-conferencia/resultado";
@@ -38,6 +44,9 @@ import { eventoEEfeito, reguaDosMarcos } from "./capa-regras";
 export { eventoEEfeito } from "./capa-regras";
 import type { Alerta, Destaque, NumeroChave } from "./modelo";
 import { capaDaRfp } from "./relatorio-rfp";
+import { montarPgp } from "./relatorio-pgp";
+import { paginasDoCorpoDoPlano } from "./paginas";
+import { destinoDaParte, essenciaisSemCobertura, LIMITES_DO_PORTE } from "../etapas/4-pgp/porte";
 import { contar, plural } from "../texto/plural";
 
 const A_DEFINIR = "a definir pelo GP";
@@ -193,13 +202,11 @@ export function capaDaProposta(dossie: Dossie, agora = new Date()): CapaDeDecisa
 
   const rotuloDoPreco =
     p.parametros.precoFinal !== undefined ? "Preço final (decisão do GP)" : "Preço calculado";
+  // a fila do GP, montada uma vez para os números e para o resumo
+  const fila = itensDaProposta(p, docs).map(revisavelDoConferido);
+  const outrasDecisoes = p.abordagem ? [] : ["Escolher a abordagem técnica"];
   const numeros: NumeroChave[] = [
-    ...numerosDaFila(
-      2,
-      itensDaProposta(p, docs).map(revisavelDoConferido),
-      p.revisoes,
-      p.abordagem ? [] : ["Escolher a abordagem técnica"],
-    ),
+    ...numerosDaFila(2, fila, p.revisoes, outrasDecisoes),
     { rotulo: "Abordagem", valor: abordagem ? `${abordagem.id} — ${abordagem.nome}` : A_DEFINIR },
     { rotulo: "Produtos", valor: String(conteudo.produtos.length) },
     {
@@ -240,6 +247,7 @@ export function capaDaProposta(dossie: Dossie, agora = new Date()): CapaDeDecisa
   });
   return {
     etapa: 2,
+    resumo: `Minuta da proposta com ${contar(conteudo.produtos.length, "produto", "produtos")}${dados?.cronograma?.total ? ` em ${Math.round(dados.cronograma.total)} dias úteis` : ""}; ${decisoesAte(2, fila, p.revisoes, outrasDecisoes)}.`,
     // os números principais (duração, entregas, valor ou horas); o resto fica na tabela (decisão 0089)
     destaques: [
       destaqueDaDuracao(dados?.cronograma),
@@ -349,11 +357,14 @@ export function capaDoTap(dossie: Dossie, agora = new Date()): CapaDeDecisao | u
       : ["Gerente do projeto, patrocinador e o nível de autoridade de cada um."]),
     ...(t.decisoes.aprovadoPor?.trim() ? [] : ["Aprovar o TAP (quem aprova e quando)."]),
   ];
+  // a fila do GP, montada uma vez para os números e para o resumo
+  const fila = todos.map(revisavelDoConferido);
+  const outrasDecisoes = [
+    ...aDecidir.map((d) => `Versão que vale: ${d.tema}`),
+    ...(t.decisoes.aprovadoPor?.trim() ? [] : ["Aprovar o TAP"]),
+  ];
   const numeros: NumeroChave[] = [
-    ...numerosDaFila(3, todos.map(revisavelDoConferido), t.revisoes, [
-      ...aDecidir.map((d) => `Versão que vale: ${d.tema}`),
-      ...(t.decisoes.aprovadoPor?.trim() ? [] : ["Aprovar o TAP"]),
-    ]),
+    ...numerosDaFila(3, fila, t.revisoes, outrasDecisoes),
     {
       rotulo: "Proposta usada",
       valor:
@@ -387,6 +398,8 @@ export function capaDoTap(dossie: Dossie, agora = new Date()): CapaDeDecisao | u
   const linha = (campo: string, textos: string[]) => [campo, textos.length ? textos.join("\n") : A_DEFINIR];
   return {
     etapa: 3,
+    // o que o TAP não traz não vira "0" (não achado não é ausente)
+    resumo: `TAP com ${r.entregas.length ? contar(r.entregas.length, "entrega-chave", "entregas-chave") : "entregas-chave a conferir"} e ${r.marcos.length ? contar(r.marcos.length, "marco", "marcos") : "marcos a conferir"}, ${entrada.contrato ? "a partir do contrato assinado" : "sem o contrato assinado"}; ${decisoesAte(3, fila, t.revisoes, outrasDecisoes)}.`,
     // os números principais (duração, entregas, valor); o resto fica na tabela (decisão 0089)
     destaques: [
       destaqueDaVigencia(entrada.lidoDoContrato?.vigencia?.texto, entrada.ponto.prazoExecucao?.texto),
@@ -483,8 +496,52 @@ export function capaDoPgp(dossie: Dossie, agora = new Date()): CapaDeDecisao | u
   const semPrazo = marcos.filter((m) => m.situacao === "nao-conferido" || m.situacao === "nao-confirmavel");
   // a régua dos marcos pelos prazos do TAP que o código tem (decisão 0087): sem eles, "não localizados", não "sem régua"
   const regua = reguaDosMarcos(e.marcosTap.map((m) => m.prazo));
+  // decisão 0092: o risco de impacto alto liga o marco que ameaça, conferido nos produtos do cronograma
+  const produtosDoPlano = new Set((p.cronograma?.resposta.atividades ?? []).map((a) => a.produto));
+  // "" é o risco do projeto todo, que o pedido permite; o alerta é para o marco que não existe no cronograma
+  const altosSemMarco = riscos.filter(
+    (x) => x.impacto === "alto" && /não localizado/.test(marcoDoRisco(x.marco, produtosDoPlano)),
+  );
+  // o tamanho do plano contra o limite do porte (decisão 0091): partes geradas e páginas estimadas
+  const porte = p.sugestaoPeloPorte?.porte;
+  const limite = porte ? LIMITES_DO_PORTE[porte] : undefined;
+  const paginas = paginasDoCorpoDoPlano(montarPgp(dossie, agora));
 
+  // decisão 0044: porte reduz partes, não a cobertura; a essencial do PMO que ficou sem lugar é alertada
+  const semCobertura = essenciaisSemCobertura(p);
   const alertas: Alerta[] = [
+    ...(semCobertura.length
+      ? [
+          {
+            nivel: "alto" as const,
+            texto: `${plural(semCobertura.length, "Parte essencial", "Partes essenciais")} pela sugestão do PMO sem lugar no plano (nem gerada nem fundida): ${semCobertura.join(", ")}. Sugere-se gerar ou marcar a hospedeira.`,
+          },
+        ]
+      : []),
+    ...(altosSemMarco.length
+      ? [
+          {
+            nivel: "medio" as const,
+            texto: `${contar(altosSemMarco.length, "risco de impacto alto ligado", "riscos de impacto alto ligados")} a um marco que não está no cronograma (${altosSemMarco.map((x) => `${x.id} → ${x.marco}`).join(", ")}): sugere-se conferir qual entrega cada um ameaça.`,
+          },
+        ]
+      : []),
+    ...(limite && paginas > limite.paginas
+      ? [
+          {
+            nivel: "medio" as const,
+            texto: `O plano passa do limite do porte ${porte}: cerca de ${paginas} páginas, para até ${limite.paginas}. Sugere-se pedir de novo as partes mais longas, com uma linha por item da ficha.`,
+          },
+        ]
+      : []),
+    ...(limite && mantidas.length > limite.partes[1]
+      ? [
+          {
+            nivel: "medio" as const,
+            texto: `${contar(mantidas.length, "parte gerada", "partes geradas")}, acima das ${limite.partes[1]} do porte ${porte}: sugere-se fundir as recomendadas na parte do mesmo assunto.`,
+          },
+        ]
+      : []),
     ...(crono?.conferenciaPrazo.situacao === "nao-cabe"
       ? [
           {
@@ -515,19 +572,24 @@ export function capaDoPgp(dossie: Dossie, agora = new Date()): CapaDeDecisao | u
         ]
       : []),
     ...(custos?.faltando.length ? [`Orçamento: ${custos.faltando.slice(0, 3).join("; ")}.`] : []),
-    ...(custos?.riscosComReserva.length
-      ? [
-          `Valor da reserva de contingência dos riscos ${custos.riscosComReserva.map((x) => x.id).join(", ")}.`,
-        ]
-      : []),
+    // a reserva que falta, risco a risco, já vem no "Orçamento: falta…" acima (decisão 0092)
     ...(foraDoPrazo.length ? ["O que fazer com os marcos que não cabem no prazo do TAP."] : []),
     "Aprovar o plano depois de revisar os itens pendentes.",
   ];
+  // a fila do GP, montada uma vez para os números e para o resumo
+  const fila = itensDoPgp(p, e.documentos, e.premissasTap).map(revisavelDoConferido);
   const numeros: NumeroChave[] = [
-    ...numerosDaFila(4, itensDoPgp(p, e.documentos, e.premissasTap).map(revisavelDoConferido), p.revisoes),
+    ...numerosDaFila(4, fila, p.revisoes),
     {
       rotulo: "Partes do plano",
-      valor: `${mantidas.length} ${plural(mantidas.length, "mantida", "mantidas")}, ${dispensadas.length} ${plural(dispensadas.length, "dispensada", "dispensadas")} pela adaptação`,
+      valor: `${mantidas.length} ${plural(mantidas.length, "gerada", "geradas")}; ${(() => {
+        const fundidas = dispensadas.filter((x) => destinoDaParte(x.codigo, p).tipo === "fundida").length;
+        return `${fundidas} ${plural(fundidas, "fundida", "fundidas")} numa parte gerada, ${dispensadas.length - fundidas} ${plural(dispensadas.length - fundidas, "dispensada", "dispensadas")}`;
+      })()}${limite ? ` (porte ${porte}: de ${limite.partes[0]} a ${limite.partes[1]} partes)` : ""}`,
+    },
+    {
+      rotulo: "Tamanho do plano",
+      valor: `cerca de ${paginas} páginas (estimativa)${limite ? `; limite do porte ${porte}: ${limite.paginas} páginas` : ""}`,
     },
     {
       rotulo: "Duração",
@@ -569,6 +631,8 @@ export function capaDoPgp(dossie: Dossie, agora = new Date()): CapaDeDecisao | u
   const nomeDoPerfil = new Map((p.cronograma?.resposta.perfis ?? []).map((x) => [x.id, x.nome]));
   return {
     etapa: 4,
+    // o que ainda não existe (riscos não gerados, cronograma não calculado, marcos do TAP não localizados) não vira "0"
+    resumo: `Plano com ${contar(mantidas.length, "parte", "partes")}, ${p.riscos ? contar(riscos.length, "risco", "riscos") : "riscos ainda não gerados"} e ${crono && regua !== "nao-localizados" ? contar(marcos.length, "marco", "marcos") : "marcos a conferir"}; ${decisoesAte(4, fila, p.revisoes)}.`,
     // os números principais (duração, entregas, valor ou horas); o resto fica na tabela (decisão 0089)
     destaques: [
       destaqueDaDuracao(crono, "Duração"),
@@ -637,8 +701,8 @@ export function capaDoPgp(dossie: Dossie, agora = new Date()): CapaDeDecisao | u
           "Sugestões do PMO, ordenadas pelo código por probabilidade × impacto (qualitativos, do registro). O valor da reserva é do GP.",
         ],
         tabela: {
-          colunas: ["Risco", "P × I", "Resposta", "Gatilho", "Responsável", "Reserva"],
-          larguras: [3, 0.9, 3, 2, 1.3, 0.9],
+          colunas: ["Risco", "P × I", "Resposta", "Gatilho", "Responsável", "Reserva", "Marco"],
+          larguras: [3, 0.9, 3, 2, 1.3, 0.9, 0.9],
           linhas: riscos
             .slice(0, 5)
             .map((x) => [
@@ -647,7 +711,13 @@ export function capaDoPgp(dossie: Dossie, agora = new Date()): CapaDeDecisao | u
               curto(`${x.estrategia}: ${x.resposta}`, 160),
               curto(x.gatilho || "—", 120),
               curto(x.responsavel || "—", 60),
-              x.pedeReserva ? "sim (valor do GP)" : "não",
+              !x.pedeReserva
+                ? "não"
+                : reservaValida({ id: x.id, texto: x.item.texto }, p.parametros.reservasPorRisco) !==
+                    undefined
+                  ? reais(reservaValida({ id: x.id, texto: x.item.texto }, p.parametros.reservasPorRisco))
+                  : A_DEFINIR,
+              marcoDoRisco(x.marco, produtosDoPlano),
             ]),
         },
       },
@@ -792,6 +862,7 @@ export function capaDosVereditos(
   ];
   return {
     etapa: 5,
+    resumo: `Veredito sugerido pela regra fixa: ${veredito}, com ${contar(sustentados.length, "achado que se sustenta", "achados que se sustentam")} (${contar(conta("grave"), "grave", "graves")}); ${semDecisao.length ? `${contar(semDecisao.length, "achado", "achados")} sem decisão do GP, ${PRAZO_DAS_DECISOES[5]}` : `quem decide é o GP, ${PRAZO_DAS_DECISOES[5]}`}.`,
     destaques: [
       {
         valor: veredito.replace(/^./, (x) => x.toUpperCase()),
@@ -805,7 +876,7 @@ export function capaDosVereditos(
         explicacao: `que se sustentam, ${contar(conta("grave"), "grave", "graves")}`,
       },
       {
-        valor: `${verdes.length} de ${presentes.length}`,
+        valor: `${verdes.length}/${presentes.length}`,
         rotulo: "Partes em ordem",
         explicacao: "sem achado",
       },

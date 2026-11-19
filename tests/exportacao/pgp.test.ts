@@ -82,7 +82,9 @@ describe("saídas da etapa 4", () => {
     const adaptacao = doc.secoes[0]!.tabela!;
     expect(adaptacao.linhas).toHaveLength(51);
     const riscos = doc.secoes.find((s) => s.titulo.startsWith("B27 "))!.tabela!;
-    expect(riscos.linhas.some((l) => l[7] === "PC3")).toBe(true);
+    // decisão 0092: o B27 ganhou as colunas da reserva e do marco; a premissa crítica é a última
+    expect(riscos.colunas.slice(-3)).toEqual(["Reserva", "Marco", "Premissa crítica"]);
+    expect(riscos.linhas.some((l) => l[l.length - 1] === "PC3")).toBe(true);
   });
 
   it("diagramas em SVG: EAP com os pacotes e rede com o caminho crítico", () => {
@@ -95,7 +97,8 @@ describe("saídas da etapa 4", () => {
 
   it("índice do pacote: cada parte, gerada ou dispensada pelo GP", () => {
     const indice = indiceDoPacote(dossie);
-    expect(indice).toContain("A9 Plano de gerenciamento das aquisições: dispensada pelo GP");
+    // decisão 0091: o índice diz para onde foi a parte (fundida numa gerada ou dispensada, com o motivo)
+    expect(indice).toMatch(/A9 Plano de gerenciamento das aquisições: (?:dispensada: |fundida em )/);
     expect(indice).toContain("A8 Plano de gerenciamento dos riscos: gerada");
   });
 });

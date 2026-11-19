@@ -423,6 +423,17 @@ export async function gerarDocxApresentacao(doc: DocumentoExportavel, logo: Arra
   ];
   const d = destaques(doc);
   if (d) corpo.push(d);
+  // o resultado da etapa numa linha, no espaço que sobrava abaixo dos blocos
+  const resumo = doc.apresentacao?.resumo;
+  if (resumo)
+    corpo.push(
+      new Paragraph({
+        alignment: AlignmentType.CENTER,
+        spacing: { before: 600 },
+        border: { top: { style: BorderStyle.SINGLE, size: 6, color: cor("soft-borda"), space: 12 } },
+        children: [new TextRun({ text: resumo, font: FONTE, size: 22, color: cor("navy") })],
+      }),
+    );
   corpo.push(
     new Paragraph({ children: [new PageBreak()] }),
     new Paragraph({

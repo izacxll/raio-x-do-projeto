@@ -14,7 +14,7 @@ import {
 import { requisitosValidos } from "../etapas/1-rfp/revisao";
 import { NOME_RECOMENDACAO, recomendacaoDoDossie, recomendacaoEmTexto } from "../etapas/1-rfp/recomendacao";
 import { curto, duracaoCurta, NAO_LOCALIZADO, secoesDaCapa, type CapaDeDecisao } from "./capa-de-decisao";
-import { numerosDaFila, revisavelDaLeitura } from "../pmo/fila";
+import { decisoesAte, numerosDaFila, revisavelDaLeitura } from "../pmo/fila";
 import { camposConfirmadosPeloPmo, type CampoQuePesa } from "./capa-regras";
 import type { Alerta, Destaque } from "./modelo";
 import {
@@ -301,8 +301,15 @@ export function capaDaRfp(
       : []),
   ];
 
+  // a fila do GP, montada uma vez para os números e para o resumo
+  const fila = itensRevisaveis(leitura).map(revisavelDaLeitura);
+  // a recomendação com aviso da conferência (redação, número sem fonte, item fora da leitura) é "a conferir"
+  const recomendacaoAConferir = Boolean(
+    recomendacao &&
+    (recomendacao.redacaoAConferir || recomendacao.numerosSemFonte.length || recomendacao.semItem.length),
+  );
   const numeros = [
-    ...numerosDaFila(1, itensRevisaveis(leitura).map(revisavelDaLeitura), a.revisoes, outrasDecisoesDaRfp(a)),
+    ...numerosDaFila(1, fila, a.revisoes, outrasDecisoesDaRfp(a)),
     { rotulo: "Modalidade", valor: modalidade },
     {
       rotulo: "Entregas",
@@ -392,6 +399,8 @@ export function capaDaRfp(
   };
   return {
     etapa: 1,
+    // sem produto achado, "não localizadas", nunca "0 entregas" (não achado não é ausente)
+    resumo: `Leitura do ${nomeDoDocumento} com ${produtos.length ? contar(produtos.length, "entrega", "entregas") : "entregas não localizadas pela ferramenta"}${recomendacao && recomendacao.recomendacao.sugestao !== "sem_base" ? `; sugestão do PMO${recomendacaoAConferir ? ", a conferir" : ""}: ${NOME_RECOMENDACAO[recomendacao.recomendacao.sugestao]}` : ""}; ${decisoesAte(1, fila, a.revisoes, outrasDecisoesDaRfp(a))}.`,
     destaques: [
       destaqueDaFicha("Prazo", doCodigo("leitura:prazo"), confirmados.includes("prazo"), nomeDoDocumento),
       destaqueDaFicha(
@@ -417,13 +426,9 @@ export function capaDaRfp(
                       x.toUpperCase(),
                     ),
               rotulo: "Recomendação",
-              // com aviso da conferência (redação, número sem fonte, item fora da leitura), o bloco diz "a conferir"
-              explicacao:
-                recomendacao.redacaoAConferir ||
-                recomendacao.numerosSemFonte.length ||
-                recomendacao.semItem.length
-                  ? "sugestão do PMO, a conferir; quem decide é o GP"
-                  : "sugestão do PMO; quem decide é o GP",
+              explicacao: recomendacaoAConferir
+                ? "sugestão do PMO, a conferir; quem decide é o GP"
+                : "sugestão do PMO; quem decide é o GP",
             },
           ]
         : []),

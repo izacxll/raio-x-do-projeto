@@ -28,7 +28,7 @@ import {
   segundaEtapa5EmTexto,
   vereditosAConferir,
 } from "../../src/pmo/segunda-etapa-5";
-import { semRevisoesDoPmo } from "../../src/pmo/itens";
+import { comLeituraDaEtapa5 } from "../../src/etapas/5-conferencia/leitura-no-dossie";
 import { identidadeDoCaso } from "../../src/pmo/identidade-do-caso";
 import { diferencasDaResposta } from "../../src/pmo/segunda-rodada";
 import { lerVersaoDoTapNoPedido, montarTapRevisado } from "../../src/pmo/tap-revisado";
@@ -99,6 +99,7 @@ import { reguaQueMudouEmTexto, reguasQueMudaram } from "../../src/etapas/4-pgp/r
 import { PEDIDOS_PGP, pgpAntesDoPasso } from "../../src/etapas/4-pgp/pedidos";
 import { linhaDaProposta } from "../../src/etapas/linha-do-tempo";
 import {
+  gerarSugerido,
   itensDoPgp,
   pareceRepetirORegistroInicial,
   passoAnterior,
@@ -946,20 +947,20 @@ describe.skipIf(MODO !== "importar")("importar a resposta do PMO (leitura indepe
           [passo]: guardada,
         } as PgpDossie;
         if (passo === "adaptacao") {
-          // decisão do GP com o padrão do teste: --gerar "A1,A3,…", ou tudo o que o PMO não marcou como dispensável
+          // decisão do GP com o padrão do teste: --gerar "A1,A3,…", ou a sugestão pelo porte (decisão 0091)
           const a = v.data as z.infer<typeof SCHEMAS_PGP.adaptacao>;
+          const porteDaSugestao = pgp.caracteristicas ?? sugestaoDoCodigo({ ...dossie, pgp });
           const escolhidas = env.RAIO_X_GERAR
             ? new Set(env.RAIO_X_GERAR.split(",").map((x) => x.trim()))
             : undefined;
           pgp = {
             ...pgp,
             abordagem: a.abordagem,
-            gerar: Object.fromEntries(
-              a.partes.map((s) => [
-                s.codigo,
-                escolhidas ? escolhidas.has(s.codigo) : s.recomendacao !== "dispensavel",
-              ]),
-            ),
+            gerar: escolhidas
+              ? Object.fromEntries(a.partes.map((s) => [s.codigo, escolhidas.has(s.codigo)]))
+              : gerarSugerido(a, porteDaSugestao),
+            // a mesma regra da tela: as características do GP ou, sem elas, as que o código sugere (decisão 0091)
+            sugestaoPeloPorte: porteDaSugestao,
           };
         }
         dossie = { ...dossie, pgp };
@@ -1292,24 +1293,14 @@ describe.skipIf(MODO !== "importar")("importar a resposta do PMO (leitura indepe
         const resposta = v.data as z.infer<typeof RespostaLeitura>;
         // a leitura fica no dossiê, como na tela: a segunda instância leve parte dela (decisão 0077); a revisão
         // anterior fica velha com a leitura nova
-        dossie = {
-          ...dossie,
-          conferencia: {
-            ...(dossie.conferencia ?? {
-              caracteristicas: c.caracteristicas,
-              mapa: c.mapa,
-              premissasAplicaveis: c.premissasAplicaveis,
-              requisitos: [],
-              proximoRequisito: 1,
-              decisoes: {},
-            }),
-            // como a tela (leitura-pmo.tsx): as decisões do GP sobre a leitura anterior saem, o plano fica ligado
-            pgpId: c.pgp.id,
-            decisoes: semRevisoesDoPmo(dossie.conferencia?.decisoes ?? {}),
-            executadaEm: HOJE.toISOString(),
-            leituraPmo: { resposta, modelo: "claude.ai (leitura independente)", em: HOJE.toISOString() },
-          },
-        };
+        dossie = comLeituraDaEtapa5(
+          dossie,
+          { caracteristicas: c.caracteristicas, mapa: c.mapa, premissasAplicaveis: c.premissasAplicaveis },
+          c.pgp.id,
+          { resposta, modelo: "claude.ai (leitura independente)", em: HOJE.toISOString() },
+          // com outro plano no dossiê, o mapa é sincronizado com o plano novo, como a tela faz
+          proporMapa(c.pgp.paginas, PARTES_PGP),
+        );
         const candidatosAgora = conferirVereditos(resposta, c.achados, c.condicionais, c.mapa, [
           c.pgp,
           ...(c.tap ? [c.tap] : []),

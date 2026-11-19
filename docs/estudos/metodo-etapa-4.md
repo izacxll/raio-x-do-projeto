@@ -51,6 +51,14 @@ A ferramenta reconhece o tipo pelo contrato e pela proposta e sugere a adaptaç�
 
 Cada linha da adaptação traz o motivo em uma frase, com a regra da ficha. O que o GP dispensar fica no dossiê e não vira "ausente" na etapa 5.
 
+**Plano enxuto por porte** (decisão 0091):
+- **Limites:** pequeno de 10 a 15 partes e até 15 páginas; médio de 16 a 30 partes e até 30 páginas; grande até 50 páginas (páginas do corpo: os planos A, sem os registros B).
+- **Porte pequeno:** um PGP único com o núcleo (A17, A13, A3, A6, A8, A4, A5, A7, A11, B31, B27, B3, B9, A16 e A9, salvo com a subcontratação vedada).
+- **Destino de cada parte que não se gera:**
+  - fundida numa parte do mesmo assunto, com o conteúdo mínimo dela, uma linha por item que vale;
+  - ou dispensada, com o motivo.
+- O plano diz para onde foi cada uma, e a capa da etapa mostra as páginas estimadas contra o limite.
+
 ### 4.2 Ciclo de vida, escopo e aceite
 - Fases com **critério de saída** verificável (o que precisa estar pronto, aceito ou recebido).
 - EAP: produtos (um pacote por produto) e, se houver, operação contínua (por frente de trabalho).

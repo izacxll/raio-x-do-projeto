@@ -12,7 +12,7 @@ import { INSTRUCAO_MARCOS, linhaDoTempoEmTexto, type MarcoDaLinha } from "../lin
 
 const REGRAS = `Regras deste pedido (além da skill):
 - Responda só com o objeto JSON do passo, no schema enviado.
-- "rotulo" usa: documento | sugestao | decisao_gp. Item "documento" sempre com fonte: doc "rfp" (vale para a RFP e para os anexos em PDFs separados), página do arquivo PDF e trecho literal. O app confere cada trecho na página; o que não for achado vira "citação não conferida".
+- "rotulo" usa: documento | sugestao | decisao_gp. Item "documento" sempre com fonte: doc "rfp" (vale para a RFP e para os anexos em PDFs separados), página do arquivo PDF e trecho literal. O app confere cada trecho na página; o que não for achado vira "citação não conferida". Um item "documento" traz só o que o trecho diz: a sugestão ou a decisão do GP sobre ele vai num item à parte, com o rótulo dela, ou o item inteiro vira "sugestao", com o trecho em fontes (skill, regra 15).
 - Sugestão em redação condicional ("sugere-se", "uma opção é", "recomenda-se avaliar"). Nada de valores, prazos ou quantidades que não estejam no documento: escreva "não informado no documento — a definir pelo GP".
 - Use os números de requisito do ponto de partida (R01, R02…). Requisito novo é sugestão, sem número.
 - Não faça contas (somas, acumulados, pontos por preço, caixa, produtividade): são do código, que já mandou o resultado no esqueleto.

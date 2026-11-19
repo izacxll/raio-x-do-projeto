@@ -113,8 +113,10 @@ export const RiscoRegistro = z.object({
   responsavel: z.string(),
   /** PC1…PC8, ou "". */
   premissaCritica: z.string(),
-  /** Pede reserva de contingência (o valor é do GP). */
+  /** Pede reserva de contingência (o valor de cada risco é do GP; a contingência do plano é a soma, decisão 0092). */
   pedeReserva: z.boolean(),
+  /** O produto (P1…) cujo marco o risco ameaça, da lista do cronograma; "" quando é do projeto todo (decisão 0092). */
+  marco: z.string().default(""),
 });
 export type RiscoRegistro = z.infer<typeof RiscoRegistro>;
 
