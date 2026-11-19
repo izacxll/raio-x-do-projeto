@@ -77,6 +77,11 @@ export interface Secao {
   nota?: string;
   /** Parágrafo de abertura, antes do quadro de decisões e dos alertas. */
   abertura?: string;
+  /**
+   * A seção começa numa página nova (no padrão de apresentação): para documentos com capítulos, como o material da
+   * comissão. Sem ela, só a primeira seção de cada parte quebra a página.
+   */
+  novaPagina?: boolean;
 }
 
 /** Uma decisão do GP no quadro "Para o GP decidir": a decisão, as opções (quando houver) e o impacto. */

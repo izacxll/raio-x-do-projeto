@@ -460,7 +460,9 @@ export async function gerarDocxApresentacao(doc: DocumentoExportavel, logo: Arra
     }
     for (const s of g.secoes) {
       // cada seção numerada da capa, dos quadros e do corpo começa numa página na primeira de cada parte
-      corpo.push(titulo(s, primeira || (s.nivel !== 2 && g.parte !== "anexo" && s === g.secoes[0])));
+      corpo.push(
+        titulo(s, primeira || !!s.novaPagina || (s.nivel !== 2 && g.parte !== "anexo" && s === g.secoes[0])),
+      );
       primeira = false;
       if (s.abertura) corpo.push(paragrafo(s.abertura));
       if (s.nota)
