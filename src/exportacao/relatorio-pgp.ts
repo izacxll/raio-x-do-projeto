@@ -12,7 +12,9 @@ import {
   cronogramaDoPgp,
   custosDoPgp,
   inicioDoPgp,
+  marcoDoRisco,
   marcosDoPgp,
+  reservaValida,
   rastrear,
   textoDaData,
 } from "../etapas/4-pgp/calculos";
@@ -312,11 +314,13 @@ function tabelasDoCodigo(codigo: string, c: Contexto): { paragrafos?: string[]; 
         paragrafos: [
           `${conta} Horas esperadas (PERT) × valor-hora do GP.`,
           "Despesas (viagens, passagens, diárias): decisão do GP, fora desta conta de horas.",
+          // decisão 0092: a reserva de cada risco, com o valor do GP ou "a definir" só para o que falta
           ...(custos.riscosComReserva.length
             ? [
-                `Contingência pedida pelos riscos ${custos.riscosComReserva.map((r) => r.id).join(", ")}: ${A_DEFINIR}, dentro da linha de base dos custos (A15).`,
+                `Contingência pedida pelos riscos, dentro da linha de base dos custos (A15): ${custos.riscosComReserva.map((r) => `${r.id} ${r.valor !== undefined ? reais(r.valor) : A_DEFINIR}`).join("; ")}.`,
               ]
             : []),
+          ...custos.avisosDaContingencia.map((a) => `Atenção: ${a}.`),
         ],
         tabela: {
           colunas: ["Perfil", "Horas", "Valor-hora (GP)", "Custo"],
@@ -347,12 +351,15 @@ function tabelasDoCodigo(codigo: string, c: Contexto): { paragrafos?: string[]; 
           linhas: [
             ["Pessoal (estimativas de custos)", reais(custos.preco.pessoal)],
             [
-              "Reserva de contingência (decisão do GP, dentro da linha de base)",
-              reais(p.parametros.contingencia),
+              custos.origemDaContingencia === "global"
+                ? "Reserva de contingência (valor único do GP, ainda não dado risco a risco)"
+                : "Reserva de contingência (soma das reservas dos riscos marcados, dentro da linha de base)",
+              reais(custos.contingencia),
             ],
+            // decisão 0092: a contingência deriva dos riscos; cada um com a reserva (do GP) e o marco que ameaça
             ...custos.riscosComReserva.map((r) => [
-              `  Contingência do risco ${r.id} (${r.texto.slice(0, 80)}${r.texto.length > 80 ? "…" : ""})`,
-              p.parametros.contingencia === undefined ? A_DEFINIR : `parte da reserva acima (${A_DEFINIR})`,
+              `  Risco ${r.id}, marco ${r.marco} (${r.texto.slice(0, 80)}${r.texto.length > 80 ? "…" : ""})`,
+              r.valor !== undefined ? reais(r.valor) : A_DEFINIR,
             ]),
             ["Linha de base dos custos", reais(custos.linhaDeBase)],
             ["Reserva gerencial (decisão do GP, fora da linha de base)", reais(p.parametros.gerencial)],
@@ -361,7 +368,10 @@ function tabelasDoCodigo(codigo: string, c: Contexto): { paragrafos?: string[]; 
         },
       });
   }
-  if (codigo === "B27" && p.riscos)
+  if (codigo === "B27" && p.riscos) {
+    // decisão 0092: cada risco liga a resposta, a reserva (valor do GP) e o marco que ameaça (conferido no cronograma)
+    const produtos = new Set((p.cronograma?.resposta.atividades ?? []).map((a) => a.produto));
+    const reservas = p.parametros.reservasPorRisco ?? {};
     out.push({
       tabela: {
         colunas: [
@@ -372,9 +382,11 @@ function tabelasDoCodigo(codigo: string, c: Contexto): { paragrafos?: string[]; 
           "Resposta",
           "Gatilho",
           "Responsável",
+          "Reserva",
+          "Marco",
           "Premissa crítica",
         ],
-        larguras: [4, 1, 1, 1, 3, 2, 1, 1],
+        larguras: [4, 1, 1, 1, 3, 2, 1, 1, 1, 1],
         linhas: p.riscos.resposta.riscos
           .filter((_, k) => c.itens.some((i) => i.id === `riscos:B27:${k}`))
           .map((r) => [
@@ -385,10 +397,17 @@ function tabelasDoCodigo(codigo: string, c: Contexto): { paragrafos?: string[]; 
             `${r.estrategia}: ${r.resposta}`,
             r.gatilho || A_DEFINIR,
             r.responsavel || A_DEFINIR,
+            !r.pedeReserva
+              ? "não pede"
+              : reservaValida({ id: r.id, texto: r.item.texto }, reservas) !== undefined
+                ? reais(reservaValida({ id: r.id, texto: r.item.texto }, reservas))
+                : A_DEFINIR,
+            marcoDoRisco(r.marco, produtos),
             r.premissaCritica || "—",
           ]),
       },
     });
+  }
   if (codigo === "B3" && (e.premissasTap.length || p.riscos))
     out.push({
       paragrafos: [

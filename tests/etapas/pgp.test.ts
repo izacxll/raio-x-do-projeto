@@ -353,7 +353,9 @@ describe("pacote, parte não gerada, contingência e registro inicial (teste ext
     const c = custosDoPgp(dossie.pgp!, entrada)!;
     const comReserva = dossie.pgp!.riscos!.resposta.riscos.filter((r) => r.pedeReserva).map((r) => r.id);
     expect(c.riscosComReserva.map((r) => r.id)).toEqual(comReserva);
-    if (comReserva.length) expect(c.faltando.join(" ")).toMatch(/pedida pelos riscos/);
+    // decisão 0092: a contingência é a soma das reservas de cada risco; o que falta diz quais riscos
+    if (comReserva.length)
+      expect(c.faltando.join(" ")).toContain(`reserva de contingência dos riscos ${comReserva.join(", ")}`);
     expect(c.linhaDeBase).toBeUndefined();
   });
 

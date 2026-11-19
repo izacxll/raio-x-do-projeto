@@ -95,6 +95,7 @@ Uma decisão por arquivo, numerada em ordem. Cada uma registra o contexto, o que
 | [0089](0089-padrao-de-apresentacao-fgv.md) | Resultado da etapa no padrão dos documentos da FGV Projetos: capa com números em destaque, sumário, seções numeradas, rótulos fora da linha, quadro "Para o GP decidir", tabelas com legenda, anexos de revisão e técnico |
 | [0090](0090-capa-com-resumo-e-leitura-da-etapa-5.md) | Capa com o resultado da etapa numa linha e o bloco "43/44"; a leitura do PMO da etapa 5 gravada no dossiê pela mesma função da tela |
 | [0091](0091-pgp-enxuto-por-porte.md) | PGP enxuto por porte: limites de partes e páginas, núcleo de 14 partes no porte pequeno, parte fundida numa hospedeira ou dispensada com o motivo, páginas estimadas na capa |
+| [0092](0092-riscos-ligados-e-reserva-derivada.md) | Cada risco liga resposta, reserva e marco (produto do cronograma, conferido pelo código); a reserva de contingência é a soma das reservas dos riscos marcados, valores do GP |
 
 Modelo para uma nova decisão:
 
