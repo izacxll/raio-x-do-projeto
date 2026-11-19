@@ -387,6 +387,7 @@ export function apresentar(
     ...(ctx.contratante ? { contratante: ctx.contratante } : {}),
     etapa: `Etapa ${ctx.etapa} · ${ctx.nomeDaEtapa}`,
     destaques: ctx.destaques,
+    ...(c?.resumo ? { resumo: corrigirPlurais(limparTermosInternos(c.resumo)) } : {}),
   };
   // o cabeçalho de minuta fica enquanto houver item sem revisão do GP (nos documentos da etapa ou na revisão)
   // e enquanto houver decisão do GP em aberto no corpo

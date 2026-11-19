@@ -111,6 +111,10 @@ describe("capa de cada etapa, com a RFP pública da OEI", () => {
     expect(c!.numeros.find((n) => n.rotulo === "Decidir")?.valor).toBe(
       "Antes da reunião de abertura e da aprovação do TAP",
     );
+    // o resultado numa linha, para a capa do documento
+    expect(c!.resumo).toMatch(
+      /^TAP com \d+ entregas?-chave e \d+ marcos?, (?:a partir do|sem o) contrato assinado; \d+ decis(?:ão|ões) do GP antes da reunião de abertura e da aprovação do TAP\.$/,
+    );
     // os blocos grandes: duração, entregas e valor; nada de "(s)" nem "(ões)"
     expect(c!.destaques!.map((d) => d.rotulo)).toEqual(["Prazo", "Entregas", "Valor"]);
     expect(JSON.stringify(c)).not.toMatch(/\p{L}\((?:s|ões|is|ns|eis)\)/u);

@@ -103,6 +103,8 @@ export interface CapaDoDocumento {
   contratante?: string;
   etapa: string;
   destaques: Destaque[];
+  /** O resultado da etapa numa linha, abaixo dos blocos. */
+  resumo?: string;
 }
 
 export interface DocumentoExportavel {

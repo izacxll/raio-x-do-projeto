@@ -4,6 +4,10 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 
 ## [Não publicado]
 
+### Capa com o resumo da etapa e a leitura da etapa 5 no dossiê (decisão 0090)
+- **Capa:** o resultado da etapa numa linha abaixo dos blocos (também na tela); o bloco da etapa 5 em uma linha ("43/44").
+- **Etapa 5:** a leitura do PMO gravada no dossiê pela mesma função da tela, com teste de ida e volta; o gerador do resultado avisa quando o dossiê está sem a leitura.
+
 ### Resultado no padrão da FGV Projetos (decisão 0089)
 - **Capa** com o título do estudo e os números-chave em destaque; **sumário**; seções numeradas; rodapé com "página n / total".
 - **Rótulos fora da linha:** referência "(TR, p. N)" no fim da frase, nota de sugestão por seção, decisões no quadro "Para o GP decidir"; marcas e avisos no anexo de revisão; termos internos só no anexo técnico.
