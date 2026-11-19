@@ -288,6 +288,7 @@ function secaoDoCorpo(
     ...(s.alertas ? { alertas: s.alertas } : {}),
     paragrafos,
     ...(tabela ? { tabela: tabela.tabela } : {}),
+    ...(s.novaPagina ? { novaPagina: true } : {}),
   };
 }
 
@@ -381,7 +382,9 @@ export function apresentar(
       "O funcionamento da ferramenta, para auditoria: a conferência automática de cada passo, a revisão independente e as seções montadas pelo cálculo.",
     ],
   });
-  for (const s of [...paraOTecnico, ...tecnico]) secoes.push({ ...s, parte: "anexo", nivel: 2 });
+  // no anexo, a seção vira subseção: a marca de capítulo (novaPagina) não vale ali
+  for (const s of [...paraOTecnico, ...tecnico])
+    secoes.push({ ...s, parte: "anexo", nivel: 2, novaPagina: undefined });
   const capa: CapaDoDocumento = {
     titulo: ctx.tituloDoEstudo,
     ...(ctx.contratante ? { contratante: ctx.contratante } : {}),

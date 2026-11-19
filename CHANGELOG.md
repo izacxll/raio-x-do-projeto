@@ -4,6 +4,9 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 
 ## [Não publicado]
 
+### Capítulo em página nova no padrão de apresentação
+- A seção marcada com `novaPagina` começa numa página nova (para documentos com capítulos, como o material da comissão); sem a marca, nada muda nos resultados das etapas.
+
 ### Documentos da comissão coerentes com o painel
 - O painel é a fonte única dos números de custo; a FAQ passa a citá-lo (US$ 11,37 a 16,66, R$ 65 a 96, cache de 1 hora com economia de 10% a 12%).
 - O piso diz "com o último pedido de cada passo" e a simulação, "com todos os pedidos do teste"; os casos têm o mesmo nome em todas as tabelas.
