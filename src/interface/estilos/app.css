@@ -1093,3 +1093,24 @@ tr[data-critica="sim"] td:first-child {
 .capa-quadro .tabela-rolavel {
   overflow-x: auto;
 }
+
+/* Fila de pendências do GP (decisão 0088). */
+.fila-pendencias {
+  margin: var(--esp-2) 0 0;
+  padding-left: 1.4em;
+}
+
+.fila-pendencias li {
+  margin: 4px 0;
+}
+
+.botao-link {
+  background: none;
+  border: 0;
+  padding: 0;
+  color: var(--navy700);
+  text-align: left;
+  cursor: pointer;
+  text-decoration: underline;
+  font: inherit;
+}

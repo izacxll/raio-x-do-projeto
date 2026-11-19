@@ -217,6 +217,21 @@ export function LeituraDoPmo({
                         <option value="sim">procede</option>
                         <option value="nao">não procede</option>
                       </select>
+                      {/* a gravidade também é do GP, como nos achados do código (decisão 0088) */}
+                      <select
+                        aria-label={`Gravidade de ${a.id}`}
+                        value={d?.gravidade ?? ""}
+                        onChange={(e) =>
+                          decidir(id, {
+                            gravidade: (e.target.value || undefined) as DecisaoAchado["gravidade"],
+                          })
+                        }
+                      >
+                        <option value="">gravidade do código</option>
+                        <option value="grave">grave</option>
+                        <option value="média">média</option>
+                        <option value="baixa">baixa</option>
+                      </select>
                       <input
                         aria-label={`Justificativa de ${a.id}`}
                         placeholder="Justificativa"

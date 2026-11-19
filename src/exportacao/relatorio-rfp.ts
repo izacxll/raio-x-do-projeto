@@ -14,9 +14,11 @@ import {
 import { requisitosValidos } from "../etapas/1-rfp/revisao";
 import { recomendacaoDoDossie, recomendacaoEmTexto } from "../etapas/1-rfp/recomendacao";
 import { curto, NAO_LOCALIZADO, secoesDaCapa, type CapaDeDecisao } from "./capa-de-decisao";
+import { PRAZO_DAS_DECISOES, resumoDaFila, revisavelDaLeitura } from "../pmo/fila";
 import type { Alerta } from "./modelo";
 import {
   contarPendentesDaLeitura,
+  itensRevisaveis,
   leituraDoDossie,
   NOME_AVISO,
   NOME_TRAVA,
@@ -242,6 +244,10 @@ export function capaDaRfp(
   ];
 
   const numeros = [
+    {
+      rotulo: "Fila do GP",
+      valor: `${resumoDaFila(itensRevisaveis(leitura).map(revisavelDaLeitura), a.revisoes)}; decidir ${PRAZO_DAS_DECISOES[1]}`,
+    },
     { rotulo: "Modalidade", valor: modalidade },
     {
       rotulo: "Entregas",

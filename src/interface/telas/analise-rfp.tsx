@@ -3,6 +3,8 @@
 // RFP" monta o esqueleto do código, manda-o ao PMO com o texto da RFP e mostra a leitura conferida pelo código
 // (citação, número, R). Sem chave, nada é analisado; o esqueleto não aparece sozinho.
 // Cada item tem o rótulo, a página e a revisão do GP (aceitar, editar, descartar). Participar é decisão só do GP.
+import { FilaDePendencias } from "../componentes/fila-de-pendencias";
+import { aceitaveisEmLote, filaDePendencias, revisavelDaLeitura, PRAZO_DAS_DECISOES } from "../../pmo/fila";
 import { recomendacaoDoDossie, recomendacaoEmTexto } from "../../etapas/1-rfp/recomendacao";
 import { useMemo, useState } from "react";
 import { MODELO_PADRAO, MODELOS, type IdModelo } from "../../config/modelo";
@@ -251,6 +253,12 @@ function Analise({
           </p>
         </div>
       )}
+      <FilaDePendencias
+        prazo={PRAZO_DAS_DECISOES[1]}
+        itens={itensRevisaveis(leitura).map(revisavelDaLeitura)}
+        revisoes={salva.revisoes}
+        aoAceitar={(ids) => mudarEstado(ids, "aceito")}
+      />
       <LeituraDoPmoNaEtapa1
         analise={analise}
         salva={salva}
@@ -266,7 +274,11 @@ function Analise({
         const naoAchou = leitura.naoLocalizados[s.id];
         const doCodigo = leitura.doCodigo[s.id];
         if (!daSecao.length && !naoAchou?.length && s.id !== "fazer-e-entregar") return null;
-        const pendentesDaSecao = daSecao.filter((i) => estadoDoItem(salva.revisoes, i.id) === "pendente");
+        // em lote, só o que pode ir em lote (decisão 0088)
+        const loteDaSecao = aceitaveisEmLote(
+          filaDePendencias(daSecao.map(revisavelDaLeitura), salva.revisoes),
+        );
+        const pendentesDaSecao = [...loteDaSecao.documento, ...loteDaSecao.sugestao];
         const corpo = (
           <>
             <p className="texto-apoio">{s.pergunta}</p>
@@ -275,14 +287,9 @@ function Analise({
                 className="botao botao--discreto"
                 type="button"
                 style={{ marginBottom: 8 }}
-                onClick={() =>
-                  mudarEstado(
-                    pendentesDaSecao.map((i) => i.id),
-                    "aceito",
-                  )
-                }
+                onClick={() => mudarEstado(pendentesDaSecao, "aceito")}
               >
-                Aceitar os {pendentesDaSecao.length} pendentes desta seção
+                Aceitar os {pendentesDaSecao.length} sem aviso desta seção
               </button>
             )}
             {cartoes.map((i) => (

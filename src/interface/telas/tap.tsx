@@ -1,6 +1,8 @@
 // Etapa 3 na tela: a proposta usada (PDF final do GP ou a da etapa 2), as divergências RFP × proposta com a decisão
 // do GP, o que vem dos documentos (código), os dois passos do PMO (12 elementos e registro de premissas), os campos
 // que só o GP preenche, a conferência do TAP (código), a aprovação e as saídas.
+import { FilaDePendencias } from "../componentes/fila-de-pendencias";
+import { aceitar, revisavelDoConferido, PRAZO_DAS_DECISOES } from "../../pmo/fila";
 import { useMemo, useState } from "react";
 import { MODELOS, type IdModelo } from "../../config/modelo";
 import type { DecisoesTap, TapDossie } from "../../dossie/esquema";
@@ -383,6 +385,13 @@ export function TermoDeAbertura() {
           </label>
         </div>
       </section>
+
+      <FilaDePendencias
+        prazo={PRAZO_DAS_DECISOES[3]}
+        itens={itens.map(revisavelDoConferido)}
+        revisoes={t.revisoes}
+        aoAceitar={(ids) => atualizar({ ...t, revisoes: aceitar(t.revisoes, ids) })}
+      />
 
       <section className="bloco">
         <RotuloSecao>Exportar</RotuloSecao>

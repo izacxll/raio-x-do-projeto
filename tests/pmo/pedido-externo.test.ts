@@ -30,6 +30,7 @@ import {
 } from "../../src/pmo/segunda-etapa-5";
 import { semRevisoesDoPmo } from "../../src/pmo/itens";
 import { identidadeDoCaso } from "../../src/pmo/identidade-do-caso";
+import { diferencasDaResposta } from "../../src/pmo/segunda-rodada";
 import { lerVersaoDoTapNoPedido, montarTapRevisado } from "../../src/pmo/tap-revisado";
 import {
   chaveDaSegundaInstancia,
@@ -1383,6 +1384,23 @@ describe.skipIf(MODO !== "importar")("importar a resposta do PMO (leitura indepe
           ),
         );
       }
+    }
+    // "seguir com correção" (decisão 0088): o placar acima já é o do código sobre a resposta nova; aqui, o que mudou
+    // desde a resposta que a segunda instância conferiu, para o GP ver antes de seguir
+    const conferida = dossie.segundaInstancia?.[chaveDaSegundaInstancia(etapa, passo)]?.conferiu;
+    if (conferida !== undefined) {
+      const dif = diferencasDaResposta(conferida, v.data);
+      linhas.push(
+        "",
+        "## O que mudou desde a resposta conferida pela segunda instância (decisão 0088)",
+        ...(dif.length
+          ? [
+              `${dif.length} item(ns): ${dif.filter((x) => x.situacao === "alterado").length} alterado(s), ${dif.filter((x) => x.situacao === "novo").length} novo(s), ${dif.filter((x) => x.situacao === "removido").length} removido(s).`,
+              ...dif.slice(0, 40).map((x) => `- ${x.situacao}: ${x.caminho}`),
+              ...(dif.length > 40 ? [`- … e mais ${dif.length - 40}`] : []),
+            ]
+          : ["Nada mudou: a resposta é a mesma que a segunda instância conferiu."]),
+      );
     }
     writeFileSync(arqDossie, serializarDossie(dossie, HOJE));
     const relatorio = join(
