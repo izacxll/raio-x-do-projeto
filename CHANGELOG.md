@@ -10,6 +10,11 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 - **Etapa 5:** gravidade escolhida pelo GP também nos achados do PMO.
 - **Teste externo:** o placar da correção diz o que mudou desde a resposta conferida pela segunda instância.
 
+### Ajustes da capa de decisão (decisão 0087)
+- **Etapa 1:** prazo e valor ausentes, confirmados pelo PMO, viram alerta afirmativo ("o TR não traz…: perguntar antes do preço").
+- **Etapa 4:** marcos "sem régua" quando o TAP não dá prazo em dias; riscos por evento e efeito.
+- **Etapa 5:** conflito sobre a régua de prazo no mínimo médio.
+
 ### Recomendação de participar ou não (decisão 0086)
 - **Etapa 1:** o PMO sugere participar, participar com condições ou não participar, com motivo, condições e os itens que sustentam; o código confere os itens; a decisão continua só do GP.
 - **Skill PMO 0.3.7.**
