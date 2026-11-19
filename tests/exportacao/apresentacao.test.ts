@@ -5,6 +5,7 @@ import { strFromU8, unzipSync } from "fflate";
 import { describe, expect, it } from "vitest";
 import {
   apresentar,
+  decisaoEmAberto,
   lerItem,
   limparTermosInternos,
   secaoTecnica,
@@ -105,6 +106,18 @@ describe("o que a segunda revisão alta apontou (decisão 0089)", () => {
     expect(corrigirPlurais("1.000.001 item(ns)")).toBe("1.000.001 itens");
     expect(duracaoCurta("assinatura em até 5 dias; vigência de 12 meses")).toBe("12 meses");
     expect(duracaoCurta("prazo de 3 anos e 6 meses")).toBe("3 anos e 6 meses");
+    expect(duracaoCurta("O prazo para assinatura é de 5 dias úteis. A vigência será de 24 meses")).toBe(
+      "24 meses",
+    );
+  });
+
+  it("decisão em aberto: palavra inteira, depois do nome, e a contagem do nome", () => {
+    expect(decisaoEmAberto("Decisões do GP (0 pendentes): Abordagem: registrada.")).toBe(false);
+    expect(decisaoEmAberto("Decisões do GP (2 pendentes): preço; início.")).toBe(true);
+    expect(decisaoEmAberto("Abordagem A2 — Avaliação independente do programa.")).toBe(false);
+    expect(decisaoEmAberto("R12 · Avaliação com cronograma a definir com a contratante.")).toBe(false);
+    expect(decisaoEmAberto("Preço: valor final a definir pelo GP.")).toBe(true);
+    expect(decisaoEmAberto("A FGV tem? Critério X: atestado de capacidade. Decisão do GP.")).toBe(true);
   });
 });
 

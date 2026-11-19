@@ -208,9 +208,21 @@ function decisaoDoQuadro(texto: string, opcoes?: string): DecisaoNoQuadro {
   };
 }
 
-/** A decisão do GP que o texto diz estar em aberto: "a definir", "pendente", pergunta ou "Decisão do GP" no fim. */
-function decisaoEmAberto(texto: string): boolean {
-  return /a (?:definir|decidir)|pendente|\?|decis(?:ão|ões) do GP\.?$/i.test(texto);
+/**
+ * A decisão do GP sem a marca ○ que o texto diz estar em aberto (as linhas de decisão montadas pela ferramenta). Vale
+ * o que vem depois do nome ("Nome: texto"): "a definir", "pendente(s)" como palavra, pergunta ou "Decisão do GP" no
+ * fim. "Decisões do GP (N pendentes)" está em aberto só com N maior que zero. Requisito incluído pelo GP ("R12 · …")
+ * não passa por aqui: sem a marca, ele já foi revisado.
+ */
+export function decisaoEmAberto(texto: string): boolean {
+  const contagem = /^Decis(?:ão|ões) do GP \((\d+) pendentes?\)/i.exec(texto);
+  if (contagem) return Number(contagem[1]) > 0;
+  if (/^R\d+\s·/.test(texto)) return false;
+  const doisPontos = texto.indexOf(": ");
+  const depois = doisPontos >= 0 ? texto.slice(doisPontos + 2) : texto;
+  return /a (?:definir|decidir)(?!\p{L})|(?<!\p{L})pendentes?(?!\p{L})|\?|decis(?:ão|ões) do GP\.?$/iu.test(
+    depois,
+  );
 }
 
 /** A frase do corpo que termina com a referência ao documento ("(TR, p. 4)"). */
@@ -382,15 +394,13 @@ export function apresentar(
   const pendente =
     revisao.some((r) => /pendente de revisão do GP/.test(r)) ||
     secoes.some((s) => s.parte === "corpo" && (s.decisoes?.length ?? 0) > 0);
-  // o placar e a conferência vêm prontos da pasta do caso: os "N item(ns)" deles também saem no plural certo
+  // o placar e a conferência vêm prontos da pasta do caso, em parágrafos: os "N item(ns)" deles saem no plural certo.
+  // A frase com a referência ao documento é citação e fica literal; as tabelas também (trazem trechos citados, e o
+  // texto do app nelas já sai no plural certo)
   const semParenteses = secoes.map((s) => ({
     ...s,
-    // a frase com a referência ao documento é citação: fica literal
     ...(s.paragrafos
       ? { paragrafos: s.paragrafos.map((p) => (REFERENCIA_NO_FIM.test(p) ? p : corrigirPlurais(p))) }
-      : {}),
-    ...(s.tabela
-      ? { tabela: { ...s.tabela, linhas: s.tabela.linhas.map((l) => l.map(corrigirPlurais)) } }
       : {}),
   }));
   return { ...doc, minuta: doc.minuta || pendente, secoes: semParenteses, apresentacao: capa };

@@ -77,8 +77,10 @@ export function limitar(texto: string, limite = 220): string {
 export function duracaoCurta(texto?: string): string | undefined {
   const t = texto ?? "";
   const unidade = String.raw`(\d+)\s*(?:\([^)]*\)\s*)?(dias? úteis|dias? corridos|dias?|meses|mês|anos?|semanas?)`;
+  // a vigência primeiro ("prazo para assinatura de 5 dias; vigência de 24 meses" dá 24 meses), depois o prazo
   const m =
-    new RegExp(String.raw`(?:vig[êe]ncia|prazo)[^.;\d]{0,40}` + unidade, "i").exec(t) ??
+    new RegExp(String.raw`vig[êe]ncia[^.;\d]{0,40}` + unidade, "i").exec(t) ??
+    new RegExp(String.raw`prazo[^.;\d]{0,40}` + unidade, "i").exec(t) ??
     new RegExp(unidade, "i").exec(t);
   if (!m) return undefined;
   const mais = new RegExp(String.raw`^\s+e\s+` + unidade, "i").exec(t.slice(m.index + m[0].length));
