@@ -223,8 +223,65 @@ describe("porte pequeno: registros só na planilha (decisão 0096)", () => {
     );
     expect(naoVerificaveis.length).toBeGreaterThan(0);
     for (const v of naoVerificaveis) expect(v.detalhe).toMatch(/decisão 0096/);
+    // resumir nunca cria ausente: todo ausente do plano em resumo também sai no plano completo (decisão 0096)
+    const completo = conferencia(pgpComoDocumento(d, HOJE));
+    const chave = (x: { regra: string; chave?: string }) => `${x.regra}:${x.chave ?? ""}`;
+    const doCompleto = new Set(completo.achados.filter((x) => x.tipo === "ausente").map(chave));
+    expect(r.achados.filter((x) => x.tipo === "ausente" && !doCompleto.has(chave(x))).map(chave)).toEqual([]);
     // o plano completo não tem a marca: a regra não muda nada nele
     expect(registrosSoNaPlanilhaDoPlano(pgpComoDocumento(d, HOJE).paginas).size).toBe(0);
+  });
+
+  it("requisito de equipe e de escopo que não está no plano em resumo: não verificável, nunca ausente", () => {
+    const d = pequeno();
+    const resumo = documentoDeExportavel(montarPgp(d, HOJE), {
+      id: "pgp-exportado",
+      papel: "pgp",
+      nomeArquivo: "plano.pdf",
+      lidoEm: HOJE.toISOString(),
+    });
+    const naPlanilha = registrosSoNaPlanilhaDoPlano(resumo.paginas);
+    const e = montarEntradaPgp(d, HOJE);
+    const base = e.ponto.listaDeR[0]!;
+    // um perfil e um produto que não aparecem em lugar nenhum do plano em resumo (como numa linha cortada)
+    const requisitos = [
+      {
+        ...base,
+        numero: "R98",
+        tipo: "equipe" as const,
+        rotulo: "Equipe: Zimurgista quíchua",
+        perfis: ["Zimurgista quíchua"],
+        descricao: "Zimurgista quíchua",
+      },
+      {
+        ...base,
+        numero: "R99",
+        tipo: "produto" as const,
+        rotulo: "Produto",
+        descricao: "Catálogo zimúrgico quíchua",
+      },
+    ];
+    const r = conferirPlano({
+      planoDaFerramenta: true,
+      pgp: resumo.paginas,
+      tap: e.tap?.paginas,
+      rfp: e.rfp.flatMap((x) => x.paginas),
+      partes: PARTES_PGP,
+      premissas: PREMISSAS_CRITICAS,
+      mapa: mapaDoPgpGerado(d, resumo),
+      caracteristicas: caracteristicasDoPgp(d, e),
+      premissasAplicaveis: d.pgp!.premissasAplicaveis ?? e.premissasAnteriores,
+      requisitos,
+    });
+    const estado = (n: string) => r.verificacoes.find((v) => v.id === `requisito:${n}`)?.estado;
+    const ausente = (n: string) => r.achados.some((x) => x.tipo === "ausente" && x.titulo.startsWith(n));
+    // o caso de exemplo resume registros de equipe e de escopo
+    expect(["B18", "B26", "B6"].some((x) => naPlanilha.has(x))).toBe(true);
+    expect(["B17", "B22", "B23"].some((x) => naPlanilha.has(x))).toBe(true);
+    expect(estado("R98")).toBe("nao-verificavel");
+    expect(ausente("R98")).toBe(false);
+    expect(estado("R99")).toBe("nao-verificavel");
+    expect(ausente("R99")).toBe(false);
   });
 
   it("a marca de um registro em resumo não pega a seção inteira de outro registro logo antes", () => {

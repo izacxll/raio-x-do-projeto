@@ -577,10 +577,16 @@ export function conferirPlano(e: EntradaConferencia): ResultadoConferencia {
         registrar({
           tipo: "ausente",
           regra: "premissa-critica",
-          partes: ["A8", ...LUGARES_DA_PREMISSA],
+          // decisão 0096: o registro em resumo (B3, B27) não pôde ser conferido: sai das partes do achado
+          partes: ["A8", ...LUGARES_DA_PREMISSA.filter((x) => !naPlanilha.has(x))],
           chave: pc.codigo,
           titulo: `Premissa crítica ${pc.codigo} ${NAO_LOCALIZADO}`,
-          descricao: `A premissa crítica "${pc.titulo}" se aplica ao projeto (confirmado pelo GP) e não foi localizada no plano. Ela deveria estar no registro de premissas (B3), no registro de riscos (B27), no plano de mudanças (A11) e no tratamento das premissas críticas do plano de riscos (A8.12).`,
+          descricao: `A premissa crítica "${pc.titulo}" se aplica ao projeto (confirmado pelo GP) e não foi localizada no plano. Ela deveria estar no registro de premissas (B3), no registro de riscos (B27), no plano de mudanças (A11) e no tratamento das premissas críticas do plano de riscos (A8.12).${(() => {
+            const soNaPlanilha = LUGARES_DA_PREMISSA.filter((x) => naPlanilha.has(x));
+            return soNaPlanilha.length
+              ? ` No ${soNaPlanilha.join(" e no ")}, que estão completos só na planilha (decisão 0096), ela não pôde ser conferida.`
+              : "";
+          })()}`,
           evidencias: [evidencia],
           sugestao: `Sugere-se escrever a premissa no plano: o que se assume (${pc.assume.replace(/\.$/, "")}), de quem depende, até quando e o efeito se falhar; com um risco ligado no B27 (resposta e gatilho) e o modo de reajustar escopo, prazo e metas no A11.`,
         }),
@@ -625,6 +631,10 @@ export function conferirPlano(e: EntradaConferencia): ResultadoConferencia {
   const lugarDoEscopo = ["B17", "A13", "A1"].find((c) => presente(c)) ?? "B17";
   const faixaEscopo = paginasDaParte(confirmadas.get(lugarDoEscopo));
   const lugarDaEquipe = ["B18", "A6", "B26"].find((c) => presente(c)) ?? "A6";
+  // decisão 0096: no porte pequeno, o B17 (requisitos) e o B18/B26 (equipe) vão fundidos e em resumo, numa seção
+  // própria; o requisito que só está numa linha cortada deles fica "não verificável", nunca "ausente"
+  const emResumoNoEscopo = ["B17", "B22", "B23"].filter((x) => naPlanilha.has(x));
+  const emResumoNaEquipe = ["B18", "B26", "B6"].filter((x) => naPlanilha.has(x));
   for (const r of e.requisitos) {
     const id = `requisito:${r.numero}`;
     // o número R e o rótulo "Produto N" também valem: a descrição pode vir partida da tabela de duas colunas da RFP
@@ -691,7 +701,7 @@ export function conferirPlano(e: EntradaConferencia): ResultadoConferencia {
             ],
             sugestao: `Sugere-se indicar no plano quem ocupa o perfil "${papel}" (${r.numero}) e a dedicação prevista, como pede a RFP.`,
           }),
-        [lugarDaEquipe],
+        [lugarDaEquipe, ...emResumoNaEquipe],
       );
       continue;
     }
@@ -735,7 +745,7 @@ export function conferirPlano(e: EntradaConferencia): ResultadoConferencia {
             : [evidenciaRfp],
           sugestao: `Sugere-se incluir o ${r.rotulo.toLowerCase()} "${r.descricao}" em ${nomeDe(lugarDoEscopo)}, com o mesmo nome e número da RFP (${r.numero}).`,
         }),
-      [lugarDoEscopo],
+      [lugarDoEscopo, ...emResumoNoEscopo],
     );
   }
 

@@ -550,7 +550,7 @@ function resumoDoRegistro(
     );
     if (itens.length)
       paragrafos.push(
-        "[Sugestão] O texto das linhas vem da resposta do PMO; o rótulo, o texto revisado e a revisão do GP de cada item estão na planilha.",
+        "[Sugestão] As linhas escritas pelo PMO são sugestões (as que vêm do registro inicial ou das contas do código dizem a origem); o rótulo, o texto revisado e a revisão do GP de cada item do PMO estão na planilha.",
       );
     // as faixas de grupo saem do resumo (os índices delas não valem nas linhas escolhidas)
     return {
