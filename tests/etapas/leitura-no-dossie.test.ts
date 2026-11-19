@@ -10,7 +10,7 @@ import { mapaInicialDaConferencia } from "../../src/etapas/5-conferencia/dispens
 import { comLeituraDaEtapa5 } from "../../src/etapas/5-conferencia/leitura-no-dossie";
 import { resultadoDaEtapa5 } from "../../src/etapas/5-conferencia/resultado";
 import { RespostaLeitura } from "../../src/pmo/schemas/leitura";
-import { proporMapa } from "../../src/regras/mapa-pgp";
+import { proporMapa, sincronizarMapa } from "../../src/regras/mapa-pgp";
 
 const HOJE = new Date(2026, 10, 19);
 
@@ -58,9 +58,22 @@ describe("leitura da etapa 5 no dossiê", () => {
     // a decisão sobre a leitura anterior sai; a sobre o achado do código fica
     expect(segunda.conferencia?.decisoes).toEqual({ "A8:ausente:A8.12": { procede: "sim" } });
     expect(segunda.conferencia?.mapa).toEqual(mapa);
-    // outro plano: o mapa volta ao do plano novo e as decisões saem, como a tela faz
-    const outro = comLeituraDaEtapa5(comDecisao, { ...base, mapa: [] }, "outro-plano", leituraNova);
-    expect(outro.conferencia?.mapa).toEqual([]);
+    // outro plano: como a tela, o mapa é sincronizado com o plano novo (a dispensa do GP fica) e as decisões saem
+    const dispensadaPeloGp = {
+      ...comDecisao,
+      conferencia: {
+        ...comDecisao.conferencia!,
+        mapa: comDecisao.conferencia!.mapa.map((m) =>
+          m.codigo === "B12"
+            ? { codigo: "B12", situacao: "dispensada" as const, justificativa: "sem campo" }
+            : m,
+        ),
+      },
+    };
+    const proposta = proporMapa(plano.paginas, PARTES_PGP);
+    const outro = comLeituraDaEtapa5(dispensadaPeloGp, base, "outro-plano", leituraNova, proposta);
+    expect(outro.conferencia?.mapa).toEqual(sincronizarMapa(dispensadaPeloGp.conferencia.mapa, proposta));
+    expect(outro.conferencia?.mapa.find((m) => m.codigo === "B12")?.situacao).toBe("dispensada");
     expect(outro.conferencia?.decisoes).toEqual({});
     expect(outro.conferencia?.pgpId).toBe("outro-plano");
   });

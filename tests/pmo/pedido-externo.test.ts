@@ -1297,6 +1297,8 @@ describe.skipIf(MODO !== "importar")("importar a resposta do PMO (leitura indepe
           { caracteristicas: c.caracteristicas, mapa: c.mapa, premissasAplicaveis: c.premissasAplicaveis },
           c.pgp.id,
           { resposta, modelo: "claude.ai (leitura independente)", em: HOJE.toISOString() },
+          // com outro plano no dossiê, o mapa é sincronizado com o plano novo, como a tela faz
+          proporMapa(c.pgp.paginas, PARTES_PGP),
         );
         const candidatosAgora = conferirVereditos(resposta, c.achados, c.condicionais, c.mapa, [
           c.pgp,
