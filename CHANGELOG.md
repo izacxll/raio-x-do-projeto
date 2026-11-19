@@ -4,6 +4,9 @@ Todas as mudanças relevantes do projeto ficam registradas aqui, no formato [Kee
 
 ## [Não publicado]
 
+### Painel da comissão: custo como estimativa
+- O custo por projeto aparece como estimativa feita com os pedidos do teste, não fatura; a PTAX de 16/11/2026 (R$ 5,7324) foi conferida no Banco Central.
+
 ### Andamento do pente fino e revisor em outro modelo
 - `docs/andamento.md` com os blocos 3, 4 e 5 e as decisões pendentes; avaliação do Sonnet 5.5 como revisor da segunda instância (só contagens).
 
